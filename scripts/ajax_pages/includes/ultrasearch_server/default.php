@@ -124,6 +124,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$subcats_data=array();
 		foreach ($this->post['tx_multishop_pi1']['categories'] as $key=>$val) {
 			if ($val>0) {
+				$tmp_man_get_subscat = mslib_fe::get_subcategory_ids($val);
+				foreach ($tmp_man_get_subscat as $tmp_subs_catid) {
+					$subcats_data[]=$tmp_subs_catid;
+				}
 				$subcats_data[]=$val;
 			}
 		}
@@ -254,7 +258,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 			$totalCountSubFilter['categories'][]="p2c.is_deepest=1 AND p2c.categories_id IN (".implode(",",$subs_id_data).")";
 			*/
-			$totalCountSubFilter['categories'][]="p2c.node_id IN (".addslashes(implode(",", $this->post['tx_multishop_pi1']['categories'])).")";
+			$post_categories_id=array();
+			foreach ($this->post['tx_multishop_pi1']['categories'] as $key=>$val) {
+				$tmp_man_get_subscat = mslib_fe::get_subcategory_ids($val);
+				foreach ($tmp_man_get_subscat as $tmp_subs_catid) {
+					$post_categories_id[] = $tmp_subs_catid;
+				}
+				$post_categories_id[] = $val;
+			}
+			$totalCountSubFilter['categories'][]="p2c.node_id IN (".addslashes(implode(",", $post_categories_id)).")";
 		}
 	}
 	foreach ($this->post['tx_multishop_pi1']['manufacturers'] as $key=>$val) {
@@ -598,7 +610,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						} else {
 							$str = "select * from tx_multishop_manufacturers m, tx_multishop_products p, tx_multishop_products_to_categories p2c where p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.node_id in (" . implode(',', $this->post['tx_multishop_pi1']['categories']) . ") group by m.manufacturers_id";
 						}
-					} else if (isset($this->get['categories_id'])) {
+					} else if (isset($this->get['categories_id']) && $this->get['categories_id']>0) {
 						$main_get_subscat = mslib_fe::get_subcategory_ids($this->get['categories_id']);
 						if (count($main_get_subscat)) {
 							$str = "select * from tx_multishop_manufacturers m, tx_multishop_products p, tx_multishop_products_to_categories p2c where p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.node_id in (" . implode(',', $main_get_subscat) . ") group by m.manufacturers_id";
@@ -710,7 +722,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								} else {
 									$tmpFilter[] = "p2c.node_id in (" . implode(',', $this->post['tx_multishop_pi1']['categories']) . ")";
 								}
-							} else if (isset($this->get['categories_id'])) {
+							} else if (isset($this->get['categories_id']) && $this->get['categories_id']>0) {
 								$main_get_subscat = mslib_fe::get_subcategory_ids($this->get['categories_id']);
 								//$man_catsubs_id_data[] = $this->get['categories_id'];
 								if (count($main_get_subscat)) {
@@ -1020,13 +1032,41 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								);
 							}
 						} else {
-							$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery('DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
-								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p',     // FROM ...
-								"pov.language_id='" . $this->sys_language_uid . "' and povp.products_options_id = " . $row['products_options_id'] . " and pa.options_id='" . $row['products_options_id'] . "' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='" . $this->showCatalogFromPage . "' and pov.products_options_values_id=povp.products_options_values_id" . (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers']) ? ' and p.manufacturers_id in (' . implode(',', $this->post['tx_multishop_pi1']['manufacturers']) . ')' : ''),    // WHERE.
-								'',            // GROUP BY...
-								$order_column." ".$order_by,    // ORDER BY...
-								''            // LIMIT ...
-							);
+							$main_get_subscat=array();
+							if (isset($this->post['tx_multishop_pi1']['categories']) && count($this->post['tx_multishop_pi1']['categories'])) {
+								foreach ($this->post['tx_multishop_pi1']['categories'] as $post_main_catid) {
+									$tmp_man_get_subscat = mslib_fe::get_subcategory_ids($post_main_catid);
+									foreach ($tmp_man_get_subscat as $tmp_subs_catid) {
+										$main_get_subscat[]=$tmp_subs_catid;
+									}
+								}
+								if (!count($main_get_subscat)) {
+									$main_get_subscat=implode(',', $this->post['tx_multishop_pi1']['categories']);
+								}
+							} else if (isset($this->get['categories_id']) && $this->get['categories_id']>0) {
+								$main_get_subscat = mslib_fe::get_subcategory_ids($this->get['categories_id']);
+								//$man_catsubs_id_data[] = $this->get['categories_id'];
+								if (!count($main_get_subscat)) {
+									$main_get_subscat[]=$this->get['categories_id'];
+								}
+							}
+							if (count($main_get_subscat)) {
+								$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery('DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
+									'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p, tx_multishop_products_to_categories p2c',     // FROM ...
+									"pov.language_id='" . $this->sys_language_uid . "' and povp.products_options_id = " . $row['products_options_id'] . " and pa.options_id='" . $row['products_options_id'] . "' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='" . $this->showCatalogFromPage . "' and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id AND p2c.node_id in (" . implode(',', $main_get_subscat) . ")" . (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers']) ? ' and p.manufacturers_id in (' . implode(',', $this->post['tx_multishop_pi1']['manufacturers']) . ')' : ''),    // WHERE.
+									'',            // GROUP BY...
+									$order_column . " " . $order_by,    // ORDER BY...
+									''            // LIMIT ...
+								);
+							} else {
+								$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery('DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
+									'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p',     // FROM ...
+									"pov.language_id='" . $this->sys_language_uid . "' and povp.products_options_id = " . $row['products_options_id'] . " and pa.options_id='" . $row['products_options_id'] . "' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='" . $this->showCatalogFromPage . "' and pov.products_options_values_id=povp.products_options_values_id" . (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers']) ? ' and p.manufacturers_id in (' . implode(',', $this->post['tx_multishop_pi1']['manufacturers']) . ')' : ''),    // WHERE.
+									'',            // GROUP BY...
+									$order_column . " " . $order_by,    // ORDER BY...
+									''            // LIMIT ...
+								);
+							}
 						}
 						$res_opt_2_values=$GLOBALS['TYPO3_DB']->sql_query($query_opt_2_values);
 						if (!$this->ms['MODULES']['FLAT_DATABASE']) {
@@ -1082,6 +1122,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								//$this->msDebug=1;
 								$totalCount=mslib_fe::getProductsPageSet($tmpFilter, 0, 0, array(), array(), $select, $totalCountWhereFlat, 0, $totalCountFromFlat, array(), 'counter', 'count(DISTINCT('.$prefix.'.products_id)) as total', 1);
 								//error_log(print_r($tmpFilter,1).$this->msDebugInfo);
+								//echo $this->msDebugInfo;
 								//die();
 								// count available records eof
 								if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
