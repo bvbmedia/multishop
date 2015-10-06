@@ -4026,7 +4026,7 @@ if ($this->post) {
 		/*
 		 * special price percentage
 		 */
-		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
+		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" class="form-control" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
 		for ($i=1; $i<=100; $i++) {
 			if ($product['specials_price_percentage']==$i) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';

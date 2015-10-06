@@ -269,7 +269,7 @@ if ($this->get['feed_hash']) {
 				} else {
 					$includeDisabled=0;
 				}
-				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 10, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
+				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
 					foreach ($pageset['products'] as $row) {
