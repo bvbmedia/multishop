@@ -780,6 +780,16 @@ class mslib_fe {
 					$product['country_tax_rate']=($tax_ruleset[$product['tax_id']]['country_tax_rate']/100);
 					$product['region_tax_rate']=($tax_ruleset[$product['tax_id']]['state_tax_rate']/100);
 				}
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'])) {
+					$params=array(
+						'product'=>&$product,
+						'search_section'=>&$search_section
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				$array['products'][]=$product;
 			}
 			//hook to let other plugins further manipulate the query
