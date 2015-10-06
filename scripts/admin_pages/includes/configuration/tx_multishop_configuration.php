@@ -2164,6 +2164,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Display checkbox of accept general condition in create account page',
+	'configuration_key'=>'DISPLAY_ACCEPT_GENERAL_CONDITIONS_IN_CREATE_ACCOUNT',
+	'configuration_value'=>'0',
+	'description'=>'Display checkbox of accept general condition in create account page',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Right of withdrawal checkbox in create account',
+	'configuration_key'=>'RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CREATE_ACCOUNT',
+	'configuration_value'=>'0',
+	'description'=>'Right of withdrawal checkbox in create account',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
