@@ -2735,9 +2735,11 @@ class mslib_fe {
 		return $output;
 	}
 	public function currency($html=1, $customer_currency=0) {
-		$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		//$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		$currency_symbol=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
-			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			//$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARAY']['cu_symbol_left'];
 		}
 		return $currency_symbol;
 	}
