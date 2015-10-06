@@ -1786,6 +1786,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$temp_var_products[$key]=$val;
 					}
 				}
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server/default.php']['ultrasearchProductsListingItemPostProc'])) {
+					$params=array(
+						'temp_var_products'=>&$temp_var_products,
+						'product'=>&$product
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server/default.php']['ultrasearchProductsListingItemPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+
 				$results_products[]=$temp_var_products;
 			}
 		} else {

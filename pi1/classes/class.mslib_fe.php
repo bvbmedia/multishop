@@ -780,6 +780,16 @@ class mslib_fe {
 					$product['country_tax_rate']=($tax_ruleset[$product['tax_id']]['country_tax_rate']/100);
 					$product['region_tax_rate']=($tax_ruleset[$product['tax_id']]['state_tax_rate']/100);
 				}
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'])) {
+					$params=array(
+						'product'=>&$product,
+						'search_section'=>&$search_section
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				$array['products'][]=$product;
 			}
 			//hook to let other plugins further manipulate the query
@@ -2735,9 +2745,11 @@ class mslib_fe {
 		return $output;
 	}
 	public function currency($html=1, $customer_currency=0) {
-		$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		//$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		$currency_symbol=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
-			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			//$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARAY']['cu_symbol_left'];
 		}
 		return $currency_symbol;
 	}
@@ -9390,6 +9402,9 @@ class mslib_fe {
 			}
 		}
 		$output.=$array[0].$cu_decimal_point.'</span><span class="amount_cents">'.$array[1].'</span>';
+		if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right']) {
+			$output.='<span class="currencySymbolRight">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right'].'</span>';
+		}
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
 			$params=array(
