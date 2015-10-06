@@ -7669,6 +7669,7 @@ class mslib_fe {
 						$updateArray=array('paid'=>1);
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$id, $updateArray);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
+						return 1;
 					}
 				}
 			}
