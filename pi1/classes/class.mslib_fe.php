@@ -5761,7 +5761,7 @@ class mslib_fe {
 		$string='';
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			$name=(($key) ? 'configuration['.$key.']' : 'configuration_value');
-			$string.='<select name="'.$name.'"><option>choose option</option>';
+			$string.='<select name="'.$name.'" class="form-control"><option>choose option</option>';
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if ($row['cn_short_en']) {
 					$string.='<option value="'.$row['cn_iso_nr'].'" '.(($key_value==$row['cn_iso_nr']) ? 'selected' : '').'>';
