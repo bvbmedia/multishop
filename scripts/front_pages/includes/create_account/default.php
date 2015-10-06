@@ -351,7 +351,7 @@ if (mslib_fe::loggedin()) {
 			$right_of_withdrawal='';
 			if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CREATE_ACCOUNT']) {
 				$page=mslib_fe::getCMScontent('right_of_withdrawal', $GLOBALS['TSFE']->sys_language_uid);
-				//if ($page[0]['content']) {
+				if ($page[0]['content']) {
 					$right_of_withdrawal.='
 						<hr>
 						<div class="checkboxAgreement accept_general_conditions_container">
@@ -362,7 +362,7 @@ if (mslib_fe::loggedin()) {
 					$right_of_withdrawal.='</label>
 							</div>
 						</div>';
-				//}
+				}
 			}
 			//
 			$markerArray['###RIGHT_OF_WITHDRAWAL###']=$right_of_withdrawal;
@@ -376,9 +376,9 @@ if (mslib_fe::loggedin()) {
 						<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
 						<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
 				$page=mslib_fe::getCMScontent('general_conditions', $GLOBALS['TSFE']->sys_language_uid);
-				//if ($page[0]['content']) {
+				if ($page[0]['content']) {
 					$accept_general_conditions.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_general_conditions').'</a>)';
-				//}
+				}
 				$accept_general_conditions.='</div></div>';
 			}
 			//
