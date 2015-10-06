@@ -7657,6 +7657,8 @@ class mslib_fe {
 					$new_invoice_id=mslib_fe::generateInvoiceId();
 					if ($new_invoice_id) {
 						unset($row['id']);
+						unset($row['invoice_processed']);
+
 						$row['reversal_related_id']=$id;
 						$row['reversal_invoice']=1;
 						$row['crdate']=time();
