@@ -9390,6 +9390,9 @@ class mslib_fe {
 			}
 		}
 		$output.=$array[0].$cu_decimal_point.'</span><span class="amount_cents">'.$array[1].'</span>';
+		if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right']) {
+			$output.='<span class="currencySymbolRight">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right'].'</span>';
+		}
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
 			$params=array(
