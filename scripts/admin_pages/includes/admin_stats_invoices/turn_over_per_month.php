@@ -208,7 +208,10 @@ $content.='
 			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
 			</div>
-
+			<div class="form-group">
+				<label for="country">'.$this->pi_getLL('countries').'</label>
+				'.$billing_countries_sb.'
+			</div>
 			<label>Date</label>
 			<div class="form-group form-inline">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
@@ -236,10 +239,7 @@ $content.='
 			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
 			'.$shipping_method_input.'
 			</div>
-			<div class="form-group">
-				<label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
-				'.$billing_countries_sb.'
-			</div>
+
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
@@ -637,6 +637,7 @@ jQuery(document).ready(function ($) {
         timeFormat: \'HH:mm:ss\'
 	});
 	$(".order_select2").select2();
+	$(".invoice_select2").select2();
 });
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
