@@ -2,6 +2,16 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// billing countries
+$order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
+$order_billing_country=array();
+foreach ($order_countries as $order_country) {
+	$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
+	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+}
+ksort($order_billing_country);
+$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
+
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['Search'] and ($this->get['payment_status']!=$this->cookie['payment_status'])) {
 	$this->cookie['payment_status']=$this->get['payment_status'];
@@ -226,6 +236,10 @@ $content.='
 			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
 			'.$shipping_method_input.'
 			</div>
+			<div class="form-group">
+				<label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
+				'.$billing_countries_sb.'
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
@@ -269,18 +283,21 @@ if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') 
 	if ($this->get['payment_method']=='nopm') {
 		$data_query['where'][]="(o.payment_method is null)";
 	} else {
-		$data_query['where'][]="(o.payment_method='".$this->get['payment_method']."')";
+		$data_query['where'][]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
 	}
 }
 if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
 	if ($this->get['shipping_method']=='nosm') {
 		$data_query['where'][]="(o.shipping_method is null)";
 	} else {
-		$data_query['where'][]="(o.shipping_method='".$this->get['shipping_method']."')";
+		$data_query['where'][]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
 	}
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 	$data_query['where'][]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
+}
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
 }
 if ($this->cookie['payment_status']=='paid_only') {
 	$data_query['where'][]="(o.paid='1')";

@@ -463,10 +463,10 @@ if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
 }
 if (isset($this->get['country']) && !empty($this->get['country'])) {
-	$filter[]="o.billing_country='".$this->get['country']."'";
+	$filter[]="o.billing_country='".addslashes($this->get['country'])."'";
 }
 if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!=99999) {
-	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".$this->get['ordered_product']."')";
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->get['ordered_product'])."')";
 }
 if (!$this->masterShop) {
 	$filter[]='i.page_uid='.$this->showCatalogFromPage;

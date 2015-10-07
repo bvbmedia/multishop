@@ -269,14 +269,14 @@ if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') 
 	if ($this->get['payment_method']=='nopm') {
 		$data_query['where'][]="(o.payment_method is null)";
 	} else {
-		$data_query['where'][]="(o.payment_method='".$this->get['payment_method']."')";
+		$data_query['where'][]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
 	}
 }
 if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
 	if ($this->get['shipping_method']=='nosm') {
 		$data_query['where'][]="(o.shipping_method is null)";
 	} else {
-		$data_query['where'][]="(o.shipping_method='".$this->get['shipping_method']."')";
+		$data_query['where'][]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
 	}
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
