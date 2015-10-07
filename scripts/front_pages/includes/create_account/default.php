@@ -95,6 +95,12 @@ if (mslib_fe::loggedin()) {
 			if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER'] && !isset($this->post['tx_multishop_pi1']['create_account_disclaimer'])) {
 				$erno[]=$this->pi_getLL('you_havent_accepted_the_create_account_disclaimer');
 			}
+			if ($this->ms['MODULES']['DISPLAY_ACCEPT_GENERAL_CONDITIONS_IN_CREATE_ACCOUNT'] && !isset($this->post['accept_general_conditions'])) {
+				$erno[]=$this->pi_getLL('you_havent_accepted_the_general_conditions');
+			}
+			if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CREATE_ACCOUNT'] && !$this->post['tx_multishop_pi1']['right_of_withdrawal']) {
+				$erno[]=$this->pi_getLL('you_havent_accepted_the_right_of_withdrawal').'.';
+			}
 			if (!count($erno)) {
 				$customer_id=$mslib_user->saveUserData();
 				if ($customer_id) {
@@ -341,6 +347,42 @@ if (mslib_fe::loggedin()) {
 			}
 			//
 			$markerArray['###CREATE_ACCOUNT_DISCLAIMER###']=$account_disclaimer;
+			//
+			$right_of_withdrawal='';
+			if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CREATE_ACCOUNT']) {
+				$page=mslib_fe::getCMScontent('right_of_withdrawal', $GLOBALS['TSFE']->sys_language_uid);
+				if ($page[0]['content']) {
+					$right_of_withdrawal.='
+						<hr>
+						<div class="checkboxAgreement accept_general_conditions_container">
+							<div class="checkbox checkbox-success">
+								<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
+								<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
+					$right_of_withdrawal.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_right_of_withdrawal').'</a>)';
+					$right_of_withdrawal.='</label>
+							</div>
+						</div>';
+				}
+			}
+			//
+			$markerArray['###RIGHT_OF_WITHDRAWAL###']=$right_of_withdrawal;
+			//
+			$accept_general_conditions='';
+			if ($this->ms['MODULES']['DISPLAY_ACCEPT_GENERAL_CONDITIONS_IN_CREATE_ACCOUNT']) {
+				$accept_general_conditions.='
+				<hr>
+				<div class="checkboxAgreement accept_general_conditions_container">
+					<div class="checkbox checkbox-success">
+						<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
+						<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
+				$page=mslib_fe::getCMScontent('general_conditions', $GLOBALS['TSFE']->sys_language_uid);
+				if ($page[0]['content']) {
+					$accept_general_conditions.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_general_conditions').'</a>)';
+				}
+				$accept_general_conditions.='</div></div>';
+			}
+			//
+			$markerArray['###ACCEPT_GENERAL_CONDITIONS###']=$accept_general_conditions;
 			//
 			$privacy_statement_link='';
 			if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE']) {
