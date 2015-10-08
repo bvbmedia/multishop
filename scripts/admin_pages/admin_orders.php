@@ -714,10 +714,10 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 	$filter[]='o.by_phone=1';
 }
 if (isset($this->post['country']) && !empty($this->post['country'])) {
-	$filter[]="o.billing_country='".$this->post['country']."'";
+	$filter[]="o.billing_country='".addslashes($this->post['country'])."'";
 }
 if (isset($this->post['ordered_product']) && !empty($this->post['ordered_product'])) {
-	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".$this->post['ordered_product']."')";
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->post['ordered_product'])."')";
 }
 if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
