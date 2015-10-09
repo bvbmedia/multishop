@@ -216,6 +216,8 @@ if (!count($js_extra['triggers'])) {
 } else {
 	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 }
+$subpartArray['###LABEL_BACK_TO_CATALOG###']=$this->pi_getLL('admin_close_and_go_back_to_catalog');
+$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 $head='';
 $head.='
 <script type="text/javascript">
