@@ -2782,7 +2782,7 @@ if ($this->post) {
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
-			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_save_attribute'))).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('cancel'))).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -4065,8 +4065,8 @@ if ($this->post) {
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
 		$subpartArray['###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
-		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
-		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
+		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_product_name_is_empty')));
+		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs')));
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 		if (!$this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 			$subpartArray['###MANUFACTURERS_ADVICE_PRICE###']='';
