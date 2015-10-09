@@ -623,3 +623,4 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .modal { z-index:10050; }
 
 #msEditProductInputImage:after { clear:both; display:table; content:""; }
+ul.custom_products_description { margin:0; padding:0; list-style:none; }
