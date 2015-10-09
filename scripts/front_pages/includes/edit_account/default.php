@@ -22,7 +22,11 @@ if ($this->post) {
 	$user['middle_name']=$this->post['middle_name'];
 	$user['last_name']=$this->post['last_name'];
 	$user['name']=preg_replace('/\s+/', ' ', $user['first_name'].' '.$user['middle_name'].' '.$user['last_name']);
-	$user['birthday']=$this->post['birthday'];
+	if (isset($this->post['date_of_birth']) && mslib_befe::isValidDate($this->post['date_of_birth'])) {
+		$this->post['date_of_birth']=strtotime($this->post['date_of_birth']);
+	} else {
+		$this->post['date_of_birth']='';
+	}
 	$user['phone']=$this->post['telephone'];
 	$user['mobile']=$this->post['mobile'];
 	// fe user table holds integer as value: 0 is male, 1 is female
@@ -53,7 +57,7 @@ if ($this->post) {
 	$user['country']=$this->post['country'];
 	$user['email']=$this->post['email'];
 	$user['telephone']=$this->post['telephone'];
-	$date_of_birth=explode("-", $user['birthday']);
+	$user['date_of_birth']=$this->post['date_of_birth'];
 	// billing details eof
 	// delivery details
 	if ($this->post['delivery_first_name']) {
@@ -168,10 +172,10 @@ if ($this->post) {
 			$insertArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 		}
 		$insertArray['gender']=$address['gender'];
-		$insertArray['date_of_birth']=$timestamp=strtotime($date_of_birth[2].'-'.$date_of_birth[1].'-'.$date_of_birth[0]);
 		$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
 		$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 		$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
+		$insertArray['date_of_birth']=$address['date_of_birth'];
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
 			$params=array(
@@ -185,6 +189,7 @@ if ($this->post) {
 		// custom hook that can be controlled by third-party plugin eof
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = '.$GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'])) {
 			$params=array(
@@ -220,7 +225,7 @@ if ($this->post) {
 		$insertTTArray['first_name']=$address['first_name'];
 		$insertTTArray['middle_name']=$address['middle_name'];
 		$insertTTArray['last_name']=$address['last_name'];
-		$insertTTArray['birthday']=$address['birthday'];
+		$insertTTArray['birthday']=$address['date_of_birth'];
 		$insertTTArray['email']=$address['email'];
 		$insertTTArray['phone']=$address['telephone'];
 		$insertTTArray['mobile']=$address['mobile'];
@@ -314,7 +319,6 @@ if ($this->post) {
 		foreach ($GLOBALS["TSFE"]->fe_user->user as $key=>$val) {
 			$user[$key]=$val;
 		}
-		$user['date_of_birth']=strftime("%x %X", $user['date_of_birth']);
 		$user['gender']=$user['gender']==0 ? 'm' : 'f';
 		// load delivery details
 		$sql_tt_address="select * from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
@@ -368,24 +372,16 @@ if ($this->post) {
 			jQuery(document).ready(function(){
 				jQuery(\'#checkout\').h5Validate();
 				'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
-				jQuery("#birthday_visitor").datepicker({
+				jQuery("#date_of_birth_visual").datepicker({
 					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
-					altField: "#birthday",
+					altField: "#date_of_birth",
 					altFormat: "yy-mm-dd",
 					changeMonth: true,
 					changeYear: true,
 					showOtherMonths: true,
-					yearRange: "'.(date("Y")-100).':'.date("Y").'"
+					yearRange: "'.(date("Y")-150).':'.date("Y").'"
 				});
-				jQuery("#delivery_birthday_visitor").datepicker({
-					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
-					altField: "#delivery_birthday",
-					altFormat: "yy-mm-dd",
-					changeMonth: true,
-					changeYear: true,
-					showOtherMonths: true,
-					yearRange: "'.(date("Y")-100).':'.date("Y").'"
-				});' : '').'
+				' : '').'
 				// set the h5validate attributes for required delivery data
 				$(\'#delivery_radio\').attr(\'required\', \'required\');
 				$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
@@ -460,9 +456,15 @@ if ($this->post) {
 	//
 	$birthday_block='';
 	if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+		$birthdayVisual='';
+		$birthday='';
+		if ($user['date_of_birth']) {
+			$birthdayVisual=date($this->pi_getLL('locale_date_format'), $user['date_of_birth']);
+			$birthday=date("Y-m-d", $user['date_of_birth']);
+		}
 		$birthday_block='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'*</label>
-		<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor" value="'.htmlspecialchars($user['date_of_birth']).'" >
-		<input type="hidden" name="birthday" class="birthday" id="birthday" value="'.htmlspecialchars($user['date_of_birth']).'" >';
+		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" value="'.htmlspecialchars($birthdayVisual).'" >
+		<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="'.htmlspecialchars($birthday).'" >';
 	}
 	//
 	$markerArray['###BIRTHDAY_BLOCK###']=$birthday_block;
