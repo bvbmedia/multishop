@@ -2739,18 +2739,18 @@ if ($this->post) {
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
-			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_select_value_or_type_new_value'))).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_value_col']='new_attributes_html+=\'<td class="product_attribute_value">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
-			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_select_value_or_type_new_value'))).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 				$element_id=time();
 				$new_product_attributes_block_columns_js['attribute_value_image_col']='new_attributes_html+=\'<td class="product_attribute_value_image">\';
 				new_attributes_html+=\'<div class="form-group" class="msEditAttributeValueImage">\';
-				new_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+				new_attributes_html+=\'<label for="attribute_value_image">'.addslashes(htmlspecialchars($this->pi_getLL('admin_image'))).'</label>\';
 				new_attributes_html+=\'<div id="attribute_value_image'.$element_id.'">\';
 				new_attributes_html+=\'<noscript>\';
 				new_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
@@ -2771,18 +2771,18 @@ if ($this->post) {
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span>\';
+			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('excluding_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span>\';
+			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('including_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
-			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_save_attribute'))).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('cancel'))).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -2807,7 +2807,7 @@ if ($this->post) {
 					var n = d.getTime();
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
-					new_attributes_html+=\'<div class="panel panel-primary no-mb"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<div class="panel panel-primary no-mb"><div class="panel-heading"><h3 class="panel-title">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_add_new_product_attributes'))).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table class="table no-mb">\';
 					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
@@ -2819,7 +2819,7 @@ if ($this->post) {
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var cols_image_attributes_html=\'<div class="form-group" class="msEditAttributeValueImage">\';
-					cols_image_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+					cols_image_attributes_html+=\'<label for="attribute_value_image">'.addslashes(htmlspecialchars($this->pi_getLL('admin_image'))).'</label>\';
 					cols_image_attributes_html+=\'<div id="attribute_value_image\' + n + \'">\';
 					cols_image_attributes_html+=\'<noscript>\';
 					cols_image_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
