@@ -369,7 +369,7 @@ if ($this->post) {
 				jQuery(\'#checkout\').h5Validate();
 				'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
 				jQuery("#birthday_visitor").datepicker({
-					dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
+					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
 					altField: "#birthday",
 					altFormat: "yy-mm-dd",
 					changeMonth: true,
@@ -378,7 +378,7 @@ if ($this->post) {
 					yearRange: "'.(date("Y")-100).':'.date("Y").'"
 				});
 				jQuery("#delivery_birthday_visitor").datepicker({
-					dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
+					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
 					altField: "#delivery_birthday",
 					altFormat: "yy-mm-dd",
 					changeMonth: true,
