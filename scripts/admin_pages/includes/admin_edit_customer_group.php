@@ -153,17 +153,19 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['members_option']=$this->cObj->getSubpart($subparts['template'], '###MEMBERS_OPTION###');
 // now lets load the users
-$users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
 $members_selected=array();
-if (is_array($users) && count($users)) {
-	foreach ($users as $user) {
-		$members_selected[]=$user['uid'];
+if (is_numeric($_REQUEST['customer_group_id'])) {
+	$users=mslib_fe::getUsers($_REQUEST['customer_group_id'], 'name');
+	if (is_array($users) && count($users)) {
+		foreach ($users as $user) {
+			$members_selected[]=$user['uid'];
+		}
 	}
 }
 $subpartArray=array();
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###']=$this->pi_getLL('edit_group');
 $subpartArray['###LABEL_HEADING###']=$this->pi_getLL('edit_group');
-$subpartArray['###FORM_ACTION###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$_REQUEST['customer_group_id']);
+$subpartArray['###FORM_ACTION###']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=edit_customer_group&action='.$_REQUEST['action'].'&customer_group_id='.$_REQUEST['customer_group_id']);
 $subpartArray['###CUSTOMER_GROUP_ID###']=$_REQUEST['customer_group_id'];
 $subpartArray['###FORM_INPUT_ACTION###']=$_REQUEST['action'];
 $subpartArray['###LABEL_NAME###']=$this->pi_getLL('name');
