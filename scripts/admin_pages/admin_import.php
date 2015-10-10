@@ -3110,7 +3110,7 @@ if ($this->post['action']=='category-insert') {
 		}
 	}
 }
-if ($this->post['action']!='product-import-preview') {
+if ($this->post['action']!='product-import-preview' && $this->get['action']!='edit_job') {
 	$tmptab='';
 	if ($content) {
 		$tmptab.=mslib_befe::bootstrapPanel('Result',$content,'success');
