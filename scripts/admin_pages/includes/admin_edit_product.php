@@ -4026,7 +4026,7 @@ if ($this->post) {
 		/*
 		 * special price percentage
 		 */
-		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" class="form-control" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
+		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
 		for ($i=1; $i<=100; $i++) {
 			if ($product['specials_price_percentage']==$i) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
@@ -4065,8 +4065,8 @@ if ($this->post) {
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
 		$subpartArray['###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
-		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
-		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
+		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_product_name_is_empty')));
+		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs')));
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 		if (!$this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 			$subpartArray['###MANUFACTURERS_ADVICE_PRICE###']='';
