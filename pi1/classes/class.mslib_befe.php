@@ -4361,12 +4361,14 @@ class mslib_befe {
 		}
 	}
 	function bootstrapPanel($heading='',$body='',$panelClass='default') {
-		$content='
-		<div class="panel panel-'.$panelClass.'">
-		  <div class="panel-heading"><h3 class="panel-title">'.$heading.'</h3></div>
-		  <div class="panel-body">'.$body.'</div>
-		</div>
-		';
+		$content='<div class="panel panel-'.$panelClass.'">';
+		if ($heading) {
+			$content.='<div class="panel-heading"><h3 class="panel-title">'.$heading.'</h3></div>';
+		}
+		if ($body) {
+			$content.='<div class="panel-body">'.$body.'</div>';
+		}
+		$content.='</div>';
 		return $content;
 	}
 }
