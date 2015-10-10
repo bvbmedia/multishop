@@ -4371,6 +4371,16 @@ class mslib_befe {
 		$content.='</div>';
 		return $content;
 	}
+	function rmNullValuedKeys($array) {
+		if (is_array($array)) {
+			foreach ($array as $key => $val) {
+				if (is_null($array[$key])) {
+					$array[$key]='';
+				}
+			}
+			return $array;
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
