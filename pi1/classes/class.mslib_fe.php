@@ -3311,7 +3311,7 @@ class mslib_fe {
 		$filter[]='c.categories_id=cd.categories_id';
 		//
 		if (!empty($keyword) && strlen($keyword)>0) {
-			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.status', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 				implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
@@ -3322,11 +3322,12 @@ class mslib_fe {
 			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
 				$subcategories_array[]=array(
 					'id'=>$subcategories['categories_id'],
-					'name'=>$subcategories['categories_name']
+					'name'=>$subcategories['categories_name'],
+					'status'=>$subcategories['status']
 				);
 			}
 		} else {
-			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.status', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
@@ -3337,7 +3338,8 @@ class mslib_fe {
 			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
 				$subcategories_array[$parent_id][]=array(
 					'id'=>$subcategories['categories_id'],
-					'name'=>$subcategories['categories_name']
+					'name'=>$subcategories['categories_name'],
+					'status'=>$subcategories['status']
 				);
 				if ($subcategories['categories_id']!=$parent_id) {
 					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id'], $page_uid, $include_disabled_categories);
@@ -3348,10 +3350,10 @@ class mslib_fe {
 	public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree, $show_every_level=false) {
 		foreach ($categories_tree[$reference_category_id] as $category_tree) {
 			if (!$show_every_level) {
-				$paths[$category_tree['id']]=$prev.' > '.$category_tree['name'];
+				$paths[$category_tree['id']]=$prev.' > '.$category_tree['name'] . (!$category_tree['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 				unset($paths[$reference_category_id]);
 			} else {
-				$paths[$category_tree['id']]=$paths[$reference_category_id].' > '.$category_tree['name'];
+				$paths[$category_tree['id']]=$paths[$reference_category_id].' > '.$category_tree['name'] . (!$category_tree['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 			}
 			if (is_array($categories_tree[$category_tree['id']])) {
 				mslib_fe::build_categories_path($paths, $category_tree['id'], $paths[$category_tree['id']], $categories_tree, $show_every_level);
