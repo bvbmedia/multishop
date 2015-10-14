@@ -159,10 +159,9 @@ if (is_array($rel_products) && count($rel_products)) {
 		<input type="checkbox" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1"><label for="relative_'.$i.'"></label></div>'.$rel_rs['hidden_fields'];
 		$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
 		$markerArray['ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
-		$markerArray['ITEM_PRODUCTS_ID']='';
+		$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-			$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
 			$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
 		}
 		$markerArray['ITEM_PRODUCTS_SKU']=$rel_rs['sku_code'];
@@ -177,7 +176,7 @@ if (is_array($rel_products) && count($rel_products)) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
 			$params=array(
 				'markerArray'=>&$markerArray,
-				'product'=>&$current_product,
+				'product'=>&$rel_rs,
 				'output'=>&$output,
 				'products_compare'=>&$products_compare
 			);
