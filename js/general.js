@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
         msAdminBlockUi();
     });
     // plus minus
-    $('.btn-number').click(function (e) {
+    $(document).on("click", '.btn-number', function(e) {
         e.preventDefault();
         fieldName = $(this).attr('data-field');
         type = $(this).attr('data-type');
@@ -104,10 +104,10 @@ jQuery(document).ready(function ($) {
             input.val(minValue);
         }
     });
-    $('.input-number').focusin(function () {
+    $(document).on("focusin", '.input-number', function(e) {
         $(this).data('oldValue', $(this).val());
     });
-    $('.input-number').change(function () {
+    $(document).on("change", '.input-number', function(e) {
         minValue = parseFloat($(this).attr('min'));
         maxValue = parseFloat($(this).attr('max'));
         valueCurrent = parseFloat($(this).val());
@@ -128,7 +128,7 @@ jQuery(document).ready(function ($) {
             $(this).val($(this).data('oldValue'));
         }
     });
-    $(".input-number").keydown(function (e) {
+    $(document).on("keydown", '.input-number', function(e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
                 // Allow: Ctrl+A
