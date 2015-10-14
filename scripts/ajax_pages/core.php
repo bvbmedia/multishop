@@ -612,7 +612,7 @@ switch ($this->ms['page']) {
 								if (count($subcategories_tree)) {
 									foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 										if (!in_array($subcategory_tree_0['id'], $skip_ids)) {
-											$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+											$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 											if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 												mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 											}
@@ -639,7 +639,7 @@ switch ($this->ms['page']) {
 							mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 							if (count($subcategories_tree)) {
 								foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 									if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 										mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 									}
@@ -655,7 +655,7 @@ switch ($this->ms['page']) {
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						if (!in_array($category_tree_0['id'], $skip_ids)) {
-							$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+							$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'] . (!$category_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							if (is_array($categories_tree[$category_tree_0['id']])) {
 								mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree, true);
 							}
