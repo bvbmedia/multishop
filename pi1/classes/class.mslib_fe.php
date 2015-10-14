@@ -6126,7 +6126,7 @@ class mslib_fe {
 			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
-				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
+				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
@@ -6134,7 +6134,7 @@ class mslib_fe {
 					//$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
 				}
 			} else {
-				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and pid='".$this->conf['fe_customer_pid']."'";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
