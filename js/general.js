@@ -22,7 +22,7 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
         cancel: noFn
     });
 }
-function msDialog(textTitle, textBody, width,opacity) {
+function msDialog(textTitle, textBody, width, opacity) {
     return $.confirm({
         title: textTitle,
         content: textBody
@@ -45,41 +45,45 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
-    $('.msBtnConfirm').click(function(e) {
+    $('.msBtnConfirm').click(function (e) {
         e.preventDefault();
-        var linkTarget=$(this).attr("href");
-        ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
-            window.location.href=linkTarget;
+        var linkTarget = $(this).attr("href");
+        ifConfirm($(this).attr("data-dialog-title"), $(this).attr("data-dialog-body"), function () {
+            window.location.href = linkTarget;
         });
     });
-    $('.blockSubmitForm').submit(function(e) {
+    $('.blockSubmitForm').submit(function (e) {
         msAdminBlockUi();
     });
-    $('.blockAhrefLink').click(function(e) {
+    $('.blockAhrefLink').click(function (e) {
         msAdminBlockUi();
     });
     // plus minus
-    $('.btn-number').click(function(e){
+    $('.btn-number').click(function (e) {
         e.preventDefault();
         fieldName = $(this).attr('data-field');
-        type      = $(this).attr('data-type');
-        //var input = $("input[name='"+fieldName+"']");
+        type = $(this).attr('data-type');
         var input = $(this).parents('.input-number-wrapper').find('.input-number');
-        var currentVal = parseInt(input.val());
-        //console.log(input);
+        var minValue = parseFloat(input.attr('min'));
+        var maxValue = parseFloat(input.attr('max'));
+        var currentVal = parseFloat(input.val());
+        var stepSize = parseFloat(input.attr('data-step-size'));
+        if (isNaN(stepSize)) {
+            stepSize = 1;
+        }
         if (!isNaN(currentVal)) {
-            if(type == 'minus') {
-                if(currentVal > input.attr('min')) {
-                    input.val(currentVal - 1).change();
+            if (type == 'minus') {
+                if (currentVal > minValue) {
+                    input.val(currentVal - stepSize).change();
                 }
-                if(parseInt(input.val()) == input.attr('min')) {
+                if (currentVal == minValue) {
                     $(this).attr('disabled', true);
                 }
-            } else if(type == 'plus') {
-                if(input.attr('max') =='' || currentVal < input.attr('max')) {
-                    input.val(currentVal + 1).change();
+            } else if (type == 'plus') {
+                if (maxValue == '' || currentVal < maxValue) {
+                    input.val(currentVal + stepSize).change();
                 }
-                if(input.attr('max') =='' && parseInt(input.val()) == input.attr('max')) {
+                if (maxValue == '' && currentVal == maxValue) {
                     $(this).attr('disabled', true);
                 }
             }
@@ -87,24 +91,24 @@ jQuery(document).ready(function ($) {
             input.val(0);
         }
     });
-    $('.input-number').focusin(function(){
+    $('.input-number').focusin(function () {
         $(this).data('oldValue', $(this).val());
     });
-    $('.input-number').change(function() {
-        minValue =  parseInt($(this).attr('min'));
-        maxValue =  parseInt($(this).attr('max'));
-        valueCurrent = parseInt($(this).val());
+    $('.input-number').change(function () {
+        minValue = parseFloat($(this).attr('min'));
+        maxValue = parseFloat($(this).attr('max'));
+        valueCurrent = parseFloat($(this).val());
 
         name = $(this).attr('name');
 
-        if(valueCurrent >= minValue) {
+        if (valueCurrent >= minValue) {
             //$(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
             $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'minus\\\']').removeAttr('disabled');
         } else {
             //alert('Sorry, the minimum value was reached');
             $(this).val($(this).data('oldValue'));
         }
-        if(maxValue!='' || valueCurrent <= maxValue) {
+        if (maxValue != '' || valueCurrent <= maxValue) {
             //$(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
             $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'plus\\\']').removeAttr('disabled');
         } else {
