@@ -671,6 +671,12 @@ if ($this->post) {
 				// Header buttons
 				$headerButtons=array();
 
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-danger';
+				$headingButton['fa_class']='fa fa-remove';
+				$headingButton['title']=$this->pi_getLL('admin_delete_category');
+				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=delete_category&cid='.$category['categories_id'].'&action=delete_category');
+				$headerButtons[]=$headingButton;
 				if (!mslib_fe::categoryHasSubs($category['categories_id'])) {
 					$headingButton=array();
 					$headingButton['btn_class']='btn btn-primary';

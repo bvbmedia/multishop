@@ -2149,12 +2149,21 @@ if ($this->post) {
 				// get all cats to generate multilevel fake url eof
 			}
 			$details_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+
+			$headingButton=array();
+			$headingButton['btn_class']='btn btn-danger';
+			$headingButton['fa_class']='fa fa-remove';
+			$headingButton['title']=$this->pi_getLL('admin_delete_product');
+			$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=delete_product&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product');
+			$headerButtons[]=$headingButton;
+
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-primary viewfront';
 			$headingButton['fa_class']='fa fa-eye';
 			$headingButton['title']=$this->pi_getLL('admin_edit_view_front_product', 'View in front');
 			$headingButton['href']=$details_link;
 			$headerButtons[]=$headingButton;
+
 
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-success';
