@@ -186,8 +186,8 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
-				$.each(split_id, function(i, v) {
-					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+				/*$.each(split_id, function(i, v) {
+					if (typeof categoriesIdTerm['.$this->shop_pid.'][v] !== "undefined") {
 						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
 					}
 				});
@@ -200,10 +200,19 @@ jQuery(document).ready(function($) {
 						},
 						dataType: "json"
 					}).done(function(data) {
-						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						categoriesIdTerm['.$this->shop_pid.'][data.id]={id: data.id, text: data.text};
 						callback(data);
 					});
-				}
+				}*/
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					categoriesIdTerm['.$this->shop_pid.'][data.id]={id: data.id, text: data.text};
+					callback(data);
+				});
 			}
 		},
 		formatResult: function(data){
@@ -217,7 +226,9 @@ jQuery(document).ready(function($) {
 		},
 		formatSelection: function(data){
 			if (data.text === undefined) {
-				return data[0].text;
+				$.each(data, function(i,val){
+					return val.text;
+				});
 			} else {
 				return data.text;
 			}
@@ -744,7 +755,9 @@ jQuery(document).ready(function($) {
 		},
 		formatSelection: function(data){
 			if (data.text === undefined) {
-				return data[0].text;
+				$.each(data, function(i,val){
+					return val.text;
+				});
 			} else {
 				return data.text;
 			}
