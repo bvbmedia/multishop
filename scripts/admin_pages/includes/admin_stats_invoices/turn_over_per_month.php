@@ -276,7 +276,7 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
 	$search_end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
 	$data_query['where'][]="i.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
 }
-if ($this->post['orders_status_search']>0) {
+if ($this->get['orders_status_search']>0) {
 	$data_query['where'][]="(o.status='".$this->get['orders_status_search']."')";
 }
 if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
@@ -299,10 +299,10 @@ if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
 }
-if ($this->cookie['payment_status']=='paid_only') {
+if ($this->get['payment_status']=='paid_only') {
 	$data_query['where'][]="(o.paid='1')";
 } else {
-	if ($this->cookie['payment_status']=='unpaid_only') {
+	if ($this->get['payment_status']=='unpaid_only') {
 		$data_query['where'][]="(o.paid='0')";
 	}
 }
