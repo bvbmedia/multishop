@@ -98,12 +98,12 @@ $customer_groups_input.='</select>'."\n";
 // payment status
 $payment_status_select='<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
-if ($this->cookie['payment_status']=='paid_only') {
+if ($this->get['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="paid_only">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 }
-if ($this->cookie['payment_status']=='unpaid_only') {
+if ($this->get['payment_status']=='unpaid_only') {
 	$payment_status_select.='<option value="unpaid_only" selected="selected">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="unpaid_only">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
