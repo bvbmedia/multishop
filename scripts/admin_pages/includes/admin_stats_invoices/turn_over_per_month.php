@@ -98,12 +98,12 @@ $customer_groups_input.='</select>'."\n";
 // payment status
 $payment_status_select='<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
-if ($this->cookie['payment_status']=='paid_only') {
+if ($this->get['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="paid_only">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 }
-if ($this->cookie['payment_status']=='unpaid_only') {
+if ($this->get['payment_status']=='unpaid_only') {
 	$payment_status_select.='<option value="unpaid_only" selected="selected">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="unpaid_only">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
@@ -276,7 +276,7 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
 	$search_end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
 	$data_query['where'][]="i.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
 }
-if ($this->post['orders_status_search']>0) {
+if ($this->get['orders_status_search']>0) {
 	$data_query['where'][]="(o.status='".$this->get['orders_status_search']."')";
 }
 if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
@@ -299,10 +299,10 @@ if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
 }
-if ($this->cookie['payment_status']=='paid_only') {
+if ($this->get['payment_status']=='paid_only') {
 	$data_query['where'][]="(o.paid='1')";
 } else {
-	if ($this->cookie['payment_status']=='unpaid_only') {
+	if ($this->get['payment_status']=='unpaid_only') {
 		$data_query['where'][]="(o.paid='0')";
 	}
 }
