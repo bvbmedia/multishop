@@ -5,7 +5,7 @@ Multishop
 Multishop is the e-commerce plugin for TYPO3.
 
 Download official version from TYPO3.org
-=====
+========================================
 
 `Multishop <http://typo3.org/extensions/repository/view/multishop>`_
 
@@ -28,9 +28,10 @@ Login to your TYPO3 backend:
 - Clear TYPO3 cache
 - Go to extension manager. Select t3jquery plugin to configure it. Select TYPO in selectbox and configure:
 
-jQuery Version - typo.jQueryVersion: 2.xhttps://git.typo3.org/TYPO3CMS/Extensions/tt_address.githttps://git.typo3.org/TYPO3CMS/Extensions/tt_address.git.x
+jQuery Version - typo.jQueryVersion: 2.x
 jQuery UI Version - typo.jQueryUiVersion: 1.10.x
 jQuery TOOLS Version - typo.jQueryTOOLSVersion: 1.2.x
+jQuery Bootstrap version - 3.x.x
 
 TYPO3 MULTISHOP DEMO PACKAGE
 ============================
@@ -49,12 +50,12 @@ Steps to configure:
 
 
 Credits
-=====
+=======
 
 This Plugin is created by `BVB Media <https://www.bvbmedia.com/>`_.
 
 More information
-=====
+================
 
 `TYPO3 Multishop <https://www.typo3multishop.com/>`_
 
