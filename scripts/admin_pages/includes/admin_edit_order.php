@@ -1592,13 +1592,13 @@ if (is_numeric($this->get['orders_id'])) {
 							if ($order['products_model']) {
 								$row[2].='('.$order['products_model'].')';
 							}
-							if ($product['ean_code']) {
+							if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 								$row[2].='<br />EAN: '.$product['ean_code'];
 							}
-							if ($product['sku_code']) {
+							if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 								$row[2].='<br />SKU: '.$product['sku_code'];
 							}
-							if ($product['vendor_code']) {
+							if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 								$row[2].='<br />Vendor code: '.$product['vendor_code'];
 							}
 							if ($product['products_id']) {

@@ -4002,13 +4002,13 @@ class mslib_befe {
 				if ($product['products_description']) {
 					$product_name.='<br/>'.nl2br($product['products_description']);
 				}
-				if (!empty($product['ean_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 				}
-				if (!empty($product['sku_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
 				}
-				if (!empty($product['vendor_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
