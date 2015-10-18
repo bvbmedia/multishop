@@ -3641,9 +3641,9 @@ if ($this->post) {
 					initSelection: function(element, callback) {
 						var id=$(element).val();
 						if (id!=="") {
-							//if (attributesValues[id] !== undefined) {
-							//	callback(attributesValues[id]);
-							//} else {
+							if (attributesValues[id] !== undefined) {
+								callback(attributesValues[id]);
+							} else {
 								$.ajax(ajax_url, {
 									data: {
 										preselected_id: id,
@@ -3653,7 +3653,7 @@ if ($this->post) {
 									attributesValues[data.id]={id: data.id, text: data.text};
 									callback(data);
 								});
-							//}
+							}
 						}
 					},
 					formatResult: function(data){

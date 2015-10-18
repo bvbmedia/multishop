@@ -2186,6 +2186,39 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Display appended EAN code to product name in order e-mail, and edit order',
+	'configuration_key'=>'DISPLAY_EAN_IN_ORDER_DETAILS',
+	'configuration_value'=>'1',
+	'description'=>'Display appended EAN code to product name in order e-mail, and edit order',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Display appended SKU code to product name in order e-mail, and edit order',
+	'configuration_key'=>'DISPLAY_SKU_IN_ORDER_DETAILS',
+	'configuration_value'=>'1',
+	'description'=>'Display appended SKU code to product name in order e-mail, and edit order',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Display appended vendor code to product name in order e-mail, and edit order',
+	'configuration_key'=>'DISPLAY_VENDOR_IN_ORDER_DETAILS',
+	'configuration_value'=>'1',
+	'description'=>'Display appended vendor code to product name in order e-mail, and edit order',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

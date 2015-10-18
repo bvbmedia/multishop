@@ -660,13 +660,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
 				$item['ITEM_NAME'].=$download_link;
 			}
-			if (!empty($product['ean_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
 			}
-			if (!empty($product['sku_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
 			}
-			if (!empty($product['vendor_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
 			}
 			if (count($product['attributes'])) {

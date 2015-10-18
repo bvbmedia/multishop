@@ -92,6 +92,22 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$title=$this->pi_getLL('search');
 		}
 		$content.='<div class="main-heading"><h2>'.$title.'</h2></div>';
+		$extendsearch_content='';
+		//hook to let other plugins further manipulate the settings
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearch'])) {
+			$params=array(
+				'extendsearch_content'=>&$extendsearch_content,
+				'offset'=>$offset,
+				'limit_per_page'=>$limit_per_page,
+				'p'=>$p
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearch'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if (!empty($extendsearch_content)) {
+			$content.=$extendsearch_content;
+		}
 		// product search
 		$filter=array();
 		$having=array();
@@ -468,9 +484,24 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				mslib_befe::storeProductsKeywordSearch($this->get['skeyword'], 1);
 			}
 			$output_array['http_header']='HTTP/1.0 404 Not Found';
-			$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_products_found_heading').'</h2></div>'."\n";
-			$content.='<p>'.$this->pi_getLL('no_products_found_description').'</p>'."\n";
+			$notfound_content='<div class="main-heading"><h2>'.$this->pi_getLL('no_products_found_heading').'</h2></div>'."\n";
+			$notfound_content.='<p>'.$this->pi_getLL('no_products_found_description').'</p>'."\n";
 		}
+	}
+	//hook to let other plugins further manipulate the settings
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearchPostHook'])) {
+		$params=array(
+			'content'=>&$content,
+			'output_array'=>&$output_array,
+			'notfound_content'=>&$notfound_content,
+			'extendsearch_content'=>&$extendsearch_content
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearchPostHook'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	if (isset($output_array['http_header']) && $output_array['http_header']=='HTTP/1.0 404 Not Found') {
+		$content.=$notfound_content;
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$output_array['content']=$content;

@@ -199,13 +199,13 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=' ('.$product['products_article_number'].')';
 			}
 			$tmpcontent.='</strong>';
-			if (!empty($product['ean_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 			}
-			if (!empty($product['sku_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
 			}
-			if (!empty($product['vendor_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
 			}
 			$tmpcontent.='</td>';
