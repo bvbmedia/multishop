@@ -330,7 +330,8 @@ switch ($this->ms['page']) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'])) {
 			$params=array(
 				'page'=>$this->ms['page'],
-				'content'=>&$content
+				'content'=>&$content,
+				'order_session'=>&$order_session
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
