@@ -192,6 +192,44 @@ if (is_numeric($this->get['orders_id'])) {
 								$insertArray=array();
 								$insertArray['orders_id']=(int)$this->get['orders_id'];
 								$insertArray['products_id']=(int)$this->post['manual_products_id'];
+								//
+								if (is_numeric($this->post['manual_products_id']) && $this->post['manual_products_id']>0) {
+									$product_data=mslib_fe::getProduct($this->post['manual_products_id'], '', '', 1);
+									$insertArray['categories_id'] = $product_data['categories_id'];
+									// get all cats
+									$cats = mslib_fe::Crumbar($product_data['categories_id']);
+									$cats = array_reverse($cats);
+									if (count($cats) > 0) {
+										$i = 0;
+										foreach ($cats as $cat) {
+											$insertArray['categories_id_' . $i] = $cat['id'];
+											$insertArray['categories_name_' . $i] = $cat['name'];
+											$i++;
+										}
+									}
+									// get all cats eof
+									if (isset($product_data['manufacturers_id']) && !empty($product_data['manufacturers_id'])) {
+										$insertArray['manufacturers_id'] = $product_data['manufacturers_id'];
+									} else {
+										$insertArray['manufacturers_id'] = '';
+									}
+									if (isset($product_data['order_unit_id']) && !empty($product_data['order_unit_id'])) {
+										$insertArray['order_unit_id'] = $product_data['order_unit_id'];
+									} else {
+										$insertArray['order_unit_id'] = '';
+									}
+									if (isset($product_data['order_unit_name']) && !empty($product_data['order_unit_name'])) {
+										$insertArray['order_unit_name'] = $product_data['order_unit_name'];
+									} else {
+										$insertArray['order_unit_name'] = '';
+									}
+									if (isset($product_data['order_unit_code']) && !empty($product_data['order_unit_code'])) {
+										$insertArray['order_unit_code'] = $product_data['order_unit_code'];
+									} else {
+										$insertArray['order_unit_code'] = '';
+									}
+								}
+								//
 								$insertArray['qty']=$this->post['manual_product_qty'];
 								if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
 									$insertArray['products_name']=$this->post['custom_manual_product_name'];
@@ -493,7 +531,44 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($order['is_proposal']==1) {
 					$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
 				}
+				// hook to let other plugins further manipulate
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPostProc'])) {
+					$params=array(
+						'updateArray'=>&$updateArray,
+						'orders_id'=>&$this->get['orders_id'],
+						'order'=>&$order
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// hook eol
 			} // if (!$order['is_locked']) eol
+			// update stuff with or without locked order
+			if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp']) && mslib_befe::isValidDate($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+				$this->post['tx_multishop_pi1']['orders_paid_timestamp']=strtotime($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			} else {
+				unset($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			}
+			if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']) {
+				if ($order['paid']) {
+					// if order already paid just update timestamp
+					$updateArray=array();
+					if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) && !$this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) {
+						$updateArray['paid']='0';
+						$updateArray['orders_paid_timestamp']='';
+					} else {
+						$updateArray['orders_paid_timestamp']=$this->post['tx_multishop_pi1']['orders_paid_timestamp'];
+					}
+					if (count($updateArray)) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				} else {
+					// if order not yet paid use official method for updating to status paid
+					mslib_fe::updateOrderStatusToPaid($this->get['orders_id'],$this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+				}
+			}
 		} // if ($this->ms['MODULES']['ORDER_EDIT']) eol
         // editable properties of orders, even when ORDERS_EDIT is disabled
         if ($this->post) {
@@ -1161,7 +1236,7 @@ if (is_numeric($this->get['orders_id'])) {
 					</div>
 				</div>
             <hr>';
-			$orderDetailsItem='<div class="form-group">';
+			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$shipping_methods=mslib_fe::loadShippingMethods(1);
@@ -1196,7 +1271,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem.='</div>';
 			$orderDetails[]=$orderDetailsItem;
 			$orderDetailsItem='';
-			$orderDetailsItem='<div class="form-group">';
+			$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				if (is_array($payment_methods) and count($payment_methods)) {
@@ -1227,10 +1302,46 @@ if (is_numeric($this->get['orders_id'])) {
 				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
 			}
 			$orderDetailsItem.='</div>';
+			// Date order paid
+			$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod">';
+			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
+			$orders_paid_timestamp_visual='';
+			$orders_paid_timestamp='';
+			if (!$this->post && $orders['orders_paid_timestamp']) {
+				$this->post['tx_multishop_pi1']['orders_paid_timestamp']=$orders['orders_paid_timestamp'];
+			}
+			if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']==0 || empty($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+				$orders_paid_timestamp_visual='';
+				$orders_paid_timestamp='';
+			} else {
+				$orders_paid_timestamp_visual=date($this->pi_getLL('locale_date_format'), $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+				$orders_paid_timestamp=date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			}
+			$orderDetailsItem.='<div class="col-md-9">
+			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
+			<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
+			</div>';
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$("#orders_paid_timestamp_visual").datepicker({
+					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'yy/mm/dd').'",
+					altField: "#orders_paid_timestamp",
+					altFormat: "yy-mm-dd",
+					changeMonth: true,
+					changeYear: true,
+					showOtherMonths: true,
+					yearRange: "'.(date("Y")-15).':'.(date("Y")+2).'"
+				});
+			});
+			</script>
+			';
+
+			$orderDetailsItem.='</div>';
 			$orderDetails[]=$orderDetailsItem;
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
 				$orderDetailsItem='';
-				$orderDetailsItem='<div class="form-group">';
+				$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentConditions">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_condition').'</label>';
 				if (!$orders['is_locked']) {
 					$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
@@ -1293,7 +1404,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_table=array();
 			$order_products_header_data=array();
 			$tr_type='even';
-			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" id="orders_products_listing_table">';
+			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" id="orders_products_listing_table_wrapper">';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			}
@@ -1519,13 +1630,13 @@ if (is_numeric($this->get['orders_id'])) {
 							if ($order['products_model']) {
 								$row[2].='('.$order['products_model'].')';
 							}
-							if ($product['ean_code']) {
+							if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 								$row[2].='<br />EAN: '.$product['ean_code'];
 							}
-							if ($product['sku_code']) {
+							if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 								$row[2].='<br />SKU: '.$product['sku_code'];
 							}
-							if ($product['vendor_code']) {
+							if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 								$row[2].='<br />Vendor code: '.$product['vendor_code'];
 							}
 							if ($product['products_id']) {
@@ -2847,7 +2958,7 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' +  price_data.price_prefix + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' +  optid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value=""/>\';
                     }
@@ -2856,7 +2967,7 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' +  price_data.price_prefix + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' +  optvalid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px"/>\';
                     }
@@ -3118,7 +3229,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-primary';
-				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['fa_class']='fa fa-file';
 				$headingButton['title']=$this->pi_getLL('invoice');
 				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice');
 				if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
@@ -3129,7 +3240,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-primary';
-				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['fa_class']='fa fa-file';
 				$headingButton['title']=$this->pi_getLL('packing_list');
 				if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
 					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']);
@@ -3140,6 +3251,13 @@ if (is_numeric($this->get['orders_id'])) {
 				$headerButtons[]=$headingButton;
 			}
 		}
+		$headingButton=array();
+		$headingButton['btn_class']='btn btn-success';
+		$headingButton['fa_class']='fa fa-check-circle';
+		$headingButton['title']=$this->pi_getLL('save');
+		$headingButton['href']='#';
+		$headingButton['attributes']='onclick="$(\'#admin_edit_order_form button[name=\\\'Submit\\\']\').click(); return false;"';
+		$headerButtons[]=$headingButton;
 		// Set header buttons through interface class so other plugins can adjust it
 		$objRef->setHeaderButtons($headerButtons);
 		// Get header buttons through interface class so we can render them
@@ -3332,11 +3450,15 @@ if (url.match("#")) {
                     }
                 });
             });
-            $(document).on("keyup", ".msOrderProductPriceExcludingVat", function() {
-                productPrice(true, $(this), "#product_tax");
+            $(document).on("keyup", ".msOrderProductPriceExcludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(true, $(this), "#product_tax");
+                }
             });
-            $(document).on("keyup", ".msOrderProductPriceIncludingVat", function() {
-                productPrice(false, $(this), "#product_tax");
+            $(document).on("keyup", ".msOrderProductPriceIncludingVat", function(e) {
+                if (e.keyCode!=9) {
+                	productPrice(false, $(this), "#product_tax");
+                }
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
@@ -3346,11 +3468,15 @@ if (url.match("#")) {
                     productPrice(true, $(this), "#product_tax");
                 });
             });
-            $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function() {
-                productPrice(true, $(this), "#manual_product_tax");
+            $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(true, $(this), "#manual_product_tax");
+                }
             });
-            $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function() {
-                productPrice(false, $(this), "#manual_product_tax");
+            $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(false, $(this), "#manual_product_tax");
+                }
             });
             $("#manual_product_tax").change(function () {
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
@@ -3373,7 +3499,7 @@ if (url.match("#")) {
 		}
 		$content.='</ul>
             <div class="tab-content">
-            <form class="form-horizontal admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
+            <form class="form-horizontal admin_product_edit blockSubmitForm" name="admin_edit_order_form" id="admin_edit_order_form" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
             <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" />';
 
 		$count=0;

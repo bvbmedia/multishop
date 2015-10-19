@@ -589,9 +589,26 @@ class tx_mslib_user {
 					$insertArray[$key]=$val;
 				}
 			}
+			// TYPO3 6.2 is null bugfix
+			foreach ($insertArray as $key => $val) {
+				if (is_null($insertArray[$key])) {
+					$insertArray[$key]='';
+				}
+			}
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPreProc'])) {
+				$params=array(
+					'insertArray'=>&$insertArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($res) {
+			if (!$res) {
+				$error=$GLOBALS['TYPO3_DB']->sql_error();
+			} else {
 				$customer_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 				// ADD CUSTOMER_ID TO THE CART CONTENTS
 				if ($customer_id && $GLOBALS['TSFE']->fe_user->id) {

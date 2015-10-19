@@ -559,8 +559,10 @@ if (count($cart['products'])<1) {
 		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
 			$newsletter_subscribe.='
 			<div class="checkboxAgreement accept_newsletter">
-				<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" />
-				<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
+				<div class="checkbox checkbox-success">
+					<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" />
+					<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
+				</div>
 			</div>';
 		}
 		$markerArray['###NEWSLETTER_SUBSCRIBE###']=$newsletter_subscribe;

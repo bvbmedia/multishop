@@ -168,9 +168,15 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE'] || $this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
 		$types['privacy_statement']=$this->pi_getLL('privacy_statement');
 	}
+	if ($this->ms['MODULES']['ENABLE_CHECKOUT_CUSTOMER_INFO_LINK'] || $this->ms['MODULES']['ENABLE_CHECKOUT_CUSTOMER_INFO_LINK']) {
+		$types['checkout_customer_info_page']=$this->pi_getLL('checkout_customer_info_page');
+	}
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
-		$params=array('types'=>&$types);
+		$params=array(
+			'types'=>&$types,
+			'payment_methods'=>&$payment_methods
+		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}

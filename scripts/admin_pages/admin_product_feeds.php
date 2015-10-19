@@ -191,6 +191,17 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$updateArray['post_data']=serialize($this->post);
 			if (is_numeric($this->post['feed_id'])) {
 				// edit
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'])) {
+					$params=array(
+						'feed_id'=>&$this->post['feed_id'],
+						'updateArray'=>&$updateArray
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// custom hook that can be controlled by third-party plugin eof
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\''.$this->post['feed_id'].'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -198,6 +209,17 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				$updateArray['page_uid']=$this->showCatalogFromPage;
 				$updateArray['crdate']=time();
 				$updateArray['code']=md5(uniqid());
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'])) {
+					$params=array(
+						'feed_id'=>&$this->post['feed_id'],
+						'updateArray'=>&$updateArray
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// custom hook that can be controlled by third-party plugin eof
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -329,6 +351,17 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				</label>
 				</div>
 		</div>
+		';
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'])) {
+			$params=array(
+				'content'=>&$content
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$content.='
 		<div class="form-group hide_pf">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
 			<div class="col-md-10">

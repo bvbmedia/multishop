@@ -13,7 +13,7 @@ if ($this->ms['MODULES']['ENABLED_CURRENCIES']) {
 	$content.='
 	<form name="multishop_currency_selector" action="index.php" method="get" id="multishop_currency_selector_form">
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
-	<select name="tx_multishop_pi1[selected_currency]" id="multishop_currency_selector">'."\n";
+	<select name="tx_multishop_pi1[selected_currency]" id="multishop_currency_selector" class="form-control">'."\n";
 	foreach ($currencies as $currency) {
 		$currency=trim($currency);
 		if ($currency) {

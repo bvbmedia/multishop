@@ -1357,9 +1357,18 @@ class mslib_befe {
 		$ms['image_paths']['manufacturers']['original']=$prefix.'uploads/tx_multishop/images/manufacturers/original';
 		$ms['image_paths']['manufacturers']['normal']=$prefix.'uploads/tx_multishop/images/manufacturers/normal';
 		$ms['image_paths']['attribute_values']['original']=$prefix.'uploads/tx_multishop/images/attribute_values/original';
+		$ms['image_paths']['attribute_values']['normal']=$prefix.'uploads/tx_multishop/images/attribute_values/normal';
+		$ms['image_paths']['attribute_values']['small']=$prefix.'uploads/tx_multishop/images/attribute_values/small';
 		$format=explode("x", $ms['MODULES']['CATEGORY_IMAGE_SIZE_NORMAL']);
 		$ms['category_image_formats']['normal']['width']=$format[0];
 		$ms['category_image_formats']['normal']['height']=$format[1];
+		$format=explode("x", $ms['MODULES']['ATTRIBUTE_VALUES_IMAGE_SIZE_NORMAL']);
+		$ms['attribute_values_image_formats']['normal']['width']=$format[0];
+		$ms['attribute_values_image_formats']['normal']['height']=$format[1];
+		$format=explode("x", $ms['MODULES']['ATTRIBUTE_VALUES_IMAGE_SIZE_SMALL']);
+		$ms['attribute_values_image_formats']['small']['width']=$format[0];
+		$ms['attribute_values_image_formats']['small']['height']=$format[1];
+
 		$format=explode("x", $ms['MODULES']['PRODUCT_IMAGE_SIZE_50']);
 		$ms['product_image_formats'][50]['width']=$format[0];
 		$ms['product_image_formats'][50]['height']=$format[1];
@@ -1776,6 +1785,154 @@ class mslib_befe {
 			return $filename;
 		}
 	}
+	public function resizeProductAttributeValuesImage($original_path, $filename, $module_path, $run_in_background=0) {
+		if (!$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']) {
+			$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']=75;
+		}
+		if (file_exists($original_path) && $filename) {
+			//hook to let other plugins further manipulate the method
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductAttributeValuesImage'])) {
+				$params=array(
+					'original_path'=>$original_path,
+					'filename'=>&$filename,
+					'module_path'=>$module_path,
+					'run_in_background'=>$run_in_background
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductAttributeValuesImage'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			} else {
+				if ($run_in_background) {
+					$suffix_exec_param=' &> /dev/null & ';
+				}
+				$commands=array();
+				$params='';
+				if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5']=='im6') {
+					$params.='-strip';
+				}
+				$imgtype=mslib_befe::exif_imagetype($original_path);
+				if ($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if ($ext) {
+						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
+							switch ($ext) {
+								case 'png':
+									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$info=shell_exec($command);
+									if (strstr($info, 'Alpha:')) {
+										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
+										break;
+									}
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.jpg';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.jpg';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
+									$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									if (file_exists($newOriginal_path)) {
+										if (filesize($original_path)>filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
+									}
+									break;
+								//case 'jpeg':
+								//case 'gif':
+								//	break;
+								default:
+									// IMAGE IS NOT PNG. MAYBE CONVERTING IT TO PNG REDUCES THE FILESIZE. LETS TRY
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.png';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.png';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
+									$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									if (file_exists($newOriginal_path)) {
+										if (filesize($original_path)>filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
+									}
+									break;
+							}
+						}
+					}
+				} else {
+					return false;
+				}
+				if (filesize($original_path)>16384) {
+					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
+					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+					exec($command);
+				}
+				$folder=mslib_befe::getImagePrefixFolder($filename);
+				$dirs=array();
+				$dirs[]=PATH_site.$this->ms['image_paths']['attribute_values']['normal'].'/'.$folder;
+				$dirs[]=PATH_site.$this->ms['image_paths']['attribute_values']['small'].'/'.$folder;
+				foreach ($dirs as $dir) {
+					if (!is_dir($dir)) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
+					}
+				}
+				$target=PATH_site.$this->ms['image_paths']['attribute_values']['normal'].'/'.$folder.'/'.$filename;
+				copy($original_path, $target);
+				// normal thumbnail settings
+				$maxwidth=$this->ms['attribute_values_image_formats']['normal']['width'];
+				$maxheight=$this->ms['attribute_values_image_formats']['normal']['height'];
+				$commands[]=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				//
+				$target=PATH_site.$this->ms['image_paths']['attribute_values']['small'].'/'.$folder.'/'.$filename;
+				copy($original_path, $target);
+				// 200 thumbnail settings
+				$maxwidth=$this->ms['attribute_values_image_formats']['small']['width'];
+				$maxheight=$this->ms['attribute_values_image_formats']['small']['height'];
+				$commands[]=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				if (count($commands)) {
+					// background running is not working on all boxes well, so we reverted it
+					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
+					//				t3lib_utility_Command::exec($final_command);
+					foreach ($commands as $command) {
+						exec($command);
+					}
+				}
+			}
+			//hook to let other plugins further manipulate the method
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductAttributeValuesImagePostProc'])) {
+				$params=array(
+					'original_path'=>$original_path,
+					'folder'=>&$folder,
+					'filename'=>&$filename,
+					'target'=>$target,
+					'module_path'=>$module_path,
+					'commands'=>$commands
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductAttributeValuesImagePostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			return $filename;
+		}
+	}
 	public function listdir($dir='.') {
 		if (!is_dir($dir)) {
 			return false;
@@ -1989,9 +2146,9 @@ class mslib_befe {
 		  `sstatus` tinyint(1) NULL,
 		  `price_filter` int(4) NULL,
 		  `contains_image` tinyint(1) NULL,
-		  `products_multiplication` int(11) NULL DEFAULT '0',
-		  `minimum_quantity` int(11) NULL DEFAULT '1',
-		  `maximum_quantity` int(11) NULL,
+		  `products_multiplication` decimal(6,2) default '0.00',
+		  `minimum_quantity` decimal(6,2) default '1.00',
+		  `maximum_quantity` decimal(6,2) default NULL,
 		  `delivery_time` varchar(75) default '',
 		  `order_unit_id` int(11) default '0',
 		  `order_unit_code` varchar(15) default '',
@@ -2208,9 +2365,9 @@ class mslib_befe {
 				$result.='</table>';
 			}
 		} else {
-			$result='<table border="1" cellpadding="1" cellspacing="0" width="100%">
+			$result='<table class="table table-striped table-bordered">
 				<tr>
-					<td><font face="Verdana,Arial" size="1" color="red">'.nl2br(htmlspecialchars((string)$array_in)).'<br /></font></td>
+					<td>'.nl2br(htmlspecialchars((string)$array_in)).'</td>
 				</tr>
 			</table>'; // Output it as a string.
 		}
@@ -3428,7 +3585,12 @@ class mslib_befe {
 			$user=$GLOBALS['TSFE']->fe_user->fetchUserRecord($info['db_user'], $loginData['uname']);
 			$GLOBALS['TSFE']->fe_user->createUserSession($user);
 			// auto login the user
-			$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
+			if (is_numeric($this->conf['login_as_customer_target_pid'])) {
+				$targetPid=$this->conf['login_as_customer_target_pid'];
+			} else {
+				$targetPid=$this->shop_pid;
+			}
+			$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($targetPid);
 			//hook to let other plugins further manipulate the redirect link
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['loginAsUserRedirectLinkPreProc'])) {
 				$params=array(
@@ -3840,13 +4002,13 @@ class mslib_befe {
 				if ($product['products_description']) {
 					$product_name.='<br/>'.nl2br($product['products_description']);
 				}
-				if (!empty($product['ean_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 				}
-				if (!empty($product['sku_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
 				}
-				if (!empty($product['vendor_code'])) {
+				if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 					$product_name.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
@@ -4196,6 +4358,27 @@ class mslib_befe {
 				"&quot;",
 				"&apos;"
 			), $string);
+		}
+	}
+	function bootstrapPanel($heading='',$body='',$panelClass='default') {
+		$content='<div class="panel panel-'.$panelClass.'">';
+		if ($heading) {
+			$content.='<div class="panel-heading"><h3 class="panel-title">'.$heading.'</h3></div>';
+		}
+		if ($body) {
+			$content.='<div class="panel-body">'.$body.'</div>';
+		}
+		$content.='</div>';
+		return $content;
+	}
+	function rmNullValuedKeys($array) {
+		if (is_array($array)) {
+			foreach ($array as $key => $val) {
+				if (is_null($array[$key])) {
+					$array[$key]='';
+				}
+			}
+			return $array;
 		}
 	}
 }

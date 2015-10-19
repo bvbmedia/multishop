@@ -348,6 +348,8 @@ $html.='
 ';
 if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
 	$html.='
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.ms_admin_has_subs\').parent().addClass("active").parentsUntil(\'li.ms_admin_has_subs\').parent().addClass("active");
+		//
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').removeClass("collapsed");
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').next().addClass("in");
 		/*

@@ -77,6 +77,12 @@ switch ($this->ms['page']) {
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
 		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
 		$count_cart_incl_vat=0;
+		//
+		$return_data['shipping_cost']=0;
+		$return_data['shipping_costs_display']=mslib_fe::amount2Cents(0);
+		$return_data['shipping_method']['deliver_by']='';
+		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
+		//
 		foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$count_cart_incl_vat=1;
@@ -606,7 +612,7 @@ switch ($this->ms['page']) {
 								if (count($subcategories_tree)) {
 									foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 										if (!in_array($subcategory_tree_0['id'], $skip_ids)) {
-											$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+											$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 											if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 												mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 											}
@@ -633,7 +639,7 @@ switch ($this->ms['page']) {
 							mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 							if (count($subcategories_tree)) {
 								foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 									if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 										mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 									}
@@ -649,7 +655,7 @@ switch ($this->ms['page']) {
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						if (!in_array($category_tree_0['id'], $skip_ids)) {
-							$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+							$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'] . (!$category_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							if (is_array($categories_tree[$category_tree_0['id']])) {
 								mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree, true);
 							}
@@ -742,6 +748,48 @@ switch ($this->ms['page']) {
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/admin_ajax_edit_order.php');
 		}
+		exit();
+		break;
+	case 'get_ordered_products':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='op.products_name like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(op.products_name like \'%'.addslashes($this->get['q']).'%\' or op.products_id = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='op.products_id = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*', // SELECT ...
+			'tx_multishop_orders_products op', // FROM ...
+			implode(' and ', $where), // WHERE.
+			'op.products_id', // GROUP BY...
+			'op.products_name asc', // ORDER BY...
+			$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!empty($row['products_name'])) {
+					$data[]=array(
+						'id'=>$row['products_id'],
+						'text'=>$row['products_name']
+					);
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
 		exit();
 		break;
 	case 'downloadCategoryTree':
@@ -1792,6 +1840,36 @@ switch ($this->ms['page']) {
 				';
 				echo $content;
 			}
+		}
+		exit();
+		break;
+	case 'get_usergroups':
+		if ($this->ADMIN_USER) {
+			$filter=array();
+			// exclude admin usergroups
+			$filter[]='uid NOT IN ('.implode(',', $this->excluded_userGroups).')';
+			$filter[]='deleted=0 and hidden=0';
+			$limit=50;
+			if (isset($this->get['q']) && !empty($this->get['q'])) {
+				$filter[]='title like \'%'.addslashes($this->get['q']).'%\'';
+				$limit='';
+			}
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'fe_groups', // FROM ...
+				implode(' AND ', $filter), // WHERE...
+				'', // GROUP BY...
+				'title', // ORDER BY...
+				$limit // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$return_data=array();
+			$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+					$return_data[]=array('id' => $row['uid'], 'text' => $row['title']);
+				}
+			}
+			echo json_encode($return_data);
 		}
 		exit();
 		break;

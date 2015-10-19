@@ -212,16 +212,20 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(\'#admin_shipping_methods_list\').slideToggle(\'slow\', function(){});
 	});
-	$(document).on("keyup", ".msHandlingCostExcludingVat", function() {
-		productPrice(true, this);
+	$(document).on("keyup", ".msHandlingCostExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, this);
+		}
 	});
 	$(document).on("change", "#tax_id", function() {
 		jQuery(".msHandlingCostExcludingVat").each(function(i) {
 			productPrice(true, this);
 		});
 	});
-	$(document).on("keyup", ".msHandlingCostIncludingVat", function() {
-		productPrice(false, this);
+	$(document).on("keyup", ".msHandlingCostIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, this);
+		}
 	});
 	$("#add_shipping_form").submit(function(e) {
 		if (!$("#name_0").val()) {

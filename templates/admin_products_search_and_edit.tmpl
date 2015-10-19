@@ -370,20 +370,28 @@ jQuery(document).ready(function($) {
 		return number;
 	}
 
-	$(".msProductsPriceExcludingVat").keyup(function() {
-		productPrice(true, this);
+	$(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, this);
+		}
 	});
 
-	$(".msProductsPriceIncludingVat").keyup(function() {
-		productPrice(false, this);
+	$(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, this);
+		}
 	});
 
-	$(".msSpecialsPriceExcludingVat").keyup(function() {
-		productPrice(true, this);
+	$(document).on("keyup", ".msSpecialsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, this);
+		}
 	});
 
-	$(".msSpecialsPriceIncludingVat").keyup(function() {
-		productPrice(false, this);
+	$(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, this);
+		}
 	});
 });
 </script>

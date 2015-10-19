@@ -784,7 +784,7 @@
             <label index="filter_by">Filter by</label>
             <label index="filter_by_date_status_last_modified">Filter by date status last modified</label>
             <label index="final_price_ex_vat">Final price (excl. VAT)</label>
-            <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
+            <label index="final_price_inc_vat">Total price (incl. VAT)</label>
             <label index="first">first</label>
             <label index="first_name">first name</label>
             <label index="first_name_required">First name is a required field. Only characters are allowed.</label>
@@ -984,7 +984,7 @@
             <label index="product_options">Product Options</label>
             <label index="product_relatives">Product relatives</label>
             <label index="product_saved">Product saved</label>
-            <label index="product_shipping_and_handling_cost_overview">Products shipping and handling costs</label>
+            <label index="product_shipping_and_handling_cost_overview">Product shipping costs</label>
             <label index="products">Products</label>
             <label index="products_attributes">Products attributes</label>
             <label index="products_date_available">Date available</label>
@@ -1025,7 +1025,7 @@
             <label index="select_orders_payment_status">Filter by payment status</label>
             <label index="select_percentage">Select percentage</label>
             <label index="send_email_to_customer">Send e-mail to customer</label>
-            <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
+            <label index="shipping_and_handling_cost_overview">Shipping costs</label>
             <label index="shipping_costs">Shipping costs</label>
             <label index="shipping_method">Shipping method</label>
             <label index="shipping_method_label">Shipping method label</label>
@@ -1251,6 +1251,12 @@
             <label index="reports">Reports</label>
             <label index="products_attributes_names">Product attribute names</label>
             <label index="products_attributes_values">Product attribute values</label>
+            <label index="deliver_in">Deliver in</label>
+            <label index="customer_details">Customer details</label>
+            <label index="period">Period</label>
+            <label index="checkout_customer_info_page">Checkout customer info page</label>
+            <label index="click_here_to_read_the_additional_customer_information">Click here to read the additional customer Information</label>
+            <label index="date_paid">Date paid</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2231,7 +2237,7 @@
             <label index="product_options">Productopties</label>
             <label index="product_relatives">Gerelateerde artikelen</label>
             <label index="product_saved">Product opgeslagen</label>
-            <label index="product_shipping_and_handling_cost_overview">Product verzend- en verwerkkosten</label>
+            <label index="product_shipping_and_handling_cost_overview">Product verzendkosten</label>
             <label index="products">Producten</label>
             <label index="products_attributes">Productattributen</label>
             <label index="products_date_available">Releasedatum</label>
@@ -2272,7 +2278,7 @@
             <label index="select_orders_payment_status">Filteren op betaalstatus</label>
             <label index="select_percentage">Selecteer percentage</label>
             <label index="send_email_to_customer">Verstuur e-mail naar klant</label>
-            <label index="shipping_and_handling_cost_overview">Bezorg- en verwerkkosten</label>
+            <label index="shipping_and_handling_cost_overview">Verzendkosten</label>
             <label index="shipping_costs">Verzendkosten</label>
             <label index="shipping_method">Verzendmethode</label>
             <label index="shipping_method_label">Bezorgmethode (label)</label>
@@ -2488,12 +2494,18 @@
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
             <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
             <label index="advanced_search">Uitgebreid zoeken</label>
-            <label index="admin_invoice_statistics">Invoice statistieken</label>
+            <label index="admin_invoice_statistics">Facturen statistieken</label>
             <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
             <label index="date_payment_received">Datum betaling ontvangen</label>
             <label index="reports">Rapporten</label>
             <label index="products_attributes_names">Product attribuutnamen</label>
             <label index="products_attributes_values">Product attribuutwaardes</label>
+            <label index="deliver_in">Bezorgen in</label>
+            <label index="customer_details">Debiteurgegevens</label>
+            <label index="period">Periode</label>
+            <label index="checkout_customer_info_page">Afrekenpagina klant informatie pagina</label>
+            <label index="click_here_to_read_the_additional_customer_information">Klik hier om de additionele klantinformatie te lezen</label>
+            <label index="date_paid">Datum betaald</label>
         </languageKey>
     </data>
 </T3locallang>

@@ -422,8 +422,9 @@ if (!$product['products_id']) {
 			});
 			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
 				//event.preventDefault();
-				var modalBox = $(this);
-				if (modalBox.find(\'.modal-body\').html()==\'\') {
+				var shippingCostsModalBox = $(this);
+				if (shippingCostsModalBox.find(\'.modal-body\').html()==\'\') {
+					shippingCostsModalBox.find(\'.modal-body\').html(\'<div class="text-center" id="loading_icon_wrapper"><img src="typo3conf/ext/multishop/templates/images/loading.gif" id="loading_icon" />&nbsp;Loading...</div>\');
 					jQuery.ajax({
 						url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
 						data: \'tx_multishop_pi1[pid]=\' + $("#products_id").val() + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
@@ -439,7 +440,7 @@ if (!$product['products_id']) {
 								shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
 								shipping_cost_popup+=\'</tr>\';
 								shipping_cost_popup+=\'<tr>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_in').'</td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 								shipping_cost_popup+=\'</tr>\';
@@ -462,7 +463,8 @@ if (!$product['products_id']) {
 								shipping_cost_popup+=\'</div>\';
 								shipping_cost_popup+=\'</div>\';
 								//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
-								modalBox.find(\'.modal-body\').html(shipping_cost_popup);
+								shippingCostsModalBox.find(\'.modal-body\').empty();
+								shippingCostsModalBox.find(\'.modal-body\').html(shipping_cost_popup);
 								//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
 							}
 						}
@@ -513,8 +515,6 @@ if (!$product['products_id']) {
                                 attribute_radio_data.push($(v).attr(\'rel\'));
                             }
                         });
-                        //
-                        console.log(attribute_radio_data);
                         //
                         $.each(attribute_radio_data, function(x,y){
                             var attribute_class=\'.\'+y+\':checked\';

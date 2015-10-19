@@ -54,6 +54,10 @@ plugin.multishop {
 	logout_pid =
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend login page: Optional field. The ID number of the page where the (felogin) login content element is put on.
 	login_pid =
+	# cat=plugin.multishop - optional; type=int+; label= PID of the page to redirect to when logging in as customer: Optional field. If you want to use a different page target define it here.
+	login_as_customer_target_pid =
+	# cat=plugin.multishop - optional; type=int+; label= PID of the page to redirect to after customer pressed on the confirm create account link: Optional field. If you want to use a different page target define it here.
+	confirmed_create_account_target_pid =
 
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend create account page: Optional field. The ID number of the page where the guest user can create an account.
 	create_account_pid =
@@ -241,9 +245,6 @@ plugin.multishop {
 
 	# cat=plugin.multishop - templates/file; type=string; label= Admin packing slip PDF File Path: Optionally specify the location of the template file that is being used for generating packing slip PDF. Example: fileadmin/templates/multishop/admin_packingslip_pdf.tmpl.
 	admin_packingslip_pdf_tmpl_path =
-
-	# cat=plugin.multishop - optional/enable; type=boolean; label= Hide Facebook like box in admin interface
-	hideFacebookInAdminInterface = 0
 
 	# cat=plugin.multishop - main; type=int+; label= TT address record ID of the store: The uid number of the tt_address record that contains the Store address details. This record is mandatory for correct calculation of VAT.
 	tt_address_record_id_store =

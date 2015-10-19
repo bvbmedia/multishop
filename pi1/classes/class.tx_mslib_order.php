@@ -196,7 +196,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price+$tmp_attributes_price)*$row_prod['qty'];
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tmp_attributes_price)+($tax+$attributes_tax)*$row_prod['qty'];
 				}
-				//
 				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
 				$order_tax_data['sub_total']=(string)$sub_total;
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
@@ -660,13 +659,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
 				$item['ITEM_NAME'].=$download_link;
 			}
-			if (!empty($product['ean_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
 			}
-			if (!empty($product['sku_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
 				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
 			}
-			if (!empty($product['vendor_code'])) {
+			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
 			}
 			if (count($product['attributes'])) {
@@ -883,7 +882,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			return round($order['orders_tax_data']['grand_total'], 2);
 		}
 	}
-	function getOrder($string, $field='orders_id') {
+	function getOrder($string, $field='orders_id', $includeDeleted=0) {
 		$filter=array();
 		switch ($field) {
 			case 'orders_id':
@@ -902,7 +901,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (!count($filter)) {
 			return false;
 		}
-		$filter[]='o.deleted=0';
+		if (!$includeDeleted) {
+			$filter[]='o.deleted=0';
+		}
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.*, osd.name as orders_status', // SELECT ...
 			'tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)', // FROM ...
 			implode(" and ", $filter), // WHERE...
@@ -1130,6 +1131,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['shipping_method_costs']=$address['shipping_method_costs'];
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
 			$insertArray['payment_condition']=$address['payment_condition'];
+			$insertArray['debit_order']=0;
+			if (isset($address['debit_order'])) {
+				$insertArray['debit_order']=$address['debit_order'];
+			}
 			// TYPO3 6.2 NULL VALUE BUGFIX
 			if (!$insertArray['customer_comments']) {
 				$insertArray['customer_comments']='';
@@ -1142,6 +1147,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			foreach ($insertArray as $key => $val) {
+				if (is_null($insertArray[$key])) {
+					$insertArray[$key]='';
 				}
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
@@ -1173,6 +1183,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			foreach ($insertArray as $key => $val) {
+				if (is_null($insertArray[$key])) {
+					$insertArray[$key]='';
 				}
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
@@ -1233,6 +1248,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePreProc'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					foreach ($insertArray as $key => $val) {
+						if (is_null($insertArray[$key])) {
+							$insertArray[$key]='';
 						}
 					}
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);

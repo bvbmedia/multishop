@@ -110,9 +110,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
 					$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($max_optid, 'class="form-control"');
 					if (!empty($options_group)) {
-						$options_group='<div class="form-group row"><label class="col-md-4 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
+						$options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
 					} else {
-                        $options_group='<div class="form-group row"><label class="col-md-4 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$this->pi_getLL('admin_label_no_groups_defined').'</div></div>';
+                        $options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$this->pi_getLL('admin_label_no_groups_defined').'</div></div>';
 					}
 					$options_data['options_groups']=$options_group;
 				} else {
@@ -579,7 +579,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 			if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 				$return_data['results'][$counter]['values_image']=htmlspecialchars($row2['products_options_values_image']);
 				if (!empty($row2['products_options_values_image'])) {
-					$return_data['results'][$counter]['values_image_display']='<img class="values_image'.$row2['products_options_values_to_products_options_id'].'" src="'.mslib_befe::getImagePath($row2['products_options_values_image'], 'attribute_values', 'original').'" width="50px">
+					$return_data['results'][$counter]['values_image_display']='<img class="values_image'.$row2['products_options_values_to_products_options_id'].'" src="'.mslib_befe::getImagePath($row2['products_options_values_image'], 'attribute_values', 'small').'" width="50px">
 					<a class="values_image'.$row2['products_options_values_to_products_options_id'].'" id="delete_attribute_values_image" href="#" rel="'.$row2['products_options_values_to_products_options_id'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 				} else {
 					$return_data['results'][$counter]['values_image_display']='';
@@ -671,13 +671,14 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 							} while (file_exists($target));
 						}
 						if (copy($temp_file, $target)) {
+							$filename=mslib_befe::resizeProductAttributeValuesImage($target, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 							$result=array();
 							$result['success']=true;
 							$result['error']=false;
 							$result['filename']=$filename;
 							$result['target_after']='#ajax_attribute_values_image'.$this->get['pov2po_id'];
 							$result['target_delete']='.values_image'.$this->get['pov2po_id'];
-							$result['image_display']='<img class="values_image'.$this->get['pov2po_id'].'" src="'.mslib_befe::getImagePath($filename, 'attribute_values', 'original').'" width="50px">
+							$result['image_display']='<img class="values_image'.$this->get['pov2po_id'].'" src="'.mslib_befe::getImagePath($filename, 'attribute_values', 'small').'" width="50px">
 							<a class="values_image'.$this->get['pov2po_id'].'" id="delete_attribute_values_image" href="#" rel="'.$this->get['pov2po_id'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 							$updateArray=array();
 							$updateArray['products_options_values_image']=$filename;
@@ -770,6 +771,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 							} while (file_exists($target));
 						}
 						if (copy($temp_file, $target)) {
+							$filename=mslib_befe::resizeProductAttributeValuesImage($target, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 							$result=array();
 							$result['success']=true;
 							$result['error']=false;
@@ -777,7 +779,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 							$result['fileLocation']=mslib_befe::getImagePath($filename, 'attribute_values', 'original');
 							$result['target_after']='#ajax_attribute_value_image'.$this->get['attribute_value_image'];
 							$result['target_delete']='.product_values_image'.$this->get['attribute_value_image'];
-							$result['image_display']='<img class="values_image'.$this->get['attribute_value_image'].'" src="'.mslib_befe::getImagePath($filename, 'attribute_values', 'original').'" width="50px">
+							$result['image_display']='<img class="values_image'.$this->get['attribute_value_image'].'" src="'.mslib_befe::getImagePath($filename, 'attribute_values', 'small').'" width="50px">
 							<a class="values_image'.$this->get['attribute_value_image'].'" id="delete_attribute_values_image" href="#" rel="'.$this->get['attribute_value_image'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 							/*$updateArray=array();
 							$updateArray['attribute_image']=$filename;

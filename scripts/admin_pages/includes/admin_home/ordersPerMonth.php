@@ -54,21 +54,30 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	$where=array();
-	$where[]='(o.deleted=0)';
-	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+	$data_query=array();
+	$data_query['where'][]='(o.deleted=0)';
+	$data_query['where'][]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
 	switch ($this->dashboardArray['section']) {
 		case 'admin_home':
 			break;
 		case 'admin_edit_customer':
 			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-				$where[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+				$data_query['where'][]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 			}
 			break;
 	}
+	// hook
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/ordersPerMonth.php']['ordersPerMonthHomeStatsQueryHookPreProc'])) {
+		$params=array(
+			'data_query'=>&$data_query
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/ordersPerMonth.php']['ordersPerMonthHomeStatsQueryHookPreProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	$str=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
 		'tx_multishop_orders o', // FROM ...
-		'('.implode(" AND ", $where).')', // WHERE...
+		'('.implode(" AND ", $data_query['where']).')', // WHERE...
 		'', // GROUP BY...
 		'', // ORDER BY...
 		'' // LIMIT ...

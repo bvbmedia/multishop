@@ -2,6 +2,16 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// billing countries
+$order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
+$order_billing_country=array();
+foreach ($order_countries as $order_country) {
+	$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
+	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+}
+ksort($order_billing_country);
+$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
+
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['Search'] and ($this->get['payment_status']!=$this->cookie['payment_status'])) {
 	$this->cookie['payment_status']=$this->get['payment_status'];
@@ -88,12 +98,12 @@ $customer_groups_input.='</select>'."\n";
 // payment status
 $payment_status_select='<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
-if ($this->cookie['payment_status']=='paid_only') {
+if ($this->get['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="paid_only">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 }
-if ($this->cookie['payment_status']=='unpaid_only') {
+if ($this->get['payment_status']=='unpaid_only') {
 	$payment_status_select.='<option value="unpaid_only" selected="selected">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="unpaid_only">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
@@ -198,7 +208,10 @@ $content.='
 			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
 			</div>
-
+			<div class="form-group">
+				<label for="country">'.$this->pi_getLL('countries').'</label>
+				'.$billing_countries_sb.'
+			</div>
 			<label>Date</label>
 			<div class="form-group form-inline">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
@@ -252,6 +265,7 @@ $content.='
 $search_start_time='';
 $search_end_time='';
 $filter=array();
+$data_query=array();
 if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['order_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
@@ -259,37 +273,49 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
 	list($td, $tm, $ty)=explode('/', $till_date);
 	$search_start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$search_end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
-	$filter[]="o.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
+	$data_query['where'][]="o.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
 }
-if ($this->post['orders_status_search']>0) {
-	$filter[]="(o.status='".$this->get['orders_status_search']."')";
+if ($this->get['orders_status_search']>0) {
+	$data_query['where'][]="(o.status='".$this->get['orders_status_search']."')";
 }
 if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
 	if ($this->get['payment_method']=='nopm') {
-		$filter[]="(o.payment_method is null)";
+		$data_query['where'][]="(o.payment_method is null)";
 	} else {
-		$filter[]="(o.payment_method='".$this->get['payment_method']."')";
+		$data_query['where'][]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
 	}
 }
 if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
 	if ($this->get['shipping_method']=='nosm') {
-		$filter[]="(o.shipping_method is null)";
+		$data_query['where'][]="(o.shipping_method is null)";
 	} else {
-		$filter[]="(o.shipping_method='".$this->get['shipping_method']."')";
+		$data_query['where'][]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
 	}
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
-	$filter[]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
+	$data_query['where'][]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
 }
-if ($this->cookie['payment_status']=='paid_only') {
-	$filter[]="(o.paid='1')";
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
+}
+if ($this->get['payment_status']=='paid_only') {
+	$data_query['where'][]="(o.paid='1')";
 } else {
-	if ($this->cookie['payment_status']=='unpaid_only') {
-		$filter[]="(o.paid='0')";
+	if ($this->get['payment_status']=='unpaid_only') {
+		$data_query['where'][]="(o.paid='0')";
 	}
 }
 if (!$this->masterShop) {
-	$filter[]='o.page_uid='.$this->shop_pid;
+	$data_query['where'][]='o.page_uid='.$this->shop_pid;
+}
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
 }
 // search processor eol
 $dates=array();
@@ -318,12 +344,13 @@ $content.='<th align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulati
 $content.='</tr></thead><tbody>';
 $content.='<tr>';
 $total_amount=0;
+// monthly order revenue
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
 	$where=array();
-	foreach ($filter as $filter_data) {
+	foreach ($data_query['where'] as $filter_data) {
 		$where[]=$filter_data;
 	}
 	$where[]='(o.deleted=0)';
@@ -375,13 +402,14 @@ $content.='</tr></thead><tbody>';
 $content.='<tr>';
 $total_amount_avg=0;
 $total_orders_avg=0;
+// monthly average order
 foreach ($dates as $key=>$value) {
 	$total_price_avrg=0;
 	$total_orders=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
 	$where=array();
-	foreach ($filter as $filter_data) {
+	foreach ($data_query['where'] as $filter_data) {
 		$where[]=$filter_data;
 	}
 	$where[]='(o.deleted=0)';
@@ -462,6 +490,7 @@ $content.='<table class="table table-striped table-bordered" id="product_import_
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('average', 'average')).'</th>
 	<th>'.htmlspecialchars($this->pi_getLL('orders_id')).'</th>
 </tr></thead><tbody>';
+// daily stats
 foreach ($dates as $key=>$value) {
 	$total_daily_orders=0;
 	if (!$tr_type or $tr_type=='even') {
@@ -475,7 +504,7 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime(date("Y-m-d 00:00:00",$value));
 	$end_time=strtotime(date("Y-m-d 23:59:59",$value));
 	$where=array();
-	foreach ($filter as $filter_data) {
+	foreach ($data_query['where'] as $filter_data) {
 		$where[]=$filter_data;
 	}
 	$where[]='(o.deleted=0)';
@@ -560,6 +589,7 @@ jQuery(document).ready(function ($) {
         timeFormat: \'HH:mm:ss\'
 	});
 	$(".order_select2").select2();
+	$(".invoice_select2").select2();
 });
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;

@@ -402,9 +402,27 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$product=mslib_fe::getProduct($products_id);
 				if ($product['products_id']) {
 					if ($product['products_image']) {
+						$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 					}
-					if (mslib_fe::ProductHasAttributes($product['products_id']) and !count($this->post['attributes'])) {
+					//
+					$query=$GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
+							'tx_multishop_products_attributes pa, tx_multishop_products_options po', // FROM ...
+							'pa.products_id="'.addslashes($product['products_id']).'" and pa.page_uid=\''.$this->showCatalogFromPage.'\' and po.hide!=1 and po.hide_in_cart!=1 and po.language_id='.$this->sys_language_uid.' and po.products_options_id=pa.options_id', // WHERE...
+							'', // GROUP BY...
+							'pa.sort_order_option_name asc, pa.sort_order_option_value asc', // ORDER BY...
+							'' // LIMIT ...
+					);
+					$product_attributes=array();
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+							$product_attributes[$row['options_id']][]=$row['options_values_id'];
+						}
+					}
+					//
+					//if (mslib_fe::ProductHasAttributes($product['products_id']) and !count($this->post['attributes'])) {
+					if (is_array($product_attributes) && count($product_attributes) && !count($this->post['attributes'])) {
 						// Product has attributes. We need to redirect the customer to the product detail page so the attributes can be selected
 						if ($product['categories_id']) {
 							// get all cats to generate multilevel fake url
@@ -688,6 +706,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$product=mslib_fe::getProduct($rel_products_id);
 								if ($product['products_id']) {
 									if ($product['products_image']) {
+										$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 										$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 									}
 									if ($product['categories_id']) {
@@ -2483,12 +2502,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$key='SHIPPING_COSTS_WRAPPER';
 			//if ($this->cart['user']['shipping_method_costs_including_vat']>0) {
 			if ($this->cart['user']['shipping_method_label']) {
-				$markerArray=array();
-				$shipping_price_value=$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
-				$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$this->cart['user']['shipping_method_label'].')';
-				$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs_including_vat']);
-				$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs']);
-				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+				$markerArray = array();
+				$shipping_price_value = $order['shipping_method_costs'] + $order['orders_tax_data']['shipping_tax'];
+				$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL'] = $this->pi_getLL('shipping_costs') . ' (' . $this->cart['user']['shipping_method_label'] . ')';
+				$markerArray['SHIPPING_COSTS_INCLUDING_VAT'] = mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs_including_vat']);
+				$markerArray['SHIPPING_COSTS'] = mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs']);
+				$shippingCostsLineContent=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+				if (!$this->cart['user']['shipping_method_costs']) {
+					if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_SHIPPING_COSTS_IN_SUMMARY']=='1') {
+						$shippingCostsLineContent='';
+					}
+				}
+				$subpartArray['###' . $key . '###']=$shippingCostsLineContent;
 			} else {
 				$subpartArray['###'.$key.'###']='';
 			}
@@ -2501,7 +2526,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$this->cart['user']['payment_method_label'].')';
 				$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs_including_vat']);
 				$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs']);
-				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+				$paymentCostsLineContent=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+				if (!$this->cart['user']['payment_method_costs']) {
+					if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_PAYMENT_COSTS_IN_SUMMARY']=='1') {
+						$paymentCostsLineContent='';
+					}
+				}
+				$subpartArray['###' . $key . '###']=$paymentCostsLineContent;
 			} else {
 				$subpartArray['###'.$key.'###']='';
 			}

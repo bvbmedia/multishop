@@ -62,7 +62,7 @@ jQuery(document).ready(function ($) {
                         ###RESULTS_LIMIT_SELECTBOX###
                     </div>
             </div>
-            <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+            <div id="msAdminInterfaceSearch" class="panel-collapse collapse###UNFOLD_SEARCH_BOX###">
                 <div class="panel-body">
                     <div id="search-orders" class="well no-mb">
                         <input name="id" type="hidden" value="###SHOP_PID###" />
@@ -77,6 +77,12 @@ jQuery(document).ready(function ($) {
                                 <div class="form-group">
                                     <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
                                     ###USERGROUP_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="type_search">###LABEL_ORDERED_PRODUCT###</label>
+                                    <div class="form-inline">
+                                        <input type="hidden" class="ordered_product" name="ordered_product" value="###VALUE_ORDERED_PRODUCT###" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4 formfield-wrapper">
@@ -163,7 +169,7 @@ jQuery(document).ready(function ($) {
                     <td class="cellID">
                         <a href="###INVOICES_URL###" target="_blank">###INVOICES_ID###</a>
                     </td>
-                    <td class="cellID">###INVOICES_ORDER_ID###</td>
+                    <td class="cellID"><a href="###ORDER_URL###">###INVOICES_ORDER_ID###</a></td>
                     ###MASTER_SHOP###
                     <td class="cellName">
                         <a href="###INVOICES_URL###" target="_blank">###INVOICES_CUSTOMER_NAME###</a>

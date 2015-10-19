@@ -269,7 +269,7 @@ if ($this->get['feed_hash']) {
 				} else {
 					$includeDisabled=0;
 				}
-				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 999999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
+				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
 					foreach ($pageset['products'] as $row) {
@@ -388,7 +388,8 @@ if ($this->get['feed_hash']) {
 					//hook to let other plugins further manipulate the settings
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedRecordsPreProc'])) {
 						$params=array(
-							'records'=>&$records
+							'records'=>&$records,
+							'feed'=>$feed
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedRecordsPreProc'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -908,6 +909,7 @@ if ($this->get['feed_hash']) {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
 					$output=$tmpcontent;
 					$params=array(
+						'feed'=>$feed,
 						'mode'=>$mode,
 						'field'=>$field,
 						'row'=>&$row,

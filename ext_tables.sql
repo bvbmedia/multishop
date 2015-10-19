@@ -788,7 +788,7 @@ CREATE TABLE `tx_multishop_payment_transactions` (
 
 CREATE TABLE `tx_multishop_products` (
  `products_id` int(11) NOT NULL auto_increment,
- `products_quantity` int(4) default '0',
+ `products_quantity` int(11) default '0',
  `products_model` varchar(128) default '',
  `products_image` varchar(250) default '',
  `products_image1` varchar(250) default '',

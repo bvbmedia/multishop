@@ -15,7 +15,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 	} else {
 		$prefix='';
 	}
-	$order=mslib_fe::getOrder($invoice['orders_id']);
+	$order=mslib_fe::getOrder($invoice['orders_id'],'orders_id',1);
+
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
 		// now parse all the objects in the tmpl file
@@ -88,7 +89,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###LABEL_INVOICE_NUMBER###']=$this->pi_getLL('invoice_number');
 		$markerArray['###INVOICE_NUMBER###']=$invoice['invoice_id'];
 		$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']='';
-		$markerArray['###INVOICE_SHIPPPING_METHOD###']='';
+		$markerArray['###INVOICE_SHIPPING_METHOD###']='';
 		if ($order['shipping_method_label']) {
 			$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 			$markerArray['###INVOICE_SHIPPING_METHOD###']=$order['shipping_method_label'];
@@ -130,6 +131,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$cmsKeys[]='pdf_invoice_header_message_'.$order['payment_method'];
 		}
 		$cmsKeys[]='pdf_invoice_header_message';
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'])) {
+			$params=array(
+				'cmsKeys'=>&$cmsKeys,
+				'order'=>&$order,
+				'markerArray'=>&$markerArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		foreach ($cmsKeys as $cmsKey) {
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
@@ -149,6 +161,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$cmsKeys[]='pdf_invoice_footer_message_'.$order['payment_method'];
 		}
 		$cmsKeys[]='pdf_invoice_footer_message';
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'])) {
+			$params=array(
+				'cmsKeys'=>&$cmsKeys,
+				'order'=>&$order,
+				'markerArray'=>&$markerArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		foreach ($cmsKeys as $cmsKey) {
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
@@ -292,15 +315,14 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
-
-
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
 				'array1'=>&$array1,
 				'array2'=>&$array2,
 				'order'=>&$order,
-				'mail_template'=>$mail_template
+				'mail_template'=>$mail_template,
+				'markerArray'=>&$markerArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -320,6 +342,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		}
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
+		if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['debug']) {
+			echo $tmpcontent;
+			exit();
+		}
+
 		// debug html output
 		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
 		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.custom.php');

@@ -186,8 +186,8 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
-				$.each(split_id, function(i, v) {
-					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+				/*$.each(split_id, function(i, v) {
+					if (typeof categoriesIdTerm['.$this->shop_pid.'][v] !== "undefined") {
 						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
 					}
 				});
@@ -200,10 +200,19 @@ jQuery(document).ready(function($) {
 						},
 						dataType: "json"
 					}).done(function(data) {
-						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						categoriesIdTerm['.$this->shop_pid.'][data.id]={id: data.id, text: data.text};
 						callback(data);
 					});
-				}
+				}*/
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					categoriesIdTerm['.$this->shop_pid.'][data.id]={id: data.id, text: data.text};
+					callback(data);
+				});
 			}
 		},
 		formatResult: function(data){
@@ -217,7 +226,9 @@ jQuery(document).ready(function($) {
 		},
 		formatSelection: function(data){
 			if (data.text === undefined) {
-				return data[0].text;
+				$.each(data, function(i,val){
+					return val.text;
+				});
 			} else {
 				return data.text;
 			}
@@ -744,7 +755,9 @@ jQuery(document).ready(function($) {
 		},
 		formatSelection: function(data){
 			if (data.text === undefined) {
-				return data[0].text;
+				$.each(data, function(i,val){
+					return val.text;
+				});
 			} else {
 				return data.text;
 			}
@@ -2149,6 +2162,14 @@ if ($this->post) {
 				// get all cats to generate multilevel fake url eof
 			}
 			$details_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+
+			$headingButton=array();
+			$headingButton['btn_class']='btn btn-danger';
+			$headingButton['fa_class']='fa fa-remove';
+			$headingButton['title']=$this->pi_getLL('admin_delete_product');
+			$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=delete_product&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product');
+			$headerButtons[]=$headingButton;
+
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-primary viewfront';
 			$headingButton['fa_class']='fa fa-eye';
@@ -2156,9 +2177,10 @@ if ($this->post) {
 			$headingButton['href']=$details_link;
 			$headerButtons[]=$headingButton;
 
+
 			$headingButton=array();
-			$headingButton['btn_class']='btn btn-primary';
-			$headingButton['fa_class']='fa fa-plus-circle';
+			$headingButton['btn_class']='btn btn-success';
+			$headingButton['fa_class']='fa fa-check-circle';
 			$headingButton['title']=$this->pi_getLL('save');
 			$headingButton['href']='#';
 			$headingButton['attributes']='onclick="$(\'#admin_product_edit button[name=\\\'Submit\\\']\').click(); return false;"';
@@ -2407,11 +2429,15 @@ if ($this->post) {
 					var counter_data = parseInt(document.getElementById(\'sp_row_counter\').value);
 					document.getElementById(\'sp_row_counter\').value = counter_data - 1;
 				}
-				$(document).on("keyup", ".msStaffelPriceExcludingVat", function() {
-					productPrice(true, this);
+				$(document).on("keyup", ".msStaffelPriceExcludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(true, this);
+					}
 				});
-				$(document).on("keyup", ".msStaffelPriceIncludingVat", function() {
-					productPrice(false, this);
+				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(false, this);
+					}
 				});
 				</script>';
 			if (empty($product['staffel_price'])) {
@@ -2475,7 +2501,7 @@ if ($this->post) {
 		}
 		$manufacturer_input.='</select>';
 		$order_unit='<select name="order_unit_id" class="form-control"><option value="">'.$this->pi_getLL('default').'</option>';
-		$str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
+		$str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$order_unit.='<option value="'.$row['id'].'" '.(($row['id']==$product['order_unit_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
@@ -2735,18 +2761,18 @@ if ($this->post) {
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
-			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_select_value_or_type_new_value'))).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_value_col']='new_attributes_html+=\'<td class="product_attribute_value">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
-			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_select_value_or_type_new_value'))).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 				$element_id=time();
 				$new_product_attributes_block_columns_js['attribute_value_image_col']='new_attributes_html+=\'<td class="product_attribute_value_image">\';
 				new_attributes_html+=\'<div class="form-group" class="msEditAttributeValueImage">\';
-				new_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+				new_attributes_html+=\'<label for="attribute_value_image">'.addslashes(htmlspecialchars($this->pi_getLL('admin_image'))).'</label>\';
 				new_attributes_html+=\'<div id="attribute_value_image'.$element_id.'">\';
 				new_attributes_html+=\'<noscript>\';
 				new_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
@@ -2767,18 +2793,18 @@ if ($this->post) {
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span>\';
+			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('excluding_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span>\';
+			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('including_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
-			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_save_attribute'))).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.addslashes(htmlspecialchars($this->pi_getLL('cancel'))).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -2803,7 +2829,7 @@ if ($this->post) {
 					var n = d.getTime();
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
-					new_attributes_html+=\'<div class="panel panel-primary no-mb"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<div class="panel panel-primary no-mb"><div class="panel-heading"><h3 class="panel-title">'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_add_new_product_attributes'))).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table class="table no-mb">\';
 					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
@@ -2815,7 +2841,7 @@ if ($this->post) {
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var cols_image_attributes_html=\'<div class="form-group" class="msEditAttributeValueImage">\';
-					cols_image_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+					cols_image_attributes_html+=\'<label for="attribute_value_image">'.addslashes(htmlspecialchars($this->pi_getLL('admin_image'))).'</label>\';
 					cols_image_attributes_html+=\'<div id="attribute_value_image\' + n + \'">\';
 					cols_image_attributes_html+=\'<noscript>\';
 					cols_image_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
@@ -3466,7 +3492,7 @@ if ($this->post) {
 										<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image'.$element_id.'" type="hidden" value="'.$attribute_data['attribute_image'].'" />';
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='<div id="attribute_value_image_action'.$element_id.'" class="attribute_value_image">';
 									if ($_REQUEST['action']=='edit_product' && $attribute_data['attribute_image']) {
-										$existing_product_attributes_block_columns['attribute_value_image_col'].='<img src="'.mslib_befe::getImagePath($attribute_data['attribute_image'], 'attribute_values', 'original').'" width="75" id="product_attribute_value_image'.$element_id.'" />';
+										$existing_product_attributes_block_columns['attribute_value_image_col'].='<img src="'.mslib_befe::getImagePath($attribute_data['attribute_image'], 'attribute_values', 'small').'" width="75" id="product_attribute_value_image'.$element_id.'" />';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].='<div class="image_tools">';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].=' <a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':'.$attribute_data['attribute_image'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
@@ -3615,9 +3641,9 @@ if ($this->post) {
 					initSelection: function(element, callback) {
 						var id=$(element).val();
 						if (id!=="") {
-							//if (attributesValues[id] !== undefined) {
-							//	callback(attributesValues[id]);
-							//} else {
+							if (attributesValues[id] !== undefined) {
+								callback(attributesValues[id]);
+							} else {
 								$.ajax(ajax_url, {
 									data: {
 										preselected_id: id,
@@ -3627,7 +3653,7 @@ if ($this->post) {
 									attributesValues[data.id]={id: data.id, text: data.text};
 									callback(data);
 								});
-							//}
+							}
 						}
 					},
 					formatResult: function(data){
@@ -3653,11 +3679,15 @@ if ($this->post) {
 			}
 			jQuery(document).ready(function(){
 				'.$attribute_values_sb_trigger.'
-				$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
-					productPrice(true, this);
+				$(document).on("keyup", ".msAttributesPriceExcludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(true, this);
+					}
 				});
-				$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
-					productPrice(false, this);
+				$(document).on("keyup", ".msAttributesPriceIncludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(false, this);
+					}
 				});
 			});
 			</script>
@@ -4057,8 +4087,8 @@ if ($this->post) {
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
 		$subpartArray['###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
-		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
-		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
+		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_product_name_is_empty')));
+		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=addslashes(htmlspecialchars($this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs')));
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 		if (!$this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 			$subpartArray['###MANUFACTURERS_ADVICE_PRICE###']='';

@@ -106,12 +106,21 @@ if ($p>0) {
 	$p=0;
 	$queryData['offset']=0;
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_action_notification_log.php']['statsActionNotificationLogQueryHookPreProc'])) {
+	$params=array(
+		'queryData'=>&$queryData
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_action_notification_log.php']['statsActionNotificationLogQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $pageset=mslib_fe::getRecordsPageSet($queryData);
 if (!count($pageset['dataset'])) {
 	$content.=$this->pi_getLL('no_records_found', 'No records found.').'.<br />';
 } else {
 	$tr_type='even';
-	$headercol.='		
+	$headercol.='
 	<th class="cellDate">'.$this->pi_getLL('date').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('title', 'Title').'</th>
 	<th class="cellID">'.$this->pi_getLL('admin_customer_id').'</th>
@@ -155,7 +164,7 @@ if (!count($pageset['dataset'])) {
 		</td>
 		<td class="cellContent">
 			'.$row['message'].'
-		</td>	
+		</td>
 		</tr>
 		';
 	}
@@ -165,7 +174,7 @@ if (!count($pageset['dataset'])) {
 		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
-	// pagination eof		
+	// pagination eof
 }
 $tmp=$content;
 $content='';
@@ -176,7 +185,7 @@ $tabs['actionNotificationLogListing']=array(
 );
 $tmp='';
 $content.='
-<script type="text/javascript">      
+<script type="text/javascript">
 jQuery(document).ready(function($) {
 var url = document.location.toString();
 if (url.match("#")) {
@@ -190,19 +199,19 @@ if (url.match("#")) {
 		window.location.hash = e.target.hash;
 		$("body,html,document").scrollTop(0);
 	})
-             		
+
     jQuery(\'#order_date_from\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'         		
+		timeFormat: \'HH:mm:ss\'
     });
-             		
+
 	jQuery(\'#order_date_till\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'         		
+		timeFormat: \'HH:mm:ss\'
     });
- 
+
 });
 </script>
 <div class="panel-body">

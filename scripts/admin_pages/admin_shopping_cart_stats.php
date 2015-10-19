@@ -53,17 +53,26 @@ foreach ($dates as $key=>$value) {
 $content.='<th class="cellDate">'.htmlspecialchars($this->pi_getLL('cumulative')).'</th></tr></thead>';
 $content.='<tbody><tr>';
 $total=0;
+$data_query=array();
+if ($this->cookie['no_checkout_cart_entries_only']) {
+	$data_query['where'][]='(c.is_checkout=0)';
+} else {
+	$data_query['where'][]='(c.is_checkout=0 or c.is_checkout=1)';
+}
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shopping_cart_stats.php']['shoppingCartStatsQueryHookPreProc'])) {
+	$params=array(
+			'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shopping_cart_stats.php']['shoppingCartStatsQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	$where=array();
-	if ($this->cookie['no_checkout_cart_entries_only']) {
-		$where[]='(c.is_checkout=0)';
-	} else {
-		$where[]='(c.is_checkout=0 or c.is_checkout=1)';
-	}
-	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
+	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $data_query['where']).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$content.='<td class="cellDate">'.$rows.'</td>';
@@ -106,20 +115,14 @@ foreach ($dates as $key=>$value) {
 	$system_date=date("Y-m-d", $value);
 	$start_time=strtotime($system_date." 00:00:00");
 	$end_time=strtotime($system_date." 23:59:59");
-	$where=array();
-	if ($this->cookie['no_checkout_cart_entries_only']) {
-		$where[]='(c.is_checkout=0)';
-	} else {
-		$where[]='(c.is_checkout=0 or c.is_checkout=1)';
-	}
-	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
+	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $data_query['where']).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$content.='<td class="text-right">'.number_format($rows).'</td>';
 	$content.='<td>';
 	$pageset['total_rows']=$rows;
 	// GET THE PRODUCTS THAT ARE INSIDE THE CART
-	$str="SELECT * FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' order by c.id desc";
+	$str="SELECT * FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $data_query['where']).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' order by c.id desc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$session_ids=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {

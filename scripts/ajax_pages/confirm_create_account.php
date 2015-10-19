@@ -37,8 +37,13 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 		$cart=unserialize($row['contents']);
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 		$GLOBALS['TSFE']->storeSessionData();
-		// redirect to checkout page
-		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout', 1);
+
+		if (is_numeric($this->conf['confirmed_create_account_target_pid'])) {
+			$targetPid=$this->conf['confirmed_create_account_target_pid'];
+		} else {
+			$targetPid=$this->conf['checkout_page_pid'];
+		}
+		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($targetPid);
 	} else {
 		// redirect to shop
 		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);

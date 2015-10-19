@@ -162,26 +162,39 @@ if (count($shipping_methods)>0) {
 	$content.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'], 1).'" method="post" enctype="multipart/form-data">';
 	$content.='<div class="shipping_cost_input_field_wrapper">';
 	$count_shipping_methods=array();
+	$row_index=0;
+	$counter_shipping_methods=count($shipping_methods);
 	foreach ($shipping_methods as $row) {
-		$content.='<div class="multishop_fieldset">';
-		$content.='<div class="form-group"><label class="control-label col-md-4">'.$this->pi_getLL('shipping_method').': '.$row['name'].'</label>';
-		$content.='<div class="col-md-8"><select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'" class="form-control">
-		<option value="">'.$this->pi_getLL('no_shipping_costs').'</option>';
+		$content.='<div class="panel panel-default">';
+		$content.='<div class="panel-heading panel-heading-toggle'.($row_index>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msAdminShippingCost'.$row['id'].'">';
+		$content.='<h3 class="panel-title">';
+		$content.='<a role="button" data-toggle="collapse" href="#msAdminShippingCost'.$row['id'].'">'.$this->pi_getLL('shipping_method').': '.$row['name'].'</a>';
+		$content.='</h3>';
+		$content.='</div>';
+		$content.='<div id="msAdminShippingCost'.$row['id'].'" class="panel-collapse collapse'.($row_index===0 ? ' in' : '').'">';
+		$content.='<div class="panel-body">';
+		$content.='<div class="form-group">';
+		$content.='<div class="col-md-12">';
+		$content.='<select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'" class="form-control">';
+		$content.='<option value="">'.$this->pi_getLL('no_shipping_costs').'</option>';
 		foreach ($shipping_cost_types as $shipping_cost_type) {
 			$content.='<option value="'.$shipping_cost_type['value'].'" '.(($row['shipping_costs_type']==$shipping_cost_type['value']) ? 'selected' : '').'>'.$shipping_cost_type['title'].'</option>';
 		}
-		$content.='</select><input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" /></div></div>';
+		$content.='</select>';
+		$content.='<input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" />';
+		$content.='</div>'; // .col-md-12
+		$content.='</div>'; // .form-group
 		$content.='<div id="has'.$row['id'].'">';
 		//if empty
 		if (empty($row['shipping_costs_type'])) {
 			$count_shipping_methods[]=$row['id'];
-			$content.='</div></div>';
-			continue;
 		}
 		if ($row['shipping_costs_type']=='flat') {
 			// start for flat based
+			$zone_index=0;
+			$counter_zones=count($zones);
 			foreach ($zones as $zone) {
-				$content.='<div class="panel panel-default">';
+				$content.='<div class="panel panel-default'.($zone_index==($counter_zones-1) ? ' no-mb' : '').'">';
 				$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 				$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
@@ -249,12 +262,16 @@ if (count($shipping_methods)>0) {
 						</div>
 					</div>';
 				$content.='</div></div>';
+				//
+				$zone_index++;
 			}
 		} else {
 			if ($row['shipping_costs_type']=='weight') {
 				// start for weight based
+				$zone_index=0;
+				$counter_zones=count($zones);
 				foreach ($zones as $zone) {
-					$content.='<div class="panel panel-default">';
+					$content.='<div class="panel panel-default'.($zone_index==($counter_zones-1) ? ' no-mb' : '').'">';
 					$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 					$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
@@ -292,8 +309,8 @@ if (count($shipping_methods)>0) {
 							// custom hook that can be controlled by third-party plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['weightConversion'])) {
 								$params=array(
-									'zone_price'=>&$zone_price,
-									'end_weight'=>&$end_weight
+										'zone_price'=>&$zone_price,
+										'end_weight'=>&$end_weight
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['weightConversion'] as $funcRef) {
 									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -394,14 +411,15 @@ if (count($shipping_methods)>0) {
 					$content.="</script>";
 					$content.='</div>';
 					//break;
+					$zone_index++;
 				} //end for weight based
 			} else {
 				// hook to process custom visual shipping cost type
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['processZoneShippingCostType'])) {
 					$params=array(
-						'row'=>&$row,
-						'zones'=>&$zones,
-						'content'=>&$content
+							'row'=>&$row,
+							'zones'=>&$zones,
+							'content'=>&$content
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['processZoneShippingCostType'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -410,9 +428,13 @@ if (count($shipping_methods)>0) {
 				// hook to process custom visual shipping cost type eof
 			}
 		}
-		$content.='</div></div>';
+		$content.='</div>'; // #has
+		$content.='</div>'; // .panel-body
+		$content.='</div>'; // .panel-collapse .collapse .in
+		$content.='</div>'; // .panel .panel-default
 		$count_shipping_methods[]=$row['id'];
 		//break;
+		$row_index++;
 	}
 	$content.='
 	</div>
@@ -536,11 +558,15 @@ if (count($shipping_methods)>0) {
 		var number = prime + "." + decimal.substr(0, 2);
 		return number;
 	}
-	$(document).on("change", ".msProductsPriceExcludingVat", function() {
-		productPrice(true, this);
+	$(document).on("change", ".msProductsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, this);
+		}
 	});
-	$(document).on("change", ".msProductsPriceIncludingVat", function() {
-		productPrice(false, this);
+	$(document).on("change", ".msProductsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, this);
+		}
 	});
 });
 </script>';

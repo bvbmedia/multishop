@@ -67,19 +67,30 @@ $phpexcel->getActiveSheet()->getColumnDimension($col_char)->setWidth(29);
 $col=0;
 $col_char='A';
 $total_amount=0;
+//
+$data=array();
+if ($this->get['paid_orders_only']) {
+	$data_query['where'][]='(o.paid=1)';
+} else {
+	$data_query['where'][]='(o.paid=1 or o.paid=0)';
+}
+$data_query['where'][]='(o.deleted=0)';
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/orders_stats_xls_export.php']['excelStatsOrdersQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/orders_stats_xls_export.php']['excelStatsOrdersQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+//
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	$where=array();
-	if ($this->get['paid_orders_only']) {
-		$where[]='(o.paid=1)';
-	} else {
-		$where[]='(o.paid=1 or o.paid=0)';
-	}
-	$where[]='(o.deleted=0)';
-	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);
@@ -156,14 +167,8 @@ foreach ($dates as $key=>$value) {
 	$system_date=date($selected_year."m-d", $value);
 	$start_time=strtotime($system_date." 00:00:00");
 	$end_time=strtotime($system_date." 23:59:59");
-	$where=array();
-	if ($this->get['paid_orders_only']) {
-		$where[]='(o.paid=1)';
-	} else {
-		$where[]='(o.paid=1 or o.paid=0)';
-	}
-	$where[]='(o.deleted=0)';
-	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	//
+	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	//echo date('d-m-Y H:i:s', $start_time).'---';
 	//echo date('d-m-Y H:i:s', $end_time);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

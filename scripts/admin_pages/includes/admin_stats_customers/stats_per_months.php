@@ -87,6 +87,22 @@ foreach ($dates as $key=>$value) {
 //$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
 $content.='</tr></thead><tbody>';
 $content.='<tr>';
+$data_query['where']=array();
+if ($this->cookie['paid_orders_only']) {
+	$data_query['where'][]='(o.paid=1)';
+} else {
+	$data_query['where'][]='(o.paid=1 or o.paid=0)';
+}
+$data_query['where'][]='(o.deleted=0)';
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_customers/stats_per_month.php']['monthlyStatsCustomersQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_customers/stats_per_month.php']['monthlyStatsCustomersQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
@@ -98,7 +114,7 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	$str="SELECT sum(o.grand_total) as total, o.billing_company, o.billing_name, o.customer_id FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") group by o.customer_id having total > 0 order by total desc limit 10";
+	$str="SELECT sum(o.grand_total) as total, o.billing_company, o.billing_name, o.customer_id FROM tx_multishop_orders o WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") group by o.customer_id having total > 0 order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$content.='<td valign="top">
 		';

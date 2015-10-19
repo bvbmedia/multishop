@@ -714,7 +714,10 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 	$filter[]='o.by_phone=1';
 }
 if (isset($this->post['country']) && !empty($this->post['country'])) {
-	$filter[]="o.billing_country='".$this->post['country']."'";
+	$filter[]="o.billing_country='".addslashes($this->post['country'])."'";
+}
+if (isset($this->post['ordered_product']) && !empty($this->post['ordered_product'])) {
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->post['ordered_product'])."')";
 }
 if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
@@ -832,8 +835,23 @@ $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
-
-
+//
+$subpartArray['###UNFOLD_SEARCH_BOX###']='';
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
+	(isset($this->get['country']) && !empty($this->get['country'])) ||
+	(isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+	(isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
+	(isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
+	(isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) ||
+	(isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
+	(isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
+	(isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
+	(isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+	(isset($this->get['search_by_status_last_modified']) && !empty($this->get['search_by_status_last_modified'])) ||
+	(isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
+	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
+}
+//
 $subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
@@ -860,6 +878,8 @@ $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_statu
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
+$subpartArray['###LABEL_ORDERED_PRODUCT###']=$this->pi_getLL('admin_ordered_product');
+$subpartArray['###VALUE_ORDERED_PRODUCT###']=$this->post['ordered_product'];
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
@@ -894,6 +914,51 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$(".order_select2").select2();
+	$(".ordered_product").select2({
+		placeholder: "'.$this->pi_getLL('all').'",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
 });
 </script>
 ';

@@ -46,6 +46,7 @@ foreach ($invoices as $invoice) {
 	}
 	//
 	$markerArray=array();
+	$markerArray['ORDER_URL']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$invoice['orders_id'].'&action=edit_order');
 	$markerArray['INVOICE_CTR']=$cb_ctr;
 	$markerArray['INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 	$markerArray['INVOICES_INTERNAL_ID']=$invoice['id'];

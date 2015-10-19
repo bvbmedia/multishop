@@ -94,9 +94,9 @@ if (count($products)<0) {
 		<div class="col-md-8">
 		<div class="form-group">
 			<span id="ValidRadio" class="InputGroup">
-				<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? '<span class="text-danger">*</span>' : '').'</label>
+				<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).'</label>
 				<div class="radio radio-success radio-inline">
-				<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m') ? 'checked' : '').($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? ' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'"' : '').'>
+				<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m') ? 'checked' : '').'>
 				<label class="account-male" for="radio">'.ucfirst($this->pi_getLL('mr')).'</label>
 				</div>
 				<div class="radio radio-success radio-inline">
@@ -115,8 +115,8 @@ if (count($products)<0) {
 				<input type="hidden" name="birthday" class="birthday" id="birthday" value="'.htmlspecialchars($user['birthday']).'" >
 			</div>
 			<div class="col-md-6">
-				<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<span class="text-danger">*</span>' : '').'</label>
-				<input type="text" name="company" class="form-control company" id="company" value="'.htmlspecialchars($user['company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>
+				<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
+				<input type="text" name="company" class="form-control company" id="company" value="'.htmlspecialchars($user['company']).'"/>
 				'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '').'
 			</div>
 			</div>
@@ -136,28 +136,28 @@ if (count($products)<0) {
 		<div class="form-group">
 			<div class="row">
 			<div class="col-md-4">
-				<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span></label>
-				<input type="text" name="first_name" class="form-control first-name" id="first_name" value="'.htmlspecialchars($user['first_name']).'" required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"><div id="invalid-first_name" class="error-space" style="display:none"></div>
+				<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'</label>
+				<input type="text" name="first_name" class="form-control first-name" id="first_name" value="'.htmlspecialchars($user['first_name']).'">
 			</div>
 			<div class="col-md-4">
 				<label class="account-middlename" for="middle_name">'.ucfirst($this->pi_getLL('middle_name')).'</label>
 				<input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="'.htmlspecialchars($user['middle_name']).'">
 			</div>
 			<div class="col-md-4">
-				<label class="account-lastname" for="last_name">'.ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span></label>
-				<input type="text" name="last_name" id="last_name" class="form-control last-name" value="'.htmlspecialchars($user['last_name']).'" required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('surname_is_required').'"><div id="invalid-last_name" class="error-space" style="display:none"></div>
+				<label class="account-lastname" for="last_name">'.ucfirst($this->pi_getLL('last_name')).'</label>
+				<input type="text" name="last_name" id="last_name" class="form-control last-name" value="'.htmlspecialchars($user['last_name']).'">
 			</div>
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-4">
-					<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span></label>
-					<input type="text" name="street_name" id="address" class="form-control address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
+					<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'</label>
+					<input type="text" name="street_name" id="address" class="form-control address" value="'.htmlspecialchars($user['street_name']).'">
 				</div>
 				<div class="col-md-4">
-					<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span></label>
-					<input type="text" name="address_number" id="address_number" class="form-control address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
+					<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
+					<input type="text" name="address_number" id="address_number" class="form-control address-number" value="'.htmlspecialchars($user['address_number']).'">
 				</div>
 				<div class="col-md-4">
 					<label class="account-address_address_ext" for="address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
@@ -168,12 +168,12 @@ if (count($products)<0) {
 		<div class="form-group">
 			<div class="row">
 			<div class="col-md-6">
-				<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span></label>
-				<input type="text" name="zip" id="zip" class="form-control zip" value="'.htmlspecialchars($user['zip']).'" required="required" data-h5-errorid="invalid-zip" title="'.$this->pi_getLL('zip_is_required').'"><div id="invalid-zip" class="error-space" style="display:none"></div>
+				<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
+				<input type="text" name="zip" id="zip" class="form-control zip" value="'.htmlspecialchars($user['zip']).'">
 			</div>
 			<div class="col-md-6">
-				<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span></label>
-				<input type="text" name="city" id="city" class="form-control city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
+				<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
+				<input type="text" name="city" id="city" class="form-control city" value="'.htmlspecialchars($user['city']).'">
 			</div>
 			</div>
 		</div>
@@ -219,16 +219,15 @@ if (count($products)<0) {
 		// country eof
 		$content.='</div>
 		<div class="form-group">
-			<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'<span class="text-danger">*</span></label>
+			<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'</label>
 			<input type="text" name="email" id="email" class="form-control email" value="'.htmlspecialchars($user['email']).'" required="required" data-h5-errorid="invalid-email" title="'.$this->pi_getLL('email_is_required').'">
 			<div id="invalid-email" class="error-space" style="display:none"></div>
 		</div>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">
-					<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '').'</label>
-					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'>
-					<div id="invalid-telephone" class="error-space" style="display:none"></div>
+					<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'</label>
+					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="'.htmlspecialchars($user['telephone']).'">
 				</div>
 				<div class="col-md-6">
 					<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
@@ -239,7 +238,8 @@ if (count($products)<0) {
 		</div>
 		<div class="form-group">
 			<div class="checkbox checkbox-success checkbox">
-				<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($this->post['different_delivery_address']) ? 'checked' : '').' /><label for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
+				<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($this->post['different_delivery_address']) ? 'checked' : '').' />
+				<label for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
 			</div>
 		</div>
 		<hr>';
@@ -307,80 +307,15 @@ if (count($products)<0) {
 				});
 				if ($("#checkboxdifferent_delivery_address").is(\':checked\')) {
 					// set the h5validate attributes for required delivery data
-					$(\'#delivery_radio\').attr(\'required\', \'required\');
-					$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-					$(\'#delivery_radio\').attr(\'title\', \''.addslashes($this->pi_getLL('gender_is_required', 'Title is required')).' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-
-					$(\'#delivery_first_name\').attr(\'required\', \'required\');
-					$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-					$(\'#delivery_first_name\').attr(\'title\', \''.addslashes($this->pi_getLL('first_name_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-					$(\'#delivery_last_name\').attr(\'required\', \'required\');
-					$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-					$(\'#delivery_last_name\').attr(\'title\', \''.addslashes($this->pi_getLL('surname_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-					$(\'#delivery_address\').attr(\'required\', \'required\');
-					$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-					$(\'#delivery_address\').attr(\'title\', \''.addslashes($this->pi_getLL('street_address_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-					$(\'#delivery_address_number\').attr(\'required\', \'required\');
-					$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-					$(\'#delivery_address_number\').attr(\'title\', \''.addslashes($this->pi_getLL('street_number_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-					$(\'#delivery_zip\').attr(\'required\', \'required\');
-					$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-					$(\'#delivery_zip\').attr(\'title\', \''.addslashes($this->pi_getLL('zip_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-					$(\'#delivery_city\').attr(\'required\', \'required\');
-					$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-					$(\'#delivery_city\').attr(\'title\', \''.addslashes($this->pi_getLL('city_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
 					$(\'#delivery_country\').attr(\'required\', \'required\');
 					$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
 					$(\'#delivery_country\').attr(\'title\', \''.addslashes($this->pi_getLL('country_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
 
-					$(\'#delivery_telephone\').attr(\'required\', \'required\');
-					$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-					$(\'#delivery_telephone\').attr(\'title\', \''.addslashes($this->pi_getLL('telephone_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
 					$(\'#delivery_address_category\').show();
 				} else {
-					// remove the h5validate attributes
-					$(\'#delivery_radio\').removeAttr(\'required\');
-					$(\'#delivery_radio\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_radio\').removeAttr(\'title\');
-
-					$(\'#delivery_first_name\').removeAttr(\'required\');
-					$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_first_name\').removeAttr(\'title\');
-
-					$(\'#delivery_last_name\').removeAttr(\'required\');
-					$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_last_name\').removeAttr(\'title\');
-
-					$(\'#delivery_address\').removeAttr(\'required\');
-					$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_address\').removeAttr(\'title\');
-
-					$(\'#delivery_address_number\').removeAttr(\'required\');
-					$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_address_number\').removeAttr(\'title\');
-
-					$(\'#delivery_zip\').removeAttr(\'required\');
-					$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_zip\').removeAttr(\'title\');
-
-					$(\'#delivery_city\').removeAttr(\'required\');
-					$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_city\').removeAttr(\'title\');
-
 					$(\'#delivery_country\').removeAttr(\'required\');
 					$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_country\').removeAttr(\'title\');
-
-					$(\'#delivery_telephone\').removeAttr(\'required\');
-					$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
-					$(\'#delivery_telephone\').removeAttr(\'title\');
 
 					$(\'#delivery_address_category\').hide();
 				}
@@ -389,81 +324,15 @@ if (count($products)<0) {
 					jQuery(\'#delivery_address_category\').slideToggle(\'slow\', function(){});
 
 					if ($("#checkboxdifferent_delivery_address").is(\':checked\')) {
-						// set the h5validate attributes for required delivery data
-						$(\'#delivery_radio\').attr(\'required\', \'required\');
-						$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-						$(\'#delivery_radio\').attr(\'title\', \''.addslashes($this->pi_getLL('gender_is_required', 'Title is required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_first_name\').attr(\'required\', \'required\');
-						$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-						$(\'#delivery_first_name\').attr(\'title\', \''.addslashes($this->pi_getLL('first_name_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_last_name\').attr(\'required\', \'required\');
-						$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-						$(\'#delivery_last_name\').attr(\'title\', \''.addslashes($this->pi_getLL('surname_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_address\').attr(\'required\', \'required\');
-						$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-						$(\'#delivery_address\').attr(\'title\', \''.addslashes($this->pi_getLL('street_address_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_address_number\').attr(\'required\', \'required\');
-						$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-						$(\'#delivery_address_number\').attr(\'title\', \''.addslashes($this->pi_getLL('street_number_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_zip\').attr(\'required\', \'required\');
-						$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-						$(\'#delivery_zip\').attr(\'title\', \''.addslashes($this->pi_getLL('zip_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
-						$(\'#delivery_city\').attr(\'required\', \'required\');
-						$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-						$(\'#delivery_city\').attr(\'title\', \''.addslashes($this->pi_getLL('city_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
 						$(\'#delivery_country\').attr(\'required\', \'required\');
 						$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
 						$(\'#delivery_country\').attr(\'title\', \''.addslashes($this->pi_getLL('country_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
 
-						$(\'#delivery_telephone\').attr(\'required\', \'required\');
-						$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-						$(\'#delivery_telephone\').attr(\'title\', \''.addslashes($this->pi_getLL('telephone_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
-
 						$(\'#delivery_address_category\').show();
 					} else {
-						// remove the h5validate attributes
-						$(\'#delivery_radio\').removeAttr(\'required\');
-						$(\'#delivery_radio\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_radio\').removeAttr(\'title\');
-
-						$(\'#delivery_first_name\').removeAttr(\'required\');
-						$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_first_name\').removeAttr(\'title\');
-
-						$(\'#delivery_last_name\').removeAttr(\'required\');
-						$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_last_name\').removeAttr(\'title\');
-
-						$(\'#delivery_address\').removeAttr(\'required\');
-						$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_address\').removeAttr(\'title\');
-
-						$(\'#delivery_address_number\').removeAttr(\'required\');
-						$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_address_number\').removeAttr(\'title\');
-
-						$(\'#delivery_zip\').removeAttr(\'required\');
-						$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_zip\').removeAttr(\'title\');
-
-						$(\'#delivery_city\').removeAttr(\'required\');
-						$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_city\').removeAttr(\'title\');
-
 						$(\'#delivery_country\').removeAttr(\'required\');
 						$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_country\').removeAttr(\'title\');
-
-						$(\'#delivery_telephone\').removeAttr(\'required\');
-						$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
-						$(\'#delivery_telephone\').removeAttr(\'title\');
 
 						$(\'#delivery_address_category\').hide();
 					}
@@ -472,7 +341,7 @@ if (count($products)<0) {
 			</script>
 			<div class="form-group">
 				<span id="delivery_ValidRadio" class="delivery_InputGroup">
-					<label for="delivery_gender" id="account-gender">'.ucfirst($this->pi_getLL('title')).'<span class="text-danger">*</span></label>
+					<label for="delivery_gender" id="account-gender">'.ucfirst($this->pi_getLL('title')).'</label>
 					<div class="radio radio-success radio-inline">
 					<input type="radio" class="delivery_InputGroup" name="delivery_gender" value="m" class="account-gender-radio" id="delivery_radio" '.(($user['delivery_gender']=='m') ? 'checked' : '').'>
 					<label class="account-male" for="delivery_radio">'.ucfirst($this->pi_getLL('mr')).'</label>
@@ -480,40 +349,38 @@ if (count($products)<0) {
 					<div class="radio radio-success radio-inline">
 					<input type="radio" name="delivery_gender" value="f" class="delivery_InputGroup" id="delivery_radio2" '.(($user['delivery_gender']=='f') ? 'checked' : '').'>
 					<label class="account-female" for="delivery_radio2">'.ucfirst($this->pi_getLL('mrs')).'</label>
-					<div id="invalid-delivery_gender" class="error-space" style="display:none"></div>
 					</div>
 				</span>
 		 </div>
 			<div class="form-group">
-				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<span class="text-danger">*</span>' : '').':</label>
-				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" value="'.htmlspecialchars($user['delivery_company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').'"' : '').'>
-				'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-delivery_company" class="error-space" style="display:none"></div>' : '').'
+				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).':</label>
+				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-4">
-						<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span></label>
-						<input type="text" name="delivery_first_name" class="form-control delivery_first-name left-this" id="delivery_first_name" value="'.htmlspecialchars($user['delivery_first_name']).'" ><div id="invalid-delivery_first_name" class="error-space" style="display:none"></div>
+						<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'</label>
+						<input type="text" name="delivery_first_name" class="form-control delivery_first-name left-this" id="delivery_first_name" value="'.htmlspecialchars($user['delivery_first_name']).'" >
 					</div>
 					<div class="col-md-4">
 						<label class="account-middlename" for="delivery_middle_name">'.ucfirst($this->pi_getLL('middle_name')).'</label>
 						<input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control delivery_middle_name left-this" value="'.htmlspecialchars($user['delivery_middle_name']).'">
 					</div>
 					<div class="col-md-4">
-						<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span></label>
-						<input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" ><div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
+						<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'</label>
+						<input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" >
 					</div>
 				</div>
 		    </div>
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-4">
-						<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>:</label>
-						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
+						<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).':</label>
+						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'">
 					</div>
 					<div class="col-md-4">
-						<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span></label>
-						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>
+						<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
+						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" >
 					</div>
 					<div class="col-md-4">
 						<label class="account-address_delivery_address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
@@ -525,14 +392,12 @@ if (count($products)<0) {
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-6">
-						<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>:</label>
+						<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).':</label>
 						<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'">
-						<div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
 					</div>
 					<div class="col-md-6">
-						<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span></label>
+						<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'</label>
 						<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" >
-						<div id="invalid-delivery_city" class="error-space" style="display:none"></div>
 					</div>
 				</div>
 			</div>

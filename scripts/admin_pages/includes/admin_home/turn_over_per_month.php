@@ -54,26 +54,35 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	$where=array();
+	$data_query['where']=array();
 	if ($this->cookie['paid_orders_only']) {
-		$where[]='(o.paid=1)';
+		$data_query['where'][]='(o.paid=1)';
 	} else {
-		$where[]='(o.paid=1 or o.paid=0)';
+		$data_query['where'][]='(o.paid=1 or o.paid=0)';
 	}
-	$where[]='(o.deleted=0)';
-	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+	$data_query['where'][]='(o.deleted=0)';
+	$data_query['where'][]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
 	switch ($this->dashboardArray['section']) {
 		case 'admin_home':
 			break;
 		case 'admin_edit_customer':
 			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-				$where[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+				$data_query['where'][]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 			}
 			break;
 	}
+	// hook
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/turn_over_per_month.php']['monthlyHomeStatsQueryHookPreProc'])) {
+		$params=array(
+			'data_query'=>&$data_query
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/turn_over_per_month.php']['monthlyHomeStatsQueryHookPreProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.orders_id, o.grand_total', // SELECT ...
 		'tx_multishop_orders o', // FROM ...
-		'('.implode(" AND ", $where).')', // WHERE...
+		'('.implode(" AND ", $data_query['where']).')', // WHERE...
 		'', // GROUP BY...
 		'', // ORDER BY...
 		'' // LIMIT ...

@@ -40,6 +40,13 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
 			}
 		}
+		// custom hook for manipulating the installed payment methods
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'])) {
+			$params=array('installedPaymentMethods'=>&$installedPaymentMethods);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+			}
+		}
 		$this->installedPaymentMethods=$params['installedPaymentMethods'];
 		// custom hook for loading the installed payment methods eof
 		// load enabled payment methods

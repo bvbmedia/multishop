@@ -26,12 +26,14 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		$where[]='p.products_id=pd.products_id';
 		$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
 		$skip_db=false;
+		$limit=50;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='pd.products_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
 				$where[]='(pd.products_name like \'%'.addslashes($this->get['q']).'%\' or p.products_id = \''.addslashes($this->get['q']).'\')';
 			}
+			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='p.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
@@ -40,7 +42,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 			implode(' and ', $where), // WHERE.
 			'p.products_id', // GROUP BY...
 			'pd.products_name asc, p.products_status asc', // ORDER BY...
-			'' // LIMIT ...
+			$limit // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$data=array();

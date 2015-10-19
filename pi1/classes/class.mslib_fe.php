@@ -780,6 +780,16 @@ class mslib_fe {
 					$product['country_tax_rate']=($tax_ruleset[$product['tax_id']]['country_tax_rate']/100);
 					$product['region_tax_rate']=($tax_ruleset[$product['tax_id']]['state_tax_rate']/100);
 				}
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'])) {
+					$params=array(
+						'product'=>&$product,
+						'search_section'=>&$search_section
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductPostProcArray'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				$array['products'][]=$product;
 			}
 			//hook to let other plugins further manipulate the query
@@ -1177,8 +1187,8 @@ class mslib_fe {
 		$conf['returnLast']='url'; // get it as URL
 		if ($manual_link) {
 			// dont use cObj typolink method (which makes realurl/cooluri version of the link), but instead make manual link
-			if (is_numeric($this->get['l'])) {
-				$conf['additionalParams'].='&l='.$this->get['l'];
+			if (is_numeric($this->get['L'])) {
+				$conf['additionalParams'].='&L='.$this->get['L'];
 			}
 			if (strstr($page_id, ',')) {
 				$array=explode(',', $page_id);
@@ -2059,7 +2069,7 @@ class mslib_fe {
 			$mail->SetFrom($from_address, $from_name);
 			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
-			$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
+			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
 //			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
 			if (!$mail->Send()) {
@@ -2195,7 +2205,7 @@ class mslib_fe {
 			}
 			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
-			$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
+			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
 //			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
 			if (!$mail->Send()) {
@@ -2521,8 +2531,8 @@ class mslib_fe {
 									if ($products_options_values['options_values_price']!='0') {
 										$image_alt.=' '.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
 									}
-									$tooltips_attribute_image=htmlspecialchars('<div class="valuesdesc_info"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" />');
-									$attribute_value_image='<a href="#" data-placement="left" class="values_desc_tooltip" title="'.$tooltips_attribute_image.'"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" alt="'.$image_alt.'" class="attribute_value_images" width="20px" height="20px" /></a>';
+									$tooltips_attribute_image=htmlspecialchars('<div class="valuesdesc_info"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'small').'" />');
+									$attribute_value_image='<a href="#" data-placement="left" class="values_desc_tooltip" title="'.$tooltips_attribute_image.'"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'small').'" alt="'.$image_alt.'" class="attribute_value_images" width="20px" height="20px" /></a>';
 								}
 							}
 							// hook for manipulating the $products_options_values array
@@ -2735,9 +2745,11 @@ class mslib_fe {
 		return $output;
 	}
 	public function currency($html=1, $customer_currency=0) {
-		$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		//$currency_symbol=$this->ms['MODULES']['CURRENCY'];
+		$currency_symbol=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
-			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			//$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
+			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARAY']['cu_symbol_left'];
 		}
 		return $currency_symbol;
 	}
@@ -3299,7 +3311,7 @@ class mslib_fe {
 		$filter[]='c.categories_id=cd.categories_id';
 		//
 		if (!empty($keyword) && strlen($keyword)>0) {
-			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.status', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 				implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
@@ -3310,11 +3322,12 @@ class mslib_fe {
 			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
 				$subcategories_array[]=array(
 					'id'=>$subcategories['categories_id'],
-					'name'=>$subcategories['categories_name']
+					'name'=>$subcategories['categories_name'],
+					'status'=>$subcategories['status']
 				);
 			}
 		} else {
-			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.status', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
@@ -3325,7 +3338,8 @@ class mslib_fe {
 			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
 				$subcategories_array[$parent_id][]=array(
 					'id'=>$subcategories['categories_id'],
-					'name'=>$subcategories['categories_name']
+					'name'=>$subcategories['categories_name'],
+					'status'=>$subcategories['status']
 				);
 				if ($subcategories['categories_id']!=$parent_id) {
 					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id'], $page_uid, $include_disabled_categories);
@@ -3336,10 +3350,10 @@ class mslib_fe {
 	public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree, $show_every_level=false) {
 		foreach ($categories_tree[$reference_category_id] as $category_tree) {
 			if (!$show_every_level) {
-				$paths[$category_tree['id']]=$prev.' > '.$category_tree['name'];
+				$paths[$category_tree['id']]=$prev.' > '.$category_tree['name'] . (!$category_tree['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 				unset($paths[$reference_category_id]);
 			} else {
-				$paths[$category_tree['id']]=$paths[$reference_category_id].' > '.$category_tree['name'];
+				$paths[$category_tree['id']]=$paths[$reference_category_id].' > '.$category_tree['name'] . (!$category_tree['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 			}
 			if (is_array($categories_tree[$category_tree['id']])) {
 				mslib_fe::build_categories_path($paths, $category_tree['id'], $paths[$category_tree['id']], $categories_tree, $show_every_level);
@@ -3418,7 +3432,7 @@ class mslib_fe {
 		}
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
-			'pd.products_id=\''.$product_id.'\' and p2c.categories_id=\''.$category_id.'\' and pd.page_uid=\''.$page_uid.'\' and pd.layered_categories_id=\''.$category_id.'\' and p2c.is_deepest=1 and pd.page_uid=p2c.page_uid and pd.products_id=p2c.products_id', // WHERE...
+			'pd.products_id=\''.$product_id.'\' and p2c.categories_id=\''.$category_id.'\' and pd.page_uid=\''.$page_uid.'\' and (pd.layered_categories_id=\''.$category_id.'\' or pd.layered_categories_id=\'0\') and p2c.is_deepest=1 and pd.page_uid=p2c.page_uid and pd.products_id=p2c.products_id', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -3894,6 +3908,18 @@ class mslib_fe {
 		return $payment_methods;
 	}
 	public function parsePaymentMethodEditForm($psp, $selected_values='', $readonly=0) {
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['parsePaymentMethodEditFormPreProc'])) {
+			$params=array(
+				'psp'=>&$psp,
+				'selected_values'=>&$selected_values,
+				'readonly'=>&$readonly,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['parsePaymentMethodEditFormPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
 		$content='';
 		foreach ($psp as $key=>$value) {
 			switch ($key) {
@@ -3944,7 +3970,13 @@ class mslib_fe {
 								$lang_key='payment_reminder_email_templates';
 								break;
 						}
-						$content.='<div class="form-group" id="'.$field_key.'_divwrapper"><label for="radio" class="control-label col-md-2">'.$this->pi_getLL($lang_key, $field_key).'</label><div class="col-md-10">';
+						if ($vars['title']) {
+							$title=$vars['title'];
+						} else {
+							$title=$this->pi_getLL($lang_key, $field_key);
+						}
+						$content.='<div class="form-group" id="'.$field_key.'_divwrapper"><label for="radio" class="control-label col-md-2">'.$title.'</label><div class="col-md-10">';
+
 						switch ($vars['type']) {
 							case 'input':
 								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" class="form-control" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
@@ -4401,7 +4433,7 @@ class mslib_fe {
 		foreach ($shipping_array as $arr_index=>$shipping_data) {
 			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
 				'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
-				'c.shipping_method_id=\''.$shipping_data['id'].'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$delivery_countries_id.'\'', // WHERE...
+				'c.shipping_method_id=\''.$shipping_data['id'].'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->showCatalogFromPage.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$delivery_countries_id.'\'', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -4710,6 +4742,12 @@ class mslib_fe {
 			return false;
 		}
 		$product_data=mslib_fe::getProduct($products_id);
+		if (!is_numeric($products_quantity)) {
+			$products_quantity=1;
+			if ($product_data['minimum_quantity']>0) {
+				$products_quantity=$product_data['minimum_quantity'];
+			}
+		}
 		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
 		$shipping_methods=array();
@@ -5400,30 +5438,37 @@ class mslib_fe {
 			if (!is_numeric($sys_language_uid)) {
 				$sys_language_uid=$this->sys_language_uid;
 			}
-			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'tx_multishop_payment_methods p, tx_multishop_payment_methods_description d', // FROM ...
 				$key.'=\''.addslashes($string).'\' and d.language_id=\''.addslashes($sys_language_uid).'\' and p.id=d.id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
 			);
-			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
-			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-			if (is_array($row3)) {
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+			if (is_array($row)) {
 				if ($countries_id>0) {
-					$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
+					$tax_ruleset=self::taxRuleSet($row['tax_id'], 0, $countries_id, 0);
 				} else {
-					$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
+					$tax_ruleset=self::getTaxRuleSet($row['tax_id'], 0);
 				}
-				$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-				$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-				$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				$row['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+				$row['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+				$row['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				// custom hook for manipulating the installed payment methods
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'])) {
+					$params=array('row'=>&$row);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+					}
+				}
 				if ($filter) {
-					if ($row3['enable_on_default']>0) {
-						return $row3;
+					if ($row['enable_on_default']>0) {
+						return $row;
 					}
 				} else {
-					return $row3;
+					return $row;
 				}
 			}
 		}
@@ -5755,7 +5800,7 @@ class mslib_fe {
 		$string='';
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			$name=(($key) ? 'configuration['.$key.']' : 'configuration_value');
-			$string.='<select name="'.$name.'"><option>choose option</option>';
+			$string.='<select name="'.$name.'" class="form-control"><option>choose option</option>';
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if ($row['cn_short_en']) {
 					$string.='<option value="'.$row['cn_iso_nr'].'" '.(($key_value==$row['cn_iso_nr']) ? 'selected' : '').'>';
@@ -6106,7 +6151,7 @@ class mslib_fe {
 			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
-				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
+				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
@@ -6114,7 +6159,7 @@ class mslib_fe {
 					//$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
 				}
 			} else {
-				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and pid='".$this->conf['fe_customer_pid']."'";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
@@ -6702,7 +6747,7 @@ class mslib_fe {
 			// multishops
 			// now grab the active shops
 			$multishop_content_objects=mslib_fe::getActiveShop();
-			if (count($multishop_content_objects)>1) {
+			if (count($multishop_content_objects)) {
 				$counter=0;
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
@@ -6739,11 +6784,15 @@ class mslib_fe {
 			'."\n";
 		}
 		$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
+		$userTitle=$GLOBALS['TSFE']->fe_user->user['username'];
+		if ($GLOBALS['TSFE']->fe_user->user['name']) {
+			$userTitle=$GLOBALS['TSFE']->fe_user->user['name'].' ('.$GLOBALS['TSFE']->fe_user->user['username'].')';
+		}
 		$ms_menu[$key]['ms_admin_user']['description']='
 			<div id="ms_admin_user">
 			<a href="'.mslib_fe::typolink($this->shop_pid, '').'">
 			<i class="fa fa-user"></i>
-			'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
+			'.$this->pi_getLL('admin_user').': <strong>'.htmlspecialchars($userTitle).'</strong></a>
 			</div>
 		';
 		// footer
@@ -7635,6 +7684,8 @@ class mslib_fe {
 					$new_invoice_id=mslib_fe::generateInvoiceId();
 					if ($new_invoice_id) {
 						unset($row['id']);
+						unset($row['invoice_processed']);
+
 						$row['reversal_related_id']=$id;
 						$row['reversal_invoice']=1;
 						$row['crdate']=time();
@@ -7647,6 +7698,7 @@ class mslib_fe {
 						$updateArray=array('paid'=>1);
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$id, $updateArray);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
+						return 1;
 					}
 				}
 			}
@@ -7691,7 +7743,7 @@ class mslib_fe {
 			return $invoice_id;
 		}
 	}
-	public function updateOrderStatusToPaid($orders_id) {
+	public function updateOrderStatusToPaid($orders_id,$timestamp='') {
 		if (!is_numeric($orders_id)) {
 			return false;
 		}
@@ -7708,7 +7760,10 @@ class mslib_fe {
 			}
 			$updateArray=array('paid'=>1);
 			$updateArray['orders_last_modified']=time();
-			$updateArray['orders_paid_timestamp']=time();
+			if (!$timestamp) {
+				$timestamp=time();
+			}
+			$updateArray['orders_paid_timestamp']=$timestamp;
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {
@@ -7756,11 +7811,11 @@ class mslib_fe {
 			return false;
 		}
 	}
-	public function getOrder($string, $field='orders_id') {
+	public function getOrder($string, $field='orders_id', $includeDeleted=0) {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
-		return $mslib_order->getOrder($string, $field);
+		return $mslib_order->getOrder($string, $field, $includeDeleted);
 	}
 	/*
 		this method is used to request the categories page set
@@ -9335,6 +9390,17 @@ class mslib_fe {
 		return mslib_fe::amount2Cents($amount, $customer_currency);
 	}
 	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1, $cropZeroDecimals=1) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'])) {
+			$params=array(
+				'amount'=>&$amount,
+				'customer_currency'=>&$customer_currency,
+				'include_currency_symbol'=>&$include_currency_symbol,
+				'cropZeroDecimals'=>&$cropZeroDecimals
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
@@ -9366,6 +9432,9 @@ class mslib_fe {
 			}
 		}
 		$output.=$array[0].$cu_decimal_point.'</span><span class="amount_cents">'.$array[1].'</span>';
+		if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right']) {
+			$output.='<span class="currencySymbolRight">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right'].'</span>';
+		}
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
 			$params=array(
