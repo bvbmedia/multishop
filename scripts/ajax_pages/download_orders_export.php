@@ -89,9 +89,9 @@ if ($this->get['orders_export_hash']) {
 				break;
 		}
 		$orderby[]=$order_by.' '.$order;
-		if ($post_data['order_type']=='by_phone') {
+		/*if ($post_data['order_type']=='by_phone') {
 			$filter[]='o.by_phone=1';
-		}
+		}*/
 		$pageset=mslib_fe::getOrdersPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
 		$records=$pageset['orders'];
 		// load all products
