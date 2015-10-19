@@ -226,10 +226,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="asc"'.($post_data['payment_status']=='asc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_asc').'</option>
 		</select>';
 		// order type selectbox
-		/*$order_type_sb='<select name="order_type" class="form-control">
-			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders').'</option>
+		$order_type_sb='<select name="order_type" class="form-control">
+			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>
 			<option value="by_phone"'.($post_data['order_type']=='by_phone' ? ' selected="selected"' : '').'>'.ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))).'</option>
-		</select>';*/
+		</select>';
 		// delimeter type selectbox
 		$delimeter_type_sb='<select name="delimeter_type" class="form-control">
 			<option value=";"'.($post_data['order_type']==';' ? ' selected="selected"' : '').'>semicolon (;)</option>
