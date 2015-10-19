@@ -883,7 +883,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			return round($order['orders_tax_data']['grand_total'], 2);
 		}
 	}
-	function getOrder($string, $field='orders_id') {
+	function getOrder($string, $field='orders_id', $includeDeleted=0) {
 		$filter=array();
 		switch ($field) {
 			case 'orders_id':
@@ -902,7 +902,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (!count($filter)) {
 			return false;
 		}
-		$filter[]='o.deleted=0';
+		if (!$includeDeleted) {
+			$filter[]='o.deleted=0';
+		}
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.*, osd.name as orders_status', // SELECT ...
 			'tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)', // FROM ...
 			implode(" and ", $filter), // WHERE...

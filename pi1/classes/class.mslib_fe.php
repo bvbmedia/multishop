@@ -7786,11 +7786,11 @@ class mslib_fe {
 			return false;
 		}
 	}
-	public function getOrder($string, $field='orders_id') {
+	public function getOrder($string, $field='orders_id', $includeDeleted=0) {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
-		return $mslib_order->getOrder($string, $field);
+		return $mslib_order->getOrder($string, $field, $includeDeleted);
 	}
 	/*
 		this method is used to request the categories page set

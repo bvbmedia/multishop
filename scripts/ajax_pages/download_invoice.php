@@ -15,7 +15,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 	} else {
 		$prefix='';
 	}
-	$order=mslib_fe::getOrder($invoice['orders_id']);
+	$order=mslib_fe::getOrder($invoice['orders_id'],'orders_id',1);
+
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
 		// now parse all the objects in the tmpl file
