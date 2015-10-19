@@ -229,7 +229,6 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$order_type_sb='<select name="order_type" class="form-control">
 			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders').'</option>
 			<option value="by_phone"'.($post_data['order_type']=='by_phone' ? ' selected="selected"' : '').'>'.ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))).'</option>
-			<option value="proposal"'.($post_data['order_type']=='proposal' ? ' selected="selected"' : '').'>'.$this->pi_getLL('admin_proposals').'</option>
 		</select>';
 		// delimeter type selectbox
 		$delimeter_type_sb='<select name="delimeter_type" class="form-control">
