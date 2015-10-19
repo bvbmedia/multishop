@@ -238,12 +238,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="|"'.($post_data['order_type']=='|' ? ' selected="selected"' : '').'>pipe (|)</option>
 		</select>';
 		$content.='
-		<!-- <div class="form-group">
+		 <div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_type')).'</label>
 			<div class="col-md-10">
 			'.$order_type_sb.'
 			</div>
-		</div> -->
+		</div> 
 		<div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
 			<div class="col-md-10">
