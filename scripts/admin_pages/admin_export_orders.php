@@ -227,7 +227,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</select>';
 		// order type selectbox
 		$order_type_sb='<select name="order_type" class="form-control">
-			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders').'</option>
+			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>
 			<option value="by_phone"'.($post_data['order_type']=='by_phone' ? ' selected="selected"' : '').'>'.ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))).'</option>
 		</select>';
 		// delimeter type selectbox
