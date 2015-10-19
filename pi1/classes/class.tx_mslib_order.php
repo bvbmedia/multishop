@@ -196,7 +196,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price+$tmp_attributes_price)*$row_prod['qty'];
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tmp_attributes_price)+($tax+$attributes_tax)*$row_prod['qty'];
 				}
-				//
 				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
 				$order_tax_data['sub_total']=(string)$sub_total;
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;

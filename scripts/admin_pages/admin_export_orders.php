@@ -243,7 +243,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<div class="col-md-10">
 			'.$order_type_sb.'
 			</div>
-		</div> 
+		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
 			<div class="col-md-10">
