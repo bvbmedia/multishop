@@ -3908,6 +3908,18 @@ class mslib_fe {
 		return $payment_methods;
 	}
 	public function parsePaymentMethodEditForm($psp, $selected_values='', $readonly=0) {
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['parsePaymentMethodEditFormPreProc'])) {
+			$params=array(
+				'psp'=>&$psp,
+				'selected_values'=>&$selected_values,
+				'readonly'=>&$readonly,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['parsePaymentMethodEditFormPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
 		$content='';
 		foreach ($psp as $key=>$value) {
 			switch ($key) {
@@ -3958,7 +3970,13 @@ class mslib_fe {
 								$lang_key='payment_reminder_email_templates';
 								break;
 						}
-						$content.='<div class="form-group" id="'.$field_key.'_divwrapper"><label for="radio" class="control-label col-md-2">'.$this->pi_getLL($lang_key, $field_key).'</label><div class="col-md-10">';
+						if ($vars['title']) {
+							$title=$vars['title'];
+						} else {
+							$title=$this->pi_getLL($lang_key, $field_key);
+						}
+						$content.='<div class="form-group" id="'.$field_key.'_divwrapper"><label for="radio" class="control-label col-md-2">'.$title.'</label><div class="col-md-10">';
+
 						switch ($vars['type']) {
 							case 'input':
 								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" class="form-control" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
@@ -5420,30 +5438,37 @@ class mslib_fe {
 			if (!is_numeric($sys_language_uid)) {
 				$sys_language_uid=$this->sys_language_uid;
 			}
-			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'tx_multishop_payment_methods p, tx_multishop_payment_methods_description d', // FROM ...
 				$key.'=\''.addslashes($string).'\' and d.language_id=\''.addslashes($sys_language_uid).'\' and p.id=d.id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
 			);
-			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
-			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-			if (is_array($row3)) {
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+			if (is_array($row)) {
 				if ($countries_id>0) {
-					$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
+					$tax_ruleset=self::taxRuleSet($row['tax_id'], 0, $countries_id, 0);
 				} else {
-					$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
+					$tax_ruleset=self::getTaxRuleSet($row['tax_id'], 0);
 				}
-				$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-				$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-				$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				$row['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+				$row['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+				$row['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				// custom hook for manipulating the installed payment methods
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'])) {
+					$params=array('row'=>&$row);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+					}
+				}
 				if ($filter) {
-					if ($row3['enable_on_default']>0) {
-						return $row3;
+					if ($row['enable_on_default']>0) {
+						return $row;
 					}
 				} else {
-					return $row3;
+					return $row;
 				}
 			}
 		}

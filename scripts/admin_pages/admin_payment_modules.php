@@ -284,6 +284,7 @@ if ($this->get['edit']) {
 		$lngproduct[$tmprow['language_id']]=$tmprow;
 	}
 	$psp=$payment_methods[$row['provider']];
+
 	// psp mail templates
 	if (!isset($psp['vars']['order_confirmation'])) {
 		$psp['vars']['order_confirmation']['type']='psp_mail_template_email_order_confirmation';
