@@ -984,7 +984,7 @@
             <label index="product_options">Product Options</label>
             <label index="product_relatives">Product relatives</label>
             <label index="product_saved">Product saved</label>
-            <label index="product_shipping_and_handling_cost_overview">Products shipping and handling costs</label>
+            <label index="product_shipping_and_handling_cost_overview">Product shipping costs</label>
             <label index="products">Products</label>
             <label index="products_attributes">Products attributes</label>
             <label index="products_date_available">Date available</label>
@@ -1025,7 +1025,7 @@
             <label index="select_orders_payment_status">Filter by payment status</label>
             <label index="select_percentage">Select percentage</label>
             <label index="send_email_to_customer">Send e-mail to customer</label>
-            <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
+            <label index="shipping_and_handling_cost_overview">Shipping costs</label>
             <label index="shipping_costs">Shipping costs</label>
             <label index="shipping_method">Shipping method</label>
             <label index="shipping_method_label">Shipping method label</label>
@@ -2237,7 +2237,7 @@
             <label index="product_options">Productopties</label>
             <label index="product_relatives">Gerelateerde artikelen</label>
             <label index="product_saved">Product opgeslagen</label>
-            <label index="product_shipping_and_handling_cost_overview">Product verzend- en verwerkkosten</label>
+            <label index="product_shipping_and_handling_cost_overview">Product verzendkosten</label>
             <label index="products">Producten</label>
             <label index="products_attributes">Productattributen</label>
             <label index="products_date_available">Releasedatum</label>
@@ -2278,7 +2278,7 @@
             <label index="select_orders_payment_status">Filteren op betaalstatus</label>
             <label index="select_percentage">Selecteer percentage</label>
             <label index="send_email_to_customer">Verstuur e-mail naar klant</label>
-            <label index="shipping_and_handling_cost_overview">Bezorg- en verwerkkosten</label>
+            <label index="shipping_and_handling_cost_overview">Verzendkosten</label>
             <label index="shipping_costs">Verzendkosten</label>
             <label index="shipping_method">Verzendmethode</label>
             <label index="shipping_method_label">Bezorgmethode (label)</label>
