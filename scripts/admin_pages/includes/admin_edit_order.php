@@ -192,6 +192,44 @@ if (is_numeric($this->get['orders_id'])) {
 								$insertArray=array();
 								$insertArray['orders_id']=(int)$this->get['orders_id'];
 								$insertArray['products_id']=(int)$this->post['manual_products_id'];
+								//
+								if (is_numeric($this->post['manual_products_id']) && $this->post['manual_products_id']>0) {
+									$product_data=mslib_fe::getProduct($this->post['manual_products_id'], '', '', 1);
+									$insertArray['categories_id'] = $product_data['categories_id'];
+									// get all cats
+									$cats = mslib_fe::Crumbar($product_data['categories_id']);
+									$cats = array_reverse($cats);
+									if (count($cats) > 0) {
+										$i = 0;
+										foreach ($cats as $cat) {
+											$insertArray['categories_id_' . $i] = $cat['id'];
+											$insertArray['categories_name_' . $i] = $cat['name'];
+											$i++;
+										}
+									}
+									// get all cats eof
+									if (isset($product_data['manufacturers_id']) && !empty($product_data['manufacturers_id'])) {
+										$insertArray['manufacturers_id'] = $product_data['manufacturers_id'];
+									} else {
+										$insertArray['manufacturers_id'] = '';
+									}
+									if (isset($product_data['order_unit_id']) && !empty($product_data['order_unit_id'])) {
+										$insertArray['order_unit_id'] = $product_data['order_unit_id'];
+									} else {
+										$insertArray['order_unit_id'] = '';
+									}
+									if (isset($product_data['order_unit_name']) && !empty($product_data['order_unit_name'])) {
+										$insertArray['order_unit_name'] = $product_data['order_unit_name'];
+									} else {
+										$insertArray['order_unit_name'] = '';
+									}
+									if (isset($product_data['order_unit_code']) && !empty($product_data['order_unit_code'])) {
+										$insertArray['order_unit_code'] = $product_data['order_unit_code'];
+									} else {
+										$insertArray['order_unit_code'] = '';
+									}
+								}
+								//
 								$insertArray['qty']=$this->post['manual_product_qty'];
 								if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
 									$insertArray['products_name']=$this->post['custom_manual_product_name'];
@@ -2920,7 +2958,7 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' +  price_data.price_prefix + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' +  optid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value=""/>\';
                     }
@@ -2929,7 +2967,7 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' +  price_data.price_prefix + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' +  optvalid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px"/>\';
                     }
