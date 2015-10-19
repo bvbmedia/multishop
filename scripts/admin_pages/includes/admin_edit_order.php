@@ -213,17 +213,17 @@ if (is_numeric($this->get['orders_id'])) {
 									} else {
 										$insertArray['manufacturers_id'] = '';
 									}
-									if (isset($value['order_unit_id']) && !empty($product_data['order_unit_id'])) {
+									if (isset($product_data['order_unit_id']) && !empty($product_data['order_unit_id'])) {
 										$insertArray['order_unit_id'] = $product_data['order_unit_id'];
 									} else {
 										$insertArray['order_unit_id'] = '';
 									}
-									if (isset($value['order_unit_name']) && !empty($product_data['order_unit_name'])) {
+									if (isset($product_data['order_unit_name']) && !empty($product_data['order_unit_name'])) {
 										$insertArray['order_unit_name'] = $product_data['order_unit_name'];
 									} else {
 										$insertArray['order_unit_name'] = '';
 									}
-									if (isset($value['order_unit_code']) && !empty($product_data['order_unit_code'])) {
+									if (isset($product_data['order_unit_code']) && !empty($product_data['order_unit_code'])) {
 										$insertArray['order_unit_code'] = $product_data['order_unit_code'];
 									} else {
 										$insertArray['order_unit_code'] = '';
