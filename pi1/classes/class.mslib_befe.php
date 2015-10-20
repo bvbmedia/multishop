@@ -3899,6 +3899,9 @@ class mslib_befe {
 		$subparts['SUBTOTAL_INCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_INCLUDE_VAT_WRAPPER###');
 		$subparts['SUBTOTAL_EXCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_EXCLUDE_VAT_WRAPPER###');
 		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
+		if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
+		}
 		$subparts['TOTAL_VAT_ROW_INCLUDE_VAT']=$this->cObj->getSubpart($subparts['template'], '###TOTAL_VAT_ROW_INCLUDE_VAT###');
 		// single packing, shipping, payment costs line
 		$subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER###');
@@ -3937,6 +3940,7 @@ class mslib_befe {
 		}
 		if ($order['discount']<0 || $order['discount']==0) {
 			$subpartsTemplateWrapperRemove['###DISCOUNT_WRAPPER###']='';
+			$subpartsTemplateWrapperRemove['###NEWSUBTOTAL_WRAPPER###']='';
 		}
 		if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
 			$subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###']='';
@@ -4214,6 +4218,9 @@ class mslib_befe {
 		if ($order['discount']>0) {
 			$subpartArray['###LABEL_DISCOUNT###']=$this->pi_getLL('discount');
 			$subpartArray['###TOTAL_DISCOUNT###']=mslib_fe::amount2Cents($prefix.$order['discount'], 0, $display_currency_symbol, 0);
+			//
+			$subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###']=$this->pi_getLL('subtotal');
+			$subpartArray['###PRODUCTS_NEWTOTAL_PRICE###']=mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], 0, $display_currency_symbol, 0);
 		}
 		//$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
 		$subpartArray['###LABEL_GRAND_TOTAL###']=$this->pi_getLL('total');

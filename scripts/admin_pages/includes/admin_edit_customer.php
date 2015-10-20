@@ -732,7 +732,7 @@ switch ($_REQUEST['action']) {
 					$selectContent.='</select>'."\n";
 					if ($selectContent) {
 						$subpartArray['###MASTER_SHOP###']='
-						<div class="account-field">
+						<div class="form-group">
 							<label for="store" id="account-store">'.$this->pi_getLL('store').'</label>
 							'.$selectContent.'
 						</div>
