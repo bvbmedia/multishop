@@ -161,6 +161,8 @@ if (is_array($rel_products) && count($rel_products)) {
 		$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
 		$markerArray['ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
 		$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
+		// for compatibility with normal listing
+		$markerArray['PRODUCTS_ID']=$markerArray['ITEM_PRODUCTS_ID'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 			$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
