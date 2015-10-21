@@ -668,12 +668,12 @@ class mslib_befe {
 			$where[]='c.status=1';
 			$where[]='p.products_status=1';
 			$where[]="p2c.products_id='".$products_id."'";
+			$where[]='p2c.is_deepest=1';
 			$where[]='p.products_id=pd.products_id';
 			$where[]='p.products_id=p2c.products_id';
 			$where[]='p2c.categories_id=c.categories_id';
 			$where[]='p2c.categories_id=cd.categories_id';
 			$where[]='pd.language_id=cd.language_id';
-			$where[]='p2c.is_deepest=1';
 			$orderby=array();
 			$orderby[]='pd.language_id';
 			$query_elements=array();
@@ -842,12 +842,7 @@ class mslib_befe {
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
-					// TYPO3 6.2 BUGFIX NULL VALUES
-					foreach ($flat_product as $key=>$val) {
-						if (is_null($flat_product[$key])) {
-							$flat_product[$key]='';
-						}
-					}
+					$flat_product=mslib_befe::rmNullValuedKeys($flat_product);
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery($table_name, $flat_product);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if (!$res) {
@@ -855,7 +850,7 @@ class mslib_befe {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 3);
 					}
 					if ($this->debug) {
-						error_log($query);
+						//error_log($query);
 						$logString=$query;
 						\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
 					}
