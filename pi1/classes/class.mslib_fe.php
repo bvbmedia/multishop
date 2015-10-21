@@ -5659,7 +5659,7 @@ class mslib_fe {
 		// custom hook that can be controlled by third-party plugin eof
 		return $discount;
 	}
-	public function getUser($value, $field='uid') {
+	public function  getUser($value, $field='uid') {
 		if ($value) {
 			if ($field=='code') {
 				$field='tx_multishop_code';

@@ -1863,7 +1863,7 @@ switch ($this->ms['page']) {
 			);
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$return_data=array();
-			$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
+			//$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 					$return_data[]=array('id' => $row['uid'], 'text' => $row['title']);
