@@ -303,29 +303,6 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*
-$records[]=array(
-		'configuration_title'=>'Google Analytics Account',
-		'configuration_key'=>'GOOGLE_ANALYTICS_ACCOUNT',
-		'configuration_value'=>'',
-		'description'=>'Google Analytics is the enterprise-class web analytics solution that gives you rich insights into your website traffic and marketing effectiveness.',
-		'group_id'=>'4',
-		'use_function'=>'',
-		'set_function'=>'',
-		'depend_on_configuration_key'=>'',
-		'use_function'=>'');
-*/
-$records[]=array(
-	'configuration_title'=>'Google Adwords Conversion Code',
-	'configuration_key'=>'GOOGLE_ADWORDS_CONVERSION_CODE',
-	'configuration_value'=>'',
-	'description'=>'Add a Google Adwords Conversion Code to the thank you page of the webshop. This makes it possible to calculate the success-ratio of your Google Adwords campaign.',
-	'group_id'=>'4',
-	'use_function'=>'',
-	'set_function'=>'',
-	'depend_on_configuration_key'=>'',
-	'use_function'=>''
-);
 $records[]=array(
 	'configuration_title'=>'Products Listing Limiting',
 	'configuration_key'=>'PRODUCTS_LISTING_LIMIT',
