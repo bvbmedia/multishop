@@ -1854,6 +1854,9 @@ switch ($this->ms['page']) {
 				$filter[]='title like \'%'.addslashes($this->get['q']).'%\'';
 				$limit='';
 			}
+			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+				$filter[]='uid in ('.$this->get['preselected_id'].')';
+			}
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'fe_groups', // FROM ...
 				implode(' AND ', $filter), // WHERE...
@@ -1866,7 +1869,9 @@ switch ($this->ms['page']) {
 			//$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-					$return_data[]=array('id' => $row['uid'], 'text' => $row['title']);
+					if (is_numeric($row['uid']) && $row['uid']>0) {
+						$return_data[] = array('id' => $row['uid'], 'text' => $row['title']);
+					}
 				}
 			}
 			echo json_encode($return_data);

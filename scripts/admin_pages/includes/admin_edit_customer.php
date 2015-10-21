@@ -599,24 +599,46 @@ jQuery(document).ready(function($) {
 });
 </script>';
 // now lets load the users
-$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
+$customer_groups_input.='<div class="form-group multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label>'."\n";
+if ($erno) {
+	//$this->post['usergroup']=$this->post['tx_multishop_pi1']['groups'];
+}
+/*$customer_groups_input.='<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">';
+foreach ($groups as $group) {
+    $customer_groups_input.='<option value="'.$group['uid'].'"'.(mslib_fe::inUserGroup($group['uid'], $this->post['usergroup']) ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+}
+$customer_groups_input.='</select>';*/
+$selected_groups=array();
+$userGroupUids=explode(',',$this->post['usergroup']);
+if (is_array($userGroupUids) && count($userGroupUids)) {
+	foreach ($userGroupUids as $userGroupUid) {
+		$usergroup=mslib_fe::getUserGroup($userGroupUid);
+		if (is_array($usergroup) && $usergroup['title']) {
+			$selected_groups[]=$userGroupUid;
+			//$userGroupMarkupArray[]='<span class="badge">'.htmlspecialchars($usergroup['title']).'</span>';
+		}
+	}
+}
+$selected_group_str='';
+if (count($selected_groups)) {
+	$selected_group_str=implode(',', $selected_groups);
+}
+$customer_groups_input.='<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="'.$selected_group_str.'" /></div>'."\n";
+//
+
+/*$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<div class="form-group multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label>'."\n";
-	if ($erno) {
-		$this->post['usergroup']=$this->post['tx_multishop_pi1']['groups'];
-	}
-	/*$customer_groups_input.='<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">';
-	foreach ($groups as $group) {
-		$customer_groups_input.='<option value="'.$group['uid'].'"'.(mslib_fe::inUserGroup($group['uid'], $this->post['usergroup']) ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
-	}
-	$customer_groups_input.='</select>';*/
+
+
+
 	$selected_groups=array();
 	foreach ($groups as $group) {
 		$selected_groups[]=(in_array($group['uid'], $this->post['usergroup']) ? $group['uid'] : '');
 	}
-	$customer_groups_input.='<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="'.$this->post['usergroup'].'" /></div>'."\n";
-}
+
+}*/
+
 $login_as_this_user_link='';
 if ($this->get['tx_multishop_pi1']['cid']) {
 	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="btn btn-success">'.$this->pi_getLL('login_as_user').'</a>';
