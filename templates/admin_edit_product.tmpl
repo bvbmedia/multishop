@@ -531,9 +531,9 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <!-- ###MANUFACTURERS_ADVICE_PRICE### begin -->
     <div class="form-group" id="msEditProductInputManufacturersPrice">
         <label for="msEditProductInputManufacturersPriceInput" class="col-md-2 control-label">###LABEL_MANUFACTURERS_ADVIES_PRICE###</label>
-        <div class="form-group" id="msEditProductInputManufacturersPriceInput">
-            <div class="msAttributesField">###LABEL_CURRENCY6### <input type="text" name="manufacturers_advice_price_excl_vat" class="price small_input msPriceExcludingVat" id="manufacturers_advice_price_excl_vat" value="###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><label for="manufacturers_advice_price_excl_vat">###LABEL_EXCLUDING_VAT3###</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY7### <input type="text" name="manufacturers_advice_price_incl_vat" class="price small_input msPriceIncludingVat" id="manufacturers_advice_price_incl_vat" value="###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><label for="manufacturers_advice_price_incl_vat">###LABEL_INCLUDING_VAT3###</label></div>
+        <div class="form-group col-md-4" id="msEditProductInputManufacturersPriceInput">
+            <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY6###</span><input type="text" name="manufacturers_advice_price_excl_vat" class="form-control price small_input msPriceExcludingVat" id="manufacturers_advice_price_excl_vat" value="###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><span class="input-group-addon">###LABEL_EXCLUDING_VAT3###</span></div></div></div>
+            <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY7###</span><input type="text" name="manufacturers_advice_price_incl_vat" class="form-control price small_input msPriceIncludingVat" id="manufacturers_advice_price_incl_vat" value="###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><span class="input-group-addon">###LABEL_INCLUDING_VAT3###</span></div></div></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="manufacturers_advice_price" value="###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###" /></div>
         </div>
     </div>
