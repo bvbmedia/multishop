@@ -282,6 +282,10 @@ switch ($this->ms['page']) {
 			$array2[]=$long_date;
 			$array1[]='###STORE_NAME###';
 			$array2[]=$this->ms['MODULES']['STORE_NAME'];
+			$array1[]='###STORE_EMAIL###';
+			$array2[]=$this->ms['MODULES']['STORE_EMAIL'];
+
+
 			$array1[]='###TOTAL_AMOUNT###';
 			$array2[]=mslib_fe::amount2Cents($order['total_amount']);
 			$array1[]='###PROPOSAL_NUMBER###';
