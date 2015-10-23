@@ -269,12 +269,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$totalCountSubFilter['categories'][]="p2c.node_id IN (".addslashes(implode(",", $post_categories_id)).")";
 		}
 	}
-	foreach ($this->post['tx_multishop_pi1']['manufacturers'] as $key=>$val) {
-		if ($val==0) {
-			unset($this->post['tx_multishop_pi1']['manufacturers'][$key]);
-		}
-	}
 	if (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers'])) {
+		foreach ($this->post['tx_multishop_pi1']['manufacturers'] as $key=>$val) {
+			if ($val==0) {
+				unset($this->post['tx_multishop_pi1']['manufacturers'][$key]);
+			}
+		}
 		// attributes
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			$prefix='p';
@@ -297,10 +297,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 			}
 			if (is_array($option_values_id) and count($option_values_id)) {
-				$totalCountSubFilter['options'][$option_id][]="pa_".$option_id.".options_values_id IN (".addslashes(implode(",", $option_values_id)).")";
+				$totalCountSubFilter['options'][$option_id][]="(pa_".$option_id.".options_id=".$option_id." and pa_".$option_id.".options_values_id IN (".addslashes(implode(",", $option_values_id))."))";
 				$totalCountFrom['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
-				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
-				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
+				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id and pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
 			}
 		}
 	}
@@ -1098,15 +1097,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 										}
 									}
 								}
-								$tmpFilter[]="(pa_".$option_id.".options_values_id IN (".$row_opt_2_values['products_options_values_id']."))";
+								$tmpFilter[]="(pa_".$option_id.".options_id =".$option_id." and pa_".$option_id.".options_values_id IN (".$row_opt_2_values['products_options_values_id']."))";
 								//error_log(print_r($tmpFilter,1));
 								$totalCountFromTmp=$totalCountFrom;
 								$totalCountWhereTmp=$totalCountWhere;
 								unset($totalCountFromTmp['options'][$option_id]);
 								unset($totalCountWhereTmp['options'][$option_id]);
 								$totalCountFromTmp['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
-								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
-								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
+								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id and pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
 								$totalCountFromFlat=array();
 								$totalCountWhereFlat=array();
 								$totalCountFromFlat=array_values($totalCountFromTmp['options']);
@@ -1122,7 +1120,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								//$this->msDebug=1;
 								$totalCount=mslib_fe::getProductsPageSet($tmpFilter, 0, 0, array(), array(), $select, $totalCountWhereFlat, 0, $totalCountFromFlat, array(), 'counter', 'count(DISTINCT('.$prefix.'.products_id)) as total', 1);
 								//error_log(print_r($tmpFilter,1).$this->msDebugInfo);
-								//echo $this->msDebugInfo;
+								//echo $this->msDebugInfo . "\n\n";
 								//die();
 								// count available records eof
 								if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
@@ -1911,6 +1909,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$results['pagination']['last']=mslib_befe::strtoupper($this->pi_getLL('last'));
 	$results['pagination']['lastText']=mslib_befe::strtoupper($this->pi_getLL('last'));
 	$data['resultSet']=$results;
+	//$data['sql_dump']=$this->msDebugInfo;
 	$content=json_encode($data);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$Cache_Lite->save($content);
