@@ -35,15 +35,27 @@ if (!$this->ms['MODULES']['COUPONS']) {
 if ($this->ms['MODULES']['COUPONS']) {
 	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
 	function postCoupon(value) {
+		var extra_post_params=\'\';
+		if ($("#deliver_to_country").length) {
+			extra_post_params+=\'&tx_multishop_pi1[country_id]=\' + $("#deliver_to_country").val();
+		}
+		if ($("#shoppingcart_shippingcost_deliver_by").length) {
+			extra_post_params+=\'&tx_multishop_pi1[shipping_method]=\' + $("#shoppingcart_shippingcost_deliver_by").val();
+		}
 		jQuery.ajax({
 			type: "POST",
 			url: "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_discount').'",
 			cache :false,
-			data: "code=" + value,
+			dataType: "json",
+			data: "code=" + value + extra_post_params,
 			success:
 				function(t) {
-					jQuery("#span_discount").html(t);
-					jQuery("#korting").val(t);
+					jQuery("#span_discount").html(t.discount_percentage);
+					jQuery("#korting").val(t.discount_percentage);
+					if (t.shopping_cart_total_price!="") {
+						jQuery(".shoppingcart-totaal-price").empty();
+						jQuery(".shoppingcart-totaal-price").html(t.shopping_cart_total_price);
+					}
 				},
 			error:
 				function() {
