@@ -52,10 +52,9 @@ if ($this->ms['MODULES']['COUPONS']) {
 				function(t) {
 					jQuery("#span_discount").html(t.discount_percentage);
 					jQuery("#korting").val(t.discount_percentage);
-					if (t.shopping_cart_total_price!="") {
-						jQuery(".shoppingcart-totaal-price").empty();
-						jQuery(".shoppingcart-totaal-price").html(t.shopping_cart_total_price);
-					}
+
+					jQuery(".shoppingcart-totaal-price").empty();
+					jQuery(".shoppingcart-totaal-price").html(t.shopping_cart_total_price);
 				},
 			error:
 				function() {
