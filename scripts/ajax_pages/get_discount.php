@@ -24,36 +24,39 @@ if (!empty($_POST['code'])) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$continue_calculate_discount=true;
 		if ($row['max_usage']>0) {
 			if ($row['times_used']>=$row['max_usage']) {
 				$content="0%";
-				echo $content;
-				exit();
+				$continue_calculate_discount=false;
 			}
 		}
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-		switch ($row['discount_type']) {
-			case 'percentage':
-				$content=number_format($row['discount']).'%';
-				break;
-			case 'price':
-				$total_price=mslib_fe::countCartTotalPrice(1, 1);
-				if ($total_price<$row['discount']) {
-					$row['discount']=$total_price;
-				}
-				$content=mslib_fe::amount2Cents($row['discount']);
-				break;
+		if ($continue_calculate_discount) {
+			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			switch ($row['discount_type']) {
+				case 'percentage':
+					$content=number_format($row['discount']).'%';
+					break;
+				case 'price':
+					$total_price=mslib_fe::countCartTotalPrice(1, 1);
+					if ($total_price<$row['discount']) {
+						$row['discount']=$total_price;
+					}
+					$content=mslib_fe::amount2Cents($row['discount']);
+					break;
+			}
+			$cart['coupon_code']=$code;
+			$cart['discount']=$row['discount'];
+			$cart['discount_type']=$row['discount_type'];
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+			$GLOBALS['TSFE']->fe_user->storeSessionData();
 		}
-		$cart['coupon_code']=$code;
-		$cart['discount']=$row['discount'];
-		$cart['discount_type']=$row['discount_type'];
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
 	} else {
 		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$cart['coupon_code']='';
 		$cart['discount']='';
 		$cart['discount_type']='';
+		$cart['discount_amount']='';
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content="0%";
@@ -64,11 +67,59 @@ if (!empty($_POST['code'])) {
 		$cart['coupon_code'] = '';
 		$cart['discount'] = '';
 		$cart['discount_type'] = '';
+		$cart['discount_amount']='';
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content = "0%";
 	}
 }
-echo $content;
+$return_data['discount_percentage'] = $content;
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
+	if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
+		$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
+	}
+	if ($this->tta_user_info['default']['country']) {
+		$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
+	} else {
+		$iso_customer=$this->tta_shop_info;
+	}
+	if (!$iso_customer['cn_iso_nr']) {
+		// fall back (had issue with admin notification)
+		$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
+	}
+	$delivery_country_id=$this->post['tx_multishop_pi1']['country_id'];
+	$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
+	$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
+	$count_cart_incl_vat=0;
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		$count_cart_incl_vat=1;
+	}
+	//
+	$return_data['shipping_cost']=0;
+	$return_data['shipping_costs_display']=mslib_fe::amount2Cents(0);
+	$return_data['shipping_method']['deliver_by']='';
+	$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
+	//
+	foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$count_cart_incl_vat=1;
+			$return_data['shipping_cost']=$shipping_cost['shipping_costs_including_vat'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+		} else {
+			$return_data['shipping_cost']=$shipping_cost['shipping_costs'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+		}
+		$return_data['shipping_method']=$shipping_cost;
+		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr'])+$return_data['shipping_cost']);
+	}
+} else {
+	$count_cart_incl_vat = 0;
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		$count_cart_incl_vat = 1;
+	}
+	$return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
+}
+
+echo json_encode($return_data);
 exit();
 ?>

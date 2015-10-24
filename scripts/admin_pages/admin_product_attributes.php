@@ -223,8 +223,12 @@ if ($rows) {
     if (!empty($js_select2_cache)) {
         $GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
     }
-    // now load the sortables jQuery code
-    $content.='<script type="text/javascript">
+} else {
+    $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
+    $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
+}
+// now load the sortables jQuery code
+$GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script type="text/javascript" data-ignore="1">
 	function attributesEditDialog (textTitle, textBody, mode) {
         $.confirm({
             title: textTitle,
@@ -918,10 +922,6 @@ if ($rows) {
 		});
 	});
 </script>';
-} else {
-    $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
-    $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
-}
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

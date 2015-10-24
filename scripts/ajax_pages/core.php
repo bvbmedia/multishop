@@ -60,7 +60,7 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'get_shoppingcart_shippingcost_overview':
-		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
 			$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 		}
 		$return_data=array();
@@ -77,6 +77,9 @@ switch ($this->ms['page']) {
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
 		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
 		$count_cart_incl_vat=0;
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$count_cart_incl_vat=1;
+		}
 		//
 		$return_data['shipping_cost']=0;
 		$return_data['shipping_costs_display']=mslib_fe::amount2Cents(0);
