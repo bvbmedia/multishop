@@ -28,7 +28,7 @@ Bootstrap 3 required
 Multishop expects the website to have Twitter Bootstrap loaded. You will have to load the JavaScript library (with i.e. t3jquery) yourself and manually include Bootstrap.css with TypoScript.
 
 Load bootstrap.css by TypoScript example:
-.. code-block:: php
+::
 	page {
 		includeCSS.bootstrapCss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
 		includeCSS.bootstrapCss {
@@ -37,6 +37,16 @@ Load bootstrap.css by TypoScript example:
 			compress=1
 		}
 	}
+```
+	page {
+		includeCSS.bootstrapCss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
+		includeCSS.bootstrapCss {
+			media =
+			import = 0
+			compress=1
+		}
+	}
+```
 
 Login to your TYPO3 backend:
 
