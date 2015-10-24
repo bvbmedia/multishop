@@ -37,16 +37,6 @@ Load bootstrap.css by TypoScript example:
 			compress=1
 		}
 	}
-```
-	page {
-		includeCSS.bootstrapCss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
-		includeCSS.bootstrapCss {
-			media =
-			import = 0
-			compress=1
-		}
-	}
-```
 
 Login to your TYPO3 backend:
 
