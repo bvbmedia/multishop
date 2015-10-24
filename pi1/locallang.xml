@@ -1932,7 +1932,7 @@
             <label index="feed_exporter_fields_label_attribute_option_name_x_values_without_price">Attribuut optie: %s (alle waardes zonder prijs)</label>
             <label index="feed_exporter_fields_label_categories_content_bottom_level_x">Categorie content beneden (niveau: %d)</label>
             <label index="feed_exporter_fields_label_categories_content_bottom_product_category_level">Categorie content beneden (product categorie niveau)</label>
-            <label index="feed_exporter_fields_label_categories_content_top_level_x">Categorie content boven</label>
+            <label index="feed_exporter_fields_label_categories_content_top_level_x">Categorie content boven (niveau: %d)</label>
             <label index="feed_exporter_fields_label_categories_content_top_product_category_level">Categorie content boven (product categorie niveau)</label>
             <label index="feed_exporter_fields_label_categories_id">Categorie ID</label>
             <label index="feed_exporter_fields_label_categories_image_level_x">Categorie afbeelding (niveau: %d)</label>
