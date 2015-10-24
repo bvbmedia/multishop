@@ -19,9 +19,23 @@ Usage
 
 After the plugin has been installed the shop must be configured. How you can do this can be read on typo3.org.
 
-jQuery notice
-=============
+jQuery / t3jquery notice
+========================
 Multishop requires jQuery 2. Also enable the jQuery module: Migrate + all the Bootstrap modules.
+
+Bootstrap 3 required
+====================
+Multishop expects the website to have Twitter Bootstrap loaded. You will have to load the JavaScript library (with i.e. t3jquery) yourself and manually include Bootstrap.css with TypoScript.
+
+Load bootstrap.css by TypoScript example:
+page {
+	includeCSS.bootstrapCss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
+	includeCSS.bootstrapCss {
+		media =
+		import = 0
+		compress=1
+	}
+}
 
 Login to your TYPO3 backend:
 
