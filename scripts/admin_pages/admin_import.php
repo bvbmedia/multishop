@@ -1464,7 +1464,7 @@ if ($this->post['action']=='category-insert') {
 					$fields=array();
 					$fields['products_id']='products_id';
 					$fields['sku_code']='products_sku';
-					$fields['products_ean']='products_ean';
+					$fields['ean_code']='products_ean';
 					foreach ($fields as $dbField=>$itemField) {
 						if ($item[$itemField]) {
 							$str="select products_id,extid from tx_multishop_products where page_uid=".$this->showCatalogFromPage." and ".$dbField."='".addslashes($item[$itemField])."'";
@@ -1997,7 +1997,7 @@ if ($this->post['action']=='category-insert') {
 							}
 						}
 						$products_id='';
-						if (isset($item['products_vat_rate']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_vat_rate', $importedProductsLockedFields)))) {
+						if (isset($item['products_vat_rate']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 							$taxGroupRow=mslib_fe::getTaxGroupByName($item['products_vat_rate']);
 							$tax_id=$taxGroupRow['rules_group_id'];
 							if (!isset($tax_id)) {
@@ -2019,11 +2019,11 @@ if ($this->post['action']=='category-insert') {
 							}
 							if ($tax_id) {
 								$item['tax_id']=$tax_id;
-							} elseif ($this->post['tx_multishop_pi1']['default_vat_rate'] and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_vat_rate', $importedProductsLockedFields)))) {
+							} elseif ($this->post['tx_multishop_pi1']['default_vat_rate'] and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 								$item['tax_id']=$this->post['tx_multishop_pi1']['default_vat_rate'];
 								$item['products_vat_rate']=$default_tax_rate['total_tax_rate'];
 							}
-						} elseif ($this->post['tx_multishop_pi1']['default_vat_rate'] and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_vat_rate', $importedProductsLockedFields)))) {
+						} elseif ($this->post['tx_multishop_pi1']['default_vat_rate'] and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 							$item['tax_id']=$this->post['tx_multishop_pi1']['default_vat_rate'];
 							$item['products_vat_rate']=$default_tax_rate['total_tax_rate'];
 						}
@@ -2074,7 +2074,7 @@ if ($this->post['action']=='category-insert') {
 							*/
 //								error_log('old_product: '.print_r($old_product,1));
 							$updateArray=array();
-							if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_vat_rate', $importedProductsLockedFields)))) {
+							if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 								$updateArray['tax_id']=$item['tax_id'];
 							}
 							if (isset($item['products_weight'])) {
@@ -2104,7 +2104,7 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_ean'])) {
 								$updateArray['ean_code']=$item['products_ean'];
 							}
-							if (isset($item['products_price']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_price', $importedProductsLockedFields)))) {
+							if (isset($item['products_price']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_price', $importedProductsLockedFields))))) {
 								$updateArray['products_price']=$item['products_price'];
 							}
 							if ($item['manufacturers_id']) {
@@ -2113,7 +2113,7 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_staffel_price'])) {
 								$updateArray['staffel_price']=$item['products_staffel_price'];
 							}
-							if (isset($item['products_quantity']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_quantity', $importedProductsLockedFields)))) {
+							if (isset($item['products_quantity']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_quantity', $importedProductsLockedFields))))) {
 								switch ($item['products_quantity']) {
 									case 'Y':
 										$item['products_quantity']=1;
@@ -2221,7 +2221,7 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_meta_keywords'])) {
 								$updateArray['products_meta_keywords']=$item['products_meta_keywords'];
 							}
-							if (isset($item['products_name']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_name', $importedProductsLockedFields)))) {
+							if (isset($item['products_name']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_name', $importedProductsLockedFields))))) {
 								$updateArray['products_name']=$item['products_name'];
 							}
 							/* if ($item['products_description_encoded']) {
@@ -2229,9 +2229,9 @@ if ($this->post['action']=='category-insert') {
 							} elseif ($item['products_description']) {
 								$updateArray['products_description'] = $item['products_description'];
 							} */
-							if (isset($item['products_description_encoded']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_description', $importedProductsLockedFields)))) {
+							if (isset($item['products_description_encoded']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
 								$updateArray['products_description']=$item['products_description_encoded'];
-							} elseif ($item['products_description'] and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_description', $importedProductsLockedFields)))) {
+							} elseif ($item['products_description'] and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
 								$updateArray['products_description']=$item['products_description'];
 							}
 							if (isset($item['products_shortdescription'])) {
@@ -2398,7 +2398,7 @@ if ($this->post['action']=='category-insert') {
 								$this->ms['products_to_categories_array']=array();
 								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
 							}
-							if (count($this->ms['products_to_categories_array']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('categories_id', $importedProductsLockedFields)))) {
+							if (count($this->ms['products_to_categories_array']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('categories_id', $importedProductsLockedFields))))) {
 								if (!$this->post['incremental_update']) {
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id='.$item['updated_products_id']);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2458,7 +2458,7 @@ if ($this->post['action']=='category-insert') {
 							}
 							// lets add the new product to the products table
 							$updateArray=array();
-							if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_vat_rate', $importedProductsLockedFields)))) {
+							if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 								$updateArray['tax_id']=$item['tax_id'];
 							}
 							if ($item['products_id']) {
@@ -2483,7 +2483,7 @@ if ($this->post['action']=='category-insert') {
 							}
 							$updateArray['products_quantity']=$item['products_quantity'];
 							$updateArray['extid']=$item['extid'];
-							if ((isset($item['products_price']) or isset($item['products_old_price'])) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_price', $importedProductsLockedFields)))) {
+							if ((isset($item['products_price']) or isset($item['products_old_price'])) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_price', $importedProductsLockedFields))))) {
 								if ($item['products_old_price']) {
 									$updateArray['products_price']=$item['products_old_price'];
 								} elseif ($item['products_price']) {

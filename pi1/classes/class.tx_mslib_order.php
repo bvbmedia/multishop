@@ -611,7 +611,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($this->conf['order_details_table_site_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site_excluding_vat.tmpl');
+					} else {
+						$template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site.tmpl');
+					}
 				}
 				break;
 			case 'email':
@@ -741,6 +745,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
+		if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
+		}
 		if (!$this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] || $template_type!='order_history_site') {
 			$subProductStatusPart=array();
 			$subProductStatusPart['ITEMS_HEADER_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###');
@@ -797,6 +804,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['SUBTOTAL_LABEL']=$this->pi_getLL('subtotal').':';
 		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price').':';
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
+		$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal').':';
 		// rounding is problem with including vat shops.
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
 		//$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
@@ -844,8 +852,16 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
 			$markerArray['DISCOUNT']=mslib_fe::amount2Cents($order['discount']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				// new subtotal
+				$markerArray = array();
+				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
+				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($subtotal - $order['discount']);
+				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+			}
 		} else {
 			$subpartArray['###'.$key.'###']='';
+			$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 		}
 		//DISCOUNT_WRAPPER EOF
 		//TAX_COSTS_WRAPPER

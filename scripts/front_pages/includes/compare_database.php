@@ -764,6 +764,8 @@ if (!$skipMultishopUpdates) {
 	$oldKeys=array();
 	$oldKeys[]='ADMIN_ORDER_PROPOSAL_MODULE';
 	$oldKeys[]='FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE';
+	$oldKeys[]='GOOGLE_ADWORDS_CONVERSION_CODE';
+	$oldKeys[]='GOOGLE_ANALYTICS_ACCOUNT';
 	foreach ($oldKeys as $key) {
 		if (isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="DELETE FROM `tx_multishop_configuration` where configuration_key='".addslashes($key)."';";

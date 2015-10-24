@@ -100,8 +100,8 @@ if ($this->post && $this->post['email']) {
 		if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
 			$customer_id=$this->post['tx_multishop_pi1']['cid'];
 			// update mode
-			if (count($this->post['tx_multishop_pi1']['groups'])) {
-				$updateArray['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
+			if (!empty($this->post['tx_multishop_pi1']['groups'])) {
+				$updateArray['usergroup']=$this->post['tx_multishop_pi1']['groups'];
 				if (isset($user['usergroup'])) {
 					// first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
 					$old_usergroups=explode(",", $user['usergroup']);
@@ -130,6 +130,7 @@ if ($this->post && $this->post['email']) {
 					}
 				}
 			}
+			//
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'])) {
 				$params=array(
@@ -243,9 +244,9 @@ if ($this->post && $this->post['email']) {
             if (isset($this->post['tx_multishop_language'])) {
                 $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
             }
-			if (count($this->post['tx_multishop_pi1']['groups'])) {
-				$this->post['tx_multishop_pi1']['groups'][]=$this->conf['fe_customer_usergroup'];
-				$updateArray['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
+			if (!empty($this->post['tx_multishop_pi1']['groups'])) {
+				$this->post['tx_multishop_pi1']['groups']=$this->conf['fe_customer_usergroup'];
+				$updateArray['usergroup']=$this->post['tx_multishop_pi1']['groups'];
 			} else {
 				$updateArray['usergroup']=$this->conf['fe_customer_usergroup'];
 			}
@@ -598,18 +599,46 @@ jQuery(document).ready(function($) {
 });
 </script>';
 // now lets load the users
-$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
+$customer_groups_input.='<div class="form-group multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label>'."\n";
+if ($erno) {
+	//$this->post['usergroup']=$this->post['tx_multishop_pi1']['groups'];
+}
+/*$customer_groups_input.='<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">';
+foreach ($groups as $group) {
+    $customer_groups_input.='<option value="'.$group['uid'].'"'.(mslib_fe::inUserGroup($group['uid'], $this->post['usergroup']) ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+}
+$customer_groups_input.='</select>';*/
+$selected_groups=array();
+$userGroupUids=explode(',',$this->post['usergroup']);
+if (is_array($userGroupUids) && count($userGroupUids)) {
+	foreach ($userGroupUids as $userGroupUid) {
+		$usergroup=mslib_fe::getUserGroup($userGroupUid);
+		if (is_array($usergroup) && $usergroup['title']) {
+			$selected_groups[]=$userGroupUid;
+			//$userGroupMarkupArray[]='<span class="badge">'.htmlspecialchars($usergroup['title']).'</span>';
+		}
+	}
+}
+$selected_group_str='';
+if (count($selected_groups)) {
+	$selected_group_str=implode(',', $selected_groups);
+}
+$customer_groups_input.='<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="'.$selected_group_str.'" /></div>'."\n";
+//
+
+/*$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<div class="form-group multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label><select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">'."\n";
-	if ($erno) {
-		$this->post['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
-	}
+
+
+
+	$selected_groups=array();
 	foreach ($groups as $group) {
-		$customer_groups_input.='<option value="'.$group['uid'].'"'.(mslib_fe::inUserGroup($group['uid'], $this->post['usergroup']) ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+		$selected_groups[]=(in_array($group['uid'], $this->post['usergroup']) ? $group['uid'] : '');
 	}
-	$customer_groups_input.='</select></div>'."\n";
-}
+
+}*/
+
 $login_as_this_user_link='';
 if ($this->get['tx_multishop_pi1']['cid']) {
 	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="btn btn-success">'.$this->pi_getLL('login_as_user').'</a>';
@@ -732,7 +761,7 @@ switch ($_REQUEST['action']) {
 					$selectContent.='</select>'."\n";
 					if ($selectContent) {
 						$subpartArray['###MASTER_SHOP###']='
-						<div class="account-field">
+						<div class="form-group">
 							<label for="store" id="account-store">'.$this->pi_getLL('store').'</label>
 							'.$selectContent.'
 						</div>
@@ -1165,6 +1194,8 @@ if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1
 	$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_new_customer');
 }
 
+$subpartArray['###AJAX_URL_GET_USERGROUPS0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_usergroups');
+$subpartArray['###AJAX_URL_GET_USERGROUPS1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_usergroups');
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');

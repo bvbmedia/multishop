@@ -19,6 +19,53 @@ jQuery(document).ready(function ($) {
 		window.location.hash = e.target.hash;
 		$("body,html,document").scrollTop(0);
 	});
+    $('#groups').select2({
+        placeholder:'Customer Groups',
+        multiple: true,
+        width:'100%',
+        minimumInputLength: 0,
+        query: function(query) {
+            $.ajax('###AJAX_URL_GET_USERGROUPS0###', {
+                data: {
+                    q: query.term
+                },
+                dataType: "json"
+            }).done(function(data) {
+                query.callback({results: data});
+            });
+        },
+        initSelection: function(element, callback) {
+            var id=$(element).val();
+            if (id!=="") {
+                $.ajax('###AJAX_URL_GET_USERGROUPS1###', {
+                    data: {
+                        preselected_id: id
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    callback(data);
+                });
+            }
+        },
+        formatResult: function(data){
+            if (data.text === undefined) {
+                $.each(data, function(i,val){
+                    return val.text;
+                });
+            } else {
+                return data.text;
+            }
+        },
+        formatSelection: function(data){
+            if (data.text === undefined) {
+                return data[0].text;
+            } else {
+                return data.text;
+            }
+        },
+        dropdownCssClass: 'existing_groups_dropdown',
+        escapeMarkup: function (m) { return m; }
+    });
     ###JS_TRIGGERS_EXTRA###
 });
 </script>

@@ -223,8 +223,12 @@ if ($rows) {
     if (!empty($js_select2_cache)) {
         $GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
     }
-    // now load the sortables jQuery code
-    $content.='<script type="text/javascript">
+} else {
+    $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
+    $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
+}
+// now load the sortables jQuery code
+$GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script type="text/javascript" data-ignore="1">
 	function attributesEditDialog (textTitle, textBody, mode) {
         $.confirm({
             title: textTitle,
@@ -259,12 +263,12 @@ if ($rows) {
 				dialog_body+=\'<input type="hidden" value="\' + optid + \'" name="option_id">\';
 				$.each(s.options, function(i, v){
 				    dialog_body+=\'<div class="form-group">\';
-				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'" class="col-md-4 control-label">\' + v.lang_title + \' : </label>\';
-				    dialog_body+=\'<div class="col-md-8"><input type="text" class="form-control text edit_option_inputs" name="option_names[\' + optid + \'][\' + i + \']" id="option_names_\' + optid + \'_\' + i + \'" value="\' + v.options_name + \'"/></div>\';
+				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'">\' + v.lang_title + \' : </label>\';
+				    dialog_body+=\'<input type="text" class="form-control text edit_option_inputs" name="option_names[\' + optid + \'][\' + i + \']" id="option_names_\' + optid + \'_\' + i + \'" value="\' + v.options_name + \'"/>\';
 				    dialog_body+=\'</div>\';
                     dialog_body+=\'<div class="form-group">\';
-                    dialog_body+=\'<label for="option_desc_\' + optid + \'_\' + i + \'" class="col-md-12 control-label option_description_label">'.addslashes($this->pi_getLL('description')).'</label>\';
-					dialog_body+=\'<div class="col-md-12"><textarea class="redactor_options edit_option_inputs" id="option_desc_\' + optid + \'_\' + i + \'" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea></div>\';
+                    dialog_body+=\'<label for="option_desc_\' + optid + \'_\' + i + \'" class="option_description_label">'.addslashes($this->pi_getLL('description')).'</label>\';
+					dialog_body+=\'<textarea class="form-control redactor_options edit_option_inputs" id="option_desc_\' + optid + \'_\' + i + \'" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
 					dialog_body+=\'</div>\';
 				});
 				dialog_body+=\'</div>\';
@@ -292,12 +296,12 @@ if ($rows) {
 				dialog_body+=\'<input type="hidden" class="edit_option_values_inputs" value="\' + relation_id + \'" name="data_id">\';
 				$.each(s.results, function(i, v) {
 				    dialog_body+=\'<div class="form-group">\';
-				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'" class="col-md-4 control-label">\' + v.lang_title + \' : </label>\';
-				    dialog_body+=\'<div class="col-md-8"><input type="text" class="form-control text edit_option_values_inputs" id="option_values_\' + s.options_values_id + \'_\' + i + \'" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/></div>\';
+				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'">\' + v.lang_title + \' : </label>\';
+				    dialog_body+=\'<input type="text" class="form-control text edit_option_values_inputs" id="option_values_\' + s.options_values_id + \'_\' + i + \'" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/>\';
 				    dialog_body+=\'</div>\';
                     dialog_body+=\'<div class="form-group">\';
-					dialog_body+=\'<label for="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'" class="col-md-12 control-label option_description_label">'.addslashes($this->pi_getLL('description')).'</label>\';
-					dialog_body+=\'<div class="col-md-12"><textarea class="redactor_values edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']" id="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'">\' + v.lang_description + \'</textarea></div>\';
+					dialog_body+=\'<label for="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'" class="option_description_label">'.addslashes($this->pi_getLL('description')).'</label>\';
+					dialog_body+=\'<textarea class="redactor_values edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']" id="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
 				});
 				dialog_body+=\'</div>\';
@@ -918,10 +922,6 @@ if ($rows) {
 		});
 	});
 </script>';
-} else {
-    $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
-    $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
-}
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

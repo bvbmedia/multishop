@@ -69,7 +69,7 @@
 </div>
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$("#shopping_cart_form input").change(function() {
+	$("#shopping_cart_form input").keyup(function() {
 		if ($(this).attr("id") !='coupons_code') {
 			$("#shopping_cart_form").submit();
 		}

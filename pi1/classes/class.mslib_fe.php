@@ -68,6 +68,7 @@ class mslib_fe {
 		$this->SEARCHADMIN_USER=&$ref->SEARCHADMIN_USER;
 		$this->SYSTEMADMIN_USER=&$ref->SYSTEMADMIN_USER;
 		$this->STATISTICSADMIN_USER=&$ref->STATISTICSADMIN_USER;
+		$this->languages=&$ref->languages;
 		$this->initLanguage($ref->LOCAL_LANG);
 	}
 	/**
@@ -5659,7 +5660,7 @@ class mslib_fe {
 		// custom hook that can be controlled by third-party plugin eof
 		return $discount;
 	}
-	public function getUser($value, $field='uid') {
+	public function  getUser($value, $field='uid') {
 		if ($value) {
 			if ($field=='code') {
 				$field='tx_multishop_code';
@@ -9029,12 +9030,15 @@ class mslib_fe {
 		if (!is_numeric($pid)) {
 			return false;
 		}
-		if (!is_numeric($page_uid)) {
+		if (!is_numeric($page_uid) ) {
 			$page_uid=$this->showCatalogFromPage;
+		}
+		if ($page_uid==$this->shop_pid) {
+			$page_uid='';
 		}
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_attributes', // FROM ...
-			'products_id="'.addslashes($pid).'" and page_uid=\''.$page_uid.'\'', // WHERE...
+			'products_id="'.addslashes($pid).'"'.(is_numeric($page_uid) && $page_uid>0 ? ' and page_uid=\''.$page_uid.'\'' : ''), // WHERE...
 			'', // GROUP BY...
 			'sort_order_option_name asc, sort_order_option_value asc', // ORDER BY...
 			'' // LIMIT ...

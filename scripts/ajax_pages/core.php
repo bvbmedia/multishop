@@ -60,7 +60,7 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'get_shoppingcart_shippingcost_overview':
-		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
 			$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 		}
 		$return_data=array();
@@ -77,6 +77,9 @@ switch ($this->ms['page']) {
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
 		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
 		$count_cart_incl_vat=0;
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$count_cart_incl_vat=1;
+		}
 		//
 		$return_data['shipping_cost']=0;
 		$return_data['shipping_costs_display']=mslib_fe::amount2Cents(0);
@@ -1854,6 +1857,9 @@ switch ($this->ms['page']) {
 				$filter[]='title like \'%'.addslashes($this->get['q']).'%\'';
 				$limit='';
 			}
+			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+				$filter[]='uid in ('.$this->get['preselected_id'].')';
+			}
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'fe_groups', // FROM ...
 				implode(' AND ', $filter), // WHERE...
@@ -1863,10 +1869,12 @@ switch ($this->ms['page']) {
 			);
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$return_data=array();
-			$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
+			//$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-					$return_data[]=array('id' => $row['uid'], 'text' => $row['title']);
+					if (is_numeric($row['uid']) && $row['uid']>0) {
+						$return_data[] = array('id' => $row['uid'], 'text' => $row['title']);
+					}
 				}
 			}
 			echo json_encode($return_data);

@@ -2436,6 +2436,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 			$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 			$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
+			}
 			// remove the status col
 			if ($disable_product_status_col) {
 				$subProductStatusPart=array();
@@ -2580,8 +2583,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$this->cart['summarize']['grand_total_vat']=(1-($this->cart['discount_amount']/$this->cart['summarize']['sub_total_including_vat']))*$this->cart['summarize']['grand_total_vat'];
 				}
+				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					// new subtotal
+					$markerArray = array();
+					$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
+					$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($this->cart['summarize']['sub_total'] - $this->cart['discount_amount']);
+					$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+				}
 			} else {
 				$subpartArray['###'.$key.'###']='';
+				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 			}
 //		error_log(print_r($this->cart['summarize'],1));
 			//DISCOUNT_WRAPPER EOF
