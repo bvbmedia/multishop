@@ -366,6 +366,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							}
 							$row[$col]=$valArray['content'];
 							break;
+						case 'boolean':
+							$status_html='';
+							if (!$row[$col]) {
+								$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('no').'"></span>';
+							} else {
+								$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('yes').'"></span>';
+							}
+							$row[$col]=$status_html;
+							break;
 						case 'booleanToggle':
 							$status_html='';
 							if (!$row[$col]) {
@@ -535,7 +544,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$content.='<p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
-			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
+			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.number_format($params['summarizeData']['totalRecordsInTable'], 0, '', '.').'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
