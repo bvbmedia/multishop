@@ -2077,7 +2077,7 @@ class mslib_fe {
 			}
 		}
 	}
-	public function mailUser($user, $subject, $content, $from_address='noreply@mysite.com', $from_name='TYPO3 Multishop', $attachments=array()) {
+	public function mailUser($user, $subject, $body, $from_email='noreply@mysite.com', $from_name='TYPO3 Multishop', $attachments=array(),$options=array()) {
 		if ($user['email']) {
 			$mail=new PHPMailer();
 			$mail->CharSet='UTF-8';
@@ -2109,7 +2109,7 @@ class mslib_fe {
 				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
 			}
 			$markerArray=array();
-			$markerArray['###BODY###']=$content;
+			$markerArray['###BODY###']=$body;
 			// ADDITIONAL OPTIONAL MARKERS
 			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
 			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
@@ -2130,7 +2130,7 @@ class mslib_fe {
 			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
 			// try to change URL images to embedded
-			$mail->SetFrom($from_address, $from_name);
+			$mail->SetFrom($from_email, $from_name);
 			if (count($attachments)) {
 				foreach ($attachments as $path) {
 					if ($path and is_file($path)) {
@@ -2143,10 +2143,30 @@ class mslib_fe {
 			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
 //			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
-			if (!$mail->Send()) {
-				return 0;
-			} else {
-				return 1;
+			if (!isset($options['skipSending'])) {
+				$options['skipSending']=0;
+			}
+			//hook to let other plugins further manipulate the query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'])) {
+				$params=array(
+					'user'=>&$user,
+					'subject'=>&$subject,
+					'body'=>&$body,
+					'from_email'=>&$from_email,
+					'from_name'=>&$from_name,
+					'attachments'=>&$attachments,
+					'options'=>&$options
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			if (!$options['skipSending']) {
+				if (!$mail->Send()) {
+					return 0;
+				} else {
+					return 1;
+				}
 			}
 		} else {
 			return 0;
