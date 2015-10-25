@@ -2162,10 +2162,27 @@ class mslib_fe {
 				}
 			}
 			if (!$options['skipSending']) {
-				if (!$mail->Send()) {
-					return 0;
-				} else {
+				//hook to let other plugins further manipulate the query
+				$return_status=$mail->Send();
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPostProc'])) {
+					$params=array(
+						'user'=>&$user,
+						'subject'=>&$subject,
+						'body'=>&$body,
+						'from_email'=>&$from_email,
+						'from_name'=>&$from_name,
+						'attachments'=>&$attachments,
+						'options'=>&$options,
+						'return_status'=>&$return_status,
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				if ($return_status) {
 					return 1;
+				} else {
+					return 0;
 				}
 			}
 		} else {
