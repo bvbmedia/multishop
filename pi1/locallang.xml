@@ -1258,6 +1258,7 @@
             <label index="checkout_customer_info_page">Checkout customer info page</label>
             <label index="click_here_to_read_the_additional_customer_information">Click here to read the additional customer Information</label>
             <label index="date_paid">Date paid</label>
+            <label index="duplicate">Duplicate</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2508,6 +2509,7 @@
             <label index="checkout_customer_info_page">Afrekenpagina klant informatie pagina</label>
             <label index="click_here_to_read_the_additional_customer_information">Klik hier om de additionele klantinformatie te lezen</label>
             <label index="date_paid">Datum betaald</label>
+            <label index="duplicate">Duplicate</label>
         </languageKey>
     </data>
 </T3locallang>
