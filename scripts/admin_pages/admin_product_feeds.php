@@ -316,7 +316,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<div class="col-md-10">
 				<select name="delimiter" class="form-control">
 					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
-					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>dash</option>
+					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>pipe</option>
 					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
 					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
 				</select>

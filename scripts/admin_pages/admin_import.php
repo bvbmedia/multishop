@@ -296,7 +296,7 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 				<option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
 				<option value="comma">'.$this->pi_getLL('comma').'</option>
 				<option value="tab">'.$this->pi_getLL('tab').'</option>
-				<option value="dash">'.$this->pi_getLL('dash').'</option>
+				<option value="dash">'.$this->pi_getLL('pipe').'</option>
 			</select>
 		</div>
 	</div>
@@ -1384,7 +1384,7 @@ if ($this->post['action']=='category-insert') {
 										}
 									}
 								} else {
-									// the values are multiple values (delimited by dash). Lets explode them and add them individually
+									// the values are multiple values (delimited by pipe). Lets explode them and add them individually
 									$key=$this->post['input'][$i];
 									if (strstr($tmpitem[$i], "|")) {
 										$exploded_items=explode("|", $tmpitem[$i]);
