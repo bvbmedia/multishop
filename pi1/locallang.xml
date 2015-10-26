@@ -598,6 +598,7 @@
             <label index="customers_that_bought_this_product_also_bought">Customers that bought this product, also bought</label>
             <label index="daily">daily</label>
             <label index="dash">dash</label>
+            <label index="pipe">pipe</label>
             <label index="database_table">Database table</label>
             <label index="datafeed_parser_template">Datafeed parser template</label>
             <label index="date">Date</label>
@@ -1257,6 +1258,7 @@
             <label index="checkout_customer_info_page">Checkout customer info page</label>
             <label index="click_here_to_read_the_additional_customer_information">Click here to read the additional customer Information</label>
             <label index="date_paid">Date paid</label>
+            <label index="duplicate">Duplicate</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1851,6 +1853,7 @@
             <label index="customers_that_bought_this_product_also_bought">Klanten die dit product hebben besteld, bestelden ook</label>
             <label index="daily">dagelijks</label>
             <label index="dash">dash</label>
+            <label index="pipe">pipe</label>
             <label index="database_table">Database tabel</label>
             <label index="datafeed_parser_template">Datafeed verwerktemplate</label>
             <label index="date">Datum</label>
@@ -2506,6 +2509,7 @@
             <label index="checkout_customer_info_page">Afrekenpagina klant informatie pagina</label>
             <label index="click_here_to_read_the_additional_customer_information">Klik hier om de additionele klantinformatie te lezen</label>
             <label index="date_paid">Datum betaald</label>
+            <label index="duplicate">Duplicate</label>
         </languageKey>
     </data>
 </T3locallang>
