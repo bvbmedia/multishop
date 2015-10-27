@@ -49,10 +49,10 @@ foreach ($tmporders as $order) {
 	$order_status_selectbox.='</select>';
 	$paid_status='';
 	if (!$order['paid']) {
-		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
+		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span> ';
 		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
-		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
+		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a> ';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$orderlist_buttons=array();
@@ -89,8 +89,8 @@ foreach ($tmporders as $order) {
 	$order_list_button_extra='';
 	if (count($orderlist_buttons)) {
 		//button area
-		$order_list_button_extra.='<td align="center" nowrap>';
-		$order_list_button_extra.=implode("&nbsp;", $orderlist_buttons);
+		$order_list_button_extra.='<td align="center">';
+		$order_list_button_extra.=implode(' ', $orderlist_buttons);
 		$order_list_button_extra.='</td>';
 	}
 	$markerArray=array();
@@ -288,10 +288,10 @@ $subpartArray['###LABEL_HEADER_PAID###']=$this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###']=$this->pi_getLL('admin_paid');
 $extra_header='';
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-	$extra_header='<th width="50">&nbsp;</th>';
+	$extra_header='<th>&nbsp;</th>';
 }
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type=='proposals') {
-	$extra_header='<th width="50">&nbsp;</th>';
+	$extra_header='<th>&nbsp;</th>';
 }
 $subpartArray['###EXTRA_RIGHT_HEADER###']=$extra_header;
 $subpartArray['###EXTRA_RIGHT_FOOTER###']=$extra_header;
