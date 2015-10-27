@@ -89,7 +89,7 @@ foreach ($tmporders as $order) {
 	$order_list_button_extra='';
 	if (count($orderlist_buttons)) {
 		//button area
-		$order_list_button_extra.='<td align="center">';
+		$order_list_button_extra.='<td class="cellActionFluid">';
 		$order_list_button_extra.=implode(' ', $orderlist_buttons);
 		$order_list_button_extra.='</td>';
 	}
@@ -288,10 +288,10 @@ $subpartArray['###LABEL_HEADER_PAID###']=$this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###']=$this->pi_getLL('admin_paid');
 $extra_header='';
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-	$extra_header='<th>&nbsp;</th>';
+	$extra_header='<th class="cellActionFluid">&nbsp;</th>';
 }
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type=='proposals') {
-	$extra_header='<th>&nbsp;</th>';
+	$extra_header='<th class="cellActionFluid">&nbsp;</th>';
 }
 $subpartArray['###EXTRA_RIGHT_HEADER###']=$extra_header;
 $subpartArray['###EXTRA_RIGHT_FOOTER###']=$extra_header;
