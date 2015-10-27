@@ -3940,14 +3940,14 @@ if ($this->post) {
 			$product['products_date_available_sys']='';
 			$product['products_date_available_visual']='';
 		} else {
-			$product['products_date_available_visual']=date($this->pi_getLL('locale_date_format'), $product['products_date_available']);
+			$product['products_date_available_visual']=strftime('%x', $product['products_date_available']);
 			$product['products_date_available_sys']=date("Y-m-d", $product['products_date_available']);
 		}
 		if ($product['products_date_added']==0 || empty($product['products_date_added'])) {
 			$product['products_date_added_sys']='';
 			$product['products_date_added_visual']='';
 		} else {
-			$product['products_date_added_visual']=date($this->pi_getLL('locale_date_format'), $product['products_date_added']);
+			$product['products_date_added_visual']=strftime('%x', $product['products_date_added']);
 			$product['products_date_added_sys']=date("Y-m-d", $product['products_date_added']);
 		}
 		if ($product['starttime']==0) {

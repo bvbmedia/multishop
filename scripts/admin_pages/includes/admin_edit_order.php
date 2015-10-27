@@ -1314,7 +1314,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$orders_paid_timestamp_visual='';
 				$orders_paid_timestamp='';
 			} else {
-				$orders_paid_timestamp_visual=date($this->pi_getLL('locale_date_format'), $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+				$orders_paid_timestamp_visual=strftime('%x', $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
 				$orders_paid_timestamp=date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
 			}
 			$orderDetailsItem.='<div class="col-md-9">
