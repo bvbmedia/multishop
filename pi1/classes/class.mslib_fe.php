@@ -2184,6 +2184,9 @@ class mslib_fe {
 				} else {
 					return 0;
 				}
+			} else {
+				// Skip sending but return true
+				return 1;
 			}
 		} else {
 			return 0;
