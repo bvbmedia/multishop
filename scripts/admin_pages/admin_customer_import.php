@@ -990,8 +990,12 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 //								$item['full_name'] = preg_replace('/\s+/', ' ', $item['full_name']);
 							}
 						}
-						if ($item['full_name']) {
+						if ($item['full_name'] && !isset($item['first_name']) && !isset($item['last_name'])) {
 							$user['name']=$item['full_name'];
+							$array=explode(' ',$item['full_name']);
+							$user['first_name']=$array[0];
+							unset($array[0]);
+							$user['last_name']=implode(' ',$array);
 						}
 						if ($item['company_name']) {
 							$user['company']=$item['company_name'];
@@ -1172,6 +1176,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if (!$user['country']) {
 								$user['country']=$default_country;
 							}
+							$skipRecord=0;
 							// custom hook that can be controlled by third-party
 							// plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'])) {
@@ -1179,7 +1184,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									'user'=>&$user,
 									'item'=>&$item,
 									'user_check'=>&$user_check,
-									'prefix_source_name'=>$this->post['prefix_source_name']
+									'prefix_source_name'=>$this->post['prefix_source_name'],
+									'skipRecord'=>&$skipRecord
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
 									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1187,35 +1193,37 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							}
 							// custom hook that can be controlled by third-party
 							// plugin eof
-							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$user_check['uid'], $user);
-							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-							$name=array();
-							if ($user['company']!='') {
-								$name[]=$user['company'];
-							}
-							if ($user['name']!='' and !in_array($user['name'], $name)) {
-								$name[]=$user['name'];
-							}
-							if ($user['email']!='' and !in_array($user['email'], $name)) {
-								$name[]='email: '.$user['email'];
-							}
-							$content.=implode(" / ", $name).' has been updated.<br />';
-							$uid=$user_check['uid'];
-							// custom hook that can be controlled by third-party
-							// plugin
-							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'])) {
-								$params=array(
-									'user'=>&$user,
-									'item'=>&$item,
-									'user_check'=>&$user_check,
-									'prefix_source_name'=>$this->post['prefix_source_name']
-								);
-								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
-									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							if (!$skipRecord) {
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$user_check['uid'], $user);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$name=array();
+								if ($user['company']!='') {
+									$name[]=$user['company'];
 								}
+								if ($user['name']!='' and !in_array($user['name'], $name)) {
+									$name[]=$user['name'];
+								}
+								if ($user['email']!='' and !in_array($user['email'], $name)) {
+									$name[]='email: '.$user['email'];
+								}
+								$content.=implode(" / ", $name).' has been updated.<br />';
+								$uid=$user_check['uid'];
+								// custom hook that can be controlled by third-party
+								// plugin
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'])) {
+									$params=array(
+										'user'=>&$user,
+										'item'=>&$item,
+										'user_check'=>&$user_check,
+										'prefix_source_name'=>$this->post['prefix_source_name']
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									}
+								}
+								// custom hook that can be controlled by third-party
+								// plugin eof
 							}
-							// custom hook that can be controlled by third-party
-							// plugin eof
 						} else {
 							if (!$user['password'] or $user['password']=='NULL') {
 								// generate our own random password
@@ -1232,6 +1240,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if (!$user['country']) {
 								$user['country']=$default_country;
 							}
+							$skipRecord=0;
 							// custom hook that can be controlled by third-party
 							// plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'])) {
@@ -1239,7 +1248,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									'user'=>&$user,
 									'item'=>&$item,
 									'user_check'=>&$user_check,
-									'prefix_source_name'=>$this->post['prefix_source_name']
+									'prefix_source_name'=>$this->post['prefix_source_name'],
+									'skipRecord'=>&$skipRecord
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
 									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1247,54 +1257,56 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							}
 							// custom hook that can be controlled by third-party
 							// plugin eof
-							if (!$user['gender']) {
-								$user['gender']=0;
-							}
-							// T3 6.2 BUGFIXES
-							$requiredCols=array();
-							$requiredCols[]='title';
-							$requiredCols[]='www';
-							foreach ($requiredCols as $requiredCol) {
-								if (!isset($user[$requiredCol])) {
-									$user[$requiredCol]='';
+							if (!$skipRecord) {
+								if (!$user['gender']) {
+									$user['gender']=0;
 								}
-							}
-							if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
-								$user['tx_multishop_source_id']=$user['uid'];
-							}
-							$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
-							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-							$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
-							if ($uid) {
-								$user_check=mslib_fe::getUser($uid);
-								$name=array();
-								if ($user['company']!='') {
-									$name[]=$user['company'];
-								}
-								if ($user['name']!='' and !in_array($user['name'], $name)) {
-									$name[]=$user['name'];
-								}
-								if ($user['email']!='' and !in_array($user['email'], $name)) {
-									$name[]='email: '.$user['email'];
-								}
-								$content.=implode(" / ", $name).' has been added.<br />';
-								// custom hook that can be controlled by third-party
-								// plugin
-								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'])) {
-									$params=array(
-										'user'=>&$user,
-										'item'=>&$item,
-										'user_check'=>&$user_check,
-										'prefix_source_name'=>$this->post['prefix_source_name']
-									);
-									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
-										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								// T3 6.2 BUGFIXES
+								$requiredCols=array();
+								$requiredCols[]='title';
+								$requiredCols[]='www';
+								foreach ($requiredCols as $requiredCol) {
+									if (!isset($user[$requiredCol])) {
+										$user[$requiredCol]='';
 									}
 								}
-								// custom hook that can be controlled by third-party
-								// plugin eof
-							} else {
-								$content.=implode(" / ", $name).' has been FAILED. Query:<br />'.$query.'<br/>';
+								if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
+									$user['tx_multishop_source_id']=$user['uid'];
+								}
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+								if ($uid) {
+									$user_check=mslib_fe::getUser($uid);
+									$name=array();
+									if ($user['company']!='') {
+										$name[]=$user['company'];
+									}
+									if ($user['name']!='' and !in_array($user['name'], $name)) {
+										$name[]=$user['name'];
+									}
+									if ($user['email']!='' and !in_array($user['email'], $name)) {
+										$name[]='email: '.$user['email'];
+									}
+									$content.=implode(" / ", $name).' has been added.<br />';
+									// custom hook that can be controlled by third-party
+									// plugin
+									if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'])) {
+										$params=array(
+											'user'=>&$user,
+											'item'=>&$item,
+											'user_check'=>&$user_check,
+											'prefix_source_name'=>$this->post['prefix_source_name']
+										);
+										foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
+											\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										}
+									}
+									// custom hook that can be controlled by third-party
+									// plugin eof
+								} else {
+									$content.=implode(" / ", $name).' has been FAILED. Query:<br />'.$query.'<br/>';
+								}
 							}
 						}
 						if ($uid) {
