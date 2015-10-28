@@ -117,6 +117,7 @@ $coltypes['crdate']=$this->pi_getLL('creation_date');
 $coltypes['language_code_2char_iso']=$this->pi_getLL('language_code', 'Language (2 char ISO code)');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
 $coltypes['tx_multishop_payment_condition']=$this->pi_getLL('payment_condition', 'payment condition');
+$coltypes['tx_multishop_customer_id']=$this->pi_getLL('tx_multishop_customer_id_field','tx_multishop_customer_id field');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
@@ -994,6 +995,12 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						}
 						if ($item['coc_id']) {
 							$user['tx_multishop_coc_id']=$item['coc_id'];
+						}
+						if (isset($item['tx_multishop_customer_id'])) {
+							if ($item['tx_multishop_customer_id']=='0') {
+								continue;
+							}
+							$user['tx_multishop_customer_id']=$item['tx_multishop_customer_id'];
 						}
 						if (isset($item['crdate'])) {
 							$user['crdate']=strtotime($item['crdate']);
