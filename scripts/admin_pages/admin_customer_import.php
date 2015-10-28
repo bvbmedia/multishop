@@ -880,6 +880,32 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							} else {
 								$item['username']=$item['email'];
 							}
+							// Make sure the username is not in use by someone else
+							// Prefix of the username
+							$username=$item['username'];
+							// Set output variable value to the prefix
+							$finalUsername=$username;
+							$filter=array();
+							if ($item['uid']) {
+								// We want to filter out the iterated user
+								$filter[]='uid !=\''.addslashes($item['uid']).'\'';
+							} elseif ($item['tx_multishop_source_id']) {
+								// We want to filter out the iterated user
+								$filter[]='disable=0 and tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
+								//$filter[]='tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
+							}
+							// Do a loop to increase the prefix number, but do the first loop with empty prefix
+							$counter=0;
+							do {
+								$suffix='';
+								if ($counter) {
+									$suffix=$counter;
+								}
+								$finalUsername=$username.$suffix;
+								$counter++;
+							} while (mslib_befe::ifExists($finalUsername,'fe_users','username',$filter));
+							// Copy final username back to the $item array
+							$item['username']=$finalUsername;
 						}
 						// first combine the values to 1 array
 						$usergroups=array();
