@@ -117,7 +117,7 @@ $coltypes['crdate']=$this->pi_getLL('creation_date');
 $coltypes['language_code_2char_iso']=$this->pi_getLL('language_code', 'Language (2 char ISO code)');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
 $coltypes['tx_multishop_payment_condition']=$this->pi_getLL('payment_condition', 'payment condition');
-$coltypes['tx_multishop_customer_id']=$this->pi_getLL('tx_multishop_customer_id_field','tx_multishop_customer_id field');
+$coltypes['tx_multishop_customer_id']=$this->pi_getLL('tx_multishop_customer_id_field', 'tx_multishop_customer_id field');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
@@ -891,7 +891,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								$filter[]='uid !=\''.addslashes($item['uid']).'\'';
 							} elseif ($item['tx_multishop_source_id']) {
 								// We want to filter out the iterated user
-								$filter[]='disable=0 and tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
+								$filter[]='tx_multishop_source_id != \''.addslashes($item['tx_multishop_source_id']).'\'';
 								//$filter[]='tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
 							}
 							// Do a loop to increase the prefix number, but do the first loop with empty prefix
@@ -903,7 +903,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								}
 								$finalUsername=$username.$suffix;
 								$counter++;
-							} while (mslib_befe::ifExists($finalUsername,'fe_users','username',$filter));
+							} while (mslib_befe::ifExists($finalUsername, 'fe_users', 'username', $filter));
 							// Copy final username back to the $item array
 							$item['username']=$finalUsername;
 						}
@@ -992,10 +992,10 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						}
 						if ($item['full_name'] && !isset($item['first_name']) && !isset($item['last_name'])) {
 							$user['name']=$item['full_name'];
-							$array=explode(' ',$item['full_name']);
+							$array=explode(' ', $item['full_name']);
 							$user['first_name']=$array[0];
 							unset($array[0]);
-							$user['last_name']=implode(' ',$array);
+							$user['last_name']=implode(' ', $array);
 						}
 						if ($item['company_name']) {
 							$user['company']=$item['company_name'];
