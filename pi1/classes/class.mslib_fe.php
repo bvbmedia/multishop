@@ -6181,18 +6181,6 @@ class mslib_fe {
 			if (!$this->ms['MODULES'][$key]) {
 				$messages[]=$this->pi_getLL('admin_label_store_email_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_email').'</strong></a>';
 			}
-			$key='META_TITLE';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_title_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_title').'</strong></a>';
-			}
-			$key='META_DESCRIPTION';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_description_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_description').'</strong></a>';
-			}
-			$key='META_KEYWORDS';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_keywords_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_keywords').'</strong></a>';
-			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
 				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
