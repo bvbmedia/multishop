@@ -933,6 +933,7 @@ if ($this->post and $_FILES) {
 if ($this->post) {
 	// updating products table
 	$updateArray=array();
+	$updateArray['vendor_code']='';
 	if (isset($this->post['manufacturers_products_id'])) {
 		$updateArray['vendor_code']=$this->post['manufacturers_products_id'];
 	}
@@ -958,6 +959,7 @@ if ($this->post) {
 	} else {
 		$updateArray['products_date_added']=time();
 	}
+	$updateArray['ean_code']='';
 	if ($this->post['ean_code']) {
 		$this->post['ean_code']=str_pad($this->post['ean_code'], 13, '0', STR_PAD_LEFT);
 		$updateArray['ean_code']=$this->post['ean_code'];
