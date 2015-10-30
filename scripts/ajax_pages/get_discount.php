@@ -74,18 +74,20 @@ if (!empty($_POST['code'])) {
 	}
 }
 $return_data['discount_percentage'] = $content;
+//
+if ($this->tta_user_info['default']['country']) {
+	$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
+} else {
+	$iso_customer=$this->tta_shop_info;
+}
+if (!$iso_customer['cn_iso_nr']) {
+	// fall back (had issue with admin notification)
+	$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
+}
+//
 if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
 	if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
 		$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
-	}
-	if ($this->tta_user_info['default']['country']) {
-		$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
-	} else {
-		$iso_customer=$this->tta_shop_info;
-	}
-	if (!$iso_customer['cn_iso_nr']) {
-		// fall back (had issue with admin notification)
-		$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
 	}
 	$delivery_country_id=$this->post['tx_multishop_pi1']['country_id'];
 	$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
@@ -119,7 +121,16 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
 	}
 	$return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
 }
-
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'])) {
+	$params=array(
+		'return_data'=>&$return_data
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// hook oef
 echo json_encode($return_data);
 exit();
 ?>
