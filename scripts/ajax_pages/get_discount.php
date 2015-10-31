@@ -87,7 +87,7 @@ if (!$iso_customer['cn_iso_nr']) {
 	$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
 }
 //
-if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']=="1") {
 	if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
 		$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 	}
@@ -118,7 +118,7 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
 	}
 } else {
 	$count_cart_incl_vat = 0;
-	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="1") {
 		$count_cart_incl_vat = 1;
 	}
 	$return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
