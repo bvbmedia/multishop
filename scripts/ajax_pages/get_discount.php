@@ -7,7 +7,6 @@ $content='0%';
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$discount_percentage=mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
 	if ($discount_percentage) {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$cart['coupon_code']='';
 		$cart['discount']=$discount_percentage;
 		$cart['discount_type']='percentage';
@@ -32,7 +31,6 @@ if (!empty($_POST['code'])) {
 			}
 		}
 		if ($continue_calculate_discount) {
-			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			switch ($row['discount_type']) {
 				case 'percentage':
 					$content=number_format($row['discount']).'%';
@@ -45,6 +43,7 @@ if (!empty($_POST['code'])) {
 					$content=mslib_fe::amount2Cents($row['discount']);
 					break;
 			}
+			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			$cart['coupon_code']=$code;
 			$cart['discount']=$row['discount'];
 			$cart['discount_type']=$row['discount_type'];
@@ -63,7 +62,7 @@ if (!empty($_POST['code'])) {
 	}
 } else {
 	if ($content=='0%') {
-		$cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$cart['coupon_code'] = '';
 		$cart['discount'] = '';
 		$cart['discount_type'] = '';
@@ -74,6 +73,17 @@ if (!empty($_POST['code'])) {
 	}
 }
 $return_data['discount_percentage'] = $content;
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'])) {
+	$params=array(
+		'cart'=>&$cart,
+		'return_data'=>&$return_data
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// hook oef
 //
 if ($this->tta_user_info['default']['country']) {
 	$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
@@ -85,7 +95,7 @@ if (!$iso_customer['cn_iso_nr']) {
 	$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
 }
 //
-if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']=="1") {
 	if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=='1') {
 		$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 	}
@@ -116,21 +126,11 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
 	}
 } else {
 	$count_cart_incl_vat = 0;
-	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="1") {
 		$count_cart_incl_vat = 1;
 	}
 	$return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
 }
-// hook
-if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'])) {
-	$params=array(
-		'return_data'=>&$return_data
-	);
-	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'] as $funcRef) {
-		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-	}
-}
-// hook oef
 echo json_encode($return_data);
 exit();
 ?>

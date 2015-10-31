@@ -928,9 +928,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 					$subtotal_price=($value['qty']*$product_amount);
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-						$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
-					} else if ($value['tax_rate'] and $include_vat) {
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="0") {
+						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=="1") {
+							$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
+						}
+					} else if ($value['tax_rate'] && $include_vat) {
 						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
 					}
 					$total_price=$total_price+$subtotal_price;

@@ -33,7 +33,7 @@ if ($this->post) {
 		$this->post['s_date']=date("Y-m-d");
 	}
 	if (!$this->post['e_date']) {
-		$this->post['e_date']=date("2020-m-d");
+		$this->post['e_date']=(date('Y')+10).date("-m-d");
 	}
 	if (is_numeric($this->post['s_hours']) and is_numeric($this->post['s_minutes'])) {
 		$this->post['s_date'].=' '.$this->post['s_hours'].':'.$this->post['s_minutes'].':00';
