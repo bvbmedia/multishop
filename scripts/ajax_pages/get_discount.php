@@ -4,13 +4,14 @@ if (!defined('TYPO3_MODE')) {
 }
 $content='0%';
 // first check group discount
-$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$discount_percentage=mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
 	if ($discount_percentage) {
 		$cart['coupon_code']='';
 		$cart['discount']=$discount_percentage;
 		$cart['discount_type']='percentage';
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content=number_format($discount_percentage).'%';
 	}
 }
@@ -42,23 +43,32 @@ if (!empty($_POST['code'])) {
 					$content=mslib_fe::amount2Cents($row['discount']);
 					break;
 			}
+			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			$cart['coupon_code']=$code;
 			$cart['discount']=$row['discount'];
 			$cart['discount_type']=$row['discount_type'];
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+			$GLOBALS['TSFE']->fe_user->storeSessionData();
 		}
 	} else {
+		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$cart['coupon_code']='';
 		$cart['discount']='';
 		$cart['discount_type']='';
 		$cart['discount_amount']='';
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content="0%";
 	}
 } else {
 	if ($content=='0%') {
+		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$cart['coupon_code'] = '';
 		$cart['discount'] = '';
 		$cart['discount_type'] = '';
 		$cart['discount_amount']='';
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content = "0%";
 	}
 }
@@ -74,8 +84,6 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 	}
 }
 // hook oef
-$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-$GLOBALS['TSFE']->fe_user->storeSessionData();
 //
 if ($this->tta_user_info['default']['country']) {
 	$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
