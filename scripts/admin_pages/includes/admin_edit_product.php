@@ -2306,6 +2306,20 @@ if ($this->post) {
 			$markerArray['LABEL_NEGATIVE_KEYWORDS']='Negative keywords';
 			$markerArray['VALUE_NEGATIVE_KEYWORDS']=htmlspecialchars($lngproduct[$language['uid']]['products_negative_keywords']);
 			$markerArray['DETAILS_TAB_CONTENT']=$details_tab_content;
+
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductDescriptionSubstitudePreProc'])) {
+				$params=array(
+					'markerArray'=>&$markerArray,
+					'product'=>&$product,
+					'language'=>&$language,
+					'langKey'=>&$key,
+					'lngproduct'=>&$lngproduct
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductDescriptionSubstitudePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$details_content.=$this->cObj->substituteMarkerArray($subparts['details_content'], $markerArray, '###|###');
 		}
 		/*
