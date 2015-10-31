@@ -399,6 +399,11 @@ if ($this->post['action']=='category-insert') {
 		if ($this->get['relaxed_import']) {
 			$this->post['relaxed_import']=$this->get['relaxed_import'];
 		}
+		$this->get['job_id']=$_REQUEST['job_id'];
+		$this->post['job_id']=$_REQUEST['job_id'];
+		// After file upload we have to force to preview to review
+		$this->post['action']='product-import-preview';
+		$this->get['job_id']=$_REQUEST['job_id'];
 	}
 	if ($this->post['database_name']) {
 		$file_location=$this->post['database_name'];
@@ -3139,6 +3144,7 @@ if ($this->post['action']=='category-insert') {
 	}
 }
 if ($this->post['action']!='product-import-preview' && $this->get['action']!='edit_job') {
+	$this->ms['show_default_form']=1;
 	$tmptab='';
 	if ($content) {
 		$tmptab.=mslib_befe::bootstrapPanel('Result',$content,'success');
