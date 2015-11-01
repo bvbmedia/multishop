@@ -544,7 +544,11 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', $page_uid, $include_disabled_cats);
+					$categoriesStartingPoint=0;
+					if (is_numeric($this->categoriesStartingPoint)) {
+						$categoriesStartingPoint=$this->categoriesStartingPoint;
+					}
+					mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
 						$cats=mslib_fe::Crumbar($category_tree['id'], '', array(), $page_uid);
@@ -591,7 +595,11 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', '', $include_disabled_cats);
+					$categoriesStartingPoint=0;
+					if (is_numeric($this->categoriesStartingPoint)) {
+						$categoriesStartingPoint=$this->categoriesStartingPoint;
+					}
+					mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, '', $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
 						if (count($skip_ids)>0) {
