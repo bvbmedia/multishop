@@ -343,6 +343,11 @@ ul.admin_sort_product_listing > li:last-child > * { border-bottom:none; padding-
 ul.admin_sort_product_listing > li > * { display:table-cell; border-bottom:1px solid #eee; vertical-align:top; padding-right:10px; padding-bottom:15px; padding-top:15px; }
 ul.admin_sort_product_listing > li > strong { width:90%; }
 ul.admin_sort_product_listing > li > .admin_menu { white-space:nowrap; }
+ul.admin_sort_product_listing > li > .admin_menu > a { float:none; display:inline-block; color:#fff; text-align:center; }
+ul.admin_sort_product_listing > li > .admin_menu > a:first-child { padding-right:12px; }
+ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm { font-size:12px; line-height:1.5; }
+ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child { padding-right:10px; }
+
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
 #ui-datepicker-div { display:none; z-index:100 !important; }
