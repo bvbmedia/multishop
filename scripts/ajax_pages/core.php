@@ -541,13 +541,13 @@ switch ($this->ms['page']) {
 				break;
 			case 'getTree':
 			default:
+				$categoriesStartingPoint=0;
+				if (is_numeric($this->categoriesStartingPoint)) {
+					$categoriesStartingPoint=$this->categoriesStartingPoint;
+				}
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					$categoriesStartingPoint=0;
-					if (is_numeric($this->categoriesStartingPoint)) {
-						$categoriesStartingPoint=$this->categoriesStartingPoint;
-					}
 					mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
@@ -573,7 +573,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid, $include_disabled_cats);
+					mslib_fe::getSubcatsArray($categories_tree, '', $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
@@ -588,6 +588,10 @@ switch ($this->ms['page']) {
 				}
 				break;
 			case'getFullTree':
+				$categoriesStartingPoint=0;
+				if (is_numeric($this->categoriesStartingPoint)) {
+					$categoriesStartingPoint=$this->categoriesStartingPoint;
+				}
 				$skip_ids=array();
 				if (isset($this->get['skip_ids']) && !empty($this->get['skip_ids'])) {
 					$skip_ids=explode(',', $this->get['skip_ids']);
@@ -595,10 +599,6 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					$categoriesStartingPoint=0;
-					if (is_numeric($this->categoriesStartingPoint)) {
-						$categoriesStartingPoint=$this->categoriesStartingPoint;
-					}
 					mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, '', $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
@@ -662,7 +662,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid, $include_disabled_cats);
+					mslib_fe::getSubcatsArray($categories_tree, $categoriesStartingPoint, '', $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						if (!in_array($category_tree_0['id'], $skip_ids)) {
