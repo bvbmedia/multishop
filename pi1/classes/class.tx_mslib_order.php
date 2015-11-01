@@ -654,23 +654,24 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
 			}
 			// ITEM_NAME
-			$item['ITEM_NAME']=$product['products_name'];
+			$tmp_item_name=array();
+			$tmp_item_name['products_name']=$product['products_name'];
 			if ($product['products_model']) {
-				$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
+				$tmp_item_name['products_model']=' ('.$product['products_model'].') ';
 			}
 			// for virtual product download link
 			if ($template_type=='email' && $order['mail_template']=='email_order_paid_letter' && $order['paid']==1 && isset($product['file_download_code']) && !empty($product['file_download_code'])) {
 				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
-				$item['ITEM_NAME'].=$download_link;
+				$tmp_item_name['download_link']=$download_link;
 			}
 			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
-				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
+				$tmp_item_name['products_ean']='<br/>EAN: '.$product['ean_code'];
 			}
 			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
+				$tmp_item_name['products_sku']='<br/>SKU: '.$product['sku_code'];
 			}
 			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
-				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
+				$tmp_item_name['products_vendor_code']='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
 			}
 			if (count($product['attributes'])) {
 				foreach ($product['attributes'] as $tmpkey=>$options) {
@@ -683,7 +684,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$attribute_price=$options['options_values_price'];
 					}
-					$item['ITEM_NAME'].='<BR>'.$options['products_options'].': '.$options['products_options_values'];
+					$tmp_item_name['products_attributes'][]='<BR>'.$options['products_options'].': '.$options['products_options_values'];
 					$price=$price+($product['qty']*($options['price_prefix'].$options['options_values_price']));
 					if ($price<0) {
 						$price=0;
@@ -693,6 +694,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 				}
 			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'])) {
+				$params=array(
+					'item_name'=>&$tmp_item_name,
+					'order'=>&$order,
+					'product'=>&$product,
+					'template_type'=>&$template_type
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$item['ITEM_NAME']=implode('', $tmp_item_name);
 			// ITEM NAME EOF
 			// ITEM_QUANTITY
 			$item['ITEM_QUANTITY']=round($product['qty'], 14);
