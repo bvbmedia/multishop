@@ -705,7 +705,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			$item['ITEM_NAME']=implode('', $tmp_item_name);
+			$item_name='';
+			if (is_array($tmp_item_name) && count($tmp_item_name)) {
+				foreach ($tmp_item_name as $array_item_name) {
+					if (is_array($array_item_name) && count($array_item_name)) {
+						$item_name .= implode('', $array_item_name);
+					} else {
+						$item_name .= $array_item_name;
+					}
+				}
+			}
+			$item['ITEM_NAME']=$item_name;
 			// ITEM NAME EOF
 			// ITEM_QUANTITY
 			$item['ITEM_QUANTITY']=round($product['qty'], 14);
