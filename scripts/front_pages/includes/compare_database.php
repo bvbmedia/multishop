@@ -795,6 +795,13 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="select related_to from tx_multishop_categories limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_categories` ADD `related_to` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`related_to`);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

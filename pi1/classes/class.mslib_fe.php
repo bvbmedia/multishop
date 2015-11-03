@@ -7398,7 +7398,7 @@ class mslib_fe {
 				}
 				$local_catname=$cat['name'];
 				// check categories name if already exists or not
-				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid);
+				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid, $cat['id']);
 				if (!$foreign_catid) {
 					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
 					//
@@ -7406,10 +7406,12 @@ class mslib_fe {
 					$exclude_columns[]='categories_id';
 					$exclude_columns[]='page_uid';
 					$exclude_columns[]='parent_id';
+					$exclude_columns[]='related_to';
 					//
 					$insertArray=array();
 					$insertArray['page_uid']=$external_page_uid;
 					$insertArray['parent_id']=$prev_catid;
+					$insertArray['related_to']=$cat['id'];
 					foreach ($cat_data as $data_colname=>$data_colvalue) {
 						if (!in_array($data_colname, $exclude_columns)) {
 							$insertArray[$data_colname]=(!empty($data_colvalue) ? $data_colvalue : '');
@@ -7446,7 +7448,7 @@ class mslib_fe {
 			return $endpoint_catid;
 		}
 	}
-	public function getCategoryIdByName($categories_name, $page_uid=0) {
+	public function getCategoryIdByName($categories_name, $page_uid=0, $related_category_id=0) {
 		if (empty($categories_name)) {
 			return false;
 		}
@@ -7457,7 +7459,7 @@ class mslib_fe {
 			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id=cd.categories_id', // WHERE...
+				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.related_to=\''.$related_category_id.'\' and c.categories_id=cd.categories_id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
