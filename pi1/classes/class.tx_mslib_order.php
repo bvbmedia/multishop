@@ -738,7 +738,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			// GRAND TOTAL CALCULATIONS
 			$subtotal=($subtotal+$price);
 			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
-			$subtotalIncludingVatArray[]=$product['total_price'];
+			$subtotalIncludingVatArray[]=$product['final_price'];
 			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_tax'];
 			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_attributes_tax'];
 			// GRAND TOTAL CALCULATIONS EOF
