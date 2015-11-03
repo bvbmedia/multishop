@@ -2581,10 +2581,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 				// trick to reduce TAX costs
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					echo $this->cart['discount_amount']."<br/>";
-					echo $this->cart['summarize']['sub_total_including_vat']."<br/>";
-					echo $this->cart['summarize']['grand_total_vat']."<br/>";
-
 					$this->cart['summarize']['grand_total_vat']=(1-($this->cart['discount_amount']/$this->cart['summarize']['sub_total_including_vat']))*$this->cart['summarize']['grand_total_vat'];
 				}
 				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
