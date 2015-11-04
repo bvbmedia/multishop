@@ -656,7 +656,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			// ITEM_NAME
 			$tmp_item_name=array();
 			$tmp_item_name['products_name']=$product['products_name'];
-			if ($product['products_model']) {
+			$tmp_item_name['products_model']='';
+			if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
 				$tmp_item_name['products_model']=' ('.$product['products_model'].') ';
 			}
 			// for virtual product download link

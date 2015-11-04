@@ -2305,6 +2305,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					// ITEM_NAME
 					$item['ITEM_NAME']=$product['products_name'];
+
 					if ($product['products_model']) {
 						$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
 					}

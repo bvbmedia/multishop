@@ -3993,7 +3993,7 @@ class mslib_befe {
 				if ($product['products_article_number']) {
 					$product_name.=' ('.$product['products_article_number'].')';
 				}
-				if ($product['products_model']) {
+				if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
 					$product_name.='<br/>Model: '.$product['products_model'];
 				}
 				if ($product['products_description']) {
