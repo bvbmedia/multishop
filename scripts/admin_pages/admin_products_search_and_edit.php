@@ -134,6 +134,14 @@ if ($this->post['submit']) {
 			}
 		}
 	}
+	// custom page hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionProductPostProc'])) {
+		$params=array();
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionProductPostProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// custom page hook that can be controlled by third-party plugin eof
 	if (count($this->post['selectedProducts'])) {
 		switch ($this->post['tx_multishop_pi1']['action']) {
 			case 'delete':
