@@ -1100,6 +1100,10 @@ if ($this->post) {
 							foreach ($tmp_categories_id as $tmp_category_id) {
 								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 								if (!empty($tmp_catname)) {
+									$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+									if ($product_real_page_uid==$page_uid) {
+										$tmp_category_id=0;
+									}
 									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 									if (!$foreign_catid) {
 										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
@@ -1243,6 +1247,10 @@ if ($this->post) {
 								foreach ($tmp_categories_id as $tmp_category_id) {
 									$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 									if (!empty($tmp_catname)) {
+										$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+										if ($product_real_page_uid==$page_uid) {
+											$tmp_category_id=0;
+										}
 										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 										if (!$foreign_catid) {
 											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
@@ -1432,6 +1440,10 @@ if ($this->post) {
 						foreach ($tmp_categories_id as $tmp_category_id) {
 							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 							if (!empty($tmp_catname)) {
+								$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+								if ($product_real_page_uid==$page_uid) {
+									$tmp_category_id=0;
+								}
 								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 								if (!$foreign_catid) {
 									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
