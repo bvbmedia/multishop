@@ -935,7 +935,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else if ($value['tax_rate'] && $include_vat) {
 						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
 					}
-					$total_price=$total_price+$subtotal_price;
+					$total_price=($total_price+$subtotal_price);
 				}
 			}
 		}
@@ -1057,14 +1057,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
 			$grand_total['shipping_cost']=$address['shipping_method_costs'];
-			$total_price=$total_price+$address['shipping_method_costs'];
+			$total_price=($total_price+$address['shipping_method_costs']);
 			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_costs']=$address['shipping_method_costs'];
 		}
 		if ($address['payment_method_costs']) {
 			$grand_total['payment_cost']=$address['payment_method_costs'];
-			$total_price=$total_price+$address['payment_method_costs'];
+			$total_price=($total_price+$address['payment_method_costs']);
 			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_costs']=$address['payment_method_costs'];
 		}
+		$customer_id='';
 		// first the account
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$customer_id=$GLOBALS['TSFE']->fe_user->user['uid'];
@@ -1072,6 +1073,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$tmp_user=mslib_fe::getUser($address['email'], 'email');
 			if ($tmp_user['uid']) {
 				$customer_id=$tmp_user['uid'];
+			}
+		}
+		//hook to let other plugins further manipulate the create table query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'])) {
+			$params=array(
+					'address'=>&$address,
+					'cart'=>&$cart,
+					'customer_id'=>&$customer_id
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if (!$customer_id) {
@@ -1531,7 +1543,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (isset($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'])) {
 				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];
 			} else {
-				$insertArray['customer_currency']='';
+				$insertArray['customer_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
 			}
 			if (isset($this->cookie['currency_rate']) && !empty($this->cookie['currency_rate'])) {
 				$insertArray['currency_rate']=$this->cookie['currency_rate'];
