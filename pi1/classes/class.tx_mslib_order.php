@@ -208,14 +208,22 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$discount_price=round($row['discount'], 2);
 						//$sub_total_excluding_vat-=$discount_price;
 						$discount_percentage=round(($discount_price/($sub_total_excluding_vat)*100), 2);
-						//$sub_total_excluding_vat=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
+						//$tmp_sub_total=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
+						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
+						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						}
 					} else {
 						$discount_price=$row['discount'];
 						//$sub_total-=$discount_price;
 						$discount_percentage=round(($discount_price/($sub_total)*100), 2);
-						//$sub_total=(($sub_total)/100*(100-$discount_percentage));
+						//$tmp_sub_total=(($sub_total)/100*(100-$discount_percentage));
+						//
+						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
+						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						}
 					}
-					$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
 					if (count($tax_separation)>1) {
 						$tax_separation=array();
 					}
@@ -828,7 +836,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
 		$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal').':';
 		// rounding is problem with including vat shops.
-		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
+		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,true));
 		//$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
 		$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($subtotal);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
