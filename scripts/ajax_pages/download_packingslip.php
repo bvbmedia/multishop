@@ -240,13 +240,13 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		}
 		// MARKERS EOL
 		//hook to let other plugins further manipulate the replacers
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadPackingslipTemplateMarkerPreProc'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_packingslip.php']['downloadPackingslipTemplateMarkerPreProc'])) {
 			$params=array(
 					'cmsKeys'=>&$cmsKeys,
 					'order'=>&$order,
 					'markerArray'=>&$markerArray
 			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadPackingslipTemplateMarkerPreProc'] as $funcRef) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_packingslip.php']['downloadPackingslipTemplateMarkerPreProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
@@ -255,12 +255,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
 		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
 		$content=$tmpcontent;
-		/*
-		if ($this->get['debug']) {
-			echo $content;
-			die();
-		}
-		*/
+
 		$settings=array();
 		if ($this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']) {
 			$settings=explode(',', $this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']);
