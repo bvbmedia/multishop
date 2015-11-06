@@ -141,11 +141,13 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 );
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
+$content.='<div class="attribute_options_sortable" id="attribute_listings">';
 if ($rows) {
-    $content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
+    //$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
 //	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
     //$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
-    $content.='<div class="attribute_options_sortable" id="attribute_listings">';
+    //$content.='<div class="attribute_options_sortable" id="attribute_listings">';
     while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
         $content.='<div class="panel panel-default" id="options_'.$row['products_options_id'].'">';
         $content.='<div class="panel-heading">';
@@ -212,9 +214,9 @@ if ($rows) {
         $content.='</div>';
         $content.='</div>';
     }
-    $content.='</div>';
-    $content.='<button class="btn btn-success" type="submit"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>';
-    $content.='</form>';
+    //$content.='</div>';
+    //$content.='<button class="btn btn-success" type="submit"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>';
+    //$content.='</form>';
     $count_js_cache_values=count($js_select2_cache_values);
     if ($count_js_cache_values) {
         $js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
@@ -223,10 +225,17 @@ if ($rows) {
     if (!empty($js_select2_cache)) {
         $GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
     }
+    $hide_form_save_btn='';
 } else {
+    $content.='<div id="no_attributes_box">';
     $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
     $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
+    $content.='</div>';
+    $hide_form_save_btn=' style="display:none"';
 }
+$content.='</div>';
+$content .= '<button id="save_attributes_options_form" class="btn btn-success" type="submit"'.$hide_form_save_btn.'><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
+$content.='</form>';
 // now load the sortables jQuery code
 $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script type="text/javascript" data-ignore="1">
 	function attributesEditDialog (textTitle, textBody, mode) {
@@ -487,6 +496,11 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 							new_option_html+=\'</div>\'; // .panel-body
 							new_option_html+=\'</div>\'; // .panel .panel-default
 							$(ul_option_listings).append(new_option_html);
+							//
+							if ($(\'#save_attributes_options_form\').is(\':hidden\')) {
+							    $(\'#no_attributes_box\').hide();
+							    $(\'#save_attributes_options_form\').show();
+							}
 							//
 							$("#new_option_name").val("");
 							$("#new_listtype").val("select");
@@ -794,6 +808,10 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
                                         success: function(s) {
                                             if (s.delete_status == "ok"){
                                                 $(s.delete_id).remove();
+                                                if ($(\'#attribute_listings > div.panel\').length==0) {
+                                                    $(\'#no_attributes_box\').show();
+							                        $(\'#save_attributes_options_form\').hide();
+                                                }
                                             }
                                         }
                                     });
