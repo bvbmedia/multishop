@@ -330,6 +330,16 @@ if (is_numeric($this->get['orders_id'])) {
 				';
 				}
 			}
+			if ($order['discount']>0) {
+				$tmpcontent.='
+				<div class="form-group">
+					<label class="control-label col-md-10">'.$this->pi_getLL('discount').'</label>
+					<div class="col-md-2">
+					<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0).'</p>
+					</div>
+				</div>
+				';
+			}
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$tmpcontent.=$content_shipping_costs;
 				$tmpcontent.=$content_payment_costs;
@@ -343,16 +353,6 @@ if (is_numeric($this->get['orders_id'])) {
 					$tmpcontent.=$content_shipping_costs;
 					$tmpcontent.=$content_payment_costs;
 				}
-			}
-			if ($order['discount']>0) {
-				$tmpcontent.='
-				<div class="form-group">
-					<label class="control-label col-md-10">'.$this->pi_getLL('discount').'</label>
-					<div class="col-md-2">
-					<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0).'</p>
-					</div>
-				</div>
-				';
 			}
 			$tmpcontent.='
 			<div class="form-group">
