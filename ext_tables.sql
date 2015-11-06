@@ -109,6 +109,7 @@ CREATE TABLE `tx_multishop_categories` (
  `hashed_id` varchar(32) default '',
  `hide_in_menu` tinyint(1) default '0',
  `col_position` tinyint(1) default '0',
+ `related_to` int(11) default '0',
  PRIMARY KEY (`categories_id`),
  KEY `idx_categories_parent_id` (`parent_id`),
  KEY `status` (`status`),
@@ -122,7 +123,8 @@ CREATE TABLE `tx_multishop_categories` (
  KEY `google_taxonomy_id` (`google_taxonomy_id`),
  KEY `hashed_id` (`hashed_id`),
  KEY `hide_in_menu` (`hide_in_menu`),
- KEY `col_position` (`col_position`)
+ KEY `col_position` (`col_position`),
+ KEY `related_to` (`related_to`)
 );
 
 CREATE TABLE `tx_multishop_categories_description` (

@@ -667,6 +667,8 @@ $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
+$subpartArray['###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###']='';
+$subpartArray['###CUSTOM_MARKER_BELOW_USERNAME_FIELD###']='';
 
 $subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action='.$_REQUEST['action'].'&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 // customer to shipping/payment method mapping

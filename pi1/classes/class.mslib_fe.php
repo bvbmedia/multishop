@@ -2016,72 +2016,6 @@ class mslib_fe {
 		$input=preg_replace("`((http)+(s)?:(//)|(www\.))((\w|\.|\-|_)+)(/)?(\S+)?`i", "<a href=\"http\\3://\\5\\6\\8\\9\" target=\"_blank\" title=\"\\0\">\\5\\6</a>", $input);
 		return $input;
 	}
-	public function mailFeUser($user, $subject, $content, $from_address='noreply@typo3multishop.com', $from_name='TYPO3 Multishop') {
-		if ($user['email']) {
-			$mail=new PHPMailer();
-			$mail->CharSet='UTF-8';
-			$mail->Encoding='base64';
-			$mail->XMailer=' ';
-			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
-				$mail->IsSMTP();
-				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'], ':')) {
-					// Hostname also has port number
-					$array=explode(':', $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
-					$mail->Host=$array[0];
-					$mail->Port=$array[1];
-				} else {
-					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
-				}
-				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
-					$mail->SMTPAuth=true;
-					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
-						$mail->SMTPSecure=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'];
-					}
-					$mail->Username=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'];
-					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
-				}
-			}
-			if ($this->conf['email_tmpl_path']) {
-				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
-			} else {
-				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
-			}
-			$markerArray=array();
-			$markerArray['###BODY###']=$content;
-			// ADDITIONAL OPTIONAL MARKERS
-			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
-			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
-			$markerArray['###STORE_DOMAIN###']=$this->server['HTTP_HOST'];
-			$markerArray['###STORE_URL###']=$this->FULL_HTTP_URL;
-			$markerArray['###STORE_ADDRESS###']='';
-			$markerArray['###STORE_ZIP###']='';
-			$markerArray['###STORE_CITY###']='';
-			$markerArray['###STORE_COUNTRY###']='';
-			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
-				$address=mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
-				if (is_array($address) && $address['uid']) {
-					$markerArray['###STORE_ADDRESS###']=$address['address'];
-					$markerArray['###STORE_ZIP###']=$address['zip'];
-					$markerArray['###STORE_CITY###']=$address['city'];
-					$markerArray['###STORE_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
-				}
-			}
-			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
-			$mail->SetFrom($from_address, $from_name);
-			$mail->AddAddress($user['email'], $user['username']);
-			$mail->Subject=$subject;
-			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
-			self::MsgHTMLwithEmbedImages($mail, $body);
-//			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
-			if (!$mail->Send()) {
-				return 0;
-			} else {
-				return 1;
-			}
-		} else {
-			return 0;
-		}
-	}
 	public function getTranslatedCountryNameByEnglishName($language_code, $english_name) {
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'static_countries', // FROM ...
@@ -2143,7 +2077,7 @@ class mslib_fe {
 			}
 		}
 	}
-	public function mailUser($user, $subject, $content, $from_address='noreply@mysite.com', $from_name='TYPO3 Multishop', $attachments=array()) {
+	public function mailUser($user, $subject, $body, $from_email='noreply@mysite.com', $from_name='TYPO3 Multishop', $attachments=array(),$options=array()) {
 		if ($user['email']) {
 			$mail=new PHPMailer();
 			$mail->CharSet='UTF-8';
@@ -2168,7 +2102,123 @@ class mslib_fe {
 					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
 				}
 			}
-			//		$mail->IsSendmail(); // telling the class to use SendMail transport
+			// $mail->IsSendmail(); // telling the class to use SendMail transport
+			if ($this->conf['email_tmpl_path']) {
+				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
+			} else {
+				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
+			}
+			$markerArray=array();
+			$markerArray['###BODY###']=$body;
+			// ADDITIONAL OPTIONAL MARKERS
+			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
+			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
+			$markerArray['###STORE_DOMAIN###']=$this->server['HTTP_HOST'];
+			$markerArray['###STORE_URL###']=$this->FULL_HTTP_URL;
+			$markerArray['###STORE_ADDRESS###']='';
+			$markerArray['###STORE_ZIP###']='';
+			$markerArray['###STORE_CITY###']='';
+			$markerArray['###STORE_COUNTRY###']='';
+			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
+				$address=mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
+				if (is_array($address) && $address['uid']) {
+					$markerArray['###STORE_ADDRESS###']=$address['address'];
+					$markerArray['###STORE_ZIP###']=$address['zip'];
+					$markerArray['###STORE_CITY###']=$address['city'];
+					$markerArray['###STORE_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+				}
+			}
+			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
+			// try to change URL images to embedded
+			$mail->SetFrom($from_email, $from_name);
+			if (count($attachments)) {
+				foreach ($attachments as $path) {
+					if ($path and is_file($path)) {
+						$mail->AddAttachment($path);
+					}
+				}
+			}
+			$mail->AddAddress($user['email'], $user['username']);
+			$mail->Subject=$subject;
+			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
+			self::MsgHTMLwithEmbedImages($mail, $body);
+//			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
+			if (!isset($options['skipSending'])) {
+				$options['skipSending']=0;
+			}
+			//hook to let other plugins further manipulate the query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'])) {
+				$params=array(
+					'user'=>&$user,
+					'subject'=>&$subject,
+					'body'=>&$body,
+					'from_email'=>&$from_email,
+					'from_name'=>&$from_name,
+					'attachments'=>&$attachments,
+					'options'=>&$options
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			if (!$options['skipSending']) {
+				//hook to let other plugins further manipulate the query
+				$return_status=$mail->Send();
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPostProc'])) {
+					$params=array(
+						'user'=>&$user,
+						'subject'=>&$subject,
+						'body'=>&$body,
+						'from_email'=>&$from_email,
+						'from_name'=>&$from_name,
+						'attachments'=>&$attachments,
+						'options'=>&$options,
+						'return_status'=>&$return_status,
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				if ($return_status) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				// Skip sending but return true
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
+	public function mailFeUser($user, $subject, $content, $from_address='noreply@typo3multishop.com', $from_name='TYPO3 Multishop') {
+		return mslib_fe::mailUser($user,$subject,$content,$from_address,$from_name);
+		/*
+		if ($user['email']) {
+			$mail=new PHPMailer();
+			$mail->CharSet='UTF-8';
+			$mail->Encoding='base64';
+			$mail->XMailer=' ';
+			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
+				$mail->IsSMTP();
+				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'], ':')) {
+					// Hostname also has port number
+					$array=explode(':', $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
+					$mail->Host=$array[0];
+					$mail->Port=$array[1];
+				} else {
+					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				}
+				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
+					$mail->SMTPAuth=true;
+					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
+						$mail->SMTPSecure=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'];
+					}
+					$mail->Username=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'];
+					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
+				}
+			}
 			if ($this->conf['email_tmpl_path']) {
 				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
 			} else {
@@ -2195,15 +2245,7 @@ class mslib_fe {
 				}
 			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
-			// try to change URL images to embedded
 			$mail->SetFrom($from_address, $from_name);
-			if (count($attachments)) {
-				foreach ($attachments as $path) {
-					if ($path and is_file($path)) {
-						$mail->AddAttachment($path);
-					}
-				}
-			}
 			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
 			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
@@ -2217,6 +2259,7 @@ class mslib_fe {
 		} else {
 			return 0;
 		}
+		*/
 	}
 	public function convertTime($dformat, $sformat, $ts) {
 		extract(strptime($ts, $sformat));
@@ -5194,7 +5237,7 @@ class mslib_fe {
 		}
 		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
-			'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
+			'sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -6137,18 +6180,6 @@ class mslib_fe {
 			$key='STORE_EMAIL';
 			if (!$this->ms['MODULES'][$key]) {
 				$messages[]=$this->pi_getLL('admin_label_store_email_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_email').'</strong></a>';
-			}
-			$key='META_TITLE';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_title_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_title').'</strong></a>';
-			}
-			$key='META_DESCRIPTION';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_description_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_description').'</strong></a>';
-			}
-			$key='META_KEYWORDS';
-			if (!$this->ms['MODULES'][$key]) {
-				$messages[]=$this->pi_getLL('admin_label_meta_tag_keywords_not_defined').' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_keywords').'</strong></a>';
 			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
@@ -7367,7 +7398,7 @@ class mslib_fe {
 				}
 				$local_catname=$cat['name'];
 				// check categories name if already exists or not
-				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid);
+				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid, $cat['id']);
 				if (!$foreign_catid) {
 					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
 					//
@@ -7375,10 +7406,12 @@ class mslib_fe {
 					$exclude_columns[]='categories_id';
 					$exclude_columns[]='page_uid';
 					$exclude_columns[]='parent_id';
+					$exclude_columns[]='related_to';
 					//
 					$insertArray=array();
 					$insertArray['page_uid']=$external_page_uid;
 					$insertArray['parent_id']=$prev_catid;
+					$insertArray['related_to']=$cat['id'];
 					foreach ($cat_data as $data_colname=>$data_colvalue) {
 						if (!in_array($data_colname, $exclude_columns)) {
 							$insertArray[$data_colname]=(!empty($data_colvalue) ? $data_colvalue : '');
@@ -7415,7 +7448,7 @@ class mslib_fe {
 			return $endpoint_catid;
 		}
 	}
-	public function getCategoryIdByName($categories_name, $page_uid=0) {
+	public function getCategoryIdByName($categories_name, $page_uid=0, $related_category_id=0) {
 		if (empty($categories_name)) {
 			return false;
 		}
@@ -7426,7 +7459,7 @@ class mslib_fe {
 			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id=cd.categories_id', // WHERE...
+				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.related_to=\''.$related_category_id.'\' and c.categories_id=cd.categories_id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -9455,6 +9488,18 @@ class mslib_fe {
 			}
 		}
 		return $output;
+	}
+	function getProductRealPageUID($pid) {
+		$query_p=$GLOBALS['TYPO3_DB']->SELECTquery('page_uid', // SELECT ...
+				'tx_multishop_products p', // FROM ...
+				'p.products_id='.$pid, // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+		);
+		$res_p=$GLOBALS['TYPO3_DB']->sql_query($query_p);
+		$row_p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p);
+		return $row_p['page_uid'];
 	}
 	public function updateCart() {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');

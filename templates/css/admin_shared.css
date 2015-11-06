@@ -151,6 +151,8 @@ td.cellAction { white-space:nowrap; }
 .cellAux { width:418px; }
 .cellStock input[type="text"] { width:73px; text-align:right; }
 .cellProjectsID { width:170px; }
+.cellActionFluid .btn { width:100%; }
+.cellActionFluid .btn:first-child:not(last-child) { margin-bottom:5px; }
 
 .alert h3:last-child { margin-bottom:0; }
 

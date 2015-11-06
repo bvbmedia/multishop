@@ -208,14 +208,22 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$discount_price=round($row['discount'], 2);
 						//$sub_total_excluding_vat-=$discount_price;
 						$discount_percentage=round(($discount_price/($sub_total_excluding_vat)*100), 2);
-						//$sub_total_excluding_vat=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
+						//$tmp_sub_total=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
+						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
+						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						}
 					} else {
 						$discount_price=$row['discount'];
 						//$sub_total-=$discount_price;
 						$discount_percentage=round(($discount_price/($sub_total)*100), 2);
-						//$sub_total=(($sub_total)/100*(100-$discount_percentage));
+						//$tmp_sub_total=(($sub_total)/100*(100-$discount_percentage));
+						//
+						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
+						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						}
 					}
-					$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
 					if (count($tax_separation)>1) {
 						$tax_separation=array();
 					}
@@ -654,23 +662,25 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
 			}
 			// ITEM_NAME
-			$item['ITEM_NAME']=$product['products_name'];
-			if ($product['products_model']) {
-				$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
+			$tmp_item_name=array();
+			$tmp_item_name['products_name']=$product['products_name'];
+			$tmp_item_name['products_model']='';
+			if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
+				$tmp_item_name['products_model']=' ('.$product['products_model'].') ';
 			}
 			// for virtual product download link
 			if ($template_type=='email' && $order['mail_template']=='email_order_paid_letter' && $order['paid']==1 && isset($product['file_download_code']) && !empty($product['file_download_code'])) {
 				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
-				$item['ITEM_NAME'].=$download_link;
+				$tmp_item_name['download_link']=$download_link;
 			}
 			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
-				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
+				$tmp_item_name['products_ean']='<br/>EAN: '.$product['ean_code'];
 			}
 			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
+				$tmp_item_name['products_sku']='<br/>SKU: '.$product['sku_code'];
 			}
 			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
-				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
+				$tmp_item_name['products_vendor_code']='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
 			}
 			if (count($product['attributes'])) {
 				foreach ($product['attributes'] as $tmpkey=>$options) {
@@ -683,7 +693,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$attribute_price=$options['options_values_price'];
 					}
-					$item['ITEM_NAME'].='<BR>'.$options['products_options'].': '.$options['products_options_values'];
+					$tmp_item_name['products_attributes'][]='<BR>'.$options['products_options'].': '.$options['products_options_values'];
 					$price=$price+($product['qty']*($options['price_prefix'].$options['options_values_price']));
 					if ($price<0) {
 						$price=0;
@@ -693,6 +703,28 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 				}
 			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'])) {
+				$params=array(
+					'item_name'=>&$tmp_item_name,
+					'order'=>&$order,
+					'product'=>&$product,
+					'template_type'=>&$template_type
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$item_name='';
+			if (is_array($tmp_item_name) && count($tmp_item_name)) {
+				foreach ($tmp_item_name as $array_item_name) {
+					if (is_array($array_item_name) && count($array_item_name)) {
+						$item_name .= implode('', $array_item_name);
+					} else {
+						$item_name .= $array_item_name;
+					}
+				}
+			}
+			$item['ITEM_NAME']=$item_name;
 			// ITEM NAME EOF
 			// ITEM_QUANTITY
 			$item['ITEM_QUANTITY']=round($product['qty'], 14);
@@ -745,9 +777,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
-		if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
-		}
+		$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
 		if (!$this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] || $template_type!='order_history_site') {
 			$subProductStatusPart=array();
 			$subProductStatusPart['ITEMS_HEADER_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###');
@@ -806,7 +836,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
 		$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal').':';
 		// rounding is problem with including vat shops.
-		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
+		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,true));
 		//$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
 		$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($subtotal);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
@@ -858,6 +888,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
 				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($subtotal - $order['discount']);
 				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+			} else {
+				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 			}
 		} else {
 			$subpartArray['###'.$key.'###']='';

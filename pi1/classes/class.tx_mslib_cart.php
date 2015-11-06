@@ -928,12 +928,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 					$subtotal_price=($value['qty']*$product_amount);
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-						$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
-					} else if ($value['tax_rate'] and $include_vat) {
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="0") {
+						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=="1") {
+							$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
+						}
+					} else if ($value['tax_rate'] && $include_vat) {
 						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
 					}
-					$total_price=$total_price+$subtotal_price;
+					$total_price=($total_price+$subtotal_price);
 				}
 			}
 		}
@@ -1055,14 +1057,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
 			$grand_total['shipping_cost']=$address['shipping_method_costs'];
-			$total_price=$total_price+$address['shipping_method_costs'];
+			$total_price=($total_price+$address['shipping_method_costs']);
 			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_costs']=$address['shipping_method_costs'];
 		}
 		if ($address['payment_method_costs']) {
 			$grand_total['payment_cost']=$address['payment_method_costs'];
-			$total_price=$total_price+$address['payment_method_costs'];
+			$total_price=($total_price+$address['payment_method_costs']);
 			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_costs']=$address['payment_method_costs'];
 		}
+		$customer_id='';
 		// first the account
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$customer_id=$GLOBALS['TSFE']->fe_user->user['uid'];
@@ -1070,6 +1073,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$tmp_user=mslib_fe::getUser($address['email'], 'email');
 			if ($tmp_user['uid']) {
 				$customer_id=$tmp_user['uid'];
+			}
+		}
+		//hook to let other plugins further manipulate the create table query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'])) {
+			$params=array(
+					'address'=>&$address,
+					'cart'=>&$cart,
+					'customer_id'=>&$customer_id
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if (!$customer_id) {
@@ -1529,7 +1543,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (isset($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'])) {
 				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];
 			} else {
-				$insertArray['customer_currency']='';
+				$insertArray['customer_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
 			}
 			if (isset($this->cookie['currency_rate']) && !empty($this->cookie['currency_rate'])) {
 				$insertArray['currency_rate']=$this->cookie['currency_rate'];
@@ -2303,6 +2317,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					// ITEM_NAME
 					$item['ITEM_NAME']=$product['products_name'];
+
 					if ($product['products_model']) {
 						$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
 					}
@@ -2436,9 +2451,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 			$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 			$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
-			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
-			}
+			$subparts['NEWSUBTOTAL_WRAPPER'] = $this->cObj->getSubpart($subparts['template'], '###NEWSUBTOTAL_WRAPPER###');
 			// remove the status col
 			if ($disable_product_status_col) {
 				$subProductStatusPart=array();
@@ -2589,6 +2602,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
 					$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($this->cart['summarize']['sub_total'] - $this->cart['discount_amount']);
 					$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+				} else {
+					$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 				}
 			} else {
 				$subpartArray['###'.$key.'###']='';

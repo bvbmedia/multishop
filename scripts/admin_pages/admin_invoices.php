@@ -151,8 +151,10 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 	default:
 		// post processing by third party plugins
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'])) {
-			$params=array();
-			$params['content']=&$content;
+			$params=array(
+				'content'=>&$content,
+				'postErno'=>&$postErno
+			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}

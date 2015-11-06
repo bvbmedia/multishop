@@ -108,7 +108,11 @@ if (count($cart['products'])>0) {
 				$output['product_image']='<img src="'.$product['products_image'].'">';
 			}
 			$output['product_link']=$value['link'];
-			$output['product_name']=$product['products_name'].($product['products_model'] ? '  <span class="checkout_listing_products_model">('.$product['products_model'].')</span>' : '').'</a></span>';
+			//$output['product_name']=$product['products_name'].($product['products_model'] ? '  <span class="checkout_listing_products_model">('.$product['products_model'].')</span>' : '').'</a></span>';
+			$output['product_name']=$product['products_name'];
+			if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
+				$output['product_name'].=' <span class="checkout_listing_products_model">('.$product['products_model'].')</span>';
+			}
 			$output['product_attributes']='';
 			if (is_array($value['attributes'])) {
 				// loading the attributes

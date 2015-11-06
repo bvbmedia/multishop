@@ -114,10 +114,12 @@ $payment_status_select.='</select>';
 $orders_status_list='<select name="orders_status_search" id="orders_status_search" class="order_select2"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
-	foreach ($all_orders_status as $row) {
-		$orders_status_list.='<option value="'.$row['id'].'" '.(($this->get['orders_status_search']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
-		if ($this->get['orders_status_search']==$row['id']) {
-			$order_status_search_selected=true;
+	if (is_array($all_orders_status) && count($all_orders_status)) {
+		foreach ($all_orders_status as $row) {
+			$orders_status_list.='<option value="'.$row['id'].'" '.(($this->get['orders_status_search']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+			if ($this->get['orders_status_search']==$row['id']) {
+				$order_status_search_selected=true;
+			}
 		}
 	}
 }

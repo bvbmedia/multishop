@@ -25,18 +25,8 @@ Multishop requires jQuery 2. Also enable the jQuery module: Migrate + all the Bo
 
 Bootstrap 3 required
 ====================
-Multishop expects the website to have Twitter Bootstrap loaded. You will have to load the JavaScript library (with i.e. t3jquery) yourself and manually include Bootstrap.css with TypoScript.
-
-Load bootstrap.css by TypoScript example:
-::
-	page {
-		includeCSS.bootstrapCss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css
-		includeCSS.bootstrapCss {
-			media =
-			import = 0
-			compress=1
-		}
-	}
+Multishop expects the website to have Twitter Bootstrap loaded. You will have to load the JavaScript library (with i.e. t3jquery) yourself.
+Multishop provides bootstrap.css and will load it automatically through TypoScript (page.includeCSS.bootstrapCss / multishop_admin_page.includeCSS.bootstrapCss).
 
 Login to your TYPO3 backend:
 

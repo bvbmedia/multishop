@@ -933,6 +933,7 @@ if ($this->post and $_FILES) {
 if ($this->post) {
 	// updating products table
 	$updateArray=array();
+	$updateArray['vendor_code']='';
 	if (isset($this->post['manufacturers_products_id'])) {
 		$updateArray['vendor_code']=$this->post['manufacturers_products_id'];
 	}
@@ -958,6 +959,7 @@ if ($this->post) {
 	} else {
 		$updateArray['products_date_added']=time();
 	}
+	$updateArray['ean_code']='';
 	if ($this->post['ean_code']) {
 		$this->post['ean_code']=str_pad($this->post['ean_code'], 13, '0', STR_PAD_LEFT);
 		$updateArray['ean_code']=$this->post['ean_code'];
@@ -1098,7 +1100,11 @@ if ($this->post) {
 							foreach ($tmp_categories_id as $tmp_category_id) {
 								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 								if (!empty($tmp_catname)) {
-									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+									$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+									if ($product_real_page_uid==$page_uid) {
+										$tmp_category_id=0;
+									}
+									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 									if (!$foreign_catid) {
 										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
 									} else {
@@ -1241,7 +1247,11 @@ if ($this->post) {
 								foreach ($tmp_categories_id as $tmp_category_id) {
 									$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 									if (!empty($tmp_catname)) {
-										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+										$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+										if ($product_real_page_uid==$page_uid) {
+											$tmp_category_id=0;
+										}
+										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 										if (!$foreign_catid) {
 											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
 										} else {
@@ -1430,7 +1440,11 @@ if ($this->post) {
 						foreach ($tmp_categories_id as $tmp_category_id) {
 							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 							if (!empty($tmp_catname)) {
-								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+								$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
+								if ($product_real_page_uid==$page_uid) {
+									$tmp_category_id=0;
+								}
+								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 								if (!$foreign_catid) {
 									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
 								} else {
@@ -2304,6 +2318,20 @@ if ($this->post) {
 			$markerArray['LABEL_NEGATIVE_KEYWORDS']='Negative keywords';
 			$markerArray['VALUE_NEGATIVE_KEYWORDS']=htmlspecialchars($lngproduct[$language['uid']]['products_negative_keywords']);
 			$markerArray['DETAILS_TAB_CONTENT']=$details_tab_content;
+
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductDescriptionSubstitudePreProc'])) {
+				$params=array(
+					'markerArray'=>&$markerArray,
+					'product'=>&$product,
+					'language'=>&$language,
+					'langKey'=>&$key,
+					'lngproduct'=>&$lngproduct
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductDescriptionSubstitudePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$details_content.=$this->cObj->substituteMarkerArray($subparts['details_content'], $markerArray, '###|###');
 		}
 		/*
@@ -3940,14 +3968,14 @@ if ($this->post) {
 			$product['products_date_available_sys']='';
 			$product['products_date_available_visual']='';
 		} else {
-			$product['products_date_available_visual']=date($this->pi_getLL('locale_date_format'), $product['products_date_available']);
+			$product['products_date_available_visual']=strftime('%x', $product['products_date_available']);
 			$product['products_date_available_sys']=date("Y-m-d", $product['products_date_available']);
 		}
 		if ($product['products_date_added']==0 || empty($product['products_date_added'])) {
 			$product['products_date_added_sys']='';
 			$product['products_date_added_visual']='';
 		} else {
-			$product['products_date_added_visual']=date($this->pi_getLL('locale_date_format'), $product['products_date_added']);
+			$product['products_date_added_visual']=strftime('%x', $product['products_date_added']);
 			$product['products_date_added_sys']=date("Y-m-d", $product['products_date_added']);
 		}
 		if ($product['starttime']==0) {

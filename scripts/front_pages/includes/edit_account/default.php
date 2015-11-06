@@ -459,7 +459,7 @@ if ($this->post) {
 		$birthdayVisual='';
 		$birthday='';
 		if ($user['date_of_birth']) {
-			$birthdayVisual=date($this->pi_getLL('locale_date_format'), $user['date_of_birth']);
+			$birthdayVisual=strftime('%x', $user['date_of_birth']);
 			$birthday=date("Y-m-d", $user['date_of_birth']);
 		}
 		$birthday_block='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'*</label>

@@ -316,7 +316,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<div class="col-md-10">
 				<select name="delimiter" class="form-control">
 					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
-					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>dash</option>
+					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>pipe</option>
 					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
 					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
 				</select>
@@ -431,7 +431,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				counter++;
 				var item=\'<div class="form-group"><label class="control-label control-label-select2 col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
 		foreach ($array as $key=>$option) {
-			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
+			$content.='<option value="'.$key.'">'.addslashes(htmlspecialchars($option)).'</option>';
 		}
 		$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div></div>\';
 				$(\'#product_feed_fields\').append(item);

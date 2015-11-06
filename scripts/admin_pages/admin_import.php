@@ -296,7 +296,7 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 				<option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
 				<option value="comma">'.$this->pi_getLL('comma').'</option>
 				<option value="tab">'.$this->pi_getLL('tab').'</option>
-				<option value="dash">'.$this->pi_getLL('dash').'</option>
+				<option value="dash">'.$this->pi_getLL('pipe').'</option>
 			</select>
 		</div>
 	</div>
@@ -399,6 +399,11 @@ if ($this->post['action']=='category-insert') {
 		if ($this->get['relaxed_import']) {
 			$this->post['relaxed_import']=$this->get['relaxed_import'];
 		}
+		$this->get['job_id']=$_REQUEST['job_id'];
+		$this->post['job_id']=$_REQUEST['job_id'];
+		// After file upload we have to force to preview to review
+		$this->post['action']='product-import-preview';
+		$this->get['job_id']=$_REQUEST['job_id'];
 	}
 	if ($this->post['database_name']) {
 		$file_location=$this->post['database_name'];
@@ -1384,7 +1389,7 @@ if ($this->post['action']=='category-insert') {
 										}
 									}
 								} else {
-									// the values are multiple values (delimited by dash). Lets explode them and add them individually
+									// the values are multiple values (delimited by pipe). Lets explode them and add them individually
 									$key=$this->post['input'][$i];
 									if (strstr($tmpitem[$i], "|")) {
 										$exploded_items=explode("|", $tmpitem[$i]);
@@ -3139,6 +3144,7 @@ if ($this->post['action']=='category-insert') {
 	}
 }
 if ($this->post['action']!='product-import-preview' && $this->get['action']!='edit_job') {
+	$this->ms['show_default_form']=1;
 	$tmptab='';
 	if ($content) {
 		$tmptab.=mslib_befe::bootstrapPanel('Result',$content,'success');

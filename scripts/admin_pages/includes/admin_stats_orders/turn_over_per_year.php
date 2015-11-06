@@ -24,12 +24,14 @@ $order_status_sb='<h3>'.$this->pi_getLL('order_status').'</h3>';
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if (is_array($all_orders_status) and count($all_orders_status)) {
 	$order_status_sb.='<div class="order_status_checkbox" id="admin_sales_stats_order_status">';
-	foreach ($all_orders_status as $row) {
-		$order_status_sb.='<div class="checkbox checkbox-success"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ? 'checked="checked"' : '').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></div>';
+	if (is_array($all_orders_status) && count($all_orders_status)) {
+		foreach ($all_orders_status as $row) {
+			$order_status_sb.='<div class="checkbox checkbox-success"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ? 'checked="checked"' : '').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></div>';
+		}
 	}
 	$order_status_sb.='</div>';
 }
-if (isset($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_multishop_pi1']['status'])>0) {
+if (isset($this->get['tx_multishop_pi1']['status']) && is_array($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_multishop_pi1']['status'])>0) {
 	$status_where='';
 	$tmp=array();
 	foreach ($this->get['tx_multishop_pi1']['status'] as $order_status) {
