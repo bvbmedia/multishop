@@ -217,14 +217,6 @@ if ($rows) {
     //$content.='</div>';
     //$content.='<button class="btn btn-success" type="submit"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>';
     //$content.='</form>';
-    $count_js_cache_values=count($js_select2_cache_values);
-    if ($count_js_cache_values) {
-        $js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
-    }
-    $js_select2_cache.='</script>';
-    if (!empty($js_select2_cache)) {
-        $GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
-    }
     $hide_form_save_btn='';
 } else {
     $content.='<div id="no_attributes_box">';
@@ -237,6 +229,14 @@ $content.='</div>';
 $content .= '<button id="save_attributes_options_form" class="btn btn-success" type="submit"'.$hide_form_save_btn.'><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
 $content.='</form>';
 // now load the sortables jQuery code
+$count_js_cache_values=count($js_select2_cache_values);
+if ($count_js_cache_values) {
+    $js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
+}
+$js_select2_cache.='</script>';
+if (!empty($js_select2_cache)) {
+    $GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
+}
 $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script type="text/javascript" data-ignore="1">
 	function attributesEditDialog (textTitle, textBody, mode) {
         $.confirm({
@@ -310,7 +310,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 				    dialog_body+=\'</div>\';
                     dialog_body+=\'<div class="form-group">\';
 					dialog_body+=\'<label for="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'" class="option_description_label">'.addslashes($this->pi_getLL('description')).'</label>\';
-					dialog_body+=\'<textarea class="redactor_values edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']" id="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'">\' + v.lang_description + \'</textarea>\';
+					dialog_body+=\'<textarea class="redactor_values edit_option_values_inputs form-control" rows="5" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']" id="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
 				});
 				dialog_body+=\'</div>\';
