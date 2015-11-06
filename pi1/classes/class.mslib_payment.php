@@ -50,11 +50,20 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->installedPaymentMethods=$params['installedPaymentMethods'];
 		// custom hook for loading the installed payment methods eof
 		// load enabled payment methods
-		$str="SELECT * from tx_multishop_payment_methods s, tx_multishop_payment_methods_description d where ";
+		$filter=array();
 		if (!$include_hidden_items) {
-			$str.="s.status=1 and ";
+			$filter[]='s.status=1';
 		}
-		$str.="d.language_id='".$this->sys_language_uid."' and s.id=d.id order by s.sort_order";
+		$filter[]='d.language_id=\''.$this->sys_language_uid.'\'';
+		$filter[]='s.id=d.id';
+		$filter[]='(s.page_uid='.$this->shop_pid.' or s.page_uid=0)';
+		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'tx_multishop_payment_methods s, tx_multishop_payment_methods_description d', // FROM ...
+				implode(' AND ',$filter), // WHERE...
+				'', // GROUP BY...
+				's.sort_order', // ORDER BY...
+				'' // LIMIT ...
+		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$array=array();
