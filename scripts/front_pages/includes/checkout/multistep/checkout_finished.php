@@ -80,6 +80,9 @@ if (!$order_session['orders_id']) {
 	$array2[]=$order['delivery_mobile'];
 	$array1[]='###FULL_NAME###';
 	$array2[]=$full_customer_name;
+	$array1[]='###BILLING_FULL_NAME###';
+	$array2[]=$full_customer_name;
+
 	$array1[]='###DELIVERY_FULL_NAME###';
 	$array2[]=$delivery_full_customer_name;
 	$array1[]='###BILLING_NAME###';
@@ -130,6 +133,8 @@ if (!$order_session['orders_id']) {
 	$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
 	$array2[]=$long_date;
 	// backwards compatibility
+	$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
+	$array2[]=strftime("%x", $time);
 	$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
 	$array2[]=$long_date;
 	$time=time();
