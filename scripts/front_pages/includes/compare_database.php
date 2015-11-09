@@ -802,6 +802,43 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	if ($this->ms['MODULES']['ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
+		// Products table
+		$columns=array();
+		$columns[]='products_model';
+		$table_name='tx_multishop_products';
+		foreach ($columns as $column) {
+			$str="show indexes from `".$table_name."` where Index_type='FULLTEXT' and Column_name ='".$column."'";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$str="ALTER TABLE  `".$table_name."` ADD FULLTEXT `".$column."_full` (`".$column."`)";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
+		}
+		// Products description table
+		$columns=array();
+		$columns[]='products_name';
+		$columns[]='products_description';
+		$table_name='tx_multishop_products_description';
+		foreach ($columns as $column) {
+			$str="show indexes from `".$table_name."` where Index_type='FULLTEXT' and Column_name ='".$column."'";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$str="ALTER TABLE  `".$table_name."` ADD FULLTEXT `".$column."_full` (`".$column."`)";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
+		}
+		$str="show indexes from `".$table_name."` where Key_name='products_name_full_combined'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+			// combined
+			$str="ALTER TABLE  `".$table_name."` ADD FULLTEXT `products_name_full_combined` (products_name,products_description)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
