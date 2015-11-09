@@ -13,16 +13,22 @@ if (mslib_fe::loggedin()) {
 					$content.='
 					<div id="bottom-navigation">
 						<a href="'.mslib_fe::typolink('', '').'" class="msFrontButton prevState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
-						<div id="navigation"> 							
+						';
+					if ($this->ms['MODULES']['ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY']) {
+						$content.='
+						<div id="navigation">
 							<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[re-order]=1&tx_multishop_pi1[orders_id]='.$order['orders_id']).'" class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" value="'.htmlspecialchars($this->pi_getLL('re-order')).'" /></a>
 						</div>
+						';
+					}
+					$content.='
 					</div>					
 					';
 				}
 			}
 			break;
 		default:
-			if (is_numeric($this->get['tx_multishop_pi1']['orders_id']) and $this->get['tx_multishop_pi1']['re-order']) {
+			if ($this->ms['MODULES']['ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY'] && is_numeric($this->get['tx_multishop_pi1']['orders_id']) and $this->get['tx_multishop_pi1']['re-order']) {
 				$order=mslib_fe::getOrder($this->get['tx_multishop_pi1']['orders_id']);
 				if ($order['customer_id']==$GLOBALS['TSFE']->fe_user->user['uid']) {
 					foreach ($order['products'] as $product) {
@@ -90,7 +96,9 @@ if (mslib_fe::loggedin()) {
 				//	$tmp.='<th class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>';
 				//	$tmp.='<th class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>';
 				$tmp.='<th class="cell_order_status">'.$this->pi_getLL('status').'</th>';
-				$tmp.='<th class="cell_action">&nbsp;</th>';
+				if ($this->ms['MODULES']['ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY']) {
+					$tmp.='<th class="cell_action">&nbsp;</th>';
+				}
 				$tmp.='</tr>';
 				$tr_type='even';
 				foreach ($tmporders as $order) {
@@ -117,11 +125,11 @@ if (mslib_fe::loggedin()) {
 					//		$tmp.='<td align="left" nowrap>'.$order['shipping_method_label'].'</td>';
 					//		$tmp.='<td align="left" nowrap>'.$order['payment_method_label'].'</td>';
 					$tmp.='<td align="left" nowrap class="cell_order_status">'.$order['orders_status'].'</td>';
-					$tmp.='<td align="center" nowrap class="cell_action">
-					';
-					$tmp.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[re-order]=1&tx_multishop_pi1[orders_id]='.$order['orders_id']).'" class="msfront_reorder" title="'.htmlspecialchars($this->pi_getLL('re-order')).'">'.$this->pi_getLL('re-order').'</a>';
-					$tmp.='
-					</td>';
+					if ($this->ms['MODULES']['ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY']) {
+						$tmp.='<td align="center" nowrap class="cell_action">';
+						$tmp.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[re-order]=1&tx_multishop_pi1[orders_id]='.$order['orders_id']).'" class="msfront_reorder" title="'.htmlspecialchars($this->pi_getLL('re-order')).'">'.$this->pi_getLL('re-order').'</a>';
+						$tmp.='</td>';
+					}
 					$tmp.='</tr>';
 				}
 				$tmp.='</table>';

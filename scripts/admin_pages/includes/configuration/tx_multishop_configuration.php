@@ -2208,6 +2208,19 @@ $records[]=array(
 		'use_function'=>''
 );
 
+$records[]=array(
+		'configuration_title'=>'Enable re-order feature in account order history page',
+		'configuration_key'=>'ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY',
+		'configuration_value'=>'1',
+		'description'=>'Enables the customer to quickly re-order the ordered products in the account order history page',
+		'group_id'=>'3',
+		'use_function'=>'',
+		'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+		'depend_on_configuration_key'=>'',
+		'use_function'=>''
+);
+
+
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
