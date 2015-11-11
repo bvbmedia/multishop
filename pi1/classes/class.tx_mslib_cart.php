@@ -1540,8 +1540,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
 			$insertArray['hash']=md5(uniqid('', true));
 			$insertArray['store_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
-			if (isset($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'])) {
-				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];
+			if (isset($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_iso_3'])) {
+				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_iso_3'];
 			} else {
 				$insertArray['customer_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
 			}

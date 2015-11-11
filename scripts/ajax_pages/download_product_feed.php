@@ -667,6 +667,9 @@ if ($this->get['feed_hash']) {
 					case 'products_price':
 						$tmpcontent.=mslib_fe::final_products_price($row);
 						break;
+					case 'products_price_currency':
+						$tmpcontent.=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+						break;
 					case 'product_capital_price':
 						if ($this->ms['MODULES']['FLAT_DATABASE']) {
 							$row2=mslib_befe::getRecord($row['products_id'], 'tx_multishop_products', 'products_id');
