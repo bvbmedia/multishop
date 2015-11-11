@@ -84,9 +84,11 @@ if (mslib_fe::loggedin()) {
 				$tmp.='<h2>'.$this->pi_getLL('account_order_history').'</h2>';
 			}
 			if ($pageset['total_rows']>0) {
-				$tmp.='<table id="account_orders_history_listing">';
-				$tmp.='<tr>
-				<th class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+				$tmp.='<table id="account_orders_history_listing" class="table table-bordered table-striped">';
+				$tmp.='
+				<thead>
+				<tr>
+				<th class="cell_orders_id" nowrap>'.$this->pi_getLL('orders_id').'</th>
 				<th class="cell_amount">'.$this->pi_getLL('amount').'</th>
 				<th class="cell_date">'.$this->pi_getLL('order_date').'</th>
 				';
@@ -99,7 +101,7 @@ if (mslib_fe::loggedin()) {
 				if ($this->ms['MODULES']['ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY']) {
 					$tmp.='<th class="cell_action">&nbsp;</th>';
 				}
-				$tmp.='</tr>';
+				$tmp.='</tr></thead><tbody>';
 				$tr_type='even';
 				foreach ($tmporders as $order) {
 					if (!$tr_type or $tr_type=='even') {
@@ -132,7 +134,7 @@ if (mslib_fe::loggedin()) {
 					}
 					$tmp.='</tr>';
 				}
-				$tmp.='</table>';
+				$tmp.='</tbody></table>';
 				// pagination
 				if (!$this->hidePagination and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
 					$tmp.='<table id="pagenav_container">

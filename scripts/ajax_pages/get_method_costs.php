@@ -7,10 +7,21 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: ".gmdate("D,d M YH:i:s")." GMT");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
+
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'])) {
+	$params=array(
+			'cart'=>&$cart
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// hook oef
 $tmp_countries=mslib_fe::getCountryByName($this->post['d_cc']);
 $mslib_cart->setCountry($this->post['b_cc'], $tmp_countries['cn_iso_nr']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);

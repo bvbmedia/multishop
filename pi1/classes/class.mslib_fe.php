@@ -663,6 +663,7 @@ class mslib_fe {
 			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 			$array['total_rows']=$row['total'];
 		}
+
 		if ($this->conf['debugEnabled']=='1') {
 			$logString='getProductsPageSet query 1 number of records: '.$array['total_rows'].'. Query: '.$str.'.';
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
