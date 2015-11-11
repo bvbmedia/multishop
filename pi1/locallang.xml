@@ -1259,6 +1259,7 @@
             <label index="click_here_to_read_the_additional_customer_information">Click here to read the additional customer Information</label>
             <label index="date_paid">Date paid</label>
             <label index="duplicate">Duplicate</label>
+            <label index="feed_exporter_fields_label_products_price_currency">Price currency</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
