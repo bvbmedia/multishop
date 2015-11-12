@@ -631,3 +631,5 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 #msEditProductInputImage:after { clear:both; display:table; content:""; }
 ul.custom_products_description { margin:0; padding:0; list-style:none; }
+
+.jconfirm-box h3.panel-title { background:#f5f5f5; border-bottom:1px solid #ddd; margin:-10px -15px 20px; padding:10px 15px; border-radius:6px 6px 0 0; }
