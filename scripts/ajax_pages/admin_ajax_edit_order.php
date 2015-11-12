@@ -4,6 +4,86 @@ if (!defined('TYPO3_MODE')) {
 }
 $content='';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
+	case 'get_order_payment_methods':
+		$return_data=array();
+		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+			$order_id=$this->post['tx_multishop_pi1']['order_id'];
+			if (is_numeric($order_id)) {
+				$payment_methods=mslib_fe::loadPaymentMethods(1);
+				$order_data=mslib_fe::getOrder($order_id);
+				//
+				$orderDetailsItem='<div class="form-group row">';
+				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').': </label>';
+				if ($this->ms['MODULES']['ORDER_EDIT'] and !$order_data['is_locked']) {
+					if (is_array($payment_methods) and count($payment_methods)) {
+						$optionItems=array();
+						$dontOverrideDefaultOption=0;
+						foreach ($payment_methods as $code=>$item) {
+							if (!$item['status']) {
+								$item['name'].=' ('.$this->pi_getLL('hidden_in_checkout').')';
+							}
+							$optionItems[]='<option value="'.$item['id'].'"'.($code==$order_data['payment_method'] ? ' selected' : '').'>'.htmlspecialchars($item['name']).'</option>';
+							if ($code==$order_data['payment_method']) {
+								$dontOverrideDefaultOption=1;
+							}
+						}
+						if (empty($order_data['payment_method'])) {
+							$dontOverrideDefaultOption=1;
+						}
+						if ($dontOverrideDefaultOption) {
+							$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
+						} else {
+							$optionItems=array_merge(array('<option value="">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</option>'), $optionItems);
+						}
+						$orderDetailsItem.='<div class="col-md-9"><select name="payment_method" id="payment_method_sb_listing" class="form-control">'.implode("\n", $optionItems).'</select></div>';
+					} else {
+						$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
+					}
+				} else {
+					$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
+				}
+				$orderDetailsItem.='</div>';
+				$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod row">';
+				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
+				$orders_paid_timestamp_visual='';
+				$orders_paid_timestamp='';
+				if ($order_data['orders_paid_timestamp']>0) {
+					$orders_paid_timestamp_visual=strftime('%x', $order_data['orders_paid_timestamp']);
+					$orders_paid_timestamp=date("Y-m-d", $order_data['orders_paid_timestamp']);
+				}
+				$orderDetailsItem.='<div class="col-md-9">
+					<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
+					<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
+					</div>';
+
+				$orderDetailsItem.='</div>';
+				$return_data['payment_method_date_purchased']=$orderDetailsItem;
+			}
+		}
+		echo json_encode($return_data);
+		exit();
+		breaks;
+	case 'save_popup_value':
+		$order_id=$this->post['tx_multishop_pi1']['order_id'];
+		$date_paid=strtotime($this->post['tx_multishop_pi1']['date_paid']);
+		$payment_id=$this->post['tx_multishop_pi1']['payment_id'];
+		if (is_numeric($payment_id) && $payment_id>0) {
+			$payment_method=mslib_fe::getPaymentMethod($payment_id);
+			$updateArray=array();
+			$updateArray['payment_method_costs']=$payment_method['handling_costs'];
+			$updateArray['payment_method']=$payment_method['code'];
+			$updateArray['payment_method_label']=$payment_method['name'];
+			$updateArray['orders_last_modified']=time();
+			$updateArray['orders_paid_timestamp']=$date_paid;
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order_id.'\'', $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			//
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order->init($this);
+			$mslib_order->repairOrder($order_id);
+		}
+		break;
 	case 'sort_orders_products':
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			$no=1;

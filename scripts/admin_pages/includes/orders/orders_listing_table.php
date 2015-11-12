@@ -50,9 +50,9 @@ foreach ($tmporders as $order) {
 	$paid_status='';
 	if (!$order['paid']) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span> ';
-		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
+		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" class="update_to_paid" data-order-id="'.$order['orders_id'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
-		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a> ';
+		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" class="update_to_unpaid" data-order-id="'.$order['orders_id'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a> ';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$orderlist_buttons=array();
@@ -328,6 +328,74 @@ $headerData='';
 $headerData.='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
+		$(document).on("click", ".update_to_paid", function(e){
+			e.preventDefault();
+			var link=$(this).attr("href");
+			var order_id=$(this).attr("data-order-id");
+			var tmp_confirm_content =\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), '%order_id%').'\';
+			var confirm_content = \'<div class="confirm_to_paid_status">\' + tmp_confirm_content . replace(\'%order_id%\', order_id) +\'</div><div class="form-inline" id="popup_order_wrapper_listing"></div>\';
+			//
+			jQuery.confirm({
+				title: \'\',
+				content: function($obj){
+					return jQuery.ajax({
+                        type: "POST",
+                        url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_order_payment_methods').'",
+                        dataType: \'json\',
+                        data: "tx_multishop_pi1[order_id]=" + order_id,
+                        success: function(d) {
+                        	var confirm_content = \'<div class="confirm_to_paid_status row">\' + tmp_confirm_content . replace(\'%order_id%\', order_id) +\'</div><div id="popup_order_wrapper_listing row">\' + d.payment_method_date_purchased + \'</div>\';
+                        	$obj.setContent(confirm_content);
+                        	jQuery("#orders_paid_timestamp_visual").datepicker({
+								dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'yy/mm/dd').'",
+								altField: "#orders_paid_timestamp",
+								altFormat: "yy-mm-dd",
+								changeMonth: true,
+								changeYear: true,
+								showOtherMonths: true,
+								yearRange: "'.(date("Y")-15).':'.(date("Y")+2).'"
+							});
+                        }
+                    })
+				},
+				confirm: function(){
+					var payment_id=this.$b.find("#payment_method_sb_listing").val();
+					var date_paid=this.$b.find("#orders_paid_timestamp").val();
+					//
+					jQuery.ajax({
+                        type: "POST",
+                        url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=save_popup_value').'",
+                        dataType: \'json\',
+                        data: "tx_multishop_pi1[payment_id]=" + payment_id + "&tx_multishop_pi1[date_paid]=" + date_paid + "&tx_multishop_pi1[order_id]=" + order_id,
+                        success: function(d) {
+                        }
+                    });
+                    window.location =link;
+				},
+				cancel: function(){},
+				confirmButton: \'Yes\',
+    			cancelButton: \'NO\',
+    			backgroundDismiss: false
+			});
+		});
+		$(document).on("click", ".update_to_unpaid", function(e){
+			e.preventDefault();
+			var link=$(this).attr("href");
+			var order_id=$(this).attr("data-order-id");
+			var tmp_confirm_content =\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), '%order_id%').'\';
+			var confirm_content=\'<div class="confirm_to_unpaid_status">\' + tmp_confirm_content.replace(\'%order_id%\', order_id) + \'</div>\';
+			//
+			$.confirm({
+				title: \'\',
+				content: confirm_content,
+				confirm: function(){
+					window.location =link;
+				},
+				cancel: function(){},
+				confirmButton: \'Yes\',
+    			cancelButton: \'NO\'
+			});
+		});
 		$(\'.change_orders_status\').change(function(){
 			var orders_id=$(this).attr("rel");
 			var orders_status_id=$("option:selected", this).val();
