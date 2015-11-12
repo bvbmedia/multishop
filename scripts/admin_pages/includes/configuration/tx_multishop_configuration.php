@@ -2207,7 +2207,6 @@ $records[]=array(
 		'depend_on_configuration_key'=>'',
 		'use_function'=>''
 );
-
 $records[]=array(
 		'configuration_title'=>'Enable re-order feature in account order history page',
 		'configuration_key'=>'ENABLE_REORDER_FEATURE_IN_ACCOUNT_ORDER_HISTORY',
@@ -2218,6 +2217,17 @@ $records[]=array(
 		'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 		'depend_on_configuration_key'=>'',
 		'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Disable adding product not in catalog database',
+	'configuration_key'=>'DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT',
+	'configuration_value'=>'0',
+	'description'=>'Disable adding product not in catalog database',
+	'group_id'=>'11',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
 );
 
 

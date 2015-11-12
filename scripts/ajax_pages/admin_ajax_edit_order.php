@@ -69,16 +69,18 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 				}
 			}
 		} else {
-			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-				$data[]=array(
-					'id'=>$this->get['preselected_id'],
-					'text'=>$this->get['preselected_id']
-				);
-			} else {
-				$data[]=array(
-					'id'=>$this->get['q'],
-					'text'=>$this->get['q']
-				);
+			if ($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT']=='0') {
+				if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+					$data[] = array(
+						'id' => $this->get['preselected_id'],
+						'text' => $this->get['preselected_id']
+					);
+				} else {
+					$data[] = array(
+						'id' => $this->get['q'],
+						'text' => $this->get['q']
+					);
+				}
 			}
 		}
 		$content=json_encode($data);
