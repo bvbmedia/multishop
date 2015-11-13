@@ -54,46 +54,48 @@ $language_id=$GLOBALS['TSFE']->sys_language_uid;
 // define the different columns
 $coltypes=array();
 // MULTILANGUAGE FIELDS
-foreach ($this->languages as $langKey=>$langTitle) {
-	$suffix='';
-	if ($langKey>0) {
-		$suffix='_'.$langKey;
-	}
-	$coltypes['products_name'.$suffix]='Products name ('.$langTitle['title'].')';
-	$coltypes['products_model'.$suffix]='Products model ('.$langTitle['title'].')';
-	$coltypes['products_description'.$suffix]='Products description ('.$langTitle['title'].')';
-	$coltypes['products_description_encoded'.$suffix]='Products description (encoded) ('.$langTitle['title'].')';
-	$coltypes['products_shortdescription'.$suffix]='Products description (short description) ('.$langTitle['title'].')';
-	$coltypes['products_meta_keywords'.$suffix]='Products meta keywords ('.$langTitle['title'].') ('.$langTitle['title'].')';
-	$coltypes['products_deeplink'.$suffix]='Products deeplink ('.$langTitle['title'].') ('.$langTitle['title'].')';
-	for ($x=1; $x<=$max_category_level; $x++) {
-		$coltypes['categories_id'.$x.$suffix]='Categories id (level: '.$x.') ('.$langTitle['title'].')';
-		$coltypes['categories_name'.$x.$suffix]='Categories name (level: '.$x.') ('.$langTitle['title'].')';
-		$coltypes['categories_image'.$x.$suffix]='Categories image (level: '.$x.') ('.$langTitle['title'].')';
-		$coltypes['categories_content'.$x.$suffix]='Categories content (level: '.$x.') ('.$langTitle['title'].')';
-		$coltypes['categories_content_bottom'.$x.$suffix]='Categories content bottom (level: '.$x.') ('.$langTitle['title'].')';
-	}
-	if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
-		for ($x=1; $x<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $x++) {
-			$coltypes['products_description_tab_title_'.$x.$suffix]='Products Description Tab '.$x.' title ('.$langTitle['title'].')';
-			$coltypes['products_description_tab_content_'.$x.$suffix]='Products Description Tab '.$x.' content ('.$langTitle['title'].')';
+if (is_array($this->languages) && count($this->languages)) {
+	foreach ($this->languages as $langKey=>$langTitle) {
+		$suffix='';
+		if ($langKey>0) {
+			$suffix='_'.$langKey;
 		}
-	}
-	$coltypes['manufacturers_name'.$suffix]='Manufacturers name ('.$langTitle['title'].')';
-	$coltypes['products_meta_title'.$suffix]='Products meta title ('.$langTitle['title'].')';
-	$coltypes['products_meta_description'.$suffix]='Products meta description ('.$langTitle['title'].')';
-	$coltypes['products_meta_keywords'.$suffix]='Products meta keywords ('.$langTitle['title'].')';
-	$coltypes['products_delivery_time'.$suffix]='Products delivery time ('.$langTitle['title'].')';
-	$coltypes['products_condition'.$suffix]='Products condition ('.$langTitle['title'].')';
-	$coltypes['category_group'.$suffix]='Category group ('.$langTitle['title'].')';
-	$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
-	$coltypes['attribute_option_value'.$suffix]='Attribute option values (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
-	$coltypes['attribute_option_value_including_vat'.$suffix]='Attribute option values incl. VAT (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
-	$coltypes['products_order_unit_name'.$suffix]='Products order unit name ('.$langTitle['title'].')';
-	$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$langKey."' order by products_options_id asc";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$coltypes['attribute_option_name_'.$row['products_options_id'].$suffix]='Attribute option values for option name: '.$row['products_options_name'].' ('.$langTitle['title'].')';
+		$coltypes['products_name'.$suffix]='Products name ('.$langTitle['title'].')';
+		$coltypes['products_model'.$suffix]='Products model ('.$langTitle['title'].')';
+		$coltypes['products_description'.$suffix]='Products description ('.$langTitle['title'].')';
+		$coltypes['products_description_encoded'.$suffix]='Products description (encoded) ('.$langTitle['title'].')';
+		$coltypes['products_shortdescription'.$suffix]='Products description (short description) ('.$langTitle['title'].')';
+		$coltypes['products_meta_keywords'.$suffix]='Products meta keywords ('.$langTitle['title'].') ('.$langTitle['title'].')';
+		$coltypes['products_deeplink'.$suffix]='Products deeplink ('.$langTitle['title'].') ('.$langTitle['title'].')';
+		for ($x=1; $x<=$max_category_level; $x++) {
+			$coltypes['categories_id'.$x.$suffix]='Categories id (level: '.$x.') ('.$langTitle['title'].')';
+			$coltypes['categories_name'.$x.$suffix]='Categories name (level: '.$x.') ('.$langTitle['title'].')';
+			$coltypes['categories_image'.$x.$suffix]='Categories image (level: '.$x.') ('.$langTitle['title'].')';
+			$coltypes['categories_content'.$x.$suffix]='Categories content (level: '.$x.') ('.$langTitle['title'].')';
+			$coltypes['categories_content_bottom'.$x.$suffix]='Categories content bottom (level: '.$x.') ('.$langTitle['title'].')';
+		}
+		if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
+			for ($x=1; $x<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $x++) {
+				$coltypes['products_description_tab_title_'.$x.$suffix]='Products Description Tab '.$x.' title ('.$langTitle['title'].')';
+				$coltypes['products_description_tab_content_'.$x.$suffix]='Products Description Tab '.$x.' content ('.$langTitle['title'].')';
+			}
+		}
+		$coltypes['manufacturers_name'.$suffix]='Manufacturers name ('.$langTitle['title'].')';
+		$coltypes['products_meta_title'.$suffix]='Products meta title ('.$langTitle['title'].')';
+		$coltypes['products_meta_description'.$suffix]='Products meta description ('.$langTitle['title'].')';
+		$coltypes['products_meta_keywords'.$suffix]='Products meta keywords ('.$langTitle['title'].')';
+		$coltypes['products_delivery_time'.$suffix]='Products delivery time ('.$langTitle['title'].')';
+		$coltypes['products_condition'.$suffix]='Products condition ('.$langTitle['title'].')';
+		$coltypes['category_group'.$suffix]='Category group ('.$langTitle['title'].')';
+		$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
+		$coltypes['attribute_option_value'.$suffix]='Attribute option values (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
+		$coltypes['attribute_option_value_including_vat'.$suffix]='Attribute option values incl. VAT (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
+		$coltypes['products_order_unit_name'.$suffix]='Products order unit name ('.$langTitle['title'].')';
+		$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$langKey."' order by products_options_id asc";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			$coltypes['attribute_option_name_'.$row['products_options_id'].$suffix]='Attribute option values for option name: '.$row['products_options_name'].' ('.$langTitle['title'].')';
+		}
 	}
 }
 // MULTILANGUAGE FIELDS EOL

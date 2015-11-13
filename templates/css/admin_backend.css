@@ -351,6 +351,7 @@ ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child { paddin
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
 #ui-datepicker-div { display:none; z-index:100 !important; }
+.jconfirm-noscroll #ui-datepicker-div { z-index:100000000 !important; }
 
 /* jquery tree overrule */
 .form-horizontal #sidetree .checkbox-inline { padding-top:0; }
@@ -630,3 +631,5 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 #msEditProductInputImage:after { clear:both; display:table; content:""; }
 ul.custom_products_description { margin:0; padding:0; list-style:none; }
+
+.jconfirm-box h3.panel-title { background:#f5f5f5; border-bottom:1px solid #ddd; margin:-10px -15px 20px; padding:10px 15px; border-radius:6px 6px 0 0; }

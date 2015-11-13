@@ -843,26 +843,36 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//SUBTOTAL_WRAPPER EOF
 		//SHIPPING_COSTS_WRAPPER
 		$key='SHIPPING_COSTS_WRAPPER';
-		if ($order['shipping_method_costs']!==0) {
+		if ($order['shipping_method_label']) {
 			$markerArray=array();
 			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
 			$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($order['shipping_method_costs']);
 			$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
 			$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']));
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+			if ($order['shipping_method_costs']=='0') {
+				if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_SHIPPING_COSTS_IN_SUMMARY']=='1') {
+					$subpartArray['###'.$key.'###']='';
+				}
+			}
 		} else {
 			$subpartArray['###'.$key.'###']='';
 		}
 		//SHIPPING_COSTS_WRAPPER EOF
 		//PAYMENT_COSTS_WRAPPER
 		$key='PAYMENT_COSTS_WRAPPER';
-		if ($order['payment_method_costs']!==0) {
+		if ($order['payment_method_label']) {
 			$markerArray=array();
 			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
 			$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($order['payment_method_costs']);
 			$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
 			$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']));
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+			if ($order['payment_method_costs']=='0') {
+				if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_PAYMENT_COSTS_IN_SUMMARY']=='1') {
+					$subpartArray['###'.$key.'###']='';
+				}
+			}
 		} else {
 			$subpartArray['###'.$key.'###']='';
 		}

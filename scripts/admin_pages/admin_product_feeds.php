@@ -131,6 +131,7 @@ if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 	$array['manufacturers_advice_price']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_advice_price');
 }
 $array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
+$array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 // attributes
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -387,12 +388,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div>';
+				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button>';
 				// custom field
 				if ($field=='custom_field') {
-					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
+					$content.='<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers['.$counter.']" type="text" class="form-control" value="'.$this->post['fields_headers'][$counter].'" /> <span class="value">Value</span> <input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" class="form-control" /></div>';
 				}
 				$content.='
+				</div>
 				</div>';
 			}
 		}
@@ -450,7 +452,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				var counter=$(this).attr("rel");
 				if(selected==\'custom_field\') {
 					$(this).next().remove();
-					$(this).parent().append(\'<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers[\'+counter+\']" type="text" /><span class="value">Value</span><input name="fields_values[\'+counter+\']" type="text" /></div>\');
+					$(this).parent().append(\'<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers[\'+counter+\']" type="text" class="form-control" /> <span class="value">Value</span> <input name="fields_values[\'+counter+\']" type="text" class="form-control" /></div>\');
 				}
 			});
 		});

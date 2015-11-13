@@ -19,6 +19,16 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplatePreProc'])) {
+			$params=array(
+					'invoice'=>&$invoice,
+					'order'=>&$order
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplatePreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		// now parse all the objects in the tmpl file
 		if ($this->conf['admin_invoice_pdf_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);

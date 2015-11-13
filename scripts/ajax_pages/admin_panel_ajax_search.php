@@ -795,7 +795,7 @@ if ($this->ADMIN_USER) {
 		$page_marker['context']['next']=$next_page;
 		$page_marker['context']['hash']=$result_hash;
 		// custom page hook that can be controlled by third-party plugin eof
-		if ($result_hash==$this->get['context']['hash']) {
+		if ($result_hash && is_array($this->get['context']) && $this->get['context']['hash'] && $result_hash==$this->get['context']['hash']) {
 			$page_marker['context']['next']=false;
 			$data_json=array();
 		}
