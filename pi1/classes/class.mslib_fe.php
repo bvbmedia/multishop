@@ -2104,10 +2104,14 @@ class mslib_fe {
 				}
 			}
 			// $mail->IsSendmail(); // telling the class to use SendMail transport
-			if ($this->conf['email_tmpl_path']) {
-				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
+			if (isset($options['email_tmpl_path']) && $options['email_tmpl_path']) {
+				$template=$this->cObj->fileResource($options['email_tmpl_path']);
 			} else {
-				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
+				if ($this->conf['email_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
+				}
 			}
 			$markerArray=array();
 			$markerArray['###BODY###']=$body;
