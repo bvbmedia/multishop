@@ -1260,6 +1260,7 @@
             <label index="date_paid">Date paid</label>
             <label index="duplicate">Duplicate</label>
             <label index="feed_exporter_fields_label_products_price_currency">Price currency</label>
+            <label index="currency">Currency</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2510,7 +2511,9 @@
             <label index="checkout_customer_info_page">Afrekenpagina klant informatie pagina</label>
             <label index="click_here_to_read_the_additional_customer_information">Klik hier om de additionele klantinformatie te lezen</label>
             <label index="date_paid">Datum betaald</label>
-            <label index="duplicate">Duplicate</label>
+            <label index="duplicate">Dupliceren</label>
+            <label index="feed_exporter_fields_label_products_price_currency">Prijs valuta</label>
+            <label index="currency">Valuta</label>
         </languageKey>
     </data>
 </T3locallang>
