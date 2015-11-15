@@ -2384,7 +2384,7 @@ if ($this->post) {
 		$staffel_price_block='';
 		if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 			$staffel_price_block.='
-				<div class="form-group">
+				<div class="form-group" id="msEditProductInputStaffelPriceWrapper">
 				<script>
 				jQuery(document).ready(function($) {
 					jQuery("#add_staffel_input").click(function(event) {
