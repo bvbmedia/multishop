@@ -322,8 +322,11 @@ jQuery(document).ready(function($) {
 					},
 					dataType: "json"
 				}).done(function(data) {
-					manufacturersIdSearchTerm[data.id]={id: data.id, text: data.text};
-					callback(data);
+					$.each(data, function(i,val){
+						manufacturersIdSearchTerm[data.id]={id: val.id, text: val.text};
+						callback(val);
+					});
+
 				});
 			}
 		},
@@ -2576,7 +2579,7 @@ if ($this->post) {
 			}
 			$staffel_price_block.='</div>';
 		}
-		$manufacturer_input='<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2">';
+		$manufacturer_input='<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2" value="'.$product['manufacturers_id'].'">';
 		/*
 		$str="SELECT * from tx_multishop_manufacturers where status=1 order by manufacturers_name";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
