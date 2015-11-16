@@ -285,6 +285,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 						$fields.=",".$tbl."products_description";
 					}
+					/*
 					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_ID'] or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_id', $this->get['tx_multishop_pi1']['search_by']))) {
 						if ($this->ms['MODULES']['FLAT_DATABASE']) {
 							$tbl='pf.';
@@ -345,6 +346,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$fields.=",".$tbl."categories_name";
 						}
 					}
+					*/
 					$select[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode) AS score";
 					$where[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";
 					$orderby[]='score desc';
