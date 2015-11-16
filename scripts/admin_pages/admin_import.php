@@ -2717,7 +2717,7 @@ if ($this->post['action']=='category-insert') {
 						// new attribute
 						// first delete if any
 						if (!$this->post['incremental_update'] and $products_id) {
-							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and page_uid='.$this->showCatalogFromPage);
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and (page_uid=0 or page_uid='.$this->showCatalogFromPage.')');
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 						if (is_array($item['attribute_option_value_including_vat'])) {
@@ -2879,7 +2879,7 @@ if ($this->post['action']=='category-insert') {
 										// LANGUAGE OVERLAYS for products options values EOL
 										if ($products_options_id and $option_value_id) {
 											if ($this->post['incremental_update'] and $products_id) {
-												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
+												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\')');
 												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
 											//$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id='.$products_options_id." and products_options_values_id='".$option_value_id."'");
@@ -2979,7 +2979,7 @@ if ($this->post['action']=='category-insert') {
 									}
 									// added 2013-07-31 due to double records when re-importing the same partial feed
 									if ($this->post['incremental_update'] and $products_id) {
-										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
+										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\')');
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
 									$insertArray=array();
