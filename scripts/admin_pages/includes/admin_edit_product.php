@@ -158,6 +158,7 @@ function cropEditorDialog(textTitle, textBody, imageName, imageActionEID) {
 jQuery(document).ready(function($) {
 	var text_input = $(\'#products_name_0\');
 	var categoriesIdSearchTerm=[];
+	var manufacturersIdSearchTerm=[];
 	text_input.focus();
 	text_input.select();
 	$(\'.select2BigDropWider\').select2({
@@ -291,6 +292,63 @@ jQuery(document).ready(function($) {
 
 		}
 		' : '').'
+	});
+	$(\'#manufacturers_id_s2\').select2({
+		placeholder: \''.$this->pi_getLL('admin_choose_manufacturer').'\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'200px\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getManufacturersList').'\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				manufacturersIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getManufacturersList').'\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						manufacturersIdSearchTerm[data.id]={id: val.id, text: val.text};
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
 	});
 	'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 	$(document).on(\'click\', "#cropEditor", function(e) {
@@ -2521,13 +2579,16 @@ if ($this->post) {
 			}
 			$staffel_price_block.='</div>';
 		}
-		$manufacturer_input='<select name="manufacturers_id" class="form-control"><option value="">'.$this->pi_getLL('admin_choose_manufacturer').'</option>';
+		$manufacturer_input='<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2" value="'.$product['manufacturers_id'].'">';
+		/*
 		$str="SELECT * from tx_multishop_manufacturers where status=1 order by manufacturers_name";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$manufacturer_input.='<option value="'.$row['manufacturers_id'].'" '.(($row['manufacturers_id']==$product['manufacturers_id']) ? 'selected' : '').'>'.htmlspecialchars($row['manufacturers_name']).'</option>';
 		}
 		$manufacturer_input.='</select>';
+		*/
+		//
 		$order_unit='<select name="order_unit_id" class="form-control"><option value="">'.$this->pi_getLL('default').'</option>';
 		$str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
