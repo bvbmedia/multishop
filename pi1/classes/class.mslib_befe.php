@@ -4381,6 +4381,46 @@ class mslib_befe {
 			return $array;
 		}
 	}
+	function antiXSS($val, $mode='') {
+		require_once(t3lib_extMgm::extPath('multishop').'res/htmlpurifier-4.7.0/HTMLPurifier.auto.php');
+		if(is_array($val)) {
+			foreach($val as $key=>$subVal) {
+				$val[$key]=tx_classifieds::antiXSS($subVal, $mode);
+			}
+			return $val;
+		} else {
+			$config=HTMLPurifier_Config::createDefault();
+			$config->set('Core.Encoding', 'UTF-8'); // replace with your encoding
+			$config->set('HTML.Doctype', 'XHTML 1.0 Transitional'); // replace with your doctype
+			$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_classifieds');
+			switch($mode) {
+				case 'html':
+					$config->set('HTML.Allowed', 'table,tr,th,td,tbody,thead,tfood,h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],h7[style],style,font[style],iframe[style|frameborder|allowfullscreen|width|height|src],a[href],img[alt|src|unselectable],div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+					$config->set("HTML.Nofollow", TRUE);
+					$config->set('HTML.TargetBlank', TRUE);
+					$config->set('HTML.SafeIframe', true);
+					$config->set('URI.SafeIframeRegexp', '%^(//|http://|https://)(www.youtube.com/embed/|player.vimeo.com/video/)%');
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_classifieds');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+				case 'strip_tags':
+					$config->set('HTML.Allowed', ''); // Allow Nothing
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_classifieds');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+				default:
+					$config->set('HTML.Allowed', 'p,div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+					$config->set("HTML.Nofollow", TRUE);
+					$config->set('HTML.TargetBlank', TRUE);
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_classifieds');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+			}
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
