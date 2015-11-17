@@ -914,21 +914,23 @@ if ($this->post and $_FILES) {
 			if ($file['tmp_name']) {
 				switch ($key) {
 					case 'file_location':
-						// digital download
-						$total_files=count($file['tmp_name']);
-						if ($total_files) {
-							for ($i=0; $i<$total_files; $i++) {
-								preg_match("/\.(.*)$/", $file['name'][$i], $tmp);
-								$ext=$tmp[1];
-								$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
-								$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
-								if (move_uploaded_file($file['tmp_name'][$i], $target)) {
-									$update_product_files[$i]['file_label']=$file['name'][$i];
-									$update_product_files[$i]['file_location']=$target;
+						if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+							// digital download
+							$total_files=count($file['tmp_name']);
+							if ($total_files) {
+								for ($i=0; $i<$total_files; $i++) {
+									preg_match("/\.(.*)$/", $file['name'][$i], $tmp);
+									$ext=$tmp[1];
+									$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
+									$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
+									if (move_uploaded_file($file['tmp_name'][$i], $target)) {
+										$update_product_files[$i]['file_label']=$file['name'][$i];
+										$update_product_files[$i]['file_location']=$target;
+									}
 								}
 							}
+							// digital download eof
 						}
-						// digital download eof
 						break;
 					default:
 						// product image
@@ -1045,7 +1047,9 @@ if ($this->post) {
 	$updateArray['search_engines_allow_indexing']=$this->post['search_engines_allow_indexing'];
 	$updateArray['order_unit_id']=$this->post['order_unit_id'];
 	$updateArray['tax_id']=$this->post['tax_id'];
-	$updateArray['file_number_of_downloads']=$this->post['file_number_of_downloads'];
+	if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+		$updateArray['file_number_of_downloads']=$this->post['file_number_of_downloads'];
+	}
 	if ($this->post['manufacturers_name']!='') {
 		$manufacturer=mslib_fe::getManufacturer($this->post['manufacturers_name'], 'manufacturers_name');
 		if ($manufacturer['manufacturers_id']) {
@@ -1651,10 +1655,12 @@ if ($this->post) {
 				if ($update_product_files[$key]['file_label']) {
 					$updateArray['file_label']=$update_product_files[$key]['file_label'];
 				}
-				if ($update_product_files[$key]['file_location']) {
-					$updateArray['file_location']=$update_product_files[$key]['file_location'];
+				if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+					if ($update_product_files[$key]['file_location']) {
+						$updateArray['file_location']=$update_product_files[$key]['file_location'];
+					}
+					$updateArray['file_remote_location']=$this->post['file_remote_location'][$key];
 				}
-				$updateArray['file_remote_location']=$this->post['file_remote_location'][$key];
 				// EXTRA TAB CONTENT
 				if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
 					for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
@@ -2177,17 +2183,19 @@ if ($this->post) {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$lngproduct[$row['language_id']]=$row;
 		}
-		if ($this->get['delete_micro_download'] and is_numeric($this->get['pid']) and is_numeric($this->get['language_id'])) {
-			// delete the micro download file
-			if ($lngproduct[$this->get['language_id']]['file_location']) {
-				@unlink($lngproduct[$this->get['language_id']]['file_location']);
-				$lngproduct[$this->get['language_id']]['file_label']='';
-				$lngproduct[$this->get['language_id']]['file_location']='';
-				$updateArray=array();
-				$updateArray['file_label']='';
-				$updateArray['file_location']='';
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$this->get['pid'].'\' and language_id='.$this->get['language_id'], $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+			if ($this->get['delete_micro_download'] and is_numeric($this->get['pid']) and is_numeric($this->get['language_id'])) {
+				// delete the micro download file
+				if ($lngproduct[$this->get['language_id']]['file_location']) {
+					@unlink($lngproduct[$this->get['language_id']]['file_location']);
+					$lngproduct[$this->get['language_id']]['file_label']='';
+					$lngproduct[$this->get['language_id']]['file_location']='';
+					$updateArray=array();
+					$updateArray['file_label']='';
+					$updateArray['file_location']='';
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$this->get['pid'].'\' and language_id='.$this->get['language_id'], $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		}
 	}
