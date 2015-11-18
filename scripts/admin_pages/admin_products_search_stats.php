@@ -64,7 +64,7 @@ foreach ($dates as $key=>$value) {
 		}
 		$search_amount+=$row['total'];
 		$content.='<tr class="'.$tr_type.'">
-		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
+		<td class="text-right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
 		if ($row['negative_results']) {
 			$content.='<span class="negative_icon">
@@ -82,7 +82,7 @@ foreach ($dates as $key=>$value) {
 	}
 	if ($search_amount>0) {
 		$content.='<tr class="'.$tr_type.'">
-		<td class="text_right" nowrap width="40">'.$search_amount.'</td>
+		<td class="text-right" nowrap width="40">'.$search_amount.'</td>
 		<td width="10" colspan="2">'.$this->pi_getLL('total').'</td>';
 	}
 	$content.='</table>';

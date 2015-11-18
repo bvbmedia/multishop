@@ -2133,6 +2133,11 @@ class mslib_fe {
 					$markerArray['###STORE_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
 				}
 			}
+			if (is_array($options['markerArray']) && count($options['markerArray'])) {
+				foreach ($options['markerArray'] as $key => $val) {
+					$markerArray[$key]=$val;
+				}
+			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
 			// try to change URL images to embedded
 			$mail->SetFrom($from_email, $from_name);
