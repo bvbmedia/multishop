@@ -313,7 +313,7 @@ jQuery(document).ready(function($) {
 		},
 		initSelection: function(element, callback) {
 			var id=$(element).val();
-			if (id!=="" && id!=="0") {
+			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
 				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getManufacturersList').'\', {
