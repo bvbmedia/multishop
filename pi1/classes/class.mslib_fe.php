@@ -1222,7 +1222,11 @@ class mslib_fe {
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'])) {
 			$params=array(
-				'product'=>&$product
+				'product'=>&$product,
+				'quantity'=>&$quantity,
+				'add_currency'=>&$add_currency,
+				'ignore_minimum_quantity'=>&$ignore_minimum_quantity,
+				'priceColumn'=>&$priceColumn
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1238,6 +1242,21 @@ class mslib_fe {
 		if ($sum and $product[$priceColumn]>0) {
 			$final_price=($product[$priceColumn]*$quantity);
 		}
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalcPostProc'])) {
+			$params=array(
+				'product'=>&$product,
+				'quantity'=>&$quantity,
+				'add_currency'=>&$add_currency,
+				'ignore_minimum_quantity'=>&$ignore_minimum_quantity,
+				'priceColumn'=>&$priceColumn,
+				'final_price'=>&$final_price
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalcPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
 		if ($this->conf['disableFeFromCalculatingVatPrices']!='1') {
 			if ($product['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
 				// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
