@@ -826,6 +826,20 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$products_id=$cart['products'][$shopping_cart_item]['products_id'];
 						$product=mslib_fe::getProduct($products_id);
+						// custom hook that can be controlled by third-party plugin
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartByShoppingCartPreProc'])) {
+							$params=array(
+									'shopping_cart_item'=>$shopping_cart_item,
+									'products_id'=>&$products_id,
+									'product'=>&$product,
+									'cart'=>&$cart,
+									'qty'=>&$qty
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartByShoppingCartPreProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						// custom hook that can be controlled by third-party plugin eof
 						// chk if the product has staffel price
 						if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 							$cart['products'][$shopping_cart_item]['final_price']=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty)/$qty);
