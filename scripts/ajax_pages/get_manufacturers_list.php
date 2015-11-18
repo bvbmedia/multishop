@@ -4,6 +4,9 @@ if (!defined('TYPO3_MODE')) {
 }
 if ($this->ADMIN_USER) {
     $return_data=array();
+    $return_data[0]['text'] = htmlentities($this->pi_getLL('admin_choose_manufacturer'));
+    $return_data[0]['id'] = '0';
+    //
     $limit=100;
     $filter=array();
     if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id']) && $this->get['preselected_id']>0) {
@@ -23,7 +26,7 @@ if ($this->ADMIN_USER) {
     );
     $res=$GLOBALS['TYPO3_DB']->sql_query($query);
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-        $counter=0;
+        $counter=1;
         while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
             $return_data[$counter]['text'] = htmlentities($row['manufacturers_name']);
             $return_data[$counter]['id'] = $row['manufacturers_id'];
