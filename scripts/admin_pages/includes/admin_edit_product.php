@@ -294,7 +294,7 @@ jQuery(document).ready(function($) {
 		' : '').'
 	});
 	$(\'#manufacturers_id_s2\').select2({
-		placeholder: \''.$this->pi_getLL('admin_choose_manufacturer').'\',
+		//placeholder: \''.$this->pi_getLL('admin_choose_manufacturer').'\',
 		dropdownCssClass: "", // apply css that makes the dropdown taller
 		width:\'200px\',
 		minimumInputLength: 0,
