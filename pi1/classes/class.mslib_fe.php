@@ -2133,7 +2133,9 @@ class mslib_fe {
 				}
 			}
 			$markerArray=array();
+			$markerArray['###SUBJECT###']=$subject;
 			$markerArray['###BODY###']=$body;
+
 			// ADDITIONAL OPTIONAL MARKERS
 			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
 			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
