@@ -2,7 +2,7 @@
 <script type="text/javascript">
 ###JS_FUNCTIONS_EXTRA###
 jQuery(document).ready(function ($) {
-	$(".nav-tabs a:first").tab("show");
+    $(".nav-tabs a:first").tab("show");
 	var lochash=window.location.hash;
 	if (lochash!="") {
 		var li_this=$("ul.nav-tabs > li").find("a[href=\'" + lochash + "\']").parent();
@@ -24,55 +24,54 @@ jQuery(document).ready(function ($) {
 </script>
 <div class="panel panel-default">
 <div class="panel-body">
-<div id="tab-container">
+<div id="tab-container" class="msadminVerticalTabs">
     <ul class="nav nav-tabs" role="tablist" id="admin_orders">
         <li role="presentation"><a href="#edit_customer_group" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###</a></li>
         ###LABEL_EXTRA_PLUGIN_TABS###
     </ul>
-    <div class="tab_container">
+    <div class="tab-content">
         <div role="tabpanel" id="edit_customer_group" class="tab-pane">
             <div class="panel panel-default">
-            <div class="panel-heading"><h3>###LABEL_HEADING###</h3></div>
-            <div class="panel-body">
-                <form id="form1" name="form1" class="form-horizontal blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
-                    <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
-                    <input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
-                    <input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
-                    <div class="form-group">
-                        <label class="control-label col-md-2">###LABEL_NAME###</label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="group_name" id="group_name" value="###VALUE_GROUP_NAME###" />
+                <div class="panel-heading"><h3>###LABEL_HEADING###</h3></div>
+                <div class="panel-body">
+                    <form id="form1" name="form1" class="form-horizontal blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
+                        <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
+                        <input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
+                        <input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
+                        <div class="form-group">
+                            <label class="control-label col-md-2">###LABEL_NAME###</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="group_name" id="group_name" value="###VALUE_GROUP_NAME###" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">###LABEL_DISCOUN###</label>
-                        <div class="col-md-10">
-                            <div class="input-group"><input type="text" class="form-control" name="discount" size="2" maxlength="2" id="discount" value="###VALUE_DISCOUNT###" /><span class="input-group-addon width-auto">%</span></div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">###LABEL_DISCOUN###</label>
+                            <div class="col-md-10">
+                                <div class="input-group"><input type="text" class="form-control" name="discount" size="2" maxlength="2" id="discount" value="###VALUE_DISCOUNT###" /><span class="input-group-addon width-auto">%</span></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">###LABEL_MEMBERS###</label>
-                        <div class="col-md-10">
-                            <input type="hidden" name="tx_multishop_pi1[users][]" id="userIdSelect2" class="width-fw" value="###MEMBERS_SELECTED###" />
+                        <div class="form-group">
+                            <label class="control-label col-md-2">###LABEL_MEMBERS###</label>
+                            <div class="col-md-10">
+                                <input type="hidden" name="tx_multishop_pi1[users][]" id="userIdSelect2" class="width-fw" value="###MEMBERS_SELECTED###" />
+                            </div>
                         </div>
-                    </div>
-                    ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                    <hr>
-                    <div class="clearfix">
-                        <div class="pull-right">
-                            <button type="submit" class="btn btn-success" name="Submit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE###</button>
+                        ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
+                        <hr>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-success" name="Submit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE###</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            </div>
-            </div>
-         	<hr>
-            <div class="clearfix">
-                <a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+                    </form>
+                </div>
             </div>
         </div>
         ###CONTENT_EXTRA_PLUGIN_TABS###
+    </div>
+    <hr>
+    <div class="clearfix">
+        <a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
     </div>
 </div>
 </div>
