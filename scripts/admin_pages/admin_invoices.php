@@ -385,7 +385,7 @@ if ($this->get['skeyword']) {
 			}
 			$items[]="o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
 			$items[]="i.invoice_id LIKE '%".addslashes($this->get['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$filter[]='('.implode(" or ", $items).')';
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->get['skeyword'])."'";
