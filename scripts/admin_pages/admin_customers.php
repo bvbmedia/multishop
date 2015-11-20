@@ -431,11 +431,11 @@ if (!$this->masterShop) {
 	$filter[]=$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
 }
 // subquery to summarize grand total per customer
-$select[]='(select sum(grand_total) from tx_multishop_orders where customer_id=f.uid) as grand_total';
+$select[]='(select sum(grand_total) from tx_multishop_orders where deleted=0 and customer_id=f.uid) as grand_total';
 // subquery to summarize grand total by year, per customer
 $startTime=strtotime(date("Y-01-01 00:00:00"));
 $endTime=strtotime(date("Y-12-31 23:59:59"));
-$select[]='(select sum(grand_total) from tx_multishop_orders where customer_id=f.uid and crdate BETWEEN '.$startTime.' and '.$endTime.') as grand_total_this_year';
+$select[]='(select sum(grand_total) from tx_multishop_orders where deleted=0 and customer_id=f.uid and crdate BETWEEN '.$startTime.' and '.$endTime.') as grand_total_this_year';
 
 $pageset=mslib_fe::getCustomersPageSet($filter, $offset, $this->ms['MODULES']['PAGESET_LIMIT'], $orderby, $having, $select, $where);
 $customers=$pageset['customers'];
