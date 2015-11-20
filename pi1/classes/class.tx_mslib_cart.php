@@ -453,6 +453,40 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if ($this->post['quantity']<0) {
 						$this->post['quantity']=0;
 					}
+					if (is_numeric($product['minimum_quantity']) && $product['minimum_quantity']>0 && $product['minimum_quantity']>$this->post['quantity']) {
+						$this->post['quantity']=$product['minimum_quantity'];
+					}
+					if ($product['products_multiplication']) {
+						$ctr_end = ($product['maximum_quantity'] > 0 ? $product['maximum_quantity'] : 9999);
+						$qty_start = $product['minimum_quantity'];
+						if ($this->post['quantity']>$qty_start) {
+							$low_number=$qty_start;
+							$high_number=$qty_start;
+							for ($ctr_start = $qty_start; $ctr_start <= $ctr_end; $ctr_start++) {
+								if ($ctr_start>$qty_start) {
+									$low_number=$high_number;
+									$high_number+=$product['products_multiplication'];
+								} else {
+									$low_number=$ctr_start;
+									$high_number+=$product['products_multiplication'];
+								}
+								if ($this->post['quantity']>$low_number && $this->post['quantity']<$high_number) {
+									if (round($this->post['quantity'], 2)==round($low_number, 2)) {
+										$this->post['quantity'] = $low_number;
+										break;
+									} else if (round($this->post['quantity'], 2)==round($high_number, 2)) {
+										$this->post['quantity'] = $high_number;
+										break;
+									} else {
+										$low_remainder=$this->post['quantity']-$low_number;
+										$high_remainder=$this->post['quantity']-$high_number;
+										$this->post['quantity'] = $low_number;
+										break;
+									}
+								}
+							}
+						}
+					}
 					// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST THE QUANTITY AS INTEGER
 					if (!$product['products_multiplication'] || (int)$product['products_multiplication']==$product['products_multiplication']) {
 						$this->post['quantity']=round($this->post['quantity'], 0);
@@ -749,6 +783,39 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 										if ($product['minimum_quantity']>$cart['products'][$product['products_id']]['qty']) {
 											$cart['products'][$product['products_id']]['qty']=$product['minimum_quantity'];
 										}
+										//
+										if ($product['products_multiplication']) {
+											$ctr_end = ($product['maximum_quantity'] > 0 ? $product['maximum_quantity'] : 9999);
+											$qty_start = $product['minimum_quantity'];
+											if ($cart['products'][$product['products_id']]['qty']>$qty_start) {
+												$low_number=$qty_start;
+												$high_number=$qty_start;
+												for ($ctr_start = $qty_start; $ctr_start <= $ctr_end; $ctr_start++) {
+													if ($ctr_start>$qty_start) {
+														$low_number=$high_number;
+														$high_number+=$product['products_multiplication'];
+													} else {
+														$low_number=$ctr_start;
+														$high_number+=$product['products_multiplication'];
+													}
+													if ($cart['products'][$product['products_id']]['qty']>$low_number && $cart['products'][$product['products_id']]['qty']<$high_number) {
+														if (round($cart['products'][$product['products_id']]['qty'], 2)==round($low_number, 2)) {
+															$cart['products'][$product['products_id']]['qty'] = $low_number;
+															break;
+														} else if (round($cart['products'][$product['products_id']]['qty'], 2)==round($high_number, 2)) {
+															$cart['products'][$product['products_id']]['qty'] = $high_number;
+															break;
+														} else {
+															$low_remainder=$cart['products'][$product['products_id']]['qty']-$low_number;
+															$high_remainder=$cart['products'][$product['products_id']]['qty']-$high_number;
+															$cart['products'][$product['products_id']]['qty'] = $low_number;
+															break;
+														}
+													}
+												}
+											}
+										}
+										//
 										$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 										if ($this->ms['eID']) {
 											$GLOBALS['TSFE']->fe_user->storeSessionData();
@@ -851,6 +918,38 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
+						}
+						if ($product['products_multiplication']) {
+							$ctr_end = ($product['maximum_quantity'] > 0 ? $product['maximum_quantity'] : 9999);
+							$qty_start = $product['minimum_quantity'];
+							if ($cart['products'][$shopping_cart_item]['qty']>$qty_start) {
+								$low_number=$qty_start;
+								$high_number=$qty_start;
+								for ($ctr_start = $qty_start; $ctr_start <= $ctr_end; $ctr_start++) {
+									if ($ctr_start>$qty_start) {
+										$low_number=$high_number;
+										$high_number+=$product['products_multiplication'];
+									} else {
+										$low_number=$ctr_start;
+										$high_number+=$product['products_multiplication'];
+									}
+									if ($cart['products'][$shopping_cart_item]['qty']>$low_number && $cart['products'][$shopping_cart_item]['qty']<$high_number) {
+										if (round($cart['products'][$shopping_cart_item]['qty'], 2)==round($low_number, 2)) {
+											$cart['products'][$shopping_cart_item]['qty'] = $low_number;
+											break;
+										} else if (round($cart['products'][$shopping_cart_item]['qty'], 2)==round($high_number, 2)) {
+											$cart['products'][$shopping_cart_item]['qty'] = $high_number;
+											break;
+										} else {
+											$low_remainder=$cart['products'][$shopping_cart_item]['qty']-$low_number;
+											$high_remainder=$cart['products'][$shopping_cart_item]['qty']-$high_number;
+											$cart['products'][$shopping_cart_item]['qty'] = $low_number;
+											break;
+										}
+
+									}
+								}
+							}
 						}
 					}
 				}
