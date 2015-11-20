@@ -89,7 +89,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						if(!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
 							$postErno[]=array(
 								'status'=>'error',
-								'message'=>'Failed to delete order: '.$orders_id
+								'message'=>'Failed to delete order: '.$orders_id.'. Query error: '.$GLOBALS['TYPO3_DB']->sql_error()
 							);
 						} else {
 							$postErno[]=array(
@@ -100,7 +100,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					} else {
 						$postErno[]=array(
 							'status'=>'error',
-							'message'=>'Failed to delete order: '.$orders_id
+							'message'=>'Failed to delete order: '.$orders_id.'. Order cannot be found'
 						);
 					}
 				}
@@ -573,7 +573,7 @@ if ($this->post['skeyword']) {
 				}
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$filter[]='('.implode(" or ", $items).')';
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
@@ -671,6 +671,7 @@ if ($this->cookie['payment_status']=='paid_only') {
 if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
+
 //$orderby[]='orders_id desc';
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
