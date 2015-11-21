@@ -745,13 +745,6 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 	$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 	$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
-	$subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_products_status');
-    $subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[includeDisabledCats]=1');
-    $subpartArray['###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues');
-	$subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree');
-	$subpartArray['###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues');
-	$subpartArray['###AJAX_GET_TAX_RULESET_URL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
-	$subpartArray['###AJAX_GET_TAX_RULESET_URL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
 	$subpartArray['###ADMIN_LABEL_ENABLE0###']=$this->pi_getLL('admin_label_enable');
 	$subpartArray['###ADMIN_LABEL_DISABLE0###']=$this->pi_getLL('admin_label_disable');
 	$subpartArray['###ADMIN_LABEL_ENABLE1###']=$this->pi_getLL('admin_label_enable');
@@ -786,6 +779,15 @@ $subpartArray['###SEACRH_IN_CATEGORY_TREE_SELECTBOX###']=$search_category_select
 $subpartArray['###LABEL_SEARCH_LIMIT###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###SEARCH_LIMIT###']=$search_limit;
 $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');
+//
+$subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_products_status');
+$subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[includeDisabledCats]=1');
+$subpartArray['###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues');
+$subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree');
+$subpartArray['###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues');
+$subpartArray['###AJAX_GET_TAX_RULESET_URL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
+$subpartArray['###AJAX_GET_TAX_RULESET_URL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
+//
 $subpartArray['###RESULTS###']=$tmp_content_results;
 $subpartArray['###NORESULTS###']=$tmp_content_noresults;
 

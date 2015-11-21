@@ -1261,6 +1261,18 @@
             <label index="duplicate">Duplicate</label>
             <label index="feed_exporter_fields_label_products_price_currency">Price currency</label>
             <label index="currency">Currency</label>
+            <label index="feed_exporter_fields_label_order_date">Order date</label>
+            <label index="feed_exporter_fields_label_order_company_name">Order company name</label>
+            <label index="feed_exporter_fields_label_order_vat_id">Order VAT ID</label>
+            <label index="feed_exporter_fields_label_order_customer_currency">Order customer currency</label>
+            <label index="feed_exporter_fields_label_order_customer_currency_rate">Order customer currency rate</label>
+            <label index="feed_exporter_fields_label_order_customer_language_id">Order customer language id</label>
+            <label index="feed_exporter_fields_label_order_track_and_trace_code">Order track and trace code</label>
+            <label index="feed_exporter_fields_label_order_orders_paid_timestamp">Order paid timestamp</label>
+            <label index="feed_exporter_fields_label_order_status_last_modified">Order status last modified</label>
+            <label index="feed_exporter_fields_label_order_orders_last_modified">Order last modified</label>
+            <label index="feed_exporter_fields_label_order_expected_delivery_date">Order expected delivery date</label>
+            <label index="feed_exporter_fields_label_order_by_phone">Order by phone</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
