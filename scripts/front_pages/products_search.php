@@ -132,7 +132,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				} else {
 					$tbl='p.';
 				}
-				$extra_filter[]=$tbl."products_id ='".addslashes($this->get['skeyword'])."'";
+				if (is_numeric($this->get['skeyword'])) {
+					$extra_filter[]=$tbl."products_id ='".addslashes($this->get['skeyword'])."'";
+				}
 			}
 			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_VENDOR_CODE']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('vendor_code', $this->get['tx_multishop_pi1']['search_by']))) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -253,32 +255,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				} else {
 					$tbl='pd.';
 				}
-				if ($oldsearch) {
-					if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
-						// do normal indexed search
-						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
-							$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-						} else {
-							$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-						}
-					} else {
-						if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='keyword%') {
-							// do normal indexed search
-							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
-								$filter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-							} else {
-								$filter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-							}
-						} else {
-							// do normal indexed search
-							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
-								$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-							} else {
-								$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
-							}
-						}
-					}
-				} else {
+				if (!$oldsearch && $this->ms['MODULES']['ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
 					// do fulltext search
 					$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array, '"', '+', true));
 					$fields=$tbl."products_name";
@@ -348,8 +325,47 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 					*/
 					$select[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode) AS score";
-					$where[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";
+					if ($this->ms['MODULES']['ENABLE_HYBRID_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
+						// we have to merge normal search with match, so buffer it in seperate array
+						$matchOrFilter=array();
+						$matchOrFilter[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";
+					} else {
+						$where[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";
+					}
 					$orderby[]='score desc';
+				}
+				if ($oldsearch || $this->ms['MODULES']['ENABLE_HYBRID_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
+					$keywordFilter=array();
+					// mix full text search with standard search
+					if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
+						// do normal indexed search
+						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
+							$keywordFilter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+						} else {
+							$keywordFilter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+						}
+					} else {
+						if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='keyword%') {
+							// do normal indexed search
+							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
+								$keywordFilter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+							} else {
+								$keywordFilter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+							}
+						} else {
+							// do normal indexed search
+							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
+								$keywordFilter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+							} else {
+								$keywordFilter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."%' ".(count($extra_filter) ? ' OR '.implode(' OR ', $extra_filter) : '').")";
+							}
+						}
+					}
+					if (is_array($matchOrFilter) && count($matchOrFilter)) {
+						$filter[]='(('.implode(' AND ',$matchOrFilter).') OR ('.implode(' AND ',$keywordFilter).'))';
+					} else {
+						$filter[]='('.implode(' AND ',$keywordFilter).')';
+					}
 				}
 			} else {
 				$filter[]='('.implode(' OR ', $extra_filter).')';
@@ -431,7 +447,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					break;
 			}
 		}
+		//$this->msDebug=1;
 		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, $having, $select, $where, 0, array(), array(), 'products_search', '', 0, 1, $extra_join);
+		//echo $this->msDebugInfo;
+		//die();
 		$products=$pageset['products'];
 		if ($pageset['total_rows']>0) {
 			if ($this->get['skeyword']) {
