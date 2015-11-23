@@ -45,8 +45,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 				$orderDetailsItem.='</div>';
 				$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod row">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
-				$orders_paid_timestamp_visual='';
-				$orders_paid_timestamp='';
+				$today_tstamp=time();
+				$orders_paid_timestamp_visual=strftime('%x', $today_tstamp);
+				$orders_paid_timestamp=date("Y-m-d", $today_tstamp);
 				if ($order_data['orders_paid_timestamp']>0) {
 					$orders_paid_timestamp_visual=strftime('%x', $order_data['orders_paid_timestamp']);
 					$orders_paid_timestamp=date("Y-m-d", $order_data['orders_paid_timestamp']);
