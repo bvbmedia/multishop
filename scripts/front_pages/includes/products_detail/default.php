@@ -543,8 +543,6 @@ if (!$product['products_id']) {
                                 submit_form=false;
                             }
                         });
-
-                        console.log(attribute_checkbox_data);
                         if (submit_form) {
                             return true;
                         }
