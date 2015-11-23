@@ -284,7 +284,11 @@ if (count($cart['products'])>0) {
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'])) {
 			$params=array(
-				'markerArray'=>&$markerArray
+				'template'=>$template,
+				'markerArray'=>&$markerArray,
+				'shopping_cart_item' => $shopping_cart_item,
+				'cart_item' => $value,
+				'product_info' => $product_info
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
