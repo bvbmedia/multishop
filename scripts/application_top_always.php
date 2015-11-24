@@ -381,6 +381,9 @@ if ($this->ms['MODULES']['CART_PAGE_UID']) {
 	$key='_'.$this->ms['MODULES']['CART_PAGE_UID'];
 }
 $this->cart_page_uid='tx_multishop_cart'.$key;
+if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
+	$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
+}
 if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) {
 	// one time load for the attribute option names. When we have to add or update products to the flat table we already know the attribute option column names, so this way it requires less running queries
 	$lifetime=36000;
