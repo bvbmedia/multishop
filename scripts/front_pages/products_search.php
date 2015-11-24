@@ -334,8 +334,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 					$orderby[]='score desc';
 				}
+				$keywordFilter=array();
 				if ($oldsearch || $this->ms['MODULES']['ENABLE_HYBRID_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
-					$keywordFilter=array();
 					// mix full text search with standard search
 					if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
 						// do normal indexed search
