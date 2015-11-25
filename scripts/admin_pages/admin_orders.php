@@ -24,6 +24,36 @@ if ($this->get) {
 }
 $postErno=array();
 switch ($this->post['tx_multishop_pi1']['action']) {
+	case 'download_selected_orders_packingslips_in_one_pdf':
+		if (is_array($this->post['selected_orders']) && count($this->post['selected_orders'])) {
+			$attachments=array();
+			foreach ($this->post['selected_orders'] as $order_id) {
+				$order=mslib_fe::getOrder($order_id);
+				$pdfFileName='packingslip_'.$order_id.'.pdf';
+				$packingslip_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$pdfFileName;
+				$packingslip_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_hash]='.$order['hash']));
+				// write temporary to disk
+				file_put_contents($packingslip_path, $packingslip_data);
+				$attachments[]=$packingslip_path;
+			}
+			if (count($attachments)) {
+				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
+				$cmd = "gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=".$combinedPdfFile." ".implode(" ", $attachments);
+				shell_exec($cmd);
+				if (file_exists($combinedPdfFile)) {
+					header("Content-type:application/pdf");
+					readfile($combinedPdfFile);
+
+					// delete temporary invoice from disk
+					unlink($combinedPdfFile);
+					foreach ($attachments as $attachment) {
+						unlink($attachment);
+					}
+					exit();
+				}
+			}
+		}
+		break;
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
