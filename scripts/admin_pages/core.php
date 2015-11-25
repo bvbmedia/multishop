@@ -372,6 +372,9 @@ switch ($this->ms['page']) {
 			if (is_numeric($this->get['job_id'])) {
 				require($script);
 			}
+			if (!$this->ADMIN_USER) {
+				exit();
+			}
 		} elseif($this->ADMIN_USER) {
 			require($script);
 		}
