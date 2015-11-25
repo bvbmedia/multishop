@@ -1260,6 +1260,7 @@
             <label index="date_paid">Date paid</label>
             <label index="duplicate">Duplicate</label>
             <label index="feed_exporter_fields_label_products_price_currency">Price currency</label>
+            <label index="feed_exporter_fields_label_products_price_with_currency">Price price with currency</label>
             <label index="currency">Currency</label>
             <label index="feed_exporter_fields_label_order_date">Order date</label>
             <label index="feed_exporter_fields_label_order_company_name">Order company name</label>
@@ -2526,6 +2527,7 @@
             <label index="date_paid">Datum betaald</label>
             <label index="duplicate">Dupliceren</label>
             <label index="feed_exporter_fields_label_products_price_currency">Prijs valuta</label>
+            <label index="feed_exporter_fields_label_products_price_with_currency">Prijs met valuta</label>
             <label index="currency">Valuta</label>
         </languageKey>
     </data>
