@@ -230,20 +230,17 @@ switch ($this->ms['page']) {
 				$script='admin_import.php';
 			}
 		}
-		if ($this->get['action']=='run_job' and $this->get['code']) {
+		if ($this->get['action']=='run_job' && $this->get['code']) {
 			$this->get['job_id']='';
-			$str="SELECT id FROM `tx_multishop_import_jobs` where code='".addslashes($this->get['code'])."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$this->get['job_id']=$row['id'];
+			$record=mslib_befe::getRecord($this->get['code'],'tx_multishop_import_jobs','code');
+			if (is_array($record) && $record['id']) {
+				$this->get['job_id']=$record['id'];
 			}
 			if (is_numeric($this->get['job_id'])) {
 				require($script);
 			}
-		} else {
-			if ($this->ADMIN_USER) {
-				require($script);
-			}
+		} elseif($this->ADMIN_USER) {
+			require($script);
 		}
 		break;
 	case 'admin_price_update_up_xls':
@@ -353,20 +350,29 @@ switch ($this->ms['page']) {
 		}
 		break;
 	case 'admin_customer_import':
-		if ($this->ADMIN_USER) {
-			if (!$this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE']) {
+		if (!$this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE']) {
+			$script='admin_customer_import.php';
+		}
+		if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'], "..")) {
+			die('error in ADMIN_CUSTOMERS_IMPORT_TYPE value');
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'], "/")) {
+				// relative mode
+				$script=$this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'].'.php';
+			} else {
 				$script='admin_customer_import.php';
 			}
-			if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'], "..")) {
-				die('error in ADMIN_CUSTOMERS_IMPORT_TYPE value');
-			} else {
-				if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'], "/")) {
-					// relative mode
-					$script=$this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CUSTOMERS_IMPORT_TYPE'].'.php';
-				} else {
-					$script='admin_customer_import.php';
-				}
+		}
+		if ($this->get['action']=='run_job' && $this->get['code']) {
+			$this->get['job_id']='';
+			$record=mslib_befe::getRecord($this->get['code'],'tx_multishop_import_jobs','code');
+			if (is_array($record) && $record['id']) {
+				$this->get['job_id']=$record['id'];
 			}
+			if (is_numeric($this->get['job_id'])) {
+				require($script);
+			}
+		} elseif($this->ADMIN_USER) {
 			require($script);
 		}
 		break;
