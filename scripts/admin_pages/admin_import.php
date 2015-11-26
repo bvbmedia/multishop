@@ -87,11 +87,13 @@ if (is_array($this->languages) && count($this->languages)) {
 		$coltypes['products_delivery_time'.$suffix]='Products delivery time ('.$langTitle['title'].')';
 		$coltypes['products_condition'.$suffix]='Products condition ('.$langTitle['title'].')';
 		$coltypes['category_group'.$suffix]='Category group ('.$langTitle['title'].')';
-		$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
+
+		// causes key naming conflicts with "Attribute option values for option name"
+		//$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
 		$coltypes['attribute_option_value'.$suffix]='Attribute option values (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
 		$coltypes['attribute_option_value_including_vat'.$suffix]='Attribute option values incl. VAT (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
 		$coltypes['products_order_unit_name'.$suffix]='Products order unit name ('.$langTitle['title'].')';
-		$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$langKey."' order by products_options_id asc";
+		$str="SELECT * FROM `tx_multishop_products_options` where language_id='0' order by products_options_id asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$coltypes['attribute_option_name_'.$row['products_options_id'].$suffix]='Attribute option values for option name: '.$row['products_options_name'].' ('.$langTitle['title'].')';
