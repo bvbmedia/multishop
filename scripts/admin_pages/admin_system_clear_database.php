@@ -163,6 +163,8 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$tables[]='tx_multishop_products_search_log';
 				$tables[]='tx_multishop_products_to_relative_products';
 				$tables[]='tx_multishop_product_crop_image_coordinate';
+				$tables[]='tx_multishop_products_locked_fields';
+
 				//$tables[]='tx_multishop_reviews';
 				//$tables[]='tx_multishop_reviews_description';
 				/*
