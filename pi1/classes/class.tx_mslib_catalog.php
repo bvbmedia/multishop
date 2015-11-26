@@ -859,10 +859,12 @@ class tx_mslib_catalog {
         }
 		//
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
-		foreach ($p2c_records as $p2c_record) {
-			//if (!strlen($p2c_record['crumbar_identifier'])) {
-			tx_mslib_catalog::compareDatabaseRebuildProductsToCategoryTree($p2c_record['products_id'], $p2c_record['categories_id']);
-			//}
+		if (is_array($p2c_records) && count($p2c_records)) {
+			foreach ($p2c_records as $p2c_record) {
+				//if (!strlen($p2c_record['crumbar_identifier'])) {
+				tx_mslib_catalog::compareDatabaseRebuildProductsToCategoryTree($p2c_record['products_id'], $p2c_record['categories_id']);
+				//}
+			}
 		}
 		// p2c fixer routine code for redundant records
 		$query_p2c=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
