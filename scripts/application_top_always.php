@@ -382,6 +382,17 @@ if ($this->ms['MODULES']['CART_PAGE_UID']) {
 }
 $this->cart_page_uid='tx_multishop_cart'.$key;
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
+	// move guest cart to member cart?
+	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	if (!is_array($cart['products']) || !count($cart['products'])) {
+		// maybe guest cart has products that we must migrate
+		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		if (is_array($cart2['products']) && count($cart2['products'])) {
+			$cart['products']=$cart2['products'];
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+	}
 	$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
 }
 if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) {
