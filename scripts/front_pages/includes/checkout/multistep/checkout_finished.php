@@ -250,7 +250,11 @@ if (!$order_session['orders_id']) {
 	//	Thank you for ordering on our shop!
 	if ($order['payment_method'] and $order['paid']) {
 		// order has been paid, so dont load the psp
-		$content.='Your order has been paid.';
+		/*
+		if ($order['total_amount'] > 0) {
+			$content.='Your order has been paid.';
+		}
+		*/
 	} elseif ($order['payment_method']) {
 		// load optional payment button
 		$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
