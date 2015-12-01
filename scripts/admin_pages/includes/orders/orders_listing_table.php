@@ -38,7 +38,6 @@ foreach ($tmporders as $order) {
 	} else {
 		$customer_name=$order['billing_name'];
 	}
-	//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
 	$order_status_selectbox='<select name="orders_status" class="form-control change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
 	if (is_array($all_orders_status)) {

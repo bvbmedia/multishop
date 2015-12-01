@@ -839,6 +839,31 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$str;
 		}
 	}
+	$indexes=array();
+	$table_name='tx_multishop_orders';
+	$str="show indexes from `".$table_name."` ";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$indexes[]=$rs['Key_name'];
+	}
+	$required_index='combined';
+	if (!in_array($required_index, $indexes)) {
+		$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`page_uid`,`deleted`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$required_index='combined_shipping_method';
+	if (!in_array($required_index, $indexes)) {
+		$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`shipping_method`(25),`shipping_method_label`(25))";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$required_index='combined_payment_method';
+	if (!in_array($required_index, $indexes)) {
+		$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`payment_method`(25),`payment_method_label`(25))";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
