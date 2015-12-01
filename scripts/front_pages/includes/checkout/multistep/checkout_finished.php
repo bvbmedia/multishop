@@ -225,7 +225,7 @@ if (!$order_session['orders_id']) {
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'])) {
 		$params=array(
 			'order'=>$order,
-			'page'=>$page,
+			'page'=>&$page,
 			'array1'=>&$array1,
 			'array2'=>&$array2
 		);
