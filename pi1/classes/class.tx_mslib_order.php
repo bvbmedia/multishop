@@ -1099,7 +1099,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if ($customer_id) {
 			if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID']) {
 				// if store country is different than customer country change VAT rate to zero
-				if ($address['country']) {
+				if ($address['country'] && $address['tx_multishop_vat_id']) {
 					$iso_customer=mslib_fe::getCountryByName($address['country']);
 					if ($iso_customer['cn_iso_nr']!=$this->ms['MODULES']['COUNTRY_ISO_NR']) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
