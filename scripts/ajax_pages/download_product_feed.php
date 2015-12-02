@@ -6,7 +6,7 @@ if ($this->get['feed_hash']) {
 	set_time_limit(86400);
 	ignore_user_abort(true);
 	$feed=mslib_fe::getProductFeed($this->get['feed_hash'], 'code');
-	$lifetime=7200;
+	$lifetime=0;
 	if ($this->ADMIN_USER) {
 		$lifetime=0;
 	}
