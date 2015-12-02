@@ -2336,11 +2336,19 @@ if ($this->post['action']=='category-insert') {
 									$updateArray['specials_new_products_price']=str_replace(",", '.', $updateArray['specials_new_products_price']);
 								}
 								$updateArray['specials_last_modified']=time();
-								if (isset($item['products_special_price_expiry_date'])) {
-									$updateArray['expires_date']=strtotime($item['products_special_price_expiry_date']);
-								}
 								if (isset($item['products_special_price_start_date'])) {
-									$updateArray['start_date']=strtotime($item['products_special_price_start_date']);
+									$time=0;
+									if ($item['products_special_price_start_date'] >0) {
+										$time=strtotime($item['products_special_price_start_date']);
+									}
+									$updateArray['start_date']=strtotime($time);
+								}
+								if (isset($item['products_special_price_expiry_date'])) {
+									$time=0;
+									if ($item['products_special_price_expiry_date'] >0) {
+										$time=strtotime($item['products_special_price_expiry_date']);
+									}
+									$updateArray['expires_date']=$time;
 								}
 								// custom hook that can be controlled by third-party plugin
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'])) {
