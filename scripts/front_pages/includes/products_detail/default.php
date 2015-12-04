@@ -111,6 +111,7 @@ if (!$product['products_id']) {
 	}
 	// products pagination module eof
 	$output['products_name'].=$product['products_name'];
+	$output['products_name_marker']=$product['products_name'];
 	$output['admin_link']='';
 	if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
 		$output['admin_link']='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_product&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"><i class="fa fa-pencil"></i></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=delete_product&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
@@ -360,6 +361,8 @@ if (!$product['products_id']) {
 	$markerArray['###ORDER_UNIT_NAME###']=$product['order_unit_name'];
 	$markerArray['###MANUFACTURERS_NAME###']=$output['manufacturers_name'];
 	$markerArray['###MICRODATA_PRICE###']=$final_price;
+	$markerArray['###PRODUCTS_NAME_MARKER###']=$output['products_name_marker'];
+
 
 	$js_detail_page_triggers[]='
 		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');
