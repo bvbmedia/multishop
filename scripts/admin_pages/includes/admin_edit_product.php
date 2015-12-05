@@ -1126,14 +1126,34 @@ if ($this->post) {
 		// custom hook that can be controlled by third-party plugin eof
 		if (isset($this->post['save_as_new'])) {
 			// SECTION FOR CLONING A PRODUCT
-			if (!$updateArray['products_image']) {
+			//if (!$updateArray['products_image']) {
+				$image_tstamp=time();
 				$product_original=mslib_fe::getProduct($this->post['pid']);
 				foreach ($product_original as $arr_key=>$arr_val) {
-					if (strpos($arr_key, 'products_image')!==false) {
-						$updateArray[$arr_key]=$arr_val;
+					if (strpos($arr_key, 'products_image')!==false && !empty($arr_val)) {
+						$original_file=$arr_val;
+						$tmp_filename=explode('.', $original_file);
+						$count_filename=count($tmp_filename);
+						$ext=$tmp_filename[$count_filename-1];
+						unset($tmp_filename[$count_filename-1]);
+						$new_filename=implode('', $tmp_filename).'-CL'.$image_tstamp.'.'.$ext;
+						// copy original product image
+						$original_path=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($original_file, 'products', 'original');
+						//
+						$folder=mslib_befe::getImagePrefixFolder($new_filename);
+						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+						}
+						$folder.='/';
+						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$new_filename;
+						if (copy($original_path, $target)) {
+							 mslib_befe::resizeProductImage($target, $new_filename, $this->DOCUMENT_ROOT . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
+						}
+						//
+						$updateArray[$arr_key]=$new_filename;
 					}
 				}
-			}
+			//}
 			if ($updateArray['products_image']) {
 				$updateArray['contains_image']=1;
 			}
