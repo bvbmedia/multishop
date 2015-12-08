@@ -2029,7 +2029,7 @@ class mslib_fe {
 	}
 	public function renderTypoContent($content) {
 		$parseHTML=new t3lib_parsehtml_proc();
-		$message=$parseHTML->TS_links_rte($content);
+		$message=$parseHTML->TS_links_rte($this->pi_RTEcssText($content));
 		return $message;
 	}
 	public function string2url($input) {
