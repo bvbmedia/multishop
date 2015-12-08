@@ -64,7 +64,7 @@ if ($this->get['customers_export_hash']) {
 				break;
 		}
 		$orderby[]=$order_by.' '.$order;
-		$pageset=mslib_fe::getCustomersPageSet($filter, $offset, 1000, $orderby, $having, $select, $where);
+		$pageset=mslib_fe::getCustomersPageSet($filter, $offset, 999999999, $orderby, $having, $select, $where);
 		$records=$pageset['customers'];
 		// load all products
 		$excelRows=array();
