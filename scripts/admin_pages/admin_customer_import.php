@@ -939,6 +939,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 										$updateArray['title']=$group;
 										$updateArray['crdate']=time();
 										$updateArray['tstamp']=time();
+										$updateArray=mslib_befe::rmNullValuedKeys($updateArray);
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_groups', $updateArray);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										$usergroups[]=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1273,6 +1274,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
 									$user['tx_multishop_source_id']=$user['uid'];
 								}
+								$user=mslib_befe::rmNullValuedKeys($user);
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1349,6 +1351,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							} else {
 								$address['tx_multishop_default']=1;
 								$address['tx_multishop_address_type']='billing';
+								$address=mslib_befe::rmNullValuedKeys($address);
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $address);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1613,5 +1616,4 @@ if ($this->ms['show_default_form']) {
 }
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-
 ?>
