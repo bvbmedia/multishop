@@ -2338,14 +2338,14 @@ if ($this->post['action']=='category-insert') {
 								$updateArray['specials_last_modified']=time();
 								if (isset($item['products_special_price_start_date'])) {
 									$time=0;
-									if ($item['products_special_price_start_date'] >0) {
+									if ($item['products_special_price_start_date'] >0 && mslib_befe::isValidDate($item['products_special_price_start_date'])) {
 										$time=strtotime($item['products_special_price_start_date']);
 									}
-									$updateArray['start_date']=strtotime($time);
+									$updateArray['start_date']=$time;
 								}
 								if (isset($item['products_special_price_expiry_date'])) {
 									$time=0;
-									if ($item['products_special_price_expiry_date'] >0) {
+									if ($item['products_special_price_expiry_date'] >0 && mslib_befe::isValidDate($item['products_special_price_expiry_date'])) {
 										$time=strtotime($item['products_special_price_expiry_date']);
 									}
 									$updateArray['expires_date']=$time;
