@@ -2198,15 +2198,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT'].'.php');
 					}
 				}
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+				$mslib_order->init($this);
+				$mslib_order->repairOrder($orders_id);
 				// if grand total is zero we have to activate directly
 				$order=mslib_fe::getOrder($orders_id);
 				if ($order['orders_id'] and $order['grand_total']<0.001) {
 					mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 				}
-				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
-				$mslib_order->init($this);
-				$mslib_order->repairOrder($orders_id);
+				//
 				return $orders_id;
 			}
 		}
