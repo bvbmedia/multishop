@@ -9481,9 +9481,11 @@ class mslib_fe {
 		return mslib_fe::amount2Cents($amount, $customer_currency);
 	}
 	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1, $cropZeroDecimals=1) {
+		$currency_rate=$this->cookie['currency_rate'];
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'])) {
 			$params=array(
 				'amount'=>&$amount,
+				'currency_rate'=>&$currency_rate,
 				'customer_currency'=>&$customer_currency,
 				'include_currency_symbol'=>&$include_currency_symbol,
 				'cropZeroDecimals'=>&$cropZeroDecimals
@@ -9494,8 +9496,8 @@ class mslib_fe {
 		}
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
-		if ($this->cookie['currency_rate'] and $customer_currency) {
-			$amount=$amount*$this->cookie['currency_rate'];
+		if ($currency_rate and $customer_currency) {
+			$amount=$amount*$currency_rate;
 			$cu_thousands_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'];
 			$cu_decimal_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
 		}
