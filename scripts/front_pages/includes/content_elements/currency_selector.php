@@ -37,23 +37,23 @@ if ($this->ms['MODULES']['ENABLED_CURRENCIES']) {
 	$GLOBALS['TSFE']->additionalHeaderData[]='
 	<script>
 		jQuery(document).ready(function($)
-		{	
+		{
 			$(\'#multishop_currency_selector\').change(function(){
 				var selected_currency=$("#multishop_currency_selector option:selected").val();
 				if (selected_currency)
 				{
-					$.ajax({ 
-							type:   "POST", 
+					$.ajax({
+							type:   "POST",
 							url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_currency').'",
-							data:   "tx_multishop_pi1[selected_currency]="+selected_currency, 
-							success: function(msg) { 	
-								parent.window.location.reload();
+							data:   "tx_multishop_pi1[selected_currency]="+selected_currency,
+							success: function(msg) {
+								//parent.window.location.reload();
 							}
 					});
 				}
 			});
 		});
-	</script>	
+	</script>
 	';
 }
 ?>
