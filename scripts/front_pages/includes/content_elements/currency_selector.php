@@ -47,7 +47,7 @@ if ($this->ms['MODULES']['ENABLED_CURRENCIES']) {
 							url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_currency').'",
 							data:   "tx_multishop_pi1[selected_currency]="+selected_currency,
 							success: function(msg) {
-								//parent.window.location.reload();
+								parent.window.location.reload();
 							}
 					});
 				}
