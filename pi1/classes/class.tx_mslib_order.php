@@ -621,6 +621,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	}
 	function printOrderDetailsTable($order, $template_type='site') {
 		$subtotalIncludingVatArray=array();
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['printOrderDetailsTablePreHook'])) {
+			$params=array(
+				'order'=>&$order,
+				'template_type'=>&$template_type
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['printOrderDetailsTablePreHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		switch ($template_type) {
 			case 'site':
 			case 'order_history_site':
