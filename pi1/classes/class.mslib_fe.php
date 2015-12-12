@@ -8967,7 +8967,21 @@ class mslib_fe {
 	public function currencyConverter($from_Currency, $to_Currency, $amount) {
 		// add static so the rate is only requested one time, while processing the PHP script
 		static $currencyArray;
-		if (!is_array($currencyArray) or !isset($currencyArray[$from_Currency][$to_Currency])) {
+		// hook
+		$use_google=true;
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['currencyConverter'])) {
+			$params=array(
+				'currencyArray'=>&$currencyArray,
+				'use_google'=>&$use_google,
+				'from_Currency'=>$from_Currency,
+				'to_Currency'=>$to_Currency
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['currencyConverter'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
+		if ((!is_array($currencyArray) or !isset($currencyArray[$from_Currency][$to_Currency])) && $use_google) {
 			// fetch currency
 			$amount=urlencode($amount);
 			$from_Currency=urlencode($from_Currency);
