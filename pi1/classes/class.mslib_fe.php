@@ -2824,7 +2824,7 @@ class mslib_fe {
 		$currency_symbol=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
 			//$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
-			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARAY']['cu_symbol_left'];
+			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'];
 		}
 		return $currency_symbol;
 	}
