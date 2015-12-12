@@ -9496,7 +9496,10 @@ class mslib_fe {
 		}
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
-		if ($currency_rate and $customer_currency) {
+		var_dump($currency_rate)."<br/>";
+		var_dump($customer_currency);
+		die();
+		if ($currency_rate && $customer_currency) {
 			$amount=$amount*$currency_rate;
 			$cu_thousands_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'];
 			$cu_decimal_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
