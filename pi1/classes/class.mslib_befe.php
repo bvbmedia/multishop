@@ -4438,6 +4438,15 @@ class mslib_befe {
 			}
 		}
 	}
+	function getLanguageIso2ByLanguageUid($id) {
+		if (!is_numeric($id)) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'));
+		if ($record['uid']) {
+			return $record['lg_iso_2'];
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
