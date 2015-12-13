@@ -5171,7 +5171,12 @@ class mslib_fe {
 			// hook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'])) {
 				$params=array(
-					'product'=>&$product
+					'product'=>&$product,
+					'products_id'=>$products_id,
+					'categories_id'=>$categories_id,
+					'extra_fields'=>$extra_fields,
+					'include_disabled_products'=>$include_disabled_products,
+					'skipFlatDatabase'=>$skipFlatDatabase,
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
