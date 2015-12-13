@@ -96,8 +96,15 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->server['REQUEST_URI']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
 		$this->server['REDIRECT_URL']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REDIRECT_URL');
 		$this->server['QUERY_STRING']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('QUERY_STRING');
-		$this->server['REMOTE_ADDR']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
-		$this->REMOTE_ADDR=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+
+		if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+			// For passing through the IP-address of the client, through reverse proxy server
+			$this->REMOTE_ADDR=$_SERVER['HTTP_X_FORWARDED_FOR'];
+			$this->server['REMOTE_ADDR']=$_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			$this->REMOTE_ADDR=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+			$this->server['REMOTE_ADDR']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+		}
 		$this->server['HTTP_HOST']=mslib_befe::strtolower(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'));
 		$tmp=explode("?", $this->server['REQUEST_URI']);
 		$this->server['REQUEST_URI']=$tmp[0];
