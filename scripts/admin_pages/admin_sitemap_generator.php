@@ -71,7 +71,7 @@ if (!$this->get['skip_categories']) {
 }
 // lets create the products sitemap
 if (!$this->get['skip_products']) {
-	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where products_status=1");
+	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where products_status=1 and page_uid='".$this->showCatalogFromPage."'");
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$product=mslib_fe::getProduct($row['products_id']);
 		$where='';
