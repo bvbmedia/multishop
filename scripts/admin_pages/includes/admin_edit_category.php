@@ -497,7 +497,7 @@ if ($this->post) {
 								}
 							}
 						}
-						print_r($tmp_categories_id);
+						//print_r($tmp_categories_id);
 						$endpoint_catid=array();
 						foreach ($tmp_categories_id as $tmp_category_id) {
 							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
