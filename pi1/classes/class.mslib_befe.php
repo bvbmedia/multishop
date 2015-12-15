@@ -1009,7 +1009,7 @@ class mslib_befe {
 							if ($product['is_deepest'] > 0) {
 								mslib_befe::deleteProduct($product['products_id'], $categories_id, true);
 								if (!empty($product['crumbar_identifier'])) {
-									$qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', "crumbar_identifier='" . $product['crumbar_identifier'] . "'");
+									//$qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', "crumbar_identifier='" . $product['crumbar_identifier'] . "'");
 								}
 							}
 						}
@@ -1101,8 +1101,8 @@ class mslib_befe {
 						'', // ORDER BY...
 						'' // LIMIT ...
 					);
-					var_dump($str);
-					die();
+					//var_dump($str);
+					//die();
 					//
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -1120,7 +1120,7 @@ class mslib_befe {
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
 						$params=array(
 							'products_id'=>$products_id,
-							'categories_id'=>''
+							'categories_id'=>&$categories_id
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
