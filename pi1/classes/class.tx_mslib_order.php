@@ -351,6 +351,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		// loading the email template
 		$page=array();
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'])) {
+			$params=array(
+				'page'=>&$page,
+				'order'=>&$order,
+				'mail_template'=>$mail_template,
+				'psp_mail_template'=>$psp_mail_template
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		//
 		if ($mail_template) {
 			switch ($mail_template) {
 				case 'email_order_paid_letter':
@@ -392,6 +405,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 		}
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPostCMSContent'])) {
+			$params=array(
+				'page'=>&$page,
+				'order'=>&$order,
+				'mail_template'=>$mail_template,
+				'psp_mail_template'=>$psp_mail_template
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPostCMSContent'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		//
 		if ($page[0]['content']) {
 			// loading the email confirmation letter eof
 			// replacing the variables with dynamic values
