@@ -660,10 +660,10 @@ if ($pageset['total_rows']>0) {
 
 		$markerArray['VALUE_PRICE_EXCL_VAT']=htmlspecialchars($product_price_display);
 		$markerArray['VALUE_PRICE_INCL_VAT']=htmlspecialchars($product_price_display_incl);
-		$markerArray['VALUE_ORIGINAL_PRICE']=htmlspecialchars(round($rs['products_price'], 14));
+		$markerArray['VALUE_ORIGINAL_PRICE']=$rs['products_price'];
 		$markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT']=htmlspecialchars($special_price_display);
 		$markerArray['VALUE_SPECIAL_PRICE_INCL_VAT']=htmlspecialchars($special_price_display_incl);
-		$markerArray['VALUE_ORIGINAL_SPECIAL_PRICE']=htmlspecialchars(round($rs['specials_new_products_price'], 14));
+		$markerArray['VALUE_ORIGINAL_SPECIAL_PRICE']=$rs['specials_new_products_price'];
 		$markerArray['VALUE_PRODUCT_QUANTITY']=$rs['products_quantity'];
 		$markerArray['VALUE_PRODUCT_WEIGHT']=$rs['products_weight'];
 		$markerArray['PID0']=$rs['products_id'];
