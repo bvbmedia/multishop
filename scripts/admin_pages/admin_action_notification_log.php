@@ -121,13 +121,9 @@ if (!count($pageset['dataset'])) {
 } else {
 	$tr_type='even';
 	$headercol.='
-	<th class="cellDate">'.$this->pi_getLL('date').'</th>
-	<th width="100" nowrap>'.$this->pi_getLL('title', 'Title').'</th>
-	<th class="cellID">'.$this->pi_getLL('admin_customer_id').'</th>
-	<th class="cellUser">'.$this->pi_getLL('admin_customer_name').'</th>
+	<th class="cellDate" width="120">'.$this->pi_getLL('date').'</th>
+	<th class="cellUser" width="150">'.$this->pi_getLL('admin_customer_name').'</th>
 	<th width="100" nowrap align="right">'.$this->pi_getLL('ip_address').'</th>
-	<th width="100" nowrap>'.$this->pi_getLL('session_id', 'Session ID').'</th>
-	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th class="cellContent">'.$this->pi_getLL('content').'</th>
 	';
 	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><thead><tr>'.$headercol.'</tr></thead><tbody>';
@@ -143,24 +139,12 @@ if (!count($pageset['dataset'])) {
 		}
 		$content.='
 		<tr class="'.$tr_type.'">
-		<td class="cellDate">'.strftime("%a. %x %X", $row['crdate']).'</td>
-		<td valign="top" nowrap>
-			'.htmlspecialchars($row['title']).'
-		</td>
-		<td class="cellID">
-			'.($row['customer_id']>0 ? '<a href="'.$customer_edit_link.'">'.$row['customer_id'].'</a>' : '').'
-		</td>
+		<td class="cellDate" align="right">'.strftime("%a. %x<br/>%X", $row['crdate']).'</td>
 		<td class="cellUser">
 			'.($row['company'] ? '<a href="'.$customer_edit_link.'">'.htmlspecialchars($row['company']).'</a>' : htmlspecialchars($row['name'])).'
 		</td>
 		<td valign="top" nowrap align="right">
-			'.htmlspecialchars($row['ip_address']).'
-		</td>
-		<td valign="top" nowrap>
-			'.htmlspecialchars($row['session_id']).'
-		</td>
-		<td valign="top" nowrap>
-			'.htmlspecialchars($row['message_type']).'
+			'.htmlspecialchars($row['ip_address']).'<br/>
 		</td>
 		<td class="cellContent">
 			'.$row['message'].'

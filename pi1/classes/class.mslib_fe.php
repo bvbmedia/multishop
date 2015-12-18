@@ -1222,7 +1222,11 @@ class mslib_fe {
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'])) {
 			$params=array(
-				'product'=>&$product
+				'product'=>&$product,
+				'quantity'=>&$quantity,
+				'add_currency'=>&$add_currency,
+				'ignore_minimum_quantity'=>&$ignore_minimum_quantity,
+				'priceColumn'=>&$priceColumn
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1238,6 +1242,21 @@ class mslib_fe {
 		if ($sum and $product[$priceColumn]>0) {
 			$final_price=($product[$priceColumn]*$quantity);
 		}
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalcPostProc'])) {
+			$params=array(
+				'product'=>&$product,
+				'quantity'=>&$quantity,
+				'add_currency'=>&$add_currency,
+				'ignore_minimum_quantity'=>&$ignore_minimum_quantity,
+				'priceColumn'=>&$priceColumn,
+				'final_price'=>&$final_price
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalcPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
 		if ($this->conf['disableFeFromCalculatingVatPrices']!='1') {
 			if ($product['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
 				// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
@@ -2010,7 +2029,7 @@ class mslib_fe {
 	}
 	public function renderTypoContent($content) {
 		$parseHTML=new t3lib_parsehtml_proc();
-		$message=$parseHTML->TS_links_rte($content);
+		$message=$parseHTML->TS_links_rte($this->pi_RTEcssText($content));
 		return $message;
 	}
 	public function string2url($input) {
@@ -2104,13 +2123,19 @@ class mslib_fe {
 				}
 			}
 			// $mail->IsSendmail(); // telling the class to use SendMail transport
-			if ($this->conf['email_tmpl_path']) {
-				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
+			if (isset($options['email_tmpl_path']) && $options['email_tmpl_path']) {
+				$template=$this->cObj->fileResource($options['email_tmpl_path']);
 			} else {
-				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
+				if ($this->conf['email_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
+				}
 			}
 			$markerArray=array();
+			$markerArray['###SUBJECT###']=$subject;
 			$markerArray['###BODY###']=$body;
+
 			// ADDITIONAL OPTIONAL MARKERS
 			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
 			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
@@ -2127,6 +2152,11 @@ class mslib_fe {
 					$markerArray['###STORE_ZIP###']=$address['zip'];
 					$markerArray['###STORE_CITY###']=$address['city'];
 					$markerArray['###STORE_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+				}
+			}
+			if (is_array($options['markerArray']) && count($options['markerArray'])) {
+				foreach ($options['markerArray'] as $key => $val) {
+					$markerArray[$key]=$val;
 				}
 			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
@@ -2794,7 +2824,7 @@ class mslib_fe {
 		$currency_symbol=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
 			//$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY'];
-			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARAY']['cu_symbol_left'];
+			$currency_symbol=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'];
 		}
 		return $currency_symbol;
 	}
@@ -5141,7 +5171,12 @@ class mslib_fe {
 			// hook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'])) {
 				$params=array(
-					'product'=>&$product
+					'product'=>&$product,
+					'products_id'=>$products_id,
+					'categories_id'=>$categories_id,
+					'extra_fields'=>$extra_fields,
+					'include_disabled_products'=>$include_disabled_products,
+					'skipFlatDatabase'=>$skipFlatDatabase,
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -7890,7 +7925,16 @@ class mslib_fe {
 		}
 		if (is_numeric($orders_id)) {
 			$order=mslib_fe::getOrder($orders_id);
-			if ($order['total_amount']==0) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'])) {
+				$params=array(
+					'force'=>&$force,
+					'order'=>$order
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			if (!$force && $order['total_amount']==0) {
 				// it does not make sense to create an invoice without an amount
 				return false;
 			}
@@ -8928,7 +8972,21 @@ class mslib_fe {
 	public function currencyConverter($from_Currency, $to_Currency, $amount) {
 		// add static so the rate is only requested one time, while processing the PHP script
 		static $currencyArray;
-		if (!is_array($currencyArray) or !isset($currencyArray[$from_Currency][$to_Currency])) {
+		// hook
+		$use_google=true;
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['currencyConverter'])) {
+			$params=array(
+				'currencyArray'=>&$currencyArray,
+				'use_google'=>&$use_google,
+				'from_Currency'=>$from_Currency,
+				'to_Currency'=>$to_Currency
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['currencyConverter'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// hook eof
+		if ((!is_array($currencyArray) or !isset($currencyArray[$from_Currency][$to_Currency])) && $use_google) {
 			// fetch currency
 			$amount=urlencode($amount);
 			$from_Currency=urlencode($from_Currency);
@@ -9428,9 +9486,11 @@ class mslib_fe {
 		return mslib_fe::amount2Cents($amount, $customer_currency);
 	}
 	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1, $cropZeroDecimals=1) {
+		$currency_rate=$this->cookie['currency_rate'];
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'])) {
 			$params=array(
 				'amount'=>&$amount,
+				'currency_rate'=>&$currency_rate,
 				'customer_currency'=>&$customer_currency,
 				'include_currency_symbol'=>&$include_currency_symbol,
 				'cropZeroDecimals'=>&$cropZeroDecimals
@@ -9441,8 +9501,8 @@ class mslib_fe {
 		}
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
-		if ($this->cookie['currency_rate'] and $customer_currency) {
-			$amount=$amount*$this->cookie['currency_rate'];
+		if ($currency_rate && $customer_currency) {
+			$amount=$amount*$currency_rate;
 			$cu_thousands_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'];
 			$cu_decimal_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
 		}

@@ -385,7 +385,7 @@ if ($this->get['skeyword']) {
 			}
 			$items[]="o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
 			$items[]="i.invoice_id LIKE '%".addslashes($this->get['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$filter[]='('.implode(" or ", $items).')';
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->get['skeyword'])."'";
@@ -445,20 +445,20 @@ if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 	$filter[]=' i.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
 }
 if ($this->get['orders_status_search']>0) {
-	$filter[]="(o.status='".$this->get['orders_status_search']."')";
+	$filter[]="(o.status='".addslashes($this->get['orders_status_search'])."')";
 }
 if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
 	if ($this->get['payment_method']=='nopm') {
 		$filter[]="(o.payment_method is null)";
 	} else {
-		$filter[]="(o.payment_method='".$this->get['payment_method']."')";
+		$filter[]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
 	}
 }
 if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
 	if ($this->get['shipping_method']=='nosm') {
 		$filter[]="(o.shipping_method is null)";
 	} else {
-		$filter[]="(o.shipping_method='".$this->get['shipping_method']."')";
+		$filter[]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
 	}
 }
 if ($this->cookie['paid_invoices_only']) {

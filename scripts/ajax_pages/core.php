@@ -867,6 +867,12 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+	case 'getManufacturersList':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/get_manufacturers_list.php');
+		}
+		exit();
+		break;
 	case 'retrieveAdminNotificationMessage':
 		if ($this->ADMIN_USER) {
 			$startTime=(time()-(60));
@@ -915,7 +921,25 @@ switch ($this->ms['page']) {
 		// change selected currency + exchange rate and save it in temporary session
 		if ($this->post['tx_multishop_pi1']['selected_currency']) {
 			$this->cookie['selected_currency']=$this->post['tx_multishop_pi1']['selected_currency'];
-			$this->cookie['currency_rate']=mslib_fe::currencyConverter($this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'], $this->cookie['selected_currency'], 1);
+			$use_google=true;
+			$converted_rate=1;
+			// hook
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['updateCurrency'])) {
+				$params=array(
+					'use_google'=>&$use_google,
+					'converted_rate'=>&$converted_rate,
+					'from_Currency'=>$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'],
+					'to_Currency'=>$this->cookie['selected_currency']
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['updateCurrency'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// hook eof
+			if ($use_google) {
+				$converted_rate=mslib_fe::currencyConverter($this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'], $this->cookie['selected_currency'], 1);
+			}
+			$this->cookie['currency_rate']=$converted_rate;
 			$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 			$GLOBALS['TSFE']->storeSessionData();
 		}
@@ -1113,7 +1137,7 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'download_packingslip':
-		if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['order_id']) {
+		if ($this->get['tx_multishop_pi1']['order_id'] || $this->get['tx_multishop_pi1']['order_hash']) {
 			if (strstr($this->ms['MODULES']['DOWNLOAD_PACKINGSLIP_TYPE'], "..")) {
 				die('error in DOWNLOAD_INVOICE_TYPE value');
 			} else {

@@ -225,7 +225,7 @@ if (!$order_session['orders_id']) {
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'])) {
 		$params=array(
 			'order'=>$order,
-			'page'=>$page,
+			'page'=>&$page,
 			'array1'=>&$array1,
 			'array2'=>&$array2
 		);
@@ -250,7 +250,11 @@ if (!$order_session['orders_id']) {
 	//	Thank you for ordering on our shop!
 	if ($order['payment_method'] and $order['paid']) {
 		// order has been paid, so dont load the psp
-		$content.='Your order has been paid.';
+		/*
+		if ($order['total_amount'] > 0) {
+			$content.='Your order has been paid.';
+		}
+		*/
 	} elseif ($order['payment_method']) {
 		// load optional payment button
 		$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');

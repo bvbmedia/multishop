@@ -132,6 +132,7 @@ if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 }
 $array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
 $array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
+$array['products_price_with_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
 // attributes
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);

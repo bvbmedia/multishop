@@ -351,6 +351,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		// loading the email template
 		$page=array();
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'])) {
+			$params=array(
+				'page'=>&$page,
+				'order'=>&$order,
+				'mail_template'=>$mail_template,
+				'psp_mail_template'=>$psp_mail_template
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		//
 		if ($mail_template) {
 			switch ($mail_template) {
 				case 'email_order_paid_letter':
@@ -392,6 +405,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 		}
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPostCMSContent'])) {
+			$params=array(
+				'page'=>&$page,
+				'order'=>&$order,
+				'mail_template'=>$mail_template,
+				'psp_mail_template'=>$psp_mail_template
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPostCMSContent'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		//
 		if ($page[0]['content']) {
 			// loading the email confirmation letter eof
 			// replacing the variables with dynamic values
@@ -540,6 +566,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$array2[]=strftime("%x", $order['expected_delivery_date']);
 			$array1[]='###CUSTOMER_COMMENTS###';
 			$array2[]=$order['customer_comments'];
+			if (isset($this->post['password']) && !empty($this->post['password']) && $order['customer_id']>0) {
+				$user=mslib_fe::getUser($order['customer_id']);
+				//
+				$array1[]='###USERNAME###';
+				$array2[]=$user['username'];
+				$array1[]='###PASSWORD###';
+				$array2[]=$this->post['password'];
+			}
 			//hook to let other plugins further manipulate the replacers
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 				$params=array(
@@ -613,6 +647,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	}
 	function printOrderDetailsTable($order, $template_type='site') {
 		$subtotalIncludingVatArray=array();
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['printOrderDetailsTablePreHook'])) {
+			$params=array(
+				'order'=>&$order,
+				'template_type'=>&$template_type
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['printOrderDetailsTablePreHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		switch ($template_type) {
 			case 'site':
 			case 'order_history_site':
@@ -831,10 +874,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//SUBTOTAL_WRAPPER
 		$key='SUBTOTAL_WRAPPER';
 		$markerArray=array();
-		$markerArray['SUBTOTAL_LABEL']=$this->pi_getLL('subtotal').':';
-		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price').':';
+		$markerArray['SUBTOTAL_LABEL']=$this->pi_getLL('subtotal');
+		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price');
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
-		$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal').':';
+		$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal');
 		// rounding is problem with including vat shops.
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,true));
 		//$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
@@ -880,22 +923,22 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
-		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total')).':';
+		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
 //		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
-		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total'], 0);
+		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 		//GRAND_TOTAL_WRAPPER EOF
 		//DISCOUNT_WRAPPER
 		$key='DISCOUNT_WRAPPER';
 		if ($order['discount']>0) {
 			$markerArray=array();
-			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
+			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount');
 			$markerArray['DISCOUNT']=mslib_fe::amount2Cents($order['discount']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				// new subtotal
 				$markerArray = array();
-				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
+				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal');
 				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($subtotal - $order['discount']);
 				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
 			} else {
@@ -1091,7 +1134,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if ($customer_id) {
 			if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID']) {
 				// if store country is different than customer country change VAT rate to zero
-				if ($address['country']) {
+				if ($address['country'] && $address['tx_multishop_vat_id']) {
 					$iso_customer=mslib_fe::getCountryByName($address['country']);
 					if ($iso_customer['cn_iso_nr']!=$this->ms['MODULES']['COUNTRY_ISO_NR']) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;

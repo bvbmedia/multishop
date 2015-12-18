@@ -40,7 +40,7 @@ if ($this->post['skeyword']) {
 				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$filter[]='('.implode(" or ", $items).')';
 			break;
 		case 'orders_id':
 			$filter[]=" orders_id='".addslashes($this->post['skeyword'])."'";

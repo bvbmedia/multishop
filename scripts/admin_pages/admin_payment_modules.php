@@ -649,6 +649,7 @@ if ($this->ms['show_main']) {
 			$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
 			if (move_uploaded_file($_FILES['payment_file']['tmp_name'], $target)) {
 				$payment_content=file_get_contents($target);
+				$payment_content=trim($payment_content);
 				$unserial_payment_data=unserialize($payment_content);
 				if (is_array($unserial_payment_data) && count($unserial_payment_data)) {
 					foreach ($unserial_payment_data as $payment_data) {

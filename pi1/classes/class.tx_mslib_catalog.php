@@ -204,7 +204,7 @@ class tx_mslib_catalog {
 		}
 	}
 	function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
-		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and page_uid=\''.$this->showCatalogFromPage.'\''));
+		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->showCatalogFromPage.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
 			return $rec;
 		} else {
@@ -859,10 +859,12 @@ class tx_mslib_catalog {
         }
 		//
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
-		foreach ($p2c_records as $p2c_record) {
-			//if (!strlen($p2c_record['crumbar_identifier'])) {
-			tx_mslib_catalog::compareDatabaseRebuildProductsToCategoryTree($p2c_record['products_id'], $p2c_record['categories_id']);
-			//}
+		if (is_array($p2c_records) && count($p2c_records)) {
+			foreach ($p2c_records as $p2c_record) {
+				//if (!strlen($p2c_record['crumbar_identifier'])) {
+				tx_mslib_catalog::compareDatabaseRebuildProductsToCategoryTree($p2c_record['products_id'], $p2c_record['categories_id']);
+				//}
+			}
 		}
 		// p2c fixer routine code for redundant records
 		$query_p2c=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...

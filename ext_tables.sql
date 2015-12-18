@@ -538,7 +538,10 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `coupon_discount_value` (`coupon_discount_value`),
  KEY `date_mail_last_sent` (`date_mail_last_sent`),
  KEY `orders_paid_timestamp` (`orders_paid_timestamp`),
- KEY `debit_order` (`debit_order`)
+ KEY `debit_order` (`debit_order`),
+ KEY `combined` (`page_uid`,`deleted`),
+ KEY `combined_payment_method` (`payment_method`(75),`payment_method_label`(75)),
+ KEY `combined_shipping_method` (`shipping_method`(75),`shipping_method_label`(75))
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (

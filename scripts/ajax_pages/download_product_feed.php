@@ -6,7 +6,7 @@ if ($this->get['feed_hash']) {
 	set_time_limit(86400);
 	ignore_user_abort(true);
 	$feed=mslib_fe::getProductFeed($this->get['feed_hash'], 'code');
-	$lifetime=7200;
+	$lifetime=0;
 	if ($this->ADMIN_USER) {
 		$lifetime=0;
 	}
@@ -301,7 +301,9 @@ if ($this->get['feed_hash']) {
 								if ($loadAttributeValues) {
 									$attributes_data=array();
 									//$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
-									$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.page_uid=".$this->showCatalogFromPage." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
+									//$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.page_uid=".$this->showCatalogFromPage." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
+									// 2015-11-16: removed page_uid filter otherwise attributes missing when working in multiple shops that share the same attributes
+									$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
 									$qry_attributes=$GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
 									while ($row_attributes=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
 										$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['values'][]=$row_attributes['products_options_values_name'];
@@ -669,6 +671,9 @@ if ($this->get['feed_hash']) {
 						break;
 					case 'products_price_currency':
 						$tmpcontent.=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+						break;
+					case 'products_price_with_currency':
+						$tmpcontent.=mslib_fe::final_products_price($row).' '.$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
 						break;
 					case 'product_capital_price':
 						if ($this->ms['MODULES']['FLAT_DATABASE']) {

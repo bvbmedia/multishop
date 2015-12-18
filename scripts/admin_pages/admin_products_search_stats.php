@@ -64,20 +64,25 @@ foreach ($dates as $key=>$value) {
 		}
 		$search_amount+=$row['total'];
 		$content.='<tr class="'.$tr_type.'">
-		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
+		<td class="text-right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
 		if ($row['negative_results']) {
-			$content.='<span class="negative_icon">x</span>';
+			$content.='<span class="negative_icon">
+			<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-thumbs-down"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>
+			</span>';
 		} else {
-			$content.='<span class="positive_icon">+</span>';
+			$content.='<span class="positive_icon">
+			<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-thumbs-up"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>
+			</span>';
 		}
+
 		$content.='</td>
 		<td><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&skeyword='.urlencode($row['keyword'])).'" target="_blank">'.htmlspecialchars($row['keyword']).'</a></td>
 		</tr>';
 	}
 	if ($search_amount>0) {
 		$content.='<tr class="'.$tr_type.'">
-		<td class="text_right" nowrap width="40">'.$search_amount.'</td>
+		<td class="text-right" nowrap width="40">'.$search_amount.'</td>
 		<td width="10" colspan="2">'.$this->pi_getLL('total').'</td>';
 	}
 	$content.='</table>';
@@ -151,9 +156,13 @@ foreach ($dates as $key=>$value) {
 		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
 		if ($row['negative_results']) {
-			$content.='<span class="negative_icon">x</span>';
+			$content.='<span class="negative_icon">
+			<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-thumbs-down"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>
+			</span>';
 		} else {
-			$content.='<span class="positive_icon">+</span>';
+			$content.='<span class="positive_icon">
+			<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-thumbs-up"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>
+			</span>';
 		}
 		$content.='</td>
 		<td><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&skeyword='.$row['keyword']).'" target="_blank">'.$row['keyword'].'</a></td></tr>';

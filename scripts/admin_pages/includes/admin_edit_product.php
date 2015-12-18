@@ -158,6 +158,7 @@ function cropEditorDialog(textTitle, textBody, imageName, imageActionEID) {
 jQuery(document).ready(function($) {
 	var text_input = $(\'#products_name_0\');
 	var categoriesIdSearchTerm=[];
+	var manufacturersIdSearchTerm=[];
 	text_input.focus();
 	text_input.select();
 	$(\'.select2BigDropWider\').select2({
@@ -291,6 +292,63 @@ jQuery(document).ready(function($) {
 
 		}
 		' : '').'
+	});
+	$(\'#manufacturers_id_s2\').select2({
+		placeholder: \''.$this->pi_getLL('admin_choose_manufacturer').'\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'200px\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getManufacturersList').'\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				manufacturersIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getManufacturersList').'\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						manufacturersIdSearchTerm[data.id]={id: val.id, text: val.text};
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
 	});
 	'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 	$(document).on(\'click\', "#cropEditor", function(e) {
@@ -856,21 +914,23 @@ if ($this->post and $_FILES) {
 			if ($file['tmp_name']) {
 				switch ($key) {
 					case 'file_location':
-						// digital download
-						$total_files=count($file['tmp_name']);
-						if ($total_files) {
-							for ($i=0; $i<$total_files; $i++) {
-								preg_match("/\.(.*)$/", $file['name'][$i], $tmp);
-								$ext=$tmp[1];
-								$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
-								$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
-								if (move_uploaded_file($file['tmp_name'][$i], $target)) {
-									$update_product_files[$i]['file_label']=$file['name'][$i];
-									$update_product_files[$i]['file_location']=$target;
+						if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+							// digital download
+							$total_files=count($file['tmp_name']);
+							if ($total_files) {
+								for ($i=0; $i<$total_files; $i++) {
+									preg_match("/\.(.*)$/", $file['name'][$i], $tmp);
+									$ext=$tmp[1];
+									$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
+									$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
+									if (move_uploaded_file($file['tmp_name'][$i], $target)) {
+										$update_product_files[$i]['file_label']=$file['name'][$i];
+										$update_product_files[$i]['file_location']=$target;
+									}
 								}
 							}
+							// digital download eof
 						}
-						// digital download eof
 						break;
 					default:
 						// product image
@@ -987,7 +1047,9 @@ if ($this->post) {
 	$updateArray['search_engines_allow_indexing']=$this->post['search_engines_allow_indexing'];
 	$updateArray['order_unit_id']=$this->post['order_unit_id'];
 	$updateArray['tax_id']=$this->post['tax_id'];
-	$updateArray['file_number_of_downloads']=$this->post['file_number_of_downloads'];
+	if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+		$updateArray['file_number_of_downloads']=$this->post['file_number_of_downloads'];
+	}
 	if ($this->post['manufacturers_name']!='') {
 		$manufacturer=mslib_fe::getManufacturer($this->post['manufacturers_name'], 'manufacturers_name');
 		if ($manufacturer['manufacturers_id']) {
@@ -1064,14 +1126,34 @@ if ($this->post) {
 		// custom hook that can be controlled by third-party plugin eof
 		if (isset($this->post['save_as_new'])) {
 			// SECTION FOR CLONING A PRODUCT
-			if (!$updateArray['products_image']) {
+			//if (!$updateArray['products_image']) {
+				$image_tstamp=time();
 				$product_original=mslib_fe::getProduct($this->post['pid']);
 				foreach ($product_original as $arr_key=>$arr_val) {
-					if (strpos($arr_key, 'products_image')!==false) {
-						$updateArray[$arr_key]=$arr_val;
+					if (strpos($arr_key, 'products_image')!==false && !empty($arr_val)) {
+						$original_file=$arr_val;
+						$tmp_filename=explode('.', $original_file);
+						$count_filename=count($tmp_filename);
+						$ext=$tmp_filename[$count_filename-1];
+						unset($tmp_filename[$count_filename-1]);
+						$new_filename=implode('', $tmp_filename).'-CL'.$image_tstamp.'.'.$ext;
+						// copy original product image
+						$original_path=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($original_file, 'products', 'original');
+						//
+						$folder=mslib_befe::getImagePrefixFolder($new_filename);
+						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+						}
+						$folder.='/';
+						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$new_filename;
+						if (copy($original_path, $target)) {
+							 mslib_befe::resizeProductImage($target, $new_filename, $this->DOCUMENT_ROOT . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
+						}
+						//
+						$updateArray[$arr_key]=$new_filename;
 					}
 				}
-			}
+			//}
 			if ($updateArray['products_image']) {
 				$updateArray['contains_image']=1;
 			}
@@ -1593,10 +1675,12 @@ if ($this->post) {
 				if ($update_product_files[$key]['file_label']) {
 					$updateArray['file_label']=$update_product_files[$key]['file_label'];
 				}
-				if ($update_product_files[$key]['file_location']) {
-					$updateArray['file_location']=$update_product_files[$key]['file_location'];
+				if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+					if ($update_product_files[$key]['file_location']) {
+						$updateArray['file_location']=$update_product_files[$key]['file_location'];
+					}
+					$updateArray['file_remote_location']=$this->post['file_remote_location'][$key];
 				}
-				$updateArray['file_remote_location']=$this->post['file_remote_location'][$key];
 				// EXTRA TAB CONTENT
 				if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
 					for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
@@ -2104,11 +2188,20 @@ if ($this->post) {
 	if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 		$str="SELECT p.*, c.categories_id, pd.file_location, pd.file_label, p.custom_settings from tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p2c.products_id='".$this->get['pid']."' ";
 		if (is_numeric($this->get['cid'])) {
-			$str.=" and p2c.categories_id=".$this->get['cid'];
+			$str.=" and p2c.categories_id=".$this->get['cid']." and is_deepest=1";
 		}
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		// redirect to proper edit product path if any
+		if (!$product['products_id'] && is_numeric($this->get['cid'])) {
+			$redirect_product=mslib_fe::getProduct($this->get['pid'], '', '', 1);
+			if ($redirect_product['products_id'] && $redirect_product['categories_id']) {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$this->get['pid'].'&cid='.$redirect_product['categories_id'].'&action=edit_product', 1));
+				exit();
+			}
+		}
+		//
 		$local_primary_product_categories=$product['categories_id'];
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
@@ -2119,17 +2212,19 @@ if ($this->post) {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$lngproduct[$row['language_id']]=$row;
 		}
-		if ($this->get['delete_micro_download'] and is_numeric($this->get['pid']) and is_numeric($this->get['language_id'])) {
-			// delete the micro download file
-			if ($lngproduct[$this->get['language_id']]['file_location']) {
-				@unlink($lngproduct[$this->get['language_id']]['file_location']);
-				$lngproduct[$this->get['language_id']]['file_label']='';
-				$lngproduct[$this->get['language_id']]['file_location']='';
-				$updateArray=array();
-				$updateArray['file_label']='';
-				$updateArray['file_location']='';
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$this->get['pid'].'\' and language_id='.$this->get['language_id'], $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+			if ($this->get['delete_micro_download'] and is_numeric($this->get['pid']) and is_numeric($this->get['language_id'])) {
+				// delete the micro download file
+				if ($lngproduct[$this->get['language_id']]['file_location']) {
+					@unlink($lngproduct[$this->get['language_id']]['file_location']);
+					$lngproduct[$this->get['language_id']]['file_label']='';
+					$lngproduct[$this->get['language_id']]['file_location']='';
+					$updateArray=array();
+					$updateArray['file_label']='';
+					$updateArray['file_location']='';
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$this->get['pid'].'\' and language_id='.$this->get['language_id'], $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		}
 	}
@@ -2147,6 +2242,7 @@ if ($this->post) {
 		$subparts['details_content']=$this->cObj->getSubpart($subparts['template'], '###DETAILS_CONTENT###');
 		$subparts['manufacturers_advice_price']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURERS_ADVICE_PRICE###');
 		$subparts['exclude_stock_from_feed']=$this->cObj->getSubpart($subparts['template'], '###EXCLUDE_STOCK_FROM_FEED_INPUT###');
+		$subparts['VIRTUAL_PRODUCTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###VIRTUAL_PRODUCTS_WRAPPER###');
 		if ($_REQUEST['action']=='add_product') {
 			$heading_page='<h3>'.$this->pi_getLL('admin_add_new_product').'</h3>';
 		} else {
@@ -2384,7 +2480,7 @@ if ($this->post) {
 		$staffel_price_block='';
 		if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 			$staffel_price_block.='
-				<div class="form-group">
+				<div class="form-group" id="msEditProductInputStaffelPriceWrapper">
 				<script>
 				jQuery(document).ready(function($) {
 					jQuery("#add_staffel_input").click(function(event) {
@@ -2521,13 +2617,16 @@ if ($this->post) {
 			}
 			$staffel_price_block.='</div>';
 		}
-		$manufacturer_input='<select name="manufacturers_id" class="form-control"><option value="">'.$this->pi_getLL('admin_choose_manufacturer').'</option>';
+		$manufacturer_input='<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2" value="'.$product['manufacturers_id'].'">';
+		/*
 		$str="SELECT * from tx_multishop_manufacturers where status=1 order by manufacturers_name";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$manufacturer_input.='<option value="'.$row['manufacturers_id'].'" '.(($row['manufacturers_id']==$product['manufacturers_id']) ? 'selected' : '').'>'.htmlspecialchars($row['manufacturers_name']).'</option>';
 		}
 		$manufacturer_input.='</select>';
+		*/
+		//
 		$order_unit='<select name="order_unit_id" class="form-control"><option value="">'.$this->pi_getLL('default').'</option>';
 		$str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2536,17 +2635,18 @@ if ($this->post) {
 		}
 		$order_unit.='</select>';
 		$options_tab_virtual_product='';
-		foreach ($this->languages as $key=>$language) {
-			$flag_path='';
-			if ($language['flag']) {
-				$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
-			}
-			$language_label='';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
-                $language_label.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
-			}
-            $language_label.=''.$language['title'];
-			$options_tab_virtual_product.='
+		if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+			foreach ($this->languages as $key=>$language) {
+				$flag_path='';
+				if ($language['flag']) {
+					$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
+				}
+				$language_label='';
+				if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
+					$language_label.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
+				}
+				$language_label.=''.$language['title'];
+				$options_tab_virtual_product.='
                 <div class="panel panel-default toggle_advanced_option">
                 <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'">
                     <h3 class="panel-title">
@@ -2559,19 +2659,20 @@ if ($this->post) {
 					<label for="file_location" class="col-md-2 control-label">'.$this->pi_getLL('file').'</label>
 					<div class="col-md-10">
 					<input name="file_location['.$language['uid'].']" type="file" class="form-control" />';
-			if ($lngproduct[$language['uid']]['file_label'] and $lngproduct[$language['uid']]['file_location']) {
-				$label='download '.htmlspecialchars($lngproduct[$language['uid']]['file_label']);
-				$options_tab_virtual_product.='<a href="'.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download_by_admin&language_id='.$language['uid'].'&products_id='.$product['products_id']).'" alt="'.$label.'" title="'.$label.'">'.$label.'</a>
+				if ($lngproduct[$language['uid']]['file_label'] and $lngproduct[$language['uid']]['file_location']) {
+					$label='download '.htmlspecialchars($lngproduct[$language['uid']]['file_label']);
+					$options_tab_virtual_product.='<a href="'.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download_by_admin&language_id='.$language['uid'].'&products_id='.$product['products_id']).'" alt="'.$label.'" title="'.$label.'">'.$label.'</a>
 				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_product&pid='.$_REQUEST['pid'].'&action=edit_product&delete_micro_download=1&language_id='.$language['uid']).'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete '.htmlspecialchars($lngproduct[$language['uid']]['file_label']).'"></a>';
-			}
-			$options_tab_virtual_product.='</div></div>
+				}
+				$options_tab_virtual_product.='</div></div>
 				<div class="form-group toggle_advanced_option" id="msEditProductInputVirtualProductExternalUrl_'.$language['uid'].'">
 					<label for="file_remote_location" class="col-md-2 control-label">'.$this->pi_getLL('admin_external_url').'</label>
 					<div class="col-md-10">
 					<input type="text" class="form-control text" name="file_remote_location['.$language['uid'].']" id="file_remote_location['.$language['uid'].']"  value="'.htmlspecialchars($lngproduct[$language['uid']]['file_remote_location']).'">
 					</div>
 				</div>';
-            $options_tab_virtual_product.='</div></div></div>';
+				$options_tab_virtual_product.='</div></div></div>';
+			}
 		}
 		$shipping_payment_method='';
 		if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
@@ -3904,6 +4005,19 @@ if ($this->post) {
 			$subpartArray['###EXCLUDE_FROM_FEED_INPUT###']=$exclude_stock_from_feed;
 		}
 		//exclude list products eol
+
+		// virtual products wrapper
+		$subpartArray['###VIRTUAL_PRODUCTS_WRAPPER###']='';
+		if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
+			$markerArray['LABEL_VIRTUAL_PRODUCT']=$this->pi_getLL('admin_virtual_product', 'Virtual Product');
+			$markerArray['LABEL_FILE_NUMBER_OF_DOWNLOADS']=$this->pi_getLL('file_number_of_downloads', 'Number of downloads');
+			$markerArray['VALUE_FILE_NUMBER_OF_DOWNLOADS']=($product['file_number_of_downloads'] ? $product['file_number_of_downloads'] : '');
+			$markerArray['OPTIONS_TAB_VIRTUAL_PRODUCT']=$options_tab_virtual_product;
+
+			$virtual_products_wrapper=$this->cObj->substituteMarkerArray($subparts['VIRTUAL_PRODUCTS_WRAPPER'], $markerArray, '###|###');
+			$subpartArray['###VIRTUAL_PRODUCTS_WRAPPER###']=$virtual_products_wrapper;
+		}
+
 		/*
 		 * options tab marker
 		 */
@@ -4039,9 +4153,6 @@ if ($this->post) {
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
 		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '');
-		$subpartArray['###LABEL_VIRTUAL_PRODUCT###']=$this->pi_getLL('admin_virtual_product', 'Virtual Product');
-		$subpartArray['###LABEL_FILE_NUMBER_OF_DOWNLOADS###']=$this->pi_getLL('file_number_of_downloads', 'Number of downloads');
-		$subpartArray['###VALUE_FILE_NUMBER_OF_DOWNLOADS###']=($product['file_number_of_downloads'] ? $product['file_number_of_downloads'] : '');
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		$subpartArray['###VALUE_PRODUCT_PID0###']=$product['products_id'];
 		$subpartArray['###VALUE_PRODUCT_PID1###']=$product['products_id'];
@@ -4049,7 +4160,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADVANCED_SETTINGS###']=$this->pi_getLL('admin_advanced_settings');
 		$subpartArray['###LABEL_CUSTOM_CONFIGURATION###']=$this->pi_getLL('admin_custom_configuration');
 		$subpartArray['###VALUE_CUSTOM_CONFIGURATION###']=htmlspecialchars($product['custom_settings']);
-		$subpartArray['###OPTIONS_TAB_VIRTUAL_PRODUCT###']=$options_tab_virtual_product;
+
 		/*
 		 * images tab marker
 		 */

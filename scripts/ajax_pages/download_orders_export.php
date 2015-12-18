@@ -93,6 +93,8 @@ if ($this->get['orders_export_hash']) {
 			$filter[]='o.by_phone=1';
 		}
 		$pageset=mslib_fe::getOrdersPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
+		//print_r($pageset);
+		//die();
 		$records=$pageset['orders'];
 		// load all products
 		$excelRows=array();
@@ -250,6 +252,42 @@ if ($this->get['orders_export_hash']) {
 						break;
 					case 'order_total_vat':
 						$excelCols[]=number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
+						break;
+					case 'order_date':
+						$excelCols[]=($row['crdate']>0 ? strftime('%x', $row['crdate']) : '');
+						break;
+					case 'order_company_name':
+						$excelCols[]=$row['billing_company'];
+						break;
+					case 'order_vat_id':
+						$excelCols[]=$row['billing_vat_id'];
+						break;
+					case 'order_customer_currency':
+						$excelCols[]=$row['customer_currency'];
+						break;
+					case 'order_customer_currency_rate':
+						$excelCols[]=$row['currency_rate'];
+						break;
+					case 'order_customer_language_id':
+						$excelCols[]=$row['language_id'];
+						break;
+					case 'order_track_and_trace_code':
+						$excelCols[]=$row['track_and_trace_code'];
+						break;
+					case 'order_orders_paid_timestamp':
+						$excelCols[]=strftime('%x', $row['orders_paid_timestamp']);
+						break;
+					case 'order_status_last_modified':
+						$excelCols[]=strftime('%x', $row['status_last_modified']);
+						break;
+					case 'order_orders_last_modified':
+						$excelCols[]=strftime('%x', $row['orders_last_modified']);
+						break;
+					case 'order_expected_delivery_date':
+						$excelCols[]=strftime('%x', $row['expected_delivery_date']);
+						break;
+					case 'order_by_phone':
+						$excelCols[]=($row['by_phone']>0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));
 						break;
 				}
 			}

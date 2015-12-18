@@ -87,11 +87,13 @@ if (is_array($this->languages) && count($this->languages)) {
 		$coltypes['products_delivery_time'.$suffix]='Products delivery time ('.$langTitle['title'].')';
 		$coltypes['products_condition'.$suffix]='Products condition ('.$langTitle['title'].')';
 		$coltypes['category_group'.$suffix]='Category group ('.$langTitle['title'].')';
-		$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
+
+		// causes key naming conflicts with "Attribute option values for option name"
+		//$coltypes['attribute_option_name'.$suffix]='Attribute option name ('.$langTitle['title'].')';
 		$coltypes['attribute_option_value'.$suffix]='Attribute option values (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
 		$coltypes['attribute_option_value_including_vat'.$suffix]='Attribute option values incl. VAT (specify option name in the aux field or also define attribute option name field) ('.$langTitle['title'].')';
 		$coltypes['products_order_unit_name'.$suffix]='Products order unit name ('.$langTitle['title'].')';
-		$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$langKey."' order by products_options_id asc";
+		$str="SELECT * FROM `tx_multishop_products_options` where language_id='0' order by products_options_id asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$coltypes['attribute_option_name_'.$row['products_options_id'].$suffix]='Attribute option values for option name: '.$row['products_options_name'].' ('.$langTitle['title'].')';
@@ -2334,11 +2336,19 @@ if ($this->post['action']=='category-insert') {
 									$updateArray['specials_new_products_price']=str_replace(",", '.', $updateArray['specials_new_products_price']);
 								}
 								$updateArray['specials_last_modified']=time();
-								if (isset($item['products_special_price_expiry_date'])) {
-									$updateArray['expires_date']=strtotime($item['products_special_price_expiry_date']);
-								}
 								if (isset($item['products_special_price_start_date'])) {
-									$updateArray['start_date']=strtotime($item['products_special_price_start_date']);
+									$time=0;
+									if ($item['products_special_price_start_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_start_date']) || mslib_befe::isValidDate($item['products_special_price_start_date']))) {
+										$time=strtotime($item['products_special_price_start_date']);
+									}
+									$updateArray['start_date']=$time;
+								}
+								if (isset($item['products_special_price_expiry_date'])) {
+									$time=0;
+									if ($item['products_special_price_expiry_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_expiry_date']) || mslib_befe::isValidDate($item['products_special_price_expiry_date']))) {
+										$time=strtotime($item['products_special_price_expiry_date']);
+									}
+									$updateArray['expires_date']=$time;
 								}
 								// custom hook that can be controlled by third-party plugin
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'])) {
@@ -2717,7 +2727,7 @@ if ($this->post['action']=='category-insert') {
 						// new attribute
 						// first delete if any
 						if (!$this->post['incremental_update'] and $products_id) {
-							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and page_uid='.$this->showCatalogFromPage);
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and (page_uid=0 or page_uid='.$this->showCatalogFromPage.')');
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 						if (is_array($item['attribute_option_value_including_vat'])) {
@@ -2879,7 +2889,7 @@ if ($this->post['action']=='category-insert') {
 										// LANGUAGE OVERLAYS for products options values EOL
 										if ($products_options_id and $option_value_id) {
 											if ($this->post['incremental_update'] and $products_id) {
-												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
+												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\')');
 												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
 											//$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id='.$products_options_id." and products_options_values_id='".$option_value_id."'");
@@ -2979,7 +2989,7 @@ if ($this->post['action']=='category-insert') {
 									}
 									// added 2013-07-31 due to double records when re-importing the same partial feed
 									if ($this->post['incremental_update'] and $products_id) {
-										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
+										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\' and (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\')');
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
 									$insertArray=array();

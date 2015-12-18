@@ -114,15 +114,13 @@ jQuery(document).ready(function ($) {
         name = $(this).attr('name');
 
         if (valueCurrent >= minValue) {
-            //$(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
-            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'minus\\\']').removeAttr('disabled');
+            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\'minus\']').removeAttr('disabled');
         } else {
             //alert('Sorry, the minimum value was reached');
             $(this).val($(this).data('oldValue'));
         }
         if (maxValue != '0' || valueCurrent <= maxValue) {
-            //$(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
-            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'plus\\\']').removeAttr('disabled');
+            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\'plus\']').removeAttr('disabled');
         } else if(maxValue != '0') {
             //alert('Sorry, the maximum value was reached');
             $(this).val($(this).data('oldValue'));

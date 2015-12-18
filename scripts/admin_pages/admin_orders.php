@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $content='';
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
-	$url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->post['tx_multishop_pi1']['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
+	$url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->post['tx_multishop_pi1']['orders_id'].'&action=edit_order');
 	header('Location: '.$url);
 	exit();
 }
@@ -24,6 +24,35 @@ if ($this->get) {
 }
 $postErno=array();
 switch ($this->post['tx_multishop_pi1']['action']) {
+	case 'download_selected_orders_packingslips_in_one_pdf':
+		if (is_array($this->post['selected_orders']) && count($this->post['selected_orders'])) {
+			$attachments=array();
+			foreach ($this->post['selected_orders'] as $order_id) {
+				$order=mslib_fe::getOrder($order_id);
+				$pdfFileName='packingslip_'.$order_id.'.pdf';
+				$packingslip_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$pdfFileName;
+				$packingslip_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_hash]='.$order['hash']));
+				// write temporary to disk
+				file_put_contents($packingslip_path, $packingslip_data);
+				$attachments[]=$packingslip_path;
+			}
+			if (count($attachments)) {
+				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
+				$cmd="gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=".$combinedPdfFile." ".implode(" ", $attachments);
+				shell_exec($cmd);
+				if (file_exists($combinedPdfFile)) {
+					header("Content-type:application/pdf");
+					readfile($combinedPdfFile);
+					// delete temporary invoice from disk
+					unlink($combinedPdfFile);
+					foreach ($attachments as $attachment) {
+						unlink($attachment);
+					}
+					exit();
+				}
+			}
+		}
+		break;
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
@@ -39,7 +68,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					if ($returnStatus['erno']) {
 						$postErno[]=array(
 							'status'=>'error',
-							'message'=>'Failed to create invoice order: '.$orders_id.'. Error(s): '.implode('<br/>',$returnStatus['erno'])
+							'message'=>'Failed to create invoice order: '.$orders_id.'. Error(s): '.implode('<br/>', $returnStatus['erno'])
 						);
 					} else {
 						$postErno[]=array(
@@ -48,18 +77,6 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						);
 					}
 				}
-			}
-		}
-		break;
-	case 'convert_to_order':
-		if ($this->post['orders_id']) {
-			$order=mslib_fe::getOrder($this->post['orders_id']);
-			if ($order['is_proposal']) {
-				$updateArray=array();
-				$updateArray['is_proposal']=0;
-				$updateArray['orders_last_modified']=time();
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order['orders_id'].'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
 		break;
@@ -86,10 +103,10 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						$updateArray['deleted']=1;
 						$updateArray['orders_last_modified']=time();
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
-						if(!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+						if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
 							$postErno[]=array(
 								'status'=>'error',
-								'message'=>'Failed to delete order: '.$orders_id
+								'message'=>'Failed to delete order: '.$orders_id.'. Query error: '.$GLOBALS['TYPO3_DB']->sql_error()
 							);
 						} else {
 							$postErno[]=array(
@@ -100,7 +117,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					} else {
 						$postErno[]=array(
 							'status'=>'error',
-							'message'=>'Failed to delete order: '.$orders_id
+							'message'=>'Failed to delete order: '.$orders_id.'. Order cannot be found'
 						);
 					}
 				}
@@ -127,7 +144,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 								$mailTo=$this->ms['MODULES']['STORE_EMAIL'];
 								break;
 						}
-						if(mslib_fe::mailOrder($orders_id, 0, $mailTo, $mail_template)) {
+						if (mslib_fe::mailOrder($orders_id, 0, $mailTo, $mail_template)) {
 							$postErno[]=array(
 								'status'=>'info',
 								'message'=>'Order '.$orders_id.' has been mailed to: '.$order['billing_email']
@@ -329,8 +346,6 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$array2[]=$this->ms['MODULES']['STORE_NAME'];
 					$array1[]='###TOTAL_AMOUNT###';
 					$array2[]=mslib_fe::amount2Cents($tmpArray['total_amount']);
-					$array1[]='###PROPOSAL_NUMBER###';
-					$array2[]=$tmpArray['orders_id'];
 					$array1[]='###ORDER_NUMBER###';
 					$array2[]=$tmpArray['orders_id'];
 					$array1[]='###ORDER_LINK###';
@@ -573,7 +588,7 @@ if ($this->post['skeyword']) {
 				}
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$filter[]='('.implode(" or ", $items).')';
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
@@ -641,21 +656,21 @@ if ($this->post['search_by_telephone_orders']) {
 //print_r($filter);
 //print_r($this->post);
 //die();
-if ($this->post['orders_status_search']>0) {
-	$filter[]="(o.status='".$this->post['orders_status_search']."')";
+if ($this->post['orders_status_search']) {
+	$filter[]="(o.status='".addslashes($this->post['orders_status_search'])."')";
 }
 if (isset($this->post['payment_method']) && $this->post['payment_method']!='all') {
 	if ($this->post['payment_method']=='nopm') {
 		$filter[]="(o.payment_method is null)";
 	} else {
-		$filter[]="(o.payment_method='".$this->post['payment_method']."')";
+		$filter[]="(o.payment_method='".addslashes($this->post['payment_method'])."')";
 	}
 }
 if (isset($this->post['shipping_method']) && $this->post['shipping_method']!='all') {
 	if ($this->post['shipping_method']=='nosm') {
 		$filter[]="(o.shipping_method is null)";
 	} else {
-		$filter[]="(o.shipping_method='".$this->post['shipping_method']."')";
+		$filter[]="(o.shipping_method='".addslashes($this->post['shipping_method'])."')";
 	}
 }
 if (isset($this->post['usergroup']) && $this->post['usergroup']>0) {
@@ -672,7 +687,8 @@ if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
 //$orderby[]='orders_id desc';
-$select[]='o.*, osd.name as orders_status';
+$select[]='o.*';
+//$select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
 switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'billing_name':
@@ -719,11 +735,6 @@ if (isset($this->post['country']) && !empty($this->post['country'])) {
 if (isset($this->post['ordered_product']) && !empty($this->post['ordered_product'])) {
 	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->post['ordered_product'])."')";
 }
-if ($this->post['tx_multishop_pi1']['is_proposal']) {
-	$filter[]='o.is_proposal=1';
-} else {
-	$filter[]='o.is_proposal=0';
-}
 // Use new method to retrieve records
 $data=array();
 $data['select']=$select;
@@ -732,10 +743,10 @@ $data['where'][]='o.deleted=0';
 $data['order_by']=$orderby;
 $data['limit']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 $data['offset']=$offset;
-$data['from'][]='tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)';
+//$data['from'][]='tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)';
+$data['from'][]='tx_multishop_orders o';
 // Define section, so hooks can control the query
 $data['section']='admin_orders';
-
 $pageset=mslib_fe::getRecordsPageSet($data);
 $tmporders=$pageset['dataset'];
 if ($pageset['total_rows']>0) {
@@ -837,18 +848,7 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###']='';
-if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
-	(isset($this->get['country']) && !empty($this->get['country'])) ||
-	(isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
-	(isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
-	(isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
-	(isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) ||
-	(isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
-	(isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
-	(isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
-	(isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
-	(isset($this->get['search_by_status_last_modified']) && !empty($this->get['search_by_status_last_modified'])) ||
-	(isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') || (isset($this->get['country']) && !empty($this->get['country'])) || (isset($this->get['usergroup']) && $this->get['usergroup']>0) || (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) || (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) || (isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) || (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') || (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') || (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) || (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) || (isset($this->get['search_by_status_last_modified']) && !empty($this->get['search_by_status_last_modified'])) || (isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
 	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
 }
 //
@@ -884,15 +884,12 @@ $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
-
 // Instantiate admin interface object
-$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef= &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);
 $objRef->setInterfaceKey('admin_orders');
-
 // Header buttons
 $headerButtons=array();
-
 $headingButton=array();
 $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-plus-circle';
@@ -903,13 +900,10 @@ $headerButtons[]=$headingButton;
 $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
 $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
-
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
 $subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
-
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -962,5 +956,4 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-
 ?>

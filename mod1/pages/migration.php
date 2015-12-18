@@ -51,7 +51,7 @@ $tables[]='fe_users';
 $tables[]='tt_address';
 foreach($tables as $tbl) {
 	$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', $tbl, '', 'page_uid');
-	if (is_array($shopPids) && count($shopPids)>0) {
+	if (is_array($otherPids) && count($otherPids)>0) {
 		foreach ($otherPids as $shopPid) {
 			if (!in_array($shopPid['page_uid'], $pids)) {
 				$pids[]=$shopPid['page_uid'];

@@ -22,4 +22,14 @@ Bootstrap 3 required
 Multishop expects the website to have Twitter Bootstrap loaded. You will have to load the JavaScript library (with i.e. t3jquery) yourself.
 Multishop provides bootstrap.css and will load it automatically through TypoScript (page.includeCSS.bootstrapCss / multishop_admin_page.includeCSS.bootstrapCss).
 
+GhostScript required
+====================
+To be able to download multiple invoices/packingslips as one single PDF file the webserver must have GhostScript installed.
+You can install it by running:
+
+CENTOS:
+yum install gs
+
+Other Linux distributions:
+apt-get install gs
 

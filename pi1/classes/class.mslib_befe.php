@@ -985,73 +985,80 @@ class mslib_befe {
 			return false;
 		}
 		if (is_numeric($categories_id)) {
-			$str=$GLOBALS['TYPO3_DB']->SELECTquery('categories_id,categories_image,parent_id', // SELECT ...
-				'tx_multishop_categories', // FROM ...
-				"categories_id='".$categories_id."'", // WHERE...
-				'', // GROUP BY...
-				'', // ORDER BY...
-				'' // LIMIT ...
-			);
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				// first check if the category has subcategories to delete them as well
-				$str=$GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
+			$str = $GLOBALS['TYPO3_DB']->SELECTquery('categories_id,categories_image,parent_id', // SELECT ...
 					'tx_multishop_categories', // FROM ...
-					"parent_id = '".$row['categories_id']."'", // WHERE...
+					"categories_id='" . $categories_id . "'", // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
-				);
-				$subcategories_query=$GLOBALS['TYPO3_DB']->sql_query($str);
-				while (($subcategory=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query))!=false) {
-					mslib_befe::deleteCategory($subcategory['categories_id']);
-				}
-				// remove any found products
-				$str=$GLOBALS['TYPO3_DB']->SELECTquery('p.products_id, p2c.is_deepest, p2c.crumbar_identifier', // SELECT ...
-					'tx_multishop_products p, tx_multishop_products_to_categories p2c', // FROM ...
-					"p2c.categories_id='".$categories_id."' and p.products_id=p2c.products_id", // WHERE...
-					'', // GROUP BY...
-					'', // ORDER BY...
-					'' // LIMIT ...
-				);
-				$products_query=$GLOBALS['TYPO3_DB']->sql_query($str);
-				while (($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_query))!=false) {
-					if ($product['is_deepest']>0) {
-						mslib_befe::deleteProduct($product['products_id'], $categories_id, true);
+			);
+			$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+					// remove any found products
+					$str = $GLOBALS['TYPO3_DB']->SELECTquery('p.products_id, p2c.is_deepest, p2c.crumbar_identifier', // SELECT ...
+							'tx_multishop_products p, tx_multishop_products_to_categories p2c', // FROM ...
+							"p2c.categories_id='" . $categories_id . "' and p.products_id=p2c.products_id", // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+					);
+					$products_query = $GLOBALS['TYPO3_DB']->sql_query($str);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($products_query)) {
+						while (($product = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_query)) != false) {
+							if ($product['is_deepest'] > 0) {
+								mslib_befe::deleteProduct($product['products_id'], $categories_id, true);
+								if (!empty($product['crumbar_identifier'])) {
+									//$qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', "crumbar_identifier='" . $product['crumbar_identifier'] . "'");
+								}
+							}
+						}
 					}
-					if (!empty($product['crumbar_identifier'])) {
-						$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', "crumbar_identifier='".$product['crumbar_identifier']."'");
+					// finally delete the category
+					$filename = $row['categories_image'];
+					$filter = array();
+					$filter[] = 'categories_image=\'' . addslashes($filename) . '\'';
+					$count = mslib_befe::getCount('', 'tx_multishop_categories', '', $filter);
+					if ($count < 2) {
+						// Only delete the file is we have found 1 category using it
+						mslib_befe::deleteCategoryImage($filename);
 					}
-				}
-				// finally delete the category
-				$filename=$row['categories_image'];
-				$filter=array();
-				$filter[]='categories_image=\''.addslashes($filename).'\'';
-				$count=mslib_befe::getCount('', 'tx_multishop_categories', '', $filter);
-				if ($count<2) {
-					// Only delete the file is we have found 1 category using it
-					mslib_befe::deleteCategoryImage($filename);
-				}
-				$tables=array();
-				$tables[]='tx_multishop_categories';
-				$tables[]='tx_multishop_categories_description';
-				$tables[]='tx_multishop_products_to_categories';
-				if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
-					$tables[]='tx_multishop_categories_to_categories';
-				}
-				foreach ($tables as $table) {
-					if ($table=='tx_multishop_categories_description') {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					} else if ($table=='tx_multishop_categories_to_categories') {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id.' and page_uid=\''.$this->shop_pid.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						// foreign
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'foreign_categories_id='.$categories_id.' and foreign_page_uid=\''.$this->shop_pid.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					} else {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id.' and page_uid=\''.$this->shop_pid.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$tables = array();
+					$tables[] = 'tx_multishop_categories';
+					$tables[] = 'tx_multishop_categories_description';
+					//$tables[]='tx_multishop_products_to_categories';
+					if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
+						$tables[] = 'tx_multishop_categories_to_categories';
+					}
+					foreach ($tables as $table) {
+						if ($table == 'tx_multishop_categories_description') {
+							$query = $GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id=' . $categories_id);
+							$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+						} else if ($table == 'tx_multishop_categories_to_categories') {
+							$query = $GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id=' . $categories_id . ' and page_uid=\'' . $this->shop_pid . '\'');
+							$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+							// foreign
+							$query = $GLOBALS['TYPO3_DB']->DELETEquery($table, 'foreign_categories_id=' . $categories_id . ' and foreign_page_uid=\'' . $this->shop_pid . '\'');
+							$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+						} else {
+							$query = $GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id=' . $categories_id . ' and page_uid=\'' . $this->shop_pid . '\'');
+							$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
+					//
+					// first check if the category has subcategories to delete them as well
+					$str = $GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
+							'tx_multishop_categories', // FROM ...
+							"parent_id = '" . $row['categories_id'] . "'", // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+					);
+					$subcategories_query = $GLOBALS['TYPO3_DB']->sql_query($str);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($subcategories_query)) {
+						while (($subcategory = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) != false) {
+							mslib_befe::deleteCategory($subcategory['categories_id']);
+						}
 					}
 				}
 			}
@@ -1071,8 +1078,8 @@ class mslib_befe {
 			return false;
 		}
 		if (is_numeric($products_id)) {
-			$row=mslib_fe::getProduct($products_id, '', '', 1, 1);
-			if (is_numeric($row['products_id'])) {
+			//$row=mslib_fe::getProduct($products_id, '', '', 1, 1);
+			if (is_numeric($products_id)) {
 				if (is_numeric($categories_id)) {
 					//hook to let other plugins further manipulate the create table query
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
@@ -1094,6 +1101,9 @@ class mslib_befe {
 						'', // ORDER BY...
 						'' // LIMIT ...
 					);
+					//var_dump($str);
+					//die();
+					//
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					if ($row['total']) {
@@ -1110,7 +1120,7 @@ class mslib_befe {
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
 						$params=array(
 							'products_id'=>$products_id,
-							'categories_id'=>''
+							'categories_id'=>&$categories_id
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3647,33 +3657,49 @@ class mslib_befe {
 		$lockedFields['tx_multishop_products_description'][]='products_shortdescription';
 		$lockedFields['tx_multishop_products_description'][]='products_description';
 		$lockedFields['tx_multishop_products_to_categories'][]='categories_id';
-		if (is_numeric($products_id) and $table) {
-			// get fields that we need to take care of
-			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-				$table, // FROM ...
-				'products_id='.$products_id, // WHERE...
-				'', // GROUP BY...
-				'', // ORDER BY...
-				'' // LIMIT ...
+		$skip=0;
+		//hook to let other plugins further manipulate the settings
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateImportedProductsLockedFieldsPreProc'])) {
+			$params=array(
+					'products_id'=>&$products_id,
+					'table'=>&$table,
+					'updateArray'=>&$updateArray,
+					'lockedFields'=>&$lockedFields,
+					'skip'=>&$skip
 			);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
-				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
-					foreach ($lockedFields[$table] as $field_key) {
-						if ($row[$field_key]!=$updateArray[$field_key]) {
-							// add to locking table with original value
-							$filter=array();
-							$filter[]='products_id='.$row['products_id'];
-							if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
-								$insertArray=array();
-								$insertArray['field_key']=$field_key;
-								$insertArray['products_id']=$row['products_id'];
-								$insertArray['crdate']=time();
-								$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
-								$insertArray['original_value']=$row[$field_key];
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateImportedProductsLockedFieldsPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if (!$skip) {
+			if (is_numeric($products_id) and $table) {
+				// get fields that we need to take care of
+				$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+						$table, // FROM ...
+						'products_id='.$products_id, // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+				);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+					if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
+						foreach ($lockedFields[$table] as $field_key) {
+							if ($row[$field_key]!=$updateArray[$field_key]) {
+								// add to locking table with original value
+								$filter=array();
+								$filter[]='products_id='.$row['products_id'];
+								if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
+									$insertArray=array();
+									$insertArray['field_key']=$field_key;
+									$insertArray['products_id']=$row['products_id'];
+									$insertArray['crdate']=time();
+									$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
+									$insertArray['original_value']=$row[$field_key];
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
 						}
 					}
@@ -3880,6 +3906,7 @@ class mslib_befe {
 				}
 				break;
 		}
+		$customer_currency=1;
 		// Extract the subparts from the template
 		$subparts=array();
 		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
@@ -4012,11 +4039,11 @@ class mslib_befe {
 				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 				$markerArray['ITEM_ORDER_UNIT']=$product['order_unit_name'];
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']+$product['products_tax_data']['total_tax']), 0, $display_currency_symbol, 0);
-					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0, $display_currency_symbol, 0);
+					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']+$product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), $customer_currency, $display_currency_symbol, 0);
 				} else {
-					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']), 0, $display_currency_symbol, 0);
-					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), 0, $display_currency_symbol, 0);
+					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']), $customer_currency, $display_currency_symbol, 0);
+					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), $customer_currency, $display_currency_symbol, 0);
 				}
 				$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
 				if (is_array($product['attributes']) && count($product['attributes'])) {
@@ -4038,11 +4065,11 @@ class mslib_befe {
 								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									$attributes_price=$options['price_prefix'].$options['options_values_price']+$options['attributes_tax_data']['tax'];
 									$total_attributes_price=$attributes_price*$product['qty'];
-									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($attributes_price), 0, $display_currency_symbol, 0);
-									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($total_attributes_price), 0, $display_currency_symbol, 0);
+									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($attributes_price), $customer_currency, $display_currency_symbol, 0);
+									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($total_attributes_price), $customer_currency, $display_currency_symbol, 0);
 								} else {
-									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price']), 0, $display_currency_symbol, 0);
-									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0, $display_currency_symbol, 0);
+									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price']), $customer_currency, $display_currency_symbol, 0);
+									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price'])*$product['qty'], $customer_currency, $display_currency_symbol, 0);
 								}
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE']=$cell_products_normal_price;
@@ -4100,8 +4127,8 @@ class mslib_befe {
 					$payment_costs=$prefix.($order['payment_method_costs']);
 				}
 			}
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0, $display_currency_symbol, 0);
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0, $display_currency_symbol, 0);
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($payment_costs, $customer_currency, $display_currency_symbol, 0);
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($payment_costs, $customer_currency, $display_currency_symbol, 0);
 			$shipping_payment_costs_line.=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
 			$product_counter++;
 			// shipping costs
@@ -4129,8 +4156,8 @@ class mslib_befe {
 					$shipping_costs=$prefix.($order['shipping_method_costs']);
 				}
 			}
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, 0, $display_currency_symbol, 0);
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, 0, $display_currency_symbol, 0);
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, $customer_currency, $display_currency_symbol, 0);
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, $customer_currency, $display_currency_symbol, 0);
 			$shipping_payment_costs_line.=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
 			$product_counter++;
 			$subpartArray['###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER###']=$shipping_payment_costs_line;
@@ -4151,7 +4178,7 @@ class mslib_befe {
 							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
 								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
 							} else {
-								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), 0, $display_currency_symbol, 0));
+								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
 							}
 							if (empty($tax_sep_data['shipping_tax'])) {
 								$tax_sep_data['shipping_tax']=0;
@@ -4160,7 +4187,7 @@ class mslib_befe {
 								$tax_sep_data['payment_tax']=0;
 							}
 							$tax_sep_total=$prefix.($tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']);
-							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, 0, $display_currency_symbol, 0);
+							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, $customer_currency, $display_currency_symbol, 0);
 							$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 						}
 					}
@@ -4171,7 +4198,7 @@ class mslib_befe {
 					} else {
 						$markerArray['LABEL_VAT']=$this->pi_getLL('vat');
 					}
-					$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['total_orders_tax']), 0, $display_currency_symbol, 0);
+					$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['total_orders_tax']), $customer_currency, $display_currency_symbol, 0);
 					$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 				}
 				$subpartArray['###'.$vat_wrapper_key.'###']=$vatItem;
@@ -4187,37 +4214,37 @@ class mslib_befe {
 		$subpartArray['###LABEL_PAYMENT_COSTS###']=$this->pi_getLL('payment_costs');
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
-				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']+$shipping_costs+$payment_costs), 0, $display_currency_symbol, 0);
-				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']+$shipping_costs+$payment_costs), 0, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']+$shipping_costs+$payment_costs), $customer_currency, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']+$shipping_costs+$payment_costs), $customer_currency, $display_currency_symbol, 0);
 			} else {
-				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']), 0, $display_currency_symbol, 0);
-				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']), 0, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']), $customer_currency, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['sub_total']), $customer_currency, $display_currency_symbol, 0);
 			}
 			//$subpartArray['###TOTAL_VAT###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['total_orders_tax']), 0,$display_currency_symbol,0);
-			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']), 0, $display_currency_symbol, 0);
-			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']), 0, $display_currency_symbol, 0);
+			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']), $customer_currency, $display_currency_symbol, 0);
+			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']), $customer_currency, $display_currency_symbol, 0);
 		} else {
 			if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
-				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']+$shipping_costs+$payment_costs), 0, $display_currency_symbol, 0);
-				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']+$shipping_costs+$payment_costs), 0, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']+$shipping_costs+$payment_costs), $customer_currency, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']+$shipping_costs+$payment_costs), $customer_currency, $display_currency_symbol, 0);
 			} else {
-				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']), 0, $display_currency_symbol, 0);
-				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']), 0, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']), $customer_currency, $display_currency_symbol, 0);
+				$subpartArray['###SUBTOTAL_EXTRA###']=mslib_fe::amount2Cents($prefix.($order['subtotal_amount']), $customer_currency, $display_currency_symbol, 0);
 			}
 			//$subpartArray['###TOTAL_VAT###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['total_orders_tax']), 0,$display_currency_symbol,0);
-			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.($order['shipping_method_costs']), 0, $display_currency_symbol, 0);
-			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.($order['payment_method_costs']), 0, $display_currency_symbol, 0);
+			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.($order['shipping_method_costs']), $customer_currency, $display_currency_symbol, 0);
+			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.($order['payment_method_costs']), $customer_currency, $display_currency_symbol, 0);
 		}
 		if ($order['discount']>0) {
 			$subpartArray['###LABEL_DISCOUNT###']=$this->pi_getLL('discount');
-			$subpartArray['###TOTAL_DISCOUNT###']=mslib_fe::amount2Cents($prefix.($order['discount']), 0, $display_currency_symbol, 0);
+			$subpartArray['###TOTAL_DISCOUNT###']=mslib_fe::amount2Cents($prefix.($order['discount']), $customer_currency, $display_currency_symbol, 0);
 			//
 			$subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###']=$this->pi_getLL('subtotal');
-			$subpartArray['###PRODUCTS_NEWTOTAL_PRICE###']=mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], 0, $display_currency_symbol, 0);
+			$subpartArray['###PRODUCTS_NEWTOTAL_PRICE###']=mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
 		}
 		//$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
 		$subpartArray['###LABEL_GRAND_TOTAL###']=$this->pi_getLL('total');
-		$subpartArray['###GRAND_TOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['grand_total']), 0, $display_currency_symbol, 0);
+		$subpartArray['###GRAND_TOTAL###']=mslib_fe::amount2Cents($prefix.($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
 		$tmpcontent=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 		return $tmpcontent;
 	}
@@ -4379,6 +4406,55 @@ class mslib_befe {
 				}
 			}
 			return $array;
+		}
+	}
+	function antiXSS($val, $mode='') {
+		require_once(t3lib_extMgm::extPath('multishop').'res/htmlpurifier-4.7.0/HTMLPurifier.auto.php');
+		if(is_array($val)) {
+			foreach($val as $key=>$subVal) {
+				$val[$key]=mslib_befe::antiXSS($subVal, $mode);
+			}
+			return $val;
+		} else {
+			$config=HTMLPurifier_Config::createDefault();
+			$config->set('Core.Encoding', 'UTF-8'); // replace with your encoding
+			$config->set('HTML.Doctype', 'XHTML 1.0 Transitional'); // replace with your doctype
+			$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_multishop');
+			switch($mode) {
+				case 'html':
+					$config->set('HTML.Allowed', 'table,tr,th,td,tbody,thead,tfood,h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],h7[style],style,font[style],iframe[style|frameborder|allowfullscreen|width|height|src],a[href],img[alt|src|unselectable],div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+					$config->set("HTML.Nofollow", TRUE);
+					$config->set('HTML.TargetBlank', TRUE);
+					$config->set('HTML.SafeIframe', true);
+					$config->set('URI.SafeIframeRegexp', '%^(//|http://|https://)(www.youtube.com/embed/|player.vimeo.com/video/)%');
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_multishop');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+				case 'strip_tags':
+					$config->set('HTML.Allowed', ''); // Allow Nothing
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_multishop');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+				default:
+					$config->set('HTML.Allowed', 'p,div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+					$config->set("HTML.Nofollow", TRUE);
+					$config->set('HTML.TargetBlank', TRUE);
+					$config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT.'uploads/tx_multishop');
+					$purifier=new HTMLPurifier($config);
+					return $purifier->purify($val);
+					break;
+			}
+		}
+	}
+	function getLanguageIso2ByLanguageUid($id) {
+		if (!is_numeric($id)) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'));
+		if ($record['uid']) {
+			return $record['lg_iso_2'];
 		}
 	}
 }
