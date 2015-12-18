@@ -2188,11 +2188,20 @@ if ($this->post) {
 	if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 		$str="SELECT p.*, c.categories_id, pd.file_location, pd.file_label, p.custom_settings from tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p2c.products_id='".$this->get['pid']."' ";
 		if (is_numeric($this->get['cid'])) {
-			$str.=" and p2c.categories_id=".$this->get['cid'];
+			$str.=" and p2c.categories_id=".$this->get['cid']." and is_deepest=1";
 		}
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		// redirect to proper edit product path if any
+		if (!$product['products_id'] && is_numeric($this->get['cid'])) {
+			$redirect_product=mslib_fe::getProduct($this->get['pid'], '', '', 1);
+			if ($redirect_product['products_id'] && $redirect_product['categories_id']) {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$this->get['pid'].'&cid='.$redirect_product['categories_id'].'&action=edit_product', 1));
+				exit();
+			}
+		}
+		//
 		$local_primary_product_categories=$product['categories_id'];
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
