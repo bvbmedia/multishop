@@ -11,6 +11,29 @@ if ($this->ADMIN_USER) {
 }
 $product=mslib_fe::getProduct($this->get['products_id'], $this->get['categories_id'], '', $include_disabled_products);
 if (!$product['products_id']) {
+	if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
+		$redirect_product=mslib_fe::getProduct($this->get['products_id'], '', '', 1);
+		if ($redirect_product['products_id'] && $redirect_product['categories_id']) {
+			if ($redirect_product['categories_id']) {
+				// get all cats to generate multilevel fake url
+				$level=0;
+				$cats=mslib_fe::Crumbar($redirect_product['categories_id']);
+				$cats=array_reverse($cats);
+				$where='';
+				if (count($cats)>0) {
+					foreach ($cats as $cat) {
+						$where.="categories_id[".$level."]=".$cat['id']."&";
+						$level++;
+					}
+					$where=substr($where, 0, (strlen($where)-1));
+					$where.='&';
+				}
+				// get all cats to generate multilevel fake url eof
+			}
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail'));
+			exit();
+		}
+	}
 	header('HTTP/1.0 404 Not Found');
 	$output_array['http_header']='HTTP/1.0 404 Not Found';
 	$content='<div class="main-title"><h1>'.$this->pi_getLL('the_requested_product_does_not_exist').'</h1></div>';
