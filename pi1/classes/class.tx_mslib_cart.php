@@ -394,6 +394,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				} elseif (is_array($this->post['attributes'])) {
 					$shopping_cart_item=md5($this->post['products_id'].serialize($this->post['attributes']));
 				}
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartSetShoppingCartItemPostProc'])) {
+					$params=array(
+							'shopping_cart_item'=>$shopping_cart_item,
+							'product'=>&$product
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartSetShoppingCartItemPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// custom hook that can be controlled by third-party plugin eof
 				if (is_numeric($cart['products'][$shopping_cart_item]['products_id'])) {
 					$products_id=$cart['products'][$shopping_cart_item]['products_id'];
 				} else {
@@ -1701,7 +1712,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				// hook
 				$params=array(
 					'orders_id'=>&$orders_id,
-					'insertArray'=>&$insertArray
+					'insertArray'=>&$insertArray,
+					'cart'=>&$cart
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
