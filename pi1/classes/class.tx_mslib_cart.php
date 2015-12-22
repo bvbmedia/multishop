@@ -2540,6 +2540,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$item['ITEM_ORDER_UNIT_NAME']=$product['order_unit_name'];
 					$item['ITEM_MANUFACTURERS_NAME']=$product['manufacturers_name'];
 					$item['ITEM_QUANTITY']=round($product['qty'], 14);
+					$item['ITEM_VAT_RATE']=($product['tax_rate']*100).'%';
 					// ITEM_SKU
 					$item['ITEM_SKU']=$product['sku_code'];
 					// ITEM_TOTAL
@@ -2597,6 +2598,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 			$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
 			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+			$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 			$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
 			//ITEMS_HEADER_WRAPPER EOF
 			//ITEMS_WRAPPER
@@ -2612,6 +2614,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$keys[]='ITEM_ORDER_UNIT_CODE';
 			$keys[]='ITEM_ORDER_UNIT_NAME';
 			$keys[]='ITEM_SKU';
+			$keys[]='ITEM_VAT_RATE';
 			$keys[]='ITEM_TOTAL';
 			if (is_array($itemsWrapper) && count($itemsWrapper)) {
 				foreach ($itemsWrapper as $item) {
