@@ -787,7 +787,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
 				$item['ITEM_PRODUCT_STATUS']=mslib_fe::getOrderStatusName($product['status']);
 			}
-			$item['ITEM_VAT_RATE']=$product['products_tax'].'%';
+			$item['ITEM_VAT_RATE']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 			// GRAND TOTAL CALCULATIONS
 			$subtotal=($subtotal+$price);
 			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
