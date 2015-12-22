@@ -2540,7 +2540,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$item['ITEM_ORDER_UNIT_NAME']=$product['order_unit_name'];
 					$item['ITEM_MANUFACTURERS_NAME']=$product['manufacturers_name'];
 					$item['ITEM_QUANTITY']=round($product['qty'], 14);
-					$item['ITEM_VAT_RATE']=($product['tax_rate']*100).'%';
+					$item['ITEM_VAT_RATE']=str_replace('.00', '', number_format($product['tax_rate']*100, 2)).'%';
 					// ITEM_SKU
 					$item['ITEM_SKU']=$product['sku_code'];
 					// ITEM_TOTAL
