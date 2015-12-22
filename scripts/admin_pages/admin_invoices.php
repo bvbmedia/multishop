@@ -358,6 +358,11 @@ $limits[]='40';
 $limits[]='50';
 $limits[]='100';
 $limits[]='150';
+$limits[]='300';
+$limits[]='450';
+$limits[]='600';
+$limits[]='1500';
+$limits[]='3000';
 foreach ($limits as $limit) {
 	$limit_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
