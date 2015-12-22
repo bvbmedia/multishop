@@ -413,6 +413,7 @@ class mslib_fe {
 				$required_cols[]='pd.products_description';
 			}
 			$select=array_merge($required_cols, $select);
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'])) {
 				$query_elements=array();
@@ -461,7 +462,7 @@ class mslib_fe {
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
 				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest;
 			}
-			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
+			//$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
 				$where_clause.='and ';
 				$where_clause.=implode(" and ", $where);
