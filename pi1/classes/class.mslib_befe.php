@@ -3262,6 +3262,20 @@ class mslib_befe {
 				}
 			}
 		}
+		//hook to let other plugins further manipulate
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'])) {
+			$params=array(
+					'orders_id'=>&$orders_id,
+					'orders_status'=>&$orders_status,
+					'mail_customer'=>&$mail_customer,
+					'order'=>&$order,
+					'array1'=>&$array1,
+					'array2'=>&$array2
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 	}
 	public function updateOrderProductStatus($orders_id, $order_product_id, $orders_status) {
 		if (!is_numeric($orders_id)) {
