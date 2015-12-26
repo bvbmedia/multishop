@@ -89,6 +89,10 @@ if (count($this->searchKeywords)) {
 			$keywordOr[]="n.message like '".$this->sqlKeyword."'";
 			$keywordOr[]="f.name like '".$this->sqlKeyword."'";
 			$keywordOr[]="f.company like '".$this->sqlKeyword."'";
+			$keywordOr[]="n.session_id = '".addslashes($searchKeyword)."'";
+			$keywordOr[]="n.ip_address = '".addslashes($searchKeyword)."'";
+			$keywordOr[]="f.uid = '".addslashes($searchKeyword)."'";
+
 		}
 	}
 	$queryData['where'][]="(".implode(" OR ", $keywordOr).")";

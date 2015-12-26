@@ -6920,9 +6920,10 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['class']='fa fa-list-ul';
 					$counter=0;
 					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						$link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_action_notification_log&tx_multishop_pi1[keyword]='.$record['session_id'],1);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['label']=htmlspecialchars($record['ip_address']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['description']=htmlspecialchars($record['http_user_agent']);
-						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$record['url'];
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$link;
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['class']='fa fa-user';
 						$counter++;
 						if ($counter==15) {
