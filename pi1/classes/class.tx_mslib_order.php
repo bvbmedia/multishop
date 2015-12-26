@@ -238,12 +238,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				} else {
 					$order_tax_data['grand_total']=(string)(($sub_total-$discount_price))+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
 				}
+				$order_tax_data['grand_total_excluding_vat']=(string)($sub_total_excluding_vat-$discount_price)+($row['shipping_method_costs'])+($row['payment_method_costs']);
+				//
 				$order_tax_data['tax_separation']=$tax_separation;
 				//print_r($order_tax_data);
 				$serial_orders=serialize($order_tax_data);
 				// update orders
 				$updateArray=array();
 				$updateArray['grand_total']=round($order_tax_data['grand_total'], 2);
+				$updateArray['grand_total_excluding_vat']=round($order_tax_data['grand_total_excluding_vat'], 2);
 				$updateArray['orders_tax_data']=$serial_orders;
 				if ($row['discount']>0) {
 					$updateArray['discount']=$discount_price;

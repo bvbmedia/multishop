@@ -464,7 +464,7 @@ class mslib_fe {
 			}
 			//$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
-				$where_clause.='and ';
+				$where_clause.=' and ';
 				$where_clause.=implode(" and ", $where);
 			}
 			$where_clause.=' and ';
