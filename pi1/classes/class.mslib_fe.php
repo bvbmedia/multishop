@@ -7828,12 +7828,12 @@ class mslib_fe {
 			//hook to let other plugins further manipulate the replacers
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'])) {
 				$query_elements=array();
-				$query_elements['limit']=&$limit;
 				$query_elements['select']=&$select;
 				$query_elements['from']=&$from;
 				$query_elements['where']=&$where;
 				$query_elements['groupby']=&$groupby;
 				$query_elements['orderby']=&$orderby;
+				$query_elements['limit']=&$limit;
 				$params=array(
 						'query_elements'=>&$query_elements
 				);
