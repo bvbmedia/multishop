@@ -7809,10 +7809,44 @@ class mslib_fe {
 		} else {
 			$sql=$GLOBALS['TYPO3_DB']->SELECTquery('invoice_id', // SELECT ...
 				'tx_multishop_invoices', // FROM ...
-				'page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE...
+				, // WHERE...
 				'', // GROUP BY...
 				'id desc', // ORDER BY...
 				'1' // LIMIT ...
+			);
+			$select=array();
+			$select[]='invoice_id';
+			$from=array();
+			$from[]='tx_multishop_invoices';
+			$where=array();
+			$where[]='page_uid=\''.$this->showCatalogFromPage.'\'';
+			$groupby=array();
+			$orderby=array();
+			$orderby[]='id desc';
+			$limit=1;
+
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'])) {
+				$query_elements=array();
+				$query_elements['limit']=&$limit;
+				$query_elements['select']=&$select;
+				$query_elements['from']=&$from;
+				$query_elements['where']=&$where;
+				$query_elements['groupby']=&$groupby;
+				$query_elements['orderby']=&$orderby;
+				$params=array(
+						'query_elements'=>&$query_elements
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$sql=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
+					(is_array($from)?implode(',',$from):''), // FROM ...
+					(is_array($where)?implode(',',$where):''), // WHERE...
+					(is_array($groupby)?implode(',',$groupby):''), // GROUP BY...
+					(is_array($orderby)?implode(',',$orderby):''), // ORDER BY...
+					$limit // LIMIT ...
 			);
 			$query=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			$rs_inv=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
