@@ -2160,6 +2160,21 @@ class mslib_fe {
 					$markerArray[$key]=$val;
 				}
 			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplatePreProc'])) {
+				$params=array(
+						'markerArray'=>&$markerArray,
+						'user'=>&$user,
+						'subject'=>&$subject,
+						'body'=>&$body,
+						'from_email'=>&$from_email,
+						'from_name'=>&$from_name,
+						'attachments'=>&$attachments,
+						'options'=>&$options
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplatePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
 			// try to change URL images to embedded
 			$mail->SetFrom($from_email, $from_name);
