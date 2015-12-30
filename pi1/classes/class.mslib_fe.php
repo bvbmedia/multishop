@@ -633,7 +633,7 @@ class mslib_fe {
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$array['total_rows']=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 			} else {
-				if (!$select_total_count) {
+				if (!$select_total_count || stristr($select_total_count,'count(')) {
 					$select_total_count='p.products_id';
 				}
 				// the select count(1) is buggy when working with group by and 1-n relations (1 product to many categories). therefore we temporary counting through sql_num_rows
@@ -646,6 +646,7 @@ class mslib_fe {
 				);
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$array['total_rows']=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+
 			}
 		} else {
 			$prefix='pf.';
