@@ -302,6 +302,10 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 #msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td { border:none; font-size:13px; line-height:20px; padding:0 5px; }
 #msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td hr { border-top-color:#ddd; margin-top:5px; margin-bottom:5px; }
 
+#msadmin_content #tblWidgetOrdersLatest .popover .popover-content table th,
+#msadmin_content #tblWidgetOrdersLatest .popover .popover-content table td { padding:5px; }
+#msadmin_wrapper #tblWidgetOrdersLatest .popover .popover-content table tr.removeTableCellBorder td { padding:0 5px; }
+
 .msAttributesField:nth-child(2) { margin-top:10px; }
 .input-group-addon:last-child,
 .form-inline .input-group .input-group-addon:last-child { width:105px; text-align:left; }

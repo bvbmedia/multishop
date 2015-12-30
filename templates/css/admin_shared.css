@@ -94,10 +94,10 @@
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > ul > li:hover > ul { left:auto; right:250px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > ul > li:hover > ul:after { position:absolute; left:auto; right:-10px; top:auto; bottom:7px; border-left:10px solid #444; border-right:none; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul { position:absolute; left:-9999em; width:250px; border:none; background:#555; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li:hover > ul { display:block; left:-250px; bottom:0; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li:hover > ul { display:block; left:300px; bottom:0; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li > span { display:block; border-top:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li:hover > ul:after { position:absolute; right:-10px; bottom:7px; border-left:10px solid #555; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li:hover > ul:after { position:absolute; left:-10px; bottom:7px; border-right:10px solid #555; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li:hover > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li:hover > span,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li.active > a,
