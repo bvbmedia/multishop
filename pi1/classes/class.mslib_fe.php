@@ -334,7 +334,7 @@ class mslib_fe {
 		}
 		return $content;
 	}
-	public function getProductsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $redirect_if_one_product=0, $extra_from=array(), $groupby=array(), $search_section='products_search', $select_total_count='', $returnTotalCountOnly=0, $enableFetchTaxRate=1, $extra_join=array(), $includeDisabled=0) {
+	public function getProductsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $redirect_if_one_product=0, $extra_from=array(), $groupby=array(), $search_section='products_search', $select_total_count='', $returnTotalCountOnly=0, $enableFetchTaxRate=1, $extra_join=array(), $includeDisabled=0, $skipIsDeepest=0) {
 		if (!is_array($filter) and $filter) {
 			$filter=array($filter);
 		}
@@ -456,7 +456,7 @@ class mslib_fe {
 			}
 			if (!$this->masterShop) {
 				$p2c_is_deepest=' AND p2c.is_deepest=1';
-				if (strpos($search_section, 'ajax_products_search')!==false) {
+				if ($skipIsDeepest || strpos($search_section, 'ajax_products_search')!==false) {
 					$p2c_is_deepest='';
 				}
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
