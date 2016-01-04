@@ -871,7 +871,7 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 		//
-		$sql_order="select orders_id from tx_multishop_orders";
+		$sql_order="select orders_id from tx_multishop_orders where grand_total>0";
 		$qry_order=$GLOBALS['TYPO3_DB']->sql_query($sql_order);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
 			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
@@ -883,7 +883,7 @@ if (!$skipMultishopUpdates) {
 			$messages[]="grand_total_excluding_vat value in tx_multishop_orders table updated";
 		}
 	} else {
-		$sql_order="select orders_id from tx_multishop_orders where grand_total_excluding_vat<1";
+		$sql_order="select orders_id from tx_multishop_orders where grand_total>0 and grand_total_excluding_vat<1";
 		$qry_order=$GLOBALS['TYPO3_DB']->sql_query($sql_order);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
 			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
