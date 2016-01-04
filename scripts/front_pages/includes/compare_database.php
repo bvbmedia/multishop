@@ -880,7 +880,7 @@ if (!$skipMultishopUpdates) {
 			while ($rs_order = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_order)) {
 				$mslib_order->repairOrder($rs_order['orders_id']);
 			}
-			$messages[]="grand_total_excluding_vat value updated";
+			$messages[]="grand_total_excluding_vat value in tx_multishop_orders table updated";
 		}
 	} else {
 		$sql_order="select orders_id from tx_multishop_orders where grand_total_excluding_vat<1";
@@ -892,7 +892,7 @@ if (!$skipMultishopUpdates) {
 			while ($rs_order = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_order)) {
 				$mslib_order->repairOrder($rs_order['orders_id']);
 			}
-			$messages[]="grand_total_excluding_vat value updated";
+			$messages[]="grand_total_excluding_vat value in tx_multishop_orders table updated";
 		}
 	}
 	//
