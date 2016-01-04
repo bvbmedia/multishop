@@ -334,7 +334,7 @@ class mslib_fe {
 		}
 		return $content;
 	}
-	public function getProductsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $redirect_if_one_product=0, $extra_from=array(), $groupby=array(), $search_section='products_search', $select_total_count='', $returnTotalCountOnly=0, $enableFetchTaxRate=1, $extra_join=array(), $includeDisabled=0) {
+	public function getProductsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $redirect_if_one_product=0, $extra_from=array(), $groupby=array(), $search_section='products_search', $select_total_count='', $returnTotalCountOnly=0, $enableFetchTaxRate=1, $extra_join=array(), $includeDisabled=0, $skipIsDeepest=0) {
 		if (!is_array($filter) and $filter) {
 			$filter=array($filter);
 		}
@@ -413,6 +413,7 @@ class mslib_fe {
 				$required_cols[]='pd.products_description';
 			}
 			$select=array_merge($required_cols, $select);
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'])) {
 				$query_elements=array();
@@ -455,15 +456,15 @@ class mslib_fe {
 			}
 			if (!$this->masterShop) {
 				$p2c_is_deepest=' AND p2c.is_deepest=1';
-				if (strpos($search_section, 'ajax_products_search')!==false) {
+				if ($skipIsDeepest || strpos($search_section, 'ajax_products_search')!==false) {
 					$p2c_is_deepest='';
 				}
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
 				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest;
 			}
-			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
+			//$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
-				$where_clause.='and ';
+				$where_clause.=' and ';
 				$where_clause.=implode(" and ", $where);
 			}
 			$where_clause.=' and ';
@@ -632,7 +633,7 @@ class mslib_fe {
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$array['total_rows']=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 			} else {
-				if (!$select_total_count) {
+				if (!$select_total_count || stristr($select_total_count,'count(')) {
 					$select_total_count='p.products_id';
 				}
 				// the select count(1) is buggy when working with group by and 1-n relations (1 product to many categories). therefore we temporary counting through sql_num_rows
@@ -645,6 +646,7 @@ class mslib_fe {
 				);
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$array['total_rows']=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+
 			}
 		} else {
 			$prefix='pf.';
@@ -2157,6 +2159,21 @@ class mslib_fe {
 			if (is_array($options['markerArray']) && count($options['markerArray'])) {
 				foreach ($options['markerArray'] as $key => $val) {
 					$markerArray[$key]=$val;
+				}
+			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplatePreProc'])) {
+				$params=array(
+						'markerArray'=>&$markerArray,
+						'user'=>&$user,
+						'subject'=>&$subject,
+						'body'=>&$body,
+						'from_email'=>&$from_email,
+						'from_name'=>&$from_name,
+						'attachments'=>&$attachments,
+						'options'=>&$options
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplatePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
@@ -5073,6 +5090,7 @@ class mslib_fe {
 			(is_array($query_elements['order_by']) ? implode(",", $query_elements['order_by']) : ''), // ORDER BY...
 			(is_array($query_elements['limit']) ? implode(",", $query_elements['limit']) : '') // LIMIT ...
 		);
+
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$current_tstamp=time();
@@ -6865,10 +6883,15 @@ class mslib_fe {
 		';
 		// footer
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
+			$filter=array();
+			$filter[]='crdate > '.(time()-350);
+			if (!$this->masterShop) {
+				$filter[]='page_uid='.$this->shop_pid;
+			}
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery('session_id,ip_address,url,http_user_agent', // SELECT ...
 				'tx_multishop_sessions', // FROM ...
-				'crdate > '.(time()-350), // WHERE...
-				'session_id', // GROUP BY...
+				implode(' AND ',$filter), // WHERE...
+				'session_id,ip_address', // GROUP BY...
 				'crdate desc', // ORDER BY...
 				'' // LIMIT ...
 			);
@@ -6894,10 +6917,15 @@ class mslib_fe {
 				}
 			}
 			if ($guests_online-$total_members) {
+				$filter=array();
+				$filter[]='customer_id=0 and crdate > '.(time()-350);
+				if (!$this->masterShop) {
+					$filter[]='page_uid='.$this->shop_pid;
+				}
 				$str=$GLOBALS['TYPO3_DB']->SELECTquery('session_id,ip_address,url,http_user_agent', // SELECT ...
 					'tx_multishop_sessions', // FROM ...
-					'customer_id=0 and crdate > '.(time()-350), // WHERE...
-					'session_id', // GROUP BY...
+					implode(' AND ',$filter), // WHERE...
+					'session_id,ip_address', // GROUP BY...
 					'crdate desc', // ORDER BY...
 					'' // LIMIT ...
 				);
@@ -6908,9 +6936,10 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['class']='fa fa-list-ul';
 					$counter=0;
 					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						$link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_action_notification_log&tx_multishop_pi1[keyword]='.$record['session_id'],1);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['label']=htmlspecialchars($record['ip_address']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['description']=htmlspecialchars($record['http_user_agent']);
-						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$record['url'];
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$link;
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['class']='fa fa-user';
 						$counter++;
 						if ($counter==15) {
@@ -7326,11 +7355,16 @@ class mslib_fe {
 		return $multishop_content_objects;
 	}
 	public function getSignedInUsers($groupid='', $orderby='company') {
-		$time=(time()-350);
+		$filter=array();
+		$filter[]='f.is_online > '.(time()-350);
+		if (!$this->masterShop) {
+			$filter[]='s.page_uid='.$this->shop_pid;
+		}
+		$filter[]='s.customer_id=f.uid';
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'fe_users', // FROM ...
-			'is_online >= '.$time, // WHERE...
-			'', // GROUP BY...
+			'fe_users f, tx_multishop_sessions s', // FROM ...
+			implode(' AND ',$filter), // WHERE...
+			'f.uid', // GROUP BY...
 			$orderby, // ORDER BY...
 			'' // LIMIT ...
 		);
@@ -7789,12 +7823,39 @@ class mslib_fe {
 			// hook oef
 			return $invoice_id;
 		} else {
-			$sql=$GLOBALS['TYPO3_DB']->SELECTquery('invoice_id', // SELECT ...
-				'tx_multishop_invoices', // FROM ...
-				'page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE...
-				'', // GROUP BY...
-				'id desc', // ORDER BY...
-				'1' // LIMIT ...
+			$select=array();
+			$select[]='invoice_id';
+			$from=array();
+			$from[]='tx_multishop_invoices';
+			$where=array();
+			$where[]='page_uid=\''.$this->showCatalogFromPage.'\'';
+			$groupby=array();
+			$orderby=array();
+			$orderby[]='id desc';
+			$limit=1;
+
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'])) {
+				$query_elements=array();
+				$query_elements['select']=&$select;
+				$query_elements['from']=&$from;
+				$query_elements['where']=&$where;
+				$query_elements['groupby']=&$groupby;
+				$query_elements['orderby']=&$orderby;
+				$query_elements['limit']=&$limit;
+				$params=array(
+						'query_elements'=>&$query_elements
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$sql=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
+					(is_array($from) && count($from) ?implode(',',$from):''), // FROM ...
+					(is_array($where) && count($where) ?implode(',',$where):''), // WHERE...
+					(is_array($groupby) && count($groupby) ?implode(',',$groupby):''), // GROUP BY...
+					(is_array($orderby) && count($orderby) ?implode(',',$orderby):''), // ORDER BY...
+					$limit // LIMIT ...
 			);
 			$query=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			$rs_inv=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);

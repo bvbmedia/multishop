@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (!is_array($skip_ids)) {
+	$skip_ids=array();
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
