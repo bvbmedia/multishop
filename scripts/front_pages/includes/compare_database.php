@@ -870,7 +870,30 @@ if (!$skipMultishopUpdates) {
 		$str="ALTER TABLE `tx_multishop_orders` ADD `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+		//
+		$sql_order="select orders_id from tx_multishop_orders";
+		$qry_order=$GLOBALS['TYPO3_DB']->sql_query($sql_order);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order->init($this);
+			while ($rs_order = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_order)) {
+				$mslib_order->repairOrder($rs_order['orders_id']);
+			}
+		}
+	} else {
+		$sql_order="select orders_id from tx_multishop_orders where grand_total_excluding_vat<1";
+		$qry_order=$GLOBALS['TYPO3_DB']->sql_query($sql_order);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order->init($this);
+			while ($rs_order = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_order)) {
+				$mslib_order->repairOrder($rs_order['orders_id']);
+			}
+		}
 	}
+	//
 	$str="select delivery_state from tx_multishop_orders limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -878,6 +901,7 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
