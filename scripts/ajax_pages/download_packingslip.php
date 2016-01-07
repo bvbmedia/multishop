@@ -263,7 +263,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		}
 		// debug html output
 		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
-		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
+		//include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
 		$content=$tmpcontent;
 
 		$settings=array();
