@@ -541,7 +541,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 			}
 			var new_li=\'<div class="panel panel-default mb-10 \' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
 			new_li+=\'<div class="panel-body">\';
-			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" style="width:300px" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>&nbsp;\';
+			new_li+=\'<span class="values_id">'.htmlentities($this->pi_getLL('admin_label_option_value')).': <input type="hidden" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" style="width:300px" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>&nbsp;\';
 			new_li+=\'<span class="values_edit">\';
 			new_li+=\'<a href="#" class="cancel_new_options_values btn btn-danger"><i class="fa fa-remove"></i> '.$this->pi_getLL('cancel').'</a>&nbsp;\';
 			new_li+=\'<a href="#" class="save_new_options_values btn btn-success" rel="\' + optid + \'"><i class="fa fa-check"></i> '.$this->pi_getLL('save').'</a>&nbsp;\';
