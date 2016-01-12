@@ -1668,7 +1668,7 @@ if ($this->post) {
 				$updateArray['products_meta_description']=$this->post['products_meta_description'][$key];
 				$updateArray['products_negative_keywords']=$this->post['products_negative_keywords'][$key];
 				$updateArray['products_url']=$this->post['products_url'][$key];
-				$updateArray['page_uid']=$this->shop_pid;
+				$updateArray['page_uid']=$this->showCatalogFromPage;
 				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
 					$updateArray['layered_categories_id']=$this->post['local_primary_product_categories'];
 				}
