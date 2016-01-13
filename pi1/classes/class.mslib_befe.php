@@ -4476,6 +4476,37 @@ class mslib_befe {
 			return $record['lg_iso_2'];
 		}
 	}
+	function setSystemLanguage($sys_language_uid) {
+		if ($sys_language_uid>0) {
+			$language_code=mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
+			$language_code=strtolower($language_code);
+			$this->lang=$language_code;
+			$this->LLkey=$language_code;
+			if ($language_code=='en') {
+				// default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
+				$this->LLkey='default';
+			}
+			$this->config['config']['language']=$language_code;
+			$GLOBALS['TSFE']->config['config']['language']=$language_code;
+			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
+			$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
+			$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
+
+			setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
+			$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		}
+	}
+	function resetSystemLanguage() {
+		// reset to default
+		$this->lang=$this->defaultLanguageArray['lang'];
+		$this->LLkey=$this->defaultLanguageArray['LLkey'];
+		$this->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+		$GLOBALS['TSFE']->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+		$GLOBALS['TSFE']->config['config']['sys_language_uid']=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+		$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+		setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
+		$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

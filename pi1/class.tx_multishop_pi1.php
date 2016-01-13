@@ -166,6 +166,13 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		$this->LOCAL_LANG_loaded=0;
 		$this->pi_loadLL();
+
+		$this->defaultLanguageArray=array();
+		$this->defaultLanguageArray['lang']=$this->lang;
+		$this->defaultLanguageArray['LLkey']=$this->LLkey;
+		$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
+		$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
+		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
 		// load language cookie for the backend eof
 		// disabled the code so developer can work with config.absRefPrefix too
 		/*
