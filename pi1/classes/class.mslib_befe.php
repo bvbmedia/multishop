@@ -4517,14 +4517,16 @@ class mslib_befe {
 	}
 	function resetSystemLanguage() {
 		// reset to default
-		$this->lang=$this->defaultLanguageArray['lang'];
-		$this->LLkey=$this->defaultLanguageArray['LLkey'];
-		$this->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
-		$GLOBALS['TSFE']->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
-		$GLOBALS['TSFE']->config['config']['sys_language_uid']=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
-		$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
-		setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
-		$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+		if (is_array($this->defaultLanguageArray)) {
+			$this->lang=$this->defaultLanguageArray['lang'];
+			$this->LLkey=$this->defaultLanguageArray['LLkey'];
+			$this->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+			$GLOBALS['TSFE']->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+			$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+			setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
+			$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+		}
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
