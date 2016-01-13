@@ -927,6 +927,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subpartArray['###'.$key.'###']='';
 		}
 		//PAYMENT_COSTS_WRAPPER EOF
+
+		//GRANT_TOTAL_EXCLUDING_VAT_WRAPPER
+		$key='GRANT_TOTAL_EXCLUDING_VAT_WRAPPER';
+		$markerArray=array();
+		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].')';
+		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents($order['grand_total_excluding_vat']);
+		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		//GRANT_TOTAL_EXCLUDING_VAT_WRAPPER EOF
+
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
