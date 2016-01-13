@@ -3190,6 +3190,9 @@ class mslib_befe {
 		$array2[]=$order['billing_city'];
 		$array1[]='###BILLING_COUNTRY###';
 		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+		$array1[]='###BILLING_COUNTRY_CODE###';
+		$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['billing_country']);
+
 		$array1[]='###DELIVERY_STREET_NAME###';
 		$array2[]=$order['delivery_street_name'];
 		$array1[]='###DELIVERY_ADDRESS_NUMBER###';
@@ -3202,6 +3205,8 @@ class mslib_befe {
 		$array2[]=$order['delivery_city'];
 		$array1[]='###DELIVERY_COUNTRY###';
 		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
+		$array1[]='###DELIVERY_COUNTRY_CODE###';
+		$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['delivery_country']);
 		// dynamic variablese eof
 		if ($this->post['comments']) {
 			$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);

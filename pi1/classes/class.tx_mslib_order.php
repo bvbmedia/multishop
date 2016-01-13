@@ -771,6 +771,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 			$item['ITEM_NAME']=$item_name;
+			$item['ITEM_MODEL']=$product_db['products_model'];
 			// ITEM NAME EOF
 			// ITEM_QUANTITY
 			$item['ITEM_QUANTITY']=round($product['qty'], 14);
@@ -821,6 +822,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$subparts['SUBTOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_WRAPPER###');
 		$subparts['SHIPPING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SHIPPING_COSTS_WRAPPER###');
 		$subparts['PAYMENT_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###PAYMENT_COSTS_WRAPPER###');
+		$subparts['GRAND_TOTAL_EXCLUDING_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_EXCLUDING_VAT_WRAPPER###');
 		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
@@ -894,9 +896,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$key='SHIPPING_COSTS_WRAPPER';
 		if ($order['shipping_method_label']) {
 			$markerArray=array();
-			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
+			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].')';
 			$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($order['shipping_method_costs']);
-			$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
+			$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].')';
 			$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']));
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 			if ($order['shipping_method_costs']=='0') {
@@ -912,9 +914,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$key='PAYMENT_COSTS_WRAPPER';
 		if ($order['payment_method_label']) {
 			$markerArray=array();
-			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
+			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].')';
 			$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($order['payment_method_costs']);
-			$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
+			$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].')';
 			$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']));
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 			if ($order['payment_method_costs']=='0') {
@@ -926,6 +928,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subpartArray['###'.$key.'###']='';
 		}
 		//PAYMENT_COSTS_WRAPPER EOF
+
+		//GRAND_TOTAL_EXCLUDING_VAT_WRAPPER
+		$key='GRAND_TOTAL_EXCLUDING_VAT_WRAPPER';
+		$markerArray=array();
+		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL']=$this->pi_getLL('grand_total_excluding_vat');
+		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents($order['grand_total_excluding_vat']);
+		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		//GRAND_TOTAL_EXCLUDING_VAT_WRAPPER EOF
+
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();

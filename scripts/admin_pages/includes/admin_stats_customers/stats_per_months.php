@@ -46,6 +46,7 @@ if ($this->cookie['stats_year_sb']>0) {
 }
 $content.='<div class="panel-body">
 <form action="index.php" method="get" id="orders_stats_form" class="float_right">
+<input name="id" type="hidden" value="'.$this->get['id'].'" />
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_customers" />

@@ -1275,6 +1275,7 @@
             <label index="feed_exporter_fields_label_order_expected_delivery_date">Order expected delivery date</label>
             <label index="feed_exporter_fields_label_order_by_phone">Order by phone</label>
             <label index="download_selected_orders_packingslips_in_one_pdf">Download selected orders packingslips in one PDF file</label>
+            <label index="grand_total_excluding_vat">Grand total excluding VAT</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2529,6 +2530,20 @@
             <label index="feed_exporter_fields_label_products_price_currency">Prijs valuta</label>
             <label index="feed_exporter_fields_label_products_price_with_currency">Prijs met valuta</label>
             <label index="currency">Valuta</label>
+            <label index="feed_exporter_fields_label_order_date">Bestelling - besteldatum</label>
+            <label index="feed_exporter_fields_label_order_company_name">Bestelling - bedrijfsnaam</label>
+            <label index="feed_exporter_fields_label_order_vat_id">Bestelling - BTW-nummer</label>
+            <label index="feed_exporter_fields_label_order_customer_currency">Bestelling - valuta</label>
+            <label index="feed_exporter_fields_label_order_customer_currency_rate">Bestelling - koerswaarde valuta</label>
+            <label index="feed_exporter_fields_label_order_customer_language_id">Bestelling - taal ID</label>
+            <label index="feed_exporter_fields_label_order_track_and_trace_code">Bestelling - Track & Trace code</label>
+            <label index="feed_exporter_fields_label_order_orders_paid_timestamp">Bestelling - betaaldatum tijdstempel</label>
+            <label index="feed_exporter_fields_label_order_status_last_modified">Bestelling - order status laatst gewijzigd</label>
+            <label index="feed_exporter_fields_label_order_orders_last_modified">Bestelling - laatst gewijzigd</label>
+            <label index="feed_exporter_fields_label_order_expected_delivery_date">Bestelling - verwachte leverdatum</label>
+            <label index="feed_exporter_fields_label_order_by_phone">Bestelling - telefonische bestelling</label>
+            <label index="download_selected_orders_packingslips_in_one_pdf">Download alle pakbonnen in 1 PDF voor de geselecteerde bestellingen</label>
+            <label index="grand_total_excluding_vat">Totaalbedrag exclusief BTW</label>
         </languageKey>
     </data>
 </T3locallang>
