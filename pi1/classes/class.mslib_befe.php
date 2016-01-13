@@ -4484,8 +4484,19 @@ class mslib_befe {
 			return $record['lg_iso_2'];
 		}
 	}
+	function setDefaultSystemLanguage() {
+		$this->defaultLanguageArray=array();
+		$this->defaultLanguageArray['lang']=$this->lang;
+		$this->defaultLanguageArray['LLkey']=$this->LLkey;
+		$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
+		$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
+		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
+	}
 	function setSystemLanguage($sys_language_uid) {
 		if ($sys_language_uid>0) {
+			if (!is_array($this->defaultLanguageArray)) {
+				mslib_befe::setDefaultSystemLanguage();
+			}
 			$language_code=mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
 			$language_code=strtolower($language_code);
 			$this->lang=$language_code;
