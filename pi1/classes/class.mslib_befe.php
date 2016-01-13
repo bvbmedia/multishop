@@ -3020,6 +3020,10 @@ class mslib_befe {
 		}
 		// dynamic variables
 		$order=mslib_fe::getOrder($orders_id);
+		if (isset($order['language_id'])) {
+			// Switch to language that is stored in the order
+			mslib_befe::setSystemLanguage($order['language_id']);
+		}
 		$billing_address='';
 		$delivery_address='';
 		$full_customer_name=$order['billing_first_name'];
@@ -3266,6 +3270,10 @@ class mslib_befe {
 					}
 				}
 			}
+		}
+		if (isset($order['language_id'])) {
+			// Switch back to default language
+			mslib_befe::resetSystemLanguage();
 		}
 		//hook to let other plugins further manipulate
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'])) {
