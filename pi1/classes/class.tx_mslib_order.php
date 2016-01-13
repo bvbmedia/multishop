@@ -822,6 +822,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$subparts['SUBTOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_WRAPPER###');
 		$subparts['SHIPPING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SHIPPING_COSTS_WRAPPER###');
 		$subparts['PAYMENT_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###PAYMENT_COSTS_WRAPPER###');
+		$subparts['GRAND_TOTAL_EXCLUDING_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_EXCLUDING_VAT_WRAPPER###');
 		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
@@ -928,13 +929,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		//PAYMENT_COSTS_WRAPPER EOF
 
-		//GRANT_TOTAL_EXCLUDING_VAT_WRAPPER
-		$key='GRANT_TOTAL_EXCLUDING_VAT_WRAPPER';
+		//GRAND_TOTAL_EXCLUDING_VAT_WRAPPER
+		$key='GRAND_TOTAL_EXCLUDING_VAT_WRAPPER';
 		$markerArray=array();
-		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].')';
+		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL']=$this->pi_getLL('grand_total_excluding_vat');
 		$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents($order['grand_total_excluding_vat']);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		//GRANT_TOTAL_EXCLUDING_VAT_WRAPPER EOF
+		//GRAND_TOTAL_EXCLUDING_VAT_WRAPPER EOF
 
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
