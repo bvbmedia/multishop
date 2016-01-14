@@ -69,6 +69,7 @@ class mslib_fe {
 		$this->SYSTEMADMIN_USER=&$ref->SYSTEMADMIN_USER;
 		$this->STATISTICSADMIN_USER=&$ref->STATISTICSADMIN_USER;
 		$this->languages=&$ref->languages;
+		$this->defaultLanguageArray=&$ref->defaultLanguageArray;
 		$this->initLanguage($ref->LOCAL_LANG);
 	}
 	/**
