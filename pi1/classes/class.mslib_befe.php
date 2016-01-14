@@ -3020,6 +3020,10 @@ class mslib_befe {
 		}
 		// dynamic variables
 		$order=mslib_fe::getOrder($orders_id);
+		if (isset($order['language_id'])) {
+			// Switch to language that is stored in the order
+			mslib_befe::setSystemLanguage($order['language_id']);
+		}
 		$billing_address='';
 		$delivery_address='';
 		$full_customer_name=$order['billing_first_name'];
@@ -3266,6 +3270,10 @@ class mslib_befe {
 					}
 				}
 			}
+		}
+		if (isset($order['language_id'])) {
+			// Switch back to default language
+			mslib_befe::resetSystemLanguage();
 		}
 		//hook to let other plugins further manipulate
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'])) {
@@ -4474,6 +4482,50 @@ class mslib_befe {
 		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'));
 		if ($record['uid']) {
 			return $record['lg_iso_2'];
+		}
+	}
+	function setDefaultSystemLanguage() {
+		$this->defaultLanguageArray=array();
+		$this->defaultLanguageArray['lang']=$this->lang;
+		$this->defaultLanguageArray['LLkey']=$this->LLkey;
+		$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
+		$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
+		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
+	}
+	function setSystemLanguage($sys_language_uid) {
+		if ($sys_language_uid>0) {
+			if (!is_array($this->defaultLanguageArray)) {
+				mslib_befe::setDefaultSystemLanguage();
+			}
+			$language_code=mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
+			$language_code=strtolower($language_code);
+			$this->lang=$language_code;
+			$this->LLkey=$language_code;
+			if ($language_code=='en') {
+				// default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
+				$this->LLkey='default';
+			}
+			$this->config['config']['language']=$language_code;
+			$GLOBALS['TSFE']->config['config']['language']=$language_code;
+			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
+			$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
+			$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
+
+			setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
+			$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		}
+	}
+	function resetSystemLanguage() {
+		// reset to default
+		if (is_array($this->defaultLanguageArray)) {
+			$this->lang=$this->defaultLanguageArray['lang'];
+			$this->LLkey=$this->defaultLanguageArray['LLkey'];
+			$this->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+			$GLOBALS['TSFE']->config['config']['language']=$this->defaultLanguageArray['config']['config']['language'];
+			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+			$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+			setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
+			$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
 		}
 	}
 }

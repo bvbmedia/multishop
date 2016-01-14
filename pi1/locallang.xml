@@ -2536,7 +2536,7 @@
             <label index="feed_exporter_fields_label_order_customer_currency">Bestelling - valuta</label>
             <label index="feed_exporter_fields_label_order_customer_currency_rate">Bestelling - koerswaarde valuta</label>
             <label index="feed_exporter_fields_label_order_customer_language_id">Bestelling - taal ID</label>
-            <label index="feed_exporter_fields_label_order_track_and_trace_code">Bestelling - Track & Trace code</label>
+            <label index="feed_exporter_fields_label_order_track_and_trace_code">Bestelling - Track en Trace code</label>
             <label index="feed_exporter_fields_label_order_orders_paid_timestamp">Bestelling - betaaldatum tijdstempel</label>
             <label index="feed_exporter_fields_label_order_status_last_modified">Bestelling - order status laatst gewijzigd</label>
             <label index="feed_exporter_fields_label_order_orders_last_modified">Bestelling - laatst gewijzigd</label>
