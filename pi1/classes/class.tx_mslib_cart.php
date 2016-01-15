@@ -2575,6 +2575,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subparts['SUBTOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_WRAPPER###');
 			$subparts['SHIPPING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SHIPPING_COSTS_WRAPPER###');
 			$subparts['PAYMENT_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###PAYMENT_COSTS_WRAPPER###');
+			$subparts['GRAND_TOTAL_EXCLUDING_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_EXCLUDING_VAT_WRAPPER###');
 			$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
 			$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
 			$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
@@ -2684,13 +2685,22 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			//PAYMENT_COSTS_WRAPPER EOF
 			//GRAND_TOTAL_WRAPPER
 			$key='GRAND_TOTAL_WRAPPER_EXCLUDING_VAT';
-			$markerArray['GRAND_TOTAL_COSTS_EXCLUDING_VAT_LABEL']=ucfirst($this->pi_getLL('total_excluding_vat'));
-			$markerArray['GRAND_TOTAL_COSTS_EXCLUDING_VAT']=mslib_fe::amount2Cents(($this->cart['summarize']['grand_total']-$this->cart['total_orders_tax_including_discount']));
+			$markerArray['GRAND_TOTAL_COSTS_EXCLUDING_VAT_LABEL']=ucfirst($this->pi_getLL('grand_total_excluding_vat'));
+			//$markerArray['GRAND_TOTAL_COSTS_EXCLUDING_VAT']=mslib_fe::amount2Cents(($this->cart['summarize']['grand_total']-$this->cart['total_orders_tax_including_discount']));
+			$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents(($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_vat']));
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+
+			// Duplicate to make all tmpl files consistent
+			$key='GRAND_TOTAL_EXCLUDING_VAT_WRAPPER';
+			$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL']=ucfirst($this->pi_getLL('grand_total_excluding_vat'));
+			//$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents(($this->cart['summarize']['grand_total']-$this->cart['total_orders_tax_including_discount']));
+			$markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE']=mslib_fe::amount2Cents(($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_vat']));
+			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+
 			//GRAND_TOTAL_WRAPPER
 			$key='GRAND_TOTAL_WRAPPER';
 			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
-//		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
+			// $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 			$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($this->cart['summarize']['grand_total']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 			//GRAND_TOTAL_WRAPPER EOF
