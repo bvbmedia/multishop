@@ -1760,8 +1760,43 @@ switch ($this->ms['page']) {
 			if ($order['orders_id'] and !$order['is_locked']) {
 				$details_type=$this->get['details_type'];
 				$orders_id=$this->get['orders_id'];
+				//
+				$name='';
+				if ($details_type=='billing_details') {
+					if (isset($this->post['tx_multishop_pi1']['billing_first_name'])) {
+						$name = $this->post['tx_multishop_pi1']['billing_first_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['billing_middle_name'])) {
+						$name .= ' ' . $this->post['tx_multishop_pi1']['billing_middle_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['billing_last_name'])) {
+						$name .= ' ' . $this->post['tx_multishop_pi1']['billing_last_name'];
+					}
+					$this->post['tx_multishop_pi1']['billing_name'] = '';
+					if ($name) {
+						$this->post['tx_multishop_pi1']['billing_name'] = $name;
+					}
+				} else if ($details_type=='delivery_details') {
+					if (isset($this->post['tx_multishop_pi1']['delivery_first_name'])) {
+						$name = $this->post['tx_multishop_pi1']['delivery_first_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['delivery_middle_name'])) {
+						$name .= ' ' . $this->post['tx_multishop_pi1']['delivery_middle_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['delivery_last_name'])) {
+						$name .= ' ' . $this->post['tx_multishop_pi1']['delivery_last_name'];
+					}
+					$this->post['tx_multishop_pi1']['delivery_name'] = '';
+					if ($name) {
+						$this->post['tx_multishop_pi1']['delivery_name'] = $name;
+					}
+				}
+				//
 				$keys=array();
 				$keys[]='company';
+				$keys[]='first_name';
+				$keys[]='middle_name';
+				$keys[]='last_name';
 				$keys[]='name';
 				$keys[]='street_name';
 				$keys[]='address_number';
