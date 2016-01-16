@@ -415,7 +415,8 @@ if (!empty($product_listing_form_content)) {
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'current'=>&$current
+		'current'=>&$current,
+		'output_array'=>&$output_array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

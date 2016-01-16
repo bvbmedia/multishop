@@ -162,7 +162,6 @@ function CheckoutStepping(&$steps, $current, $pointer) {
 	$output.='</ul>';
 	return $output;
 }
-
 if ($this->get['tx_multishop_pi1']['previous_checkout_section']) {
 	for ($i=1; $i<=count($stepCodes); $i++) {
 		if ($this->get['tx_multishop_pi1']['previous_checkout_section']==current($stepCodes)) {
@@ -177,6 +176,14 @@ if ($this->get['tx_multishop_pi1']['previous_checkout_section']) {
 		}
 	}
 }
-$content.='';
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout.php']['checkoutStepPreProc'])) {
+	$params=array(
+			'stepCodes'=>$stepCodes
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout.php']['checkoutStepPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 require(current($stepCodes).'.php');
 ?>
