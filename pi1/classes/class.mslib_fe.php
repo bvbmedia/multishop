@@ -6848,13 +6848,13 @@ class mslib_fe {
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"].',2003', 'tx_multishop_pi1[page_section]=admin_home');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['class']='fa fa-shopping-cart';
 					}
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanelStoreItem'])) {
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanelStoreItemPostProc'])) {
 						$params=array(
 								'pageinfo'=>&$pageinfo,
 								'ms_menu'=>&$ms_menu,
 								'counter'=>&$counter
 						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanelStoreItem'] as $funcRef) {
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanelStoreItemPostProc'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
