@@ -201,34 +201,36 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
 				// discount
 				//echo "<pre>";
-				//echo $sub_total."<br/>";
-				//echo $sub_total_excluding_vat."<br/>";
+				echo $sub_total."<br/>";
+				echo $sub_total_excluding_vat."<br/>";
 				if ($row['discount']>0) {
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$discount_price=round($row['discount'], 2);
 						//$sub_total_excluding_vat-=$discount_price;
-						$discount_percentage=round(($discount_price/($sub_total_excluding_vat)*100), 2);
+						$discount_percentage=(($discount_price/$sub_total_excluding_vat)*100);
 						//$tmp_sub_total=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
-						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						} else {
+							$sub_total_tax=((($sub_total-$sub_total_excluding_vat)/100)*(100-$discount_percentage));
 						}
 					} else {
 						$discount_price=$row['discount'];
 						//$sub_total-=$discount_price;
-						$discount_percentage=round(($discount_price/($sub_total)*100), 2);
+						$discount_percentage=(($discount_price/$sub_total)*100);
 						//$tmp_sub_total=(($sub_total)/100*(100-$discount_percentage));
 						//
-						$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							$sub_total_tax=round((1-($discount_price/$sub_total))*$sub_total_tax, 2);
+						} else {
+							$sub_total_tax=((($sub_total-$sub_total_excluding_vat)/100)*(100-$discount_percentage));
 						}
 					}
 					if (count($tax_separation)>1) {
 						$tax_separation=array();
 					}
 				}
-				//echo $discount_percentage."<br/>";
+				echo $discount_percentage."<br/>";
 				//echo $discount_price."<br/>";
 				//echo $sub_total_tax."<br/>";
 				//die();
