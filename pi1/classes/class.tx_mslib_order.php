@@ -201,8 +201,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
 				// discount
 				//echo "<pre>";
-				echo $sub_total."<br/>";
-				echo $sub_total_excluding_vat."<br/>";
+				//echo $sub_total."<br/>";
+				//echo $sub_total_excluding_vat."<br/>";
 				if ($row['discount']>0) {
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$discount_price=round($row['discount'], 2);
@@ -230,7 +230,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$tax_separation=array();
 					}
 				}
-				echo $discount_percentage."<br/>";
+				//echo $discount_percentage."<br/>";
 				//echo $discount_price."<br/>";
 				//echo $sub_total_tax."<br/>";
 				//die();
