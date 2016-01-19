@@ -4492,6 +4492,15 @@ class mslib_befe {
 			return $record['lg_iso_2'];
 		}
 	}
+	function getSysLanguageUidByIso2($iso2) {
+		if (!$iso2) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'));
+		if ($record['uid']) {
+			return $record['uid'];
+		}
+	}
 	function setDefaultSystemLanguage() {
 		$this->defaultLanguageArray=array();
 		$this->defaultLanguageArray['lang']=$this->lang;
@@ -4509,10 +4518,12 @@ class mslib_befe {
 			$language_code=strtolower($language_code);
 			$this->lang=$language_code;
 			$this->LLkey=$language_code;
+			/*
 			if ($language_code=='en') {
 				// default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
 				$this->LLkey='default';
 			}
+			*/
 			$this->config['config']['language']=$language_code;
 			$GLOBALS['TSFE']->config['config']['language']=$language_code;
 			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
