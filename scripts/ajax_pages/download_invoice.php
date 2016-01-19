@@ -117,6 +117,12 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
 			$markerArray['###YOUR_VAT_ID###']=strtoupper($order['billing_vat_id']);
 		}
+		$markerArray['###LABEL_YOUR_COC_ID###']='';
+		$markerArray['###YOUR_COC_ID###']='';
+		if ($order['billing_coc_id']) {
+			$markerArray['###LABEL_YOUR_COC_ID###']=$this->pi_getLL('your_coc_id');
+			$markerArray['###YOUR_COC_ID###']=strtoupper($order['billing_coc_id']);
+		}
 		$markerArray['###BILLING_TELEPHONE###']='';
 		if (!empty($order['billing_telephone'])) {
 			$markerArray['###BILLING_TELEPHONE###']=$order['billing_telephone'].'<br/>';
