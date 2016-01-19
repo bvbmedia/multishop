@@ -1275,7 +1275,7 @@ class mslib_befe {
 			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id='.$id);
 		}
 	}
-	public function getRecord($value='', $table, $field='', $additional_where=array()) {
+	public function getRecord($value='', $table, $field='', $additional_where=array(),$select='*') {
 		$queryArray=array();
 		$queryArray['from']=$table;
 		if (isset($value) && isset($field) && $field!='') {
@@ -1288,7 +1288,7 @@ class mslib_befe {
 				}
 			}
 		}
-		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
 			$queryArray['from'], // FROM ...
 			((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
 			'', // GROUP BY...
@@ -4487,7 +4487,7 @@ class mslib_befe {
 		if (!is_numeric($id)) {
 			return false;
 		}
-		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'));
+		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'),'statlang.lg_iso_2');
 		if ($record['uid']) {
 			return $record['lg_iso_2'];
 		}
@@ -4496,7 +4496,7 @@ class mslib_befe {
 		if (!$iso2) {
 			return false;
 		}
-		$record=mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'));
+		$record=mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'),'syslang.uid');
 		if ($record['uid']) {
 			return $record['uid'];
 		}
