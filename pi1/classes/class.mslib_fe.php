@@ -2223,6 +2223,7 @@ class mslib_fe {
 						'attachments'=>&$attachments,
 						'options'=>&$options,
 						'return_status'=>&$return_status,
+						'mailObj'=>&$mail
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPostProc'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
