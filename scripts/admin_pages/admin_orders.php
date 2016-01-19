@@ -181,7 +181,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 							if (mslib_fe::updateOrderStatusToPaid($orders_id)) {
 								$postErno[]=array(
 									'status'=>'info',
-									'message'=>'Order '.$orders_id.' has been update to paid.'
+									'message'=>'Order '.$orders_id.' has been updated to paid.'
 								);
 							} else {
 								$postErno[]=array(
