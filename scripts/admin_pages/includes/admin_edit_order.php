@@ -468,6 +468,38 @@ if (is_numeric($this->get['orders_id'])) {
 					if (isset($this->post['order_payment_condition'])) {
 						$updateArray['payment_condition']=$this->post['order_payment_condition'];
 					}
+					//
+					$billing_name='';
+					if (isset($this->post['tx_multishop_pi1']['billing_first_name'])) {
+						$billing_name = $this->post['tx_multishop_pi1']['billing_first_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['billing_middle_name'])) {
+						$billing_name .= ' ' . $this->post['tx_multishop_pi1']['billing_middle_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['billing_last_name'])) {
+						$billing_name .= ' ' . $this->post['tx_multishop_pi1']['billing_last_name'];
+					}
+					$this->post['tx_multishop_pi1']['billing_name'] = '';
+					if ($billing_name) {
+						$this->post['tx_multishop_pi1']['billing_name'] = $billing_name;
+					}
+					//
+					$delivery_name='';
+					if (isset($this->post['tx_multishop_pi1']['delivery_first_name'])) {
+						$delivery_name = $this->post['tx_multishop_pi1']['delivery_first_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['delivery_middle_name'])) {
+						$delivery_name .= ' ' . $this->post['tx_multishop_pi1']['delivery_middle_name'];
+					}
+					if (isset($this->post['tx_multishop_pi1']['delivery_last_name'])) {
+						$delivery_name .= ' ' . $this->post['tx_multishop_pi1']['delivery_last_name'];
+					}
+					$this->post['tx_multishop_pi1']['delivery_name'] = '';
+					if ($delivery_name) {
+						$this->post['tx_multishop_pi1']['delivery_name'] = $delivery_name;
+					}
+
+					//
 					$keys=array();
 					$keys[]='company';
 					$keys[]='name';
@@ -728,9 +760,21 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" />
+                <input class="form-control" name="tx_multishop_pi1[billing_first_name]" type="text" id="edit_billing_first_name" value="'.$orders['billing_first_name'].'" />
+                </div>
+                </div>
+                <div class="form-group">
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
+                <div class="col-md-7">
+                <input class="form-control" name="tx_multishop_pi1[billing_middle_name]" type="text" id="edit_billing_middle_name" value="'.$orders['billing_middle_name'].'" />
+                </div>
+                </div>
+                <div class="form-group">
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
+                <div class="col-md-7">
+                <input class="form-control" name="tx_multishop_pi1[billing_last_name]" type="text" id="edit_billing_last_name" value="'.$orders['billing_last_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
@@ -863,9 +907,21 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
+                <input class="form-control" name="tx_multishop_pi1[delivery_first_name]" type="text" id="edit_delivery_first_name" value="'.$orders['delivery_first_name'].'" />
+                </div>
+                </div>
+                 <div class="form-group">
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
+                <div class="col-md-7">
+                <input class="form-control" name="tx_multishop_pi1[delivery_middle_name]" type="text" id="edit_delivery_middle_name" value="'.$orders['delivery_middle_name'].'" />
+                </div>
+                </div>
+                 <div class="form-group">
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
+                <div class="col-md-7">
+                <input class="form-control" name="tx_multishop_pi1[delivery_last_name]" type="text" id="edit_delivery_last_name" value="'.$orders['delivery_last_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
@@ -1046,8 +1102,14 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_company").val("");
                 $("#edit_delivery_company").val($("#edit_billing_company").val());
 
-                $("#edit_delivery_name").val("");
-                $("#edit_delivery_name").val($("#edit_billing_name").val());
+                $("#edit_delivery_first_name").val("");
+                $("#edit_delivery_first_name").val($("#edit_billing_first_name").val());
+
+                $("#edit_delivery_middle_name").val("");
+                $("#edit_delivery_middle_name").val($("#edit_billing_middle_name").val());
+
+                 $("#edit_delivery_last_name").val("");
+                $("#edit_delivery_last_name").val($("#edit_billing_last_name").val());
 
                 $("#edit_delivery_street_name").val("");
                 $("#edit_delivery_street_name").val($("#edit_billing_street_name").val());
@@ -1086,14 +1148,24 @@ if (is_numeric($this->get['orders_id'])) {
                 e.preventDefault();
                 var billing_details 	= "";
                 var address_data 		= "";
+                 var name="";
                 $("[id^=edit_billing]").each(function(){
                     if ($(this).attr("id") == "edit_billing_company") {
                         if ($(this).val() != "") {
-                            billing_details += "<strong>" + $(this).val() + "</strong><br/>";
+                            name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
-                    } else if ($(this).attr("id") == "edit_billing_name") {
-                        billing_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_billing_street_name") {
+                    }
+                    if ($(this).attr("id") == "edit_billing_first_name") {
+                        name += $(this).val();
+                    }
+                    if ($(this).attr("id") == "edit_billing_middle_name") {
+                        name += " " + $(this).val();
+                    }
+					if ($(this).attr("id") == "edit_billing_last_name") {
+                        name += " " + $(this).val();
+                    }
+                    //
+                    if ($(this).attr("id") == "edit_billing_street_name") {
                         address_data += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_billing_address_number") {
                         address_data += $(this).val() + " ";
@@ -1138,8 +1210,11 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                     }
                 });
+                if (name!="") {
+                	name+="<br/>";
+                }
                 $("#billing_details_container").empty();
-                $("#billing_details_container").html(billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
+                $("#billing_details_container").html(name + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
                 $("#billing_details_container").show();
                 $("#edit_billing_details_container").hide();
@@ -1153,14 +1228,24 @@ if (is_numeric($this->get['orders_id'])) {
                 e.preventDefault();
                 var delivery_details 	= "";
                 var address_data 		= "";
+                var name="";
                 $("[id^=edit_delivery]").each(function() {
                     if ($(this).attr("id") == "edit_delivery_company") {
                         if ($(this).val() != "") {
-                            delivery_details += "<strong>" + $(this).val() + "</strong><br/>";
+                            name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
-                    } else if ($(this).attr("id") == "edit_delivery_name") {
-                        delivery_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_street_name") {
+                    }
+                    if ($(this).attr("id") == "edit_delivery_first_name") {
+                        name += $(this).val();
+                    }
+                    if ($(this).attr("id") == "edit_delivery_middle_name") {
+                        name += " " + $(this).val();
+                    }
+					if ($(this).attr("id") == "edit_delivery_last_name") {
+                        name += " " + $(this).val();
+                    }
+                    //
+                    if ($(this).attr("id") == "edit_delivery_street_name") {
                         address_data += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_address_number") {
                         address_data += $(this).val() + " ";
@@ -1196,8 +1281,11 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                     }
                 });
+                if (name!="") {
+                	name+="<br/>";
+                }
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
+                $("#delivery_details_container").html(name + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
@@ -1441,7 +1529,8 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
 			// products price total header col
-			$order_products_header_data['products_final_price']['class']='cellFinalPrice';
+			//cellFinalPrice
+			$order_products_header_data['products_final_price']['class']='cellPrice';
 			$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_ex_vat');
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
@@ -1513,7 +1602,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products qty col
 						$order_products_body_data['products_qty']['align']='right';
 						$order_products_body_data['products_qty']['class']='cellQty';
-						$order_products_body_data['products_qty']['value']='<input type="hidden" name="product_name" id="product_name" value="'.$order['products_name'].'">';
+						$order_products_body_data['products_qty']['value']='<input type="hidden" name="product_name" id="product_name" value="'.htmlspecialchars($order['products_name']).'">';
 						$order_products_body_data['products_qty']['value'].='<input type="hidden" name="orders_products_id" value="'.$order['orders_products_id'].'">';
 						$order_products_body_data['products_qty']['value'].='<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="'.round($order['qty'], 13).'" />';
 						// products name col
@@ -1531,9 +1620,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($original_pn!=$order['products_name']) {
 									$custom_product_name=$order['products_name'];
 								}
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.htmlspecialchars($this->pi_getLL('admin_current_custom_product_name')).':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.htmlspecialchars($custom_product_name).'" style="width:402px;" /></div>';
 							} else {
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.htmlspecialchars($this->pi_getLL('admin_custom_product_name')).':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
 							}
 						}
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
@@ -1589,7 +1678,8 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
+						//cellFinalPrice
+						$order_products_body_data['products_final_price']['class']='cellPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1725,7 +1815,8 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
+						//cellFinalPrice
+						$order_products_body_data['products_final_price']['class']='cellPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
@@ -2170,7 +2261,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
-					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
+					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
@@ -2242,7 +2333,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_qty']['value']='';
 					// products name col
 					$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
-					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
+					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" class="form-control" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						// products status col
 						$order_products_body_data['products_status']['value']='';
@@ -2565,7 +2656,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$coupon_code=' (code: '.$orders['coupon_code'].')';
 				}
 				$content_discount='
-                <div class="form-group">
+                <div class="form-group" id="order_discount_wrapper">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
                     '.$discount_content.'

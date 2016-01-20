@@ -30,6 +30,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			}
 		}
 		// now parse all the objects in the tmpl file
+		if ($invoice['reversal_invoice'] && isset($this->conf['admin_credit_invoice_pdf_tmpl_path']) && $this->conf['admin_credit_invoice_pdf_tmpl_path'] !='') {
+			// Use custom template for credit invoice
+			$this->conf['admin_invoice_pdf_tmpl_path']=$this->conf['admin_credit_invoice_pdf_tmpl_path'];
+		}
 		if ($this->conf['admin_invoice_pdf_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);
 		} else {
@@ -58,6 +62,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']='';
 		}
 		$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('invoice');
+		if ($invoice['reversal_invoice']) {
+			$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('credit_invoice');
+		}
 		// billing address
 		if (!empty($order['billing_company'])) {
 			$markerArray['###BILLING_COMPANY###']='<strong>'.$order['billing_company'].'</strong><br/>';
@@ -116,6 +123,12 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		if ($order['billing_vat_id']) {
 			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
 			$markerArray['###YOUR_VAT_ID###']=strtoupper($order['billing_vat_id']);
+		}
+		$markerArray['###LABEL_YOUR_COC_ID###']='';
+		$markerArray['###YOUR_COC_ID###']='';
+		if ($order['billing_coc_id']) {
+			$markerArray['###LABEL_YOUR_COC_ID###']=$this->pi_getLL('your_coc_id');
+			$markerArray['###YOUR_COC_ID###']=strtoupper($order['billing_coc_id']);
 		}
 		$markerArray['###BILLING_TELEPHONE###']='';
 		if (!empty($order['billing_telephone'])) {

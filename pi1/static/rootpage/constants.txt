@@ -243,6 +243,9 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= Admin invoice PDF File Path: Optionally specify the location of the template file that is being used for generating invoice PDF. Example: fileadmin/templates/multishop/admin_invoice_pdf.tmpl.
 	admin_invoice_pdf_tmpl_path =
 
+	# cat=plugin.multishop - templates/file; type=string; label= Admin invoice PDF File Path: Optionally specify the location of the template file that is being used for generating credit invoice PDF. Example: fileadmin/templates/multishop/admin_credit_invoice_pdf.tmpl.
+	admin_credit_invoice_pdf_tmpl_path=
+
 	# cat=plugin.multishop - templates/file; type=string; label= Admin packing slip PDF File Path: Optionally specify the location of the template file that is being used for generating packing slip PDF. Example: fileadmin/templates/multishop/admin_packingslip_pdf.tmpl.
 	admin_packingslip_pdf_tmpl_path =
 

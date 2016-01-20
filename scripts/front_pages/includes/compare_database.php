@@ -889,7 +889,21 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
+	$table='tx_multishop_invoices';
+	$str="describe `".$table."`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		switch($row['Field']) {
+			case 'discount':
+			case 'amount':
+				if ($row['Type']=='double(10,4)') {
+					$str2="ALTER TABLE `".$table."` CHANGE `".$row['Field']."`  `".$row['Field']."` decimal(24,14) DEFAULT  '0.00000000000000'";
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					$messages[]=$str2;
+				}
+				break;
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

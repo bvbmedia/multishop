@@ -1275,7 +1275,7 @@ class mslib_befe {
 			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id='.$id);
 		}
 	}
-	public function getRecord($value='', $table, $field='', $additional_where=array()) {
+	public function getRecord($value='', $table, $field='', $additional_where=array(),$select='*') {
 		$queryArray=array();
 		$queryArray['from']=$table;
 		if (isset($value) && isset($field) && $field!='') {
@@ -1288,7 +1288,7 @@ class mslib_befe {
 				}
 			}
 		}
-		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
 			$queryArray['from'], // FROM ...
 			((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
 			'', // GROUP BY...
@@ -3349,7 +3349,7 @@ class mslib_befe {
 		}
 		return $password;
 	}
-	public function storeProductsKeywordSearch($keyword, $negative_results=0) {
+	public function storeProductsKeywordSearch($keyword, $negative_results=0, $categories_id=0) {
 		$insertArray=array();
 		$insertArray['keyword']=$keyword;
 		$insertArray['ip_address']=$this->REMOTE_ADDR;
@@ -3360,11 +3360,19 @@ class mslib_befe {
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 		}
-		if ($this->get['categories_id']) {
-			$insertArray['categories_id']=$this->get['categories_id'];
+		if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
+			$categories_id=$this->get['categories_id'];
 		}
-		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if (is_numeric($categories_id) && $categories_id > 0) {
+			$insertArray['categories_id']=$categories_id;
+		}
+		$filter=array();
+		$filter[]='ip_address=\''.addslashes($this->REMOTE_ADDR).'\'';
+		$record=mslib_befe::getRecord($keyword,'tx_multishop_products_search_log','keyword',$filter);
+		if (!is_array($record) || (time()-$record['crdate']) > 180) {
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
 	}
 	public function storeCustomerCartContent($content, $customer_id='', $is_checkout=0) {
 		if (!$customer_id && $GLOBALS['TSFE']->fe_user->user['uid']) {
@@ -4043,24 +4051,24 @@ class mslib_befe {
 				$markerArray['ITEM_ROW_TYPE']=$tr_type;
 				$markerArray['ITEM_PRODUCT_QTY']=round($product['qty'], 2);
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
-				$product_name=$product['products_name'];
+				$product_name=htmlspecialchars($product['products_name']);
 				if ($product['products_article_number']) {
-					$product_name.=' ('.$product['products_article_number'].')';
+					$product_name.=' ('.htmlspecialchars($product['products_article_number']).')';
 				}
 				if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
-					$product_name.='<br/>Model: '.$product['products_model'];
+					$product_name.='<br/>Model: '.htmlspecialchars($product['products_model']);
 				}
 				if ($product['products_description']) {
-					$product_name.='<br/>'.nl2br($product['products_description']);
+					$product_name.='<br/>'.nl2br(htmlspecialchars($product['products_description']));
 				}
 				if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_ean')).': '.htmlspecialchars($product['ean_code']);
 				}
 				if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_sku')).': '.htmlspecialchars($product['sku_code']);
 				}
 				if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_vendor_code')).': '.htmlspecialchars($product['vendor_code']);
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
 				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
@@ -4080,7 +4088,7 @@ class mslib_befe {
 							$attributeMarkerArray['ITEM_ATTRIBUTE_ROW_TYPE']=$tr_type;
 							$attributeMarkerArray['ITEM_ATTRIBUTE']='';
 							if ($options['products_options'] && $options['products_options_values']) {
-								$attributeMarkerArray['ITEM_ATTRIBUTE']=$options['products_options'].': '.$options['products_options_values'];
+								$attributeMarkerArray['ITEM_ATTRIBUTE']=htmlspecialchars($options['products_options']).': '.htmlspecialchars($options['products_options_values']);
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_VAT']='';
 							// calculating
@@ -4205,7 +4213,13 @@ class mslib_befe {
 							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
 								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
 							} else {
-								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
+								// todo: add typoscript constant to enable/disable the view
+
+								// Show the taken amount for the seperated VAT (i.e. BTW 21% from 10 Euro)
+								//$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
+
+								// Show traditional label (i.e. BTW 21%)
+								$markerArray['LABEL_VAT']=$this->pi_getLL('vat').' '.$tax_sep_rate.'%';
 							}
 							if (empty($tax_sep_data['shipping_tax'])) {
 								$tax_sep_data['shipping_tax']=0;
@@ -4479,9 +4493,18 @@ class mslib_befe {
 		if (!is_numeric($id)) {
 			return false;
 		}
-		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'));
+		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'),'statlang.lg_iso_2');
 		if ($record['uid']) {
 			return $record['lg_iso_2'];
+		}
+	}
+	function getSysLanguageUidByIso2($iso2) {
+		if (!$iso2) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'),'syslang.uid');
+		if ($record['uid']) {
+			return $record['uid'];
 		}
 	}
 	function setDefaultSystemLanguage() {
@@ -4501,10 +4524,12 @@ class mslib_befe {
 			$language_code=strtolower($language_code);
 			$this->lang=$language_code;
 			$this->LLkey=$language_code;
+			/*
 			if ($language_code=='en') {
 				// default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
 				$this->LLkey='default';
 			}
+			*/
 			$this->config['config']['language']=$language_code;
 			$GLOBALS['TSFE']->config['config']['language']=$language_code;
 			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
