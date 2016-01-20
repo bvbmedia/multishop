@@ -4059,7 +4059,7 @@ class mslib_befe {
 					$product_name.='<br/>Model: '.htmlspecialchars($product['products_model']);
 				}
 				if ($product['products_description']) {
-					$product_name.='<br/>'.nl2br($product['products_description']);
+					$product_name.='<br/>'.nl2br(htmlspecialchars($product['products_description']));
 				}
 				if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_ean')).': '.htmlspecialchars($product['ean_code']);
