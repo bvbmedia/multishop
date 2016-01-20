@@ -62,6 +62,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']='';
 		}
 		$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('invoice');
+		if ($invoice['reversal_invoice']) {
+			$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('credit_invoice');
+		}
 		// billing address
 		if (!empty($order['billing_company'])) {
 			$markerArray['###BILLING_COMPANY###']='<strong>'.$order['billing_company'].'</strong><br/>';
