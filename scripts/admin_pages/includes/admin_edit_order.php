@@ -1588,7 +1588,7 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($original_pn!=$order['products_name']) {
 									$custom_product_name=$order['products_name'];
 								}
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
 							} else {
 								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
 							}
