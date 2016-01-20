@@ -2298,7 +2298,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_qty']['value']='';
 					// products name col
 					$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
-					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
+					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" class="form-control" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						// products status col
 						$order_products_body_data['products_status']['value']='';
