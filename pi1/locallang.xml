@@ -1075,7 +1075,7 @@
             <label index="street_address_is_required">Street address is a required field.</label>
             <label index="street_address_number">number</label>
             <label index="street_number_is_required">Number is a required field.</label>
-            <label index="sub_total">Sub-Total</label>
+            <label index="sub_total">Subtotal</label>
             <label index="submit">Submit</label>
             <label index="submit_button_label">Click here to submit value</label>
             <label index="subscribe_to_our_newsletter">Subscribe to our newsletter</label>
