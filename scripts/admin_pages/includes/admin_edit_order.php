@@ -2621,7 +2621,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$coupon_code=' (code: '.$orders['coupon_code'].')';
 				}
 				$content_discount='
-                <div class="form-group">
+                <div class="form-group" id="order_discount_wrapper">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
                     '.$discount_content.'
