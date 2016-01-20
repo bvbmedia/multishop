@@ -30,6 +30,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			}
 		}
 		// now parse all the objects in the tmpl file
+		if ($invoice['reversal_invoice'] && isset($this->conf['admin_credit_invoice_pdf_tmpl_path']) && $this->conf['admin_credit_invoice_pdf_tmpl_path'] !='') {
+			// Use custom template for credit invoice
+			$this->conf['admin_invoice_pdf_tmpl_path']=$this->conf['admin_credit_invoice_pdf_tmpl_path'];
+		}
 		if ($this->conf['admin_invoice_pdf_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);
 		} else {
