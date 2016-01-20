@@ -1075,7 +1075,7 @@
             <label index="street_address_is_required">Street address is a required field.</label>
             <label index="street_address_number">number</label>
             <label index="street_number_is_required">Number is a required field.</label>
-            <label index="sub_total">Sub-Total</label>
+            <label index="sub_total">Subtotal</label>
             <label index="submit">Submit</label>
             <label index="submit_button_label">Click here to submit value</label>
             <label index="subscribe_to_our_newsletter">Subscribe to our newsletter</label>
@@ -1276,6 +1276,8 @@
             <label index="feed_exporter_fields_label_order_by_phone">Order by phone</label>
             <label index="download_selected_orders_packingslips_in_one_pdf">Download selected orders packingslips in one PDF file</label>
             <label index="grand_total_excluding_vat">Grand total excluding VAT</label>
+            <label index="your_coc_id">Your CoC-id</label>
+            <label index="credit_invoice">Credit Invoice</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2544,6 +2546,8 @@
             <label index="feed_exporter_fields_label_order_by_phone">Bestelling - telefonische bestelling</label>
             <label index="download_selected_orders_packingslips_in_one_pdf">Download alle pakbonnen in 1 PDF voor de geselecteerde bestellingen</label>
             <label index="grand_total_excluding_vat">Totaalbedrag exclusief BTW</label>
+            <label index="your_coc_id">Uw KvK-nummer</label>
+            <label index="credit_invoice">Creditfactuur</label>
         </languageKey>
     </data>
 </T3locallang>

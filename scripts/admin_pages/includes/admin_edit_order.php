@@ -1529,7 +1529,8 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
 			// products price total header col
-			$order_products_header_data['products_final_price']['class']='cellFinalPrice';
+			//cellFinalPrice
+			$order_products_header_data['products_final_price']['class']='cellPrice';
 			$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_ex_vat');
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
@@ -1619,9 +1620,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($original_pn!=$order['products_name']) {
 									$custom_product_name=$order['products_name'];
 								}
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
 							} else {
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
 							}
 						}
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
@@ -1677,7 +1678,8 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
+						//cellFinalPrice
+						$order_products_body_data['products_final_price']['class']='cellPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1813,7 +1815,8 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
+						//cellFinalPrice
+						$order_products_body_data['products_final_price']['class']='cellPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
@@ -2258,7 +2261,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
-					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
+					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
@@ -2330,7 +2333,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_qty']['value']='';
 					// products name col
 					$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
-					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
+					$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" class="form-control" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						// products status col
 						$order_products_body_data['products_status']['value']='';
@@ -2653,7 +2656,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$coupon_code=' (code: '.$orders['coupon_code'].')';
 				}
 				$content_discount='
-                <div class="form-group">
+                <div class="form-group" id="order_discount_wrapper">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
                     '.$discount_content.'
