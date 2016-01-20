@@ -1602,7 +1602,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products qty col
 						$order_products_body_data['products_qty']['align']='right';
 						$order_products_body_data['products_qty']['class']='cellQty';
-						$order_products_body_data['products_qty']['value']='<input type="hidden" name="product_name" id="product_name" value="'.$order['products_name'].'">';
+						$order_products_body_data['products_qty']['value']='<input type="hidden" name="product_name" id="product_name" value="'.htmlspecialchars($order['products_name']).'">';
 						$order_products_body_data['products_qty']['value'].='<input type="hidden" name="orders_products_id" value="'.$order['orders_products_id'].'">';
 						$order_products_body_data['products_qty']['value'].='<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="'.round($order['qty'], 13).'" />';
 						// products name col
@@ -1620,9 +1620,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($original_pn!=$order['products_name']) {
 									$custom_product_name=$order['products_name'];
 								}
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.htmlspecialchars($this->pi_getLL('admin_current_custom_product_name')).':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.htmlspecialchars($custom_product_name).'" style="width:402px;" /></div>';
 							} else {
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.htmlspecialchars($this->pi_getLL('admin_custom_product_name')).':</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
 							}
 						}
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {

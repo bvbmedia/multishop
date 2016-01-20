@@ -721,24 +721,24 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			// ITEM_NAME
 			$tmp_item_name=array();
-			$tmp_item_name['products_name']=$product['products_name'];
+			$tmp_item_name['products_name']=htmlspecialchars($product['products_name']);
 			$tmp_item_name['products_model']='';
 			if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
-				$tmp_item_name['products_model']=' ('.$product['products_model'].') ';
+				$tmp_item_name['products_model']=' ('.htmlspecialchars($product['products_model']).') ';
 			}
 			// for virtual product download link
 			if ($template_type=='email' && $order['mail_template']=='email_order_paid_letter' && $order['paid']==1 && isset($product['file_download_code']) && !empty($product['file_download_code'])) {
-				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
+				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.htmlspecialchars($product['products_name']).'" title="'.htmlspecialchars($product['products_name']).'">Download product</a>';
 				$tmp_item_name['download_link']=$download_link;
 			}
 			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
-				$tmp_item_name['products_ean']='<br/>EAN: '.$product['ean_code'];
+				$tmp_item_name['products_ean']='<br/>EAN: '.htmlspecialchars($product['ean_code']);
 			}
 			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-				$tmp_item_name['products_sku']='<br/>SKU: '.$product['sku_code'];
+				$tmp_item_name['products_sku']='<br/>SKU: '.htmlspecialchars($product['sku_code']);
 			}
 			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
-				$tmp_item_name['products_vendor_code']='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
+				$tmp_item_name['products_vendor_code']='<br/>'.htmlspecialchars($this->pi_getLL('label_order_details_vendor_code', 'Vendor code')).': '.htmlspecialchars($product['vendor_code']);
 			}
 			if (count($product['attributes'])) {
 				foreach ($product['attributes'] as $tmpkey=>$options) {
@@ -751,7 +751,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$attribute_price=$options['options_values_price'];
 					}
-					$tmp_item_name['products_attributes'][]='<BR>'.$options['products_options'].': '.$options['products_options_values'];
+					$tmp_item_name['products_attributes'][]='<BR>'.htmlspecialchars($options['products_options']).': '.htmlspecialchars($options['products_options_values']);
 					$price=$price+($product['qty']*($options['price_prefix'].$options['options_values_price']));
 					if ($price<0) {
 						$price=0;
@@ -783,12 +783,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 			$item['ITEM_NAME']=$item_name;
-			$item['ITEM_MODEL']=$product_db['products_model'];
+			$item['ITEM_MODEL']=htmlspecialchars($product_db['products_model']);
 			// ITEM NAME EOF
 			// ITEM_QUANTITY
 			$item['ITEM_QUANTITY']=round($product['qty'], 14);
 			// ITEM_SKU
-			$item['ITEM_SKU']=$product_db['sku_code'];
+			$item['ITEM_SKU']=htmlspecialchars($product_db['sku_code']);
 			// ITEM_TOTAL
 			if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 				$tmp_tax=round(($product['final_price']*($product['products_tax']/100)), 2);
@@ -801,7 +801,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			$item['ITEM_TOTAL']=mslib_fe::amount2Cents($final_price).$subprices;
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
-				$item['ITEM_PRODUCT_STATUS']=mslib_fe::getOrderStatusName($product['status']);
+				$item['ITEM_PRODUCT_STATUS']=htmlspecialchars(mslib_fe::getOrderStatusName($product['status']));
 			}
 			$item['ITEM_VAT_RATE']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 			// GRAND TOTAL CALCULATIONS

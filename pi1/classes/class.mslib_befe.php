@@ -4051,24 +4051,24 @@ class mslib_befe {
 				$markerArray['ITEM_ROW_TYPE']=$tr_type;
 				$markerArray['ITEM_PRODUCT_QTY']=round($product['qty'], 2);
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
-				$product_name=$product['products_name'];
+				$product_name=htmlspecialchars($product['products_name']);
 				if ($product['products_article_number']) {
-					$product_name.=' ('.$product['products_article_number'].')';
+					$product_name.=' ('.htmlspecialchars($product['products_article_number']).')';
 				}
 				if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
-					$product_name.='<br/>Model: '.$product['products_model'];
+					$product_name.='<br/>Model: '.htmlspecialchars($product['products_model']);
 				}
 				if ($product['products_description']) {
 					$product_name.='<br/>'.nl2br($product['products_description']);
 				}
 				if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_ean')).': '.htmlspecialchars($product['ean_code']);
 				}
 				if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_sku')).': '.htmlspecialchars($product['sku_code']);
 				}
 				if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
-					$product_name.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
+					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_vendor_code')).': '.htmlspecialchars($product['vendor_code']);
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
 				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
@@ -4088,7 +4088,7 @@ class mslib_befe {
 							$attributeMarkerArray['ITEM_ATTRIBUTE_ROW_TYPE']=$tr_type;
 							$attributeMarkerArray['ITEM_ATTRIBUTE']='';
 							if ($options['products_options'] && $options['products_options_values']) {
-								$attributeMarkerArray['ITEM_ATTRIBUTE']=$options['products_options'].': '.$options['products_options_values'];
+								$attributeMarkerArray['ITEM_ATTRIBUTE']=htmlspecialchars($options['products_options']).': '.htmlspecialchars($options['products_options_values']);
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_VAT']='';
 							// calculating
