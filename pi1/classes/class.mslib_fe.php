@@ -7752,14 +7752,19 @@ class mslib_fe {
 						}
 					}
 				}
+
 				if (is_array($add_usergroup)) {
 					foreach ($add_usergroup as $item) {
 						if ($item) {
-							$new_groups[]=$item;
+							if (!in_array($item, $this->excluded_userGroups)) {
+								$new_groups[] = $item;
+							}
 						}
 					}
 				} else if ($add_usergroup) {
-					$new_groups[]=$add_usergroup;
+					if (!in_array($add_usergroup, $this->excluded_userGroups)) {
+						$new_groups[] = $add_usergroup;
+					}
 				}
 				$new_groups=array_unique($new_groups);
 				$new_string=implode(",", $new_groups);
