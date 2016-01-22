@@ -7540,11 +7540,12 @@ class mslib_fe {
 			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.related_to=\''.$related_category_id.'\' and c.categories_id=cd.categories_id', // WHERE...
+				'cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\''.($related_category_id>0 ? ' and c.related_to=\''.$related_category_id.'\'' : '').' and c.categories_id=cd.categories_id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
 			);
+
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -7752,14 +7753,19 @@ class mslib_fe {
 						}
 					}
 				}
+
 				if (is_array($add_usergroup)) {
 					foreach ($add_usergroup as $item) {
 						if ($item) {
-							$new_groups[]=$item;
+							if (!in_array($item, $this->excluded_userGroups)) {
+								$new_groups[] = $item;
+							}
 						}
 					}
 				} else if ($add_usergroup) {
-					$new_groups[]=$add_usergroup;
+					if (!in_array($add_usergroup, $this->excluded_userGroups)) {
+						$new_groups[] = $add_usergroup;
+					}
 				}
 				$new_groups=array_unique($new_groups);
 				$new_string=implode(",", $new_groups);
