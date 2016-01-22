@@ -1264,6 +1264,7 @@ if ($this->post) {
 				}
 			}
 		} else {
+
 			$prodid=$this->post['pid'];
 			$updateArray['products_last_modified']=time();
 			// if product is originally coming from products importer we have to define that the merchant changed it
@@ -1377,8 +1378,8 @@ if ($this->post) {
 								}
 								$crumbar_ident_string=implode(',', $crumbar_ident_array);
 								//
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and crumbar_identifier=\''.$crumbar_ident_string.'\' and page_uid='.$page_uid);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								//$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and crumbar_identifier=\''.$crumbar_ident_string.'\' and page_uid='.$page_uid);
+								//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								// remove the custom page desc if the cat id is not related anymore in p2c
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2186,6 +2187,9 @@ if ($this->post) {
 		$str="SELECT p.*, c.categories_id, pd.file_location, pd.file_label, p.custom_settings from tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p2c.products_id='".$this->get['pid']."' ";
 		if (is_numeric($this->get['cid'])) {
 			$str.=" and p2c.categories_id=".$this->get['cid']." and is_deepest=1";
+		}
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+			//$str.=" and p2c.page_uid=".$this->shop_pid;
 		}
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
