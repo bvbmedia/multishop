@@ -2204,10 +2204,12 @@ if ($this->post) {
 		//
 		$local_primary_product_categories=$product['categories_id'];
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
+			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and (pd.page_uid='".$this->shop_pid."' or pd.page_uid='0' or pd.page_uid>0) and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0' or pd.layered_categories_id>0) and p.products_id=pd.products_id";
 		} else {
 			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and p.products_id=pd.products_id";
 		}
+		//echo $str;
+		//die();
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$lngproduct[$row['language_id']]=$row;
