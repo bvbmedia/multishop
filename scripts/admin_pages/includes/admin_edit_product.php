@@ -1264,7 +1264,6 @@ if ($this->post) {
 				}
 			}
 		} else {
-
 			$prodid=$this->post['pid'];
 			$updateArray['products_last_modified']=time();
 			// if product is originally coming from products importer we have to define that the merchant changed it
@@ -2189,7 +2188,7 @@ if ($this->post) {
 			$str.=" and p2c.categories_id=".$this->get['cid']." and is_deepest=1";
 		}
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-			//$str.=" and p2c.page_uid=".$this->shop_pid;
+			$str.=" and p2c.page_uid=".$this->shop_pid;
 		}
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
