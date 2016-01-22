@@ -1330,17 +1330,18 @@ if ($this->post) {
 									$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 									if (!empty($tmp_catname)) {
 										$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
-										if ($product_real_page_uid==$page_uid) {
+										if ($product_real_page_uid!=$page_uid) {
 											$tmp_category_id=0;
-										}
-										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
-										if (!$foreign_catid) {
-											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-										} else {
-											$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+											$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
+											if (!$foreign_catid) {
+												$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+											} else {
+												$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+											}
 										}
 									}
 								}
+								//print_r($endpoint_catid);
 								$shopRecord=implode(',', $endpoint_catid);
 							}
 						}
@@ -1353,6 +1354,8 @@ if ($this->post) {
 						}
 					}
 				}
+				//print_r($catIds);
+				//die();
 				// finally get the category ids that we must remove
 				if (is_array($catOldIds) && count($catOldIds)) {
 					foreach ($catOldIds as $page_uid=>$catOldArray) {
