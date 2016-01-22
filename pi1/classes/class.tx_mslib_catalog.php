@@ -204,7 +204,7 @@ class tx_mslib_catalog {
 		}
 	}
 	function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
-		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->showCatalogFromPage.'\''));
+		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->shop_pid.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
 			return $rec;
 		} else {
