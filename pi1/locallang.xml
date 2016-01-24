@@ -796,9 +796,9 @@
             <label index="full_name">full name</label>
             <label index="gender">gender</label>
             <label index="gender_is_required">Title is required</label>
-            <label index="gender_salutation_female">Dear Madam</label>
-            <label index="gender_salutation_male">Dear Sir</label>
-            <label index="gender_salutation_unknown">Dear Sir/Madam</label>
+            <label index="gender_salutation_female">Dear Mrs</label>
+            <label index="gender_salutation_male">Dear Mr</label>
+            <label index="gender_salutation_unknown">Dear Mr/Mrs</label>
             <label index="general_conditions">General conditions</label>
             <label index="generic">generic</label>
             <label index="go_directly_to_checkout">Go directly to checkout</label>
