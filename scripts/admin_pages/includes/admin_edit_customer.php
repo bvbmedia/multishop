@@ -245,7 +245,9 @@ if ($this->post && $this->post['email']) {
                 $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
             }
 			if (!empty($this->post['tx_multishop_pi1']['groups'])) {
-				$this->post['tx_multishop_pi1']['groups']=$this->conf['fe_customer_usergroup'];
+				if (!empty($this->conf['fe_customer_usergroup'])) {
+					$this->post['tx_multishop_pi1']['groups'] .= ',' . $this->conf['fe_customer_usergroup'];
+				}
 				$updateArray['usergroup']=$this->post['tx_multishop_pi1']['groups'];
 			} else {
 				$updateArray['usergroup']=$this->conf['fe_customer_usergroup'];
@@ -609,7 +611,7 @@ foreach ($groups as $group) {
 }
 $customer_groups_input.='</select>';*/
 $selected_groups=array();
-$userGroupUids=explode(',',$this->post['usergroup']);
+$userGroupUids=explode(',',$this->post['tx_multishop_pi1']['groups']);
 if (is_array($userGroupUids) && count($userGroupUids)) {
 	foreach ($userGroupUids as $userGroupUid) {
 		$usergroup=mslib_fe::getUserGroup($userGroupUid);
@@ -1088,8 +1090,8 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
 		$subpartArray['###LABEL_BIRTHDATE###']=ucfirst($this->pi_getLL('birthday'));
-		$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
-		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
+		$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : $this->post['birthday_visitor']);
+		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) :  $this->post['birthday']);
 		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
