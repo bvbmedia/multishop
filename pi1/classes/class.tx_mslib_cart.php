@@ -1699,6 +1699,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['user_agent']=$this->server['HTTP_USER_AGENT'];
 			if (isset($address['expected_delivery_date'])) {
 				$insertArray['expected_delivery_date']=$address['expected_delivery_date'];
+
+			}
+			//
+			$user=mslib_fe::getUser($customer_id);
+			$insertArray['payment_condition']=14;
+			if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition']>0) {
+				$insertArray['payment_condition']=$user['tx_multishop_payment_condition'];
 			}
 			//$insertArray['orders_tax_data']			=	serialize($orders_tax);
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
