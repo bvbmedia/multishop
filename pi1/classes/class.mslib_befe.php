@@ -4071,6 +4071,12 @@ class mslib_befe {
 					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_vendor_code')).': '.htmlspecialchars($product['vendor_code']);
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
+				// Seperate marker version
+				$markerArray['ITEM_SEPERATE_PRODUCTS_NAME']=htmlspecialchars($product['products_name']);
+				$markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION']=nl2br(htmlspecialchars($product['products_description']));
+				$markerArray['ITEM_SEPERATE_PRODUCTS_MODEL']=htmlspecialchars($product['products_model']);
+				// Seperate marker version eol
+
 				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 				$markerArray['ITEM_ORDER_UNIT']=$product['order_unit_name'];
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
