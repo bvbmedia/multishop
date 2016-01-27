@@ -385,7 +385,7 @@ if (!$product['products_id']) {
 	$markerArray['###MANUFACTURERS_NAME###']=$output['manufacturers_name'];
 	$markerArray['###MICRODATA_PRICE###']=$final_price;
 	$markerArray['###PRODUCTS_NAME_MARKER###']=$output['products_name_marker'];
-
+	$markerArray['###MANUFACTURERS_ADVICE_PRICE###']=mslib_fe::amount2Cents($product['manufacturers_advice_price']);
 
 	$js_detail_page_triggers[]='
 		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');

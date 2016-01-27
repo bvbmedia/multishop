@@ -680,10 +680,14 @@ class tx_mslib_user {
 			$updateArray['tx_multishop_address_type']='billing';
 			$updateArray['tx_multishop_default']=($is_default) ? 1 : 0;
 			$updateArray['tx_multishop_customer_id']=$customer_id;
+			$updateArray=mslib_befe::rmNullValuedKeys($updateArray);
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id='.$customer_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
 				return true;
+			} else {
+				//echo $GLOBALS['TYPO3_DB']->sql_error();
+				//die();
 			}
 		} else {
 			// insert billing into tt_address
@@ -732,10 +736,14 @@ class tx_mslib_user {
 			$insertArray['tx_multishop_address_type']='billing';
 			$insertArray['tx_multishop_default']=($is_default) ? 1 : 0;
 			$insertArray['tx_multishop_customer_id']=$customer_id;
+			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
 				return true;
+			} else {
+				echo $GLOBALS['TYPO3_DB']->sql_error();
+				die();
 			}
 		}
 		return false;

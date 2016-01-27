@@ -266,7 +266,8 @@ if (is_array($products) && count($products)) {
 				'.$button_submit.'
 			</form>
 		</div>
-	';
+		';
+		$markerArray['MANUFACTURERS_ADVICE_PRICE']=mslib_fe::amount2Cents($current_product['manufacturers_advice_price']);
 		// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
 		$plugins_item_extra_content=array();
 		// shipping cost popup
