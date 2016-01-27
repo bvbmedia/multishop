@@ -611,7 +611,10 @@ foreach ($groups as $group) {
 }
 $customer_groups_input.='</select>';*/
 $selected_groups=array();
-$userGroupUids=explode(',',$this->post['tx_multishop_pi1']['groups']);
+if ($this->post['tx_multishop_pi1']['groups']) {
+	$this->post['usergroup']=$this->post['tx_multishop_pi1']['groups'];
+}
+$userGroupUids=explode(',',$this->post['usergroup']);
 if (is_array($userGroupUids) && count($userGroupUids)) {
 	foreach ($userGroupUids as $userGroupUid) {
 		$usergroup=mslib_fe::getUserGroup($userGroupUid);
