@@ -9,6 +9,9 @@ $hash=$this->get['tx_multishop_pi1']['hash'];
 $invoice=mslib_fe::getInvoice($hash, 'hash');
 $pdfFileName='invoice_'.$hash.'.pdf';
 $pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED'] && file_exists($pdfFilePath)) {
+	unlink($pdfFilePath);
+}
 if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $invoice['orders_id']) {
 	if ($invoice['reversal_invoice']) {
 		$prefix='-';
@@ -412,6 +415,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 if (file_exists($pdfFilePath)) {
 	header("Content-type:application/pdf");
 	readfile($pdfFilePath);
+	if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
+		unlink($pdfFilePath);
+	}
 }
 exit();
 ?>
