@@ -202,7 +202,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
 				$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='<div class="content_footer_message" style="page-break-before:auto">
-				<br/><br/><br/>
 				'.$page[0]['content'].'
 				</div>';
 			}
