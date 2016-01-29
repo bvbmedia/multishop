@@ -2187,7 +2187,6 @@ class mslib_fe {
 					}
 				}
 			}
-			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
 			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
@@ -2204,12 +2203,14 @@ class mslib_fe {
 					'from_email'=>&$from_email,
 					'from_name'=>&$from_name,
 					'attachments'=>&$attachments,
-					'options'=>&$options
+					'options'=>&$options,
+					'mailObj'=>&$mail
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
+			$mail->AddAddress($user['email'], $user['username']);
 			if (!$options['skipSending']) {
 				//hook to let other plugins further manipulate the query
 				$return_status=$mail->Send();
