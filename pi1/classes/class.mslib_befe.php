@@ -4215,7 +4215,7 @@ class mslib_befe {
 				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation'])) {
 					foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate=>$tax_sep_data) {
 						$markerArray=array();
-						if ($tax_sep_rate>0) {
+						if (isset($tax_sep_rate)) {
 							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
 								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
 							} else {
