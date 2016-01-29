@@ -319,6 +319,19 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 
 			$markerArray['###PAID_STATUS###']=$this->pi_getLL('unpaid');
 		}
+		// Payment date
+		$markerArray['###PAID_DATE_LABEL###']=$this->pi_getLL('payment_date');
+		if ($order['paid']) {
+			$array1[]='###PAID_DATE###';
+			$array2[]=strftime("%x", $order['orders_paid_timestamp']);
+
+			$markerArray['###PAID_DATE###']=strftime("%x", $order['orders_paid_timestamp']);
+		} else {
+			$array1[]='###PAID_DATE###';
+			$array2[]=$this->pi_getLL('unpaid');
+
+			$markerArray['###PAID_DATE###']=$this->pi_getLL('unpaid');
+		}
 		// Payment received date
 		if ($order['orders_paid_timestamp']) {
 			$date=strftime("%x", $order['orders_paid_timestamp']);
