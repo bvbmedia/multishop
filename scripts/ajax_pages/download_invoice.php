@@ -5,6 +5,9 @@ if (!defined('TYPO3_MODE')) {
 if (!$this->get['tx_multishop_pi1']['hash']) {
 	die();
 }
+if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
+	$this->get['tx_multishop_pi1']['forceRecreate']=1;
+}
 $hash=$this->get['tx_multishop_pi1']['hash'];
 $invoice=mslib_fe::getInvoice($hash, 'hash');
 $pdfFileName='invoice_'.$hash.'.pdf';
@@ -427,7 +430,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 if (file_exists($pdfFilePath)) {
 	header("Content-type:application/pdf");
 	readfile($pdfFilePath);
-	if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
+	if ($this->get['tx_multishop_pi1']['forceRecreate']) {
 		unlink($pdfFilePath);
 	}
 }
