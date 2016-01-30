@@ -989,9 +989,9 @@ switch ($_REQUEST['action']) {
 							<td class="cellID"><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
 							<td class="cellDate">'.strftime("%a. %x %X", $order['crdate']).'</td>
 							<td class="cellPrice">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
-							<td nowrap>'.$order['shipping_method_label'].'</td>
-							<td nowrap>'.$order['payment_method_label'].'</td>
-							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
+							<td nowrap class="cell_shipping_method">'.$order['shipping_method_label'].'</td>
+							<td nowrap class="cell_payment_method">'.$order['payment_method_label'].'</td>
+							<td align="left" nowrap class="cell_status">'.$all_orders_status[$order['status']]['name'].'</td>
 							<td class="cellDate">'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
 							<td class="cellStatus">'.$paid_status.'</td>
 						</tr>';
