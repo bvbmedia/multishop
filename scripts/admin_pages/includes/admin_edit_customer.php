@@ -951,7 +951,7 @@ switch ($_REQUEST['action']) {
 			$select=array();
 			$select[]='o.*';
 			$filter[]='o.customer_id='.$user['uid'];
-			$filter[]='o.page_uid='.$this->shop_pid;
+			//$filter[]='o.page_uid='.$this->shop_pid;
 			$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
 			$order_listing=$this->pi_getLL('no_orders_found');
 			if ($orders_pageset['total_rows']>0) {
