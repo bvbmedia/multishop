@@ -4215,27 +4215,31 @@ class mslib_befe {
 				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation'])) {
 					foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate=>$tax_sep_data) {
 						$markerArray=array();
-						if ($tax_sep_rate>0) {
-							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
-								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
-							} else {
-								// todo: add typoscript constant to enable/disable the view
+						if (isset($tax_sep_rate)) {
+							// If TAX seperation has only 1 entry always print it (0% TAX for example)
+							// Else only print the current TAX rate if it is higher than zero
+							if (count($order['orders_tax_data']['tax_separation']) == 1 || (count($order['orders_tax_data']['tax_separation']) > 1 && $tax_sep_rate > 0)) {
+								if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
+									$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
+								} else {
+									// todo: add typoscript constant to enable/disable the view
 
-								// Show the taken amount for the seperated VAT (i.e. BTW 21% from 10 Euro)
-								//$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
+									// Show the taken amount for the seperated VAT (i.e. BTW 21% from 10 Euro)
+									//$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
 
-								// Show traditional label (i.e. BTW 21%)
-								$markerArray['LABEL_VAT']=$this->pi_getLL('vat').' '.$tax_sep_rate.'%';
+									// Show traditional label (i.e. BTW 21%)
+									$markerArray['LABEL_VAT']=$this->pi_getLL('vat').' '.$tax_sep_rate.'%';
+								}
+								if (empty($tax_sep_data['shipping_tax'])) {
+									$tax_sep_data['shipping_tax']=0;
+								}
+								if (empty($tax_sep_data['payment_tax'])) {
+									$tax_sep_data['payment_tax']=0;
+								}
+								$tax_sep_total=$prefix.($tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']);
+								$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, $customer_currency, $display_currency_symbol, 0);
+								$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 							}
-							if (empty($tax_sep_data['shipping_tax'])) {
-								$tax_sep_data['shipping_tax']=0;
-							}
-							if (empty($tax_sep_data['payment_tax'])) {
-								$tax_sep_data['payment_tax']=0;
-							}
-							$tax_sep_total=$prefix.($tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']);
-							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, $customer_currency, $display_currency_symbol, 0);
-							$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 						}
 					}
 				} else {

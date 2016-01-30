@@ -1278,6 +1278,7 @@
             <label index="grand_total_excluding_vat">Grand total excluding VAT</label>
             <label index="your_coc_id">Your CoC-id</label>
             <label index="credit_invoice">Credit Invoice</label>
+            <label index="payment_date">Payment date</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2548,6 +2549,7 @@
             <label index="grand_total_excluding_vat">Totaalbedrag exclusief BTW</label>
             <label index="your_coc_id">Uw KvK-nummer</label>
             <label index="credit_invoice">Creditfactuur</label>
+            <label index="payment_date">Betaaldatum</label>
         </languageKey>
     </data>
 </T3locallang>
