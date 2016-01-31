@@ -2180,6 +2180,9 @@ class mslib_fe {
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
 			// try to change URL images to embedded
 			$mail->SetFrom($from_email, $from_name);
+			if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
+				$mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+			}
 			if (count($attachments)) {
 				foreach ($attachments as $path) {
 					if ($path and is_file($path)) {

@@ -2262,7 +2262,17 @@ $records[]=array(
 		'depend_on_configuration_key'=>'',
 		'use_function'=>''
 );
-
+$records[]=array(
+	'configuration_title'=>'Add Reply-To e-mail address',
+	'configuration_key'=>'STORE_REPLY_TO_EMAIL',
+	'configuration_value'=>'',
+	'description'=>'Add Reply-To e-mail address for every e-mail sent by multishop.',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
