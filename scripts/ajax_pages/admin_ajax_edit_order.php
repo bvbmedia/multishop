@@ -64,26 +64,99 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		echo json_encode($return_data);
 		exit();
 		breaks;
-	case 'save_popup_value':
+	case 'update_paid_status_save_popup_value':
+		$return_data=array();
 		$order_id=$this->post['tx_multishop_pi1']['order_id'];
-		$date_paid=strtotime($this->post['tx_multishop_pi1']['date_paid']);
-		$payment_id=$this->post['tx_multishop_pi1']['payment_id'];
-		if (is_numeric($payment_id) && $payment_id>0) {
-			$payment_method=mslib_fe::getPaymentMethod($payment_id);
-			$updateArray=array();
-			$updateArray['payment_method_costs']=$payment_method['handling_costs'];
-			$updateArray['payment_method']=$payment_method['code'];
-			$updateArray['payment_method_label']=$payment_method['name'];
-			$updateArray['orders_last_modified']=time();
-			$updateArray['orders_paid_timestamp']=$date_paid;
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order_id.'\'', $updateArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			//
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
-			$mslib_order->init($this);
-			$mslib_order->repairOrder($order_id);
+		$return_data['status']='NOTOK';
+		if (is_numeric($order_id) && $order_id>0) {
+			$order=mslib_fe::getOrder($order_id);
+			if ($order['orders_id']) {
+				if ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_paid') {
+					$date_paid=strtotime($this->post['tx_multishop_pi1']['date_paid']);
+					$payment_id=$this->post['tx_multishop_pi1']['payment_id'];
+					//
+					if (mslib_fe::updateOrderStatusToPaid($order_id)) {
+						$return_data['info']=array(
+							'status'=>'info',
+							'message'=>'Order '.$orders_id.' has been updated to paid.'
+						);
+						//
+						if (is_numeric($payment_id) && $payment_id>0) {
+							$payment_method=mslib_fe::getPaymentMethod($payment_id);
+							$updateArray=array();
+							$updateArray['payment_method_costs']=$payment_method['handling_costs'];
+							$updateArray['payment_method']=$payment_method['code'];
+							$updateArray['payment_method_label']=$payment_method['name'];
+							$updateArray['orders_last_modified']=time();
+							$updateArray['orders_paid_timestamp']=$date_paid;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order_id.'\'', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							//
+							require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+							$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+							$mslib_order->init($this);
+							$mslib_order->repairOrder($order_id);
+						}
+						$return_data['status']='OK';
+					}
+				} else {
+					$updateArray=array('paid'=>0);
+					$updateArray['orders_last_modified']=time();
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+
+					$return_data['status']='OK';
+				}
+			}
 		}
+		echo json_encode($return_data);
+		exit();
+		break;
+	case 'update_invoice_paid_status_save_popup_value':
+		$return_data=array();
+		$order_id=$this->post['tx_multishop_pi1']['order_id'];
+		$invoice_id=$this->post['tx_multishop_pi1']['invoice_id'];
+		$invoice_nr=$this->post['tx_multishop_pi1']['invoice_nr'];
+		$return_data['status']='NOTOK';
+
+		$return_data['status']='NOTOK';
+		if (is_numeric($invoice_id)) {
+			$invoice=mslib_fe::getInvoice($invoice_id, 'id');
+			if ($invoice['id']) {
+				$order=mslib_fe::getOrder($invoice['orders_id']);
+				if ($order['orders_id']) {
+					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
+						if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
+							$return_data['info']=array(
+								'status'=>'info',
+								'message'=>'Invoice '.$invoice['invoice_id'].' has been updated to paid.'
+							);
+						}
+					} else {
+						$updateArray=array('paid'=>0);
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$updateArray=array('paid'=>0);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+					$return_data['status']='OK';
+				} else {
+					// this invoice has no belonging order. This could be true in specific cases so just update the invoice to not paid.
+					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
+						$updateArray=array('paid'=>1);
+					} else {
+						$updateArray=array('paid'=>0);
+					}
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$return_data['status']='OK';
+				}
+			}
+		}
+		echo json_encode($return_data);
+		exit();
 		break;
 	case 'sort_orders_products':
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
