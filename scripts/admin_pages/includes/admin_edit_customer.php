@@ -259,7 +259,8 @@ if ($this->post && $this->post['email']) {
 			if ($this->post['password']) {
 				$updateArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 			} else {
-				$updateArray['password']=mslib_befe::getHashedPassword(rand(1000000, 9000000));
+				$string='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|';
+				$updateArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(12, $string, 'unpronounceable'));
 			}
 			if ($this->post['page_uid'] and $this->masterShop) {
 				$updateArray['page_uid']=$this->post['page_uid'];
@@ -1052,6 +1053,9 @@ switch ($_REQUEST['action']) {
 			$subpartArray['###USERNAME_READONLY###']='';
 		}
 		$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
+		//if (empty($this->post['password']) || !isset($this->post['password'])) {
+		//	$this->post['password']=substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|') , 0 , 10 );
+		//}
 		$subpartArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 		$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
