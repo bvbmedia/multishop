@@ -657,7 +657,7 @@
             <label index="email_alert_quantity_threshold_letter">Alert quantity threshold e-mail content</label>
             <label index="email_create_account_confirmation">E-mail create account confirmation</label>
             <label index="email_is_not_the_same_as_repeated_email">Email address is not the same as the repeated email address</label>
-            <label index="email_is_required">E-mail is a required field. The format of the e-mail is not valid</label>
+            <label index="email_is_required">E-mail is a required field. The format of the e-mail is not valid.</label>
             <label index="email_message">E-mail message</label>
             <label index="email_order_confirmation_letter">E-mail order confirmation letter</label>
             <label index="email_order_paid_letter">E-mail order paid letter</label>
@@ -1932,7 +1932,7 @@
             <label index="email_alert_quantity_threshold_letter">Alert hoeveelheid drempel e-mail content</label>
             <label index="email_create_account_confirmation">E-mail Creëer account confirmatie</label>
             <label index="email_is_not_the_same_as_repeated_email">E-mailadres is niet gelijk aan het herhaalde e-mailadres</label>
-            <label index="email_is_required">E-mail is verplicht. Het opgegeven e-mailadres is niet geldig</label>
+            <label index="email_is_required">E-mail is verplicht. Het opgegeven e-mailadres is niet geldig.</label>
             <label index="email_message">E-mailbericht</label>
             <label index="email_order_confirmation_letter">E-mail bestelling bevestigingsbericht</label>
             <label index="email_order_paid_letter">E-mail bestelling betaald bericht</label>
