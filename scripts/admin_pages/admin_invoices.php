@@ -591,25 +591,6 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 								data: "tx_multishop_pi1[payment_id]=" + payment_id + "&tx_multishop_pi1[date_paid]=" + date_paid + "&tx_multishop_pi1[order_id]=" + order_id + "&tx_multishop_pi1[invoice_nr]=" + invoice_nr + "&tx_multishop_pi1[invoice_id]=" + invoice_id + "&tx_multishop_pi1[action]=update_selected_invoices_to_paid",
 								success: function(d) {
 									if (d.status=="OK") {
-										var success_msg=\'<div id="msAdminPostMessage">\';
-										success_msg+=\'<table class="table table-striped table-bordered">\';
-										success_msg+=\'<thead>\';
-										success_msg+=\'<tr>\';
-										success_msg+=\'<th class="text-center">Status</th>\';
-										success_msg+=\'<th>Message</th>\';
-										success_msg+=\'</tr>\';
-										success_msg+=\'</thead>\';
-										success_msg+=\'<tbody>\';
-										success_msg+=\'<tr><td class="text-center"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span></td><td>\' + d.info.message + \'</td></tr>\';
-										success_msg+=\'</tbody>\';
-										success_msg+=\'</table>\';
-										success_msg+=\'</div>\';
-										//
-										jQuery.confirm({
-											title: \'\',
-											content: $(success_msg).html()
-										});
-
 										var return_string = \'<a href="#" class="update_to_unpaid" data-order-id="\' + order_id + \'" data-invoice-nr="\' + invoice_nr + \'" data-invoice-id="\' + invoice_id + \'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('admin_label_disable').'"></span></a><span class="admin_status_green" alt="'.$this->pi_getLL('admin_label_enable').'"></span>\';
 									    tthis.html(return_string);
 									}
