@@ -1574,6 +1574,7 @@ if ($this->post) {
 								if ($product_real_page_uid==$page_uid) {
 									$tmp_category_id=0;
 								}
+								//
 								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 								if (!$foreign_catid) {
 									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
