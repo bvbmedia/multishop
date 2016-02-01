@@ -259,7 +259,7 @@ if ($this->post && $this->post['email']) {
 			if ($this->post['password']) {
 				$updateArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 			} else {
-				$string='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|';
+				$string='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./?;:[]{}\|';
 				$updateArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(12, $string, 'unpronounceable'));
 			}
 			if ($this->post['page_uid'] and $this->masterShop) {
