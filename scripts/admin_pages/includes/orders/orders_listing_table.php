@@ -363,8 +363,8 @@ $headerData.='
 							//window.location =link;
 						},
 						cancel: function(){},
-						confirmButton: \'Yes\',
-						cancelButton: \'NO\',
+						confirmButton: \''.$this->pi_getLL('yes').'\',
+						cancelButton: \''.$this->pi_getLL('no').'\',
 						backgroundDismiss: false
 					});
 					confirm_box.$b.find("#orders_paid_timestamp_visual").datepicker({
