@@ -14,7 +14,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 				//
 				$orderDetailsItem='<div class="form-group row">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').': </label>';
-				if ($this->ms['MODULES']['ORDER_EDIT'] and !$order_data['is_locked']) {
+				if ($this->ms['MODULES']['ORDER_EDIT']) {
 					if (is_array($payment_methods) and count($payment_methods)) {
 						$optionItems=array();
 						$dontOverrideDefaultOption=0;
@@ -39,9 +39,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					} else {
 						$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
 					}
-				} else {
+				}/* else {
 					$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
-				}
+				}*/
 				$orderDetailsItem.='</div>';
 				$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod row">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
@@ -125,6 +125,26 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 			if ($invoice['id']) {
 				$order=mslib_fe::getOrder($invoice['orders_id']);
 				if ($order['orders_id']) {
+					$date_paid=strtotime($this->post['tx_multishop_pi1']['date_paid']);
+					$payment_id=$this->post['tx_multishop_pi1']['payment_id'];
+					//
+					if (is_numeric($payment_id) && $payment_id>0) {
+						$payment_method=mslib_fe::getPaymentMethod($payment_id);
+						$updateArray=array();
+						$updateArray['payment_method_costs']=$payment_method['handling_costs'];
+						$updateArray['payment_method']=$payment_method['code'];
+						$updateArray['payment_method_label']=$payment_method['name'];
+						$updateArray['orders_last_modified']=time();
+						$updateArray['orders_paid_timestamp']=$date_paid;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order_id.'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						//
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+						$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+						$mslib_order->init($this);
+						$mslib_order->repairOrder($order_id);
+					}
+					//
 					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 						if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
 							$return_data['info']=array(
