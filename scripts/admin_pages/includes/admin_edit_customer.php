@@ -778,6 +778,10 @@ switch ($_REQUEST['action']) {
 				}
 			}
 			$subpartArray['###VALUE_PASSWORD###']='';
+			$subpartArray['###HIDE_PASSWORD###']='';
+			if ($this->ms['MODULES']['HIDE_PASSWORD_FIELD_IN_EDIT_CUSTOMER']=='1') {
+				$subpartArray['###HIDE_PASSWORD###']=' style="display:none"';
+			}
 			$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 			$subpartArray['###GENDER_MR_CHECKED###']=(($this->post['gender']=='0') ? 'checked="checked"' : '');
 			$subpartArray['###LABEL_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
@@ -1057,6 +1061,7 @@ switch ($_REQUEST['action']) {
 		//	$this->post['password']=substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|') , 0 , 10 );
 		//}
 		$subpartArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
+		$subpartArray['###HIDE_PASSWORD###']='';
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 		$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 		$subpartArray['###GENDER_MR_CHECKED###']=$mr_checked;
