@@ -12,7 +12,23 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 				$payment_methods=mslib_fe::loadPaymentMethods(1);
 				$order_data=mslib_fe::getOrder($order_id);
 				//
-				$orderDetailsItem='<div class="form-group row">';
+				$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod row">';
+				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').': </label>';
+				$today_tstamp=time();
+				$orders_paid_timestamp_visual=strftime('%x', $today_tstamp);
+				$orders_paid_timestamp=date("Y-m-d", $today_tstamp);
+				if ($order_data['orders_paid_timestamp']>0) {
+					$orders_paid_timestamp_visual=strftime('%x', $order_data['orders_paid_timestamp']);
+					$orders_paid_timestamp=date("Y-m-d", $order_data['orders_paid_timestamp']);
+				}
+				$orderDetailsItem.='<div class="col-md-9">
+					<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
+					<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
+					</div>';
+
+				$orderDetailsItem.='</div>';
+
+				$orderDetailsItem.='<div class="form-group row">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').': </label>';
 				if ($this->ms['MODULES']['ORDER_EDIT']) {
 					if (is_array($payment_methods) and count($payment_methods)) {
@@ -43,21 +59,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
 				}*/
 				$orderDetailsItem.='</div>';
-				$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod row">';
-				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
-				$today_tstamp=time();
-				$orders_paid_timestamp_visual=strftime('%x', $today_tstamp);
-				$orders_paid_timestamp=date("Y-m-d", $today_tstamp);
-				if ($order_data['orders_paid_timestamp']>0) {
-					$orders_paid_timestamp_visual=strftime('%x', $order_data['orders_paid_timestamp']);
-					$orders_paid_timestamp=date("Y-m-d", $order_data['orders_paid_timestamp']);
-				}
-				$orderDetailsItem.='<div class="col-md-9">
-					<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
-					<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
-					</div>';
 
-				$orderDetailsItem.='</div>';
+
 				$return_data['payment_method_date_purchased']=$orderDetailsItem;
 			}
 		}
