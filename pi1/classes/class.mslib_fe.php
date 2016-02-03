@@ -6865,6 +6865,9 @@ class mslib_fe {
 					}
 				}
 			}
+			if (!is_array($ms_menu['footer']['ms_admin_stores']['subs'])) {
+				unset($ms_menu['footer']['ms_admin_stores']);
+			}
 			$this->ms_menu=$ms_menu;
 			// multishops eof
 		}
