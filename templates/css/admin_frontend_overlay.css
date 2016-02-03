@@ -57,6 +57,14 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #555; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li { position:relative; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul { position:absolute; left:-9999em; width:250px; border:none; background:#666; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > ul { display:block; left:250px; top:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li :first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #666; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li:hover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
 
 ul#ms_admin_minimize { position:absolute; clear:left; float:left; width:102px; margin: 0; padding:0; list-style:none; }
 ul#ms_admin_minimize li { background:none; margin:0; padding:0; list-style:none; }
