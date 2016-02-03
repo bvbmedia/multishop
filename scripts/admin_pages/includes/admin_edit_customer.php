@@ -386,12 +386,18 @@ if ($this->post && $this->post['email']) {
 			}
 		}
 		if (!count($erno)) {
-			if ($this->post['tx_multishop_pi1']['referrer']) {
-				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-				exit();
-			} else {
+			if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
+				// Insert always redirect back to admin customers overview
 				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
 				exit();
+			} else {
+				if ($this->post['tx_multishop_pi1']['referrer']) {
+					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+					exit();
+				} else {
+					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
+					exit();
+				}
 			}
 		}
 	}
