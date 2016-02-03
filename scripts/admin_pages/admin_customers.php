@@ -408,6 +408,7 @@ if (!$this->get['tx_multishop_pi1']['show_deleted_accounts']) {
 if (!$this->masterShop) {
 	$filter[]="f.page_uid='".$this->shop_pid."'";
 }
+$filter[]="f.pid='".$this->conf['fe_customer_pid']."'";
 if (!empty($this->get['crdate_from']) && !empty($this->get['crdate_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['crdate_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
