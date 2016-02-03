@@ -64,7 +64,8 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
-	$markerArray['INVOICES_CUSTOMER_NAME']=$link_name;
+	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$invoice['customer_id'].'&action=edit_customer', 1);
+	$markerArray['INVOICES_CUSTOMER_NAME']=$customer_edit_link;
 	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
