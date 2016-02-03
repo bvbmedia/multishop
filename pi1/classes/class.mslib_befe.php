@@ -3612,6 +3612,17 @@ class mslib_befe {
 		}
 		$user=mslib_fe::getUser($uid);
 		if ($user['uid']) {
+			$GLOBALS['TSFE']->fe_user->logoff();
+			$GLOBALS['TSFE']->loginUser = 0;
+
+			$fe_user = $GLOBALS['TSFE']->fe_user;
+			$fe_user->createUserSession(array('uid' => $uid));
+			$fe_user->user = $fe_user->getRawUserByUid($uid);
+			$fe_user->fetchGroupData();
+			$GLOBALS['TSFE']->loginUser = 1;
+
+			/*
+			 * Old style, dont use this anymore. use above approach which uses the $uid
 			// auto login the user
 			$loginData=array(
 				'uname'=>$user['username'],
@@ -3624,6 +3635,7 @@ class mslib_befe {
 			$info=$GLOBALS['TSFE']->fe_user->getAuthInfoArray();
 			$user=$GLOBALS['TSFE']->fe_user->fetchUserRecord($info['db_user'], $loginData['uname']);
 			$GLOBALS['TSFE']->fe_user->createUserSession($user);
+			*/
 			// auto login the user
 			if (is_numeric($this->conf['login_as_customer_target_pid'])) {
 				$targetPid=$this->conf['login_as_customer_target_pid'];
