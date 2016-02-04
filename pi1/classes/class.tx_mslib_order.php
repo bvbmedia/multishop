@@ -977,6 +977,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subpartArray['###'.$key.'###']='';
 			$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 		}
+
+
 		//DISCOUNT_WRAPPER EOF
 		//TAX_COSTS_WRAPPER
 		$key='TAX_COSTS_WRAPPER';
