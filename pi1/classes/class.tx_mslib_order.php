@@ -373,7 +373,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			//
 			if ($mail_template) {
 				switch ($mail_template) {
 					case 'email_order_paid_letter':
@@ -427,7 +426,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			//
 			if ($page[0]['content']) {
 				// loading the email confirmation letter eof
 				// replacing the variables with dynamic values
@@ -549,6 +547,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 				$array1[]='###CUSTOMER_ID###';
 				$array2[]=$order['customer_id'];
+
 				$ORDER_DETAILS=self::printOrderDetailsTable($order, 'email');
 				if ($this->ms['MODULES']['CREATE_INVOICE_DIRECTLY_AFTER_CREATING_ORDER']) {
 					// FORCE CREATE INVOICE IF NOT ALREADY EXISTING

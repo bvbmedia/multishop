@@ -168,6 +168,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->pi_loadLL();
 		mslib_befe::setDefaultSystemLanguage();
 
+
 		// load language cookie for the backend eof
 		// disabled the code so developer can work with config.absRefPrefix too
 		/*

@@ -4533,7 +4533,8 @@ class mslib_befe {
 	function setDefaultSystemLanguage() {
 		$this->defaultLanguageArray=array();
 		$this->defaultLanguageArray['lang']=$this->lang;
-		$this->defaultLanguageArray['LLkey']=$this->LLkey;
+		// Dont set llkey because then the language switcher mixed languages
+		//$this->defaultLanguageArray['LLkey']=$this->LLkey;
 		$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
 		$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
 		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
@@ -4547,7 +4548,8 @@ class mslib_befe {
 			if ($language_code!='') {
 				$language_code=strtolower($language_code);
 				$this->lang=$language_code;
-				$this->LLkey=$language_code;
+				// Dont set llkey because then the language switcher mixed languages
+				//$this->LLkey=$language_code;
 				/*
                 if ($language_code=='en') {
                     // default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
@@ -4558,10 +4560,9 @@ class mslib_befe {
 				$GLOBALS['TSFE']->config['config']['language']=$language_code;
 				$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
 				$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
+				$this->sys_language_uid=$sys_language_uid;
 				$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
-
 				setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
-				$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
 			}
 		}
 	}
