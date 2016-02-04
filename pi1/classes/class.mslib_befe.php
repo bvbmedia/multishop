@@ -4515,7 +4515,7 @@ class mslib_befe {
 		if (!is_numeric($id)) {
 			return false;
 		}
-		$this->msDebug=1;
+		//$this->msDebug=1;
 		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'),'statlang.lg_iso_2');
 		if ($record['lg_iso_2']) {
 			return $record['lg_iso_2'];
@@ -4539,7 +4539,7 @@ class mslib_befe {
 		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
 	}
 	function setSystemLanguage($sys_language_uid) {
-		if ($sys_language_uid>0) {
+		if (is_numeric($sys_language_uid)) {
 			if (!is_array($this->defaultLanguageArray)) {
 				mslib_befe::setDefaultSystemLanguage();
 			}
