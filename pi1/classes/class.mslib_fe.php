@@ -5773,9 +5773,12 @@ class mslib_fe {
 			}
 			if ($field) {
 				$filter=array();
+				/*
+				 * todo: At this moment disabled, because when enabled, projects that uses multiple sys_folders for fe_users this causes problems
 				if ($this->conf['fe_customer_pid']) {
 					$filter[]='pid='.$this->conf['fe_customer_pid'];
 				}
+				*/
 				$filter[]=$field.'=\''.addslashes($value).'\'';
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 					'fe_users', // FROM ...
