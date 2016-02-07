@@ -22,9 +22,22 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$prefix='';
 	}
 	$order=mslib_fe::getOrder($invoice['orders_id'],'orders_id',1);
-
-	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
+		$orders_tax_data=$order['orders_tax_data'];
+		if ($this->sys_language_uid != $order['sys_language_uid']) {
+			// The order is created in different language, let us try to find the correct localized label
+			$methodLabel=mslib_befe::getShippingMethodLabelByCode($order['shipping_method'],$this->sys_language_uid);
+			if ($methodLabel) {
+				$order['shipping_method_label']=$methodLabel;
+			}
+		}
+		if ($this->sys_language_uid != $order['sys_language_uid']) {
+			// The order is created in different language, let us try to find the correct localized label
+			$methodLabel=mslib_befe::getPaymentMethodLabelByCode($order['payment_method'],$this->sys_language_uid);
+			if ($methodLabel) {
+				$order['payment_method_label']=$methodLabel;
+			}
+		}
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplatePreProc'])) {
 			$params=array(

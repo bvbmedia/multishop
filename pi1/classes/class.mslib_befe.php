@@ -4588,6 +4588,64 @@ class mslib_befe {
 			$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
 		}
 	}
+	public function getPaymentMethodLabelByCode($code, $sys_language_id=0) {
+		if ($code) {
+			$select=array();
+			$select[]='pd.name';
+
+			$from=array();
+			$from[]='tx_multishop_payment_methods p';
+			$from[]='tx_multishop_payment_methods_description pd';
+
+			$where=array();
+			$orderby=array();
+			$where[]='p.code=\''.addslashes($code).'\'';
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+			$where[]='p.id=pd.id';
+
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(', ', $select), // SELECT ...
+					implode(', ', $from), // FROM ...
+					implode(' and ', $where), // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				return $row['name'];
+			}
+		}
+	}
+	public function getShippingMethodLabelByCode($code, $sys_language_id=0) {
+		if ($code) {
+			$select=array();
+			$select[]='pd.name';
+
+			$from=array();
+			$from[]='tx_multishop_shipping_methods p';
+			$from[]='tx_multishop_shipping_methods_description pd';
+
+			$where=array();
+			$orderby=array();
+			$where[]='p.code=\''.addslashes($code).'\'';
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+			$where[]='p.id=pd.id';
+
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(', ', $select), // SELECT ...
+					implode(', ', $from), // FROM ...
+					implode(' and ', $where), // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				return $row['name'];
+			}
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
