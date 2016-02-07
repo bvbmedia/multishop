@@ -7,7 +7,7 @@
  *
  * Modified by Lincoln Cooper to add Safari support and only call the callback once during initialization
  * for msie when no initial hash supplied.
- * API rewrite by Lauris Bukðis-Haberkorns
+ * API rewrite by Lauris Bukï¿½is-Haberkorns
  */
 
 (function($) {
