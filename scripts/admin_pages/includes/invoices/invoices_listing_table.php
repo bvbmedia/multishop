@@ -8,10 +8,6 @@ $invoiceItem='';
 foreach ($invoices as $invoice) {
 	$cb_ctr++;
 	$user=mslib_fe::getUser($invoice['customer_id']);
-	$link_name=$invoice['ordered_by'];
-	if ($user['username']) {
-		$link_name.=" (".$user['username'].")";
-	}
 	$master_shop_col='';
 	if ($this->masterShop) {
 		$master_shop_col='<td class="cellName">'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
@@ -64,8 +60,12 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
-	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$invoice['customer_id'].'&action=edit_customer', 1);
-	$markerArray['INVOICES_CUSTOMER_NAME']=$customer_edit_link;
+	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$invoice['customer_id'].'&action=edit_customer', 1);
+	$link_name=$invoice['ordered_by'];
+	if ($user['username']) {
+		$link_name.=" (".$user['username'].")";
+	}
+	$markerArray['INVOICES_CUSTOMER_NAME']='<a href="'.$customer_edit_link.'">'.$link_name.'</a>';
 	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
