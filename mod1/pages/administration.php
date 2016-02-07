@@ -78,6 +78,7 @@ switch ($_REQUEST['action']) {
 				if (count($records)>0) {
 					$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration_values', 'page_uid='.$target_pid);
 					foreach ($records as $record) {
+						$record=mslib_befe::rmNullValuedKeys($record);
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_configuration_values', $record);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -113,6 +114,7 @@ switch ($_REQUEST['action']) {
 					if (count($records)>0) {
 						$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration_values', 'page_uid='.$target_pid);
 						foreach ($records as $record) {
+							$record=mslib_befe::rmNullValuedKeys($record);
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_configuration_values', $record);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
@@ -561,8 +563,10 @@ switch ($_REQUEST['action']) {
 					if (is_array($database['customers']) and count($database['customers'])) {
 						$tx_multishop_customer_ids=array();
 						// lets import the old customers
-						foreach ($database['orders_status_history'] as &$row) {
-							$row['crdate']=strtotime($row['date_added']);
+						if (is_array($database['orders_status_history'])) {
+							foreach ($database['orders_status_history'] as &$row) {
+								$row['crdate']=strtotime($row['date_added']);
+							}
 						}
 						foreach ($database['customers'] as $row) {
 							$user=mslib_fe::getUser($row['customers_email_address'], 'email');
@@ -622,6 +626,7 @@ switch ($_REQUEST['action']) {
 								$insertArray['page_uid']=$this->post['page_uid'];
 								$insertArray['usergroup']='';
 								$insertArray['pid']='';
+								$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 								$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery('fe_users', $insertArray);
 								$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 								$tx_multishop_customer_ids[$row['customers_id']]=$new_id;
@@ -824,6 +829,7 @@ switch ($_REQUEST['action']) {
 										$insertArray['date']=time();
 										$insertArray['status']=1;
 										$insertArray['provider']='cod';
+										$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -833,6 +839,7 @@ switch ($_REQUEST['action']) {
 											$updateArray['description']='';
 											$updateArray['id']=$id;
 											$updateArray['language_id']=0;
+											$updateArray=mslib_befe::rmNullValuedKeys($updateArray);
 											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_description', $updateArray);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 											$payment_method=mslib_fe::getPaymentMethod($record['payment_method'], 'd.name');
@@ -852,6 +859,7 @@ switch ($_REQUEST['action']) {
 										$insertArray['date']=time();
 										$insertArray['status']=1;
 										$insertArray['provider']='cod';
+										$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -861,6 +869,7 @@ switch ($_REQUEST['action']) {
 											$updateArray['description']='';
 											$updateArray['id']=$id;
 											$updateArray['language_id']=0;
+											$updateArray=mslib_befe::rmNullValuedKeys($updateArray);
 											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 											$shipping_method=mslib_fe::getShippingMethod($record['shipping_method'], 'd.name');
@@ -981,6 +990,7 @@ switch ($_REQUEST['action']) {
 							}
 							// older multishop versions has sometimes columnes that are not existing in the newer version. lets filter them out EOF
 							$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=true;
+							$record=mslib_befe::rmNullValuedKeys($record);
 							$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 							if ($GLOBALS['TYPO3_DB']->sql_insert_id() or $GLOBALS['TYPO3_DB']->sql_affected_rows()) {
 								$insert_records++;
@@ -1000,6 +1010,7 @@ switch ($_REQUEST['action']) {
 									$old_id=$record['categories_id'];
 									$record['categories_id']='';
 									$record['status']=1;
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1014,6 +1025,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_categories_description':
 								foreach ($records as $record) {
 									$record['categories_id']=$tx_multishop_categories_ids[$record['categories_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1024,6 +1036,7 @@ switch ($_REQUEST['action']) {
 									$record['page_uid']=$this->post['page_uid'];
 									$old_id=$record['id'];
 									$record['id']='';
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1035,6 +1048,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_cms_description':
 								foreach ($records as $record) {
 									$record['id']=$tx_multishop_cms_ids[$record['id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1046,6 +1060,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_configuration_values':
 								foreach ($records as $record) {
 									$record['id']='';
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1059,6 +1074,7 @@ switch ($_REQUEST['action']) {
 									$record['page_uid']=$this->post['page_uid'];
 									$old_id=$record['manufacturers_id'];
 									$record['manufacturers_id']='';
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1070,6 +1086,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_manufacturers_description':
 								foreach ($records as $record) {
 									$record['manufacturers_id']=$tx_multishop_manufacturers_ids[$record['manufacturers_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1077,6 +1094,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_manufacturers_info':
 								foreach ($records as $record) {
 									$record['manufacturers_id']=$tx_multishop_manufacturers_ids[$record['manufacturers_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1092,6 +1110,7 @@ switch ($_REQUEST['action']) {
 										$record['customer_id']=$tx_multishop_customer_ids[$record['customer_id']];
 									}
 									$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=true;
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1107,6 +1126,7 @@ switch ($_REQUEST['action']) {
 								foreach ($records as $record) {
 									$record['orders_id']=$tx_multishop_orders_ids[$record['orders_id']];
 									$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=true;
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_orders_products_id) {
@@ -1121,6 +1141,7 @@ switch ($_REQUEST['action']) {
 								foreach ($records as $record) {
 									$record['orders_id']=$tx_multishop_orders_ids[$record['orders_id']];
 									$record['crdate']=strtotime($record['orders_id']);
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1136,6 +1157,7 @@ switch ($_REQUEST['action']) {
 									$old_id=$record['products_id'];
 									$record['products_id']='';
 									$record['products_status']=1;
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1150,6 +1172,7 @@ switch ($_REQUEST['action']) {
 							case 'tx_multishop_products_faq':
 								foreach ($records as $record) {
 									$record['products_id']=$tx_multishop_products_ids[$record['products_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1163,6 +1186,7 @@ switch ($_REQUEST['action']) {
 									$record['page_uid']=$this->post['page_uid'];
 									$old_id=$record['products_options_id'];
 									$record['products_options_id']='';
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1177,6 +1201,7 @@ switch ($_REQUEST['action']) {
 									$record['page_uid']=$this->post['page_uid'];
 									$old_id=$record['products_options_values_id'];
 									$record['products_options_values_id']='';
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1193,6 +1218,7 @@ switch ($_REQUEST['action']) {
 									$record['products_options_values_to_products_options_id']='';
 									$record['products_options_id']=$tx_multishop_products_options_ids[$record['products_options_id']];
 									$record['products_options_values_id']=$tx_multishop_products_options_values_ids[$record['products_options_values_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
@@ -1204,6 +1230,7 @@ switch ($_REQUEST['action']) {
 								foreach ($records as $record) {
 									$record['products_id']=$tx_multishop_products_ids[$record['products_id']];
 									$record['categories_id']=$tx_multishop_categories_ids[$record['categories_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1213,6 +1240,7 @@ switch ($_REQUEST['action']) {
 									$record['products_to_relative_product_id']='';
 									$record['products_id']=$tx_multishop_products_ids[$record['products_id']];
 									$record['relative_product_id']=$tx_multishop_products_ids[$record['relative_product_id']];
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}
@@ -1249,6 +1277,7 @@ switch ($_REQUEST['action']) {
 									if ($record['date_status_change']>0) {
 										$record['date_status_change']=strtotime($record['date_status_change']);
 									}
+									$record=mslib_befe::rmNullValuedKeys($record);
 									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
 									$insert_records++;
 								}

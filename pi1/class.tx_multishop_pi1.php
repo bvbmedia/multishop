@@ -166,6 +166,26 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		$this->LOCAL_LANG_loaded=0;
 		$this->pi_loadLL();
+
+		// Preload additional languages
+		$preloadLanguagesArray=array();
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['preloadAdditionalLanguages'])) {
+			$params=array(
+					'preloadLanguagesArray'=>&$preloadLanguagesArray,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['preloadAdditionalLanguages'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if (count($preloadLanguagesArray)) {
+			$tempLLkey=$this->LLkey;
+			foreach ($preloadLanguagesArray as $item) {
+				$this->LLkey=$item;
+				$this->LOCAL_LANG_loaded=0;
+				$this->pi_loadLL();
+			}
+			$this->LLkey=$tempLLkey;
+		}
 		mslib_befe::setDefaultSystemLanguage();
 
 		// load language cookie for the backend eof

@@ -1180,18 +1180,27 @@ if ($this->post) {
 							}
 							$endpoint_catid=array();
 							foreach ($tmp_categories_id as $tmp_category_id) {
+								$current_category_id=$tmp_category_id;
+								//echo $tmp_category_id;
 								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 								if (!empty($tmp_catname)) {
 									$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
-									if ($product_real_page_uid==$page_uid) {
+									if ($product_real_page_uid==$this->shop_pid) {
 										$tmp_category_id=0;
 									}
-									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
-									if (!$foreign_catid) {
-										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-									} else {
-										$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
-									}
+									//if ($product_real_page_uid!=$page_uid) {
+										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id, $current_category_id, $prodid);
+										if ($product_real_page_uid!=$page_uid) {
+											$tmp_category_id='::rel_'.$current_category_id;
+										} else {
+											$tmp_category_id='';
+										}
+										if (!$foreign_catid) {
+											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+										} else {
+											$endpoint_catid[]=$foreign_catid.$tmp_category_id;
+										}
+									//}
 								}
 							}
 							$shopRecord=implode(',', $endpoint_catid);
@@ -1302,7 +1311,10 @@ if ($this->post) {
 				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['old_products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['old_products_to_shop_categories'])) {
 					foreach ($this->post['tx_multishop_pi1']['old_products_to_shop_categories'] as $page_uid=>$shopRecord) {
 						if (strpos($shopRecord, ',')!==false) {
-							$catOldIds[$page_uid]=explode(',', $shopRecord);
+							$shopRecordsTmp=explode(',', $shopRecord);
+							foreach ($shopRecordsTmp as $shopRecordTmp) {
+								$catOldIds[$page_uid][] = $shopRecordTmp;
+							}
 						} else {
 							$catOldIds[$page_uid][]=$shopRecord;
 						}
@@ -1311,9 +1323,28 @@ if ($this->post) {
 				// now collect the new category ids
 				$catIds=array();
 				if (strpos($this->post['categories_id'], ',')!==false) {
-					$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
+					$tmp_categories_id=explode(',', $this->post['categories_id']);
+					foreach ($tmp_categories_id as $tmp_category_id) {
+						$catIds[$this->showCatalogFromPage][]=$tmp_category_id;
+						if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->shop_pid][$tmp_category_id]) && $tmp_category_id!=$this->get['cid']) {
+							//$this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->showCatalogFromPage][$tmp_category_id]=1;
+							/*foreach ($this->post['products_name'] as $key=>$value) {
+								if (!isset($this->post['customProductsDescription_products_name'][$this->showCatalogFromPage][$tmp_category_id][$key])) {
+									$this->post['customProductsDescription_products_name'][$this->showCatalogFromPage][$tmp_category_id][$key]=$value;
+								}
+							}*/
+						}
+					}
 				} else {
 					$catIds[$this->showCatalogFromPage][]=$this->post['categories_id'];
+					if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->shop_pid][$this->post['categories_id']]) && $this->post['categories_id']!=$this->get['cid']) {
+						//$this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->showCatalogFromPage][$this->post['categories_id']]=1;
+						/*foreach ($this->post['products_name'] as $key=>$value) {
+							if (!isset($this->post['customProductsDescription_products_name'][$this->showCatalogFromPage][$this->post['categories_id']][$key])) {
+								$this->post['customProductsDescription_products_name'][$this->showCatalogFromPage][$this->post['categories_id']][$key]=$value;
+							}
+						}*/
+					}
 				}
 				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 					foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid=>$shopRecord) {
@@ -1327,32 +1358,49 @@ if ($this->post) {
 								}
 								$endpoint_catid=array();
 								foreach ($tmp_categories_id as $tmp_category_id) {
+									$current_category_id=$tmp_category_id;
+									//echo $tmp_category_id;
 									$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 									if (!empty($tmp_catname)) {
 										$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
-										if ($product_real_page_uid==$page_uid) {
+										if ($product_real_page_uid==$this->shop_pid) {
 											$tmp_category_id=0;
 										}
-										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
-										if (!$foreign_catid) {
-											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-										} else {
-											$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
-										}
+										//if ($product_real_page_uid!=$page_uid) {
+											$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id, $current_category_id, $prodid);
+											if ($product_real_page_uid!=$page_uid) {
+												$tmp_category_id='::rel_'.$current_category_id;
+											} else {
+												$tmp_category_id='';
+											}
+											if (!$foreign_catid) {
+												$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+											} else {
+												$endpoint_catid[]=$foreign_catid.$tmp_category_id;
+											}
+										//}
 									}
 								}
+								//print_r($endpoint_catid);
 								$shopRecord=implode(',', $endpoint_catid);
 							}
 						}
 						if (!empty($shopRecord)) {
 							if (strpos($shopRecord, ',')!==false) {
-								$catIds[$page_uid]=explode(',', $shopRecord);
+								$shopRecordsTmp=explode(',', $shopRecord);
+								foreach ($shopRecordsTmp as $shopRecordTmp) {
+									$catIds[$page_uid][] = $shopRecordTmp;
+								}
 							} else {
 								$catIds[$page_uid][]=$shopRecord;
 							}
 						}
 					}
 				}
+				//echo "<pre>";
+				//print_r($catOldIds);
+				//print_r($catIds);
+				//die();
 				// finally get the category ids that we must remove
 				if (is_array($catOldIds) && count($catOldIds)) {
 					foreach ($catOldIds as $page_uid=>$catOldArray) {
@@ -1360,13 +1408,13 @@ if ($this->post) {
 						if (is_array($catIds[$page_uid]) && count($catIds[$page_uid])) {
 							$catIdsToRemove=array_diff($catOldIds[$page_uid], $catIds[$page_uid]);
 						}
+						//print_r($catIdsToRemove);
 						if (is_array($catIdsToRemove) && count($catIdsToRemove)) {
 							foreach ($catIdsToRemove as $catId) {
 								if (strpos($catId, '::rel_')!==false) {
 									list($tmpcatId,)=explode('::rel_', $catId);
 									$catId=$tmpcatId;
 								}
-								//
 								$cats=mslib_fe::globalCrumbarTree($catId);
 								$cats=array_reverse($cats);
 								//
@@ -1377,15 +1425,20 @@ if ($this->post) {
 								}
 								$crumbar_ident_string=implode(',', $crumbar_ident_array);
 								//
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and crumbar_identifier=\''.$crumbar_ident_string.'\' and page_uid='.$page_uid);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-								// remove the custom page desc if the cat id is not related anymore in p2c
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								if (!empty($crumbar_ident_string)) {
+									$query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and crumbar_identifier=\'' . $crumbar_ident_string . '\' and page_uid=' . $page_uid);
+									//var_dump($query);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									// remove the custom page desc if the cat id is not related anymore in p2c
+									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
+									var_dump($query);
+									//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
 						}
 					}
 				}
+				//die();
 				// remove the p2c relation when the external shops are not linked anymore
 				if ($this->conf['enableMultipleShops']) {
 					if (is_array($shopPids) && count($shopPids)) {
@@ -1417,6 +1470,7 @@ if ($this->post) {
 					}
 				}
 				//print_r($catIds);
+				//print_r($catOldIds);
 				//die();
 				if (is_array($catIds) && count($catIds)) {
 					foreach ($catIds as $page_uid=>$catArray) {
@@ -1424,6 +1478,8 @@ if ($this->post) {
 						if (is_array($catOldIds[$page_uid]) && count($catOldIds[$page_uid])) {
 							$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
 						}
+						//print_r($catIdsToAdd);
+						//
 						foreach ($catIdsToAdd as $catId) {
 							if (strpos($catId, '::rel_')!==false) {
 								list($tmpCatId, $relCatId)=explode('::rel_', $catId);
@@ -1481,6 +1537,7 @@ if ($this->post) {
 						}
 					}
 				}
+				//die();
 				/*
 				foreach ($catIds as $page_uid => $catId) {
 					if ($catId>0) {
@@ -1520,17 +1577,30 @@ if ($this->post) {
 						}
 						$endpoint_catid=array();
 						foreach ($tmp_categories_id as $tmp_category_id) {
+							$current_category_id=$tmp_category_id;
 							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
 							if (!empty($tmp_catname)) {
 								$product_real_page_uid=mslib_fe::getProductRealPageUID($prodid);
 								if ($product_real_page_uid==$page_uid) {
 									$tmp_category_id=0;
 								}
-								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
+								//
+								/*$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id);
 								if (!$foreign_catid) {
 									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
 								} else {
 									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+								}*/
+								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid, $tmp_category_id, $current_category_id);
+								if ($product_real_page_uid!=$page_uid) {
+									$tmp_category_id='::rel_'.$current_category_id;
+								} else {
+									$tmp_category_id='';
+								}
+								if (!$foreign_catid) {
+									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+								} else {
+									$endpoint_catid[]=$foreign_catid.$tmp_category_id;
 								}
 							}
 						}
@@ -1651,12 +1721,6 @@ if ($this->post) {
 		}
 		foreach ($this->post['products_name'] as $key=>$value) {
 			if (is_numeric($key)) {
-				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
-				} else {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and language_id='".$key."'";
-				}
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$updateArray=array();
 				$updateArray['products_name']=$this->post['products_name'][$key];
 				$updateArray['delivery_time']=$this->post['delivery_time'][$key];
@@ -1689,6 +1753,12 @@ if ($this->post) {
 					}
 				}
 				// EXTRA TAB CONTENT EOF
+				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
+				} else {
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and language_id='".$key."'";
+				}
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 					// if product is originally coming from products importer we have to define that the merchant changed it
 					$filter=array();
@@ -2187,6 +2257,9 @@ if ($this->post) {
 		if (is_numeric($this->get['cid'])) {
 			$str.=" and p2c.categories_id=".$this->get['cid']." and is_deepest=1";
 		}
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+			$str.=" and p2c.page_uid=".$this->showCatalogFromPage;
+		}
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -2201,7 +2274,8 @@ if ($this->post) {
 		//
 		$local_primary_product_categories=$product['categories_id'];
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
+			//$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
+			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and p.products_id=pd.products_id";
 		} else {
 			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and p.products_id=pd.products_id";
 		}

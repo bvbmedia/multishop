@@ -13,11 +13,32 @@ jQuery(document).ready(function ($) {
 			$(lochash).addClass("active");
 			$(lochash).fadeIn(0);
 		}
+		$("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+			var href_value=$(anchor).attr("href");
+			if (href_value!="#") {
+				href_value+=lochash;
+				$(anchor).prop("href", href_value);
+			}
+		})
 	}
 	// Change hash for page-reload
 	$('.nav-tabs a').on('shown.bs.tab', function (e) {
+	//console.log(e);
 		window.location.hash = e.target.hash;
 		$("body,html,document").scrollTop(0);
+		//
+		var lochash=window.location.hash;
+        if (lochash!="") {
+			//
+			$("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+				var href_value=$(anchor).attr("href").split("#");
+
+				if (href_value[0]!="") {
+					href_value[0]+=lochash;
+					$(anchor).prop("href", href_value[0]);
+				}
+			})
+		}
 	});
     $('#groups').select2({
         placeholder:'Customer Groups',
@@ -166,7 +187,7 @@ jQuery(document).ready(function ($) {
                         <input type="text" name="username" class="form-control username" id="username" ###USERNAME_READONLY### value="###VALUE_USERNAME###" required="required" data-h5-errorid="invalid-username" title="###INVALID_USERNAME_MESSAGE###" />
                         <div id="invalid-username" class="error-space" style="display:none"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6"###HIDE_PASSWORD###>
                         <label for="password" id="account-password">###LABEL_PASSWORD###</label>
                         <input type="text" name="password" class="form-control password" id="password" value="###VALUE_PASSWORD###" title="###INVALID_PASSWORD_MESSAGE###" />
                         <div id="invalid-password" class="error-space" style="display:none"></div>
@@ -260,7 +281,7 @@ jQuery(document).ready(function ($) {
                         <div class="row">
                             <div class="col-md-6">
                         <label for="email" id="account-email">###LABEL_EMAIL###<span class="text-danger">*</span></label>
-                        <input type="text" name="email" id="email" class="form-control email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
+                        <input type="email" name="email" id="email" class="form-control email h5-email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
                         <div id="invalid-email" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-6">

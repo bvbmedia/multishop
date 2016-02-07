@@ -657,7 +657,7 @@
             <label index="email_alert_quantity_threshold_letter">Alert quantity threshold e-mail content</label>
             <label index="email_create_account_confirmation">E-mail create account confirmation</label>
             <label index="email_is_not_the_same_as_repeated_email">Email address is not the same as the repeated email address</label>
-            <label index="email_is_required">E-mail is a required field. The format of the e-mail is not valid</label>
+            <label index="email_is_required">E-mail is a required field. The format of the e-mail is not valid.</label>
             <label index="email_message">E-mail message</label>
             <label index="email_order_confirmation_letter">E-mail order confirmation letter</label>
             <label index="email_order_paid_letter">E-mail order paid letter</label>
@@ -796,9 +796,9 @@
             <label index="full_name">full name</label>
             <label index="gender">gender</label>
             <label index="gender_is_required">Title is required</label>
-            <label index="gender_salutation_female">Dear Madam</label>
-            <label index="gender_salutation_male">Dear Sir</label>
-            <label index="gender_salutation_unknown">Dear Sir/Madam</label>
+            <label index="gender_salutation_female">Dear Mrs</label>
+            <label index="gender_salutation_male">Dear Mr</label>
+            <label index="gender_salutation_unknown">Dear Mr/Mrs</label>
             <label index="general_conditions">General conditions</label>
             <label index="generic">generic</label>
             <label index="go_directly_to_checkout">Go directly to checkout</label>
@@ -1278,6 +1278,7 @@
             <label index="grand_total_excluding_vat">Grand total excluding VAT</label>
             <label index="your_coc_id">Your CoC-id</label>
             <label index="credit_invoice">Credit Invoice</label>
+            <label index="payment_date">Payment date</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1931,7 +1932,7 @@
             <label index="email_alert_quantity_threshold_letter">Alert hoeveelheid drempel e-mail content</label>
             <label index="email_create_account_confirmation">E-mail Creëer account confirmatie</label>
             <label index="email_is_not_the_same_as_repeated_email">E-mailadres is niet gelijk aan het herhaalde e-mailadres</label>
-            <label index="email_is_required">E-mail is verplicht. Het opgegeven e-mailadres is niet geldig</label>
+            <label index="email_is_required">E-mail is verplicht. Het opgegeven e-mailadres is niet geldig.</label>
             <label index="email_message">E-mailbericht</label>
             <label index="email_order_confirmation_letter">E-mail bestelling bevestigingsbericht</label>
             <label index="email_order_paid_letter">E-mail bestelling betaald bericht</label>
@@ -2548,6 +2549,7 @@
             <label index="grand_total_excluding_vat">Totaalbedrag exclusief BTW</label>
             <label index="your_coc_id">Uw KvK-nummer</label>
             <label index="credit_invoice">Creditfactuur</label>
+            <label index="payment_date">Betaaldatum</label>
         </languageKey>
     </data>
 </T3locallang>

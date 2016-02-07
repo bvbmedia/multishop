@@ -8,10 +8,6 @@ $invoiceItem='';
 foreach ($invoices as $invoice) {
 	$cb_ctr++;
 	$user=mslib_fe::getUser($invoice['customer_id']);
-	$link_name=$invoice['ordered_by'];
-	if ($user['username']) {
-		$link_name.=" (".$user['username'].")";
-	}
 	$master_shop_col='';
 	if ($this->masterShop) {
 		$master_shop_col='<td class="cellName">'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
@@ -24,11 +20,22 @@ foreach ($invoices as $invoice) {
 	}
 	//
 	$paid_status='';
-	if (!$invoice['paid']) {
+	/** PLAN TO REMOVED **/
+	/*
+	 if (!$invoice['paid']) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
 		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
 		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_not_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>';
+		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+	}
+	*/
+	/** PLAN TO REMOVED **/
+	if (!$invoice['paid']) {
+		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
+		$paid_status.='<a href="#" class="update_to_paid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
+	} else {
+		$paid_status.='<a href="#" class="update_to_unpaid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	//
@@ -53,7 +60,12 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
-	$markerArray['INVOICES_CUSTOMER_NAME']=$link_name;
+	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$invoice['customer_id'].'&action=edit_customer', 1);
+	$link_name=$invoice['ordered_by'];
+	if ($user['username']) {
+		$link_name.=" (".$user['username'].")";
+	}
+	$markerArray['INVOICES_CUSTOMER_NAME']='<a href="'.$customer_edit_link.'">'.$link_name.'</a>';
 	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];

@@ -1274,7 +1274,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 			}
 			$insertArray['tx_multishop_quick_checkout']=1;
-
+			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
@@ -1321,6 +1321,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_address_type']='billing';
 				$insertArray['tx_multishop_default']=1;
 				$insertArray['tx_multishop_customer_id']=$customer_id;
+				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// insert delivery into tt_address
@@ -1404,6 +1405,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_customer_id']=$customer_id;
 				$insertArray['tx_multishop_address_type']='delivery';
 				$insertArray['tx_multishop_default']=0;
+				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// ADD TT_ADDRESS RECORD EOF
@@ -1462,6 +1464,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_address_type']='billing';
 				$insertArray['tx_multishop_default']=1;
 				$insertArray['tx_multishop_customer_id']=$customer_id;
+				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -1547,6 +1550,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_customer_id']=$customer_id;
 				$insertArray['tx_multishop_address_type']='delivery';
 				$insertArray['tx_multishop_default']=0;
+				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -1699,6 +1703,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['user_agent']=$this->server['HTTP_USER_AGENT'];
 			if (isset($address['expected_delivery_date'])) {
 				$insertArray['expected_delivery_date']=$address['expected_delivery_date'];
+
+			}
+			//
+			$user=mslib_fe::getUser($customer_id);
+			$insertArray['payment_condition']=14;
+			if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition']>0) {
+				$insertArray['payment_condition']=$user['tx_multishop_payment_condition'];
 			}
 			//$insertArray['orders_tax_data']			=	serialize($orders_tax);
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
@@ -1712,6 +1723,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				// hook oef
 			}
+			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			// now add the order eof
@@ -1866,9 +1878,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								// hook oef
 							}
 							// TYPO3 6.2 LTS NULL FIX
+							/*
 							if (!$insertArray['products_model']) {
 								$insertArray['products_model']='';
 							}
+							*/
+							$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2066,6 +2081,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 										$sub_total_excluding_vat['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
 										$sub_total['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
 										$insertAttributes['attributes_tax_data']=serialize($attributes_tax);
+										$insertAttributes=mslib_befe::rmNullValuedKeys($insertAttributes);
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertAttributes);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}

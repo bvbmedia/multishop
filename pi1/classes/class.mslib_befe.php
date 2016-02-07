@@ -3612,6 +3612,17 @@ class mslib_befe {
 		}
 		$user=mslib_fe::getUser($uid);
 		if ($user['uid']) {
+			$GLOBALS['TSFE']->fe_user->logoff();
+			$GLOBALS['TSFE']->loginUser = 0;
+
+			$fe_user = $GLOBALS['TSFE']->fe_user;
+			$fe_user->createUserSession(array('uid' => $uid));
+			$fe_user->user = $fe_user->getRawUserByUid($uid);
+			$fe_user->fetchGroupData();
+			$GLOBALS['TSFE']->loginUser = 1;
+
+			/*
+			 * Old style, dont use this anymore. use above approach which uses the $uid
 			// auto login the user
 			$loginData=array(
 				'uname'=>$user['username'],
@@ -3624,6 +3635,7 @@ class mslib_befe {
 			$info=$GLOBALS['TSFE']->fe_user->getAuthInfoArray();
 			$user=$GLOBALS['TSFE']->fe_user->fetchUserRecord($info['db_user'], $loginData['uname']);
 			$GLOBALS['TSFE']->fe_user->createUserSession($user);
+			*/
 			// auto login the user
 			if (is_numeric($this->conf['login_as_customer_target_pid'])) {
 				$targetPid=$this->conf['login_as_customer_target_pid'];
@@ -4071,6 +4083,12 @@ class mslib_befe {
 					$product_name.='<br/>'.htmlspecialchars($this->pi_getLL('admin_label_vendor_code')).': '.htmlspecialchars($product['vendor_code']);
 				}
 				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
+				// Seperate marker version
+				$markerArray['ITEM_SEPERATE_PRODUCTS_NAME']=htmlspecialchars($product['products_name']);
+				$markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION']=nl2br(htmlspecialchars($product['products_description']));
+				$markerArray['ITEM_SEPERATE_PRODUCTS_MODEL']=htmlspecialchars($product['products_model']);
+				// Seperate marker version eol
+
 				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 				$markerArray['ITEM_ORDER_UNIT']=$product['order_unit_name'];
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -4209,27 +4227,31 @@ class mslib_befe {
 				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation'])) {
 					foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate=>$tax_sep_data) {
 						$markerArray=array();
-						if ($tax_sep_rate>0) {
-							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
-								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
-							} else {
-								// todo: add typoscript constant to enable/disable the view
+						if (isset($tax_sep_rate)) {
+							// If TAX seperation has only 1 entry always print it (0% TAX for example)
+							// Else only print the current TAX rate if it is higher than zero
+							if (count($order['orders_tax_data']['tax_separation']) == 1 || (count($order['orders_tax_data']['tax_separation']) > 1 && $tax_sep_rate > 0)) {
+								if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
+									$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount').' '.$tax_sep_rate.'%';
+								} else {
+									// todo: add typoscript constant to enable/disable the view
 
-								// Show the taken amount for the seperated VAT (i.e. BTW 21% from 10 Euro)
-								//$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
+									// Show the taken amount for the seperated VAT (i.e. BTW 21% from 10 Euro)
+									//$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate.'%', ($display_currency_symbol ? '' : 'EUR ').mslib_fe::amount2Cents($prefix.($tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']), $customer_currency, $display_currency_symbol, 0));
 
-								// Show traditional label (i.e. BTW 21%)
-								$markerArray['LABEL_VAT']=$this->pi_getLL('vat').' '.$tax_sep_rate.'%';
+									// Show traditional label (i.e. BTW 21%)
+									$markerArray['LABEL_VAT']=$this->pi_getLL('vat').' '.$tax_sep_rate.'%';
+								}
+								if (empty($tax_sep_data['shipping_tax'])) {
+									$tax_sep_data['shipping_tax']=0;
+								}
+								if (empty($tax_sep_data['payment_tax'])) {
+									$tax_sep_data['payment_tax']=0;
+								}
+								$tax_sep_total=$prefix.($tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']);
+								$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, $customer_currency, $display_currency_symbol, 0);
+								$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 							}
-							if (empty($tax_sep_data['shipping_tax'])) {
-								$tax_sep_data['shipping_tax']=0;
-							}
-							if (empty($tax_sep_data['payment_tax'])) {
-								$tax_sep_data['payment_tax']=0;
-							}
-							$tax_sep_total=$prefix.($tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']);
-							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, $customer_currency, $display_currency_symbol, 0);
-							$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 						}
 					}
 				} else {
@@ -4493,8 +4515,9 @@ class mslib_befe {
 		if (!is_numeric($id)) {
 			return false;
 		}
+		//$this->msDebug=1;
 		$record=mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'),'statlang.lg_iso_2');
-		if ($record['uid']) {
+		if ($record['lg_iso_2']) {
 			return $record['lg_iso_2'];
 		}
 	}
@@ -4507,37 +4530,49 @@ class mslib_befe {
 			return $record['uid'];
 		}
 	}
+	function getLocalLanguageNameByIso2($iso2) {
+		if (!$iso2) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($iso2, 'static_languages statlang', 'statlang.lg_iso_2');
+		if ($record['uid']) {
+			return $record['lg_name_local'];
+		}
+	}
 	function setDefaultSystemLanguage() {
-		$this->defaultLanguageArray=array();
-		$this->defaultLanguageArray['lang']=$this->lang;
-		$this->defaultLanguageArray['LLkey']=$this->LLkey;
-		$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
-		$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
-		$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
+		if ($this->LLkey) {
+			$this->defaultLanguageArray=array();
+			$this->defaultLanguageArray['lang']=$this->lang;
+			$this->defaultLanguageArray['LLkey']=$this->LLkey;
+			$this->defaultLanguageArray['config']['config']['language']=$this->config['config']['language'];
+			$this->defaultLanguageArray['config']['config']['sys_language_uid']=$this->sys_language_uid;
+			$this->defaultLanguageArray['config']['config']['locale_all']=$GLOBALS['TSFE']->config['config']['locale_all'];
+		}
 	}
 	function setSystemLanguage($sys_language_uid) {
-		if ($sys_language_uid>0) {
+		if (is_numeric($sys_language_uid)) {
 			if (!is_array($this->defaultLanguageArray)) {
 				mslib_befe::setDefaultSystemLanguage();
 			}
 			$language_code=mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
-			$language_code=strtolower($language_code);
-			$this->lang=$language_code;
-			$this->LLkey=$language_code;
-			/*
-			if ($language_code=='en') {
-				// default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
-				$this->LLkey='default';
+			if ($language_code!='') {
+				$language_code=strtolower($language_code);
+				$this->lang=$language_code;
+				$this->LLkey=$language_code;
+				/*
+                if ($language_code=='en') {
+                    // default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
+                    $this->LLkey='default';
+                }
+                */
+				$this->config['config']['language']=$language_code;
+				$GLOBALS['TSFE']->config['config']['language']=$language_code;
+				$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
+				$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
+				$this->sys_language_uid=$sys_language_uid;
+				$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
+				setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
 			}
-			*/
-			$this->config['config']['language']=$language_code;
-			$GLOBALS['TSFE']->config['config']['language']=$language_code;
-			$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
-			$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
-			$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
-
-			setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
-			$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
 		}
 	}
 	function resetSystemLanguage() {
@@ -4551,6 +4586,64 @@ class mslib_befe {
 			$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
 			setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
 			$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+		}
+	}
+	public function getPaymentMethodLabelByCode($code, $sys_language_id=0) {
+		if ($code) {
+			$select=array();
+			$select[]='pd.name';
+
+			$from=array();
+			$from[]='tx_multishop_payment_methods p';
+			$from[]='tx_multishop_payment_methods_description pd';
+
+			$where=array();
+			$orderby=array();
+			$where[]='p.code=\''.addslashes($code).'\'';
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+			$where[]='p.id=pd.id';
+
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(', ', $select), // SELECT ...
+					implode(', ', $from), // FROM ...
+					implode(' and ', $where), // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				return $row['name'];
+			}
+		}
+	}
+	public function getShippingMethodLabelByCode($code, $sys_language_id=0) {
+		if ($code) {
+			$select=array();
+			$select[]='pd.name';
+
+			$from=array();
+			$from[]='tx_multishop_shipping_methods p';
+			$from[]='tx_multishop_shipping_methods_description pd';
+
+			$where=array();
+			$orderby=array();
+			$where[]='p.code=\''.addslashes($code).'\'';
+			$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+			$where[]='p.id=pd.id';
+
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(', ', $select), // SELECT ...
+					implode(', ', $from), // FROM ...
+					implode(' and ', $where), // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				return $row['name'];
+			}
 		}
 	}
 }

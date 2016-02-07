@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $total_pages=ceil(($pageset['total_rows']/$this->ms['MODULES']['PAGESET_LIMIT']));
 $tmp='';
 $tmp.='<div id="pagenav_container_list_wrapper">
-<ul class="pagination">';
+<ul class="pagination" id="admin_pagination_ul">';
 if ($p>0) {
 	$tmp.='<li class="pagenav_first"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', ''.mslib_fe::tep_get_all_get_params(array(
 				'p',

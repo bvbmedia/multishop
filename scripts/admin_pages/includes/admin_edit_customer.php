@@ -245,7 +245,9 @@ if ($this->post && $this->post['email']) {
                 $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
             }
 			if (!empty($this->post['tx_multishop_pi1']['groups'])) {
-				$this->post['tx_multishop_pi1']['groups']=$this->conf['fe_customer_usergroup'];
+				if (!empty($this->conf['fe_customer_usergroup'])) {
+					$this->post['tx_multishop_pi1']['groups'] .= ',' . $this->conf['fe_customer_usergroup'];
+				}
 				$updateArray['usergroup']=$this->post['tx_multishop_pi1']['groups'];
 			} else {
 				$updateArray['usergroup']=$this->conf['fe_customer_usergroup'];
@@ -257,7 +259,8 @@ if ($this->post && $this->post['email']) {
 			if ($this->post['password']) {
 				$updateArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 			} else {
-				$updateArray['password']=mslib_befe::getHashedPassword(rand(1000000, 9000000));
+				$string='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./?;:[]{}\|';
+				$updateArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(12, $string, 'unpronounceable'));
 			}
 			if ($this->post['page_uid'] and $this->masterShop) {
 				$updateArray['page_uid']=$this->post['page_uid'];
@@ -383,12 +386,18 @@ if ($this->post && $this->post['email']) {
 			}
 		}
 		if (!count($erno)) {
-			if ($this->post['tx_multishop_pi1']['referrer']) {
-				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-				exit();
-			} else {
+			if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
+				// Insert always redirect back to admin customers overview
 				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
 				exit();
+			} else {
+				if ($this->post['tx_multishop_pi1']['referrer']) {
+					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+					exit();
+				} else {
+					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
+					exit();
+				}
 			}
 		}
 	}
@@ -422,7 +431,11 @@ $head='';
 $head.='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
+		jQuery.h5Validate.addPatterns({
+			email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		});
 		var validate=jQuery(\'#edit_customer\').h5Validate();
+
 		$("#birthday_visitor").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
 			altField: "#birthday",
@@ -609,6 +622,9 @@ foreach ($groups as $group) {
 }
 $customer_groups_input.='</select>';*/
 $selected_groups=array();
+if ($this->post['tx_multishop_pi1']['groups']) {
+	$this->post['usergroup']=$this->post['tx_multishop_pi1']['groups'];
+}
 $userGroupUids=explode(',',$this->post['usergroup']);
 if (is_array($userGroupUids) && count($userGroupUids)) {
 	foreach ($userGroupUids as $userGroupUid) {
@@ -772,6 +788,10 @@ switch ($_REQUEST['action']) {
 				}
 			}
 			$subpartArray['###VALUE_PASSWORD###']='';
+			$subpartArray['###HIDE_PASSWORD###']='';
+			if ($this->ms['MODULES']['HIDE_PASSWORD_FIELD_IN_EDIT_CUSTOMER']=='1') {
+				$subpartArray['###HIDE_PASSWORD###']=' style="display:none"';
+			}
 			$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 			$subpartArray['###GENDER_MR_CHECKED###']=(($this->post['gender']=='0') ? 'checked="checked"' : '');
 			$subpartArray['###LABEL_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
@@ -946,7 +966,9 @@ switch ($_REQUEST['action']) {
 			$select=array();
 			$select[]='o.*';
 			$filter[]='o.customer_id='.$user['uid'];
-			$filter[]='o.page_uid='.$this->shop_pid;
+			if (!$this->masterShop) {
+				$filter[]='o.page_uid='.$this->shop_pid;
+			}
 			$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
 			$order_listing=$this->pi_getLL('no_orders_found');
 			if ($orders_pageset['total_rows']>0) {
@@ -984,9 +1006,9 @@ switch ($_REQUEST['action']) {
 							<td class="cellID"><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
 							<td class="cellDate">'.strftime("%a. %x %X", $order['crdate']).'</td>
 							<td class="cellPrice">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
-							<td nowrap>'.$order['shipping_method_label'].'</td>
-							<td nowrap>'.$order['payment_method_label'].'</td>
-							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
+							<td nowrap class="cell_shipping_method">'.$order['shipping_method_label'].'</td>
+							<td nowrap class="cell_payment_method">'.$order['payment_method_label'].'</td>
+							<td align="left" nowrap class="cell_status">'.$all_orders_status[$order['status']]['name'].'</td>
 							<td class="cellDate">'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
 							<td class="cellStatus">'.$paid_status.'</td>
 						</tr>';
@@ -1045,7 +1067,11 @@ switch ($_REQUEST['action']) {
 			$subpartArray['###USERNAME_READONLY###']='';
 		}
 		$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
+		//if (empty($this->post['password']) || !isset($this->post['password'])) {
+		//	$this->post['password']=substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|') , 0 , 10 );
+		//}
 		$subpartArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
+		$subpartArray['###HIDE_PASSWORD###']='';
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 		$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 		$subpartArray['###GENDER_MR_CHECKED###']=$mr_checked;
@@ -1088,8 +1114,8 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
 		$subpartArray['###LABEL_BIRTHDATE###']=ucfirst($this->pi_getLL('birthday'));
-		$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
-		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
+		$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : $this->post['birthday_visitor']);
+		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) :  $this->post['birthday']);
 		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));

@@ -38,7 +38,7 @@ if (!empty($_POST['code'])) {
 				case 'price':
 					$total_price=mslib_fe::countCartTotalPrice(1, 1);
 					if ($total_price<$row['discount']) {
-						$row['discount']=$total_price;
+						//$row['discount']=$total_price;
 					}
 					$content=mslib_fe::amount2Cents($row['discount']);
 					break;

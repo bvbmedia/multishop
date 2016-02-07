@@ -160,6 +160,12 @@ if ($this->conf['fe_systemadmin_usergroup']) {
 if ($this->conf['fe_statisticsadmin_usergroup']) {
 	$this->excluded_userGroups[]=$this->conf['fe_statisticsadmin_usergroup'];
 }
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['setExcludedUserGroupsPostProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['setExcludedUserGroupsPostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 if ($this->conf['cacheConfiguration']=='1' and !$this->ADMIN_USER) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=1;
 }
@@ -206,7 +212,8 @@ if ($this->ADMIN_USER) {
 	}
 	// add default language id 0
 	$this->languages[0]['uid']=0;
-	$this->languages[0]['title']=htmlspecialchars($this->pi_getLL('default_language'));
+	//$this->languages[0]['title']=htmlspecialchars($this->pi_getLL('default_language'));
+	$this->languages[0]['title']=mslib_befe::getLocalLanguageNameByIso2($GLOBALS['TSFE']->config['config']['language']);
 	$this->languages[0]['lg_iso_2']=$this->lang;
 	ksort($this->languages);
 	// load enabled languages eof

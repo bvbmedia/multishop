@@ -5,10 +5,16 @@ if (!defined('TYPO3_MODE')) {
 if (!$this->get['tx_multishop_pi1']['hash']) {
 	die();
 }
+if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
+	$this->get['tx_multishop_pi1']['forceRecreate']=1;
+}
 $hash=$this->get['tx_multishop_pi1']['hash'];
 $invoice=mslib_fe::getInvoice($hash, 'hash');
 $pdfFileName='invoice_'.$hash.'.pdf';
 $pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED'] && file_exists($pdfFilePath)) {
+	unlink($pdfFilePath);
+}
 if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $invoice['orders_id']) {
 	if ($invoice['reversal_invoice']) {
 		$prefix='-';
@@ -16,9 +22,22 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$prefix='';
 	}
 	$order=mslib_fe::getOrder($invoice['orders_id'],'orders_id',1);
-
-	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
+		$orders_tax_data=$order['orders_tax_data'];
+		if ($this->sys_language_uid != $order['sys_language_uid']) {
+			// The order is created in different language, let us try to find the correct localized label
+			$methodLabel=mslib_befe::getShippingMethodLabelByCode($order['shipping_method'],$this->sys_language_uid);
+			if ($methodLabel) {
+				$order['shipping_method_label']=$methodLabel;
+			}
+		}
+		if ($this->sys_language_uid != $order['sys_language_uid']) {
+			// The order is created in different language, let us try to find the correct localized label
+			$methodLabel=mslib_befe::getPaymentMethodLabelByCode($order['payment_method'],$this->sys_language_uid);
+			if ($methodLabel) {
+				$order['payment_method_label']=$methodLabel;
+			}
+		}
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplatePreProc'])) {
 			$params=array(
@@ -199,7 +218,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
 				$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='<div class="content_footer_message" style="page-break-before:auto">
-				<br/><br/><br/>
 				'.$page[0]['content'].'
 				</div>';
 			}
@@ -317,6 +335,19 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 
 			$markerArray['###PAID_STATUS###']=$this->pi_getLL('unpaid');
 		}
+		// Payment date
+		$markerArray['###PAID_DATE_LABEL###']=$this->pi_getLL('payment_date');
+		if ($order['paid']) {
+			$array1[]='###PAID_DATE###';
+			$array2[]=strftime("%x", $order['orders_paid_timestamp']);
+
+			$markerArray['###PAID_DATE###']=strftime("%x", $order['orders_paid_timestamp']);
+		} else {
+			$array1[]='###PAID_DATE###';
+			$array2[]=$this->pi_getLL('unpaid');
+
+			$markerArray['###PAID_DATE###']=$this->pi_getLL('unpaid');
+		}
 		// Payment received date
 		if ($order['orders_paid_timestamp']) {
 			$date=strftime("%x", $order['orders_paid_timestamp']);
@@ -412,6 +443,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 if (file_exists($pdfFilePath)) {
 	header("Content-type:application/pdf");
 	readfile($pdfFilePath);
+	if ($this->get['tx_multishop_pi1']['forceRecreate']) {
+		unlink($pdfFilePath);
+	}
 }
 exit();
 ?>
