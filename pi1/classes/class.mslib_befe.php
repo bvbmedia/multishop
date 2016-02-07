@@ -4530,6 +4530,15 @@ class mslib_befe {
 			return $record['uid'];
 		}
 	}
+	function getLocalLanguageNameByIso2($iso2) {
+		if (!$iso2) {
+			return false;
+		}
+		$record=mslib_befe::getRecord($iso2, 'static_languages statlang', 'statlang.lg_iso_2');
+		if ($record['uid']) {
+			return $record['lg_name_local'];
+		}
+	}
 	function setDefaultSystemLanguage() {
 		if ($this->LLkey) {
 			$this->defaultLanguageArray=array();
