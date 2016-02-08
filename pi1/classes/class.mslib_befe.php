@@ -4412,6 +4412,8 @@ class mslib_befe {
 			if (is_array($record) && $record['uid']) {
 				return $record['uid'];
 			}
+		} else {
+			return mslib_befe::getSysLanguageUidByIso2($twoChars);
 		}
 	}
 	function getSysLanguageUidByFlagString($flag) {
@@ -4570,6 +4572,7 @@ class mslib_befe {
 				$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
 				$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
 				$this->sys_language_uid=$sys_language_uid;
+				$GLOBALS['TSFE']->sys_language_content=$this->sys_language_uid;
 				$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
 				setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
 			}
@@ -4586,6 +4589,7 @@ class mslib_befe {
 			$GLOBALS['TSFE']->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
 			setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
 			$this->sys_language_uid=$this->defaultLanguageArray['config']['config']['sys_language_uid'];
+			$GLOBALS['TSFE']->sys_language_content=$this->sys_language_uid;
 		}
 	}
 	public function getPaymentMethodLabelByCode($code, $sys_language_id=0) {

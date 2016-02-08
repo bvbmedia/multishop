@@ -5099,7 +5099,6 @@ class mslib_fe {
 			(is_array($query_elements['order_by']) ? implode(",", $query_elements['order_by']) : ''), // ORDER BY...
 			(is_array($query_elements['limit']) ? implode(",", $query_elements['limit']) : '') // LIMIT ...
 		);
-
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$current_tstamp=time();
