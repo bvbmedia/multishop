@@ -212,8 +212,16 @@ if ($this->ADMIN_USER) {
 	}
 	// add default language id 0
 	$this->languages[0]['uid']=0;
-	//$this->languages[0]['title']=htmlspecialchars($this->pi_getLL('default_language'));
-	$this->languages[0]['title']=mslib_befe::getLocalLanguageNameByIso2($GLOBALS['TSFE']->config['config']['language']);
+	if ($GLOBALS['TSFE']->sys_language_uid==0) {
+		// If current language is zero try to show the local language name
+		$this->languages[0]['title']=mslib_befe::getLocalLanguageNameByIso2($GLOBALS['TSFE']->config['config']['language']);
+	} else {
+		// If current language is not uid 0 then show default label
+		$setDefaultLanguageLabel=1;
+	}
+	if (!$this->languages[0]['title'] || $setDefaultLanguageLabel) {
+		$this->languages[0]['title']=htmlspecialchars($this->pi_getLL('default_language'));
+	}
 	$this->languages[0]['lg_iso_2']=$this->lang;
 	ksort($this->languages);
 	// load enabled languages eof
