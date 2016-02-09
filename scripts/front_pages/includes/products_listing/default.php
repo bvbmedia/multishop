@@ -275,7 +275,7 @@ if (is_array($products) && count($products)) {
 			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
 		}
 		// custom hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
 			$params=array(
 				'markerArray'=>&$markerArray,
 				'product'=>&$current_product,

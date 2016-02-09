@@ -1786,7 +1786,7 @@
             <label index="average">Gemiddeld</label>
             <label index="average_order_amount_per_month">Gemiddelde ordergrootte per maand</label>
             <label index="back">Terug</label>
-            <label index="basket">winkelwagen</label>
+            <label index="basket">Winkelwagen</label>
             <label index="billing_address">Factuuradres</label>
             <label index="billing_details">Factuuradres</label>
             <label index="billing_name">Factuurnaam</label>
