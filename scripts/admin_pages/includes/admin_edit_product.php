@@ -1196,7 +1196,7 @@ if ($this->post) {
 											$tmp_category_id='';
 										}
 										if (!$foreign_catid) {
-											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($current_category_id, $page_uid).$tmp_category_id;
 										} else {
 											$endpoint_catid[]=$foreign_catid.$tmp_category_id;
 										}
@@ -1374,7 +1374,7 @@ if ($this->post) {
 												$tmp_category_id='';
 											}
 											if (!$foreign_catid) {
-												$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+												$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($current_category_id, $page_uid).$tmp_category_id;
 											} else {
 												$endpoint_catid[]=$foreign_catid.$tmp_category_id;
 											}
@@ -1597,11 +1597,15 @@ if ($this->post) {
 								} else {
 									$tmp_category_id='';
 								}
+								//var_dump($foreign_catid);
+								//var_dump($tmp_category_id);
 								if (!$foreign_catid) {
-									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).$tmp_category_id;
+									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($current_category_id, $page_uid).$tmp_category_id;
 								} else {
 									$endpoint_catid[]=$foreign_catid.$tmp_category_id;
 								}
+								/*var_dump($endpoint_catid);
+								die();*/
 							}
 						}
 						$shopRecord=implode(',', $endpoint_catid);

@@ -7485,10 +7485,14 @@ class mslib_fe {
 		if (!is_numeric($external_page_uid)) {
 			return false;
 		}
+		//var_dump($categories_id);
+		//var_dump($external_page_uid);
+		//die();
 		if (is_numeric($categories_id) && is_numeric($external_page_uid)) {
 			// check if it's have a parent
 			$cats=mslib_fe::Crumbar($categories_id, '', array(), $this->showCatalogFromPage);
 			$cats=array_reverse($cats);
+
 			$prev_catid=0;
 			foreach ($cats as $catidx=>$cat) {
 				if ($catidx>0) {
@@ -7496,7 +7500,9 @@ class mslib_fe {
 				}
 				$local_catname=$cat['name'];
 				// check categories name if already exists or not
-				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid, $cat['id']);
+				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid, 0, $cat['id']);
+				//var_dump($foreign_catid);
+				//die();
 				if (!$foreign_catid) {
 					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
 					//
