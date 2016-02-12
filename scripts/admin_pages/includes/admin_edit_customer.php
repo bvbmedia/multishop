@@ -1232,7 +1232,14 @@ $objRef->setInterfaceKey('admin_edit_customer');
 
 // Header buttons
 $headerButtons=array();
-
+if (is_array($user) && $user['uid']) {
+	$headingButton=array();
+	$headingButton['btn_class']='btn btn-primary';
+	$headingButton['fa_class']='fa fa-sign-in';
+	$headingButton['title']=$this->pi_getLL('login_as_user');
+	$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$user['uid']);
+	$headerButtons[]=$headingButton;
+}
 $headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
