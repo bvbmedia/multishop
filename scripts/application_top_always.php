@@ -399,12 +399,30 @@ $this->cart_page_uid='tx_multishop_cart'.$key;
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	// move guest cart to member cart?
 	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	//
 	if (!is_array($cart['products'])) {
 		// maybe guest cart has products that we must migrate
 		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//
 		if (is_array($cart2['products']) && count($cart2['products'])) {
 			$cart['products']=$cart2['products'];
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+		if (isset($cart2['coupon_code']) && !empty($cart2['coupon_code'])) {
+			$cart['coupon_code'] = $cart2['coupon_code'];
+			$cart['discount'] = $cart2['discount'];
+			$cart['discount_type'] = $cart2['discount_type'];
+			$cart['discount_amount'] = $cart2['discount_amount'];
+			$cart['discount_percentage'] = $cart2['discount_percentage'];
+			//
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+		if (is_array($cart2['summarize']) && count($cart2['summarize'])) {
+			$cart['summarize'] = $cart2['summarize'];
+			//
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
 			$GLOBALS['TSFE']->storeSessionData();
 		}
 	}
