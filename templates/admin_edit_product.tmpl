@@ -163,34 +163,53 @@ jQuery(document).ready(function ($) {
            productPrice(true, this);
        }
     });
-
     $("#tax_id").change(function () {
         $(".msPriceExcludingVat").each(function (i) {
             productPrice(true, $(this));
         });
     });
-
     $(document).on("keyup", ".msPriceIncludingVat", function (e) {
         if (e.keyCode!=9) {
             productPrice(false, this);
         }
     });
     $("#specials_sections").hide();
-    getSpecialsSections(###AJAX_PID###)
-    ;
+    getSpecialsSections(###AJAX_PID###);
 
-var url = document.location.toString();
-if (url.match('#')) {
-    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
-} else {
-	$('.nav-tabs a:first').tab('show');
-}
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+    } else {
+        $('.nav-tabs a:first').tab('show');
+    }
+    var lochash=window.location.hash;
+    if (lochash!="") {
+        $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+            var href_value=$(anchor).attr("href");
+            if (href_value!="#") {
+                href_value+=lochash;
+                $(anchor).prop("href", href_value);
+            }
+        })
+    }
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+        $("body,html,document").scrollTop(0);
+        //
+        var lochash=window.location.hash;
+        if (lochash!="") {
+            //
+            $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+                var href_value=$(anchor).attr("href").split("#");
 
-// Change hash for page-reload
-$('.nav-tabs a').on('shown.bs.tab', function (e) {
-	window.location.hash = e.target.hash;
-	$("body,html,document").scrollTop(0);
-});
+                if (href_value[0]!="") {
+                    href_value[0]+=lochash;
+                    $(anchor).prop("href", href_value[0]);
+                }
+            })
+        }
+    });
 
 	###AJAX_REQUEST_SPECIAL_PRICE###
 	$('#specials_new_products_price_excl_vat').keyup(function () {
