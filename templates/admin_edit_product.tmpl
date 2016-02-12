@@ -185,11 +185,34 @@ if (url.match('#')) {
 } else {
 	$('.nav-tabs a:first').tab('show');
 }
+var lochash=window.location.hash;
+if (lochash!="") {
+	$("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+		var href_value=$(anchor).attr("href");
+		if (href_value!="#") {
+			href_value+=lochash;
+			$(anchor).prop("href", href_value);
+		}
+	})
+}
 
 // Change hash for page-reload
 $('.nav-tabs a').on('shown.bs.tab', function (e) {
 	window.location.hash = e.target.hash;
 	$("body,html,document").scrollTop(0);
+    //
+    var lochash=window.location.hash;
+    if (lochash!="") {
+        //
+        $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+            var href_value=$(anchor).attr("href").split("#");
+
+            if (href_value[0]!="") {
+                href_value[0]+=lochash;
+                $(anchor).prop("href", href_value[0]);
+            }
+        })
+    }
 });
 
 	###AJAX_REQUEST_SPECIAL_PRICE###
