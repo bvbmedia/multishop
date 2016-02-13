@@ -402,6 +402,7 @@ if ($this->post && $this->post['email']) {
 		}
 	}
 }
+
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_edit_customer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
@@ -1259,6 +1260,10 @@ $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(
 
 if ($this->get['tx_multishop_pi1']['cid']>0 && !is_numeric($user['uid'])) {
 	$content=$this->pi_getLL('customer_not_found');
+} else {
+	if (isset($this->get['tx_multishop_pi1']['cid']) && !is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+		$content = $this->pi_getLL('customer_not_found');
+	}
 }
 /*
 if ($customer_id) {
