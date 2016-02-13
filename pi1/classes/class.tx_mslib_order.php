@@ -792,13 +792,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 				$tmp_tax=round(($product['final_price']*($product['products_tax']/100)), 2);
 				$final_price=($product['qty']*($product['final_price']+$tmp_tax));
+				$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents($product['final_price']+$tmp_tax);
 			} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$final_price=($product['qty']*$product['final_price']);
 				$final_price=round(($final_price*($product['products_tax']/100)), 4)+$final_price;
+				$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents(round(($product['final_price']*($product['products_tax']/100)), 4)+$product['final_price']);
 			} else {
 				$final_price=($product['qty']*$product['final_price']);
+				$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents($product['final_price']);
 			}
 			$item['ITEM_TOTAL']=mslib_fe::amount2Cents($final_price).$subprices;
+
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
 				$item['ITEM_PRODUCT_STATUS']=htmlspecialchars(mslib_fe::getOrderStatusName($product['status']));
 			}
@@ -856,6 +860,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
 		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
+		$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
 		$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
 		$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
@@ -872,6 +877,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$keys[]='ITEM_SKU';
 		$keys[]='ITEM_VAT_RATE';
 		$keys[]='ITEM_TOTAL';
+		$keys[]='ITEM_PRICE_SINGLE';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
 			$keys[]='ITEM_PRODUCT_STATUS';
 		}
