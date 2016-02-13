@@ -384,7 +384,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								}
 								// get all cats to generate multilevel fake url eof
 							}
-							$product_detail_link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+							$product_detail_link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row['products_id'].'&tx_multishop_pi1[page_section]=products_detail',1);
 							$row[$col]='<a href="'.$product_detail_link.'" target="_blank">'.htmlspecialchars($row['products_name']).'</a>';
 							break;
 						case 'boolean':
