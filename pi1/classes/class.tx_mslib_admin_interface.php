@@ -366,6 +366,27 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							}
 							$row[$col]=$valArray['content'];
 							break;
+						case 'products_detail_page_link':
+							$where='';
+							if ($row['categories_id']) {
+								// get all cats to generate multilevel fake url
+								$level=0;
+								$cats=mslib_fe::Crumbar($row['categories_id']);
+								$cats=array_reverse($cats);
+								$where='';
+								if (count($cats)>0) {
+									foreach ($cats as $cat) {
+										$where.="categories_id[".$level."]=".$cat['id']."&";
+										$level++;
+									}
+									$where=substr($where, 0, (strlen($where)-1));
+									$where.='&';
+								}
+								// get all cats to generate multilevel fake url eof
+							}
+							$product_detail_link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+							$row[$col]='<a href="'.$product_detail_link.'" target="_blank">'.htmlspecialchars($row['products_name']).'</a>';
+							break;
 						case 'boolean':
 							$status_html='';
 							if (!$row[$col]) {
