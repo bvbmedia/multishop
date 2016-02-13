@@ -1657,6 +1657,18 @@ if ($this->post['action']=='category-insert') {
 							$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 								$rowchk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+								// custom hook that can be controlled by third-party plugin
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchCategoriesImagePreProc'])) {
+									$params=array(
+											'rowchk'=>&$rowchk,
+											'item'=>&$item,
+											'column'=>'categories_image'.$x
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchCategoriesImagePreProc'] as $funcRef) {
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									}
+								}
+								// custom hook that can be controlled by third-party plugin eof
 								if (!$rowchk['categories_image'] or ($rowchk['categories_image'] and !file_exists(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.mslib_befe::getImagePrefixFolder($rowchk['categories_image']).'/'.$rowchk['categories_image']))) {
 									// download image
 									$data=mslib_fe::file_get_contents($image);
@@ -1852,6 +1864,18 @@ if ($this->post['action']=='category-insert') {
 						$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 						if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 							$rowchk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+							// custom hook that can be controlled by third-party plugin
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'])) {
+								$params=array(
+										'rowchk'=>&$rowchk,
+										'item'=>&$item,
+										'column'=>'manufacturers_image'
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// custom hook that can be controlled by third-party plugin eof
 							if (!$rowchk['manufacturers_image']) {
 								// download image
 								$data=mslib_fe::file_get_contents($image);
@@ -2197,6 +2221,18 @@ if ($this->post['action']=='category-insert') {
 								$name='products_image'.$i;
 								if ($item[$name]) {
 									$import_product_images=1;
+									// custom hook that can be controlled by third-party plugin
+									if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchProductImagePreProc'])) {
+										$params=array(
+												'old_product'=>&$old_product,
+												'item'=>&$item,
+												'column'=>$name
+										);
+										foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchProductImagePreProc'] as $funcRef) {
+											\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										}
+									}
+									// custom hook that can be controlled by third-party plugin eof
 									if ($old_product[$name]) {
 										$filename=$old_product[$name];
 										$folder=mslib_befe::getImagePrefixFolder($filename);
