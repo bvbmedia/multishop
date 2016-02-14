@@ -973,6 +973,7 @@ if ($this->post['action']=='category-insert') {
 	}
 	if (!$this->post['skip_import']) {
 		$stats=array();
+		$stats['time_started']=time();
 		$stats['products_added']=0;
 		$stats['products_updated']=0;
 		$stats['products_deleted']=0;
@@ -3166,6 +3167,7 @@ if ($this->post['action']=='category-insert') {
 			}
 //			if ($file_location and file_exists($file_location)) @unlink($file_location);
 		}
+		$stats['time_finished']=time();
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'])) {
 			$params=array(
