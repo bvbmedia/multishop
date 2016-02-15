@@ -195,6 +195,30 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 				$extra_filter[]=$tbl."products_negative_keywords like '%".addslashes($this->get['skeyword'])."%'";
 			}
+			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_meta_title', $this->get['tx_multishop_pi1']['search_by']))) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='pf.';
+				} else {
+					$tbl='pd.';
+				}
+				$extra_filter[]=$tbl."products_meta_title like '%".addslashes($this->get['skeyword'])."%'";
+			}
+			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_meta_keywords', $this->get['tx_multishop_pi1']['search_by']))) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='pf.';
+				} else {
+					$tbl='pd.';
+				}
+				$extra_filter[]=$tbl."products_meta_keywords like '%".addslashes($this->get['skeyword'])."%'";
+			}
+			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_meta_description', $this->get['tx_multishop_pi1']['search_by']))) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='pf.';
+				} else {
+					$tbl='pd.';
+				}
+				$extra_filter[]=$tbl."products_meta_description like '%".addslashes($this->get['skeyword'])."%'";
+			}
 			// attribute values
 			$search_in_option_ids=array();
 			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_ATTRIBUTE_OPTION_IDS'])) {
@@ -259,6 +283,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					// do fulltext search
 					$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array, '"', '+', true));
 					$fields=$tbl."products_name";
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
+						$fields.=",".$tbl."products_description";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+						$fields.=",".$tbl."products_meta_keywords";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+						$fields.=",".$tbl."products_meta_description";
+					}
 					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 						$fields.=",".$tbl."products_description";
 					}

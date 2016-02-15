@@ -190,6 +190,15 @@ if ($this->get['feed_hash']) {
 					if ($oldsearch) {
 						if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
 							// do normal indexed search
+							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+								$extra_columns.=" or ".$tbl."products_meta_title like '%".addslashes($this->get['skeyword'])."'";
+							}
+							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+								$extra_columns.=" or ".$tbl."products_meta_keywords like '%".addslashes($this->get['skeyword'])."'";
+							}
+							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+								$extra_columns.=" or ".$tbl."products_meta_description like '%".addslashes($this->get['skeyword'])."'";
+							}
 							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 								$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".$extra_columns.")";
 							} else {
@@ -197,6 +206,15 @@ if ($this->get['feed_hash']) {
 							}
 						} else {
 							if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='keyword%') {
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+									$extra_columns.=" or ".$tbl."products_meta_title like '".addslashes($this->get['skeyword'])."%'";
+								}
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+									$extra_columns.=" or ".$tbl."products_meta_keywords like '".addslashes($this->get['skeyword'])."%'";
+								}
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+									$extra_columns.=" or ".$tbl."products_meta_description like '".addslashes($this->get['skeyword'])."%'";
+								}
 								// do normal indexed search
 								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 									$filter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".$extra_columns.")";
@@ -204,6 +222,15 @@ if ($this->get['feed_hash']) {
 									$filter[]="(".$tbl."products_name like '".addslashes($this->get['skeyword'])."%' ".$extra_columns.")";
 								}
 							} else {
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+									$extra_columns.=" or ".$tbl."products_meta_title like '%".addslashes($this->get['skeyword'])."%'";
+								}
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+									$extra_columns.=" or ".$tbl."products_meta_keywords like '%".addslashes($this->get['skeyword'])."%'";
+								}
+								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+									$extra_columns.=" or ".$tbl."products_meta_description like '%".addslashes($this->get['skeyword'])."%'";
+								}
 								// do normal indexed search
 								if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 									$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."%' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".$extra_columns.")";
@@ -216,6 +243,16 @@ if ($this->get['feed_hash']) {
 						// do fulltext search
 						$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array, '"', '+', true));
 						$fields=$tbl."products_name";
+
+						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+							$fields.=",".$tbl."products_meta_title";
+						}
+						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+							$fields.=",".$tbl."products_meta_keywords";
+						}
+						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+							$fields.=",".$tbl."products_meta_description";
+						}
 						if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 							$fields.=",".$tbl."products_description";
 						}
