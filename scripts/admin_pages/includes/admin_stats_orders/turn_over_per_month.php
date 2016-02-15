@@ -252,7 +252,7 @@ $content.='
 				<div class="col-md-6">
 					<div class="checkbox checkbox-success checkbox-inline">
 						<input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"'.($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'').'>
-						<label for="filter_by_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label>
+						<label for="filter_by_excluding_vat">'.htmlspecialchars($this->pi_getLL('excluding_vat')).'</label>
 					</div>
 				</div>
 			</div>

@@ -1366,7 +1366,7 @@
             <label index="admin_customer_email">Debiteur e-mailadres</label>
             <label index="admin_customer_groups">Debiteurgroepen</label>
             <label index="admin_customer_id">Klantnummer</label>
-            <label index="admin_customer_name">Debiteur naam</label>
+            <label index="admin_customer_name">Debiteurnaam</label>
             <label index="admin_customers">Debiteuren</label>
             <label index="admin_customers_description">Beheer hier uw debiteuren</label>
             <label index="admin_customers_overview">Overzicht debiteuren</label>
