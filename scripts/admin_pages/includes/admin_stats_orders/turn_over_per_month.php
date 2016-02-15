@@ -43,19 +43,22 @@ if ($row_year['crdate']>0) {
 	$oldest_year=date("Y");
 }
 $current_year=date("Y");
-$temp_year='<select name="stats_year_sb" id="stats_year_sb">';
+$year_select='<select name="stats_year_sb" class="form-control" id="stats_year_sb"><option value="">'.$this->pi_getLL('choose').'</option>';
+if ($this->get['order_date_from']) {
+	$this->cookie['stats_year_sb']='';
+}
 if ($oldest_year) {
 	for ($y=$current_year; $y>=$oldest_year; $y--) {
 		if ($this->cookie['stats_year_sb']==$y) {
-			$temp_year.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
 		} else {
-			$temp_year.='<option value="'.$y.'">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'">'.$y.'</option>';
 		}
 	}
 } else {
-	$temp_year.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
+	$year_select.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
 }
-$temp_year.='</select>';
+$year_select.='</select>';
 $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
@@ -189,7 +192,7 @@ $content.='
 <form method="get" id="orders_stats_form">
 <!--
 <input name="id" type="hidden" value="'.$this->get['id'].'" />
-<div class="stat-years float_right">'.$temp_year.'</div>
+<div class="stat-years float_right">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_orders" />
@@ -199,7 +202,7 @@ $content.='
 
 <div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->get['id'].'" />
-	<!-- <div class="stat-years float_right">'.$temp_year.'</div> -->
+	<!-- <div class="stat-years float_right">'.$year_select.'</div> -->
 	<input name="type" type="hidden" value="2003" />
 	<input name="Search" type="hidden" value="1" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_orders" />
@@ -230,6 +233,10 @@ $content.='
 			<div class="form-group">
 			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
+			</div>
+			<label>'.$this->pi_getLL('year').'</label>
+			<div class="form-group form-inline">
+				'.$year_select.'
 			</div>
 		</div>
 		<div class="col-md-4 formfield-wrapper">
@@ -463,6 +470,7 @@ if (!$tr_type or $tr_type=='even') {
 $content.='
 </tbody></table>';
 // LAST MONTHS EOF
+/*
 $tr_type='even';
 $dates=array();
 $content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_day')).'</h3>';
@@ -537,6 +545,7 @@ foreach ($dates as $key=>$value) {
 	$content.='</tr>';
 }
 $content.='</tbody></table>';
+*/
 // LAST MONTHS EOF
 $content.='<div class="msAdminOrdersStatsButtonWrapper">';
 $dlink_param['stats_year_sb']=$this->get['stats_year_sb'];
