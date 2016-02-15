@@ -248,6 +248,14 @@ $content.='
 			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
 			'.$shipping_method_input.'
 			</div>
+			<div class="form-group">
+				<div class="col-md-6">
+					<div class="checkbox checkbox-success checkbox-inline">
+						<input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"'.($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'').'>
+						<label for="filter_by_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
@@ -317,6 +325,10 @@ if ($this->get['payment_status']=='paid_only') {
 if (!$this->masterShop) {
 	$data_query['where'][]='o.page_uid='.$this->shop_pid;
 }
+$grandTotalColumnName='grand_total';
+if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+	$grandTotalColumnName='grand_total_excluding_vat';
+}
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'])) {
 	$params=array(
@@ -366,10 +378,10 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT o.orders_id, o.grand_total FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$str='SELECT o.orders_id, o.'.$grandTotalColumnName.' FROM tx_multishop_orders o WHERE ('.implode(' AND ', $where).') and (o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price=($total_price+$row['grand_total']);
+		$total_price=($total_price+$row[$grandTotalColumnName]);
 	}
 	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
 	$total_amount=$total_amount+$total_price;
@@ -425,12 +437,12 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$str='SELECT o.orders_id, o.'.$grandTotalColumnName.'  FROM tx_multishop_orders o WHERE ('.implode(' AND ', $where).') and (o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$total_orders=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$total_orders_avg+=$total_orders;
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price_avrg=($total_price_avrg+$row['grand_total']);
+		$total_price_avrg=($total_price_avrg+$row[$grandTotalColumnName]);
 	}
 	if ($total_price_avrg>0 && $total_orders>0) {
 		$totalSum=$total_price_avrg/$total_orders;
@@ -521,12 +533,12 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$str="SELECT o.customer_id, o.orders_id, o.".$grandTotalColumnName."  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$uids=array();
 	$users=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price=($total_price+$row['grand_total']);
+		$total_price=($total_price+$row[$grandTotalColumnName]);
 		$uids[]='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$row['orders_id'].'&action=edit_order', 1).'">'.$row['orders_id'].'</a>';
 		$total_daily_orders++;
 	}
