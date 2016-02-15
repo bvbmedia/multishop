@@ -27,26 +27,26 @@ if ($row_year['crdate']>0) {
 	$oldest_year=date("Y");
 }
 $current_year=date("Y");
-$temp_year='<select name="stats_year_sb" id="stats_year_sb">';
+$year_select='<select name="stats_year_sb" class="form-control" id="stats_year_sb"><option value="">'.$this->pi_getLL('choose').'</option>';
 if ($oldest_year) {
 	for ($y=$current_year; $y>=$oldest_year; $y--) {
 		if ($this->cookie['stats_year_sb']==$y) {
-			$temp_year.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
 		} else {
-			$temp_year.='<option value="'.$y.'">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'">'.$y.'</option>';
 		}
 	}
 } else {
-	$temp_year.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
+	$year_select.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
 }
-$temp_year.='</select>';
+$year_select.='</select>';
 $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
 $content.='
 <form action="index.php" method="get" id="orders_stats_form" class="float_right">
-<div class="stat-years float_right">'.$temp_year.'</div>
+<div class="stat-years float_right">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_products" />

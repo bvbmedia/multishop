@@ -127,7 +127,12 @@ foreach ($tmporders as $order) {
 	//$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
 	$markerArray['ORDER_CREATE_DATE']=strftime("%a. %x<br/>%X", $order['crdate']);
-	$markerArray['ORDER_GRAND_TOTAL']=mslib_fe::amount2Cents($order['grand_total'], 0);
+
+	$grandTotalColumnName='grand_total';
+	if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+		$grandTotalColumnName='grand_total_excluding_vat';
+	}
+	$markerArray['ORDER_GRAND_TOTAL']=mslib_fe::amount2Cents($order[$grandTotalColumnName], 0);
 	$markerArray['ORDER_SHIPPING_METHOD']=$order['shipping_method_label'];
 	$markerArray['ORDER_PAYMENT_METHOD']=$order['payment_method_label'];
 	$markerArray['ORDER_STATUS']=$order_status_selectbox;

@@ -43,19 +43,22 @@ if ($row_year['crdate']>0) {
 	$oldest_year=date("Y");
 }
 $current_year=date("Y");
-$temp_year='<select name="stats_year_sb" id="stats_year_sb">';
+$year_select='<select name="stats_year_sb" class="form-control" id="stats_year_sb"><option value="">'.$this->pi_getLL('choose').'</option>';
+if ($this->get['order_date_from']) {
+	$this->cookie['stats_year_sb']='';
+}
 if ($oldest_year) {
 	for ($y=$current_year; $y>=$oldest_year; $y--) {
 		if ($this->cookie['stats_year_sb']==$y) {
-			$temp_year.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'" selected="selected">'.$y.'</option>';
 		} else {
-			$temp_year.='<option value="'.$y.'">'.$y.'</option>';
+			$year_select.='<option value="'.$y.'">'.$y.'</option>';
 		}
 	}
 } else {
-	$temp_year.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
+	$year_select.='<option value="'.$current_year.'" selected="selected">'.$current_year.'</option>';
 }
-$temp_year.='</select>';
+$year_select.='</select>';
 $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
@@ -187,7 +190,7 @@ $content.='
 <form method="get" id="orders_stats_form">
 <!--
 <input name="id" type="hidden" value="'.$this->get['id'].'" />
-<div class="stat-years float_right">'.$temp_year.'</div>
+<div class="stat-years float_right">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_invoices" />
@@ -197,7 +200,7 @@ $content.='
 
 <div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->get['id'].'" />
-	<!-- <div class="stat-years float_right">'.$temp_year.'</div> -->
+	<!-- <div class="stat-years float_right">'.$year_select.'</div> -->
 	<input name="type" type="hidden" value="2003" />
 	<input name="Search" type="hidden" value="1" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_invoices" />
@@ -212,12 +215,12 @@ $content.='
 				<label for="country">'.$this->pi_getLL('countries').'</label>
 				'.$billing_countries_sb.'
 			</div>
-			<label>Date</label>
+			<label>'.$this->pi_getLL('date').'</label>
 			<div class="form-group form-inline">
-			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-			<input type="text" class="form-control" name="order_date_from" id="order_date_from" value="'.$this->get['order_date_from'].'">
-			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-			<input type="text" class="form-control" name="order_date_till" id="order_date_till" value="'.$this->get['order_date_till'].'">
+				<label for="order_date_from">'.$this->pi_getLL('from').':</label>
+				<input type="text" class="form-control" name="order_date_from" id="order_date_from" value="'.$this->get['order_date_from'].'">
+				<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
+				<input type="text" class="form-control" name="order_date_till" id="order_date_till" value="'.$this->get['order_date_till'].'">
 			</div>
 		</div>
 		<div class="col-md-4 formfield-wrapper">
@@ -229,6 +232,10 @@ $content.='
 			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
 			</div>
+			<label>'.$this->pi_getLL('year').'</label>
+			<div class="form-group form-inline">
+				'.$year_select.'
+			</div>
 		</div>
 		<div class="col-md-4 formfield-wrapper">
 			<div class="form-group">
@@ -239,7 +246,14 @@ $content.='
 			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
 			'.$shipping_method_input.'
 			</div>
-
+			<div class="form-group">
+				<div class="col-md-6">
+					<div class="checkbox checkbox-success checkbox-inline">
+						<input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"'.($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'').'>
+						<label for="filter_by_excluding_vat">'.htmlspecialchars($this->pi_getLL('excluding_vat')).'</label>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
@@ -309,6 +323,10 @@ if ($this->get['payment_status']=='paid_only') {
 if (!$this->masterShop) {
 	$data_query['where'][]='o.page_uid='.$this->shop_pid;
 }
+$grandTotalColumnName='grand_total';
+if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+	$grandTotalColumnName='grand_total_excluding_vat';
+}
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_month.php']['monthlyStatsInvoicesQueryHookPreProc'])) {
 	$params=array(
@@ -360,13 +378,13 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
+	$str='SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.'.$grandTotalColumnName.' FROM tx_multishop_orders o, tx_multishop_invoices i WHERE ('.implode(" AND ", $where).') and (i.crdate BETWEEN '.$start_time.' and '.$end_time.') AND o.orders_id=i.orders_id';
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if (!$row['reversal_invoice']) {
-			$total_price=($total_price+$row['grand_total']);
+			$total_price=($total_price+$row[$grandTotalColumnName]);
 		} else {
-			$total_price=($total_price-$row['grand_total']);
+			$total_price=($total_price-$row[$grandTotalColumnName]);
 		}
 	}
 	$stringOutput=mslib_fe::amount2Cents($total_price, 0);
@@ -457,15 +475,15 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
+	$str='SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.'.$grandTotalColumnName.' FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE ('.implode(' AND ', $where).') and (i.crdate BETWEEN '.$start_time.' and '.$end_time.') AND o.orders_id=i.orders_id';
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$total_orders=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$total_orders_avg+=$total_orders;
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if (!$row['reversal_invoice']) {
-			$total_price_avrg=($total_price_avrg+$row['grand_total']);
+			$total_price_avrg=($total_price_avrg+$row[$grandTotalColumnName]);
 		} else {
-			$total_price_avrg=($total_price_avrg-$row['grand_total']);
+			$total_price_avrg=($total_price_avrg-$row[$grandTotalColumnName]);
 		}
 	}
 	if ($total_price_avrg>0 && $total_orders>0) {
@@ -506,6 +524,7 @@ if (!$tr_type or $tr_type=='even') {
 $content.='
 </tbody></table>';
 // LAST MONTHS EOF
+/*
 $tr_type='even';
 $content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_day')).'</h3>';
 if ($currentMonth) {
@@ -554,16 +573,16 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.reversal_invoice, i.invoice_id, o.customer_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
+	$str="SELECT i.reversal_invoice, i.invoice_id, o.customer_id, o.orders_id, o.".$grandTotalColumnName." FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$uids=array();
 	$users=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if (!$row['reversal_invoice']) {
-			$total_price=($total_price+$row['grand_total']);
+			$total_price=($total_price+$row[$grandTotalColumnName]);
 		} else {
-			$total_price=($total_price-$row['grand_total']);
+			$total_price=($total_price-$row[$grandTotalColumnName]);
 		}
 		$uids[]='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$row['orders_id'].'&action=edit_order', 1).'">'.$row['invoice_id'].'</a>';
 		$total_daily_orders++;
@@ -583,6 +602,7 @@ foreach ($dates as $key=>$value) {
 	$content.='</tr>';
 }
 $content.='</tbody></table>';
+*/
 // LAST MONTHS EOF
 $content.='<div class="msAdminOrdersStatsButtonWrapper">';
 $dlink_param['stats_year_sb']=$this->get['stats_year_sb'];

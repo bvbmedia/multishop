@@ -531,6 +531,11 @@ $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->get['invoice_date_till'];
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###']=$this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###']=($this->cookie['paid_invoices_only'] ? ' checked' : '');
+
+$subpartArray['###EXCLUDING_VAT_LABEL###']=htmlspecialchars($this->pi_getLL('excluding_vat'));
+$subpartArray['###EXCLUDING_VAT_CHECKED###']=($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'');
+
+
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$invoices_results;

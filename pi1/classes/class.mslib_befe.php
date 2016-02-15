@@ -1620,11 +1620,13 @@ class mslib_befe {
 				} else {
 					return false;
 				}
+				/*
 				if (filesize($original_path)>16384) {
 					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
 					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}
+				*/
 				$folder=mslib_befe::getImagePrefixFolder($filename);
 				$dirs=array();
 				$dirs[]=PATH_site.$this->ms['image_paths']['products']['100'].'/'.$folder;

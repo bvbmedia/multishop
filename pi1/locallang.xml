@@ -1150,7 +1150,7 @@
             <label index="week">week</label>
             <label index="weekly">weekly</label>
             <label index="weight_based">Weight based</label>
-            <label index="year">year</label>
+            <label index="year">Year</label>
             <label index="yes">Yes</label>
             <label index="you_are_already_signed_in">You are already signed in</label>
             <label index="you_are_currently_here">You are currently here</label>
@@ -1366,7 +1366,7 @@
             <label index="admin_customer_email">Debiteur e-mailadres</label>
             <label index="admin_customer_groups">Debiteurgroepen</label>
             <label index="admin_customer_id">Klantnummer</label>
-            <label index="admin_customer_name">Debiteur naam</label>
+            <label index="admin_customer_name">Debiteurnaam</label>
             <label index="admin_customers">Debiteuren</label>
             <label index="admin_customers_description">Beheer hier uw debiteuren</label>
             <label index="admin_customers_overview">Overzicht debiteuren</label>
@@ -2425,7 +2425,7 @@
             <label index="week">week</label>
             <label index="weekly">wekelijks</label>
             <label index="weight_based">Op basis van gewicht</label>
-            <label index="year">jaar</label>
+            <label index="year">Jaar</label>
             <label index="yes">Ja</label>
             <label index="you_are_already_signed_in">Je bent al reeds ingelogd</label>
             <label index="you_are_currently_here">Je bent hier</label>

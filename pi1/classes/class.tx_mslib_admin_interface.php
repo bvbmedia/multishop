@@ -572,14 +572,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		$content.='</div>';
 		$content.='</div>';
-		if ($params['settings']['returnResultSetAsArray']) {
-			$array=array();
-			$array['searchForm']=$searchForm;
-			$array['paginationMarkup']=$paginationMarkup;
-			$array['dataset']=$pageset['dataset'];
-			return $array;
+		if ($params['settings']['returnOnlyWhenRecordsFound'] && !$pageset['total_rows']) {
+			//return;
 		} else {
-			return $content;
+			if ($params['settings']['returnResultSetAsArray']) {
+				$array=array();
+				$array['searchForm']=$searchForm;
+				$array['paginationMarkup']=$paginationMarkup;
+				$array['dataset']=$pageset['dataset'];
+				return $array;
+			} else {
+				return $content;
+			}
 		}
 	}
 }
