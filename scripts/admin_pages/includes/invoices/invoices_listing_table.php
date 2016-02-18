@@ -6,18 +6,18 @@ $counter=0;
 $totalAmount=0;
 $invoiceItem='';
 foreach ($invoices as $invoice) {
+	$grandTotalColumnName='grand_total';
+	if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+		$grandTotalColumnName='grand_total_excluding_vat';
+	}
 	$cb_ctr++;
 	$user=mslib_fe::getUser($invoice['customer_id']);
 	$master_shop_col='';
 	if ($this->masterShop) {
 		$master_shop_col='<td class="cellName">'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
 	}
-	//
-	if ($invoice['reversal_invoice']) {
-		$totalAmount-=$invoice['amount'];
-	} else {
-		$totalAmount+=$invoice['amount'];
-	}
+	$totalAmount+=$invoice[$grandTotalColumnName];
+
 	//
 	$paid_status='';
 	/** PLAN TO REMOVED **/
@@ -71,10 +71,6 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0);
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['grand_total'], 0);
-	$grandTotalColumnName='grand_total';
-	if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
-		$grandTotalColumnName='grand_total_excluding_vat';
-	}
 	$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice[$grandTotalColumnName], 0);
 
 	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime("%a.<br/>%x", $invoice['date_mail_last_sent']) : '');
