@@ -115,7 +115,16 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 		if ($oldsearch) {
 			if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
-				// do normal indexed search					
+				// do normal indexed search
+				if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+					$extra_columns.=" or ".$tbl."products_meta_title like '%".addslashes($this->get['q'])."'";
+				}
+				if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+					$extra_columns.=" or ".$tbl."products_meta_keywords like '%".addslashes($this->get['q'])."'";
+				}
+				if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+					$extra_columns.=" or ".$tbl."products_meta_description like '%".addslashes($this->get['q'])."'";
+				}
 				if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 					$filter[]="(".$tbl."products_name like '%".addslashes($this->get['q'])."' or ".$tbl."products_description like '%".addslashes($this->get['q'])."%' ".$extra_columns.")";
 				} else {
@@ -123,6 +132,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 			} else {
 				if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='keyword%') {
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+						$extra_columns.=" or ".$tbl."products_meta_title like '".addslashes($this->get['q'])."%'";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+						$extra_columns.=" or ".$tbl."products_meta_keywords like '".addslashes($this->get['q'])."%'";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+						$extra_columns.=" or ".$tbl."products_meta_description like '".addslashes($this->get['q'])."%'";
+					}
 					// do normal indexed search
 					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 						$filter[]="(".$tbl."products_name like '".addslashes($this->get['q'])."%' or ".$tbl."products_description like '%".addslashes($this->get['q'])."%' ".$extra_columns.")";
@@ -130,6 +148,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$filter[]="(".$tbl."products_name like '".addslashes($this->get['q'])."%' ".$extra_columns.")";
 					}
 				} else {
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+						$extra_columns.=" or ".$tbl."products_meta_title like '%".addslashes($this->get['q'])."%'";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+						$extra_columns.=" or ".$tbl."products_meta_keywords like '%".addslashes($this->get['q'])."%'";
+					}
+					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+						$extra_columns.=" or ".$tbl."products_meta_description like '%".addslashes($this->get['q'])."%'";
+					}
 					// do normal indexed search
 					if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 						$filter[]="(".$tbl."products_name like '%".addslashes($this->get['q'])."%' or ".$tbl."products_description like '%".addslashes($this->get['q'])."%' ".$extra_columns.")";
@@ -160,7 +187,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($string) {
 				$filter[]=$string;
 			}
-			// 
+			//
 		} else {
 			$cats=mslib_fe::get_subcategory_ids($parent_id);
 			$cats[]=$parent_id;
