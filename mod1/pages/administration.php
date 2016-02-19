@@ -174,29 +174,32 @@ switch ($_REQUEST['action']) {
 				case 'categories':
 					foreach ($items as $item) {
 						$dbFilename=$item['categories_image'];
-						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
-						if ($newFilename) {
-							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
-								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
-								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
-								$updateArray=array();
-								$updateArray['categories_image']=$newFilename;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$item['categories_id'].'\'', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						if ($dbFilename) {
+							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+							$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
+							if ($newFilename) {
+								$content.=$newFilename.'<BR>';
+								if ($newFilename!=$dbFilename) {
+									//if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
+									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
+									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+									$updateArray=array();
+									$updateArray['categories_image']=$newFilename;
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$item['categories_id'].'\'', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
-						}
-						if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
-							$crop_images_data=mslib_befe::getRecords($item['categories_id'], 'tx_multishop_categories_crop_image_coordinate', 'categories_id');
-							if (is_array($crop_images_data) && count($crop_images_data)) {
-								foreach ($crop_images_data as $crop_image_data) {
-									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
-									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', $src_image_size);
-									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', 'original');
-									// backup original
-									copy($src, $src.'-ori-'.$image_size);
-									mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'categories');
+							if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+								$crop_images_data=mslib_befe::getRecords($item['categories_id'], 'tx_multishop_categories_crop_image_coordinate', 'categories_id');
+								if (is_array($crop_images_data) && count($crop_images_data)) {
+									foreach ($crop_images_data as $crop_image_data) {
+										$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
+										$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', $src_image_size);
+										$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', 'original');
+										// backup original
+										copy($src, $src.'-ori-'.$image_size);
+										mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'categories');
+									}
 								}
 							}
 						}
@@ -205,29 +208,32 @@ switch ($_REQUEST['action']) {
 				case 'manufacturers':
 					foreach ($items as $item) {
 						$dbFilename=$item['manufacturers_image'];
-						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
-						if ($newFilename) {
-							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
-								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
-								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
-								$updateArray=array();
-								$updateArray['manufacturers_image']=$newFilename;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\''.$item['manufacturers_id'].'\'', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						if ($dbFilename) {
+							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+							$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
+							if ($newFilename) {
+								$content.=$newFilename.'<BR>';
+								if ($newFilename!=$dbFilename) {
+									//if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
+									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
+									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+									$updateArray=array();
+									$updateArray['manufacturers_image']=$newFilename;
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\''.$item['manufacturers_id'].'\'', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
-						}
-						if ($this->ms['MODULES']['ADMIN_CROP_MANUFACTURERS_IMAGES']) {
-							$crop_images_data=mslib_befe::getRecords($item['manufacturers_id'], 'tx_multishop_manufacturers_crop_image_coordinate', 'manufacturers_id');
-							if (is_array($crop_images_data) && count($crop_images_data)) {
-								foreach ($crop_images_data as $crop_image_data) {
-									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
-									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', $src_image_size);
-									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', 'original');
-									// backup original
-									copy($src, $src.'-ori-'.$image_size);
-									mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'manufacturers');
+							if ($this->ms['MODULES']['ADMIN_CROP_MANUFACTURERS_IMAGES']) {
+								$crop_images_data=mslib_befe::getRecords($item['manufacturers_id'], 'tx_multishop_manufacturers_crop_image_coordinate', 'manufacturers_id');
+								if (is_array($crop_images_data) && count($crop_images_data)) {
+									foreach ($crop_images_data as $crop_image_data) {
+										$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
+										$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', $src_image_size);
+										$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', 'original');
+										// backup original
+										copy($src, $src.'-ori-'.$image_size);
+										mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'manufacturers');
+									}
 								}
 							}
 						}
@@ -244,14 +250,17 @@ switch ($_REQUEST['action']) {
 							}
 							$col='products_image'.$s;
 							$dbFilename=$item[$col];
-							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-							$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
-							if ($newFilename) {
-								$content.=$newFilename.'<BR>';
-								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
-									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
-									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
-									$updateArray[$col]=$newFilename;
+							if ($dbFilename) {
+								$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+								$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
+								if ($newFilename) {
+									$content.=$newFilename.'<BR>';
+									if ($newFilename!=$dbFilename) {
+										//if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
+										// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
+										$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+										$updateArray[$col]=$newFilename;
+									}
 								}
 							}
 						}
@@ -282,17 +291,20 @@ switch ($_REQUEST['action']) {
 				case 'products_attributes':
 					foreach ($items as $item) {
 						$dbFilename=$item['attribute_image'];
-						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeProductAttributeValuesImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
-						if ($newFilename) {
-							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
-								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
-								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
-								$updateArray=array();
-								$updateArray['attribute_image']=$newFilename;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$item['products_attributes_id'].'\'', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						if ($dbFilename) {
+							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+							$newFilename=mslib_befe::resizeProductAttributeValuesImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
+							if ($newFilename) {
+								$content.=$newFilename.'<BR>';
+								if ($newFilename!=$dbFilename) {
+									//if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
+									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
+									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+									$updateArray=array();
+									$updateArray['attribute_image']=$newFilename;
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$item['products_attributes_id'].'\'', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
 						}
 					}
@@ -300,17 +312,20 @@ switch ($_REQUEST['action']) {
 				case 'products_options_values_to_products_options':
 					foreach ($items as $item) {
 						$dbFilename=$item['products_options_values_image'];
-						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeProductAttributeValuesImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
-						if ($newFilename) {
-							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
-								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
-								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
-								$updateArray=array();
-								$updateArray['products_options_values_image']=$newFilename;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id=\''.$item['products_options_values_to_products_options_id'].'\'', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						if ($dbFilename) {
+							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+							$newFilename=mslib_befe::resizeProductAttributeValuesImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
+							if ($newFilename) {
+								$content.=$newFilename.'<BR>';
+								if ($newFilename!=$dbFilename) {
+									//if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
+									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
+									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+									$updateArray=array();
+									$updateArray['products_options_values_image']=$newFilename;
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id=\''.$item['products_options_values_to_products_options_id'].'\'', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 							}
 						}
 					}

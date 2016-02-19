@@ -6257,7 +6257,7 @@ class mslib_fe {
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
-					$messages[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $store_tt_address_id);
+					$messages[]=sprintf($this->pi_getLL(' admin_label_store_tt_address_id_found'), $store_tt_address_id);
 					//$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
 				}
 			} else {
