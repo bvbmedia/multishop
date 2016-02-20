@@ -33,7 +33,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
 		}
 	}
-	$content.='<div class="main-heading"><h2>'.$page['name'].'</h2></div>
+	$content.='<div class="main-heading"><h1>'.$page['name'].'</h1></div>
 	<div class="content">'.$page['content'].'</div>';
 }
 ?>
