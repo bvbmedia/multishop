@@ -163,6 +163,17 @@ if ($id_category==0) {
 				//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// create categories tree linking
 				$res=tx_mslib_catalog::linkCategoriesTreeToProduct($id_product_new, $id_category, $insertArray);
+				// custom page hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/copy_duplicate_product.php']['copyDuplicateProductPostHook'])) {
+					$params=array(
+						'old_products_id'=>&$id_product,
+						'products_id'=>&$id_product_new
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/copy_duplicate_product.php']['copyDuplicateProductPostHook'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// custom page hook that can be controlled by third-party plugin eof
 				if ($res) {
 					echo "<p>Product succesfully duplicated</p>";
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
