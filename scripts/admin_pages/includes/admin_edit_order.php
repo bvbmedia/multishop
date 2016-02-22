@@ -463,6 +463,9 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
+						if (strpos($this->post['edit_discount_value'], ',')!==false) {
+							$this->post['edit_discount_value']=str_replace(',', '.', $this->post['edit_discount_value']);
+						}
 						$updateArray['discount']=$this->post['edit_discount_value'];
 					}
 					if (isset($this->post['order_payment_condition'])) {
@@ -2613,6 +2616,7 @@ if (is_numeric($this->get['orders_id'])) {
                     </div>
                 </div>';
 			} else {
+
 				$tmpcontent.='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
@@ -2663,6 +2667,7 @@ if (is_numeric($this->get['orders_id'])) {
                     </div>
                 </div>';
 			}
+			print_r($orders_tax_data);
 			$content_total='
             <div class="form-group">
                 <label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
