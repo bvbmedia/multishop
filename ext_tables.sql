@@ -887,7 +887,7 @@ CREATE TABLE `tx_multishop_products_attributes` (
  `attribute_image` varchar(150) default '',
  `sort_order_option_name` int(11) default '0',
  `sort_order_option_value` int(11) default '0',
- `page_uid` int(11) not null default '0',
+ `page_uid` int(11) NOT NULL default '0',
  PRIMARY KEY (`products_attributes_id`),
  KEY `products_id` (`products_id`),
  KEY `options_id` (`options_id`),
@@ -1076,18 +1076,24 @@ CREATE TABLE `tx_multishop_products_search_log` (
 ) ;
 
 CREATE TABLE `tx_multishop_products_to_categories` (
+ `products_to_categories_id` int(11) NOT NULL auto_increment,
  `products_id` int(11) NOT NULL default '0',
  `categories_id` int(5) NOT NULL default '0',
  `sort_order` int(11) default '0',
  `page_uid` int(11) default '0',
  `related_to` int(11) default '0',
+ `crumbar_identifier` varchar(250) default '',
+ `node_id` int(11) default '0',
  `is_deepest` tinyint(1) default '0',
- PRIMARY KEY (`products_id`,`categories_id`),
+ PRIMARY KEY (`products_to_categories_id`),
+ UNIQUE KEY `p2c_unique_key` (`products_id`,`categories_id`,`page_uid`,`node_id`,`is_deepest`,`crumbar_identifier`),
+ KEY `categories_id` (`categories_id`),
  KEY `page_uid` (`page_uid`),
+ KEY `related_to` (`related_to`),
  KEY `products_id` (`products_id`),
  KEY `sort_order` (`sort_order`),
- KEY `categories_id` (`categories_id`),
- KEY `related_to` (`related_to`),
+ KEY `crumbar_identifier` (`crumbar_identifier`),
+ KEY `node_id` (`node_id`),
  KEY `is_deepest` (`is_deepest`)
 );
 
