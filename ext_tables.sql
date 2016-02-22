@@ -887,7 +887,7 @@ CREATE TABLE `tx_multishop_products_attributes` (
  `attribute_image` varchar(150) default '',
  `sort_order_option_name` int(11) default '0',
  `sort_order_option_value` int(11) default '0',
- `page_uid` int(11) not null default '0',
+ `page_uid` int(11) NOT NULL default '0',
  PRIMARY KEY (`products_attributes_id`),
  KEY `products_id` (`products_id`),
  KEY `options_id` (`options_id`),
