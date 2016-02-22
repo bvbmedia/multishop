@@ -876,6 +876,9 @@ $subpartArray['###LABEL_FILTER_LAST_MODIFIED###']=$this->pi_getLL('filter_by_dat
 $subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###']=$this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###']=($this->post['search_by_status_last_modified'] ? ' checked' : '');
 $subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###']=($this->post['search_by_telephone_orders'] ? ' checked' : '');
+$subpartArray['###EXCLUDING_VAT_LABEL###']=htmlspecialchars($this->pi_getLL('excluding_vat'));
+$subpartArray['###EXCLUDING_VAT_CHECKED###']=($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'');
+
 $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');

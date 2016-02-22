@@ -2284,6 +2284,39 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Search also in products meta title',
+	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_META_TITLE',
+	'configuration_value'=>'0',
+	'description'=>'This enables the search-engine to also search in the products meta title.',
+	'group_id'=>'13',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Search also in products meta keywords',
+	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS',
+	'configuration_value'=>'0',
+	'description'=>'This enables the search-engine to also search in the products meta keywords.',
+	'group_id'=>'13',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Search also in products meta description',
+	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION',
+	'configuration_value'=>'0',
+	'description'=>'This enables the search-engine to also search in the products meta description.',
+	'group_id'=>'13',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

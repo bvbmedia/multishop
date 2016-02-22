@@ -402,6 +402,7 @@ if ($this->post && $this->post['email']) {
 		}
 	}
 }
+
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_edit_customer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
@@ -1232,7 +1233,14 @@ $objRef->setInterfaceKey('admin_edit_customer');
 
 // Header buttons
 $headerButtons=array();
-
+if (is_array($user) && $user['uid']) {
+	$headingButton=array();
+	$headingButton['btn_class']='btn btn-primary';
+	$headingButton['fa_class']='fa fa-sign-in';
+	$headingButton['title']=$this->pi_getLL('login_as_user');
+	$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$user['uid']);
+	$headerButtons[]=$headingButton;
+}
 $headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
@@ -1252,6 +1260,12 @@ $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(
 
 if ($this->get['tx_multishop_pi1']['cid']>0 && !is_numeric($user['uid'])) {
 	$content=$this->pi_getLL('customer_not_found');
+} else {
+	if (isset($this->get['tx_multishop_pi1']['cid'])) {
+		if (!$this->get['tx_multishop_pi1']['cid'] || !is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+			$content = $this->pi_getLL('customer_not_found');
+		}
+	}
 }
 /*
 if ($customer_id) {

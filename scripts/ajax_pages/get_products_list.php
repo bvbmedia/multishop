@@ -27,10 +27,12 @@ if ($this->ADMIN_USER) {
         if (!$this->masterShop) {
             $filter[]='p.page_uid=\''.$this->shop_pid.'\'';
         }
-        if ($catid>0) {
+        if ($catid>0 && is_numeric($catid)) {
             $filter[] = 'p2c.categories_id=\'' . $catid . '\'';
         } else {
-            $filter[] = 'p2c.is_deepest=\'1\'';
+            if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+                $filter[] = 'p2c.is_deepest=\'1\'';
+            }
         }
         $filter[] = 'p.products_id=pd.products_id';
         $filter[] = 'p.products_id=p2c.products_id';
@@ -91,10 +93,16 @@ if ($this->ADMIN_USER) {
         } else {
             $prefix='pf.';
         }
-        if ($catid>0) {
-            $filter[] = 'p2c.categories_id=\'' . $catid . '\'';
+        if ($catid>0 && is_numeric($catid)) {
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $filter[] = 'pf.categories_id=\'' . $catid . '\'';
+            } else {
+                $filter[] = 'p2c.categories_id=\'' . $catid . '\'';
+            }
         } else {
-            $filter[] = 'p2c.is_deepest=\'1\'';
+            if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+                $filter[] = 'p2c.is_deepest=\'1\'';
+            }
         }
         $products=mslib_fe::getProductsPageSet($filter, 0, 100, array($prefix.'products_name asc'));
         $counter=0;

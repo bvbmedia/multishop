@@ -3,6 +3,13 @@ if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 // when having a multi category based url get the deepest categories_id and save it as $this->get['categories_id']
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['applicationTopAlwaysPreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['applicationTopAlwaysPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 /*
 if (is_array($this->get['categories_id'])) {
 	$GLOBALS['categories_id_array']=$this->get['categories_id'];
@@ -397,14 +404,38 @@ if ($this->ms['MODULES']['CART_PAGE_UID']) {
 }
 $this->cart_page_uid='tx_multishop_cart'.$key;
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
+	// store the customer uid in cookies for later use
+	if (!isset($this->cookie['customer_id'])) {
+		$this->cookie['customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];
+		$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+		$GLOBALS['TSFE']->storeSessionData();
+	}
 	// move guest cart to member cart?
 	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	//
 	if (!is_array($cart['products'])) {
 		// maybe guest cart has products that we must migrate
 		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//
 		if (is_array($cart2['products']) && count($cart2['products'])) {
 			$cart['products']=$cart2['products'];
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+		if (isset($cart2['coupon_code']) && !empty($cart2['coupon_code'])) {
+			$cart['coupon_code'] = $cart2['coupon_code'];
+			$cart['discount'] = $cart2['discount'];
+			$cart['discount_type'] = $cart2['discount_type'];
+			$cart['discount_amount'] = $cart2['discount_amount'];
+			$cart['discount_percentage'] = $cart2['discount_percentage'];
+			//
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+		if (is_array($cart2['summarize']) && count($cart2['summarize'])) {
+			$cart['summarize'] = $cart2['summarize'];
+			//
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
 			$GLOBALS['TSFE']->storeSessionData();
 		}
 	}
@@ -471,4 +502,11 @@ $this->ms['product_image_formats']['enlarged']['height']=$format[1];
 $format=explode("x", $this->ms['MODULES']['MANUFACTURER_IMAGE_SIZE_NORMAL']);
 $this->ms['manufacturer_image_formats']['enlarged']['width']=$format[0];
 $this->ms['manufacturer_image_formats']['enlarged']['height']=$format[1];
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['applicationTopAlwaysPostProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['applicationTopAlwaysPostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 ?>

@@ -58,14 +58,19 @@ $content.='<select name="tx_multishop_pi1[categories_id]" id="sort_categories_id
 $content.='<div class="show_disabled_status_wrapper"><div class="checkbox checkbox-success"><input type="checkbox" name="tx_multishop_pi1[show_disabled_product]" id="show_disabled_product" value="1"'.(isset($this->get['tx_multishop_pi1']['show_disabled_product']) ? ' checked="checked"' : '').'><label for="show_disabled_product">'.$this->pi_getLL('show_disabled_product').'</label></div></div>';
 $content.='</form><hr>';
 //
-$where_status = '';
+$filter= array();
+$filter[]='p.page_uid=' . $this->showCatalogFromPage;
+$filter[]='pd.language_id=' . $this->sys_language_uid;
+$filter[]='p.products_id=pd.products_id and p2c.products_id=p.products_id and p2c.is_deepest=1';
+//
+
 $categories_id=0;
 if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id']>0) {
     $categories_id = (int)$this->get['tx_multishop_pi1']['categories_id'];
-    $where_status.=' and p2c.categories_id=' . $categories_id;
+    $filter[]='p2c.categories_id=' . $categories_id;
 }
 if (!isset($this->get['tx_multishop_pi1']['show_disabled_product'])) {
-    $where_status .= ' and p.products_status=1';
+    $filter[]='p.products_status=1';
 }
 if (!$count_categories && $parent_id>0) {
     $cats=mslib_fe::get_subcategory_ids($parent_id);
@@ -75,16 +80,24 @@ if (!$count_categories && $parent_id>0) {
     } else {
         $tbl='p2c.';
     }
-    $where_status .=' and ('.$tbl.'categories_id IN ('.implode(",", $cats).'))';
+    $filter[]='('.$tbl.'categories_id IN ('.implode(",", $cats).'))';
     $categories_id=$parent_id;
 }
 if ($categories_id>0) {
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQuesryFilter'])) {
+        $params=array(
+            'filter'=>&$filter,
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQuesryFilter'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
     $query_p=$GLOBALS['TYPO3_DB']->SELECTquery('p.products_id, p.products_image, pd.products_name', // SELECT ...
-            'tx_multishop_products_to_categories p2c, tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
-            'p.page_uid=' . $this->showCatalogFromPage . ' and pd.language_id=' . $this->sys_language_uid . $where_status . ' and p.products_id=pd.products_id and p2c.products_id=p.products_id and p2c.is_deepest=1', // WHERE...
-            'p.products_id', // GROUP BY...
-            'p2c.sort_order asc', // ORDER BY...
-            '' // LIMIT ...
+        'tx_multishop_products_to_categories p2c, tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
+        implode(' and ', $filter), // WHERE...
+        'p.products_id', // GROUP BY...
+        'p2c.sort_order '.$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'], // ORDER BY...
+        '' // LIMIT ...
     );
 //
     $res_p=$GLOBALS['TYPO3_DB']->sql_query($query_p);

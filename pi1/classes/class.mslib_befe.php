@@ -156,6 +156,17 @@ class mslib_befe {
 			$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']=75;
 		}
 		if ($filename) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeCategoryImagePreProc'])) {
+				$params=array(
+						'original_path'=>&$original_path,
+						'filename'=>&$filename,
+						'module_path'=>&$module_path,
+						'run_in_background'=>&$run_in_background
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeCategoryImagePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			//hook to let other plugins further manipulate the method
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeCategoryImage'])) {
 				$params=array(
@@ -321,6 +332,17 @@ class mslib_befe {
 			$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']=75;
 		}
 		if ($filename) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeManufacturerImagePreProc'])) {
+				$params=array(
+						'original_path'=>&$original_path,
+						'filename'=>&$filename,
+						'module_path'=>&$module_path,
+						'run_in_background'=>&$run_in_background
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeManufacturerImagePreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			//hook to let other plugins further manipulate the method
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeManufacturerImage'])) {
 				$params=array(
@@ -1529,6 +1551,17 @@ class mslib_befe {
 		if (!$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']) {
 			$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']=75;
 		}
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImagePreProc'])) {
+			$params=array(
+					'original_path'=>&$original_path,
+					'filename'=>&$filename,
+					'module_path'=>$module_path,
+					'run_in_background'=>$run_in_background
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImagePreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		if (file_exists($original_path) && $filename) {
 			//hook to let other plugins further manipulate the method
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImage'])) {
@@ -1620,11 +1653,13 @@ class mslib_befe {
 				} else {
 					return false;
 				}
+				/*
 				if (filesize($original_path)>16384) {
 					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
 					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}
+				*/
 				$folder=mslib_befe::getImagePrefixFolder($filename);
 				$dirs=array();
 				$dirs[]=PATH_site.$this->ms['image_paths']['products']['100'].'/'.$folder;

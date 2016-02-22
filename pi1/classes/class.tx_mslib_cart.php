@@ -2582,6 +2582,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$totalPrice=$product['total_price'];
 					}
 					$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice); //.$subPrices;
+					$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents($product['final_price']); //.$subPrices;
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
 						$params=array(
 							'item'=>&$item,
@@ -2630,6 +2631,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			//ITEMS_HEADER_WRAPPER
 			$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 			$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
+			$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
 			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
 			$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 			$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
@@ -2649,6 +2651,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$keys[]='ITEM_SKU';
 			$keys[]='ITEM_VAT_RATE';
 			$keys[]='ITEM_TOTAL';
+			$keys[]='ITEM_PRICE_SINGLE';
 			if (is_array($itemsWrapper) && count($itemsWrapper)) {
 				foreach ($itemsWrapper as $item) {
 					$markerArray=array();

@@ -187,6 +187,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$innerFilter[]="(".$tbl."products_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
 			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+				$innerFilter[]="(".$tbl."products_meta_title like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+				$innerFilter[]="(".$tbl."products_meta_keywords like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+				$innerFilter[]="(".$tbl."products_meta_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_MANUFACTURERS_NAME']) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
@@ -216,6 +225,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$ultra_fields=$tbl."products_name";
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$ultra_fields.=",".$tbl."products_description";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+				$ultra_fields.=",".$tbl."products_meta_title";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+				$ultra_fields.=",".$tbl."products_meta_keywords";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+				$ultra_fields.=",".$tbl."products_meta_description";
 			}
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_ID']) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -1288,6 +1306,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$innerFilter[]="(".$tbl."products_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
 			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+				$innerFilter[]="(".$tbl."products_meta_title like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+				$innerFilter[]="(".$tbl."products_meta_keywords like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+				$innerFilter[]="(".$tbl."products_meta_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
+			}
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_MANUFACTURERS_NAME']) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
@@ -1317,6 +1344,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$fields=$tbl."products_name";
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$fields.=",".$tbl."products_description";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_TITLE']) {
+				$ultra_fields.=",".$tbl."products_meta_title";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_KEYWORDS']) {
+				$ultra_fields.=",".$tbl."products_meta_keywords";
+			}
+			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_META_DESCRIPTION']) {
+				$ultra_fields.=",".$tbl."products_meta_description";
 			}
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_ID']) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {

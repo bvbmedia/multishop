@@ -227,9 +227,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="payment_method_label"'.($post_data['order_by']=='payment_method_label' ? ' selected="selected"' : '').'>'.$this->pi_getLL('payment_method_label').'</option>
 		</select>';
 		// sort direction selectbox
-		$sort_direction_sb='<select name="payment_status">
-			<option value="desc"'.($post_data['payment_status']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_desc').'</option>
-			<option value="asc"'.($post_data['payment_status']=='asc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_asc').'</option>
+		$sort_direction_sb='<select name="sort_direction">
+			<option value="desc"'.($post_data['sort_direction']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_desc').'</option>
+			<option value="asc"'.($post_data['sort_direction']=='asc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_asc').'</option>
 		</select>';
 		// order type selectbox
 		$order_type_sb='<select name="order_type">
