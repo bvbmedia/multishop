@@ -1,0 +1,15 @@
+@media print {
+  #tx_multishop_admin_newheader_wrapper,
+  #tx_multishop_admin_header_wrapper,
+  #tx_multishop_admin_footer_wrapper,
+  .well,
+  hr,
+  .clearfix,
+  .btn { display:none; }
+  .table > thead > tr > th,
+  .table > tfoot > tr > th { font-size:12px; }
+  .table > tbody > tr > td { font-size:12px; white-space:normal; /*word-break:break-word;*/ }
+
+  #msadmin_wrapper,
+  #msadmin_section { padding:0; }
+}
