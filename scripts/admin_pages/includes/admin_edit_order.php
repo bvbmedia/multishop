@@ -2667,7 +2667,7 @@ if (is_numeric($this->get['orders_id'])) {
                     </div>
                 </div>';
 			}
-			print_r($orders_tax_data);
+			//print_r($orders_tax_data);
 			$content_total='
             <div class="form-group">
                 <label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
