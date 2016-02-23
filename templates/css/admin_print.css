@@ -9,7 +9,7 @@
   .btn { display:none !important; }
   .table > thead > tr > th,
   .table > tfoot > tr > th { font-size:12px; }
-  .table > tbody > tr > td { font-size:12px; white-space:normal; /*word-break:break-word;*/ }
+  .table > tbody > tr > td { font-size:12px; }
 
   #msadmin_wrapper,
   #msadmin_section { padding:0 !important; }
@@ -18,7 +18,10 @@
   #orders_search,
   #msAdminOrdersListingActionForm { display:none !important; }
 
-  .table-responsive { overflow:visible !important; }
-
   .tx-multishop-pi1 > .panel-default { margin-bottom:0; }
+
+  .table-responsive { width:100%; overflow:visible; }
+
+  /* bootstrap */
+  a[href]:after { content:""; }
 }
