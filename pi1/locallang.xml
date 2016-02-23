@@ -1063,8 +1063,8 @@
             <label index="start_time">Start time</label>
             <label index="state">State</label>
             <label index="state_is_required">State is required.</label>
-            <label index="stats_turnover_per_month">Turnover per month</label>
-            <label index="stats_turnover_per_year">Turnover per year</label>
+            <label index="stats_turnover_per_month">Revenue per month</label>
+            <label index="stats_turnover_per_year">Revenue per year</label>
             <label index="status">Status</label>
             <label index="status_last_modified">Status last modified</label>
             <label index="step">Step</label>
