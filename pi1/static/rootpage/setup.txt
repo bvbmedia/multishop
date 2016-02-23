@@ -465,6 +465,12 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			adminPrintCSS = EXT:multishop/templates/css/admin_print.css
+   			adminPrintCSS {
+    			media = print
+    			import = 0
+    			compress = 1
+   			}
 		}
 	}
 
@@ -577,12 +583,6 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-			adminPrintCSS = EXT:multishop/templates/css/admin_print.css
-   			adminPrintCSS {
-    			media = print
-    			import = 0
-    			compress = 1
-   			}
 			# not needed in bootstrap version
 			adminglobalCSS >
 
