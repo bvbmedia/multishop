@@ -1,15 +1,24 @@
 @media print {
+  body { background:none !important; }
   #tx_multishop_admin_newheader_wrapper,
   #tx_multishop_admin_header_wrapper,
   #tx_multishop_admin_footer_wrapper,
   .well,
   hr,
   .clearfix,
-  .btn { display:none; }
+  .btn { display:none !important; }
   .table > thead > tr > th,
   .table > tfoot > tr > th { font-size:12px; }
   .table > tbody > tr > td { font-size:12px; white-space:normal; /*word-break:break-word;*/ }
 
   #msadmin_wrapper,
-  #msadmin_section { padding:0; }
+  #msadmin_section { padding:0 !important; }
+
+  /* component */
+  #orders_search,
+  #msAdminOrdersListingActionForm { display:none !important; }
+
+  .table-responsive { overflow:visible !important; }
+
+  .tx-multishop-pi1 > .panel-default { margin-bottom:0; }
 }
