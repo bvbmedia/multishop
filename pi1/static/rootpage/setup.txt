@@ -683,3 +683,10 @@ multishop_admin_page {
 	headerData.1441 < page.headerData.1441
 }
 # LOAD THE ADMIN PAGE EOF
+
+adminPrintCSS = EXT:multishop/templates/css/admin_print.css
+   adminPrintCSS {
+    media = print
+    import = 0
+    compress = 1
+   }
