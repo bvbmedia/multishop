@@ -281,7 +281,9 @@ if (is_array($products) && count($products)) {
 				'product'=>&$current_product,
 				'output'=>&$output,
 				'products_compare'=>&$products_compare,
-				'plugins_item_extra_content'=>&$plugins_item_extra_content
+				'plugins_item_extra_content'=>&$plugins_item_extra_content,
+				'limit_per_page'=>&$limit_per_page,
+				'p'=>&$p
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
