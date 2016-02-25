@@ -297,11 +297,11 @@ if (is_array($products) && count($products)) {
 }
 // fill the row marker with the expanded rows
 $subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
-if ($current['content']) {
+if ($current['content'] && !$this->get['manufacturers_id']) {
 	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='<div class="categories_top_description">'.trim($current['content']).'</div>';
 }
 $subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
-if ($current['content_footer']) {
+if ($current['content_footer'] && !$this->get['manufacturers_id']) {
 	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 }
 $subpartArray['###CURRENT_CATEGORIES_NAME###']='';
