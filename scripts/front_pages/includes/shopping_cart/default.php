@@ -446,6 +446,7 @@ if (count($cart['products'])>0) {
 		$params=array(
 			'template'=>$template,
 			'subpartArray'=>&$subpartArray,
+			'cart'=>&$cart
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['shoppingCartPagePostHook'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
