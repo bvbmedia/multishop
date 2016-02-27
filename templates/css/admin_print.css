@@ -1,0 +1,37 @@
+@media print {
+  body { background:none !important; }
+  #tx_multishop_admin_newheader_wrapper,
+  #tx_multishop_admin_header_wrapper,
+  #tx_multishop_admin_footer_wrapper,
+  .well,
+  hr,
+  .clearfix,
+  .btn { display:none !important; }
+  .table > thead > tr > th,
+  .table > tfoot > tr > th { font-size:12px; }
+  .table > tbody > tr > td { font-size:12px; }
+
+  #msadmin_wrapper,
+  #msadmin_section { padding:0 !important; }
+
+  /* component */
+  #orders_search,
+  #msAdminOrdersListingActionForm,
+  #msAdminCustomersListingActionForm,
+  #pagenav_container_list_wrapper,
+  #msAdminSearchByCharNav,
+  #form1 > .panel-default { display:none !important; }
+
+  .tx-multishop-pi1 > .panel-default { border:none; margin-bottom:0; border-radius:0; }
+  .tx-multishop-pi1 > .panel-default > .panel-heading { display:none; }
+  .tx-multishop-pi1 > .panel-default > .panel-body { padding:0; }
+
+  .table-responsive { width:100%; overflow:visible; }
+
+  /* bootstrap */
+  a[href]:after { content:""; }
+  .table { margin-bottom:0; }
+  .table > thead > tr > th.noPrint,
+  .table > tfoot > tr > th.noPrint,
+  .table > tbody > tr > td.noPrint { display:none; }
+}

@@ -281,7 +281,9 @@ if (is_array($products) && count($products)) {
 				'product'=>&$current_product,
 				'output'=>&$output,
 				'products_compare'=>&$products_compare,
-				'plugins_item_extra_content'=>&$plugins_item_extra_content
+				'plugins_item_extra_content'=>&$plugins_item_extra_content,
+				'limit_per_page'=>&$limit_per_page,
+				'p'=>&$p
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -297,11 +299,11 @@ if (is_array($products) && count($products)) {
 }
 // fill the row marker with the expanded rows
 $subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
-if ($current['content']) {
+if ($current['content'] && !$this->get['manufacturers_id']) {
 	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='<div class="categories_top_description">'.trim($current['content']).'</div>';
 }
 $subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
-if ($current['content_footer']) {
+if ($current['content_footer'] && !$this->get['manufacturers_id']) {
 	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 }
 $subpartArray['###CURRENT_CATEGORIES_NAME###']='';

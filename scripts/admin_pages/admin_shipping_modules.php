@@ -156,9 +156,9 @@ function productPrice(to_include_vat, o, type) {
 				if (json && json.price_excluding_tax) {
 					var excl_tax_crop = decimalCrop(json.price_excluding_tax);
 					// update the excl. vat
-					o.parent().prev().first().children().val(excl_tax_crop);
+					//o.parent().prev().first().children().val(excl_tax_crop);
 					// update the hidden excl vat
-					o.parent().next().first().children().val(json.price_excluding_tax);
+					//o.parent().next().first().children().val(json.price_excluding_tax);
 					//
                     // update the excl. vat
                     $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(excl_tax_crop);
