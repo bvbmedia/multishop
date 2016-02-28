@@ -1292,6 +1292,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (isset($address['debit_order'])) {
 				$insertArray['debit_order']=$address['debit_order'];
 			}
+			$insertArray['store_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+			$insertArray['customer_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+			if (isset($address['customer_currency']) && $address['customer_currency'] !='') {
+				$insertArray['customer_currency']=$address['customer_currency'];
+			}
+			$insertArray['currency_rate']=1;
+			if (isset($address['currency_rate']) && $address['currency_rate'] !='') {
+				$insertArray['currency_rate']=$address['currency_rate'];
+			}
 			// TYPO3 6.2 NULL VALUE BUGFIX
 			if (!$insertArray['customer_comments']) {
 				$insertArray['customer_comments']='';
