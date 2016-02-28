@@ -1198,6 +1198,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray=array();
 			$insertArray['customer_id']=$customer_id;
 			$insertArray['page_uid']=$this->shop_pid;
+			$insertArray['language_id']=0;
+			if (is_numeric($address['language_id'])) {
+				$insertArray['language_id']=$address['language_id'];
+			}
 			$insertArray['status']=1;
 			$insertArray['customer_comments']=$this->post['customer_comments'];
 			$insertArray['billing_company']=$address['company'];
