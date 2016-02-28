@@ -2809,11 +2809,11 @@ if ($this->post['action']=='category-insert') {
 								}
 								// if option name is defined as an individual col (not through aux)
 								if (!$option_row[0] and $item['attribute_option_name']) {
-									$option_name=$item['attribute_option_name'];
+									$option_name=trim($item['attribute_option_name']);
 								} else {
-									$option_name=$option_row[0];
+									$option_name=trim($option_row[0]);
 								}
-								$option_value=$option_row[1];
+								$option_value=trim($option_row[1]);
 								if ($option_name and $option_value) {
 									// first chk if the option already exists and if not add it
 									$sql_chk="select products_options_id from tx_multishop_products_options where products_options_name='".addslashes($option_name)."' and language_id='".$language_id."'";

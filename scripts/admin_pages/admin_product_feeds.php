@@ -233,7 +233,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$feeds=array();
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				$this->post=$row;
+				foreach ($row as $key => $value) {
+					$this->post[$key]=$value;
+				}
 				$this->post['fields']=unserialize($row['fields']);
 				// now also unserialize for the custom field
 				$post_data=unserialize($row['post_data']);
@@ -357,7 +359,8 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'])) {
 			$params=array(
-				'content'=>&$content
+				'content'=>&$content,
+				'post_data'=>&$post_data
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

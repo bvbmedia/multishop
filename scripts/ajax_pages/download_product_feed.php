@@ -314,6 +314,7 @@ if ($this->get['feed_hash']) {
 						//hook to let other plugins further manipulate the settings
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPreProc'])) {
 							$params=array(
+								'fields'=>&$fields,
 								'row'=>&$row,
 								'fetchExtraDataFromProducts'=>&$fetchExtraDataFromProducts
 							);
@@ -347,7 +348,7 @@ if ($this->get['feed_hash']) {
 										$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['array'][]=$row_attributes;
 									}
 									foreach ($attributes_data as $attribute_key=>$attribute_val) {
-										$row[$attribute_key]=implode(', ', $attributes_data[$attribute_key]['values']);
+										$row[$attribute_key]=implode(',', $attributes_data[$attribute_key]['values']);
 										// now with prices
 										$itemsWithPrice=array();
 										$itemsWithPriceIncludingVat=array();
@@ -421,6 +422,19 @@ if ($this->get['feed_hash']) {
 									}
 									$records[]=array_merge($product, $row);
 								}
+							}
+						}
+						//hook to let other plugins further manipulate the settings
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'])) {
+							$params=array(
+								'records'=>&$records,
+								'loadAttributeValues'=>$loadAttributeValues,
+								'feed'=>$feed,
+								'row'=>&$row,
+								'fields'=>$fields
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 					}
