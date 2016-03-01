@@ -1804,6 +1804,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							*/
 							$insertArray['products_price']=$value['products_price'];
 							$insertArray['final_price']=$value['final_price'];
+							$insertArray['product_capital_price']=$value['product_capital_price'];
 							$insertArray['type']='P'; // P for Product, S for Subscription (returning-costs)
 							$insertArray['ean_code']=$value['ean_code'];
 							$insertArray['sku_code']=$value['sku_code'];
@@ -1878,11 +1879,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								// hook oef
 							}
 							// TYPO3 6.2 LTS NULL FIX
-							/*
-							if (!$insertArray['products_model']) {
-								$insertArray['products_model']='';
-							}
-							*/
 							$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);

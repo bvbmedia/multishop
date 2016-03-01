@@ -593,6 +593,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `vendor_code` varchar(50) default '',
  `sort_order` int(11) default '0',
  `customer_comments` text,
+ `product_capital_price` decimal(24,14) default '0.00000000000000',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
