@@ -71,7 +71,21 @@ if (!$this->get['skip_categories']) {
 }
 // lets create the products sitemap
 if (!$this->get['skip_products']) {
-	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where products_status=1 and page_uid='".$this->showCatalogFromPage."'");
+	$filterProducts=array();
+	$filterProducts[]='products_status=1';
+	$filterProducts[]='page_uid=' . $this->showCatalogFromPage;
+	// hook
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorProductsQueryFilter'])) {
+		$params=array(
+			'filterProducts'=>&$filterProducts
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorProductsQueryFilter'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// hook eof
+
+	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where " . implode(" and ", $filterProducts));
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$product=mslib_fe::getProduct($row['products_id']);
 		$where='';
