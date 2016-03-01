@@ -104,20 +104,23 @@ if (!$this->get['skip_products']) {
 			}
 			// get all cats to generate multilevel fake url eof
 		}
-		$link=$prefix_domain.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-		// TXT
-		$tmpContent=$link."\n";
-		file_put_contents($log_file, $tmpContent, FILE_APPEND|LOCK_EX);
-		// XML
-		$tmpContent='<url>'."\n";
-		$tmpContent.="\t".'<loc>'.$link.'</loc>'."\n";
-		if ($product['products_last_modified']) {
-			$tmpContent.="\t".'<lastmod>'.($product['products_last_modified']>0?date('c', $product['products_last_modified']):'').'</lastmod>'."\n";
+		$link='';
+		if (!empty($where)) {
+			$link = $prefix_domain . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+			// TXT
+			$tmpContent=$link."\n";
+			file_put_contents($log_file, $tmpContent, FILE_APPEND|LOCK_EX);
+			// XML
+			$tmpContent='<url>'."\n";
+			$tmpContent.="\t".'<loc>'.$link.'</loc>'."\n";
+			if ($product['products_last_modified']) {
+				$tmpContent.="\t".'<lastmod>'.($product['products_last_modified']>0?date('c', $product['products_last_modified']):'').'</lastmod>'."\n";
+			}
+			$tmpContent.="\t".'<changefreq>daily</changefreq>'."\n";
+			$tmpContent.="\t".'<priority>0.5</priority>'."\n";
+			$tmpContent.='</url>'."\n";
+			file_put_contents($log_xml_file, $tmpContent, FILE_APPEND|LOCK_EX);
 		}
-		$tmpContent.="\t".'<changefreq>daily</changefreq>'."\n";
-		$tmpContent.="\t".'<priority>0.5</priority>'."\n";
-		$tmpContent.='</url>'."\n";
-		file_put_contents($log_xml_file, $tmpContent, FILE_APPEND|LOCK_EX);
 	}
 }
 if (!$this->get['skip_manufacturers']) {
