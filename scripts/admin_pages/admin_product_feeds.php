@@ -239,8 +239,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				$this->post['fields']=unserialize($row['fields']);
 				// now also unserialize for the custom field
 				$post_data=unserialize($row['post_data']);
-				$this->post['fields_headers']=$post_data['fields_headers'];
-				$this->post['fields_values']=$post_data['fields_values'];
+				foreach ($post_data['fields_headers'] as $fh_key => $field_header_title) {
+					$this->post['fields_headers'][]=$field_header_title;
+					$this->post['fields_values'][]=$post_data['fields_values'][$fh_key];
+				}
+				/*$this->post['fields_headers']=$post_data['fields_headers'];
+				$this->post['fields_values']=$post_data['fields_values'];*/
 			}
 		}
 	}
@@ -385,6 +389,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div id="product_feed_fields">';
 		$counter=0;
+		$field_header_counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
@@ -395,7 +400,8 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button>';
 				// custom field
 				if ($field=='custom_field') {
-					$content.='<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers['.$counter.']" type="text" class="form-control" value="'.$this->post['fields_headers'][$counter].'" /> <span class="value">Value</span> <input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" class="form-control" /></div>';
+					$content.='<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers['.$counter.']" type="text" class="form-control" value="'.$this->post['fields_headers'][$field_header_counter].'" /> <span class="value">Value</span> <input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$field_header_counter].'" class="form-control" /></div>';
+					$field_header_counter++;
 				}
 				$content.='
 				</div>
