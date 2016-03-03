@@ -19,6 +19,7 @@ if.equals = 10
 }
 */
 class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
+	// Create tmenu object for categories menu
 	function makeHmenuArray($content,$conf) {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_befe.php');
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_fe.php');
@@ -59,6 +60,49 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$GLOBALS['TT']->setTSlogMessage($error, 3);
 			} else {
 				$dataArray=mslib_fe::getSitemap($cat['categories_id'], array(), 0, 0);
+				$menuArr[$tel]['_SUB_MENU']=array();
+				if (count($dataArray)) {
+					$sub_content=self::subMenuArray($dataArray);
+					$menuArr[$tel]['_SUB_MENU']=$sub_content;
+				}
+			}
+			$tel++;
+		}
+		return $menuArr;
+	}
+	// Create tmenu object for categories menu
+	function makeManufacturersHmenuArray($content,$conf) {
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_befe.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_fe.php');
+		$this->conf=$conf['userFunc.']['conf.'];
+		if (!isset($GLOBALS['TSFE']->config['config']['sys_language_uid'])) {
+			$GLOBALS['TSFE']->config['config']['sys_language_uid']=0;
+		}
+		$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		$this->categoriesStartingPoint=$this->conf['categoriesStartingPoint'];
+		if (!is_numeric($this->conf['catalog_shop_pid']) or $this->conf['catalog_shop_pid']==0) {
+			$this->conf['catalog_shop_pid']=$this->conf['shop_pid'];
+		}
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
+				'tx_multishop_manufacturers m', // FROM ...
+				'm.status=1', // WHERE...
+				'', // GROUP BY...
+				'm.sort_order', // ORDER BY...
+				'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$menuArr=array();
+		$tel=0;
+		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$menuArr[$tel]['title']=$row['manufacturers_name'];
+			$menuArr[$tel]['uid']='9999'.$row['manufacturers_id'];
+			$link=mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=manufacturers_products_listing&manufacturers_id='.$row['manufacturers_id']);
+
+			$menuArr[$tel]['_OVERRIDE_HREF']=$link;
+			if ($error=$GLOBALS['TYPO3_DB']->sql_error()) {
+				$GLOBALS['TT']->setTSlogMessage($error, 3);
+			} else {
+				$dataArray=mslib_fe::getSitemap($row['categories_id'], array(), 0, 0);
 				$menuArr[$tel]['_SUB_MENU']=array();
 				if (count($dataArray)) {
 					$sub_content=self::subMenuArray($dataArray);

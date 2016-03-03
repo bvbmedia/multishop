@@ -1198,6 +1198,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray=array();
 			$insertArray['customer_id']=$customer_id;
 			$insertArray['page_uid']=$this->shop_pid;
+			$insertArray['language_id']=0;
+			if (is_numeric($address['language_id'])) {
+				$insertArray['language_id']=$address['language_id'];
+			}
 			$insertArray['status']=1;
 			$insertArray['customer_comments']=$this->post['customer_comments'];
 			$insertArray['billing_company']=$address['company'];
@@ -1287,6 +1291,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['debit_order']=0;
 			if (isset($address['debit_order'])) {
 				$insertArray['debit_order']=$address['debit_order'];
+			}
+			$insertArray['store_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+			$insertArray['customer_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+			if (isset($address['customer_currency']) && $address['customer_currency'] !='') {
+				$insertArray['customer_currency']=$address['customer_currency'];
+			}
+			$insertArray['currency_rate']=1;
+			if (isset($address['currency_rate']) && $address['currency_rate'] !='') {
+				$insertArray['currency_rate']=$address['currency_rate'];
 			}
 			// TYPO3 6.2 NULL VALUE BUGFIX
 			if (!$insertArray['customer_comments']) {

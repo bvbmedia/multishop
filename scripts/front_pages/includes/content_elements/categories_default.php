@@ -89,6 +89,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						// get all cats to generate multilevel fake url
 						$nested_level=1;
 						if ($cat['categories_url']) {
+							if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+								$cat['categories_url']='http://'.$cat['categories_url'];
+							}
 							$parsed_url=@parse_url($cat['categories_url']);
 							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 								$target=" target=\"_blank\"";
@@ -154,6 +157,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 									if (!$cat['hide_in_menu']) {
 										$nested_level=2;
 										if ($cat['categories_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+												$cat['categories_url']='http://'.$cat['categories_url'];
+											}
 											$parsed_url=@parse_url($cat['categories_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
@@ -283,6 +289,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							$nested_level=0;
 							$level=0;
 							if ($cat['categories_url']) {
+								if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+									$cat['categories_url']='http://'.$cat['categories_url'];
+								}
 								$parsed_url=@parse_url($cat['categories_url']);
 								if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 									$target=" target=\"_blank\"";
@@ -411,6 +420,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						$nested_level=0;
 						$level=0;
 						if ($cat['categories_url']) {
+							if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+								$cat['categories_url']='http://'.$cat['categories_url'];
+							}
 							$parsed_url=@parse_url($cat['categories_url']);
 							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 								$target=" target=\"_blank\"";
@@ -513,6 +525,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 										// get all cats to generate multilevel fake url
 										$level=0;
 										if ($cat['categories_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+												$cat['categories_url']='http://'.$cat['categories_url'];
+											}
 											$parsed_url=@parse_url($cat['categories_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
@@ -537,6 +552,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 											$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 										}
 										if ($cat['categories_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+												$cat['categories_url']='http://'.$cat['categories_url'];
+											}
 											$parsed_url=@parse_url($cat['categories_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
@@ -589,6 +607,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 													// get all cats to generate multilevel fake url
 													$level=0;
 													if ($cat['categories_url']) {
+														if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+															$cat['categories_url']='http://'.$cat['categories_url'];
+														}
 														$parsed_url=@parse_url($cat['categories_url']);
 														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 															$target=" target=\"_blank\"";
@@ -613,6 +634,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 														$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 													}
 													if ($cat['categories_url']) {
+														if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
+															$cat['categories_url']='http://'.$cat['categories_url'];
+														}
 														$parsed_url=@parse_url($cat['categories_url']);
 														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 															$target=" target=\"_blank\"";

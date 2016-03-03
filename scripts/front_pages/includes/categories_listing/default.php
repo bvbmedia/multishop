@@ -47,6 +47,9 @@ foreach ($categories as $category) {
 	}
 	// get all cats to generate multilevel fake url eof
 	if ($category['categories_url']) {
+		if (!preg_match('/^(http|https):\/\//',$category['categories_url'])) {
+			$category['categories_url']='http://'.$category['categories_url'];
+		}
 		$link_parse_url=parse_url($category['categories_url']);
 		if (isset($link_parse_url['host']) && !empty($link_parse_url['host'])) {
 			if (strpos($this->FULL_HTTP_URL, $link_parse_url['host'])===false) {
