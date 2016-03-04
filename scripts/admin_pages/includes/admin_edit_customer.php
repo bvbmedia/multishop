@@ -1120,7 +1120,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
-		$subpartArray['###VALUE_PAYMENT_CONDITION###']=14;
+		$subpartArray['###VALUE_PAYMENT_CONDITION###']='';
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']='';
 		$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
