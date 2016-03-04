@@ -33,6 +33,8 @@ if (strstr($qty, ".")) {
 		$qty_decimal_correction=$qty;
 	}
 }
+// caller marker for the mslib_fe::getProduct
+$this->post['caller_script']='get_staffel_price';
 if ($this->ADMIN_USER) {
 	$product=mslib_fe::getProduct($products_id, '', '', 1);
 } else {

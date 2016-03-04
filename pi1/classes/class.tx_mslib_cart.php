@@ -258,11 +258,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$discount_price=round((($this->cart['summarize']['sub_total_including_vat'])/100*$discount_percentage), 2);
 								$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
 							}
-							/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								$subtotal_tax=round((1-($discount_price/$this->cart['summarize']['sub_total_including_vat']))*($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']), 2);
 							} else {
 								$subtotal_tax = (($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
-							}*/
+							}
 							$this->cart['discount_amount']=$discount_price;
 							$this->cart['discount_percentage']=$discount_percentage;
 							break;
@@ -275,11 +275,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$discount_percentage=($this->cart['discount']/($this->cart['summarize']['sub_total_including_vat'])*100);
 								$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
 							}
-							/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								$subtotal_tax=round((1-($discount_price/$this->cart['summarize']['sub_total_including_vat']))*($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']), 2);
 							} else {
 								$subtotal_tax = (($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
-							}*/
+							}
 							$this->cart['discount_amount']=$discount_price;
 							$this->cart['discount_percentage']=$discount_percentage;
 							break;
