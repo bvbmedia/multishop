@@ -1705,9 +1705,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['expected_delivery_date']=$address['expected_delivery_date'];
 
 			}
-			//
 			$user=mslib_fe::getUser($customer_id);
-			$insertArray['payment_condition']=14;
+			$insertArray['payment_condition']='';
 			if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition']>0) {
 				$insertArray['payment_condition']=$user['tx_multishop_payment_condition'];
 			}
