@@ -150,7 +150,7 @@ if ($this->post['proceed_order']) {
 			$insertArray['delivery_state']=$this->post['delivery_state'];
 			$insertArray['delivery_name']=preg_replace('/ +/', ' ', $this->post['delivery_first_name'].' '.$this->post['delivery_middle_name'].' '.$this->post['delivery_last_name']);
 		}
-		$insertArray['payment_condition']=14;
+		$insertArray['payment_condition']=$this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
 		if (is_numeric($this->post['tx_multishop_payment_condition']) && $this->post['tx_multishop_payment_condition']>0) {
 			$insertArray['payment_condition']=$this->post['tx_multishop_payment_condition'];
 		}

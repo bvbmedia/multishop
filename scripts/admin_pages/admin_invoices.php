@@ -36,6 +36,15 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 				// combine all PDF files in 1 (needs GhostScript on the server: yum install ghostscript)
 				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
 				$prog=t3lib_utility_Command::exec('which gs');
+				//hook to let other plugins further manipulate the settings
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'])) {
+					$params=array(
+							'prog'=>&$prog
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				if ($prog && is_file($prog)) {
 					$cmd = $prog.' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='.$combinedPdfFile.' '.implode(' ', $attachments);
 					t3lib_utility_Command::exec($cmd);
