@@ -2242,11 +2242,21 @@ if ($this->post) {
 			// if the flat database module is enabled we have to sync the changes to the flat table
 			mslib_befe::convertProductToFlat($prodid);
 		}
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-			exit();
-		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
+		if (isset($this->post['SaveClose'])) {
+			if ($this->post['tx_multishop_pi1']['referrer']) {
+				if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product')===false) {
+					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+					exit();
+				} else {
+					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
+					exit();
+				}
+			} else {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
+				exit();
+			}
+		} else if (isset($this->post['Submit'])) {
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->get['action'].'&pid='.$this->get['pid']."&cid=".$this->get['cid']."&action=edit_product"));
 			exit();
 		}
 	}
@@ -2368,7 +2378,16 @@ if ($this->post) {
 			$headingButton['fa_class']='fa fa-check-circle';
 			$headingButton['title']=$this->pi_getLL('save');
 			$headingButton['href']='#';
-			$headingButton['attributes']='onclick="$(\'#admin_product_edit button[name=\\\'Submit\\\']\').click(); return false;"';
+			$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+			$headerButtons[]=$headingButton;
+
+
+			$headingButton=array();
+			$headingButton['btn_class']='btn btn-success';
+			$headingButton['fa_class']='fa fa-check-circle';
+			$headingButton['title']=$this->pi_getLL('admin_save_close');
+			$headingButton['href']='#';
+			$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 			$headerButtons[]=$headingButton;
 
 			// Set header buttons through interface class so other plugins can adjust it
@@ -3971,8 +3990,9 @@ if ($this->post) {
 		$subpartArray['###FOOTER_VALUE_ADVANCED_OPTION###']=($_COOKIE['hide_advanced_options']==1 ? $this->pi_getLL('admin_show_options') : $this->pi_getLL('admin_hide_options'));
 		$subpartArray['###FOOTER_LABEL_BUTTON_CANCEL###']=$this->pi_getLL('admin_cancel');
 		$subpartArray['###FOOTER_LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
+		$subpartArray['###FOOTER_LABEL_BUTTON_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
 		$subpartArray['###PRODUCT_PID###']=$product['products_id'];
-		$subpartArray['###FORM_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&pid='.$this->get['pid']);
+		$subpartArray['###FORM_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&pid='.$this->get['pid']."&cid=".$this->get['cid']."&action=edit_product");
 		if ($_COOKIE['hide_advanced_options']==1) {
 			$subpartArray['###JS_ADVANCED_OPTION_TOGGLE###']='$(".toggle_advanced_option").hide();'."\n";
 		} else {
