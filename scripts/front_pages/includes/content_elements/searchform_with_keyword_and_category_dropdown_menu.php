@@ -28,7 +28,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$categories=$Cache_Lite->get($s
 	$categories='';
 	$cats=mslib_fe::getSubcatsOnly(0);
 	foreach ($cats as $cat) {
-		if (!$cat['categories_url']) {
+		if (!$cat['categories_external_url']) {
 			$categories.='<option value="'.$cat['categories_id'].'" '.($cat['categories_id']==$categories_id ? 'selected' : '').'>'.$cat['categories_name'].'</option>';
 		}
 	}

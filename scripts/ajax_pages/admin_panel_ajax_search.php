@@ -516,7 +516,7 @@ if ($this->ADMIN_USER) {
 			if (!$this->masterShop) {
 				$filter[]='c.page_uid='.$this->showCatalogFromPage;
 			}
-			$select[]='c.categories_url, cd.categories_name, c.categories_id';
+			$select[]='cd.categories_external_url, cd.categories_name, c.categories_id';
 			$orderby[]='cd.categories_name';
 			$pageset=mslib_fe::getCategoriesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 			$resultset['categories']=$pageset;
@@ -541,9 +541,9 @@ if ($this->ADMIN_USER) {
 					$prod['Page']=$pages;
 					$prod['Product']=false;
 					$prod['SmallListing']=true;
-					if ($category['categories_url']) {
+					if ($category['categories_external_url']) {
 						$target=' target="_blank"';
-						$link=$category['categories_url'];
+						$link=$category['categories_external_url'];
 					} else {
 						$target="";
 						// get all cats to generate multilevel fake url

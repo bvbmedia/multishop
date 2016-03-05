@@ -470,8 +470,8 @@ if ($this->get['feed_hash']) {
 						}
 //						$where.='categories_id['.$level.']='.$row['categories_id'];
 						// get all cats to generate multilevel fake url eof
-						if ($row['categories_url']) {
-							$link=$row['categories_url'];
+						if ($row['categories_external_url']) {
+							$link=$row['categories_external_url'];
 						} else {
 							$target="";
 							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
