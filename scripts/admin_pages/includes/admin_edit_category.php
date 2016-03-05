@@ -444,6 +444,7 @@ if ($this->post) {
 				$updateArray['meta_description']=$this->post['meta_description'][$key];
 				$updateArray['content']=$this->post['content'][$key];
 				$updateArray['content_footer']=$this->post['content_footer'][$key];
+				$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\''.$catid.'\' and language_id=\''.$key.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -456,6 +457,7 @@ if ($this->post) {
 				$updateArray['meta_description']=$this->post['meta_description'][$key];
 				$updateArray['content']=$this->post['content'][$key];
 				$updateArray['content_footer']=$this->post['content_footer'][$key];
+				$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -563,6 +565,7 @@ if ($this->post) {
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2) > 0) {
 						$updateArray = array();
 						$updateArray['categories_name'] = $this->post['categories_name'][$key];
+						$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 						$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\'' . $row['categories_id'] . '\' and language_id=\'' . $key . '\'', $updateArray);
 						$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -761,6 +764,12 @@ if ($this->post) {
 				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'"'.($key===0 ? ' required="required"' : '').'>
 				</div>
 			</div>
+			<div class="form-group" id="msEditCategoryInputExternalUrl">
+				<label class="control-label col-md-2" for="categories_external_url_'.$language['uid'].'">'.$this->pi_getLL('admin_external_url').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="categories_external_url['.$language['uid'].']" id="categories_external_url_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_external_url']).'">
+				</div>
+            </div>
 			';
             $category_name_block.='</div></div></div>';
 		}
