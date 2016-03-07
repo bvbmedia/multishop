@@ -3394,9 +3394,16 @@ if (is_numeric($this->get['orders_id'])) {
                 return "0.00";
             }
         }
-        function productPrice(to_include_vat, o, tax_element_id) {
-            var original_val = $(o).val();
-		    var current_value = parseFloat($(o).val());
+        function productPrice(to_include_vat, o, tax_element_id, trigger_element) {
+         	trigger_element = typeof trigger_element !== \'undefined\' ? trigger_element : \'\';
+         	//
+         	if (trigger_element=="product_tax") {
+         		var price_value=$(o).parent().parent().next().next().children().val();
+         	} else {
+         		var price_value=$(o).val();
+         	}
+         	var original_val = price_value;
+		    var current_value = parseFloat(price_value);
             var tax_id = $(tax_element_id).val();
             if (current_value > 0) {
                 if (to_include_vat) {
@@ -3560,10 +3567,10 @@ if (url.match("#")) {
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax");
+                    productPrice(true, $(this), "#product_tax", "product_tax");
                 });
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax");
+                    productPrice(true, $(this), "#product_tax", "product_tax");
                 });
             });
             $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function(e) {
@@ -3578,7 +3585,7 @@ if (url.match("#")) {
             });
             $("#manual_product_tax").change(function () {
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#manual_product_tax");
+                    productPrice(true, $(this), "#manual_product_tax", "product_tax");
                 });
             });
         });
