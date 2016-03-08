@@ -657,6 +657,11 @@ if (is_numeric($this->get['orders_id'])) {
             header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
             exit();
         } else {
+			if (isset($this->post['Submit'])) {
+				$close_window=0;
+			} else if (isset($this->post['SaveClose'])) {
+				$close_window=1;
+			}
             if ($close_window) {
                 if ($this->post['tx_multishop_pi1']['referrer']) {
                     if (strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_product')!==false || strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_order')!==false) {
@@ -680,7 +685,8 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="clearfix">
                 	<div class="pull-right">
                     <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
-                    <button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
+                    <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
+                    <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('admin_save_close').'</button>
                     </div>
                 </div>';
 			// count total products
@@ -3354,7 +3360,15 @@ if (is_numeric($this->get['orders_id'])) {
 		$headingButton['fa_class']='fa fa-check-circle';
 		$headingButton['title']=$this->pi_getLL('save');
 		$headingButton['href']='#';
-		$headingButton['attributes']='onclick="$(\'#admin_edit_order_form button[name=\\\'Submit\\\']\').click(); return false;"';
+		$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+		$headerButtons[]=$headingButton;
+		//
+		$headingButton=array();
+		$headingButton['btn_class']='btn btn-success';
+		$headingButton['fa_class']='fa fa-check-circle';
+		$headingButton['title']=$this->pi_getLL('admin_save_close');
+		$headingButton['href']='#';
+		$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 		$headerButtons[]=$headingButton;
 		// Set header buttons through interface class so other plugins can adjust it
 		$objRef->setHeaderButtons($headerButtons);
