@@ -1890,155 +1890,170 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$updateOrderProductsSortOrder['sort_order']=$orders_products_id;
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\''.$orders_products_id.'\'', $updateOrderProductsSortOrder);
 							if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
-								if ($this->ms['MODULES']['PRODUCT_ATTRIBUTES_STOCK']) {
-									$sql_as_data=array();
-									$attributes_count=count($value['attributes']);
-									foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
-										$sql_as_data[]='(pas.options_id = '.$attribute_values['options_id'].' and pas.options_values_id = '.$attribute_values['options_values_id'].')';
+								$continue_update_stock=true;
+								// hook to manipulate the continuity of update stock
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'])) {
+									// hook
+									$params=array(
+										'continue_update_stock'=>&$continue_update_stock
+									);
+									foreach (GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'] as $funcRef) {
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
-									$sql_as="select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = ".$value['products_id']." and (".implode(' or ', $sql_as_data).") and pasg.group_id = pas.group_id";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($sql_as);
-									$total_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
-									$used_group=0;
-									if ($total_rows>1) {
-										$group_counter=array();
-										while ($rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-											$group_counter[$rs_as['group_id']]+=1;
+									// hook oef
+								}
+								//
+								if ($continue_update_stock) {
+									if ($this->ms['MODULES']['PRODUCT_ATTRIBUTES_STOCK']) {
+										$sql_as_data=array();
+										$attributes_count=count($value['attributes']);
+										foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
+											$sql_as_data[]='(pas.options_id = '.$attribute_values['options_id'].' and pas.options_values_id = '.$attribute_values['options_values_id'].')';
 										}
-										foreach ($group_counter as $ref_group_id=>$group_ctr_result) {
-											if ($group_ctr_result==$attributes_count) {
-												$used_group=$ref_group_id;
-												break;
+										$sql_as="select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = ".$value['products_id']." and (".implode(' or ', $sql_as_data).") and pasg.group_id = pas.group_id";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($sql_as);
+										$total_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
+										$used_group=0;
+										if ($total_rows>1) {
+											$group_counter=array();
+											while ($rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+												$group_counter[$rs_as['group_id']]+=1;
 											}
+											foreach ($group_counter as $ref_group_id=>$group_ctr_result) {
+												if ($group_ctr_result==$attributes_count) {
+													$used_group=$ref_group_id;
+													break;
+												}
+											}
+										} else {
+											$rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+											$used_group=$rs_as['group_id'];
+										}
+										if ($used_group>0) {
+											$str="update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-".$value['qty'].") where group_id='".$used_group."'";
+											$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+										}
+										$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+										$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+										$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+										if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
+											$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
+											if ($page[0]['content']) {
+												// loading the email confirmation letter eof
+												// replacing the variables with dynamic values
+												$array1=array();
+												$array2=array();
+												$array1[]='###ORDERED_QTY###';
+												$array2[]=$value['qty'];
+												$array1[]='###CURRENT_PRODUCT_QUANTITY###';
+												$array2[]=$row['products_id'];
+												$array1[]='###PRODUCT_ID###';
+												$array2[]=$row['products_quantity'];
+												$array1[]='###PRODUCT_NAME###';
+												$array2[]=$value['products_name'];
+												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+												$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
+												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
+												// now mail a copy to the merchant
+												$merchant=array();
+												$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
+												$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
+												$mailTo=array();
+												$mailTo[]=$merchant;
+												//hook to let other plugins further manipulate the replacers
+												if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
+													$params=array(
+														'array1'=>&$array1,
+														'array2'=>&$array2,
+														'page'=>&$page,
+														'mailTo'=>&$mailTo
+													);
+													foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
+														\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+													}
+												}
+												//end of hook to let other plugins further manipulate the replacers
+												if ($page[0]['content']) {
+													$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+												}
+												if ($page[0]['name']) {
+													$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+												}
+												foreach ($mailTo as $mailuser) {
+													mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+												}
+											}
+										}
+										if ($row['products_quantity']<1) {
+											// stock is negative or zero. lets turn of the product
+											$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
+											$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 										}
 									} else {
-										$rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-										$used_group=$rs_as['group_id'];
-									}
-									if ($used_group>0) {
-										$str="update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-".$value['qty'].") where group_id='".$used_group."'";
+										// now decrease the stocklevel
+										$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
 										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									}
-									$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-									if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
-										$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
-										if ($page[0]['content']) {
-											// loading the email confirmation letter eof
-											// replacing the variables with dynamic values
-											$array1=array();
-											$array2=array();
-											$array1[]='###ORDERED_QTY###';
-											$array2[]=$value['qty'];
-											$array1[]='###CURRENT_PRODUCT_QUANTITY###';
-											$array2[]=$row['products_id'];
-											$array1[]='###PRODUCT_ID###';
-											$array2[]=$row['products_quantity'];
-											$array1[]='###PRODUCT_NAME###';
-											$array2[]=$value['products_name'];
-											$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
-											$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
-											$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
-											// now mail a copy to the merchant
-											$merchant=array();
-											$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
-											$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-											$mailTo=array();
-											$mailTo[]=$merchant;
-											//hook to let other plugins further manipulate the replacers
-											if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
-												$params=array(
-													'array1'=>&$array1,
-													'array2'=>&$array2,
-													'page'=>&$page,
-													'mailTo'=>&$mailTo
-												);
-												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-													\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+										$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+										if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
+											$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
+											if ($page[0]['content']) {
+												// loading the email confirmation letter eof
+												// replacing the variables with dynamic values
+												$array1=array();
+												$array2=array();
+												$array1[]='###ORDERED_QTY###';
+												$array2[]=$value['qty'];
+												$array1[]='###CURRENT_PRODUCT_QUANTITY###';
+												$array2[]=$row['products_quantity'];
+												$array1[]='###PRODUCT_NAME###';
+												$array2[]=$value['products_name'];
+												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+												$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
+												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
+												// now mail a copy to the merchant
+												$merchant=array();
+												$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
+												$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
+												$mailTo=array();
+												$mailTo[]=$merchant;
+												//hook to let other plugins further manipulate the replacers
+												if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
+													$params=array(
+														'array1'=>&$array1,
+														'array2'=>&$array2,
+														'page'=>&$page,
+														'mailTo'=>&$mailTo
+													);
+													foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
+														\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+													}
+												}
+												//end of hook to let other plugins further manipulate the replacers
+												if ($page[0]['content']) {
+													$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+												}
+												if ($page[0]['name']) {
+													$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+												}
+												foreach ($mailTo as $mailuser) {
+													mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 												}
 											}
-											//end of hook to let other plugins further manipulate the replacers
-											if ($page[0]['content']) {
-												$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-											}
-											if ($page[0]['name']) {
-												$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-											}
-											foreach ($mailTo as $mailuser) {
-												mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-											}
 										}
-									}
-									if ($row['products_quantity']<1) {
-										// stock is negative or zero. lets turn of the product
-										$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
-										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									}
-								} else {
-									// now decrease the stocklevel
-									$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-									if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
-										$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
-										if ($page[0]['content']) {
-											// loading the email confirmation letter eof
-											// replacing the variables with dynamic values
-											$array1=array();
-											$array2=array();
-											$array1[]='###ORDERED_QTY###';
-											$array2[]=$value['qty'];
-											$array1[]='###CURRENT_PRODUCT_QUANTITY###';
-											$array2[]=$row['products_quantity'];
-											$array1[]='###PRODUCT_NAME###';
-											$array2[]=$value['products_name'];
-											$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
-											$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
-											$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
-											// now mail a copy to the merchant
-											$merchant=array();
-											$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
-											$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-											$mailTo=array();
-											$mailTo[]=$merchant;
-											//hook to let other plugins further manipulate the replacers
-											if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
-												$params=array(
-													'array1'=>&$array1,
-													'array2'=>&$array2,
-													'page'=>&$page,
-													'mailTo'=>&$mailTo
-												);
-												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-													\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										if ($row['products_quantity']<1) {
+											if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
+												if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+													// stock is negative or zero. lets turn off the product
+													mslib_befe::disableProduct($value['products_id']);
 												}
 											}
-											//end of hook to let other plugins further manipulate the replacers
-											if ($page[0]['content']) {
-												$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-											}
-											if ($page[0]['name']) {
-												$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-											}
-											foreach ($mailTo as $mailuser) {
-												mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-											}
 										}
+										// now decrease the stocklevel eof
 									}
-									if ($row['products_quantity']<1) {
-										if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
-											if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-												// stock is negative or zero. lets turn off the product
-												mslib_befe::disableProduct($value['products_id']);
-											}
-										}
-									}
-									// now decrease the stocklevel eof
 								}
 							}
 							if ($orders_products_id and is_array($value['attributes'])) {

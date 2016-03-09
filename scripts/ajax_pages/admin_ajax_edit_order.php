@@ -106,9 +106,21 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					$updateArray=array('paid'=>0);
 					$updateArray['orders_last_modified']=time();
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
-					$return_data['status']='OK';
+					$return_data['status']='NOTOK';
+					if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+						$return_data['status']='OK';
+					}
+					//hook to let other plugins further manipulate the replacers
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
+						$params = array(
+							'return_data' => &$return_data,
+							'order_id' => $order_id
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					//end of hook to let other plugins further manipulate the replacers
 				}
 			}
 		}
