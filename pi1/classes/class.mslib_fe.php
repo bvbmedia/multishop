@@ -1028,25 +1028,43 @@ class mslib_fe {
 	}
 	public function getTaxRuleSet($tax_group_id, $current_price, $to_tax_include='true') {
 		if (is_numeric($tax_group_id)) {
-			if (mslib_fe::loggedin()) {
-				if (!$this->ADMIN_USER) {
-					if (!$this->tta_user_info) {
-						$row_shop_address=$this->tta_shop_info;
-					} else {
-						if (!isset($this->tta_user_info['default'])) {
-							if (isset($this->tta_user_info['billing'][0])) {
-								$row_shop_address=$this->tta_user_info['billing'][0];
-							} else if (isset($this->tta_user_info['delivery'][0])) {
-								$row_shop_address=$this->tta_user_info['delivery'][0];
-							}
+			if ($this->tta_user_info) {
+				if (!isset($this->tta_user_info['default'])) {
+					if (isset($this->tta_user_info['billing'][0])) {
+						$row_shop_address=$this->tta_user_info['billing'][0];
+					} else if (isset($this->tta_user_info['delivery'][0])) {
+						$row_shop_address=$this->tta_user_info['delivery'][0];
+					}
+				} else {
+					$row_shop_address=$this->tta_user_info['default'];
+				}
+			} else {
+				$row_shop_address=$this->tta_shop_info;
+				/*
+				if (mslib_fe::loggedin()) {
+					if (!$this->ADMIN_USER) {
+						if (!$this->tta_user_info) {
+							$row_shop_address=$this->tta_shop_info;
 						} else {
-							$row_shop_address=$this->tta_user_info['default'];
+							if (!isset($this->tta_user_info['default'])) {
+								if (isset($this->tta_user_info['billing'][0])) {
+									$row_shop_address=$this->tta_user_info['billing'][0];
+								} else if (isset($this->tta_user_info['delivery'][0])) {
+									$row_shop_address=$this->tta_user_info['delivery'][0];
+								}
+							} else {
+								$row_shop_address=$this->tta_user_info['default'];
+							}
 						}
+					} else {
+						$row_shop_address=$this->tta_shop_info;
 					}
 				} else {
 					$row_shop_address=$this->tta_shop_info;
 				}
-			} else {
+				*/
+			}
+			if (!$row_shop_address) {
 				$row_shop_address=$this->tta_shop_info;
 			}
 			$sql_local_tax_rate=$GLOBALS['TYPO3_DB']->SELECTquery('mt.rate as tax_rate,mt_c.rate as country_tax_rate,sc.cn_iso_nr as country_id,sc.cn_short_en as country_name,scz.uid as state_id,scz.zn_name_local as state_name,mtr.state_modus', // SELECT ...
