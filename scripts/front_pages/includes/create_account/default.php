@@ -196,6 +196,23 @@ if (mslib_fe::loggedin()) {
 			}
 		}
 		if (!$this->post or count($erno)) {
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+				<script type="text/javascript">
+					jQuery(document).ready(function(){
+						jQuery(\'#checkout\').h5Validate();
+						'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
+						jQuery("#date_of_birth_visual").datepicker({
+							dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+							altField: "#date_of_birth",
+							altFormat: "yy-mm-dd",
+							changeMonth: true,
+							changeYear: true,
+							showOtherMonths: true,
+							yearRange: "'.(date("Y")-150).':'.date("Y").'"
+						});
+						' : '').'
+					}); //end of first load
+				</script>';
 			if (count($erno)>0) {
 				$content.='<div class="alert alert-danger">';
 				$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
@@ -226,6 +243,21 @@ if (mslib_fe::loggedin()) {
 			}
 			//
 			$markerArray=array();
+			//
+			$birthday_block='';
+			if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+				$birthdayVisual='';
+				$birthday='';
+				if ($user['date_of_birth']) {
+					$birthdayVisual=strftime('%x', $user['date_of_birth']);
+					$birthday=date("Y-m-d", $user['date_of_birth']);
+				}
+				$birthday_block='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'*</label>
+				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" value="" >
+				<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="" >';
+			}
+			//
+			$markerArray['###BIRTHDAY_BLOCK###']=$birthday_block;
 			$markerArray['###CREATE_ACCOUNT_FORM_URL###']=mslib_fe::typolink();
 			$markerArray['###LABEL_PERSONAL_DETAILS###']=$this->pi_getLL('personal_details');
 			$markerArray['###LABEL_PERSONAL_DETAILS_DESCRIPTION###']=$this->pi_getLL('personal_details_description');
