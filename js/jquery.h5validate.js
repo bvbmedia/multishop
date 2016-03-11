@@ -559,7 +559,3 @@
 		return methods.bindDelegation.call(this, settings);
 	};
 }(jQuery));
-//
-jQuery(document).ready(function($){
-
-});
