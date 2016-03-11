@@ -34,7 +34,7 @@ if ($this->conf['includejAutocomplete']) {
 						jQuery(".ui-autocomplete li.ui-menu-item:odd a").addClass("ui-menu-item-alternate");
 					},
 					source: function( request, response ) {
-							if (sendData){
+						if (sendData){
 							jQuery.ajax({
 								url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_search').'",
 								dataType : "json",
@@ -44,51 +44,55 @@ if ($this->conf['includejAutocomplete']) {
 								},
 								success: function( data ) {
 									var index = 1;
-									 if(data.products != null){
+									if(data.products != null){
 										response( jQuery.map( data.products, function( item ) {
 											index = index + 1;
-
-												if (index == 6) {
-													return {
-														label: item.Title,
-														value: item.skeyword,
-														link: item.Link,
-														skeyword: item.skeyword,
-														page: item.Page,
-														prod: item.Product
-													}
-												} else {
-													return {
-														label: "<div class=\"ajax_products_image_wrapper\">"+item.Image + "</div><div class=\"ajax_products_search_item\">" + item.Title  + item.Desc + item.Price + "</div>",
-														value: item.Name,
-														link: item.Link,
-														skeyword: item.skeyword,
-														page: item.Page,
-														prod: item.Product
-													}
+											if (index == 6) {
+												return {
+													label: item.Title,
+													value: item.skeyword,
+													link: item.Link,
+													skeyword: item.skeyword,
+													page: item.Page,
+													prod: item.Product
 												}
+											} else {
+												var result_html = \'<div class="ajax_products">\';
+												result_html += item.Image;
+												result_html += \'<div class="ajax_products_name"><a href="\' + item.Link + \'"><span>\' + item.Title + \'</span></a></div>\';
+												result_html += item.Desc;
+												result_html += item.Price;
+												result_html += \'</div>\';
+												return {
+													label: result_html,
+													//label: "<div class=\"ajax_products_image_wrapper\">"+item.Image + "</div><div class=\"ajax_products_search_item\">" + item.Title  + item.Desc + item.Price + "</div>",
+													value: item.Name,
+													link: item.Link,
+													skeyword: item.skeyword,
+													page: item.Page,
+													prod: item.Product
+												}
+											}
 
-											})
-										);
-									 } //end if data
-									//alert(index);
+										}));
+									} //end if data
 								}
 							});
-							} // and if sendData
-						},
+						} // and if sendData
+					},
 					select: function(event, ui ) {
-									 jQuery("#skeyword").val(ui.item.skeyword);
-									 jQuery("#page").val(ui.item.page);
-									//console.log(ui);
-									//alert(ui.toSource());
-									var link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ;
-									//alert(link);
-									if (ui.item.prod == true){
-										open(link,\'_self\',\'resizable,location,menubar,toolbar,scrollbars,status\');
-									} else {
-										jQuery("#skeyword").autocomplete("search");
-									}
-								},
+						jQuery("#skeyword").val(ui.item.skeyword);
+						jQuery("#page").val(ui.item.page);
+						//console.log(ui);
+						//alert(ui.toSource());
+						var link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ;
+						//alert(link);
+						if (ui.item.prod == true){
+							open(link,\'_self\',\'resizable,location,menubar,toolbar,scrollbars,status\');
+						} else {
+							jQuery("#skeyword").autocomplete("search");
+						}
+					},
 					focus: function(event, ui) {
 						jQuery("#skeyword").val(ui.item.skeyword);
 						jQuery("#page").val(0);
@@ -96,7 +100,7 @@ if ($this->conf['includejAutocomplete']) {
 					}
 				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
 					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
-					};
+				};
 			  });
 		</script>';
 }
