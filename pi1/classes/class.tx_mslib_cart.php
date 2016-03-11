@@ -1256,6 +1256,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['page_uid']=$this->shop_pid;
             if (isset($address['password']) && !empty($address['password'])) {
                 $insertArray['password']=mslib_befe::getHashedPassword($address['password']);
+				$insertArray['disable']=1;
             } else {
                 $insertArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10));
             }
@@ -1324,6 +1325,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				// send out the create account confirmation e-mail
+				if (isset($address['password']) && !empty($address['password'])) {
+					mslib_fe::sendCreateAccountConfirmationLetter($customer_id, $address['password']);
+				}
 				// insert delivery into tt_address
 				if (!$address['different_delivery_address']) {
 					$insertArray=array();
