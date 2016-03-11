@@ -2317,6 +2317,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+		'configuration_title'=>'Default payment condition value',
+		'configuration_key'=>'DEFAULT_PAYMENT_CONDITION_VALUE',
+		'configuration_value'=>'',
+		'description'=>'Defined in admin edit customer and admin edit order.',
+		'group_id'=>'11',
+		'use_function'=>'',
+		'set_function'=>'',
+		'depend_on_configuration_key'=>'',
+		'use_function'=>''
+);
+$records[]=array(
+		'configuration_title'=>'E-mail address of the web developer',
+		'configuration_key'=>'DEVELOPER_EMAIL',
+		'configuration_value'=>'',
+		'description'=>'The e-mail address of the web developer. For debugging purposes.',
+		'group_id'=>'3',
+		'use_function'=>'',
+		'set_function'=>'',
+		'depend_on_configuration_key'=>'',
+		'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

@@ -2,44 +2,45 @@
 <table class="border" id="msOrderDetailsTable" cellpadding="0" cellspacing="0" border="1" width="100%" style="border-width: 1px; border-color:#cdcdcd; border-spacing: 0px; border-style: none; border-collapse: collapse;margin:0 0 10px;">
   <!-- ###ITEMS_HEADER_WRAPPER### begin -->
   <tr class="msOrderDetailsHeading">
-    <th class="msOrderDetailsHeadingImage" width="5%" style="ont-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">&nbsp;</th>
-    <th class="msOrderDetailsHeadingName" width="79%" align="left" style="ont-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_PRODUCTS_NAME###</th>
-    <th class="msOrderDetailsHeadingQuantity" width="8%" align="right" style="ont-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_QUANTITY###</th>
-    <th class="msOrderDetailsHeadingTotal" width="8%" align="right" style="ont-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_TOTAL###</th>
+    <th width="5%" style="font-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">&nbsp;</th>
+    <th width="79%" align="left" style="font-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_PRODUCTS_NAME###</th>
+    <th width="8%" align="right" style="font-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_QUANTITY###</th>
+    <th width="8%" align="right" style="font-size:12px;line-height:16px;font-family:Arial;background:#666; color:#fff; border:1px solid #666; padding:5px 10px;">###HEADING_TOTAL###</th>
   </tr>
   <!-- ###ITEMS_HEADER_WRAPPER### end -->
   <!-- ###ITEMS_WRAPPER### begin -->
   <tr class="###ITEM_CLASS###">
-    <td class="msOrderDetailsItemImage" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_IMAGE###</td>
-    <td class="msOrderDetailsItemName" align="left" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_NAME###</td>
-    <td class="msOrderDetailsItemQuantity" align="right" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_QUANTITY###</td>
-    <td class="msOrderDetailsItemTotal" align="right" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_TOTAL###</td>
+    <td align="center" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_IMAGE###</td>
+    <td align="left" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;">###ITEM_NAME###</td>
+    <td align="right" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;white-space:nowrap;">###ITEM_QUANTITY###</td>
+    <td align="right" valign="top" style="font-size:12px;line-height:16px;font-family:Arial;padding:5px 10px;white-space:nowrap;">###ITEM_TOTAL###</td>
   </tr>
     <!-- ###ITEMS_WRAPPER### end -->
 </table>
-<table id="msOrderDetailsSubTotalTable" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 20px">
+<br>
+<table id="msOrderDetailsSubTotalTable" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
 <!-- ###DISCOUNT_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsDiscountLabel msOrderDetailsSubTotalLabel" style="font-size:12px;font-family:Arial;line-height:16px;">###DISCOUNT_LABEL###</td>
-  <td class="msOrderDetailsDiscountValue msOrderDetailsSubTotalValue" style="font-size:12px;font-family:Arial;line-height:16px;">###DISCOUNT###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###DISCOUNT_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###DISCOUNT###</td>
 </tr>
 <!-- ###DISCOUNT_WRAPPER### end -->
 <!-- ###NEWSUBTOTAL_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsSubTotalProductsLabel msOrderDetailsSubTotalLabel" style="font-size:12px;font-family:Arial;line-height:16px;">###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###</td>
-  <td class="msOrderDetailsSubTotalProducts msOrderDetailsSubTotalValue" style="font-size:12px;font-family:Arial;line-height:16px;">###PRODUCTS_NEWTOTAL_PRICE###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###PRODUCTS_NEWTOTAL_PRICE###</td>
 </tr>
 <!-- ###NEWSUBTOTAL_WRAPPER### end -->
 <!-- ###SHIPPING_COSTS_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsShippingCostsLabel msOrderDetailsSubTotalLabel" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###SHIPPING_COSTS_INCLUDING_VAT_LABEL###</td>
-  <td class="msOrderDetailsShippingCosts msOrderDetailsSubTotalValue" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###SHIPPING_COSTS_INCLUDING_VAT###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###SHIPPING_COSTS_INCLUDING_VAT_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###SHIPPING_COSTS_INCLUDING_VAT###</td>
 </tr>
 <!-- ###SHIPPING_COSTS_WRAPPER### end -->
 <!-- ###PAYMENT_COSTS_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsPaymentCostsLabel msOrderDetailsSubTotalLabel" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###PAYMENT_COSTS_INCLUDING_VAT_LABEL###</td>
-  <td class="msOrderDetailsPaymentCosts msOrderDetailsSubTotalValue" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###PAYMENT_COSTS_INCLUDING_VAT###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###PAYMENT_COSTS_INCLUDING_VAT_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###PAYMENT_COSTS_INCLUDING_VAT###</td>
 </tr>
 <!-- ###PAYMENT_COSTS_WRAPPER### end -->
 <tr>
@@ -47,15 +48,16 @@
 </tr>
 <!-- ###GRAND_TOTAL_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsGrandTotalLabel msOrderDetailsSubTotalLabel" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###GRAND_TOTAL_COSTS_LABEL###</td>
-  <td class="msOrderDetailsGrandTotal msOrderDetailsSubTotalValue" align="right" style="font-weight:bold;font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###GRAND_TOTAL_COSTS###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###GRAND_TOTAL_COSTS_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###GRAND_TOTAL_COSTS###</td>
 </tr>
 <!-- ###GRAND_TOTAL_WRAPPER### end -->
 <!-- ###TAX_COSTS_WRAPPER### begin -->
 <tr>
-  <td class="msOrderDetailsTaxTotalLabel msOrderDetailsSubTotalLabel" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###INCLUDED_TAX_RATE_LABEL###</td>
-  <td class="msOrderDetailsTaxTotal msOrderDetailsSubTotalValue" align="right" style="font-size:12px;font-family:Arial;line-height:16px;padding:0 10px;">###TAX_COSTS###</td>
+  <td align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###INCLUDED_TAX_RATE_LABEL###</td>
+  <td width="8%" nowrap align="right" style="font-family:Arial;font-size:12px;line-height:16px;color:#333;padding:0 10px;">###TAX_COSTS###</td>
 </tr>
 <!-- ###TAX_COSTS_WRAPPER### end -->
 </table>
+<br>
 <!-- ###TEMPLATE### end -->

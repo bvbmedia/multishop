@@ -2,6 +2,10 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+if (!is_array($this->languages) || !count($this->languages)) {
+	echo 'languages array not loaded';
+	die();
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {

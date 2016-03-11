@@ -896,7 +896,16 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
+	$str="select `categories_external_url` from tx_multishop_categories_description limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_categories_description` ADD `categories_external_url` text default ''";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		// copy existing categories_url to new column
+		$str_copy="update tx_multishop_categories_description cd set cd.categories_external_url=(select c.categories_url from tx_multishop_categories c where c.categories_id=cd.categories_id) where language_id=0";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str_copy);
+	}
 	$table='tx_multishop_invoices';
 	$str="describe `".$table."`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

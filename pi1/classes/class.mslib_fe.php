@@ -1028,25 +1028,43 @@ class mslib_fe {
 	}
 	public function getTaxRuleSet($tax_group_id, $current_price, $to_tax_include='true') {
 		if (is_numeric($tax_group_id)) {
-			if (mslib_fe::loggedin()) {
-				if (!$this->ADMIN_USER) {
-					if (!$this->tta_user_info) {
-						$row_shop_address=$this->tta_shop_info;
-					} else {
-						if (!isset($this->tta_user_info['default'])) {
-							if (isset($this->tta_user_info['billing'][0])) {
-								$row_shop_address=$this->tta_user_info['billing'][0];
-							} else if (isset($this->tta_user_info['delivery'][0])) {
-								$row_shop_address=$this->tta_user_info['delivery'][0];
-							}
+			if ($this->tta_user_info) {
+				if (!isset($this->tta_user_info['default'])) {
+					if (isset($this->tta_user_info['billing'][0])) {
+						$row_shop_address=$this->tta_user_info['billing'][0];
+					} else if (isset($this->tta_user_info['delivery'][0])) {
+						$row_shop_address=$this->tta_user_info['delivery'][0];
+					}
+				} else {
+					$row_shop_address=$this->tta_user_info['default'];
+				}
+			} else {
+				$row_shop_address=$this->tta_shop_info;
+				/*
+				if (mslib_fe::loggedin()) {
+					if (!$this->ADMIN_USER) {
+						if (!$this->tta_user_info) {
+							$row_shop_address=$this->tta_shop_info;
 						} else {
-							$row_shop_address=$this->tta_user_info['default'];
+							if (!isset($this->tta_user_info['default'])) {
+								if (isset($this->tta_user_info['billing'][0])) {
+									$row_shop_address=$this->tta_user_info['billing'][0];
+								} else if (isset($this->tta_user_info['delivery'][0])) {
+									$row_shop_address=$this->tta_user_info['delivery'][0];
+								}
+							} else {
+								$row_shop_address=$this->tta_user_info['default'];
+							}
 						}
+					} else {
+						$row_shop_address=$this->tta_shop_info;
 					}
 				} else {
 					$row_shop_address=$this->tta_shop_info;
 				}
-			} else {
+				*/
+			}
+			if (!$row_shop_address) {
 				$row_shop_address=$this->tta_shop_info;
 			}
 			$sql_local_tax_rate=$GLOBALS['TYPO3_DB']->SELECTquery('mt.rate as tax_rate,mt_c.rate as country_tax_rate,sc.cn_iso_nr as country_id,sc.cn_short_en as country_name,scz.uid as state_id,scz.zn_name_local as state_name,mtr.state_modus', // SELECT ...
@@ -9753,6 +9771,76 @@ class mslib_fe {
 		$res_p=$GLOBALS['TYPO3_DB']->sql_query($query_p);
 		$row_p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p);
 		return $row_p['page_uid'];
+	}
+	function sendCreateAccountConfirmationLetter($customer_id, $password='') {
+		if (!is_numeric($customer_id)) {
+			return false;
+		}
+		$page=mslib_fe::getCMScontent('email_create_account_confirmation', $GLOBALS['TSFE']->sys_language_uid);
+		if ($page[0]['content']) {
+			$newCustomer=mslib_fe::getUser($customer_id);
+			// loading the email confirmation letter eof
+			// replacing the variables with dynamic values
+			$array1 = array();
+			$array2 = array();
+			$array1[] = '###GENDER_SALUTATION###';
+			$array2[] = mslib_fe::genderSalutation($this->post['gender']);
+			$array1[] = '###BILLING_COMPANY###';
+			$array2[] = $newCustomer['company'];
+			$array1[] = '###FULL_NAME###';
+			$array2[] = $newCustomer['name'];
+			$array1[] = '###BILLING_NAME###';
+			$array2[] = $newCustomer['name'];
+			$array1[] = '###BILLING_FIRST_NAME###';
+			$array2[] = $newCustomer['first_name'];
+			$array1[] = '###BILLING_LAST_NAME###';
+			$last_name = $newCustomer['last_name'];
+			if ($newCustomer['middle_name']) {
+				$last_name = $newCustomer['middle_name'] . ' ' . $last_name;
+			}
+			$array2[] = $last_name;
+			$array1[] = '###CUSTOMER_EMAIL###';
+			$array2[] = $newCustomer['email'];
+			$array1[] = '###BILLING_EMAIL###';
+			$array2[] = $newCustomer['email'];
+			$array1[] = '###BILLING_ADDRESS###';
+			$array2[] = $newCustomer['address'];
+			$array1[] = '###BILLING_TELEPHONE###';
+			$array2[] = $newCustomer['telephone'];
+			$array1[] = '###BILLING_MOBILE###';
+			$array2[] = $newCustomer['mobile'];
+			$array1[] = '###LONG_DATE###'; // ie woensdag 23 juni, 2010
+			$long_date = strftime($this->pi_getLL('full_date_format'));
+			$array2[] = $long_date;
+			$array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+			$long_date = strftime($this->pi_getLL('full_date_format'));
+			$array2[] = $long_date;
+			$array1[] = '###STORE_NAME###';
+			$array2[] = $this->ms['MODULES']['STORE_NAME'];
+			$array1[] = '###CUSTOMER_ID###';
+			$array2[] = $customer_id;
+			$link = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]=' . $newCustomer['tx_multishop_code']);
+			$array1[] = '###LINK###';
+			$array2[] = '<a href="' . $link . '" rel="noreferrer">' . htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')) . '</a>';
+			$array1[] = '###CONFIRMATION_LINK###';
+			$array2[] = '<a href="' . $link . '" rel="noreferrer">' . htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')) . '</a>';
+
+			$array1[] = '###USERNAME###';
+			$array2[] = $newCustomer['email'];
+			$array1[] = '###PASSWORD###';
+			$array2[] = $password;
+			if ($page[0]['content']) {
+				$page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
+			}
+			if ($page[0]['name']) {
+				$page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+			}
+			$user = array();
+			$user['name'] = $newCustomer['first_name'];
+			$user['email'] = $newCustomer['email'];
+			mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+			return true;
+		}
 	}
 	public function updateCart() {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');

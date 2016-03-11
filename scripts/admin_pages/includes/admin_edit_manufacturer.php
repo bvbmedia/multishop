@@ -159,11 +159,16 @@ if ($this->post) {
             }
         }
 		if (!count($postErno)) {
-			if ($this->post['tx_multishop_pi1']['referrer']) {
-				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-				exit();
-			} else {
-				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers', 1));
+			if (isset($this->post['SaveClose'])) {
+				if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_manufacturer')===false && $this->post['tx_multishop_pi1']['referrer']) {
+					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+					exit();
+				} else {
+					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers', 1));
+					exit();
+				}
+			} else if (isset($this->post['Submit'])) {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id='.$this->get['manufacturers_id'].'&action=edit_manufacturer', 1));
 				exit();
 			}
 		}
@@ -297,9 +302,9 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	}
 	$subpartArray['###MANUFACTURER_ID###']=$manufacturer['manufacturers_id'];
 	if ($_REQUEST['manufacturers_id']) {
-		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&manufacturers_id='.$_REQUEST['manufacturers_id']);
+		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&action=edit_manufacturer&manufacturers_id='.$_REQUEST['manufacturers_id']);
 	} else {
-		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action']);
+		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&action=edit_manufacturer');
 	}
 	$subpartArray['###LABEL_MANUFACTURER_NAME###']=$this->pi_getLL('admin_name');
 	$subpartArray['###VALUE_MANUFACTURER_NAME###']=htmlspecialchars($manufacturer['manufacturers_name']);
@@ -311,6 +316,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###LABEL_MANUFACTURER_ADMIN_NO###']=$this->pi_getLL('admin_no');
 	$subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
+	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
 	$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 	$subpartArray['###VALUE_FORM_MANUFACTURER_ACTION_URL###']=$_REQUEST['action'];
 	$subpartArray['###DELETE_IMAGES_MANUFACTURERS_ID###']=$_REQUEST['manufacturers_id'];
@@ -595,7 +601,15 @@ jQuery(document).ready(function ($) {
 	$headingButton['fa_class']='fa fa-check-circle';
 	$headingButton['title']=$this->pi_getLL('save');
 	$headingButton['href']='#';
-	$headingButton['attributes']='onclick="$(\'#admin_edit_manufacturer button[name=\\\'Submit\\\']\').click(); return false;"';
+	$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+	$headerButtons[]=$headingButton;
+
+	$headingButton=array();
+	$headingButton['btn_class']='btn btn-success';
+	$headingButton['fa_class']='fa fa-check-circle';
+	$headingButton['title']=$this->pi_getLL('admin_save_close');
+	$headingButton['href']='#';
+	$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 	$headerButtons[]=$headingButton;
 
 	// Set header buttons through interface class so other plugins can adjust it

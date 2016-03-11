@@ -46,11 +46,11 @@ foreach ($categories as $category) {
 		$where=substr($where, 0, (strlen($where)-1));
 	}
 	// get all cats to generate multilevel fake url eof
-	if ($category['categories_url']) {
-		if (!preg_match('/^(http|https):\/\//',$category['categories_url'])) {
-			$category['categories_url']='http://'.$category['categories_url'];
+	if ($category['categories_external_url']) {
+		if (!preg_match('/^(http|https):\/\//',$category['categories_external_url'])) {
+			$category['categories_external_url']='http://'.$category['categories_external_url'];
 		}
-		$link_parse_url=parse_url($category['categories_url']);
+		$link_parse_url=parse_url($category['categories_external_url']);
 		if (isset($link_parse_url['host']) && !empty($link_parse_url['host'])) {
 			if (strpos($this->FULL_HTTP_URL, $link_parse_url['host'])===false) {
 				$output['target']=' target="_blank"';
@@ -60,7 +60,7 @@ foreach ($categories as $category) {
 		} else {
 			$output['target']='';
 		}
-		$output['link']=$category['categories_url'];
+		$output['link']=$category['categories_external_url'];
 	} else {
 		$output['target']="";
 		$output['link']=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');

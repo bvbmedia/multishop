@@ -158,7 +158,7 @@ if ($this->ADMIN_USER) {
 				$results_counter++;
 			}
 		}
-		// cms search eof		
+		// cms search eof
 		// admin_settings search
 		if ($modules['admin_settings']) {
 			$filter=array();
@@ -192,7 +192,7 @@ if ($this->ADMIN_USER) {
 				$results_counter++;
 			}
 		}
-		// admin_settings search eof	
+		// admin_settings search eof
 		// categories search
 		if ($modules['categories']) {
 			$filter=$categories_filter;
@@ -210,7 +210,7 @@ if ($this->ADMIN_USER) {
 			if (!$this->masterShop) {
 				$filter[]='c.page_uid='.$this->showCatalogFromPage;
 			}
-			$select[]='c.categories_url, cd.categories_name, c.categories_id';
+			$select[]='cd.categories_external_url, cd.categories_name, c.categories_id';
 			$orderby[]='cd.categories_name';
 			$pageset=mslib_fe::getCategoriesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 			$resultset['categories']=$pageset;
@@ -287,7 +287,7 @@ if ($this->ADMIN_USER) {
 				$results_counter++;
 			}
 		}
-		// invoices eof	
+		// invoices eof
 		// customer search
 		if ($modules['customers']) {
 			$filter=$customers_filter;
@@ -486,7 +486,7 @@ if ($this->ADMIN_USER) {
 			}
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_footer">'.$this->pi_getLL('admin_label_total_number').': '.$resultset['customers']['total_rows'].'</span></li>';
 		}
-		// end customers	
+		// end customers
 		// products
 		if (count($resultset['products']['products'])) {
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_header">'.$this->pi_getLL('products').'</span></li>';

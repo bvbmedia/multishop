@@ -83,6 +83,7 @@ $array['customer_country']=$this->pi_getLL('customers').' '.$this->pi_getLL('cou
 $array['orders_id']=$this->pi_getLL('feed_exporter_fields_label_orders_id');
 $array['customer_gender']=$this->pi_getLL('customers').' '.$this->pi_getLL('gender');
 $array['customer_username']=$this->pi_getLL('customers').' '.$this->pi_getLL('username');
+$array['customer_tx_multishop_newsletter']=$this->pi_getLL('customers').' '.$this->pi_getLL('newsletter');
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_customers.php']['adminExportCustomersColtypesHook'])) {
 	$params=array(

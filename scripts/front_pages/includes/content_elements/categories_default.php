@@ -88,17 +88,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						// level 0
 						// get all cats to generate multilevel fake url
 						$nested_level=1;
-						if ($cat['categories_url']) {
-							if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-								$cat['categories_url']='http://'.$cat['categories_url'];
+						if ($cat['categories_external_url']) {
+							if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+								$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 							}
-							$parsed_url=@parse_url($cat['categories_url']);
+							$parsed_url=@parse_url($cat['categories_external_url']);
 							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 								$target=" target=\"_blank\"";
 							} else {
 								$target='';
 							}
-							$link=$cat['categories_url'];
+							$link=$cat['categories_external_url'];
 						} else {
 							$target="";
 							$level=0;
@@ -156,17 +156,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 								foreach ($catlist2 as $cat) {
 									if (!$cat['hide_in_menu']) {
 										$nested_level=2;
-										if ($cat['categories_url']) {
-											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-												$cat['categories_url']='http://'.$cat['categories_url'];
+										if ($cat['categories_external_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+												$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 											}
-											$parsed_url=@parse_url($cat['categories_url']);
+											$parsed_url=@parse_url($cat['categories_external_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
 											} else {
 												$target='';
 											}
-											$link=$cat['categories_url'];
+											$link=$cat['categories_external_url'];
 										} else {
 											$target="";
 											// get all cats to generate multilevel fake url
@@ -230,28 +230,28 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
-					$content.='					
+					$content.='
 					<script type="text/javascript">
 					  jQuery(document).ready(function($) {
 						var result = jQuery("#catalog_sortable_'.$this->cObj->data['uid'].'").sortable({
-						 cursor:     "move", 
-							//axis:       "y", 
-							update: function(e, ui) { 
+						 cursor:     "move",
+							//axis:       "y",
+							update: function(e, ui) {
 								href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=menu').'";
-								jQuery(this).sortable("refresh"); 
-								sorted = jQuery(this).sortable("serialize", "id"); 
-								jQuery.ajax({ 
-										type:   "POST", 
-										url:    href, 
-										data:   sorted, 
-										success: function(msg) { 
-												//do something with the sorted data 
-										} 
-								}); 
-							} 
+								jQuery(this).sortable("refresh");
+								sorted = jQuery(this).sortable("serialize", "id");
+								jQuery.ajax({
+										type:   "POST",
+										url:    href,
+										data:   sorted,
+										success: function(msg) {
+												//do something with the sorted data
+										}
+								});
+							}
 						});
 					  });
-					  </script>					
+					  </script>
 					';
 				}
 			}
@@ -288,17 +288,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							// get all cats to generate multilevel fake url
 							$nested_level=0;
 							$level=0;
-							if ($cat['categories_url']) {
-								if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-									$cat['categories_url']='http://'.$cat['categories_url'];
+							if ($cat['categories_external_url']) {
+								if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+									$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 								}
-								$parsed_url=@parse_url($cat['categories_url']);
+								$parsed_url=@parse_url($cat['categories_external_url']);
 								if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 									$target=" target=\"_blank\"";
 								} else {
 									$target='';
 								}
-								$link=$cat['categories_url'];
+								$link=$cat['categories_external_url'];
 							} else {
 								$target="";
 								$cats=mslib_fe::Crumbar($cat['categories_id']);
@@ -374,7 +374,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						$content.='<div id="tabbertopnav_row_'.$del_num.'">
 						<table cellpadding="0" cellspacing="0" border="0">
 						<tr>
-						<td>									
+						<td>
 						<ul class="tabberttopnav_row">'."\n";
 						for ($i=0; $i<$delimited; $i++) {
 							$content.=$items[$real_num]."\n";
@@ -385,7 +385,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						</td>
 						</tr>
 						</table>
-					
+
 						</div>'."\n";
 					}
 					$content.='</div>'."\n";
@@ -419,17 +419,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						// get all cats to generate multilevel fake url
 						$nested_level=0;
 						$level=0;
-						if ($cat['categories_url']) {
-							if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-								$cat['categories_url']='http://'.$cat['categories_url'];
+						if ($cat['categories_external_url']) {
+							if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+								$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 							}
-							$parsed_url=@parse_url($cat['categories_url']);
+							$parsed_url=@parse_url($cat['categories_external_url']);
 							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 								$target=" target=\"_blank\"";
 							} else {
 								$target='';
 							}
-							$link=$cat['categories_url'];
+							$link=$cat['categories_external_url'];
 						} else {
 							$target="";
 							$cats=mslib_fe::Crumbar($cat['categories_id']);
@@ -446,8 +446,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							// get all cats to generate multilevel fake url eof
 							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 						}
-						if ($cat['categories_url']) {
-							$link=$cat['categories_url'];
+						if ($cat['categories_external_url']) {
+							$link=$cat['categories_external_url'];
 						}
 						$actifsub=0;
 						$act=0;
@@ -524,17 +524,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 										$nested_level=1;
 										// get all cats to generate multilevel fake url
 										$level=0;
-										if ($cat['categories_url']) {
-											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-												$cat['categories_url']='http://'.$cat['categories_url'];
+										if ($cat['categories_external_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+												$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 											}
-											$parsed_url=@parse_url($cat['categories_url']);
+											$parsed_url=@parse_url($cat['categories_external_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
 											} else {
 												$target='';
 											}
-											$link=$cat['categories_url'];
+											$link=$cat['categories_external_url'];
 										} else {
 											$target="";
 											$cats=mslib_fe::Crumbar($cat['categories_id']);
@@ -551,17 +551,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 											// get all cats to generate multilevel fake url eof
 											$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 										}
-										if ($cat['categories_url']) {
-											if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-												$cat['categories_url']='http://'.$cat['categories_url'];
+										if ($cat['categories_external_url']) {
+											if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+												$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 											}
-											$parsed_url=@parse_url($cat['categories_url']);
+											$parsed_url=@parse_url($cat['categories_external_url']);
 											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 												$target=" target=\"_blank\"";
 											} else {
 												$target='';
 											}
-											$link=$cat['categories_url'];
+											$link=$cat['categories_external_url'];
 										}
 										$categories_name=htmlspecialchars($cat['categories_name']);
 										$meta_description=htmlspecialchars($cat['meta_description']);
@@ -606,17 +606,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 													$nested_level=2;
 													// get all cats to generate multilevel fake url
 													$level=0;
-													if ($cat['categories_url']) {
-														if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-															$cat['categories_url']='http://'.$cat['categories_url'];
+													if ($cat['categories_external_url']) {
+														if (!preg_match('categories_external_url',$cat['categories_external_url'])) {
+															$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 														}
-														$parsed_url=@parse_url($cat['categories_url']);
+														$parsed_url=@parse_url($cat['categories_external_url']);
 														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 															$target=" target=\"_blank\"";
 														} else {
 															$target='';
 														}
-														$link=$cat['categories_url'];
+														$link=$cat['categories_external_url'];
 													} else {
 														$target="";
 														$cats=mslib_fe::Crumbar($cat['categories_id']);
@@ -633,17 +633,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 														// get all cats to generate multilevel fake url eof
 														$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 													}
-													if ($cat['categories_url']) {
-														if (!preg_match('/^(http|https):\/\//',$cat['categories_url'])) {
-															$cat['categories_url']='http://'.$cat['categories_url'];
+													if ($cat['categories_external_url']) {
+														if (!preg_match('/^(http|https):\/\//',$cat['categories_external_url'])) {
+															$cat['categories_external_url']='http://'.$cat['categories_external_url'];
 														}
-														$parsed_url=@parse_url($cat['categories_url']);
+														$parsed_url=@parse_url($cat['categories_external_url']);
 														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
 															$target=" target=\"_blank\"";
 														} else {
 															$target='';
 														}
-														$link=$cat['categories_url'];
+														$link=$cat['categories_external_url'];
 													}
 													$categories_name=htmlspecialchars($cat['categories_name']);
 													$meta_description=htmlspecialchars($cat['meta_description']);
@@ -704,28 +704,28 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
-					$content.='					
+					$content.='
 					<script type="text/javascript">
 					  jQuery(document).ready(function($) {
 						var result = jQuery("#vertical_container").sortable({
-						 cursor:     "move", 
-							//axis:       "y", 
-							update: function(e, ui) { 
+						 cursor:     "move",
+							//axis:       "y",
+							update: function(e, ui) {
 								href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=menu').'";
-								jQuery(this).sortable("refresh"); 
-								sorted = jQuery(this).sortable("serialize", "id"); 
-								jQuery.ajax({ 
-										type:   "POST", 
-										url:    href, 
-										data:   sorted, 
-										success: function(msg) { 
-												//do something with the sorted data 
-										} 
-								}); 
-							} 
+								jQuery(this).sortable("refresh");
+								sorted = jQuery(this).sortable("serialize", "id");
+								jQuery.ajax({
+										type:   "POST",
+										url:    href,
+										data:   sorted,
+										success: function(msg) {
+												//do something with the sorted data
+										}
+								});
+							}
 						});
 					  });
-					  </script>					
+					  </script>
 					';
 				}
 			}

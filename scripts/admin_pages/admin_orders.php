@@ -38,16 +38,31 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			}
 			if (count($attachments)) {
 				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
-				$cmd="gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=".$combinedPdfFile." ".implode(" ", $attachments);
-				shell_exec($cmd);
-				if (file_exists($combinedPdfFile)) {
-					header("Content-type:application/pdf");
-					readfile($combinedPdfFile);
-					// delete temporary invoice from disk
-					unlink($combinedPdfFile);
-					foreach ($attachments as $attachment) {
-						unlink($attachment);
+				$prog=t3lib_utility_Command::exec('which gs');
+				//hook to let other plugins further manipulate the settings
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'])) {
+					$params=array(
+							'prog'=>&$prog
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
+				}
+				if ($prog && is_file($prog)) {
+					$cmd=$prog.' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='.$combinedPdfFile.' '.implode(' ', $attachments);
+					t3lib_utility_Command::exec($cmd);
+					if (file_exists($combinedPdfFile)) {
+						header("Content-type:application/pdf");
+						readfile($combinedPdfFile);
+						// delete temporary invoice from disk
+						unlink($combinedPdfFile);
+						foreach ($attachments as $attachment) {
+							unlink($attachment);
+						}
+						exit();
+					}
+				} else {
+					echo 'gs binary cannot be found. This is needed for merging multiple PDF files as one file.';
 					exit();
 				}
 			}

@@ -104,74 +104,12 @@ if (mslib_fe::loggedin()) {
 			if (!count($erno)) {
 				$customer_id=$mslib_user->saveUserData();
 				if ($customer_id) {
-					// SAVE CUSTOMER
-					$newCustomer=mslib_fe::getUser($customer_id);
 					// save as billing address and default address, later on
 					// customer can edit the profile
 					$res=$mslib_user->saveUserBillingAddress($customer_id);
 					if ($res) {
-						$page=mslib_fe::getCMScontent('email_create_account_confirmation', $GLOBALS['TSFE']->sys_language_uid);
-						if ($page[0]['content']) {
-							// loading the email confirmation letter eof
-							// replacing the variables with dynamic values
-							$array1=array();
-							$array2=array();
-							$array1[]='###GENDER_SALUTATION###';
-							$array2[]=mslib_fe::genderSalutation($this->post['gender']);
-							$array1[]='###BILLING_COMPANY###';
-							$array2[]=$newCustomer['company'];
-							$array1[]='###FULL_NAME###';
-							$array2[]=$newCustomer['name'];
-							$array1[]='###BILLING_NAME###';
-							$array2[]=$newCustomer['name'];
-							$array1[]='###BILLING_FIRST_NAME###';
-							$array2[]=$newCustomer['first_name'];
-							$array1[]='###BILLING_LAST_NAME###';
-							$last_name=$newCustomer['last_name'];
-							if ($newCustomer['middle_name']) {
-								$last_name=$newCustomer['middle_name'].' '.$last_name;
-							}
-							$array2[]=$last_name;
-							$array1[]='###CUSTOMER_EMAIL###';
-							$array2[]=$newCustomer['email'];
-							$array1[]='###BILLING_EMAIL###';
-							$array2[]=$newCustomer['email'];
-							$array1[]='###BILLING_ADDRESS###';
-							$array2[]=$newCustomer['address'];
-							$array1[]='###BILLING_TELEPHONE###';
-							$array2[]=$newCustomer['telephone'];
-							$array1[]='###BILLING_MOBILE###';
-							$array2[]=$newCustomer['mobile'];
-							$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
-							$long_date=strftime($this->pi_getLL('full_date_format'));
-							$array2[]=$long_date;
-							$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
-							$long_date=strftime($this->pi_getLL('full_date_format'));
-							$array2[]=$long_date;
-							$array1[]='###STORE_NAME###';
-							$array2[]=$this->ms['MODULES']['STORE_NAME'];
-							$array1[]='###CUSTOMER_ID###';
-							$array2[]=$customer_id;
-							$link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
-							$array1[]='###LINK###';
-							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
-							$array1[]='###CONFIRMATION_LINK###';
-							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
-
-							$array1[]='###USERNAME###';
-							$array2[]=$newCustomer['email'];
-							$array1[]='###PASSWORD###';
-							$array2[]=$this->post['password'];
-							if ($page[0]['content']) {
-								$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-							}
-							if ($page[0]['name']) {
-								$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-							}
-							$user=array();
-							$user['name']=$newCustomer['first_name'];
-							$user['email']=$newCustomer['email'];
-							mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+						$send_email_confirmation=mslib_fe::sendCreateAccountConfirmationLetter($customer_id, $this->post['password']);
+						if ($send_email_confirmation) {
 							// mail a copy to the merchant
 							/*
 							$merchant=array();
@@ -196,6 +134,23 @@ if (mslib_fe::loggedin()) {
 			}
 		}
 		if (!$this->post or count($erno)) {
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+				<script type="text/javascript">
+					jQuery(document).ready(function(){
+						jQuery(\'#checkout\').h5Validate();
+						'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
+						jQuery("#date_of_birth_visual").datepicker({
+							dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+							altField: "#date_of_birth",
+							altFormat: "yy-mm-dd",
+							changeMonth: true,
+							changeYear: true,
+							showOtherMonths: true,
+							yearRange: "'.(date("Y")-150).':'.date("Y").'"
+						});
+						' : '').'
+					}); //end of first load
+				</script>';
 			if (count($erno)>0) {
 				$content.='<div class="alert alert-danger">';
 				$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
@@ -226,6 +181,21 @@ if (mslib_fe::loggedin()) {
 			}
 			//
 			$markerArray=array();
+			//
+			$birthday_block='';
+			if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+				$birthdayVisual='';
+				$birthday='';
+				if ($user['date_of_birth']) {
+					$birthdayVisual=strftime('%x', $user['date_of_birth']);
+					$birthday=date("Y-m-d", $user['date_of_birth']);
+				}
+				$birthday_block='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'*</label>
+				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" value="" >
+				<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="" >';
+			}
+			//
+			$markerArray['###BIRTHDAY_BLOCK###']=$birthday_block;
 			$markerArray['###CREATE_ACCOUNT_FORM_URL###']=mslib_fe::typolink();
 			$markerArray['###LABEL_PERSONAL_DETAILS###']=$this->pi_getLL('personal_details');
 			$markerArray['###LABEL_PERSONAL_DETAILS_DESCRIPTION###']=$this->pi_getLL('personal_details_description');

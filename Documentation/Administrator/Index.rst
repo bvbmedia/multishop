@@ -33,3 +33,4 @@ yum install gs
 Other Linux distributions:
 apt-get install gs
 
+Make sure the version is decent. We use: GPL Ghostscript 9.07 (2013-02-14).

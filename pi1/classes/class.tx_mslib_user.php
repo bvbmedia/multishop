@@ -56,10 +56,49 @@ class tx_mslib_user {
 	var $region='';
 	var $customFields=array();
 	function init(&$ref) {
+		$this->ref=$ref;
+		$this->DOCUMENT_ROOT=$ref->DOCUMENT_ROOT;
+		$this->HTTP_HOST=$ref->HTTP_HOST;
+		$this->FULL_HTTP_URL=$ref->FULL_HTTP_URL;
+		$this->DOCUMENT_ROOT_MULTISHOP=$ref->DOCUMENT_ROOT_MULTISHOP;
+		$this->DOCUMENT_ROOT_MS=$ref->DOCUMENT_ROOT_MS;
+		$this->FULL_HTTP_URL_MS=$ref->FULL_HTTP_URL_MS;
+		$this->FULL_HTTP_URL_MULTISHOP=$ref->FULL_HTTP_URL_MS;
 		$this->get= &$ref->get;
 		$this->post= &$ref->post;
+		$this->conf= &$ref->conf;
 		$this->ms= &$ref->ms;
-		$this->ref= &$ref;
+		$this->cObj= &$ref->cObj;
+		$this->extKey= &$ref->extKey;
+		$this->server= &$ref->server;
+		$this->cart_page_uid= &$ref->cart_page_uid;
+		$this->shop_pid= &$ref->shop_pid;
+		$this->showCatalogFromPage= &$ref->showCatalogFromPage;
+		$this->sys_language_uid= &$ref->sys_language_uid;
+		$this->tta_user_info=&$ref->tta_user_info;
+		$this->tta_shop_info=&$ref->tta_shop_info;
+		$this->sys_language_uid=&$ref->sys_language_uid;
+		$this->lang=&$ref->lang;
+		$this->LLkey=&$ref->LLkey;
+		$this->LOCAL_LANG=&$ref->LOCAL_LANG;
+		$this->excluded_userGroups=&$ref->excluded_userGroups;
+		$this->categoriesStartingPoint=&$ref->categoriesStartingPoint;
+		$this->REMOTE_ADDR=&$ref->REMOTE_ADDR;
+		$this->cookie=&$ref->cookie;
+		$this->msDebugInfo=&$ref->msDebugInfo;
+		$this->masterShop=&$ref->masterShop;
+		// PERMISSIONS
+		$this->ADMIN_USER=$ref->ADMIN_USER;
+		$this->ROOTADMIN_USER=$ref->ROOTADMIN_USER;
+		$this->CMSADMIN_USER=&$ref->CMSADMIN_USER;
+		$this->CUSTOMERSADMIN_USER=&$ref->CUSTOMERSADMIN_USER;
+		$this->CMSADMIN_USER=&$ref->CMSADMIN_USER;
+		$this->CATALOGADMIN_USER=&$ref->CATALOGADMIN_USER;
+		$this->ORDERSADMIN_USER=&$ref->ORDERSADMIN_USER;
+		$this->STORESADMIN_USER=&$ref->STORESADMIN_USER;
+		$this->SEARCHADMIN_USER=&$ref->SEARCHADMIN_USER;
+		$this->SYSTEMADMIN_USER=&$ref->SYSTEMADMIN_USER;
+		$this->STATISTICSADMIN_USER=&$ref->STATISTICSADMIN_USER;
 		return true;
 	}
 	/**

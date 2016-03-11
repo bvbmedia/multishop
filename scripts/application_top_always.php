@@ -198,7 +198,7 @@ if (!isset($this->ms['MODULES']['PAGE_TITLE_DELIMETER'])) {
 }
 $this->ms=mslib_befe::convertConfiguration($this->ms);
 //if ($this->ms['MODULES']['CACHE_FRONT_END'] or $this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'])	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/Cache_Lite-1.7.8/Lite.php');
-if ($this->ADMIN_USER) {
+//if ($this->ADMIN_USER) {
 	// load enabled languages
 	$enabled_countries=array();
 	if ($this->ms['MODULES']['ENABLED_LANGUAGES']) {
@@ -232,7 +232,7 @@ if ($this->ADMIN_USER) {
 	$this->languages[0]['lg_iso_2']=$this->lang;
 	ksort($this->languages);
 	// load enabled languages eof
-}
+//}
 if ($this->conf['addBox']) {
 	$this->addBox=$this->conf['addBox'];
 } else {

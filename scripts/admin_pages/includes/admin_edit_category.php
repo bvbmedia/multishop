@@ -444,6 +444,7 @@ if ($this->post) {
 				$updateArray['meta_description']=$this->post['meta_description'][$key];
 				$updateArray['content']=$this->post['content'][$key];
 				$updateArray['content_footer']=$this->post['content_footer'][$key];
+				$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\''.$catid.'\' and language_id=\''.$key.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -456,6 +457,7 @@ if ($this->post) {
 				$updateArray['meta_description']=$this->post['meta_description'][$key];
 				$updateArray['content']=$this->post['content'][$key];
 				$updateArray['content_footer']=$this->post['content_footer'][$key];
+				$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -563,6 +565,7 @@ if ($this->post) {
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2) > 0) {
 						$updateArray = array();
 						$updateArray['categories_name'] = $this->post['categories_name'][$key];
+						$updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
 						$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\'' . $row['categories_id'] . '\' and language_id=\'' . $key . '\'', $updateArray);
 						$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -634,13 +637,19 @@ if ($this->post) {
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-			exit();
-		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
+		if (isset($this->post['SaveClose'])) {
+			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_category')===false && $this->post['tx_multishop_pi1']['referrer']) {
+				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+				exit();
+			} else {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories', 1));
+				exit();
+			}
+		} else if (isset($this->post['Submit'])) {
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$_REQUEST['cid'].'&action=edit_category'));
 			exit();
 		}
+
 	}
 } else {
 	if ($_REQUEST['action']=='edit_category') {
@@ -727,7 +736,15 @@ if ($this->post) {
 				$headingButton['fa_class']='fa fa-check-circle';
 				$headingButton['title']=$this->pi_getLL('save');
 				$headingButton['href']='#';
-				$headingButton['attributes']='onclick="$(\'#admin_categories_edit button[name=\\\'Submit\\\']\').click(); return false;"';
+				$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+				$headerButtons[]=$headingButton;
+
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-success';
+				$headingButton['fa_class']='fa fa-check-circle';
+				$headingButton['title']=$this->pi_getLL('admin_save_close');
+				$headingButton['href']='#';
+				$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 				$headerButtons[]=$headingButton;
 
 				// Set header buttons through interface class so other plugins can adjust it
@@ -761,6 +778,12 @@ if ($this->post) {
 				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'"'.($key===0 ? ' required="required"' : '').'>
 				</div>
 			</div>
+			<div class="form-group" id="msEditCategoryInputExternalUrl">
+				<label class="control-label col-md-2" for="categories_external_url_'.$language['uid'].'">'.$this->pi_getLL('admin_external_url').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="categories_external_url['.$language['uid'].']" id="categories_external_url_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_external_url']).'">
+				</div>
+            </div>
 			';
             $category_name_block.='</div></div></div>';
 		}
@@ -1000,7 +1023,7 @@ if ($this->post) {
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
 
-		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$_REQUEST['cid']);
+		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$_REQUEST['cid'].'&action=edit_category');
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
 		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LINK_BUTTON_CANCEL_FOOTER###']=$subpartArray['###VALUE_REFERRER###'];
@@ -1044,6 +1067,7 @@ if ($this->post) {
 		$subpartArray['###CATEGORIES_META_BLOCK###']=$categories_meta_block;
 		$subpartArray['###LABEL_BUTTON_CANCEL_FOOTER###']=$this->pi_getLL('cancel');
 		$subpartArray['###LABEL_BUTTON_SAVE_FOOTER###']=$this->pi_getLL('save');
+		$subpartArray['###LABEL_BUTTON_SAVE_CLOSE_FOOTER###']=$this->pi_getLL('admin_save_close');
 		$subpartArray['###CATEGORIES_ID_FOOTER0###']=$category['categories_id'];
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
