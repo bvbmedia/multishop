@@ -211,12 +211,23 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		exit();
 		breaks;
 	case 'get_products':
+		$from=array();
+		$from[]='tx_multishop_products p';
+		$from[]='tx_multishop_products_description pd';
+		//
 		$where=array();
 		$where[]='p.products_id=pd.products_id';
 		$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+		//
 		$skip_db=false;
 		$limit=50;
+		$categories_id=0;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (strpos($this->get['q'], '||catid=')!==false) {
+				$tmp_value=explode('||catid=', $this->get['q']);
+				$this->get['q']=$tmp_value[0];
+				$categories_id=$tmp_value[1];
+			}
 			if (!is_numeric($this->get['q'])) {
 				$where[]='pd.products_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
@@ -226,8 +237,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='p.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
+		if (is_numeric($categories_id) && $categories_id>0) {
+			$from[]='tx_multishop_products_to_categories p2c';
+			$where[]='p2c.categories_id=\''.$categories_id.'\' and p2c.is_deepest=1 and p2c.products_id=p.products_id';
+		}
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
-			'tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
+			implode(', ', $from), // FROM ...
 			implode(' and ', $where), // WHERE.
 			'p.products_id', // GROUP BY...
 			'pd.products_name asc, p.products_status asc', // ORDER BY...

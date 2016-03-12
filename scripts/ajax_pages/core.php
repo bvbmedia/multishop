@@ -517,6 +517,13 @@ switch ($this->ms['page']) {
 							$tmp_preselecteds[]=$this->get['preselected_id'];
 						}
 					}
+					if (strpos($this->post['preselected_id'], ',')!==false) {
+						$tmp_preselecteds=explode(',', $this->post['preselected_id']);
+					} else {
+						if (is_numeric($this->post['preselected_id'])) {
+							$tmp_preselecteds[]=$this->post['preselected_id'];
+						}
+					}
 					if (is_array($tmp_preselecteds) && count($tmp_preselecteds)) {
 						foreach ($tmp_preselecteds as $preselected_id) {
 							$preselected_id=trim($preselected_id);
@@ -532,7 +539,7 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				if (!count($tmp_preselecteds) || (count($tmp_preselecteds)===1 && !$tmp_preselecteds[0])) {
+				if (!count($tmp_preselecteds) || (count($tmp_preselecteds)===1 && !$tmp_preselecteds[0]) || !count($tmp_return_data) ) {
 					$return_data[]=array(
 						'id'=>0,
 						'text'=>$this->pi_getLL('admin_main_category')
