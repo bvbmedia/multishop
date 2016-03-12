@@ -2224,7 +2224,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products name col
 						$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 						$order_products_body_data['products_name']['align']='left';
-						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value=""><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
+						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value="" style="display:none"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2419,7 +2419,7 @@ if (is_numeric($this->get['orders_id'])) {
 				// products name col
 				$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 				$order_products_body_data['products_name']['style']='border:0px solid #fff';
-				$order_products_body_data['products_name']['value']='<button type="button" class="btn btn-primary btn-sm" id="add_attributes"><i class="fa fa-plus"></i> add attribute</button>';
+				$order_products_body_data['products_name']['value']='<button type="button" class="btn btn-primary btn-sm" id="add_attributes" style="display:none"><i class="fa fa-plus"></i> add attribute</button>';
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
 					$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2924,11 +2924,24 @@ if (is_numeric($this->get['orders_id'])) {
                             // get the pre-def attributes
                             $(\'.manual_new_attributes\').remove();
                             jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order&ajax_products_attributes_search[action]=get_options_values').'",{pid: e.object.id, optid: 0}, function(optionsData){
-                                $.each(optionsData, function(i, opt){
-                                    var valid=opt.value.valid
-                                    var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
-                                    add_new_attributes(opt.optid, valid, price_data);
-                                });
+                                if (optionsData.length==0) {
+									if ($("#edit_add_attributes").length) {
+										$("#edit_add_attributes").hide();
+									} else {
+										$("#add_attributes").hide();
+									}
+                                } else {
+                                	if ($("#edit_add_attributes").length) {
+										$("#edit_add_attributes").show();
+									} else {
+										$("#add_attributes").show();
+									}
+									$.each(optionsData, function(i, opt){
+										var valid=opt.value.valid
+										var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
+										add_new_attributes(opt.optid, valid, price_data);
+									});
+                                }
                             });
                             '.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
                             $("#custom_manual_product_name_wrapper").show();
@@ -2955,19 +2968,24 @@ if (is_numeric($this->get['orders_id'])) {
                         },
                         minimumInputLength: 0,
                         query: function(query) {
-                            if (attributesSearchOptions[query.term] !== undefined) {
-                                query.callback({results: attributesSearchOptions[query.term]});
+                            if ($(".product_name").length) {
+                            	var product_id=$(".product_name").select2("val");
                             } else {
+                            	var product_id=$(".product_name_input").select2("val");
+                            }
+                            //if (attributesSearchOptions[query.term] !== undefined) {
+                            //    query.callback({results: attributesSearchOptions[query.term]});
+                            //} else {
                                 $.ajax(ajax_url, {
                                     data: {
-                                        q: query.term
+                                        q: query.term + "||pid=" +  product_id
                                     },
                                     dataType: "json"
                                 }).done(function(data) {
-                                    attributesSearchOptions[query.term]=data;
+                                    //attributesSearchOptions[query.term]=data;
                                     query.callback({results: data});
                                 });
-                            }
+                            //}
                         },
                         initSelection: function(element, callback) {
                             var id=$(element).val();

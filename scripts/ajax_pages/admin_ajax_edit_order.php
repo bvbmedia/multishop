@@ -290,23 +290,35 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		$content=json_encode($data);
 		break;
 	case 'get_attributes_options':
+		$from=array();
+		$from[]='tx_multishop_products_options po';
 		$where=array();
-		$where[]="language_id = '".$this->sys_language_uid."'";
+		$where[]="po.language_id = '".$this->sys_language_uid."'";
 		$skip_db=false;
+		$pid=0;
+		if (strpos($this->get['q'], '||pid=')!==false) {
+			list($search_term, $tmp_pid) = explode('||pid=', $this->get['q']);
+			$this->get['q']=$search_term;
+			$pid=$tmp_pid;
+		}
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
-				$where[]="products_options_name like '%".addslashes($this->get['q'])."%'";
+				$where[]="po.products_options_name like '%".addslashes($this->get['q'])."%'";
 			} else {
-				$where[]="products_options_id = '".addslashes($this->get['q'])."'";
+				$where[]="po.products_options_id = '".addslashes($this->get['q'])."'";
 			}
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-			$where[]="products_options_id = '".addslashes($this->get['preselected_id'])."'";
+			$where[]="po.products_options_id = '".addslashes($this->get['preselected_id'])."'";
 		}
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'tx_multishop_products_options', // FROM ...
+		if (is_numeric($pid) && $pid>0) {
+			$from[]='tx_multishop_products_attributes pa';
+			$where[]='pa.products_id=\''.$pid.'\' and pa.options_id=po.products_options_id';
+		}
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('po.*', // SELECT ...
+			implode(', ', $from), // FROM ...
 			implode(' and ', $where), // WHERE.
-			'', // GROUP BY...
-			'sort_order', // ORDER BY...
+			'po.products_options_id', // GROUP BY...
+			'po.sort_order', // ORDER BY...
 			'' // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
