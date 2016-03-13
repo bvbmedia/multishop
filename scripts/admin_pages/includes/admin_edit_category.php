@@ -638,7 +638,7 @@ if ($this->post) {
 		}
 		// custom hook that can be controlled by third-party plugin eof
 		if (isset($this->post['SaveClose'])) {
-			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_category')===false && $this->post['tx_multishop_pi1']['referrer']) {
+			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_category')===false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_category')===false && $this->post['tx_multishop_pi1']['referrer']) {
 				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 				exit();
 			} else {
@@ -646,7 +646,7 @@ if ($this->post) {
 				exit();
 			}
 		} else if (isset($this->post['Submit'])) {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$_REQUEST['cid'].'&action=edit_category'));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$catid.'&action=edit_category'));
 			exit();
 		}
 

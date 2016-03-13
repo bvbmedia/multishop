@@ -517,6 +517,13 @@ switch ($this->ms['page']) {
 							$tmp_preselecteds[]=$this->get['preselected_id'];
 						}
 					}
+					if (strpos($this->post['preselected_id'], ',')!==false) {
+						$tmp_preselecteds=explode(',', $this->post['preselected_id']);
+					} else {
+						if (is_numeric($this->post['preselected_id'])) {
+							$tmp_preselecteds[]=$this->post['preselected_id'];
+						}
+					}
 					if (is_array($tmp_preselecteds) && count($tmp_preselecteds)) {
 						foreach ($tmp_preselecteds as $preselected_id) {
 							$preselected_id=trim($preselected_id);
@@ -532,7 +539,7 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				if (!count($tmp_preselecteds) || (count($tmp_preselecteds)===1 && !$tmp_preselecteds[0])) {
+				if (!count($tmp_preselecteds) || (count($tmp_preselecteds)===1 && !$tmp_preselecteds[0]) || !count($tmp_return_data) ) {
 					$return_data[]=array(
 						'id'=>0,
 						'text'=>$this->pi_getLL('admin_main_category')
@@ -765,6 +772,7 @@ switch ($this->ms['page']) {
 		$where=array();
 		$skip_db=false;
 		$limit=50;
+
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='op.products_name like \'%'.addslashes($this->get['q']).'%\'';
@@ -775,8 +783,10 @@ switch ($this->ms['page']) {
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='op.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$where[]='o.orders_id=op.orders_id';
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*', // SELECT ...
-			'tx_multishop_orders_products op', // FROM ...
+			'tx_multishop_orders_products op, tx_multishop_orders o', // FROM ...
 			implode(' and ', $where), // WHERE.
 			'op.products_id', // GROUP BY...
 			'op.products_name asc', // ORDER BY...
