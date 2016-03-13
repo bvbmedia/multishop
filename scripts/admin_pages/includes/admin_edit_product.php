@@ -2243,7 +2243,7 @@ if ($this->post) {
 			mslib_befe::convertProductToFlat($prodid);
 		}
 		if (isset($this->post['SaveClose'])) {
-			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product')===false && $this->post['tx_multishop_pi1']['referrer']) {
+			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product')===false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_product')===false && $this->post['tx_multishop_pi1']['referrer']) {
 				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 				exit();
 			} else {
@@ -2251,7 +2251,12 @@ if ($this->post) {
 				exit();
 			}
 		} else if (isset($this->post['Submit'])) {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->get['action'].'&pid='.$this->get['pid']."&cid=".$this->get['cid']."&action=edit_product"));
+			$redirect_cid=$this->get['cid'];
+			if (!$redirect_cid) {
+				$product_data=mslib_fe::getProduct($prodid, '', '', 1);
+				$redirect_cid=$product_data['categories_id'];
+			}
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->get['action'].'&pid='.$prodid."&cid=".$redirect_cid."&action=edit_product"));
 			exit();
 		}
 	}
