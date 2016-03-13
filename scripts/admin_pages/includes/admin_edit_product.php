@@ -2242,7 +2242,7 @@ if ($this->post) {
 			// if the flat database module is enabled we have to sync the changes to the flat table
 			mslib_befe::convertProductToFlat($prodid);
 		}
-		if (isset($this->post['SaveClose'])) {
+		if (isset($this->post['SaveClose']) || isset($this->post['save_as_new'])) {
 			if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product')===false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_product')===false && $this->post['tx_multishop_pi1']['referrer']) {
 				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 				exit();
@@ -3936,28 +3936,6 @@ if ($this->post) {
 			$product_relatives_block='<h3>'.$this->pi_getLL('admin_related_products').'</h3>'.$form_category_search.'<hr><div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
 		}
 		/*
-		 * product copy tab
-		 */
-		$product_copy_block='';
-		if ($_REQUEST['action']=='edit_product') {
-			$product_copy_block.='
-				<div class="form-group" id="msEditProductInputDuplicateProduct">
-				<label for="cid" class="col-md-2 control-label">'.$this->pi_getLL('admin_select_category').'</label>
-				<div class="col-md-10">
-				<input type="hidden" name="cid" id="cid" value="'.$this->get['cid'].'" />
-				</div>
-				</div>
-				<div class="form-group">
-				<div id="cp_buttons" class="col-md-10 col-md-offset-2">
-					<button type="button" value="" id="cp_product" class="btn btn-primary"><i class="fa fa-link"></i> '.$this->pi_getLL('admin_relate_product_to_category').'</button>
-					<button type="button" value="" id="dp_product" class="btn btn-primary"><i class="fa fa-files-o"></i> '.$this->pi_getLL('admin_duplicate_product').'</button>
-				</div>
-				</div>
-				<div id="has_cd">
-				</div>';
-			// '.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
-		}
-		/*
 		 * layout page
 		*/
 		$subpartArray=array();
@@ -4269,10 +4247,6 @@ if ($this->post) {
 		 * product relatives tab marker
 		*/
 		$subpartArray['###INPUT_PRODUCT_RELATIVES_BLOCK###']=$product_relatives_block;
-		/*
-		 * product copy tab marker
-		*/
-		$subpartArray['###INPUT_PRODUCT_COPY_BLOCK###']=$product_copy_block;
 		$subpartArray['###INFORMATION_SELECT2_LABEL1###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		/*
 		 * special price percentage
