@@ -11,7 +11,11 @@ if ($this->get['Search']) {
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-$sql_year="select crdate from tx_multishop_orders order by orders_id asc limit 1";
+if (!$this->masterShop) {
+	$sql_year="select crdate from tx_multishop_orders where page_uid='".$this->shop_pid."' order by orders_id asc limit 1";
+} else {
+	$sql_year="select crdate from tx_multishop_orders order by orders_id asc limit 1";
+}
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if ($row_year['crdate']>0) {
@@ -104,6 +108,9 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 		$data_query['where'][]='(o.deleted=0)';
 		if (!empty($status_where)) {
 			$data_query['where'][]=$status_where;
+		}
+		if (!$this->masterShop) {
+			$data_query['where'][]='o.page_uid=\''.$this->shop_pid.'\'';
 		}
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_year.php']['annuallyStatsOrdersQueryHookPreProc'])) {

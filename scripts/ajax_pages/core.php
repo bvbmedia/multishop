@@ -772,6 +772,7 @@ switch ($this->ms['page']) {
 		$where=array();
 		$skip_db=false;
 		$limit=50;
+
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='op.products_name like \'%'.addslashes($this->get['q']).'%\'';
@@ -782,8 +783,10 @@ switch ($this->ms['page']) {
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='op.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$where[]='o.orders_id=op.orders_id';
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*', // SELECT ...
-			'tx_multishop_orders_products op', // FROM ...
+			'tx_multishop_orders_products op, tx_multishop_orders o', // FROM ...
 			implode(' and ', $where), // WHERE.
 			'op.products_id', // GROUP BY...
 			'op.products_name asc', // ORDER BY...
