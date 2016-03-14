@@ -103,24 +103,37 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 						$return_data['status']='OK';
 					}
 				} else {
-					$updateArray=array('paid'=>0);
-					$updateArray['orders_last_modified']=time();
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
-					$return_data['status']='NOTOK';
-					if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
-						$return_data['status']='OK';
-					}
+					$continue=1;
 					//hook to let other plugins further manipulate the replacers
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'])) {
 						$params = array(
-							'return_data' => &$return_data,
-							'order_id' => $order_id
+							'continue' => &$continue
 						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'] as $funcRef) {
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					//end of hook to let other plugins further manipulate the replacers
+					if ($continue) {
+						//end of hook to let other plugins further manipulate the replacers
+						$updateArray=array('paid'=>0);
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
+						$return_data['status']='NOTOK';
+						if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+							$return_data['status']='OK';
+						}
+						//hook to let other plugins further manipulate the replacers
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
+							$params = array(
+									'return_data' => &$return_data,
+									'order_id' => $order_id
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						//end of hook to let other plugins further manipulate the replacers
+					}
 				}
 			}
 		}
@@ -162,21 +175,41 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					//
 					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 						if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
+							/*
 							$return_data['info']=array(
 								'status'=>'info',
 								'message'=>'Invoice '.$invoice['invoice_id'].' has been updated to paid.'
 							);
+							*/
+							$return_data['status']='OK';
 						}
 					} else {
-						$updateArray=array('paid'=>0);
-						$updateArray['orders_last_modified']=time();
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$updateArray=array('paid'=>0);
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						// Update to unpaid
+						$continue=1;
+						//hook to let other plugins further manipulate the replacers
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'])) {
+							$params = array(
+								'continue' => &$continue
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						if ($continue) {
+							$updateArray=array('paid'=>0);
+							$updateArray['orders_last_modified']=time();
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$updateArray=array('paid'=>0);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						} else {
+							$return_data['error']=array(
+								'status'=>'error',
+								'message'=>'Invoice '.$invoice['invoice_id'].' has not been updated to paid.'
+							);
+						}
 					}
-					$return_data['status']='OK';
 				} else {
 					// this invoice has no belonging order. This could be true in specific cases so just update the invoice to not paid.
 					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
