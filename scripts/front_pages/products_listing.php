@@ -69,7 +69,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 		$display_listing=true;
 	} else {
 		if ($this->get['categories_id']) {
-			$content.=$this->pi_getLL('no_products_available');
+			// set custom 404 message
+			$page=mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+			if ($page[0]['name']) {
+				$content .= '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+			} else {
+				$content .= $this->pi_getLL('no_products_available');
+			}
+			if ($page[0]['content']) {
+				$content.=$page[0]['content'];
+			}
+
 		} else {
 			$parent_id=$this->categoriesStartingPoint;
 			$this->get['categories_id']=$this->categoriesStartingPoint;

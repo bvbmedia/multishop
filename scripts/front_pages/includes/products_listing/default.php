@@ -296,216 +296,265 @@ if (is_array($products) && count($products)) {
 		// custom hook that can be controlled by third-party plugin eof
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts[$markerKey], $markerArray, '###|###');
 	}
-}
-// fill the row marker with the expanded rows
-$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
-if ($current['content'] && !$this->get['manufacturers_id']) {
-	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='<div class="categories_top_description">'.trim($current['content']).'</div>';
-}
-$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
-if ($current['content_footer'] && !$this->get['manufacturers_id']) {
-	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
-}
-$subpartArray['###CURRENT_CATEGORIES_NAME###']='';
-if (is_array($current) && $current['categories_name']) {
-	$subpartArray['###CURRENT_CATEGORIES_NAME###']='<h1>'.trim($current['categories_name']).'</h1>';
-}
-$subpartArray['###ITEM_1###']='';
-$subpartArray['###ITEM_2###']='';
-$subpartArray['###ITEM###']=$contentItem;
-$product_listing_form_content='';
-if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']) {
-	$limit_options=array();
-	$limit_options[]=5;
-	$limit_options[]=10;
-	$limit_options[]=20;
-	$limit_options[]=30;
-	$limit_options[]=50;
-	$limit_options[]=100;
-	$product_listing_form_content.='<div class="listing_limit_selectbox">';
-	$product_listing_form_content.='<label for="limitsb">'.$this->pi_getLL('products_per_page', 'Products per page').':</label>';
-	$product_listing_form_content.='<select name="tx_multishop_pi1[limitsb]" id="limitsb" class="products_listing_filter">';
-	if (!in_array($default_limit_page, $limit_options)) {
-		$product_listing_form_content.='<option value="'.$default_limit_page.'">'.$default_limit_page.'</option>';
+	// fill the row marker with the expanded rows
+	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
+	if ($current['content'] && !$this->get['manufacturers_id']) {
+		$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='<div class="categories_top_description">'.trim($current['content']).'</div>';
 	}
-	foreach ($limit_options as $limit_option) {
-		if (isset($this->cookie['limitsb']) && !empty($this->cookie['limitsb']) && $limit_option==$this->cookie['limitsb']) {
-			$product_listing_form_content.='<option value="'.$limit_option.'" selected="selected">'.$limit_option.'</option>';
-		} else {
-			if ($limit_option==$default_limit_page && !isset($this->cookie['limitsb']) && empty($this->cookie['limitsb'])) {
+	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
+	if ($current['content_footer'] && !$this->get['manufacturers_id']) {
+		$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
+	}
+	$subpartArray['###CURRENT_CATEGORIES_NAME###']='';
+	if (is_array($current) && $current['categories_name']) {
+		$subpartArray['###CURRENT_CATEGORIES_NAME###']='<h1>'.trim($current['categories_name']).'</h1>';
+	}
+	$subpartArray['###ITEM_1###']='';
+	$subpartArray['###ITEM_2###']='';
+	$subpartArray['###ITEM###']=$contentItem;
+	$product_listing_form_content='';
+	if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']) {
+		$limit_options=array();
+		$limit_options[]=5;
+		$limit_options[]=10;
+		$limit_options[]=20;
+		$limit_options[]=30;
+		$limit_options[]=50;
+		$limit_options[]=100;
+		$product_listing_form_content.='<div class="listing_limit_selectbox">';
+		$product_listing_form_content.='<label for="limitsb">'.$this->pi_getLL('products_per_page', 'Products per page').':</label>';
+		$product_listing_form_content.='<select name="tx_multishop_pi1[limitsb]" id="limitsb" class="products_listing_filter">';
+		if (!in_array($default_limit_page, $limit_options)) {
+			$product_listing_form_content.='<option value="'.$default_limit_page.'">'.$default_limit_page.'</option>';
+		}
+		foreach ($limit_options as $limit_option) {
+			if (isset($this->cookie['limitsb']) && !empty($this->cookie['limitsb']) && $limit_option==$this->cookie['limitsb']) {
 				$product_listing_form_content.='<option value="'.$limit_option.'" selected="selected">'.$limit_option.'</option>';
 			} else {
-				$product_listing_form_content.='<option value="'.$limit_option.'">'.$limit_option.'</option>';
+				if ($limit_option==$default_limit_page && !isset($this->cookie['limitsb']) && empty($this->cookie['limitsb'])) {
+					$product_listing_form_content.='<option value="'.$limit_option.'" selected="selected">'.$limit_option.'</option>';
+				} else {
+					$product_listing_form_content.='<option value="'.$limit_option.'">'.$limit_option.'</option>';
+				}
 			}
 		}
+		$product_listing_form_content.='</select>';
+		$product_listing_form_content.='</div>';
 	}
-	$product_listing_form_content.='</select>';
-	$product_listing_form_content.='</div>';
-}
-if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM']) {
-	$sortby_options=array();
-	$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
-	$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
-	$sortby_options['best_selling_asc']=$this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
-	$sortby_options['best_selling_desc']=$this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
-	$sortby_options['price_asc']=$this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
-	$sortby_options['price_desc']=$this->pi_getLL('sortby_options_label_price_desc', 'Price (desc)');
-	$sortby_options['new_asc']=$this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
-	$sortby_options['new_desc']=$this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
-	$product_listing_form_content.='<div class="listing_sortby_selectbox">';
-	$product_listing_form_content.='<label for="sortbysb">'.$this->pi_getLL('sort_by', 'Sort by').':</label>';
-	$product_listing_form_content.='<select name="tx_multishop_pi1[sortbysb]" id="sortbysb" class="products_listing_filter">';
-	$product_listing_form_content.='<option value="">'.$this->pi_getLL('default').'</option>';
-	foreach ($sortby_options as $sortby_key=>$sortby_label) {
-		if ($sortby_key==$this->cookie['sortbysb']) {
-			$product_listing_form_content.='<option value="'.$sortby_key.'" selected="selected">'.$sortby_label.'</option>';
-		} else {
-			$product_listing_form_content.='<option value="'.$sortby_key.'">'.$sortby_label.'</option>';
+	if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM']) {
+		$sortby_options=array();
+		$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
+		$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
+		$sortby_options['best_selling_asc']=$this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
+		$sortby_options['best_selling_desc']=$this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
+		$sortby_options['price_asc']=$this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
+		$sortby_options['price_desc']=$this->pi_getLL('sortby_options_label_price_desc', 'Price (desc)');
+		$sortby_options['new_asc']=$this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
+		$sortby_options['new_desc']=$this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
+		$product_listing_form_content.='<div class="listing_sortby_selectbox">';
+		$product_listing_form_content.='<label for="sortbysb">'.$this->pi_getLL('sort_by', 'Sort by').':</label>';
+		$product_listing_form_content.='<select name="tx_multishop_pi1[sortbysb]" id="sortbysb" class="products_listing_filter">';
+		$product_listing_form_content.='<option value="">'.$this->pi_getLL('default').'</option>';
+		foreach ($sortby_options as $sortby_key=>$sortby_label) {
+			if ($sortby_key==$this->cookie['sortbysb']) {
+				$product_listing_form_content.='<option value="'.$sortby_key.'" selected="selected">'.$sortby_label.'</option>';
+			} else {
+				$product_listing_form_content.='<option value="'.$sortby_key.'">'.$sortby_label.'</option>';
+			}
 		}
+		$product_listing_form_content.='</select>';
+		$product_listing_form_content.='</div>';
 	}
-	$product_listing_form_content.='</select>';
-	$product_listing_form_content.='</div>';
-}
-if (!empty($product_listing_form_content)) {
-	$product_listing_form_content.='<input type="hidden" name="id" value="'.$this->get['id'].'">';
-	if ($this->get['tx_multishop_pi1']['page_section']=='products_listing') {
-		$product_listing_form_content.='<input type="hidden" name="categories_id" value="'.$this->get['categories_id'].'">';
-	} else if ($this->get['tx_multishop_pi1']['page_section']=='manufacturers_products_listing') {
-		$product_listing_form_content.='<input type="hidden" name="manufacturers_id" value="'.$this->get['manufacturers_id'].'">';
-	}
-	if ($this->get['tx_multishop_pi1']['page_section']=='products_search') {
-		$product_listing_form_content.='<input type="hidden" name="skeyword" value="'.$this->get['skeyword'].'">';
-		$product_listing_form_content.='<input type="hidden" name="Submit" value="Zoeken">';
-	}
-	$product_listing_form_content.='<input type="hidden" name="tx_multishop_pi1[page_section]" value="'.$this->get['tx_multishop_pi1']['page_section'].'">';
-	if ($p>0) {
+	if (!empty($product_listing_form_content)) {
+		$product_listing_form_content.='<input type="hidden" name="id" value="'.$this->get['id'].'">';
 		if ($this->get['tx_multishop_pi1']['page_section']=='products_listing') {
-			$product_listing_form_content.='<input type="hidden" name="p" value="'.$p.'">';
+			$product_listing_form_content.='<input type="hidden" name="categories_id" value="'.$this->get['categories_id'].'">';
+		} else if ($this->get['tx_multishop_pi1']['page_section']=='manufacturers_products_listing') {
+			$product_listing_form_content.='<input type="hidden" name="manufacturers_id" value="'.$this->get['manufacturers_id'].'">';
 		}
 		if ($this->get['tx_multishop_pi1']['page_section']=='products_search') {
-			$product_listing_form_content.='<input type="hidden" name="page" value="'.$this->get['page'].'">';
+			$product_listing_form_content.='<input type="hidden" name="skeyword" value="'.$this->get['skeyword'].'">';
+			$product_listing_form_content.='<input type="hidden" name="Submit" value="Zoeken">';
 		}
-	}
-	$product_listing_form_content.='<script type="text/javascript">
-	  jQuery(document).ready(function($) {
-			$(".products_listing_filter").change(function(){
-				$("#sorting_products_listing").submit();
-			});
-	  });
-	  </script>';
-	// get all cats to generate multilevel fake url
-	$level=0;
-	$cats=mslib_fe::Crumbar($this->get['categories_id']);
-	$cats=array_reverse($cats);
-	$where='';
-	if (count($cats)>0) {
-		foreach ($cats as $item) {
-			$where.="categories_id[".$level."]=".$item['id']."&";
-			$level++;
-		}
-		$where=substr($where, 0, (strlen($where)-1));
-	}
-	// get all cats to generate multilevel fake url eof
-	$form_action_url=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-	$subpartArray['###PRODUCTS_LISTING_FILTER_FORM_URL###']='';
-	$subpartArray['###PRODUCTS_LISTING_FORM_CONTENT###']=$product_listing_form_content;
-} else {
-	$subpartArray['###PRODUCTS_LISTING_FILTER_FORM_URL###']='';
-	$subpartArray['###PRODUCTS_LISTING_FORM_CONTENT###']='';
-}
-// completed the template expansion by replacing the "item" marker in the template
-// custom hook that can be controlled by third-party plugin
-if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'])) {
-	$params=array(
-		'subpartArray'=>&$subpartArray,
-		'current'=>&$current,
-		'output_array'=>&$output_array
-	);
-	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'] as $funcRef) {
-		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-	}
-}
-// custom hook that can be controlled by third-party plugin eof
-$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-// ADD OPACITY TO PRODUCTS THAT ARE TURNED OFF
-$content.='
-	<script type="text/javascript">
-	  jQuery(document).ready(function($) {
-		$(".disabled_product").css({ opacity: 0.6 });
-		$(".disabled_product").hover(
-		  function () {
-			$(".disabled_product").css({ opacity: 1 });
-		  },
-		  function () {
-			$(".disabled_product").css({ opacity: 0.6 });
-		  }
-		)
-	  });
-	</script>
-';
-$skippedTypes=array();
-$skippedTypes[]='products_modified';
-$skippedTypes[]='products_search';
-$skippedTypes[]='products_new';
-$skippedTypes[]='products_specials';
-$skippedTypes[]='specials_listing_page';
-if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
-	$content.='
-	<script type="text/javascript">
-	  jQuery(document).ready(function($) {
-		var result = jQuery(".product_listing").sortable({
-			cursor:     "move",
-			//axis:       "y",
-			update: function(e, ui) {
-				href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=product&catid='.$current_product['categories_id']).'";
-				jQuery(this).sortable("refresh");
-				sorted = jQuery(this).sortable("serialize", "id");
-				jQuery.ajax({
-					type:   "POST",
-					url:    href,
-					data:   sorted,
-					success: function(msg) {
-							//do something with the sorted data
-					}
-				});
+		$product_listing_form_content.='<input type="hidden" name="tx_multishop_pi1[page_section]" value="'.$this->get['tx_multishop_pi1']['page_section'].'">';
+		if ($p>0) {
+			if ($this->get['tx_multishop_pi1']['page_section']=='products_listing') {
+				$product_listing_form_content.='<input type="hidden" name="p" value="'.$p.'">';
 			}
-		});
-	  });
-	  </script>
-	';
-}
-if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+			if ($this->get['tx_multishop_pi1']['page_section']=='products_search') {
+				$product_listing_form_content.='<input type="hidden" name="page" value="'.$this->get['page'].'">';
+			}
+		}
+		$product_listing_form_content.='<script type="text/javascript">
+		  jQuery(document).ready(function($) {
+				$(".products_listing_filter").change(function(){
+					$("#sorting_products_listing").submit();
+				});
+		  });
+		  </script>';
+		// get all cats to generate multilevel fake url
+		$level=0;
+		$cats=mslib_fe::Crumbar($this->get['categories_id']);
+		$cats=array_reverse($cats);
+		$where='';
+		if (count($cats)>0) {
+			foreach ($cats as $item) {
+				$where.="categories_id[".$level."]=".$item['id']."&";
+				$level++;
+			}
+			$where=substr($where, 0, (strlen($where)-1));
+		}
+		// get all cats to generate multilevel fake url eof
+		$form_action_url=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
+		$subpartArray['###PRODUCTS_LISTING_FILTER_FORM_URL###']='';
+		$subpartArray['###PRODUCTS_LISTING_FORM_CONTENT###']=$product_listing_form_content;
+	} else {
+		$subpartArray['###PRODUCTS_LISTING_FILTER_FORM_URL###']='';
+		$subpartArray['###PRODUCTS_LISTING_FORM_CONTENT###']='';
+	}
+	// completed the template expansion by replacing the "item" marker in the template
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'])) {
+		$params=array(
+			'subpartArray'=>&$subpartArray,
+			'current'=>&$current,
+			'output_array'=>&$output_array
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// custom hook that can be controlled by third-party plugin eof
+	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+	// ADD OPACITY TO PRODUCTS THAT ARE TURNED OFF
 	$content.='
-	<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
-	  <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
-		  </div>
-		  <div class="modal-body"></div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+		<script type="text/javascript">
+		  jQuery(document).ready(function($) {
+			$(".disabled_product").css({ opacity: 0.6 });
+			$(".disabled_product").hover(
+			  function () {
+				$(".disabled_product").css({ opacity: 1 });
+			  },
+			  function () {
+				$(".disabled_product").css({ opacity: 0.6 });
+			  }
+			)
+		  });
+		</script>
+	';
+	$skippedTypes=array();
+	$skippedTypes[]='products_modified';
+	$skippedTypes[]='products_search';
+	$skippedTypes[]='products_new';
+	$skippedTypes[]='products_specials';
+	$skippedTypes[]='specials_listing_page';
+	if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+		$content.='
+		<script type="text/javascript">
+		  jQuery(document).ready(function($) {
+			var result = jQuery(".product_listing").sortable({
+				cursor:     "move",
+				//axis:       "y",
+				update: function(e, ui) {
+					href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=product&catid='.$current_product['categories_id']).'";
+					jQuery(this).sortable("refresh");
+					sorted = jQuery(this).sortable("serialize", "id");
+					jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+					});
+				}
+			});
+		  });
+		  </script>
+		';
+	}
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$content.='
+		<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
+			  </div>
+			  <div class="modal-body"></div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+			  </div>
+			</div>
 		  </div>
 		</div>
-	  </div>
-	</div>
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-	  	$(\'#shippingCostsModal\').modal({
-			show:false,
-			backdrop:false
-		});
-		$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
-			var button = $(event.relatedTarget) // Button that triggered the modal
-  			var product_id = button.data(\'productid\') // Extract info from data-* attributes
-			var modalBox = $(this);
-			modalBox.find(\'.modal-body\').empty();
-			if (modalBox.find(\'.modal-body\').html()==\'\') {
-				modalBox.find(\'.modal-body\').html(\'<div class="text-center" id="loading_icon_wrapper"><img src="typo3conf/ext/multishop/templates/images/loading.gif" id="loading_icon" />&nbsp;Loading...</div>\');
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(\'#shippingCostsModal\').modal({
+				show:false,
+				backdrop:false
+			});
+			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var product_id = button.data(\'productid\') // Extract info from data-* attributes
+				var modalBox = $(this);
+				modalBox.find(\'.modal-body\').empty();
+				if (modalBox.find(\'.modal-body\').html()==\'\') {
+					modalBox.find(\'.modal-body\').html(\'<div class="text-center" id="loading_icon_wrapper"><img src="typo3conf/ext/multishop/templates/images/loading.gif" id="loading_icon" />&nbsp;Loading...</div>\');
+					jQuery.ajax({
+						url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
+						data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
+						type: \'post\',
+						dataType: \'json\',
+						success: function (j) {
+							if (j) {
+								var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
+								shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
+								shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
+								shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
+								shipping_cost_popup+=\'<tr>\';
+								shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
+								shipping_cost_popup+=\'</tr>\';
+								shipping_cost_popup+=\'<tr>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_in').'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
+								shipping_cost_popup+=\'</tr>\';
+								$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
+									$.each(shipping_data, function(country_iso_nr, shipping_cost){
+										shipping_cost_popup+=\'<tr>\';
+										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
+										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
+										shipping_cost_popup+=\'</tr>\';
+									});
+								});
+								if (j.delivery_time!=\'e\') {
+									shipping_cost_popup+=\'<tr>\';
+									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
+									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
+									shipping_cost_popup+=\'</tr>\';
+								}
+								shipping_cost_popup+=\'</table>\';
+								shipping_cost_popup+=\'</div>\';
+								shipping_cost_popup+=\'</div>\';
+								//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
+								modalBox.find(\'.modal-body\').empty();
+								modalBox.find(\'.modal-body\').html(shipping_cost_popup);
+								//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+							}
+						}
+					});
+				}
+			});
+
+			/*$(document).on("click", ".show_shipping_cost_table", function(e) {
+				e.preventDefault();
+				var pid=jQuery(this).attr("rel");
 				jQuery.ajax({
 					url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
-					data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
+					data: \'tx_multishop_pi1[pid]=\' + pid + \'&tx_multishop_pi1[qty]=1\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j) {
@@ -513,7 +562,7 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 							var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
 							shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
 							shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
-							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
+							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
 							shipping_cost_popup+=\'<tr>\';
 							shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
 							shipping_cost_popup+=\'</tr>\';
@@ -522,73 +571,37 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
 							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 							shipping_cost_popup+=\'</tr>\';
-							$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-								$.each(shipping_data, function(country_iso_nr, shipping_cost){
-									shipping_cost_popup+=\'<tr>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'</tr>\';
-								});
-							});
-							if (j.delivery_time!=\'e\') {
+							$.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
 								shipping_cost_popup+=\'<tr>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
 								shipping_cost_popup+=\'</tr>\';
-							}
+							});
 							shipping_cost_popup+=\'</table>\';
 							shipping_cost_popup+=\'</div>\';
 							shipping_cost_popup+=\'</div>\';
-							//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
-							modalBox.find(\'.modal-body\').empty();
-							modalBox.find(\'.modal-body\').html(shipping_cost_popup);
-							//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
 						}
 					}
 				});
-			}
+			});*/
 		});
-
-		/*$(document).on("click", ".show_shipping_cost_table", function(e) {
-			e.preventDefault();
-			var pid=jQuery(this).attr("rel");
-			jQuery.ajax({
-				url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
-				data: \'tx_multishop_pi1[pid]=\' + pid + \'&tx_multishop_pi1[qty]=1\',
-				type: \'post\',
-				dataType: \'json\',
-				success: function (j) {
-					if (j) {
-						var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
-						shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
-						shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
-						shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
-						shipping_cost_popup+=\'</tr>\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_in').'</td>\';
-						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
-						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
-						shipping_cost_popup+=\'</tr>\';
-						$.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
-							shipping_cost_popup+=\'<tr>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'</td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
-							shipping_cost_popup+=\'</tr>\';
-						});
-						shipping_cost_popup+=\'</table>\';
-						shipping_cost_popup+=\'</div>\';
-						shipping_cost_popup+=\'</div>\';
-						msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
-					}
-				}
-			});
-		});*/
-	});
-	</script>
-	';
+		</script>
+		';
+	}
+} else {
+	header('HTTP/1.0 404 Not Found');
+	// set custom 404 message
+	$page=mslib_fe::getCMScontent('category_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+	if ($page[0]['name']) {
+		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+	} else {
+		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_category_does_not_exist') . '</h1></div>';
+	}
+	if ($page[0]['content']) {
+		$content.=$page[0]['content'];
+	}
 }
+
 ?>

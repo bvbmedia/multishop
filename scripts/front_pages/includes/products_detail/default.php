@@ -36,7 +36,16 @@ if (!$product['products_id']) {
 	}
 	header('HTTP/1.0 404 Not Found');
 	$output_array['http_header']='HTTP/1.0 404 Not Found';
-	$content='<div class="main-title"><h1>'.$this->pi_getLL('the_requested_product_does_not_exist').'</h1></div>';
+	// set custom 404 message
+	$page=mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+	if ($page[0]['name']) {
+		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+	} else {
+		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
+	}
+	if ($page[0]['content']) {
+		$content.=$page[0]['content'];
+	}
 } else {
 	if ($this->conf['imageWidth']) {
 		$this->imageWidth=$this->conf['imageWidth'];
