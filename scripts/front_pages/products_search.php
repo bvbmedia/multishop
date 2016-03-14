@@ -91,7 +91,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		} else {
 			$title=$this->pi_getLL('search');
 		}
-		$content.='<div class="main-heading"><h2>'.$title.'</h2></div>';
+		$content.='<div class="main-heading"><h1>'.$title.'</h1></div>';
 		$extendsearch_content='';
 		//hook to let other plugins further manipulate the settings
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearch'])) {
