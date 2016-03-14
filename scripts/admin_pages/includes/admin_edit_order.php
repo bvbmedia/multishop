@@ -1636,7 +1636,6 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper">
 								<div class="categories_select2_input">
 									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
-									<span>&gt;</span>
 								</div>
 								<div class="products_select2_input">
 									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:380px" />
@@ -1646,7 +1645,6 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper">
 								<div class="categories_select2_input">
 									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
-									<span>&gt;</span>
 								</div>
 								<div class="products_select2_input">
 									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:402px" />
@@ -2302,7 +2300,6 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper">
 					<div class="categories_select2_input">
 						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
-						<span>&gt;</span>
 					</div>
 					<div id="manual_product_name_select2">
 						<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:380px;" tabindex="2" />
