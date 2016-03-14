@@ -1280,6 +1280,11 @@
             <label index="credit_invoice">Credit Invoice</label>
             <label index="payment_date">Payment date</label>
             <label index="admin_save_close">Save and close</label>
+            <label index="product_not_found_message">Product 404 message</label>
+            <label index="category_not_found_message">Category 404 message</label>
+            <label index="manufacturer_not_found_message">Manufacturer 404 message</label>
+            <label index="the_requested_category_does_not_exist">The requested category does not exist</label>
+            <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer does not exist</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

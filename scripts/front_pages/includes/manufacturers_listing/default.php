@@ -55,6 +55,18 @@ if (count($manufacturers)>0) {
 	$subpartArray['###ITEM###']=$contentItem;
 	// completed the template expansion by replacing the "item" marker in the template
 	$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+} else {
+	header('HTTP/1.0 404 Not Found');
+	// set custom 404 message
+	$page=mslib_fe::getCMScontent('manufacturer_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+	if ($page[0]['name']) {
+		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+	} else {
+		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_manufacturer_does_not_exist') . '</h1></div>';
+	}
+	if ($page[0]['content']) {
+		$content.=$page[0]['content'];
+	}
 }
 if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 	$content.='
