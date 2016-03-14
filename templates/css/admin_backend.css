@@ -652,4 +652,5 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 .removeUsergroup .btn-sm .fa { line-height:14px; }
 
 .categories_select2_input,
+.products_select2_input,
 #manual_product_name_select2 { display:inline-block; vertical-align:middle; }
