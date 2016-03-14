@@ -9510,7 +9510,9 @@ class mslib_fe {
 					}
 				}
 			} elseif ($type=='customer') {
-				$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				// Use wider query to prevent migration bugs
+				$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id."";
+				//$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				while ($row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address)) {
 					if ($row_tt_address['tx_multishop_default']==1) {
