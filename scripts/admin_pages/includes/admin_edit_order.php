@@ -1633,24 +1633,23 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_name']['align']='left';
 						$order_products_body_data['products_name']['class']='cellName';
 						if ($order['products_id']>0) {
-							$order_products_body_data['products_name']['value']='
+							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper select2-container">
 								<div class="categories_select2_input">
 									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
 								</div>
-								<span>&nbsp;</span>
 								<div class="products_select2_input">
 									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:380px" />
 								</div>
-							';
+							</div>';
 						} else {
-							$order_products_body_data['products_name']['value']='
+							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper select2-container">
 								<div class="categories_select2_input">
 									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
 								</div>
-								<span>&nbsp;</span>
 								<div class="products_select2_input">
 									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:402px" />
-								</div>';
+								</div>
+							</div>';
 						}
 						if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 							if ($order['products_id']>0) {
@@ -2298,14 +2297,14 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['align']='left';
 				$order_products_body_data['products_name']['valign']='top';
 				$order_products_body_data['products_name']['id']='manual_add_product';
-				$order_products_body_data['products_name']['value']='
+				$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapperselect2-container">
 					<div class="categories_select2_input">
 						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
 					</div>
-					<span>&nbsp;
 					<div id="manual_product_name_select2 products_select2_input">
 						<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:380px;" tabindex="2" />
-					</div>';
+					</div>
+				</div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
