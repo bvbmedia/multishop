@@ -1280,11 +1280,11 @@
             <label index="credit_invoice">Credit Invoice</label>
             <label index="payment_date">Payment date</label>
             <label index="admin_save_close">Save and close</label>
-            <label index="product_not_found_message">Product 404 message</label>
-            <label index="category_not_found_message">Category 404 message</label>
-            <label index="manufacturer_not_found_message">Manufacturer 404 message</label>
-            <label index="the_requested_category_does_not_exist">The requested category does not exist</label>
-            <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer does not exist</label>
+            <label index="product_not_found_message">Product not found page</label>
+            <label index="category_not_found_message">Category not found page</label>
+            <label index="manufacturer_not_found_message">Manufacturer not found page</label>
+            <label index="the_requested_category_does_not_exist">The requested category cannot be found</label>
+            <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer cannot be found</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2556,6 +2556,12 @@
             <label index="your_coc_id">Uw KvK-nummer</label>
             <label index="credit_invoice">Creditfactuur</label>
             <label index="payment_date">Betaaldatum</label>
+            <label index="admin_save_close">Opslaan en sluiten</label>
+            <label index="product_not_found_message">Product niet gevonden pagina</label>
+            <label index="category_not_found_message">Categorie niet gevonden pagina</label>
+            <label index="manufacturer_not_found_message">Merk niet gevonden pagina</label>
+            <label index="the_requested_category_does_not_exist">De opgevraagde categorie is niet gevonden</label>
+            <label index="the_requested_manufacturer_does_not_exist">De opgevraagde merkenpagina is niet gevonden</label>
         </languageKey>
     </data>
 </T3locallang>
