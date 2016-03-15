@@ -17,6 +17,7 @@
 .select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a { color:#fff; }
 .select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a:hover { text-decoration:none; }
 .select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li.select2-highlighted { background:#444; }
+.select2-drop.adminpanel-search-bigdrop li.select2-no-results { display:none; }
 .select2-drop.adminpanel-search-bigdrop .select2-results .select2-no-results,
 .select2-drop.adminpanel-search-bigdrop .select2-results .select2-searching,
 .select2-drop.adminpanel-search-bigdrop .select2-results .select2-selection-limit { background:#333; color:#fff; padding:3px 7px; }

@@ -2,6 +2,13 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_month.php']['monthlyStatsInvoicesPagePreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_month.php']['monthlyStatsInvoicesPagePreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 // billing countries
 $additional_where=array();
 if (!$this->masterShop) {

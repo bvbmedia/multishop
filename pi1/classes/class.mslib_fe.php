@@ -7324,6 +7324,7 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-cog';
 		}
 		// hook
+		/*
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
 			$params=array(
 				'this'=>&$this,
@@ -7333,6 +7334,7 @@ class mslib_fe {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		*/
 		$this->linkVars=$GLOBALS['TSFE']->linkVars;
 		$useSysLanguageTitle=trim($this->conf['useSysLanguageTitle']) ? trim($this->conf['useSysLanguageTitle']) : 0;
 		$useIsoLanguageCountryCode=trim($this->conf['useIsoLanguageCountryCode']) ? trim($this->conf['useIsoLanguageCountryCode']) : 0;
@@ -7393,6 +7395,16 @@ class mslib_fe {
 				</select>
 			</form>
 			';
+		}
+		// Hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
+			$params=array(
+					'this'=>&$this,
+					'ms_menu'=>&$ms_menu
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
 		}
 		return $ms_menu;
 	}
