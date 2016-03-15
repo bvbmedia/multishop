@@ -1814,7 +1814,11 @@ if (is_numeric($this->get['orders_id'])) {
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
 						$order_products_body_data['products_id']['class']='cellID';
-						$order_products_body_data['products_id']['id']='edit_order_product_id';
+						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
+								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
+							}
+						}
 						$order_products_body_data['products_id']['value']=$row[0];
 						// products qty col
 						$order_products_body_data['products_qty']['align']='right';
