@@ -386,18 +386,17 @@ if ($this->post && $this->post['email']) {
 			}
 		}
 		if (!count($erno)) {
-			if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
-				// Insert always redirect back to admin customers overview
-				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
-				exit();
-			} else {
-				if ($this->post['tx_multishop_pi1']['referrer']) {
+			if (isset($this->post['SaveClose'])) {
+				if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_customer')===false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_customer')===false && $this->post['tx_multishop_pi1']['referrer']) {
 					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 					exit();
 				} else {
 					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
 					exit();
 				}
+			} else if (isset($this->post['Submit'])) {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_customer', 1) . '&tx_multishop_pi1[cid]='.$customer_id.'&action=edit_customer#edit_customer');
+				exit();
 			}
 		}
 	}
@@ -682,6 +681,7 @@ $subpartArray['###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###']='';
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
+$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
 $subpartArray['###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###']='';
@@ -1246,7 +1246,15 @@ $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=$this->pi_getLL('save');
 $headingButton['href']='#';
-$headingButton['attributes']='onclick="$(\'#admin_interface_form button[name=\\\'Submit\\\']\').click(); return false;"';
+$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+$headerButtons[]=$headingButton;
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-success';
+$headingButton['fa_class']='fa fa-check-circle';
+$headingButton['title']=$this->pi_getLL('admin_save_close');
+$headingButton['href']='#';
+$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 $headerButtons[]=$headingButton;
 
 // Set header buttons through interface class so other plugins can adjust it
