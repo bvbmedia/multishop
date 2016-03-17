@@ -306,6 +306,7 @@ if ($this->post) {
 	}
 	$updateArray['option_attributes']=$option_attributes; */
 	$updateArray['option_attributes']='';
+	$updateArray['search_engines_allow_indexing']=$this->post['search_engines_allow_indexing'];
 	if ($_REQUEST['action']=='add_category') {
 		$updateArray['page_uid']=$this->showCatalogFromPage;
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
@@ -1038,6 +1039,16 @@ if ($this->post) {
 		$subpartArray['###LABEL_STATUS_YES###']=$this->pi_getLL('admin_yes');
 		$subpartArray['###CATEGORY_STATUS_NO###']=((!$category['status'] and $_REQUEST['action']=='edit_category') ? 'checked' : '');
 		$subpartArray['###LABEL_STATUS_NO###']=$this->pi_getLL('admin_no');
+
+
+		$subpartArray['###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING###']=$this->pi_getLL('search_engine_indexing');
+		$subpartArray['###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING_ON_CHECKED###']=(($category['search_engines_allow_indexing'] or $_REQUEST['action']=='add_category') ? 'checked="checked"' : '');
+		$subpartArray['###LABEL_ADMIN_YES_INDEXING###']=$this->pi_getLL('admin_yes');
+		$subpartArray['###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING_OFF_CHECKED###']=((!$category['search_engines_allow_indexing'] and $_REQUEST['action']=='edit_category') ? 'checked="checked"' : '');
+		$subpartArray['###LABEL_ADMIN_NO_INDEXING###']=$this->pi_getLL('admin_no');
+
+
+
 		$subpartArray['###LABEL_IMAGE###']=$this->pi_getLL('admin_image');
 		$subpartArray['###UPLOAD_IMAGE_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
 		$subpartArray['###DELETE_IMAGES_CATEGORIES_ID###']=$category['categories_id'];

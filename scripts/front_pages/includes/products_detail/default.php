@@ -89,14 +89,12 @@ if (!$product['products_id']) {
 		}
 		// meta tags eof
 	}
-	if (isset($product['search_engines_allow_indexing']) && !$product['search_engines_allow_indexing']) {
-		$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
-	}
 	// facebook image and open graph
 	$where='';
 	if ($product['categories_id']) {
 		// get all cats to generate multilevel fake url
 		$level=0;
+		$cats=array();
 		$cats=mslib_fe::Crumbar($product['categories_id']);
 		$cats=array_reverse($cats);
 		$where='';

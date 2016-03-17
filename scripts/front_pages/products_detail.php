@@ -67,6 +67,32 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get(
 	} else {
 		require_once('includes/products_detail/default.php');
 	}
+	if (isset($product['search_engines_allow_indexing'])) {
+		if (!$product['search_engines_allow_indexing']) {
+			$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+		} else {
+			if ($product['categories_id']) {
+				$no_index = false;
+				$level = 0;
+				$cats=array();
+				$cats = mslib_fe::Crumbar($product['categories_id']);
+				if (count($cats) > 0) {
+					foreach ($cats as $cat) {
+						if ($level > 0) {
+							if (!$cat['search_engines_allow_indexing']) {
+								$no_index = true;
+								break;
+							}
+						}
+						$level++;
+					}
+				}
+				if ($no_index) {
+					$output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+				}
+			}
+		}
+	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$output_array['content']=$content;
 		$Cache_Lite->save(serialize($output_array));

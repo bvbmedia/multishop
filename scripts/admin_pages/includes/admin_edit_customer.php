@@ -401,7 +401,6 @@ if ($this->post && $this->post['email']) {
 		}
 	}
 }
-
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_edit_customer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
@@ -686,8 +685,11 @@ $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_e
 $subpartArray['###MASTER_SHOP###']='';
 $subpartArray['###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###']='';
 $subpartArray['###CUSTOM_MARKER_BELOW_USERNAME_FIELD###']='';
-
-$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action='.$_REQUEST['action'].'&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+if ($_GET['action']=='add_customer') {
+	$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&action='.$_REQUEST['action']);
+} else {
+	$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&action='.$_REQUEST['action'].'&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+}
 // customer to shipping/payment method mapping
 $shipping_payment_method='';
 if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {

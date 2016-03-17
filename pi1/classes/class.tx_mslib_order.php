@@ -985,22 +985,21 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount');
 			$markerArray['DISCOUNT']=mslib_fe::amount2Cents($order['discount']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				// new subtotal
-				$markerArray = array();
-				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal');
-				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($subtotal - $order['discount']);
-				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
-			} else {
-				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
-			}
 		} else {
 			$subpartArray['###'.$key.'###']='';
 			$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 		}
-
-
 		//DISCOUNT_WRAPPER EOF
+		if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			// new subtotal
+			$markerArray = array();
+			$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('new_subtotal_excl_vat');
+			$new_subtotal_amount=($subtotal - $order['discount']) + $order['shipping_method_costs'] + $order['payment_method_costs'];
+			$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($new_subtotal_amount);
+			$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+		} else {
+			$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
+		}
 		//TAX_COSTS_WRAPPER
 		$key='TAX_COSTS_WRAPPER';
 		if ($order['orders_tax_data']['total_orders_tax']) {

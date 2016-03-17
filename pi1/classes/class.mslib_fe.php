@@ -876,7 +876,7 @@ class mslib_fe {
 				$filter[]='c.categories_id = \''.$c.'\'';
 				$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 				$filter[]='c.categories_id = cd.categories_id';
-				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
+				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, c.search_engines_allow_indexing, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					implode(' and ', $filter), // WHERE...
 					'', // GROUP BY...
@@ -895,7 +895,8 @@ class mslib_fe {
 							'meta_title'=>$data['meta_title'],
 							'meta_description'=>$data['meta_description'],
 							'status'=>$data['status'],
-							'page_uid'=>$data['page_uid']
+							'page_uid'=>$data['page_uid'],
+							'search_engines_allow_indexing'=>$data['search_engines_allow_indexing']
 						);
 					}
 					if ($data['parent_id']>0 && $data['parent_id']<>$this->categoriesStartingPoint) {
