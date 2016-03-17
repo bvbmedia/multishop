@@ -86,7 +86,7 @@ foreach ($dates as $key=>$value) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_orders=($total_orders+$row['total']);
 	}
-	$compiledWidget['content'].='<td align="right">'.number_format($total_orders, 0, 3, '.').'</td>';
+	$compiledWidget['content'].='<td align="right">'.number_format($total_orders, 0, '', '.').'</td>';
 	$total_amount=$total_amount+$total_orders;
 }
 if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']) {
@@ -104,8 +104,8 @@ if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']
 	$currentYear=0;
 	$currentMonth=0;
 }
-$compiledWidget['content'].='<td align="right" nowrap>'.number_format($total_amount, 0, 3, '.').'</td>';
-$compiledWidget['content'].='<td align="right" nowrap>'.number_format(($total_amount/$dayOfTheYear)*365, 0, 3, '.').'</td>';
+$compiledWidget['content'].='<td align="right" nowrap>'.number_format($total_amount, 0, '', '.').'</td>';
+$compiledWidget['content'].='<td align="right" nowrap>'.number_format(($total_amount/$dayOfTheYear)*365, 0, '', '.').'</td>';
 $compiledWidget['content'].='</tr>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';

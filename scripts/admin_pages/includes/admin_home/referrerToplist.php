@@ -66,7 +66,7 @@ if (count($data)==1) {
 				$compiledWidget['content'].='
 				<tr>
 					<td>'.$host.'</td>
-					<td class="text-right">'.number_format($item[1], 0, 3, '.').'</td>
+					<td class="text-right">'.number_format($item[1], 0, '', '.').'</td>
 				</tr>
 				';
 			}
