@@ -57,15 +57,15 @@ if ($this->conf['includejAutocomplete']) {
 													prod: item.Product
 												}
 											} else {
-												var result_html = \'<div class="ajax_products">\';
+												/*var result_html = \'<div class="ajax_products">\';
 												result_html += item.Image;
 												result_html += \'<div class="ajax_products_name"><a href="\' + item.Link + \'"><span>\' + item.Title + \'</span></a></div>\';
 												result_html += item.Desc;
 												result_html += item.Price;
-												result_html += \'</div>\';
+												result_html += \'</div>\';*/
 												return {
-													label: result_html,
-													//label: "<div class=\"ajax_products_image_wrapper\">"+item.Image + "</div><div class=\"ajax_products_search_item\">" + item.Title  + item.Desc + item.Price + "</div>",
+													//label: result_html,
+													label: "<div class=\"ajax_products_image_wrapper\">"+item.Image + "</div><div class=\"ajax_products_search_item\">" + item.Title  + item.Desc + item.Price + "</div>",
 													value: item.Name,
 													link: item.Link,
 													skeyword: item.skeyword,

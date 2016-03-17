@@ -1280,6 +1280,13 @@
             <label index="credit_invoice">Credit Invoice</label>
             <label index="payment_date">Payment date</label>
             <label index="admin_save_close">Save and close</label>
+            <label index="product_not_found_message">Product not found page</label>
+            <label index="category_not_found_message">Category not found page</label>
+            <label index="manufacturer_not_found_message">Manufacturer not found page</label>
+            <label index="the_requested_category_does_not_exist">The requested category cannot be found</label>
+            <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer cannot be found</label>
+            <label index="new_subtotal_excl_vat">Total Excl. VAT</label>
+            <label index="new_subtotal_incl_vat">Total Incl. VAT</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2481,7 +2488,7 @@
             <label index="pdf_packingslip_header_message">PDF pakbon tekst boven de orderregels</label>
             <label index="privacy_statement">Privacy statement</label>
             <label index="view_privacy_statement">Bekijk privacy statement</label>
-            <label index="search_engine_indexing">Zoekmachine product laten indexeren</label>
+            <label index="search_engine_indexing">Zoekmachine laten indexeren</label>
             <label index="free_shippingcosts_for_order_amount_above">Gratis verzendkosten voor orderbedrag boven</label>
             <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
             <label index="merge_categories">Categorieën samenvoegen</label>
@@ -2551,6 +2558,14 @@
             <label index="your_coc_id">Uw KvK-nummer</label>
             <label index="credit_invoice">Creditfactuur</label>
             <label index="payment_date">Betaaldatum</label>
+            <label index="admin_save_close">Opslaan en sluiten</label>
+            <label index="product_not_found_message">Product niet gevonden pagina</label>
+            <label index="category_not_found_message">Categorie niet gevonden pagina</label>
+            <label index="manufacturer_not_found_message">Merk niet gevonden pagina</label>
+            <label index="the_requested_category_does_not_exist">De opgevraagde categorie is niet gevonden</label>
+            <label index="the_requested_manufacturer_does_not_exist">De opgevraagde merkenpagina is niet gevonden</label>
+            <label index="new_subtotal_excl_vat">Totaal Excl. BTW</label>
+            <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
         </languageKey>
     </data>
 </T3locallang>

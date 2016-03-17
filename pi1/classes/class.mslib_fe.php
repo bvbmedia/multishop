@@ -876,7 +876,7 @@ class mslib_fe {
 				$filter[]='c.categories_id = \''.$c.'\'';
 				$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 				$filter[]='c.categories_id = cd.categories_id';
-				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
+				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, c.search_engines_allow_indexing, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					implode(' and ', $filter), // WHERE...
 					'', // GROUP BY...
@@ -895,7 +895,8 @@ class mslib_fe {
 							'meta_title'=>$data['meta_title'],
 							'meta_description'=>$data['meta_description'],
 							'status'=>$data['status'],
-							'page_uid'=>$data['page_uid']
+							'page_uid'=>$data['page_uid'],
+							'search_engines_allow_indexing'=>$data['search_engines_allow_indexing']
 						);
 					}
 					if ($data['parent_id']>0 && $data['parent_id']<>$this->categoriesStartingPoint) {
@@ -7324,6 +7325,7 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-cog';
 		}
 		// hook
+		/*
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
 			$params=array(
 				'this'=>&$this,
@@ -7333,6 +7335,7 @@ class mslib_fe {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		*/
 		$this->linkVars=$GLOBALS['TSFE']->linkVars;
 		$useSysLanguageTitle=trim($this->conf['useSysLanguageTitle']) ? trim($this->conf['useSysLanguageTitle']) : 0;
 		$useIsoLanguageCountryCode=trim($this->conf['useIsoLanguageCountryCode']) ? trim($this->conf['useIsoLanguageCountryCode']) : 0;
@@ -7393,6 +7396,16 @@ class mslib_fe {
 				</select>
 			</form>
 			';
+		}
+		// Hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
+			$params=array(
+					'this'=>&$this,
+					'ms_menu'=>&$ms_menu
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
 		}
 		return $ms_menu;
 	}
@@ -9510,7 +9523,9 @@ class mslib_fe {
 					}
 				}
 			} elseif ($type=='customer') {
-				$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				// Use wider query to prevent migration bugs
+				$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id."";
+				//$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				while ($row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address)) {
 					if ($row_tt_address['tx_multishop_default']==1) {

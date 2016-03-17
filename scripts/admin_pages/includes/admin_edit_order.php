@@ -101,6 +101,21 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								$updateArray=array();
 								$updateArray['products_id']=$this->post['products_id'];
+								// build the categories record
+								$product_data=mslib_fe::getProduct($this->post['products_id'], '', '', 1);
+								$updateArray['categories_id'] = $product_data['categories_id'];
+								// get all cats
+								$cats = mslib_fe::Crumbar($product_data['categories_id']);
+								$cats = array_reverse($cats);
+								if (count($cats) > 0) {
+									$i = 0;
+									foreach ($cats as $cat) {
+										$updateArray['categories_id_' . $i] = $cat['id'];
+										$updateArray['categories_name_' . $i] = $cat['name'];
+										$i++;
+									}
+								}
+								// get all cats eof
 								$updateArray['qty']=$this->post['product_qty'];
 								if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
 									$updateArray['products_name']=$this->post['custom_manual_product_name'];
@@ -116,7 +131,7 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
 									$updateArray['customer_comments']=$this->post['product_customer_comments'];
 								}
-								$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
+								//$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
 								$updateArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
@@ -594,6 +609,15 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['orders_paid_timestamp']='';
 					} else {
 						$updateArray['orders_paid_timestamp']=$this->post['tx_multishop_pi1']['orders_paid_timestamp'];
+					}
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'])) {
+						$params=array(
+								'updateArray'=>&$updateArray,
+								'orders_id'=>&$this->get['orders_id'],
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
 					}
 					if (count($updateArray)) {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
@@ -1618,9 +1642,23 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_name']['align']='left';
 						$order_products_body_data['products_name']['class']='cellName';
 						if ($order['products_id']>0) {
-							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:402px" />';
+							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper select2-container">
+								<div class="categories_select2_input">
+									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
+								</div>
+								<div class="products_select2_input">
+									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:380px" />
+								</div>
+							</div>';
 						} else {
-							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:402px" />';
+							$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapper select2-container">
+								<div class="categories_select2_input">
+									<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
+								</div>
+								<div class="products_select2_input">
+									<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:402px" />
+								</div>
+							</div>';
 						}
 						if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 							if ($order['products_id']>0) {
@@ -1776,7 +1814,11 @@ if (is_numeric($this->get['orders_id'])) {
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
 						$order_products_body_data['products_id']['class']='cellID';
-						$order_products_body_data['products_id']['id']='edit_order_product_id';
+						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
+								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
+							}
+						}
 						$order_products_body_data['products_id']['value']=$row[0];
 						// products qty col
 						$order_products_body_data['products_qty']['align']='right';
@@ -2193,7 +2235,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products name col
 						$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 						$order_products_body_data['products_name']['align']='left';
-						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value=""><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
+						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value="" style="display:none"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2268,7 +2310,14 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['align']='left';
 				$order_products_body_data['products_name']['valign']='top';
 				$order_products_body_data['products_name']['id']='manual_add_product';
-				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
+				$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapperselect2-container">
+					<div class="categories_select2_input">
+						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
+					</div>
+					<div id="manual_product_name_select2" class="products_select2_input">
+						<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:380px;" tabindex="2" />
+					</div>
+				</div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').':</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
@@ -2380,7 +2429,7 @@ if (is_numeric($this->get['orders_id'])) {
 				// products name col
 				$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 				$order_products_body_data['products_name']['style']='border:0px solid #fff';
-				$order_products_body_data['products_name']['value']='<button type="button" class="btn btn-primary btn-sm" id="add_attributes"><i class="fa fa-plus"></i> add attribute</button>';
+				$order_products_body_data['products_name']['value']='<button type="button" class="btn btn-primary btn-sm" id="add_attributes" style="display:none"><i class="fa fa-plus"></i> add attribute</button>';
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
 					$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2708,6 +2757,53 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<script type="text/javascript">';
 				$tmpcontent.='
                 // autocomplete for options val
+                var select2_cn = function(selector_str, placeholder, dropdowncss, ajax_url) {
+                    $(selector_str).select2({
+                        placeholder: placeholder,
+                        minimumInputLength: 0,
+                        query: function(query) {
+                            $.ajax(ajax_url, {
+								data: {
+									q: query.term
+								},
+								dataType: "json"
+							}).done(function(data) {
+								query.callback({results: data});
+							});
+                        },
+                        initSelection: function(element, callback) {
+                            var id=$(element).val();
+                            if (id!=="") {
+                                $.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+									data: {
+										preselected_id: id
+									},
+									dataType: "json"
+								}).done(function(data) {
+									callback(data);
+								});
+                            }
+                        },
+                        formatResult: function(data){
+                            if (data.text === undefined) {
+                                $.each(data, function(i,val){
+                                    return val.text;
+                                });
+                            } else {
+                                return data.text;
+                            }
+                        },
+                        formatSelection: function(data){
+                            if (data.text === undefined) {
+                                return data[0].text;
+                            } else {
+                                return data.text;
+                            }
+                        },
+                        dropdownCssClass: dropdowncss,
+                        escapeMarkup: function (m) { return m; }
+                    });
+                }
                 var select2_pn = function(selector_str, placeholder, dropdowncss, ajax_url) {
                     $(selector_str).select2({
                         placeholder: placeholder,
@@ -2725,19 +2821,19 @@ if (is_numeric($this->get['orders_id'])) {
                         ' : '') . '
                         minimumInputLength: 0,
                         query: function(query) {
-                            if (productsSearch[query.term] !== undefined) {
+                            /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});
-                            } else {
+                            } else {*/
                                 $.ajax(ajax_url, {
                                     data: {
-                                        q: query.term
+                                        q: query.term+ "||catid=" +  $("#categories_filter_id").select2("val")
                                     },
                                     dataType: "json"
                                 }).done(function(data) {
-                                    productsSearch[query.term]=data;
+                                    //productsSearch[query.term]=data;
                                     query.callback({results: data});
                                 });
-                            }
+                            //}
                         },
                         initSelection: function(element, callback) {
                             var id=$(element).val();
@@ -2838,11 +2934,24 @@ if (is_numeric($this->get['orders_id'])) {
                             // get the pre-def attributes
                             $(\'.manual_new_attributes\').remove();
                             jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order&ajax_products_attributes_search[action]=get_options_values').'",{pid: e.object.id, optid: 0}, function(optionsData){
-                                $.each(optionsData, function(i, opt){
-                                    var valid=opt.value.valid
-                                    var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
-                                    add_new_attributes(opt.optid, valid, price_data);
-                                });
+                                if (optionsData.length==0) {
+									if ($("#edit_add_attributes").length) {
+										$("#edit_add_attributes").hide();
+									} else {
+										$("#add_attributes").hide();
+									}
+                                } else {
+                                	if ($("#edit_add_attributes").length) {
+										$("#edit_add_attributes").show();
+									} else {
+										$("#add_attributes").show();
+									}
+									$.each(optionsData, function(i, opt){
+										var valid=opt.value.valid
+										var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
+										add_new_attributes(opt.optid, valid, price_data);
+									});
+                                }
                             });
                             '.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
                             $("#custom_manual_product_name_wrapper").show();
@@ -2869,19 +2978,24 @@ if (is_numeric($this->get['orders_id'])) {
                         },
                         minimumInputLength: 0,
                         query: function(query) {
-                            if (attributesSearchOptions[query.term] !== undefined) {
-                                query.callback({results: attributesSearchOptions[query.term]});
+                            if ($(".product_name").length) {
+                            	var product_id=$(".product_name").select2("val");
                             } else {
+                            	var product_id=$(".product_name_input").select2("val");
+                            }
+                            //if (attributesSearchOptions[query.term] !== undefined) {
+                            //    query.callback({results: attributesSearchOptions[query.term]});
+                            //} else {
                                 $.ajax(ajax_url, {
                                     data: {
-                                        q: query.term
+                                        q: query.term + "||pid=" +  product_id
                                     },
                                     dataType: "json"
                                 }).done(function(data) {
-                                    attributesSearchOptions[query.term]=data;
+                                    //attributesSearchOptions[query.term]=data;
                                     query.callback({results: data});
                                 });
-                            }
+                            //}
                         },
                         initSelection: function(element, callback) {
                             var id=$(element).val();
@@ -3046,6 +3160,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 // eof autocomplete for option
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
+                select2_cn("#categories_filter_id", "categories", "categories_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'");
                 select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
                 $.each($(".edit_product_manual_option"), function(i, v){
                     select2_sb("#" + $(v).attr("id"), "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
@@ -3388,6 +3503,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $(".manual_add_new_product").hide();
                 }
                 $(".order_product_action").hide();
+                select2_cn("#categories_filter_id", "categories", "categories_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'");
                 select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
             });';
 		}

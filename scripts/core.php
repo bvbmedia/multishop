@@ -544,7 +544,8 @@ switch ($this->ms['page']) {
 						'order'=>$order,
 						'page'=>$page,
 						'array1'=>&$array1,
-						'array2'=>&$array2
+						'array2'=>&$array2,
+						'content'=>&$content
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

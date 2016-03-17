@@ -72,14 +72,14 @@ if (isset($p)) {
 	if ($totpage>1) {
 		//echo $totpage;
 		if ($pages!=$totpage) {
-			$prod=array();
+			/*$prod=array();
 			$prod['Name']=$this->pi_getLL('more_results');
 			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' >></span>';
 			$prod['Link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=products_search&skeyword='.urlencode($this->get['q']));
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']=$pages;
 			$prod['Product']=false;
-			$data[]=$prod;
+			$data[]=$prod;*/
 		}
 	}
 }

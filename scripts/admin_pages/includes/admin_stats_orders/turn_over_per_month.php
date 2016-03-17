@@ -2,12 +2,26 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersPagePreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersPagePreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+
 // billing countries
-$order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
+$additional_where=array();
+if (!$this->masterShop) {
+	$additional_where[]='page_uid=\''.$this->shop_pid.'\'';
+}
+$order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'billing_country', 'billing_country asc');
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
 	$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+	if (!empty($cn_localized_name)) {
+		$order_billing_country[] = '<option value="' . mslib_befe::strtolower($order_country['billing_country']) . '" ' . ((mslib_befe::strtolower($this->get['country']) == strtolower($order_country['billing_country'])) ? 'selected' : '') . '>' . $cn_localized_name . '</option>';
+	}
 }
 ksort($order_billing_country);
 $billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
@@ -34,7 +48,7 @@ if ($this->get['Search']) {
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-$sql_year="select crdate from tx_multishop_orders where deleted=0 order by orders_id asc limit 1";
+$sql_year="select crdate from tx_multishop_orders where deleted=0'.((!$this->masterShop) ? ' and page_uid=\''.$this->shop_pid.'\'' : '').' order by orders_id asc limit 1";
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if ($row_year['crdate']>0) {
@@ -132,7 +146,7 @@ $orders_status_list.='</select>';
 $payment_methods=array();
 $sql=$GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
 	'tx_multishop_orders', // FROM ...
-	'', // WHERE...
+	((!$this->masterShop) ? 'page_uid=\''.$this->shop_pid.'\'' : ''), // WHERE...
 	'payment_method', // GROUP BY...
 	'payment_method_label', // ORDER BY...
 	'' // LIMIT ...
@@ -159,7 +173,7 @@ $payment_method_input.='</select>'."\n";
 $shipping_methods=array();
 $sql=$GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
 	'tx_multishop_orders', // FROM ...
-	'', // WHERE...
+	((!$this->masterShop) ? 'page_uid=\''.$this->shop_pid.'\'' : ''), // WHERE...
 	'shipping_method', // GROUP BY...
 	'shipping_method_label', // ORDER BY...
 	'' // LIMIT ...

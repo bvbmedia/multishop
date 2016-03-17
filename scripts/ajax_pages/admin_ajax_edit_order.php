@@ -103,24 +103,37 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 						$return_data['status']='OK';
 					}
 				} else {
-					$updateArray=array('paid'=>0);
-					$updateArray['orders_last_modified']=time();
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
-					$return_data['status']='NOTOK';
-					if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
-						$return_data['status']='OK';
-					}
+					$continue=1;
 					//hook to let other plugins further manipulate the replacers
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'])) {
 						$params = array(
-							'return_data' => &$return_data,
-							'order_id' => $order_id
+							'continue' => &$continue
 						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'] as $funcRef) {
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'] as $funcRef) {
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					//end of hook to let other plugins further manipulate the replacers
+					if ($continue) {
+						//end of hook to let other plugins further manipulate the replacers
+						$updateArray=array('paid'=>0);
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order_id, $updateArray);
+						$return_data['status']='NOTOK';
+						if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+							$return_data['status']='OK';
+						}
+						//hook to let other plugins further manipulate the replacers
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
+							$params = array(
+									'return_data' => &$return_data,
+									'order_id' => $order_id
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						//end of hook to let other plugins further manipulate the replacers
+					}
 				}
 			}
 		}
@@ -162,21 +175,41 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					//
 					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 						if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
+							/*
 							$return_data['info']=array(
 								'status'=>'info',
 								'message'=>'Invoice '.$invoice['invoice_id'].' has been updated to paid.'
 							);
+							*/
+							$return_data['status']='OK';
 						}
 					} else {
-						$updateArray=array('paid'=>0);
-						$updateArray['orders_last_modified']=time();
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$updateArray=array('paid'=>0);
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						// Update to unpaid
+						$continue=1;
+						//hook to let other plugins further manipulate the replacers
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'])) {
+							$params = array(
+								'continue' => &$continue
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPreProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						if ($continue) {
+							$updateArray=array('paid'=>0);
+							$updateArray['orders_last_modified']=time();
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$updateArray=array('paid'=>0);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						} else {
+							$return_data['error']=array(
+								'status'=>'error',
+								'message'=>'Invoice '.$invoice['invoice_id'].' has not been updated to paid.'
+							);
+						}
 					}
-					$return_data['status']='OK';
 				} else {
 					// this invoice has no belonging order. This could be true in specific cases so just update the invoice to not paid.
 					if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
@@ -211,12 +244,23 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		exit();
 		breaks;
 	case 'get_products':
+		$from=array();
+		$from[]='tx_multishop_products p';
+		$from[]='tx_multishop_products_description pd';
+		//
 		$where=array();
 		$where[]='p.products_id=pd.products_id';
 		$where[]='pd.language_id=\''.$this->sys_language_uid.'\'';
+		//
 		$skip_db=false;
 		$limit=50;
+		$categories_id=0;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (strpos($this->get['q'], '||catid=')!==false) {
+				$tmp_value=explode('||catid=', $this->get['q']);
+				$this->get['q']=$tmp_value[0];
+				$categories_id=$tmp_value[1];
+			}
 			if (!is_numeric($this->get['q'])) {
 				$where[]='pd.products_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
@@ -226,8 +270,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='p.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
+		if (is_numeric($categories_id) && $categories_id>0) {
+			$from[]='tx_multishop_products_to_categories p2c';
+			$where[]='p2c.categories_id=\''.$categories_id.'\' and p2c.is_deepest=1 and p2c.products_id=p.products_id';
+		}
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
-			'tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
+			implode(', ', $from), // FROM ...
 			implode(' and ', $where), // WHERE.
 			'p.products_id', // GROUP BY...
 			'pd.products_name asc, p.products_status asc', // ORDER BY...
@@ -275,23 +323,35 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		$content=json_encode($data);
 		break;
 	case 'get_attributes_options':
+		$from=array();
+		$from[]='tx_multishop_products_options po';
 		$where=array();
-		$where[]="language_id = '".$this->sys_language_uid."'";
+		$where[]="po.language_id = '".$this->sys_language_uid."'";
 		$skip_db=false;
+		$pid=0;
+		if (strpos($this->get['q'], '||pid=')!==false) {
+			list($search_term, $tmp_pid) = explode('||pid=', $this->get['q']);
+			$this->get['q']=$search_term;
+			$pid=$tmp_pid;
+		}
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
-				$where[]="products_options_name like '%".addslashes($this->get['q'])."%'";
+				$where[]="po.products_options_name like '%".addslashes($this->get['q'])."%'";
 			} else {
-				$where[]="products_options_id = '".addslashes($this->get['q'])."'";
+				$where[]="po.products_options_id = '".addslashes($this->get['q'])."'";
 			}
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-			$where[]="products_options_id = '".addslashes($this->get['preselected_id'])."'";
+			$where[]="po.products_options_id = '".addslashes($this->get['preselected_id'])."'";
 		}
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'tx_multishop_products_options', // FROM ...
+		if (is_numeric($pid) && $pid>0) {
+			$from[]='tx_multishop_products_attributes pa';
+			$where[]='pa.products_id=\''.$pid.'\' and pa.options_id=po.products_options_id';
+		}
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('po.*', // SELECT ...
+			implode(', ', $from), // FROM ...
 			implode(' and ', $where), // WHERE.
-			'', // GROUP BY...
-			'sort_order', // ORDER BY...
+			'po.products_options_id', // GROUP BY...
+			'po.sort_order', // ORDER BY...
 			'' // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

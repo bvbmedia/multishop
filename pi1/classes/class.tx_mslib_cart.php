@@ -2785,17 +2785,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$this->cart['summarize']['grand_total_vat']=(1-($this->cart['discount_amount']/$this->cart['summarize']['sub_total_including_vat']))*$this->cart['summarize']['grand_total_vat'];
 				}
-				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					// new subtotal
-					$markerArray = array();
-					$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal') . ':';
-					$markerArray['PRODUCTS_NEWTOTAL_PRICE'] = mslib_fe::amount2Cents($this->cart['summarize']['sub_total'] - $this->cart['discount_amount']);
-					$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
-				} else {
-					$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
-				}
 			} else {
 				$subpartArray['###'.$key.'###']='';
+				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
+			}
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				// new subtotal
+				$markerArray = array();
+				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('new_subtotal_excl_vat') . ':';
+				$new_subtotal_amount=($this->cart['summarize']['sub_total'] - $this->cart['discount_amount']) + $this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs'];
+				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] =mslib_fe::amount2Cents($new_subtotal_amount);
+				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');
+			} else {
 				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';
 			}
 //		error_log(print_r($this->cart['summarize'],1));

@@ -14,6 +14,7 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$Cache_Lite=new Cache_Lite($options);
 	$string=md5(serialize($this->conf)).$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'].serialize($this->post);
 }
+$output_array=array();
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get($string)) {
 	if ($this->get['p']) {
 		$p=$this->get['p'];
@@ -36,7 +37,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 	}
 	// first check if the meta_title exists
 	$display_listing=false;
-	$output_array=array();
 	if ($current['categories_id']) {
 		if ($current['custom_settings']) {
 			mslib_fe::updateCustomSettings($current['custom_settings']);
@@ -65,11 +65,45 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($meta_keywords).'" />';
 			}
 		}
+		if (isset($current['search_engines_allow_indexing'])) {
+			if (!$current['search_engines_allow_indexing']) {
+				$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+			} else {
+				$no_index=false;
+				$level=0;
+				$cats=array();
+				$cats=mslib_fe::Crumbar($current['categories_id']);
+				if (count($cats)>0) {
+					foreach ($cats as $cat) {
+						if ($level > 0) {
+							if (!$cat['search_engines_allow_indexing']) {
+								$no_index=true;
+								break;
+							}
+						}
+						$level++;
+					}
+				}
+				if ($no_index) {
+					$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+				}
+			}
+		}
 		// create the meta tags eof
 		$display_listing=true;
 	} else {
 		if ($this->get['categories_id']) {
-			$content.=$this->pi_getLL('no_products_available');
+			// set custom 404 message
+			$page=mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+			if ($page[0]['name']) {
+				$content .= '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+			} else {
+				$content .= $this->pi_getLL('no_products_available');
+			}
+			if ($page[0]['content']) {
+				$content.=$page[0]['content'];
+			}
+
 		} else {
 			$parent_id=$this->categoriesStartingPoint;
 			$this->get['categories_id']=$this->categoriesStartingPoint;
