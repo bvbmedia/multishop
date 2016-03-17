@@ -65,8 +65,28 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($meta_keywords).'" />';
 			}
 		}
-		if (isset($current['search_engines_allow_indexing']) && !$current['search_engines_allow_indexing']) {
-			$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+		if (isset($current['search_engines_allow_indexing'])) {
+			if (!$current['search_engines_allow_indexing']) {
+				$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+			} else {
+				$no_index=false;
+				$level=0;
+				$cats=mslib_fe::Crumbar($current['categories_id']);
+				if (count($cats)>0) {
+					foreach ($cats as $cat) {
+						if ($level > 0) {
+							if (!$cat['search_engines_allow_indexing']) {
+								$no_index=true;
+								break;
+							}
+						}
+						$level++;
+					}
+				}
+				if ($no_index) {
+					$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+				}
+			}
 		}
 		// create the meta tags eof
 		$display_listing=true;

@@ -89,14 +89,38 @@ if (!$product['products_id']) {
 		}
 		// meta tags eof
 	}
-	if (isset($product['search_engines_allow_indexing']) && !$product['search_engines_allow_indexing']) {
-		$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+	if (isset($product['search_engines_allow_indexing'])) {
+		if (!$product['search_engines_allow_indexing']) {
+			$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+		} else {
+			if ($product['categories_id']) {
+				$no_index = false;
+				$level = 0;
+				$cats=array();
+				$cats = mslib_fe::Crumbar($product['categories_id']);
+				if (count($cats) > 0) {
+					foreach ($cats as $cat) {
+						if ($level > 0) {
+							if (!$cat['search_engines_allow_indexing']) {
+								$no_index = true;
+								break;
+							}
+						}
+						$level++;
+					}
+				}
+				if ($no_index) {
+					$output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+				}
+			}
+		}
 	}
 	// facebook image and open graph
 	$where='';
 	if ($product['categories_id']) {
 		// get all cats to generate multilevel fake url
 		$level=0;
+		$cats=array();
 		$cats=mslib_fe::Crumbar($product['categories_id']);
 		$cats=array_reverse($cats);
 		$where='';
