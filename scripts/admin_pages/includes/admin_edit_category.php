@@ -306,6 +306,7 @@ if ($this->post) {
 	}
 	$updateArray['option_attributes']=$option_attributes; */
 	$updateArray['option_attributes']='';
+	$updateArray['search_engines_allow_indexing']=$this->post['search_engines_allow_indexing'];
 	if ($_REQUEST['action']=='add_category') {
 		$updateArray['page_uid']=$this->showCatalogFromPage;
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
