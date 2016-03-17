@@ -342,6 +342,7 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_QUANTITY###'] = number_format(round($product['products_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MINIMUM_QUANTITY###'] = number_format(round($product['minimum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MAXIMUM_QUANTITY###'] = number_format(round($product['maximum_quantity'], 2), 0, '', '.');
+    $markerArray['###PRODUCTS_MULTIPLICATION###'] = number_format(round($product['products_multiplication'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_NAME###'] = $output['products_name'];
     if (strstr($template, '###PRODUCTS_RELATIVES_BY_CATEGORY###')) {
         $markerArray['###PRODUCTS_RELATIVES_BY_CATEGORY###'] = mslib_fe::getProductRelativesBox($product, 'categories_id');
