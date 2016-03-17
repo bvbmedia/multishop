@@ -2380,8 +2380,7 @@ if ($this->post) {
 			$headingButton['href']='#';
 			$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 			$headerButtons[]=$headingButton;
-
-
+			
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-success';
 			$headingButton['fa_class']='fa fa-check-circle';

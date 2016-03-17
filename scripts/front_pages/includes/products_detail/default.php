@@ -342,6 +342,8 @@ if (!$product['products_id']) {
 	$markerArray['###CONTENT###']=$output['content'];
 	$markerArray['###PAGINATION###']=$output['pagination'];
 	$markerArray['###STOCK###']=$output['products_quantity'];
+	$markerArray['###PRODUCTS_QUANTITY###']=$product['products_quantity'];
+
 	$markerArray['###PRODUCTS_NAME###']=$output['products_name'];
 
 	if (strstr($template,'###PRODUCTS_RELATIVES_BY_CATEGORY###')) {
