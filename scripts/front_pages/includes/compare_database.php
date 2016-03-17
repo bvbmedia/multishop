@@ -906,6 +906,13 @@ if (!$skipMultishopUpdates) {
 		$str_copy="update tx_multishop_categories_description cd set cd.categories_external_url=(select c.categories_url from tx_multishop_categories c where c.categories_id=cd.categories_id) where language_id=0";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str_copy);
 	}
+	$str="select search_engines_allow_indexing from tx_multishop_categories limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_categories` ADD search_engines_allow_indexing tinyint(1) NOT NULL default '1', ADD KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$table='tx_multishop_invoices';
 	$str="describe `".$table."`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

@@ -2488,7 +2488,7 @@
             <label index="pdf_packingslip_header_message">PDF pakbon tekst boven de orderregels</label>
             <label index="privacy_statement">Privacy statement</label>
             <label index="view_privacy_statement">Bekijk privacy statement</label>
-            <label index="search_engine_indexing">Zoekmachine product laten indexeren</label>
+            <label index="search_engine_indexing">Zoekmachine laten indexeren</label>
             <label index="free_shippingcosts_for_order_amount_above">Gratis verzendkosten voor orderbedrag boven</label>
             <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
             <label index="merge_categories">Categorieën samenvoegen</label>

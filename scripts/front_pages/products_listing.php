@@ -65,6 +65,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($meta_keywords).'" />';
 			}
 		}
+		if (isset($current['search_engines_allow_indexing']) && !$current['search_engines_allow_indexing']) {
+			$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+		}
 		// create the meta tags eof
 		$display_listing=true;
 	} else {
