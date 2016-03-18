@@ -917,6 +917,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$products_id=$cart['products'][$shopping_cart_item]['products_id'];
 						$product=mslib_fe::getProduct($products_id);
+						$product['maximum_quantity']=str_replace('.00', '', $product['maximum_quantity']);
+						$product['minimum_quantity']=str_replace('.00', '', $product['minimum_quantity']);
 						// custom hook that can be controlled by third-party plugin
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartByShoppingCartPreProc'])) {
 							$params=array(
@@ -942,6 +944,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
+						}
+						if ($product['maximum_quantity']>0 && $qty>$product['maximum_quantity']) {
+							$cart['products'][$shopping_cart_item]['qty']=$product['maximum_quantity'];
 						}
 						if ($product['products_multiplication']) {
 							$ctr_end = ($product['maximum_quantity'] > 0 ? $product['maximum_quantity'] : 9999);

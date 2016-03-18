@@ -27,25 +27,27 @@ if (!$product['products_id']) {
                     }
                     $where = substr($where, 0, (strlen($where) - 1));
                     $where .= '&';
+					//
+					header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
+					exit();
                 }
                 // get all cats to generate multilevel fake url eof
             }
-            header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
-            exit();
         }
     }
-    header('HTTP/1.0 404 Not Found');
-    $output_array['http_header'] = 'HTTP/1.0 404 Not Found';
-    // set custom 404 message
-    $page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
-    if ($page[0]['name']) {
-        $content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
-    } else {
-        $content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
-    }
-    if ($page[0]['content']) {
-        $content .= $page[0]['content'];
-    }
+	header('HTTP/1.0 404 Not Found');
+	$output_array['http_header'] = 'HTTP/1.0 404 Not Found';
+	// set custom 404 message
+	$page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+	if ($page[0]['name']) {
+		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+	} else {
+		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
+	}
+	if ($page[0]['content']) {
+		$content .= $page[0]['content'];
+	}
+
 } else {
     if ($this->conf['imageWidth']) {
         $this->imageWidth = $this->conf['imageWidth'];
