@@ -73,7 +73,15 @@ if ($this->ms['MODULES']['COUPONS']) {
 $output['shopping_cart_colspan']=5;
 $output['shopping_cart_header']=ucfirst($this->pi_getLL('basket'));
 $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-if (count($cart['products'])>0) {
+$count_product=count($cart['products']);
+if ($count_product===1) {
+	foreach ($cart['products'] as $shopping_cart_item=>$value) {
+		if (!isset($value['products_id']) || (isset($value['products_id']) && !$value['products_id'])) {
+			$count_product=0;
+		}
+	}
+}
+if ($count_product>0) {
 	$output['shopping_cart_form_action_url']=mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart');
 	$output['col_header_shopping_cart_product']=ucfirst($this->pi_getLL('product'));
 	$output['col_header_shopping_cart_qty']=ucfirst($this->pi_getLL('qty'));

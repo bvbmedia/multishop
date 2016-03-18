@@ -900,6 +900,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			} elseif (is_array($this->post['qty'])) {
 				// add/update products in cart (from shopping cart page)
+				foreach ($cart['products'] as $shopping_cart_item => $value) {
+					if (!isset($value['products_id']) || (isset($value['products_id']) && !$value['products_id'])) {
+						unset($cart['products'][$shopping_cart_item]);
+					}
+				}
 				foreach ($this->post['qty'] as $shopping_cart_item=>$qty) {
 					if ($qty and strstr($qty, ",")) {
 						$qty=str_replace(",", ".", $qty);
@@ -907,7 +912,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if (($qty and !is_numeric($qty))) {
 						$qty=1;
 					}
-					if (!$qty or $qty<0) {
+					if (!$qty or $qty<0.01) {
 						unset($cart['products'][$shopping_cart_item]);
 					} else {
 						$products_id=$cart['products'][$shopping_cart_item]['products_id'];
@@ -972,6 +977,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 				}
+				//die();
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 				$GLOBALS['TSFE']->storeSessionData();
 			}
