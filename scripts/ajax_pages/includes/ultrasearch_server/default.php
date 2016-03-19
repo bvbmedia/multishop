@@ -1771,6 +1771,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$temp_var_products['products_url']=$product['products_url'];
 				$temp_var_products['categories_name']=$product['categories_name'];
 				$temp_var_products['admin_edit_product_button']=false;
+				$temp_var_products['admin_edit_product']='';
+				$temp_var_products['admin_delete_product']='';
 				if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 					$temp_var_products['admin_edit_product_button']=true;
 					$temp_var_products['admin_edit_product']=mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&cid=' . $product['categories_id'] . '&pid=' . $product['products_id'] . '&action=edit_product', 1);
