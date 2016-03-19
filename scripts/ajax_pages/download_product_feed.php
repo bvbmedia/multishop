@@ -948,7 +948,38 @@ if ($this->get['feed_hash']) {
 									}
 								}
 							} else {
-								if ($attributes[$field]) {
+								if (strpos($field, 'product_payment_methods_')!==false) {
+									if ($row['products_id']) {
+										$method_mappings=mslib_befe::getMethodsByProduct($row['products_id']);
+									}
+									$payment_code=str_replace('product_payment_methods_', '', $field);
+									$payment_method=mslib_fe::loadPaymentMethod($payment_code);
+									if (is_array($method_mappings['payment']) && in_array($payment_method['id'], $method_mappings['payment'])) {
+										if (!$method_mappings['payment']['method_data'][$payment_method['id']]['negate']) {
+											$tmpcontent.=1;
+										} else if ($method_mappings['payment']['method_data'][$payment_method['id']]['negate']>0) {
+											$tmpcontent.=0;
+										} else {
+											$tmpcontent.='';
+										}
+									}
+
+								} else if (strpos($field, 'product_shipping_methods_')!==false) {
+									if ($row['products_id']) {
+										$method_mappings=mslib_befe::getMethodsByProduct($row['products_id']);
+									}
+									$shipping_code=str_replace('product_shipping_methods_', '', $field);
+									$shipping_method=mslib_fe::loadShippingMethod($shipping_code);
+									if (is_array($method_mappings['shipping']) && in_array($shipping_method['id'], $method_mappings['shipping'])) {
+										if (!$method_mappings['shipping']['method_data'][$shipping_method['id']]['negate']) {
+											$tmpcontent.=1;
+										} else if ($method_mappings['shipping']['method_data'][$shipping_method['id']]['negate']>0) {
+											$tmpcontent.=0;
+										} else {
+											$tmpcontent.='';
+										}
+									}
+								} else if ($attributes[$field]) {
 									// print it from flat table
 									if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 										$field_name=$field;

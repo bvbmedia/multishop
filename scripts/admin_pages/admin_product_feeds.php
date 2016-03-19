@@ -141,6 +141,24 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
 }
+if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+	// loading payment methods
+	$payment_methods=mslib_fe::loadPaymentMethods();
+	// loading shipping methods
+	$shipping_methods=mslib_fe::loadShippingMethods();
+	if (count($payment_methods) or count($shipping_methods)) {
+		if (count($payment_methods)) {
+			foreach ($payment_methods as $code => $item) {
+				$array['product_payment_methods_' . $code] = 'Products payment methods: ' . $item['name'] . ' ('.$code.')';
+			}
+		}
+		if (count($shipping_methods)) {
+			foreach ($shipping_methods as $code => $item) {
+				$array['product_shipping_methods_' . $code] = 'Products shipping methods: ' . $item['name'] . ' ('.$code.')';
+			}
+		}
+	}
+}
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'])) {
 	$params=array(

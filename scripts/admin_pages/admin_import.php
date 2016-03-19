@@ -104,6 +104,25 @@ if (is_array($this->languages) && count($this->languages)) {
 		}
 	}
 }
+if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+	// loading payment methods
+	$payment_methods=mslib_fe::loadPaymentMethods();
+	// loading shipping methods
+	$shipping_methods=mslib_fe::loadShippingMethods();
+
+	if (count($payment_methods) or count($shipping_methods)) {
+		if (count($payment_methods)) {
+			foreach ($payment_methods as $code => $item) {
+				$coltypes['product_payment_methods_' . $code] = 'Products payment methods: ' . $item['name'] . ' ('.$code.')';
+			}
+		}
+		if (count($shipping_methods)) {
+			foreach ($shipping_methods as $code => $item) {
+				$coltypes['product_shipping_methods_' . $code] = 'Products shipping methods: ' . $item['name'] . ' ('.$code.')';
+			}
+		}
+	}
+}
 // MULTILANGUAGE FIELDS EOL
 $coltypes['products_price']='Products price (normal price, excl. VAT)';
 $coltypes['products_price_including_vat']='Products price (normal price, incl. VAT)';
@@ -3050,6 +3069,45 @@ if ($this->post['action']=='category-insert') {
 							}
 						}
 						// predefined attribute option mappings eof
+						// payment & shipping method mapped to product
+						if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'products_id=\''.$products_id.'\'');
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// loading payment methods
+							$payment_methods=mslib_fe::loadPaymentMethods();
+							// loading shipping methods
+							$shipping_methods=mslib_fe::loadShippingMethods();
+							if (count($payment_methods) or count($shipping_methods)) {
+								if (count($payment_methods)) {
+									foreach ($payment_methods as $payment_code => $payment_item) {
+										$s='product_payment_methods_' . $payment_code;
+										if ($item[$s]!='') {
+											$updateArray=array();
+											$updateArray['products_id']=$products_id;
+											$updateArray['method_id']=$payment_item['id'];
+											$updateArray['type']='payment';
+											$updateArray['negate']=(!$item[$s] ? 1 : 0);
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_method_mappings', $updateArray);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
+									}
+								}
+								if (count($shipping_methods)) {
+									foreach ($shipping_methods as $shipping_code => $shipping_item) {
+										$s='product_shipping_methods_' . $shipping_code;
+										if ($item[$s]!='') {
+											$updateArray=array();
+											$updateArray['products_id']=$products_id;
+											$updateArray['method_id']=$shipping_item['id'];
+											$updateArray['type']='shipping';
+											$updateArray['negate']=(!$item[$s] ? 1 : 0);
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_method_mappings', $updateArray);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
+									}
+								}
+							}
+						}
 						// update flat database
 						if ($this->ms['MODULES']['FLAT_DATABASE'] or $this->ms['MODULES']['GLOBAL_MODULES']['FLAT_DATABASE']) {
 							if (isset($item['products_status']) and $item['products_status']=='0' and is_numeric($products_id)) {
