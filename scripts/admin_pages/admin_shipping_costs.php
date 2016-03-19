@@ -480,6 +480,27 @@ if (count($shipping_methods)>0) {
 	function productPrice(to_include_vat, o, type) {
 		var original_val = jQuery(o).val();
 		var current_value = parseFloat(jQuery(o).val());
+		//
+		if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
+			var thousand=original_val.split(".");
+			if (thousand[1].indexOf(",")!=-1) {
+				var hundreds = thousand[1].split(",");
+				original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+				current_value = parseFloat(original_val);
+				//
+				$(o).val(original_val);
+			} else {
+				thousand=original_val.split(",");
+				if (thousand[1].indexOf(".")!=-1) {
+					var hundreds = thousand[1].split(".");
+					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+					current_value = parseFloat(original_val);
+					//
+					$(o).val(original_val);
+				}
+			}
+		}
+		//
 		var tax_id 			= jQuery(o).attr("rel");
 
 		var have_comma = original_val.indexOf(",");
@@ -558,12 +579,12 @@ if (count($shipping_methods)>0) {
 		var number = prime + "." + decimal.substr(0, 2);
 		return number;
 	}
-	$(document).on("change", ".msProductsPriceExcludingVat", function(e) {
+	$(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
 		if (e.keyCode!=9) {
 			productPrice(true, this);
 		}
 	});
-	$(document).on("change", ".msProductsPriceIncludingVat", function(e) {
+	$(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
 		if (e.keyCode!=9) {
 			productPrice(false, this);
 		}
