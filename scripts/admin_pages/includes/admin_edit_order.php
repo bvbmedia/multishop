@@ -1356,7 +1356,37 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>
 				</div>
-            <hr>';
+            ';
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				$filter=array();
+				$filter[]='orders_id='.$orders['orders_id'];
+				//$filter[]='deleted=0';
+				$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filter,'','id desc');
+				$invoiceArray=array();
+				if (count($invoices)) {
+					foreach ($invoices as $invoice) {
+						$link=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+						$invoiceArray[]='<a href="'.$link.'" target="_blank" rel="nofollow">'.$invoice['invoice_id'].'</a>';
+					}
+				}
+				if (count($invoiceArray)) {
+					$orderDetails[]='
+					<div class="form-group">
+						<label class="control-label col-md-3">'.$this->pi_getLL('admin_invoice_number').'</label>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-12"><p class="form-control-static">'.implode(', ',$invoiceArray).'</p></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				';
+				}
+			}
+			$orderDetails[]='<hr>';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
@@ -3747,7 +3777,7 @@ if (url.match("#")) {
         	'.$interfaceHeaderButtons.'
         </div>
         <div class="panel-body">
-        <div id="tab-container" class="">
+        <div id="tab-container" class="msAdminEditOrder">
             <ul class="nav nav-tabs" role="tablist">';
 		foreach ($tabs as $key=>$value) {
 			$count++;

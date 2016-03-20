@@ -35,8 +35,19 @@ foreach ($invoices as $invoice) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
 		$paid_status.='<a href="#" class="update_to_paid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
+		$paidToolTipInfoArray=array();
+		if ($invoice['payment_method_label']) {
+			$paidToolTipInfoArray[]=$this->pi_getLL('payment_method').': '.$invoice['payment_method_label'];
+		}
+		if ($invoice['orders_paid_timestamp']) {
+			$paidToolTipInfoArray[]=$this->pi_getLL('date_paid').': '.strftime("%x", $invoice['orders_paid_timestamp']);
+		}
+		$paidToolTipInfo='';
+		if (count($paidToolTipInfoArray)) {
+			$paidToolTipInfo=implode('<br/>',$paidToolTipInfoArray);
+		}
 		$paid_status.='<a href="#" class="update_to_unpaid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>';
-		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+		$paid_status.='<span class="admin_status_green" data-toggle="tooltip" title="'.htmlspecialchars($paidToolTipInfo).'"></span>';
 	}
 	//
 	$actionButtons=array();
@@ -55,7 +66,8 @@ foreach ($invoices as $invoice) {
 	$markerArray=array();
 	$markerArray['ORDER_URL']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$invoice['orders_id'].'&action=edit_order');
 	$markerArray['INVOICE_CTR']=$cb_ctr;
-	$markerArray['INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+	$markerArray['INVOICES_URL']=$markerArray['ORDER_URL'];
+	$markerArray['DOWNLOAD_INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 	$markerArray['INVOICES_INTERNAL_ID']=$invoice['id'];
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
