@@ -2342,7 +2342,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapperselect2-container">
 					<div class="categories_select2_input">
-						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
+						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="" style="width:380px" />
 					</div>
 					<div id="manual_product_name_select2" class="products_select2_input">
 						<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:380px;" tabindex="2" />
