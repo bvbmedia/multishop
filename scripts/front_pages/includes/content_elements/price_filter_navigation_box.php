@@ -20,6 +20,7 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
 		$array=explode(";", $this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']);
 		$array[]=$this->pi_getLL('show_all');
 		$content.='<ul>';
+
 		if (count($GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'])>0) {
 			// get all cats to generate multilevel fake url
 			$level=0;
