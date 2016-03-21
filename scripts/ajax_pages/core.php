@@ -517,25 +517,27 @@ switch ($this->ms['page']) {
 							$tmp_preselecteds[]=$this->get['preselected_id'];
 						}
 					}
-					if (strpos($this->post['preselected_id'], ',')!==false) {
-						$tmp_preselecteds=explode(',', $this->post['preselected_id']);
+				}
+				if (isset($this->post['preselected_id'])) {
+					if (strpos($this->post['preselected_id'], ',') !== false) {
+						$tmp_preselecteds = explode(',', $this->post['preselected_id']);
 					} else {
 						if (is_numeric($this->post['preselected_id'])) {
-							$tmp_preselecteds[]=$this->post['preselected_id'];
+							$tmp_preselecteds[] = $this->post['preselected_id'];
 						}
 					}
-					if (is_array($tmp_preselecteds) && count($tmp_preselecteds)) {
-						foreach ($tmp_preselecteds as $preselected_id) {
-							$preselected_id=trim($preselected_id);
-							$cats=mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
-							$cats=array_reverse($cats);
-							$catpath=array();
-							foreach ($cats as $cat) {
-								$catpath[]=$cat['name'];
-							}
-							if (count($catpath)>0) {
-								$tmp_return_data[$preselected_id]=implode(' > ', $catpath);
-							}
+				}
+				if (is_array($tmp_preselecteds) && count($tmp_preselecteds)) {
+					foreach ($tmp_preselecteds as $preselected_id) {
+						$preselected_id=trim($preselected_id);
+						$cats=mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						if (count($catpath)>0) {
+							$tmp_return_data[$preselected_id]=implode(' > ', $catpath);
 						}
 					}
 				}
