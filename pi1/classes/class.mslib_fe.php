@@ -7524,14 +7524,10 @@ class mslib_fe {
 		if (!is_numeric($external_page_uid)) {
 			return false;
 		}
-		//var_dump($categories_id);
-		//var_dump($external_page_uid);
-		//die();
 		if (is_numeric($categories_id) && is_numeric($external_page_uid)) {
 			// check if it's have a parent
-			$cats=mslib_fe::Crumbar($categories_id, '', array(), $external_page_uid);
+			$cats=mslib_fe::Crumbar($categories_id, '', array(), $this->showCatalogFromPage);
 			$cats=array_reverse($cats);
-
 			$prev_catid=0;
 			foreach ($cats as $catidx=>$cat) {
 				if ($catidx>0) {
