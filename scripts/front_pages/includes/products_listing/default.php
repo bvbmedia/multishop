@@ -157,10 +157,10 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_IMAGE_200']=$output['image_200'];
 		$markerArray['PRODUCTS_IMAGE_300']=$output['image_300'];
 
-		$markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
-		$markerArray['PRODUCTS_IMAGE_URL_100']=mslib_befe::getImagePath($product['products_image'], 'products', '100');
-		$markerArray['PRODUCTS_IMAGE_URL_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
-		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($product['products_image'], 'products', '300');
+		$markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($current_product['products_image'], 'products', $this->imageWidth);
+		$markerArray['PRODUCTS_IMAGE_URL_100']=mslib_befe::getImagePath($current_product['products_image'], 'products', '100');
+		$markerArray['PRODUCTS_IMAGE_URL_200']=mslib_befe::getImagePath($current_product['products_image'], 'products', '200');
+		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($current_product['products_image'], 'products', '300');
 
 		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
 		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
