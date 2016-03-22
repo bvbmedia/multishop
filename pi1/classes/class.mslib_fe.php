@@ -7419,6 +7419,7 @@ class mslib_fe {
 		if (!$this->masterShop) {
 			$filter[]='s.page_uid='.$this->shop_pid;
 		}
+		$filter[]=$GLOBALS['TYPO3_DB']->listQuery('f.usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
 		$filter[]='s.customer_id=f.uid';
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'fe_users f, tx_multishop_sessions s', // FROM ...
