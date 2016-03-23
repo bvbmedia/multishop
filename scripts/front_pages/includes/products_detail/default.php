@@ -207,8 +207,8 @@ if (!$product['products_id']) {
                 $staffel_qty = '> ' . $qty_1;
             }
             $staffel_table_content .= '<tr class="' . $tr_type . '">';
-            $staffel_table_content .= '<td class="staffel_list_qty">' . str_replace('-', ' - ', $staffel_qty) . '</th>';
-            $staffel_table_content .= '<td class="staffel_list_price">' . mslib_fe::amount2Cents($staffel_price) . '</th>';
+            $staffel_table_content .= '<td class="staffel_list_qty">' . str_replace('-', ' - ', $staffel_qty) . '</td>';
+            $staffel_table_content .= '<td class="staffel_list_price">' . mslib_fe::amount2Cents($staffel_price) . '</td>';
             $staffel_table_content .= '</tr>';
         }
         $staffel_table_content .= '</table>';
