@@ -171,10 +171,10 @@ if (is_array($products) && count($products)) {
 		$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
 		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'], 2, ',', '.');
 		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'], 2, ',', '.');
-		$markerArray['###PRODUCTS_QUANTITY###'] = number_format(round($current_product['products_quantity'], 2), 0, '', '.');
-		$markerArray['###PRODUCTS_MINIMUM_QUANTITY###'] = number_format(round($current_product['minimum_quantity'], 2), 0, '', '.');
-		$markerArray['###PRODUCTS_MAXIMUM_QUANTITY###'] = number_format(round($current_product['maximum_quantity'], 2), 0, '', '.');
-		$markerArray['###PRODUCTS_MULTIPLICATION###'] = number_format(round($current_product['products_multiplication'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_QUANTITY'] = number_format(round($current_product['products_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MINIMUM_QUANTITY'] = number_format(round($current_product['minimum_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MAXIMUM_QUANTITY'] = number_format(round($current_product['maximum_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MULTIPLICATION'] = number_format(round($current_product['products_multiplication'], 2), 0, '', '.');
 		// STOCK INDICATOR
 		$product_qty=$current_product['products_quantity'];
 		if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
