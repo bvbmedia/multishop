@@ -179,7 +179,7 @@ $subpartArray['###ADMIN_LABEL_OR###']=$this->pi_getLL('admin_label_or');
 $subpartArray['###ADMIN_LABEL_BTN_MOVE###']=$this->pi_getLL('admin_label_btn_move');
 $subpartArray['###ADMIN_LABEL_BTN_DELETE_SELECTED_CATEGORIES###']=$this->pi_getLL('admin_label_btn_delete_selected_categories');
 $subpartArray['###CATEGORIES###']=$contentItem;
-$subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
+$subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
