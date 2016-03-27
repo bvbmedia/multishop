@@ -1085,8 +1085,24 @@ if ($this->get['feed_hash']) {
 		}
 		$Cache_Lite->save($content);
 	}
-	header("Content-Type: text/plain");
-	echo $content;
+	// Print CSV file in UTF-8 format (with BOM)
+	//header("Content-Type: text/plain");
+	if (!mb_detect_encoding($content, 'UTF-8', true)) {
+		$content=mslib_befe::convToUtf8($content);
+	}
+	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Pragma: no-cache");
+	header('Content-Encoding: UTF-8');
+	//header('Content-type: text/csv; charset=UTF-8');
+	header('Content-type: text/plain; charset=UTF-8');
+	//header("Content-Disposition: attachment; filename=\"" . basename($export_file) . "\"");
+	//header('Content-Transfer-Encoding: binary');
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
+	echo "\xEF\xBB\xBF".$content;
 	exit();
 }
 exit();
