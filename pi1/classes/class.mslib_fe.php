@@ -8792,6 +8792,7 @@ class mslib_fe {
 		$content.='</ul>';
 		return $content;
 	}
+	// duplicate method with mslib_fe::getProductAttributes
 	public function getProductOptions($products_id) {
 		if (!is_numeric($products_id)) {
 			return false;
