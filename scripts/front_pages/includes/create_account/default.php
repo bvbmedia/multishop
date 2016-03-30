@@ -67,7 +67,7 @@ if (mslib_fe::loggedin()) {
 			$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 			$mslib_user=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_user');
 			$mslib_user->init($this);
-			if (isset($this->post['username']) && !empty($this->post['username'])) {
+			if ($this->ms['MODULES']['CREATE_ACCOUNT_REGULAR_USERNAME'] && isset($this->post['username']) && !empty($this->post['username'])) {
 				$mslib_user->setUsername($this->post['username']);
 			} else {
 				$mslib_user->setUsername($this->post['email']);
