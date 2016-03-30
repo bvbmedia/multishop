@@ -67,7 +67,11 @@ if (mslib_fe::loggedin()) {
 			$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 			$mslib_user=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_user');
 			$mslib_user->init($this);
-			$mslib_user->setUsername($this->post['email']);
+			if (isset($this->post['username']) && !empty($this->post['username'])) {
+				$mslib_user->setUsername($this->post['username']);
+			} else {
+				$mslib_user->setUsername($this->post['email']);
+			}
 			$mslib_user->setEmail($this->post['email']);
 			$mslib_user->setConfirmation_email($this->post['email_confirm']);
 			$mslib_user->setGender($this->post['gender']);
@@ -362,6 +366,17 @@ if (mslib_fe::loggedin()) {
 				}
 			}
 			$markerArray['###PRIVACY_STATEMENT_LINK###']=$privacy_statement_link;
+			//
+			$create_account_username_block='';
+			if ($this->ms['MODULES']['CREATE_ACCOUNT_REGULAR_USERNAME']) {
+				$create_account_username_block='<div class="account-field col-sm-12" id="user-username">
+					<label class="account-username" for="username">'.ucfirst($this->pi_getLL('username')).'<span class="text-danger">*</span></label>
+					<input type="text" name="username" class="username" id="username" value="'.$this->post['username'].'" required="required" />
+					<span class="error-space"></span>
+				</div>';
+
+			}
+			$markerArray['###USERNAME_INPUT###']=$create_account_username_block;
 			//
 			$markerArray['###CREATE_ACCOUNT_CAPTCHA_URL###']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha');
 			$markerArray['###LABEL_CAPTCHA_PLACEHOLDER###']=$this->pi_getLL('captcha_code_placeholder');
