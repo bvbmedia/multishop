@@ -2053,6 +2053,14 @@ if ($this->post['action']=='category-insert') {
 								$item['updated_products_id']=$row['products_id'];
 							}
 						}
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorItemProc'])) {
+							$params=array(
+								'item'=>&$item
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorItemProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
 						$products_id='';
 						if (isset($item['products_vat_rate']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
 							$taxGroupRow=mslib_fe::getTaxGroupByName($item['products_vat_rate']);
