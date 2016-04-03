@@ -350,14 +350,19 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 						$this->sqlKeyword='%'.addslashes($searchKeyword).'%';
 						break;
 				}
-				$keywordOr[]="f.company like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.name like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.email like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.username like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.city like '".$this->sqlKeyword."'";
-				//$keywordOr[]="f.country like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
+				if ($this->get['tx_multishop_pi1']['searchByChar']) {
+					$keywordOr[]="f.company like '".$this->sqlKeyword."'";
+					$keywordOr[]="(f.company ='' AND f.name like '".$this->sqlKeyword."')";
+				} else {
+					$keywordOr[]="f.company like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.name like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.email like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.username like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.city like '".$this->sqlKeyword."'";
+					//$keywordOr[]="f.country like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
+				}
 			}
 		}
 		$filter[]="(".implode(" OR ", $keywordOr).")";
