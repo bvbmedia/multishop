@@ -342,6 +342,9 @@ if (!$product['products_id']) {
     $markerArray['###PAGINATION###'] = $output['pagination'];
     $markerArray['###STOCK###'] = $output['products_quantity'];
     $markerArray['###PRODUCTS_QUANTITY###'] = number_format(round($product['products_quantity'], 2), 0, '', '.');
+    if ($product['minimum_quantity']=='0') {
+        $product['minimum_quantity']=1;
+    }
     $markerArray['###PRODUCTS_MINIMUM_QUANTITY###'] = number_format(round($product['minimum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MAXIMUM_QUANTITY###'] = number_format(round($product['maximum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MULTIPLICATION###'] = number_format(round($product['products_multiplication'], 2), 0, '', '.');

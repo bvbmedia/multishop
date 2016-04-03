@@ -349,7 +349,7 @@ CREATE TABLE `tx_multishop_manufacturers` (
 
 CREATE TABLE `tx_multishop_manufacturers_cms` (
  `manufacturers_id` int(11) default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `content` text,
  `content_footer` text,
  `shortdescription` text,
@@ -481,7 +481,7 @@ CREATE TABLE `tx_multishop_orders` (
  `store_currency` char(3) default '',
  `customer_currency` char(3) default '',
  `currency_rate` varchar(15) default '1',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `orders_tax_data` text,
  `status_last_modified` int(11) default '0',
  `reminder_sent` tinyint(1) default '0',
@@ -652,7 +652,7 @@ CREATE TABLE `tx_multishop_orders_status` (
 CREATE TABLE `tx_multishop_orders_status_description` (
  `id` int(11) NOT NULL auto_increment,
  `orders_status_id` int(11) default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `name` varchar(50) default '',
  PRIMARY KEY (`id`),
  KEY `orders_status_id` (`orders_status_id`),
@@ -687,7 +687,7 @@ CREATE TABLE `tx_multishop_order_units` (
 CREATE TABLE `tx_multishop_order_units_description` (
  `id` int(11) NOT NULL auto_increment,
  `order_unit_id` int(11) default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `name` varchar(50) default '',
  PRIMARY KEY (`id`),
  KEY `order_unit_id` (`order_unit_id`),
@@ -755,7 +755,7 @@ CREATE TABLE `tx_multishop_payment_methods` (
 
 CREATE TABLE `tx_multishop_payment_methods_description` (
  `id` int(4) NOT NULL default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `name` varchar(255) default '',
  `description` text,
  PRIMARY KEY (`id`,`language_id`),
@@ -908,7 +908,7 @@ CREATE TABLE `tx_multishop_products_attributes_download` (
 CREATE TABLE `tx_multishop_products_description` (
  `products_id` int(11) NOT NULL default '0',
  `page_uid` int(11) NOT NULL default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `products_name` varchar(255) default '',
  `products_description` text,
  `products_url` text,
@@ -956,7 +956,7 @@ ALTER TABLE tx_multishop_products_description DROP INDEX combined_four;
 CREATE TABLE `tx_multishop_products_faq` (
  `products_faq_id` int(11) NOT NULL auto_increment,
  `products_id` int(11) default '0',
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `question` varchar(255) default '',
  `answer` text,
  `sort_order` int(11) default '0',
@@ -1201,7 +1201,7 @@ CREATE TABLE `tx_multishop_reviews` (
  `last_modified` int(11) default '0',
  `reviews_read` int(5) default '0',
  `message` text,
- `language_id` int(11) default '0',
+ `language_id` int(11) NOT NULL default '0',
  `ipaddress` varchar(127) default '',
  `status` tinyint(1) default '0',
  PRIMARY KEY (`reviews_id`),
