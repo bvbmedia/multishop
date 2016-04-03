@@ -2053,6 +2053,9 @@ if ($this->post['action']=='category-insert') {
 								$item['updated_products_id']=$row['products_id'];
 							}
 						}
+						if ($this->post['fetch_existing_product_by_direct_field'] && !$item['updated_products_id'] && $item['products_id']) {
+							$item['updated_products_id']=$item['products_id'];
+						}
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorItemProc'])) {
 							$params=array(
 								'item'=>&$item
