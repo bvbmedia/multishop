@@ -603,7 +603,7 @@
             <label index="datafeed_parser_template">Datafeed parser template</label>
             <label index="date">Date</label>
             <label index="date_added">Date added</label>
-            <label index="date_last_sent">Date last sent</label>
+            <label index="date_last_sent">Last sent</label>
             <label index="day">day</label>
             <label index="days">days</label>
             <label index="default">default</label>
@@ -1886,7 +1886,7 @@
             <label index="datafeed_parser_template">Datafeed verwerktemplate</label>
             <label index="date">Datum</label>
             <label index="date_added">Datum toegevoegd</label>
-            <label index="date_last_sent">Datum laatst verzonden</label>
+            <label index="date_last_sent">Laatst verzonden</label>
             <label index="day">dag</label>
             <label index="days">dagen</label>
             <label index="default">Standaard</label>
