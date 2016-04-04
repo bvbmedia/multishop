@@ -208,7 +208,7 @@ if (!$order_session['orders_id']) {
 		}
 	}
 	// first try to load the custom thank you page based on the payment method
-	if (isset($psp_mail_template['order_thank_you_page']) && !empty($psp_mail_template['order_thank_you_page'])) {
+	if (isset($psp_mail_template['order_thank_you_page'])) {
 		$page=array();
 		if (!empty($psp_mail_template['order_thank_you_page'])) {
 			$page=mslib_fe::getCMScontent($psp_mail_template['order_thank_you_page'], $GLOBALS['TSFE']->sys_language_uid);
