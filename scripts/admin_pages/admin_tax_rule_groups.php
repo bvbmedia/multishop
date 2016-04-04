@@ -175,7 +175,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 							$tab_content.='<li class="item_'.$counter.' form-inline">';
 							$tab_content.='<label class="tree_item_label">';
-							$tab_content.=$row['cn_short_en'];
+							$tab_content.=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row['cn_short_en']));
 							$tab_content.='</label> ';
 							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control form-control-country"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
