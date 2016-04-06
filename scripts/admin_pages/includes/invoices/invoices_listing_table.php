@@ -35,8 +35,19 @@ foreach ($invoices as $invoice) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
 		$paid_status.='<a href="#" class="update_to_paid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
+		$paidToolTipInfoArray=array();
+		if ($invoice['payment_method_label']) {
+			$paidToolTipInfoArray[]=$this->pi_getLL('payment_method').': '.$invoice['payment_method_label'];
+		}
+		if ($invoice['orders_paid_timestamp']) {
+			$paidToolTipInfoArray[]=$this->pi_getLL('date_paid').': '.strftime("%x", $invoice['orders_paid_timestamp']);
+		}
+		$paidToolTipInfo='';
+		if (count($paidToolTipInfoArray)) {
+			$paidToolTipInfo=implode('<br/>',$paidToolTipInfoArray);
+		}
 		$paid_status.='<a href="#" class="update_to_unpaid" data-order-id="'.$invoice['orders_id'].'" data-invoice-id="'.$invoice['id'].'" data-invoice-nr="'.$invoice['invoice_id'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>';
-		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+		$paid_status.='<span class="admin_status_green" data-toggle="tooltip" title="'.htmlspecialchars($paidToolTipInfo).'"></span>';
 	}
 	//
 	$actionButtons=array();
@@ -55,7 +66,8 @@ foreach ($invoices as $invoice) {
 	$markerArray=array();
 	$markerArray['ORDER_URL']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$invoice['orders_id'].'&action=edit_order');
 	$markerArray['INVOICE_CTR']=$cb_ctr;
-	$markerArray['INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+	$markerArray['INVOICES_URL']=$markerArray['ORDER_URL'];
+	$markerArray['DOWNLOAD_INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 	$markerArray['INVOICES_INTERNAL_ID']=$invoice['id'];
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
@@ -66,14 +78,14 @@ foreach ($invoices as $invoice) {
 		$link_name.=" (".$user['username'].")";
 	}
 	$markerArray['INVOICES_CUSTOMER_NAME']='<a href="'.$customer_edit_link.'">'.$link_name.'</a>';
-	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
+	$markerArray['INVOICES_ORDER_DATE']=strftime('%a.<br/>%x', $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0);
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['grand_total'], 0);
 	$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice[$grandTotalColumnName], 0);
 
-	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime("%a.<br/>%x", $invoice['date_mail_last_sent']) : '');
+	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime('%a.<br/>%x', $invoice['date_mail_last_sent']) : '');
 	$markerArray['INVOICES_PAID_STATUS']=$paid_status;
 	$markerArray['INVOICES_ACTION']=$action_button;
 	$markerArray['CUSTOM_MARKER_0_BODY']='';

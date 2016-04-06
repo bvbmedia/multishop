@@ -346,7 +346,29 @@ if ($this->ADMIN_USER) {
 	<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			function productPrice(to_include_vat, o, type) {
+				var original_val = o.val();
 				var current_value 	= parseFloat(o.val());
+				//
+				if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
+					var thousand=original_val.split(".");
+					if (thousand[1].indexOf(",")!=-1) {
+						var hundreds = thousand[1].split(",");
+						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+						current_value = parseFloat(original_val);
+						//
+						o.val(original_val);
+					} else {
+						thousand=original_val.split(",");
+						if (thousand[1].indexOf(".")!=-1) {
+							var hundreds = thousand[1].split(".");
+							original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+							current_value = parseFloat(original_val);
+							//
+							o.val(original_val);
+						}
+					}
+				}
+				//
 				var tax_id 			= o.attr("rel");
 				if (current_value > 0) {
 					if (to_include_vat) {

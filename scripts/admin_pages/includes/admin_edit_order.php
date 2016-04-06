@@ -1356,7 +1356,37 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>
 				</div>
-            <hr>';
+            ';
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				$filter=array();
+				$filter[]='orders_id='.$orders['orders_id'];
+				//$filter[]='deleted=0';
+				$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filter,'','id desc');
+				$invoiceArray=array();
+				if (count($invoices)) {
+					foreach ($invoices as $invoice) {
+						$link=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+						$invoiceArray[]='<a href="'.$link.'" target="_blank" rel="nofollow">'.$invoice['invoice_id'].'</a>';
+					}
+				}
+				if (count($invoiceArray)) {
+					$orderDetails[]='
+					<div class="form-group">
+						<label class="control-label col-md-3">'.$this->pi_getLL('admin_invoice_number').'</label>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-12"><p class="form-control-static">'.implode(', ',$invoiceArray).'</p></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				';
+				}
+			}
+			$orderDetails[]='<hr>';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
@@ -2312,7 +2342,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div class="categories_products_select2_wrapperselect2-container">
 					<div class="categories_select2_input">
-						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="'.$order['categories_id'].'" style="width:380px" />
+						<input class="categories_name_input" type="hidden" name="categories_filter_id" id="categories_filter_id" value="" style="width:380px" />
 					</div>
 					<div id="manual_product_name_select2" class="products_select2_input">
 						<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:380px;" tabindex="2" />
@@ -3534,6 +3564,27 @@ if (is_numeric($this->get['orders_id'])) {
          	}
          	var original_val = price_value;
 		    var current_value = parseFloat(price_value);
+		    //
+			if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
+				var thousand=original_val.split(".");
+				if (thousand[1].indexOf(",")!=-1) {
+					var hundreds = thousand[1].split(",");
+					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+					current_value = parseFloat(original_val);
+					//
+					$(o).val(original_val);
+				} else {
+					thousand=original_val.split(",");
+					if (thousand[1].indexOf(".")!=-1) {
+						var hundreds = thousand[1].split(".");
+						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+						current_value = parseFloat(original_val);
+						//
+						$(o).val(original_val);
+					}
+				}
+			}
+			//
             var tax_id = $(tax_element_id).val();
             if (current_value > 0) {
                 if (to_include_vat) {
@@ -3726,7 +3777,7 @@ if (url.match("#")) {
         	'.$interfaceHeaderButtons.'
         </div>
         <div class="panel-body">
-        <div id="tab-container" class="">
+        <div id="tab-container" class="msAdminEditOrder">
             <ul class="nav nav-tabs" role="tablist">';
 		foreach ($tabs as $key=>$value) {
 			$count++;

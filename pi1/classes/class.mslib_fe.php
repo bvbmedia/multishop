@@ -7419,6 +7419,7 @@ class mslib_fe {
 		if (!$this->masterShop) {
 			$filter[]='s.page_uid='.$this->shop_pid;
 		}
+		$filter[]=$GLOBALS['TYPO3_DB']->listQuery('f.usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
 		$filter[]='s.customer_id=f.uid';
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'fe_users f, tx_multishop_sessions s', // FROM ...
@@ -7524,14 +7525,10 @@ class mslib_fe {
 		if (!is_numeric($external_page_uid)) {
 			return false;
 		}
-		//var_dump($categories_id);
-		//var_dump($external_page_uid);
-		//die();
 		if (is_numeric($categories_id) && is_numeric($external_page_uid)) {
 			// check if it's have a parent
-			$cats=mslib_fe::Crumbar($categories_id, '', array(), $external_page_uid);
+			$cats=mslib_fe::Crumbar($categories_id, '', array(), $this->showCatalogFromPage);
 			$cats=array_reverse($cats);
-
 			$prev_catid=0;
 			foreach ($cats as $catidx=>$cat) {
 				if ($catidx>0) {
@@ -8795,6 +8792,7 @@ class mslib_fe {
 		$content.='</ul>';
 		return $content;
 	}
+	// duplicate method with mslib_fe::getProductAttributes
 	public function getProductOptions($products_id) {
 		if (!is_numeric($products_id)) {
 			return false;

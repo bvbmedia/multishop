@@ -350,14 +350,19 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 						$this->sqlKeyword='%'.addslashes($searchKeyword).'%';
 						break;
 				}
-				$keywordOr[]="f.company like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.name like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.email like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.username like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.city like '".$this->sqlKeyword."'";
-				//$keywordOr[]="f.country like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
+				if ($this->get['tx_multishop_pi1']['searchByChar']) {
+					$keywordOr[]="f.company like '".$this->sqlKeyword."'";
+					$keywordOr[]="(f.company ='' AND f.name like '".$this->sqlKeyword."')";
+				} else {
+					$keywordOr[]="f.company like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.name like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.email like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.username like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.city like '".$this->sqlKeyword."'";
+					//$keywordOr[]="f.country like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
+					$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
+				}
 			}
 		}
 		$filter[]="(".implode(" OR ", $keywordOr).")";
@@ -638,6 +643,6 @@ foreach ($tabs as $key=>$value) {
 	';
 	break;
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

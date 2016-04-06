@@ -948,7 +948,38 @@ if ($this->get['feed_hash']) {
 									}
 								}
 							} else {
-								if ($attributes[$field]) {
+								if (strpos($field, 'product_payment_methods_')!==false) {
+									if ($row['products_id']) {
+										$method_mappings=mslib_befe::getMethodsByProduct($row['products_id']);
+									}
+									$payment_code=str_replace('product_payment_methods_', '', $field);
+									$payment_method=mslib_fe::loadPaymentMethod($payment_code);
+									if (is_array($method_mappings['payment']) && in_array($payment_method['id'], $method_mappings['payment'])) {
+										if (!$method_mappings['payment']['method_data'][$payment_method['id']]['negate']) {
+											$tmpcontent.=1;
+										} else if ($method_mappings['payment']['method_data'][$payment_method['id']]['negate']>0) {
+											$tmpcontent.=0;
+										} else {
+											$tmpcontent.='';
+										}
+									}
+
+								} else if (strpos($field, 'product_shipping_methods_')!==false) {
+									if ($row['products_id']) {
+										$method_mappings=mslib_befe::getMethodsByProduct($row['products_id']);
+									}
+									$shipping_code=str_replace('product_shipping_methods_', '', $field);
+									$shipping_method=mslib_fe::loadShippingMethod($shipping_code);
+									if (is_array($method_mappings['shipping']) && in_array($shipping_method['id'], $method_mappings['shipping'])) {
+										if (!$method_mappings['shipping']['method_data'][$shipping_method['id']]['negate']) {
+											$tmpcontent.=1;
+										} else if ($method_mappings['shipping']['method_data'][$shipping_method['id']]['negate']>0) {
+											$tmpcontent.=0;
+										} else {
+											$tmpcontent.='';
+										}
+									}
+								} else if ($attributes[$field]) {
 									// print it from flat table
 									if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 										$field_name=$field;
@@ -1054,8 +1085,24 @@ if ($this->get['feed_hash']) {
 		}
 		$Cache_Lite->save($content);
 	}
-	header("Content-Type: text/plain");
-	echo $content;
+	// Print CSV file in UTF-8 format (with BOM)
+	//header("Content-Type: text/plain");
+	if (!mb_detect_encoding($content, 'UTF-8', true)) {
+		$content=mslib_befe::convToUtf8($content);
+	}
+	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Pragma: no-cache");
+	header('Content-Encoding: UTF-8');
+	//header('Content-type: text/csv; charset=UTF-8');
+	header('Content-type: text/plain; charset=UTF-8');
+	//header("Content-Disposition: attachment; filename=\"" . basename($export_file) . "\"");
+	//header('Content-Transfer-Encoding: binary');
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
+	echo "\xEF\xBB\xBF".$content;
 	exit();
 }
 exit();

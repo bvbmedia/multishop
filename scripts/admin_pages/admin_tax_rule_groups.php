@@ -175,7 +175,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 							$tab_content.='<li class="item_'.$counter.' form-inline">';
 							$tab_content.='<label class="tree_item_label">';
-							$tab_content.=$row['cn_short_en'];
+							$tab_content.=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row['cn_short_en']));
 							$tab_content.='</label> ';
 							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control form-control-country"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
@@ -348,7 +348,7 @@ if (!$this->get['edit']) {
 }
 $content.='<hr>
             <div class="clearfix">
-                <a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>
+                <a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>
             </div>
        </div>
        </div>';

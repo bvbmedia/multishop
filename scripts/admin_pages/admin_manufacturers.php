@@ -318,5 +318,5 @@ $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content);
 $content.='<div class="clearfix"><div class="add_manufacturer pull-right"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_manufacturer&action=add_manufacturer').'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div></div>';
-$content.='<hr><div><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content.='<hr><div><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 ?>

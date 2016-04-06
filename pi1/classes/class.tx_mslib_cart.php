@@ -900,6 +900,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			} elseif (is_array($this->post['qty'])) {
 				// add/update products in cart (from shopping cart page)
+				foreach ($cart['products'] as $shopping_cart_item => $value) {
+					if (!isset($value['products_id']) || (isset($value['products_id']) && !$value['products_id'])) {
+						unset($cart['products'][$shopping_cart_item]);
+					}
+				}
 				foreach ($this->post['qty'] as $shopping_cart_item=>$qty) {
 					if ($qty and strstr($qty, ",")) {
 						$qty=str_replace(",", ".", $qty);
@@ -907,11 +912,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if (($qty and !is_numeric($qty))) {
 						$qty=1;
 					}
-					if (!$qty or $qty<0) {
+					if (!$qty or $qty<0.01) {
 						unset($cart['products'][$shopping_cart_item]);
 					} else {
 						$products_id=$cart['products'][$shopping_cart_item]['products_id'];
 						$product=mslib_fe::getProduct($products_id);
+						$product['maximum_quantity']=str_replace('.00', '', $product['maximum_quantity']);
+						$product['minimum_quantity']=str_replace('.00', '', $product['minimum_quantity']);
 						// custom hook that can be controlled by third-party plugin
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartByShoppingCartPreProc'])) {
 							$params=array(
@@ -937,6 +944,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
+						}
+						if ($product['maximum_quantity']>0 && $qty>$product['maximum_quantity']) {
+							$cart['products'][$shopping_cart_item]['qty']=$product['maximum_quantity'];
 						}
 						if ($product['products_multiplication']) {
 							$ctr_end = ($product['maximum_quantity'] > 0 ? $product['maximum_quantity'] : 9999);
@@ -972,6 +982,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 				}
+				//die();
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 				$GLOBALS['TSFE']->storeSessionData();
 			}
@@ -2250,6 +2261,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				unset($cart['discount_amount']);
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 				$GLOBALS['TSFE']->storeSessionData();
+				// unset the cart with original key
+				$plain_cart_key='tx_multishop_cart';
+				if ($this->ms['MODULES']['CART_PAGE_UID']) {
+					$plain_cart_key.='_'.$this->ms['MODULES']['CART_PAGE_UID'];
+				}
+				$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $plain_cart_key);
+				unset($cart2['products']);
+				unset($cart2['user']);
+				unset($cart2['discount_type']);
+				unset($cart2['discount_amount']);
+				$GLOBALS['TSFE']->fe_user->setKey('ses', $plain_cart_key, $cart2);
+				$GLOBALS['TSFE']->storeSessionData();
+				// custom error script for checkout
 				if ($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT']) {
 					if (strstr($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT'], "..")) {
 						die('error in ORDERS_CUSTOM_EXPORT_SCRIPT value');
@@ -2782,9 +2806,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$markerArray['DISCOUNT']=mslib_fe::amount2Cents($this->cart['discount_amount']);
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 				// trick to reduce TAX costs
-				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$this->cart['summarize']['grand_total_vat']=(1-($this->cart['discount_amount']/$this->cart['summarize']['sub_total_including_vat']))*$this->cart['summarize']['grand_total_vat'];
-				}
+				//if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					//$this->cart['summarize']['grand_total_vat']=(1-($this->cart['discount_amount']/$this->cart['summarize']['sub_total_including_vat']))*$this->cart['summarize']['grand_total_vat'];
+				//}
 			} else {
 				$subpartArray['###'.$key.'###']='';
 				$subpartArray['###NEWSUBTOTAL_WRAPPER###']='';

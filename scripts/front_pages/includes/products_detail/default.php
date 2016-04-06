@@ -27,25 +27,27 @@ if (!$product['products_id']) {
                     }
                     $where = substr($where, 0, (strlen($where) - 1));
                     $where .= '&';
+					//
+					header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
+					exit();
                 }
                 // get all cats to generate multilevel fake url eof
             }
-            header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
-            exit();
         }
     }
-    header('HTTP/1.0 404 Not Found');
-    $output_array['http_header'] = 'HTTP/1.0 404 Not Found';
-    // set custom 404 message
-    $page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
-    if ($page[0]['name']) {
-        $content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
-    } else {
-        $content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
-    }
-    if ($page[0]['content']) {
-        $content .= $page[0]['content'];
-    }
+	header('HTTP/1.0 404 Not Found');
+	$output_array['http_header'] = 'HTTP/1.0 404 Not Found';
+	// set custom 404 message
+	$page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+	if ($page[0]['name']) {
+		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+	} else {
+		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
+	}
+	if ($page[0]['content']) {
+		$content .= $page[0]['content'];
+	}
+
 } else {
     if ($this->conf['imageWidth']) {
         $this->imageWidth = $this->conf['imageWidth'];
@@ -205,8 +207,8 @@ if (!$product['products_id']) {
                 $staffel_qty = '> ' . $qty_1;
             }
             $staffel_table_content .= '<tr class="' . $tr_type . '">';
-            $staffel_table_content .= '<td class="staffel_list_qty">' . str_replace('-', ' - ', $staffel_qty) . '</th>';
-            $staffel_table_content .= '<td class="staffel_list_price">' . mslib_fe::amount2Cents($staffel_price) . '</th>';
+            $staffel_table_content .= '<td class="staffel_list_qty">' . str_replace('-', ' - ', $staffel_qty) . '</td>';
+            $staffel_table_content .= '<td class="staffel_list_price">' . mslib_fe::amount2Cents($staffel_price) . '</td>';
             $staffel_table_content .= '</tr>';
         }
         $staffel_table_content .= '</table>';
@@ -340,6 +342,9 @@ if (!$product['products_id']) {
     $markerArray['###PAGINATION###'] = $output['pagination'];
     $markerArray['###STOCK###'] = $output['products_quantity'];
     $markerArray['###PRODUCTS_QUANTITY###'] = number_format(round($product['products_quantity'], 2), 0, '', '.');
+    if ($product['minimum_quantity']=='0') {
+        $product['minimum_quantity']=1;
+    }
     $markerArray['###PRODUCTS_MINIMUM_QUANTITY###'] = number_format(round($product['minimum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MAXIMUM_QUANTITY###'] = number_format(round($product['maximum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MULTIPLICATION###'] = number_format(round($product['products_multiplication'], 2), 0, '', '.');

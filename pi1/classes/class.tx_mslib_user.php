@@ -252,12 +252,13 @@ class tx_mslib_user {
 				}
 		*/
 		if ($this->getEmail()) {
+			$username = $this->getUsername();
 			// check if username is not in use
-			$checkUsername=mslib_fe::getUser($this->getEmail(), 'username');
+			$checkUsername=mslib_fe::getUser($username, 'username');
 			if ($checkUsername['uid']) {
 				// if the quick_checkout indicator is 0 this mean the user already registered as full account before
 				if (!$checkUsername['tx_multishop_quick_checkout']) {
-					if ($this->getEmail()==$this->getUsername()) {
+					if ($this->getEmail()==$username) {
 						$erno[]=$this->ref->pi_getLL('specified_email_address_already_in_use');
 					} else {
 						$erno[]=$this->ref->pi_getLL('specified_username_already_in_use');

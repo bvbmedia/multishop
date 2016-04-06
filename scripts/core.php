@@ -11,6 +11,13 @@ if ($this->conf['page_section']) {
 } else {
 	$this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 }
+// more items could be added through hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['corePreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['corePreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 switch ($this->ms['page']) {
 	case 'payment_page':
 		if ($this->get['tx_multishop_pi1']['hash']) {

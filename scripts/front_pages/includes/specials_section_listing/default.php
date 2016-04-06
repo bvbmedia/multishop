@@ -31,6 +31,11 @@ foreach ($products as $product) {
 			$markerArray['PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '100').'">';
 			$markerArray['PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '200').'">';
 			$markerArray['PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
+
+			$markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+			$markerArray['PRODUCTS_IMAGE_URL_100']=mslib_befe::getImagePath($product['products_image'], 'products', '100');
+			$markerArray['PRODUCTS_IMAGE_URL_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
+			$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($product['products_image'], 'products', '300');
 		} else {
 			$output['image']='<div class="no_image"></div>';
 			$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];

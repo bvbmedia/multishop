@@ -383,9 +383,6 @@ multishop_ajax_server {
 			jqueryPace.compress = 1
 			#jqueryPace.forceOnTop= 1
 		}
-		includeJS
-		headerData {
-		}
 	}
 [end]
 

@@ -153,7 +153,7 @@
 			</div>
 			<hr>
 			<div class="clearfix">
-				<a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+				<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
 			</div>
 </form>
 <!-- ###RESULTS### end -->
@@ -162,7 +162,7 @@
 ###LABEL_NO_RESULT###
 
 			<div class="clearfix">
-				<a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+				<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
 			</div>
 
 <!-- ###NORESULTS### end -->
@@ -305,6 +305,27 @@
 		function productPrice(to_include_vat, o, type) {
 			var original_val = $(o).val();
 			var current_value = parseFloat($(o).val());
+			//
+			if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
+				var thousand=original_val.split(".");
+				if (thousand[1].indexOf(",")!=-1) {
+					var hundreds = thousand[1].split(",");
+					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+					current_value = parseFloat(original_val);
+					//
+					$(o).val(original_val);
+				} else {
+					thousand=original_val.split(",");
+					if (thousand[1].indexOf(".")!=-1) {
+						var hundreds = thousand[1].split(".");
+						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
+						current_value = parseFloat(original_val);
+						//
+						$(o).val(original_val);
+					}
+				}
+			}
+			//
 			var tax_id_holder = "#product_tax_id_" + $(o).attr("rel");
 			var tax_id = $(tax_id_holder).val();
 

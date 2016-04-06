@@ -4162,8 +4162,8 @@ class mslib_befe {
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE']=$cell_products_normal_price;
 							$attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE']=$cell_products_final_price;
-							$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
 						}
+						$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
 					}
 				}
 				$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
@@ -4174,6 +4174,8 @@ class mslib_befe {
 				}
 				$product_counter++;
 			}
+		} else {
+			$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
 		}
 		$subpartArray['###ITEM_WRAPPER###']=$contentItem;
 		if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {

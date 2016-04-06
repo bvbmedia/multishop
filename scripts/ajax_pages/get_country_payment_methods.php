@@ -93,13 +93,18 @@ foreach ($payment_methods as $payment_name=>$payment_data) {
 	$data[$payment_data['sort_order']]['payment_description']=$payment_data['description'];
 	$data[$payment_data['sort_order']]['li_class']=$tr_type;
 	$data[$payment_data['sort_order']]['radio_class']='regular-payment';
+	$price='';
 	if (!empty($payment_data['handling_costs'])) {
 		$price=$payment_data['handling_costs'];
 		if ($vars['handling_costs_type']!='percentage') {
 			if ($price && $payment_data['tax_rate']>0 && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$price=($price*$payment_data['tax_rate'])+$price;
 			}
-			$price=mslib_fe::amount2Cents($price);
+			if ($price>0.00 || $price<0.00) {
+				$price=mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($price, 0, 0);
+			} else {
+				$price='';
+			}
 		}
 		$data[$payment_data['sort_order']]['handling_cost']=$price;
 	} else {

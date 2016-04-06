@@ -81,7 +81,14 @@ jQuery(document).ready(function ($) {
                 } else {
                     listing_products += '<div class="image"><a href="' + item.link_detail + '" title="' + item.products_name + '" class="ajax_link"><div class="no_image"></div></a></div>';
                 }
-                listing_products += '<strong><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a></strong>';
+                var admin_icon = '';
+                if (item.admin_edit_product_button) {
+                    admin_icon += '<div class="admin_menu">';
+                    admin_icon += '<a href="' + item.admin_edit_product + '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a>';
+                    admin_icon += '<a href="' + item.admin_delete_product + '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a>';
+                    admin_icon += '</div>';
+                }
+                listing_products += '<strong><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a>' + admin_icon + '</strong>';
                 listing_products += '<div class="category"><a href="' + item.catlink + '" class="ajax_link">' + item.categories_name + '</a></div>';
                 listing_products += '<div class="visible-lg msFrontAddToCartBtn"><a href="#" rel="' + item.products_id + '" class="add_cart_item_listing"><span></span></a></div>';
                 listing_products += '<div class="visible-xs visible-sm visible-md msFrontAddToCartBtn"><a href="' + item.link_add_to_cart + '"><span>winkelwagen</span></a></div>';

@@ -156,6 +156,12 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_IMAGE']=$output['image'];
 		$markerArray['PRODUCTS_IMAGE_200']=$output['image_200'];
 		$markerArray['PRODUCTS_IMAGE_300']=$output['image_300'];
+
+		$markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($current_product['products_image'], 'products', $this->imageWidth);
+		$markerArray['PRODUCTS_IMAGE_URL_100']=mslib_befe::getImagePath($current_product['products_image'], 'products', '100');
+		$markerArray['PRODUCTS_IMAGE_URL_200']=mslib_befe::getImagePath($current_product['products_image'], 'products', '200');
+		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($current_product['products_image'], 'products', '300');
+
 		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
 		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 		$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
@@ -165,6 +171,10 @@ if (is_array($products) && count($products)) {
 		$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
 		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'], 2, ',', '.');
 		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'], 2, ',', '.');
+		$markerArray['PRODUCTS_QUANTITY'] = number_format(round($current_product['products_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MINIMUM_QUANTITY'] = number_format(round($current_product['minimum_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MAXIMUM_QUANTITY'] = number_format(round($current_product['maximum_quantity'], 2), 0, '', '.');
+		$markerArray['PRODUCTS_MULTIPLICATION'] = number_format(round($current_product['products_multiplication'], 2), 0, '', '.');
 		// STOCK INDICATOR
 		$product_qty=$current_product['products_quantity'];
 		if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
