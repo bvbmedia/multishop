@@ -746,6 +746,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.htmlspecialchars($product['products_name']).'" title="'.htmlspecialchars($product['products_name']).'">Download product</a>';
 				$tmp_item_name['download_link']=$download_link;
 			}
+			if ($product['products_description']) {
+				$tmp_item_name['products_description']='<br/>'.nl2br(htmlspecialchars($product['products_description']));
+			}
 			if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 				$tmp_item_name['products_ean']='<br/>EAN: '.htmlspecialchars($product['ean_code']);
 			}
