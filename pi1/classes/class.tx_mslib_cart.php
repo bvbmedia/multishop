@@ -2261,6 +2261,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				unset($cart['discount_amount']);
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 				$GLOBALS['TSFE']->storeSessionData();
+				// unset the cart with original key
+				$plain_cart_key='tx_multishop_cart';
+				if ($this->ms['MODULES']['CART_PAGE_UID']) {
+					$plain_cart_key.='_'.$this->ms['MODULES']['CART_PAGE_UID'];
+				}
+				$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $plain_cart_key);
+				unset($cart2['products']);
+				unset($cart2['user']);
+				unset($cart2['discount_type']);
+				unset($cart2['discount_amount']);
+				$GLOBALS['TSFE']->fe_user->setKey('ses', $plain_cart_key, $cart2);
+				$GLOBALS['TSFE']->storeSessionData();
+				// custom error script for checkout
 				if ($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT']) {
 					if (strstr($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT'], "..")) {
 						die('error in ORDERS_CUSTOM_EXPORT_SCRIPT value');
