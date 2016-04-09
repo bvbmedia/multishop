@@ -2927,7 +2927,7 @@ class mslib_fe {
 			}
 		}
 	}
-	public function getCategory($categories_id, $include_disabled_category=0) {
+	public function getCategory($categories_id, $include_disabled_category=0, $page_uid='') {
 		if (!is_numeric($categories_id)) {
 			return false;
 		}
