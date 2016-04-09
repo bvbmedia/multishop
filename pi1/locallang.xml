@@ -888,8 +888,8 @@
             <label index="mobile_must_be_x_digits_long">Must be 10 digits long.</label>
             <label index="modified">Modified</label>
             <label index="modified_on">Modified on</label>
-            <label index="month">month</label>
-            <label index="monthly">monthly</label>
+            <label index="month">Month</label>
+            <label index="monthly">Monthly</label>
             <label index="more_results">More results</label>
             <label index="move_selected_products_to">Move selected products to</label>
             <label index="mr">Mr.</label>
@@ -2171,8 +2171,8 @@
             <label index="mobile_must_be_x_digits_long">Moet 10 cijfers bevatten.</label>
             <label index="modified">Aangepast op</label>
             <label index="modified_on">Gewijzigd op</label>
-            <label index="month">maand</label>
-            <label index="monthly">maandelijks</label>
+            <label index="month">Maand</label>
+            <label index="monthly">Maandelijks</label>
             <label index="more_results">Meer resultaten</label>
             <label index="move_selected_products_to">Verplaats geselecteerde producten naar</label>
             <label index="mr">Dhr.</label>
