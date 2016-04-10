@@ -886,7 +886,19 @@ class mslib_fe {
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 					$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-					if ($data['categories_name']) {
+					$include_categories=true;
+					// hook
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['crumbarCategoriesIterator'])) {
+						$params=array(
+							'include_categories'=>&$include_categories,
+							'data'=>&$data,
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['crumbarCategoriesIterator'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					// hook eof
+					if ($data['categories_name'] && $include_categories) {
 						$output[]=array(
 							'name'=>$data['categories_name'],
 							'url'=>mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
