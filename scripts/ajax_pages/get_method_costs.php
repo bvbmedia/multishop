@@ -183,6 +183,7 @@ $data['payment_name']=$payment_method_label;
 $data['available_shipping']=implode(';', $available_sid);
 // rebuilt the shipping cost for available shipping methods based on selected payment
 foreach ($available_sid as $sids) {
+	$this->post['caller_segment']='available_shipping_costs';
 	$priceArray=mslib_fe::getShippingCosts($countries_id, $sids);
 	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 		$data['available_shippingcost'][$sids]='';
@@ -209,6 +210,7 @@ if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multi
 		$this->post['tx_multishop_pi1']['sid']=999999;
 	}
 }
+$this->post['caller_segment']='getHtmlCartContents';
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
