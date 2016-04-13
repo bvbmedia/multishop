@@ -1240,6 +1240,7 @@ class mslib_fe {
 				// bugfix for CoolURI links that are otherwise broken
 				$conf['additionalParams']=str_replace(' ', '%2520', $conf['additionalParams']);
 			}
+
 			$url=$GLOBALS["TSFE"]->cObj->typolink(null, $conf);
 		}
 		return $url;
