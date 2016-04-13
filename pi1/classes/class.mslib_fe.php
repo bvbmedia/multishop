@@ -6309,7 +6309,9 @@ class mslib_fe {
 			if ($total_warnings>0) {
 				$tmpcontent='';
 				foreach ($messages as $message) {
-					$tmpcontent.=$message."<br /><br />\n";
+					if ($message) {
+						$tmpcontent.=$message."<br /><br />\n";
+					}
 				}
 				if ($tmpcontent) {
 					$html='

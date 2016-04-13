@@ -1357,7 +1357,7 @@ if (is_numeric($this->get['orders_id'])) {
 					</div>
 				</div>
             ';
-			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 				$filter=array();
 				$filter[]='orders_id='.$orders['orders_id'];
 				//$filter[]='deleted=0';
