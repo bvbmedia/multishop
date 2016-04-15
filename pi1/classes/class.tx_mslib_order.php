@@ -977,7 +977,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
 		if (!$order['orders_tax_data']['total_orders_tax']) {
-			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('grand_total'));
+			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total_excl_vat'));
 		} else {
 			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
 		}

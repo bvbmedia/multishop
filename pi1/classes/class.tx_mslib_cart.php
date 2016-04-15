@@ -2775,7 +2775,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			//GRAND_TOTAL_WRAPPER
 			$key='GRAND_TOTAL_WRAPPER';
 			if (!$this->cart['summarize']['grand_total_vat']) {
-				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('grand_total'));
+				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total_excl_vat'));
 			} else {
 				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
 			}
