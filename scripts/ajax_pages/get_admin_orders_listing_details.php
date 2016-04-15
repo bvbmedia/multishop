@@ -224,7 +224,7 @@ if ($this->ADMIN_USER) {
 					</tr>';
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
-						<td colspan="4" class="text-right"><strong>'.ucfirst($this->pi_getLL('total')).'</strong></td>
+						<td colspan="4" class="text-right"><strong>'.(!$order['orders_tax_data']['total_orders_tax'] ? ucfirst($this->pi_getLL('grand_total')) : ucfirst($this->pi_getLL('total'))).'</strong></td>
 						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total'], $customer_currency).'</strong></td>
 					</tr>';
 					//if ($order['payment_method_label']) {

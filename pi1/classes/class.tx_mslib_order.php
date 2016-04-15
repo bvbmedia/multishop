@@ -67,8 +67,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
 				$iso_customer['country']=$iso_customer['cn_short_en'];
 				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
-				$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
-				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
+				//$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
+				if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
 					if (strtolower($row['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
@@ -976,7 +976,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
-		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+		if (!$order['orders_tax_data']['total_orders_tax']) {
+			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('grand_total'));
+		} else {
+			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+		}
 //		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
@@ -1021,7 +1025,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$params=array(
 				'content'=>&$content,
 				'order'=>&$order,
-				'template_type'=>&$template_type
+				'template_type'=>&$template_type,
+				'subparts'=>&$subparts,
+				'subpartArray'=>&$subpartArray,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

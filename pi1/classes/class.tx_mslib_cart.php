@@ -2774,7 +2774,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 			//GRAND_TOTAL_WRAPPER
 			$key='GRAND_TOTAL_WRAPPER';
-			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+			if (!$this->cart['summarize']['grand_total_vat']) {
+				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('grand_total'));
+			} else {
+				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+			}
 			// $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 			$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($this->cart['summarize']['grand_total']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
