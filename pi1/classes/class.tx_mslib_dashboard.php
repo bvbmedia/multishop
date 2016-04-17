@@ -75,6 +75,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['ordersLatest'] = 1;
                 break;
         }
+        $this->compiledWidgets = array();
         //hook to let other plugins further manipulate the settings
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['renderWidgetsPreProc'])) {
             $params = array();
@@ -83,7 +84,6 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
         }
         // COMPILING
-        $this->compiledWidgets = array();
         foreach ($this->enabledWidgets as $widgetKey => $enabled) {
             if ($enabled) {
                 $compiledWidget = tx_mslib_dashboard::compileWidget($widgetKey);
@@ -130,7 +130,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             default:
                 //hook to let other plugins further manipulate the settings
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['compileWidgetDefault'])) {
-                    $params = array('key' => &$key);
+                    $params = array('key' => &$key, 'compiledWidget'=>&$compiledWidget);
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['compileWidgetDefault'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
@@ -309,6 +309,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             )
                     );
                     break;
+            }
+        }
+        //hook to let other plugins further manipulate the settings
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['displayDashboardPageLayout'])) {
+            $params = array('pageLayout' => &$pageLayout);
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['displayDashboardPageLayout'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
         $content .= '<div class="column-wrapper">';
