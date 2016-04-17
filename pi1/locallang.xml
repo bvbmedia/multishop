@@ -1287,6 +1287,7 @@
             <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer cannot be found</label>
             <label index="new_subtotal_excl_vat">Total Excl. VAT</label>
             <label index="new_subtotal_incl_vat">Total Incl. VAT</label>
+            <label index="total_excl_vat">Total</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2566,6 +2567,7 @@
             <label index="the_requested_manufacturer_does_not_exist">De opgevraagde merkenpagina is niet gevonden</label>
             <label index="new_subtotal_excl_vat">Totaal Excl. BTW</label>
             <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
+            <label index="total_excl_vat">Totaal</label>
         </languageKey>
     </data>
 </T3locallang>
