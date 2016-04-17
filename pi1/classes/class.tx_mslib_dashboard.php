@@ -1,6 +1,6 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
+    die('Access denied.');
 }
 /***************************************************************
  *  Copyright notice
@@ -24,107 +24,123 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
-	var $dashboardArray=array();
-	var $widgetsArray=array();
-	var $compiledWidgets=array();
-	var $senabledWidgets=array();
-	var $layouts=array(
-		'layout1big1small'=>2,
-		'layout1small1big'=>2,
-		'layout2cols'=>2,
-		'layout3cols'=>3,
-		'layout4cols'=>4
-	);
-	function initLanguage($ms_locallang) {
-		$this->pi_loadLL();
-		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
-		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		if ($this->altLLkey) {
-			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		}
-	}
-	function init($ref) {
-		mslib_fe::init($ref);
-	}
-	function setSection($string) {
-		$this->dashboardArray['section']=$string;
-	}
-	function renderWidgets() {
-		switch ($this->dashboardArray['section']) {
-			case 'admin_home':
-				$this->enabledWidgets['ordersPerMonth']=1;
-				$this->enabledWidgets['google_chart_orders']=1;
-				$this->enabledWidgets['google_chart_customers']=1;
-				$this->enabledWidgets['google_chart_carts']=1;
-				$this->enabledWidgets['customersPerMonth']=1;
-				$this->enabledWidgets['turnoverPerMonth']=1;
-				$this->enabledWidgets['turnoverPerYear']=1;
-				$this->enabledWidgets['referrerToplist']=1;
-				$this->enabledWidgets['searchKeywordsToplist']=1;
-				$this->enabledWidgets['ordersLatest']=1;
-				// ORDERS TOTAL TABLES EOF
-				break;
-			case 'admin_edit_customer':
-				$this->enabledWidgets['ordersPerMonth']=1;
-				$this->enabledWidgets['google_chart_orders']=1;
-				$this->enabledWidgets['google_chart_carts']=1;
-				$this->enabledWidgets['turnoverPerMonth']=1;
-				$this->enabledWidgets['turnoverPerYear']=1;
-				$this->enabledWidgets['referrerToplist']=1;
-				$this->enabledWidgets['searchKeywordsToplist']=1;
-				$this->enabledWidgets['ordersLatest']=1;
-				break;
-		}
-		// COMPILING
-		$this->compiledWidgets=array();
-		foreach ($this->enabledWidgets as $widgetKey=>$enabled) {
-			if ($enabled) {
-				$compiledWidget=tx_mslib_dashboard::compileWidget($widgetKey);
-				if ($compiledWidget['additionalHeaderData']['content']) {
-					$GLOBALS['TSFE']->additionalHeaderData[$compiledWidget['additionalHeaderData']['key']]=$compiledWidget['additionalHeaderData']['content'];
-				}
-				$this->compiledWidgets[$widgetKey]=$compiledWidget;
-			}
-		}
-	}
-	function compileWidget($key) {
-		$compiledWidget=array();
-		switch ($key) {
-			case 'google_chart_orders':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_orders.php');
-				break;
-			case 'google_chart_customers':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_customers.php');
-				break;
-			case 'google_chart_carts':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_carts.php');
-				break;
-			case 'turnoverPerMonth':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_month.php');
-				break;
-			case 'turnoverPerYear':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_year.php');
-				break;
-			case 'referrerToplist':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/referrerToplist.php');
-				break;
-			case 'customersPerMonth':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/customersPerMonth.php');
-				break;
-			case 'searchKeywordsToplist':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php');
-				break;
-			case 'ordersLatest':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersLatest.php');
-				break;
-			case 'ordersPerMonth':
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersPerMonth.php');
-				break;
-		}
-		return $compiledWidget;
-	}
-	function displayDashboard() {
-		$GLOBALS['TSFE']->additionalHeaderData[]='
+    var $dashboardArray = array();
+    var $widgetsArray = array();
+    var $compiledWidgets = array();
+    var $senabledWidgets = array();
+    var $layouts = array(
+            'layout1big1small' => 2,
+            'layout1small1big' => 2,
+            'layout2cols' => 2,
+            'layout3cols' => 3,
+            'layout4cols' => 4
+    );
+    function initLanguage($ms_locallang) {
+        $this->pi_loadLL();
+        //array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+        $this->LOCAL_LANG = array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+        if ($this->altLLkey) {
+            $this->LOCAL_LANG = array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+        }
+    }
+    function init($ref) {
+        mslib_fe::init($ref);
+    }
+    function setSection($string) {
+        $this->dashboardArray['section'] = $string;
+    }
+    function renderWidgets() {
+        switch ($this->dashboardArray['section']) {
+            case 'admin_home':
+                $this->enabledWidgets['ordersPerMonth'] = 1;
+                $this->enabledWidgets['google_chart_orders'] = 1;
+                $this->enabledWidgets['google_chart_customers'] = 1;
+                $this->enabledWidgets['google_chart_carts'] = 1;
+                $this->enabledWidgets['customersPerMonth'] = 1;
+                $this->enabledWidgets['turnoverPerMonth'] = 1;
+                $this->enabledWidgets['turnoverPerYear'] = 1;
+                $this->enabledWidgets['referrerToplist'] = 1;
+                $this->enabledWidgets['searchKeywordsToplist'] = 1;
+                $this->enabledWidgets['ordersLatest'] = 1;
+                // ORDERS TOTAL TABLES EOF
+                break;
+            case 'admin_edit_customer':
+                $this->enabledWidgets['ordersPerMonth'] = 1;
+                $this->enabledWidgets['google_chart_orders'] = 1;
+                $this->enabledWidgets['google_chart_carts'] = 1;
+                $this->enabledWidgets['turnoverPerMonth'] = 1;
+                $this->enabledWidgets['turnoverPerYear'] = 1;
+                $this->enabledWidgets['referrerToplist'] = 1;
+                $this->enabledWidgets['searchKeywordsToplist'] = 1;
+                $this->enabledWidgets['ordersLatest'] = 1;
+                break;
+        }
+        //hook to let other plugins further manipulate the settings
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['renderWidgetsPreProc'])) {
+            $params = array();
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['renderWidgetsPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // COMPILING
+        $this->compiledWidgets = array();
+        foreach ($this->enabledWidgets as $widgetKey => $enabled) {
+            if ($enabled) {
+                $compiledWidget = tx_mslib_dashboard::compileWidget($widgetKey);
+                if ($compiledWidget['additionalHeaderData']['content']) {
+                    $GLOBALS['TSFE']->additionalHeaderData[$compiledWidget['additionalHeaderData']['key']] = $compiledWidget['additionalHeaderData']['content'];
+                }
+                $this->compiledWidgets[$widgetKey] = $compiledWidget;
+            }
+        }
+    }
+    function compileWidget($key) {
+        $compiledWidget = array();
+        switch ($key) {
+            case 'google_chart_orders':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/google_chart_new_orders.php');
+                break;
+            case 'google_chart_customers':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/google_chart_new_customers.php');
+                break;
+            case 'google_chart_carts':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/google_chart_carts.php');
+                break;
+            case 'turnoverPerMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_month.php');
+                break;
+            case 'turnoverPerYear':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_year.php');
+                break;
+            case 'referrerToplist':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/referrerToplist.php');
+                break;
+            case 'customersPerMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/customersPerMonth.php');
+                break;
+            case 'searchKeywordsToplist':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php');
+                break;
+            case 'ordersLatest':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/ordersLatest.php');
+                break;
+            case 'ordersPerMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/ordersPerMonth.php');
+                break;
+            default:
+                //hook to let other plugins further manipulate the settings
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['compileWidgetDefault'])) {
+                    $params = array('key' => &$key);
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['compileWidgetDefault'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                break;
+        }
+        return $compiledWidget;
+    }
+    function displayDashboard() {
+        $GLOBALS['TSFE']->additionalHeaderData[] = '
 		<style>
 		body { min-width: 520px; }
 		.column { width: 170px; float: left; padding-bottom: 100px; }
@@ -135,7 +151,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
 		.ui-sortable-placeholder * { visibility: hidden; }
 		</style>
-		<link href="'.$this->FULL_HTTP_URL_MS.'templates/admin_multishop/css/admin_home.css" rel="stylesheet" type="text/css"/>
+		<link href="' . $this->FULL_HTTP_URL_MS . 'templates/admin_multishop/css/admin_home.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript">
 		makesortable = function() {
 			var old_position;
@@ -214,9 +230,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		});
 		</script>
 		';
-		$col=0;
-		$intCounter=0;
-		$headerData='
+        $col = 0;
+        $intCounter = 0;
+        $headerData = '
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			$("#addWidgetButton").click(function(e) {
@@ -226,13 +242,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				switch(rowType)
 				{
 					';
-		foreach ($layouts as $layout=>$cols) {
-			$headerData.='
-						case "'.$layout.'": var cols=\''.$cols.'\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
+        foreach ($layouts as $layout => $cols) {
+            $headerData .= '
+						case "' . $layout . '": var cols=\'' . $cols . '\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
 						break;
 						';
-		}
-		$headerData.='
+        }
+        $headerData .= '
 					default: html =\'<div class="column">dummy</div>\';
 				}
 				html+=\'</div>\';
@@ -244,96 +260,96 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		});
 		</script>
 		';
-		$GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
-		$headerData='';
-		$pageLayout=array();
-		if (isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
-			$cookie_json_decode=json_decode($_COOKIE['widget_position']);
-			foreach ($cookie_json_decode as $row_index=>$rows) {
-				$pageLayout[$row_index]['class']=$rows->rclass;
-				if (count($rows->column)>0) {
-					foreach ($rows->column as $column_index=>$columns) {
-						$widgets=array();
-						if (count($columns->widget_key)>0) {
-							foreach ($columns->widget_key as $wkey) {
-								$widgets[]=$wkey;
-							}
-						}
-						$pageLayout[$row_index]['cols'][$column_index]=$widgets;
-					}
-				}
-			}
-		} else {
-			switch ($this->dashboardArray['section']) {
-				case 'admin_home':
-				case 'admin_edit_customer':
-					$pageLayout[]=array(
-						'class'=>'layout1big1small',
-						'cols'=>array(
-							0=>array('ordersLatest'),
-							1=>array(
-								'google_chart_orders',
-								'google_chart_customers',
-								'google_chart_carts'
-							)
-						)
-					);
-					$pageLayout[]=array(
-						'class'=>'layout2cols',
-						'cols'=>array(
-							0=>array(
-								'searchKeywordsToplist',
-								'referrerToplist'
-							),
-							1=>array(
-								'turnoverPerMonth',
-								'ordersPerMonth',
-								'customersPerMonth'
-							)
-						)
-					);
-					break;
-			}
-		}
-		$content.='<div class="column-wrapper">';
-		//shuffle($layouts);
-		foreach ($pageLayout as $rowNr=>$cols) {
-			$content.='<div class="widgetRow '.$cols['class'].'" id="'.$cols['class'].'_'.$rowNr.'">';
-			$colNr=0;
-			foreach ($cols['cols'] as $col) {
-				$colNr++;
-				$content.='<div class="column columnCol'.($colNr).'" id="'.$cols['class'].'_'.$rowNr.'_'.($colNr-1).'">';
-				foreach ($col as $widget_key) {
-					$intCounter++;
-					if ($intCounter==1) {
-						//$idName='intro';
-						$idName='widget'.$intCounter;
-					} else {
-						$idName='widget'.$intCounter;
-					}
-					if ($this->compiledWidgets[$widget_key]['content']) {
-						$widget=$this->compiledWidgets[$widget_key];
-						$content.='<div class="portlet'.($widget['class'] ? ' '.$widget['class'] : '').'" rel="'.$intCounter.'" id="'.$widget_key.'">';
-						$content.='
+        $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
+        $headerData = '';
+        $pageLayout = array();
+        if (isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
+            $cookie_json_decode = json_decode($_COOKIE['widget_position']);
+            foreach ($cookie_json_decode as $row_index => $rows) {
+                $pageLayout[$row_index]['class'] = $rows->rclass;
+                if (count($rows->column) > 0) {
+                    foreach ($rows->column as $column_index => $columns) {
+                        $widgets = array();
+                        if (count($columns->widget_key) > 0) {
+                            foreach ($columns->widget_key as $wkey) {
+                                $widgets[] = $wkey;
+                            }
+                        }
+                        $pageLayout[$row_index]['cols'][$column_index] = $widgets;
+                    }
+                }
+            }
+        } else {
+            switch ($this->dashboardArray['section']) {
+                case 'admin_home':
+                case 'admin_edit_customer':
+                    $pageLayout[] = array(
+                            'class' => 'layout1big1small',
+                            'cols' => array(
+                                    0 => array('ordersLatest'),
+                                    1 => array(
+                                            'google_chart_orders',
+                                            'google_chart_customers',
+                                            'google_chart_carts'
+                                    )
+                            )
+                    );
+                    $pageLayout[] = array(
+                            'class' => 'layout2cols',
+                            'cols' => array(
+                                    0 => array(
+                                            'searchKeywordsToplist',
+                                            'referrerToplist'
+                                    ),
+                                    1 => array(
+                                            'turnoverPerMonth',
+                                            'ordersPerMonth',
+                                            'customersPerMonth'
+                                    )
+                            )
+                    );
+                    break;
+            }
+        }
+        $content .= '<div class="column-wrapper">';
+        //shuffle($layouts);
+        foreach ($pageLayout as $rowNr => $cols) {
+            $content .= '<div class="widgetRow ' . $cols['class'] . '" id="' . $cols['class'] . '_' . $rowNr . '">';
+            $colNr = 0;
+            foreach ($cols['cols'] as $col) {
+                $colNr++;
+                $content .= '<div class="column columnCol' . ($colNr) . '" id="' . $cols['class'] . '_' . $rowNr . '_' . ($colNr - 1) . '">';
+                foreach ($col as $widget_key) {
+                    $intCounter++;
+                    if ($intCounter == 1) {
+                        //$idName='intro';
+                        $idName = 'widget' . $intCounter;
+                    } else {
+                        $idName = 'widget' . $intCounter;
+                    }
+                    if ($this->compiledWidgets[$widget_key]['content']) {
+                        $widget = $this->compiledWidgets[$widget_key];
+                        $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">';
+                        $content .= '
 					<div class="portlet-header">
-						<h3>'.($widget['title'] ? $widget['title'] : 'Widget '.$intCounter).'</h3>
+						<h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
 					</div>
 					<div class="portlet-content">
-						'.$widget['content'].'
+						' . $widget['content'] . '
 					</div>
 					';
-						$content.='</div>';
-					}
-				}
-				$content.='</div>';
-			}
-			$content.='</div>';
-		}
-		$content.='</div>';
-		return $content;
-	}
+                        $content .= '</div>';
+                    }
+                }
+                $content .= '</div>';
+            }
+            $content .= '</div>';
+        }
+        $content .= '</div>';
+        return $content;
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_dashboard.php"]) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_dashboard.php"]);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_dashboard.php"]);
 }
 ?>

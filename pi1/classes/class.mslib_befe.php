@@ -4518,7 +4518,7 @@ class mslib_befe {
 		}
 	}
 	function antiXSS($val, $mode='') {
-		require_once(t3lib_extMgm::extPath('multishop').'res/htmlpurifier-4.7.0/HTMLPurifier.auto.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/htmlpurifier-4.7.0/HTMLPurifier.auto.php');
 		if(is_array($val)) {
 			foreach($val as $key=>$subVal) {
 				$val[$key]=mslib_befe::antiXSS($subVal, $mode);
