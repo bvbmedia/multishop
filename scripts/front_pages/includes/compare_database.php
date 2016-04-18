@@ -913,6 +913,90 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$updateOrders=0;
+	$types=array();
+	$types[]='billing';
+	$types[]='delivery';
+
+	$cols=array();
+	$cols[]='tr_iso_nr';
+	$cols[]='tr_name_en';
+	$cols[]='tr_parent_iso_nr';
+	$cols[]='tr_parent_name_en';
+
+
+	foreach ($types as $type) {
+		foreach ($cols as $col) {
+			$str='select '.$type.'_'.$col.' from tx_multishop_orders limit 1';
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$qry) {
+				$colType='';
+				switch($col) {
+					case 'tr_iso_nr':
+						$colType='int(11) default \'0\'';
+						break;
+					case 'tr_name_en':
+						$colType='varchar(50) default \'\'';
+						break;
+					case 'tr_parent_iso_nr':
+						$colType='int(11) default \'0\'';
+						break;
+					case 'tr_parent_name_en':
+						$colType='varchar(50) default \'\'';
+						break;
+				}
+				if ($colType) {
+					$str='ALTER TABLE `tx_multishop_orders` ADD '.$type.'_'.$col.' '.$colType.', ADD KEY `'.$type.'_'.$col.'` (`'.$type.'_'.$col.'`)';
+					//error_log($str);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$messages[]=$str;
+				}
+			}
+		}
+	}
+	$filter=array();
+	$filter[]='billing_tr_iso_nr=0';
+	$count=mslib_befe::getCount('','tx_multishop_orders','',$filter);
+	if ($count) {
+		$str = 'SELECT o.orders_id, o.billing_country,o.delivery_country, o.billing_tr_iso_nr, o.delivery_tr_iso_nr from tx_multishop_orders o';
+		$query = $GLOBALS['TYPO3_DB']->sql_query($str);
+		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($query);
+		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query)) != false) {
+			if (!$row['billing_tr_iso_nr']) {
+				$types=array();
+				$types[]='billing';
+				$types[]='delivery';
+
+				foreach ($types as $type) {
+					$str2='select st.* from static_countries sc, static_territories st where sc.cn_short_en=\''.addslashes($row[$type.'_country']).'\' and st.tr_iso_nr=sc.cn_parent_tr_iso_nr';
+					$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+					$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+					if ($rows2) {
+						$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+						$updateArray=array();
+						$updateArray[$type.'_tr_iso_nr']=$row2['tr_iso_nr'];
+						$updateArray[$type.'_tr_name_en']=$row2['tr_name_en'];
+
+						$str2='select * from static_territories where tr_iso_nr='.$row2['tr_parent_iso_nr'];
+						$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+						$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+						if ($rows2) {
+							$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+
+							$updateArray[$type.'_tr_parent_iso_nr']=$row2['tr_iso_nr'];
+							$updateArray[$type.'_tr_parent_name_en']=$row2['tr_name_en'];
+						}
+						if (count($updateArray)) {
+							$query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $row['orders_id'], $updateArray);
+							$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+							$messages[]=$query2;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	$table='tx_multishop_invoices';
 	$str="describe `".$table."`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
