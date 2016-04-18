@@ -108,7 +108,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #tx_multishop_admin_header.affix { position:fixed !important; top:0; width:220px; }
 #tx_multishop_admin_header.affix-bottom { position:absolute !important; width:220px; }
 
-#tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; z-index:8888890; }
+#tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; z-index:8888890 ; }
 
 #msadmin_footer_wrapper { display:none; background:#333; padding:0 0 0 220px; }
 #msadmin_footer { overflow:hidden; }
