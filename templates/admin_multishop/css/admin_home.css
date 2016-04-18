@@ -209,6 +209,7 @@
 #msadmin_content .layout1small1big .columnCol2 { width:66.33333%; margin-right:0; }
 #msadmin_content .layout1big1small .columnCol1 { width:66.33333%; }
 #msadmin_content .layout1big1small .columnCol2 { width:32.66667%; margin-right:0; }
+#msadmin_content .layout1col .column { width:100%; }
 #msadmin_content .layout2cols .column { width:49.5%; }
 #msadmin_content .layout2cols .columnCol2 { margin-right:0; }
 #msadmin_content .layout3cols .column { width:32.66667%; }
