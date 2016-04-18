@@ -453,9 +453,9 @@ if ($this->get['skeyword']) {
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['invoice_date_from']);
-	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($fd, $fm, $fy)=explode('-', $from_date);
 	list($till_date, $till_time)=explode(" ", $this->get['invoice_date_till']);
-	list($td, $tm, $ty)=explode('/', $till_date);
+	list($td, $tm, $ty)=explode('-', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
 	$column='i.crdate';
@@ -487,6 +487,18 @@ if ($this->cookie['paid_invoices_only']) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->get['country'])."'";
 }
+if (isset($this->get['order_customer']) && !empty($this->get['order_customer']) && $this->get['order_customer']!=99999) {
+	$filter[]="o.customer_id='".addslashes($this->get['order_customer'])."'";
+}
+if (isset($this->get['order_territory']) && !empty($this->get['order_territory']) && $this->get['order_territory']!=99999) {
+	$filter[]="o.billing_tr_iso_nr='".addslashes($this->get['order_territory'])."' or o.billing_tr_parent_iso_nr='".addslashes($this->get['order_territory'])."'";
+}
+if (isset($this->get['ordered_manufacturer']) && !empty($this->get['ordered_manufacturer']) && $this->get['ordered_manufacturer']!=99999) {
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.manufacturers_id='".addslashes($this->get['ordered_manufacturer'])."')";
+}
+if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category']!=99999) {
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.categories_id='".addslashes($this->get['ordered_category'])."')";
+}
 if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!=99999) {
 	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->get['ordered_product'])."')";
 }
@@ -515,6 +527,10 @@ $subpartArray['###UNFOLD_SEARCH_BOX###']='';
 if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
 	(isset($this->get['country']) && !empty($this->get['country'])) ||
 	(isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+	(isset($this->get['ordered_manufacturer']) && !empty($this->get['ordered_manufacturer'])) ||
+	(isset($this->get['order_customer']) && !empty($this->get['order_customer'])) ||
+	(isset($this->get['order_territory']) && !empty($this->get['order_territory'])) ||
+	(isset($this->get['ordered_category']) && !empty($this->get['ordered_category'])) ||
 	(isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
 	(isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) ||
 	(isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
@@ -558,9 +574,20 @@ $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_INVOICES###']=$this->pi_getLL('admin_invoices');
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_sb;
+$subpartArray['###LABEL_ORDERED_MANUFACTURER###']=$this->pi_getLL('admin_ordered_manufacturer');
+$subpartArray['###LABEL_ORDERED_CATEGORY###']=$this->pi_getLL('admin_ordered_category');
 $subpartArray['###LABEL_ORDERED_PRODUCT###']=$this->pi_getLL('admin_ordered_product');
+$subpartArray['###VALUE_ORDERED_MANUFACTURER###']=$this->get['ordered_manufacturer'];
+$subpartArray['###VALUE_ORDERED_CATEGORY###']=$this->get['ordered_category'];
 $subpartArray['###VALUE_ORDERED_PRODUCT###']=$this->get['ordered_product'];
+$subpartArray['###LABEL_USERS###']=$this->pi_getLL('customer');
+$subpartArray['###VALUE_ORDER_CUSTOMER###']=$this->get['order_customer'];
+$subpartArray['###LABEL_TERRITORIES###']=$this->pi_getLL('territory');
+$subpartArray['###VALUE_ORDER_TERRITORY###']=$this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
+
+$subpartArray['###DATE_TIME_JS_FORMAT0###']=$this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT1###']=$this->pi_getLL('locale_date_format_js');
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
@@ -667,51 +694,58 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
     			cancelButton: \'NO\'
 			});
 		});
-		$(".ordered_product").select2({
-			placeholder: "'.$this->pi_getLL('all').'",
-			minimumInputLength: 0,
-			query: function(query) {
-				$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
-					data: {
-						q: query.term
-					},
-					dataType: "json"
-				}).done(function(data) {
-					query.callback({results: data});
-				});
-			},
-			initSelection: function(element, callback) {
-				var id=$(element).val();
-				if (id!=="") {
-					$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+		var ordered_select2 = function (selector, ajax_url) {
+			$(selector).select2({
+				placeholder: "'.$this->pi_getLL('all').'",
+				minimumInputLength: 0,
+				query: function(query) {
+					$.ajax(ajax_url, {
 						data: {
-							preselected_id: id
+							q: query.term
 						},
 						dataType: "json"
 					}).done(function(data) {
-						callback(data);
+						query.callback({results: data});
 					});
-				}
-			},
-			formatResult: function(data){
-				if (data.text === undefined) {
-					$.each(data, function(i,val){
-						return val.text;
-					});
-				} else {
-					return data.text;
-				}
-			},
-			formatSelection: function(data){
-				if (data.text === undefined) {
-					return data[0].text;
-				} else {
-					return data.text;
-				}
-			},
-			dropdownCssClass: "orderedProductsDropDownCss",
-			escapeMarkup: function (m) { return m; }
-		});
+				},
+				initSelection: function(element, callback) {
+					var id=$(element).val();
+					if (id!=="") {
+						$.ajax(ajax_url, {
+							data: {
+								preselected_id: id
+							},
+							dataType: "json"
+						}).done(function(data) {
+							callback(data);
+						});
+					}
+				},
+				formatResult: function(data){
+					if (data.text === undefined) {
+						$.each(data, function(i,val){
+							return val.text;
+						});
+					} else {
+						return data.text;
+					}
+				},
+				formatSelection: function(data){
+					if (data.text === undefined) {
+						return data[0].text;
+					} else {
+						return data.text;
+					}
+				},
+				dropdownCssClass: "orderedProductsDropDownCss",
+				escapeMarkup: function (m) { return m; }
+			});
+		}
+		ordered_select2(".ordered_manufacturer", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_manufacturers').'");
+		ordered_select2(".ordered_category", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_categories').'");
+		ordered_select2(".ordered_product", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'");
+		ordered_select2(".order_customer", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_order_customers').'");
+		ordered_select2(".order_territory", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_order_territories').'");
 	});
 </script>
 ';

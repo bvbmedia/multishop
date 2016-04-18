@@ -770,6 +770,210 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'get_order_territories':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='o.billing_tr_name_en like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(o.billing_tr_name_en like \'%'.addslashes($this->get['q']).'%\' or o.billing_tr_iso_nr = \''.addslashes($this->get['q']).'\' or o.billing_tr_parent_iso_nr = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='o.billing_tr_iso_nr = \''.addslashes($this->get['preselected_id']).'\' or o.billing_tr_parent_iso_nr = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.billing_tr_iso_nr, o.billing_tr_name_en, o.billing_tr_parent_iso_nr', // SELECT ...
+				'tx_multishop_orders o', // FROM ...
+				implode(' and ', $where), // WHERE...
+				'o.billing_tr_iso_nr', // GROUP BY...
+				'o.billing_tr_name_en asc', // ORDER BY...
+				$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		$territories=array();
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!isset($this->get['preselected_id']) || ($this->get['preselected_id']==$row['billing_tr_parent_iso_nr'])) {
+					$str_parent = $GLOBALS ['TYPO3_DB']->SELECTquery('st.tr_name_en', // SELECT ...
+							'static_territories st', // FROM ...
+							'st.tr_iso_nr=' . $row['billing_tr_parent_iso_nr'], // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							$limit // LIMIT ...
+					);
+					$qry_parent = $GLOBALS['TYPO3_DB']->sql_query($str_parent);
+					$row_parent = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_parent);
+					$territories[$row['billing_tr_parent_iso_nr']]['name'] = $row_parent['tr_name_en'];
+				}
+				$territories[$row['billing_tr_parent_iso_nr']]['children'][]=array(
+					'id'=>$row['billing_tr_iso_nr'],
+					'text'=>$row['billing_tr_name_en']
+				);
+			}
+			if (count($territories)) {
+				foreach ($territories as $parent_id => $territory) {
+					if (isset($territory['name']) && !empty($territory['name'])) {
+						$data[] = array(
+								'id' => $parent_id,
+								'text' => $territory['name'],
+								'children' => $territory['children']
+						);
+					} else {
+						$data = $territory['children'];
+					}
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
+		exit();
+		break;
+	case 'get_order_customers':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='m.billing_name like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(m.billing_name like \'%'.addslashes($this->get['q']).'%\' or op.customer_id = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='o.customer_id = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.customer_id, o.billing_name', // SELECT ...
+				'tx_multishop_orders o', // FROM ...
+				implode(' and ', $where), // WHERE...
+				'o.customer_id', // GROUP BY...
+				'o.billing_name asc', // ORDER BY...
+				$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!empty($row['billing_name'])) {
+					$data[]=array(
+						'id'=>$row['customer_id'],
+						'text'=>$row['billing_name']
+					);
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
+		exit();
+		break;
+	case 'get_ordered_manufacturers':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='m.manufacturers_name like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(m.manufacturers_name like \'%'.addslashes($this->get['q']).'%\' or op.manufacturers_id = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='op.manufacturers_id = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$where[]='m.status=1';
+		$where[]='m.manufacturers_id=op.manufacturers_id';
+		$where[]='o.orders_id=op.orders_id';
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*, m.manufacturers_name', // SELECT ...
+				'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_manufacturers m', // FROM ...
+				implode(' and ', $where), // WHERE...
+				'm.manufacturers_id', // GROUP BY...
+				'm.manufacturers_name asc', // ORDER BY...
+				$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!empty($row['manufacturers_name'])) {
+					$data[]=array(
+						'id'=>$row['manufacturers_id'],
+						'text'=>$row['manufacturers_name']
+					);
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
+		exit();
+		break;
+	case 'get_ordered_categories':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='cd.categories_name like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(cd.categories_name like \'%'.addslashes($this->get['q']).'%\' or op.categories_id = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='op.categories_id = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$where[]='o.page_uid=' . $this->showCatalogFromPage;
+		$where[]='cd.language_id=' . $this->sys_language_uid;
+		$where[]='c.status=1';
+		$where[]='c.categories_id=cd.categories_id';
+		$where[]='c.categories_id=op.categories_id';
+		$where[]='o.orders_id=op.orders_id';
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*, cd.categories_name', // SELECT ...
+				'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				implode(' and ', $where), // WHERE.
+				'op.categories_id', // GROUP BY...
+				'cd.categories_name asc', // ORDER BY...
+				$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!empty($row['categories_name'])) {
+					$data[]=array(
+						'id'=>$row['categories_id'],
+						'text'=>$row['categories_name']
+					);
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
+		exit();
+		break;
 	case 'get_ordered_products':
 		$where=array();
 		$skip_db=false;
