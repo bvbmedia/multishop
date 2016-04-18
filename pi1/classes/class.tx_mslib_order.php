@@ -1314,6 +1314,29 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['customer_comments']='';
 			}
 			$insertArray['hash']=md5(uniqid('', true));
+			$types=array();
+			$types[]='billing';
+			$types[]='delivery';
+			foreach ($types as $type) {
+				$str2='select st.* from static_countries sc, static_territories st where sc.cn_short_en=\''.addslashes($insertArray[$type.'_country']).'\' and st.tr_iso_nr=sc.cn_parent_tr_iso_nr';
+				$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+				$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+				if ($rows2) {
+					$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+					$insertArray[$type.'_tr_iso_nr']=$row2['tr_iso_nr'];
+					$insertArray[$type.'_tr_name_en']=$row2['tr_name_en'];
+
+					$str2='select * from static_territories where tr_iso_nr='.$row2['tr_parent_iso_nr'];
+					$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+					$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+					if ($rows2) {
+						$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+
+						$insertArray[$type.'_tr_parent_iso_nr']=$row2['tr_iso_nr'];
+						$insertArray[$type.'_tr_parent_name_en']=$row2['tr_name_en'];
+					}
+				}
+			}
 			//hook to let other plugins further manipulate the replacers
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'])) {
 				$params=array(
