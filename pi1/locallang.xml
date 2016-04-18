@@ -1291,6 +1291,7 @@
             <label index="admin_ordered_manufacturer">Ordered manufacturers</label>
             <label index="admin_ordered_category">Ordered categories</label>
             <label index="territory">Territory</label>
+            <label index="sales_volume_by_month_per_product">Monthly sales volume per product</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2571,6 +2572,7 @@
             <label index="new_subtotal_excl_vat">Totaal Excl. BTW</label>
             <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
             <label index="total_excl_vat">Totaal</label>
+            <label index="sales_volume_by_month_per_product">Omzet per product</label>
         </languageKey>
     </data>
 </T3locallang>

@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-$compiledWidget['key']='turnoverPerProduct_B2U';
+$compiledWidget['key']='turnoverPerProduct';
 $compiledWidget['defaultCol']=1;
 $compiledWidget['title']=$this->pi_getLL('sales_volume_by_month_per_product');
 $categoriesTotal=array();

@@ -288,6 +288,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 case 'admin_home':
                 case 'admin_edit_customer':
                     $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverPerProduct')
+                            )
+                    );
+                    $pageLayout[] = array(
                             'class' => 'layout1big1small',
                             'cols' => array(
                                     0 => array('ordersLatest'),
@@ -312,12 +318,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     )
                             )
                     );
-                    $pageLayout[] = array(
-                            'class' => 'layout1col',
-                            'cols' => array(
-                                    0 => array('turnoverPerProduct')
-                            )
-                    );
+
                     break;
             }
         }
