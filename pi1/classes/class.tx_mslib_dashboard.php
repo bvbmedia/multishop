@@ -57,11 +57,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['google_chart_customers'] = 1;
                 $this->enabledWidgets['google_chart_carts'] = 1;
                 $this->enabledWidgets['customersPerMonth'] = 1;
-                $this->enabledWidgets['turnoverPerMonth'] = 1;
+                $this->enabledWidgets['turnoverPerProduct'] = 1;
                 $this->enabledWidgets['turnoverPerYear'] = 1;
                 $this->enabledWidgets['referrerToplist'] = 1;
                 $this->enabledWidgets['searchKeywordsToplist'] = 1;
                 $this->enabledWidgets['ordersLatest'] = 1;
+                $this->enabledWidgets['turnoverPerMonth'] = 1;
                 // ORDERS TOTAL TABLES EOF
                 break;
             case 'admin_edit_customer':
@@ -126,6 +127,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 break;
             case 'ordersPerMonth':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/ordersPerMonth.php');
+                break;
+            case 'turnoverPerProduct':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_product.php');
                 break;
             default:
                 //hook to let other plugins further manipulate the settings
@@ -306,6 +310,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                             'ordersPerMonth',
                                             'customersPerMonth'
                                     )
+                            )
+                    );
+                    $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverPerProduct')
                             )
                     );
                     break;
