@@ -1288,6 +1288,9 @@
             <label index="new_subtotal_excl_vat">Total Excl. VAT</label>
             <label index="new_subtotal_incl_vat">Total Incl. VAT</label>
             <label index="total_excl_vat">Total</label>
+            <label index="admin_ordered_manufacturer">Ordered manufacturers</label>
+            <label index="admin_ordered_category">Ordered categories</label>
+            <label index="territory">Territory</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
