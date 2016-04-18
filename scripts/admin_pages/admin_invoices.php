@@ -453,9 +453,9 @@ if ($this->get['skeyword']) {
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['invoice_date_from']);
-	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($fd, $fm, $fy)=explode('-', $from_date);
 	list($till_date, $till_time)=explode(" ", $this->get['invoice_date_till']);
-	list($td, $tm, $ty)=explode('/', $till_date);
+	list($td, $tm, $ty)=explode('-', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
 	$column='i.crdate';
@@ -585,6 +585,9 @@ $subpartArray['###VALUE_ORDER_CUSTOMER###']=$this->get['order_customer'];
 $subpartArray['###LABEL_TERRITORIES###']=$this->pi_getLL('territory');
 $subpartArray['###VALUE_ORDER_TERRITORY###']=$this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
+
+$subpartArray['###DATE_TIME_JS_FORMAT0###']=$this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT1###']=$this->pi_getLL('locale_date_format_js');
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
