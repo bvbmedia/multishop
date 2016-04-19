@@ -45,6 +45,7 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
+    $('[data-toggle="tooltip"]').tooltip({html:true});
     $('.msBtnConfirm').click(function (e) {
         e.preventDefault();
         var linkTarget = $(this).attr("href");
