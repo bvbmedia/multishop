@@ -102,9 +102,9 @@ foreach ($dates as $key=>$value) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$total_price+=$row['total_final_price'];
-			$compiledWidget['content'].='<td class="text-right"><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_invoices&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&ordered_category='.$cid.'&type_search=all">'.mslib_fe::amount2Cents($row['total_final_price'], 0).'</a></td>';
+			$compiledWidget['content'].='<td class="text-right"><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&ordered_category='.$cid.'&type_search=all">'.mslib_fe::amount2Cents($row['total_final_price'], 0, 1, 0).'</a></td>';
 		}
-		//$compiledWidget['content'].='<td class="text-right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
+		//$compiledWidget['content'].='<td class="text-right">'.mslib_fe::amount2Cents($total_price, 0, 1, 0).'</td>';
 		$total_amount=$total_amount+$total_price;
 		$categoriesTotal[$cid]=($categoriesTotal[$cid]+$total_price);
 		$allTotal=($allTotal+$total_price);
@@ -114,15 +114,15 @@ foreach ($dates as $key=>$value) {
 		$currentYear=0;
 		$currentMonth=0;
 	}
-	//$compiledWidget['content'].='<td class="text-right" nowrap>'.mslib_fe::amount2Cents($total_amount, 0).'</td>';
-	$compiledWidget['content'].='<td class="text-right" nowrap><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_invoices&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&type_search=all">'.mslib_fe::amount2Cents($total_amount, 0).'</a></td>';
+	//$compiledWidget['content'].='<td class="text-right" nowrap>'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</td>';
+	$compiledWidget['content'].='<td class="text-right" nowrap><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&type_search=all">'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</a></td>';
 	$compiledWidget['content'].='</tr>';
 }
 $compiledWidget['content'].='</tbody><tfoot><tr><th>Total</th>';
 foreach ($categoriesTotal as $key => $val) {
-	$compiledWidget['content'].='<th class="text-right" nowrap>'.mslib_fe::amount2Cents($val, 0).'</th>';
+	$compiledWidget['content'].='<th class="text-right" nowrap>'.mslib_fe::amount2Cents($val, 0, 1, 0).'</th>';
 }
-$compiledWidget['content'].='<th class="text-right" nowrap>'.mslib_fe::amount2Cents($allTotal, 0).'</th>';
+$compiledWidget['content'].='<th class="text-right" nowrap>'.mslib_fe::amount2Cents($allTotal, 0, 1, 0).'</th>';
 $compiledWidget['content'].='</tr></tfoot>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
