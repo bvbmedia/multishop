@@ -79,7 +79,7 @@ ul#ms_admin_maximize li a:after { position:absolute; left:15px; top:10px; border
 ul#ms_admin_maximize li a:hover { background:#000; text-decoration:underline; }
 ul#ms_admin_maximize li a:focus { background:#000; text-decoration:none; }
 
-#tx_multishop_admin_footer_wrapper { position:fixed; left:0; right:0; bottom:0; height:38px; background:#000; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; box-shadow:0 0 10px rgba(0,0,0,.8); z-index:10004; }
+#tx_multishop_admin_footer_wrapper { position:fixed; left:0; right:0; bottom:0; height:38px; background:#000; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; box-shadow:0 0 10px rgba(0,0,0,.8); z-index:8888890; }
 
 /* bootstrap overrule */
 .dropdown-backdrop { display:none; }

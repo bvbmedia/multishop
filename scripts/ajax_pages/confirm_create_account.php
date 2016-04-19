@@ -46,7 +46,13 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($targetPid);
 	} else {
 		// redirect to shop
-		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
+		if (is_numeric($this->conf['confirmed_create_account_target_pid'])) {
+			$targetPid=$this->conf['confirmed_create_account_target_pid'];
+		} else {
+			$targetPid=$this->conf['checkout_page_pid'];
+		}
+		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($targetPid);
+		//$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
 	}
 	//hook to let other plugins further manipulate the redirect link
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/confirm_create_account']['confirmationSuccesfulRedirectLinkPreProc'])) {
