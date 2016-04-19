@@ -6578,7 +6578,8 @@ class mslib_fe {
 		}
 		$order_status_array=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$ms_menu=array();
-		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank">';
+		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home').'">';
+		//$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank">';
 		if ($this->conf['admin_development_company_logo']) {
 			// Display custom logo of development company
 			$ms_menu['header']['ms_admin_logo']['description'].='<img src="'.$this->conf['admin_development_company_logo'].'">';
