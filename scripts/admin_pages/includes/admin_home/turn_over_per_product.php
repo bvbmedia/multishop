@@ -118,7 +118,7 @@ foreach ($dates as $key=>$value) {
 	$compiledWidget['content'].='<td class="text-right" nowrap><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&type_search=all">'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</a></td>';
 	$compiledWidget['content'].='</tr>';
 }
-$compiledWidget['content'].='</tbody><tfoot><tr><th>Total</th>';
+$compiledWidget['content'].='</tbody><tfoot><tr><th class="text-right" nowrap>Total</th>';
 foreach ($categoriesTotal as $key => $val) {
 	$compiledWidget['content'].='<th class="text-right" nowrap>'.mslib_fe::amount2Cents($val, 0, 1, 0).'</th>';
 }
