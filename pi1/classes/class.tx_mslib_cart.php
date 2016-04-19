@@ -1334,7 +1334,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_default']=1;
 				$insertArray['tx_multishop_customer_id']=$customer_id;
 				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
-				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// send out the create account confirmation e-mail
 				if (isset($address['password']) && !empty($address['password'])) {
@@ -1422,7 +1422,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_address_type']='delivery';
 				$insertArray['tx_multishop_default']=0;
 				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
-				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// ADD TT_ADDRESS RECORD EOF
 				//hook to let other plugins further manipulate the create table query
@@ -1481,7 +1481,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_default']=1;
 				$insertArray['tx_multishop_customer_id']=$customer_id;
 				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
-				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 			if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
@@ -1567,7 +1567,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_address_type']='delivery';
 				$insertArray['tx_multishop_default']=0;
 				$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
-				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
