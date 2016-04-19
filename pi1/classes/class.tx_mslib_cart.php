@@ -2372,7 +2372,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$this->cart['user']['payment_method_costs']=$payment_method['handling_costs'];
 			} else {
 				// calculate total payment costs based by %
-				$subtotal=$this->cart['summarize']['sub_total_including_vat'];
+				$subtotal=$this->cart['summarize']['sub_total'];
 				if ($subtotal) {
 					if (strstr($payment_method['handling_costs'], "%")) {
 						$percentage=str_replace("%", '', $payment_method['handling_costs']);
