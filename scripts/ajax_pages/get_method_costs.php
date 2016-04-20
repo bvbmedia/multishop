@@ -46,7 +46,7 @@ if ($payment_method['handling_costs']) {
 		$payment_method_costs=$payment_method['handling_costs'];
 	} else {
 		// calculate total payment costs based by %
-		$subtotal=$cart['summarize']['sub_total'];
+		$subtotal=$cart['summarize']['grand_total_excluding_vat']-$cart['user']['payment_method_costs'];
 		if ($subtotal) {
 			if (strstr($payment_method['handling_costs'], "%")) {
 				$percentage=str_replace("%", '', $payment_method['handling_costs']);
