@@ -880,6 +880,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
 		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
 		$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
+		if (!$order['orders_tax_data']['total_orders_tax']) {
+			$markerArray['HEADING_TOTAL']=ucfirst($this->pi_getLL('total_excl_vat'));
+		} else {
+			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+		}
 		$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
 		$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
