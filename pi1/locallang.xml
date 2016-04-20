@@ -1460,7 +1460,7 @@
             <label index="admin_label_click_here_to_add_zones">Klik hier om een zone toe te voegen</label>
             <label index="admin_label_click_here_to_map_country_to_a_zone">Klik hier om een land te koppelen aan een zone</label>
             <label index="admin_label_cms_marker_billing_address">Factuuradres</label>
-            <label index="admin_label_cms_marker_billing_company">Afleveradres</label>
+            <label index="admin_label_cms_marker_billing_company">Factuur bedrijfsnaam</label>
             <label index="admin_label_cms_marker_create_account_confirmation_link">Account aanmaken bevestigingslink</label>
             <label index="admin_label_cms_marker_current_date_in_long_format">Huidige datum in volledige formaat (verzenddatum van bericht)</label>
             <label index="admin_label_cms_marker_customer_comments_update_status">Opmerking van debiteur (wordt gebruikt door order status wijzigingsbericht)</label>
@@ -1469,7 +1469,7 @@
             <label index="admin_label_cms_marker_customer_email_delivery">E-mailadres (afleveradres)</label>
             <label index="admin_label_cms_marker_customer_id">Debiteurnummer</label>
             <label index="admin_label_cms_marker_delivery_address">Afleveradres</label>
-            <label index="admin_label_cms_marker_delivery_company">Bedrijf afleveradres</label>
+            <label index="admin_label_cms_marker_delivery_company">Afleveradres bedrijfsnaam</label>
             <label index="admin_label_cms_marker_expected_delivery_date">Verwachte leverdatum</label>
             <label index="admin_label_cms_marker_first_name_billing">Voornaam (factuuradres)</label>
             <label index="admin_label_cms_marker_first_name_delivery">Voornaam (afleveradres)</label>
