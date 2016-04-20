@@ -2212,7 +2212,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				};
 				$updateArray['orders_last_modified']=time();
 
-				//$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderDiscountPreProc'])) {
 					// hook
@@ -2672,7 +2672,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 			$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
 			$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
-			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+			if (!$this->cart['summarize']['grand_total_vat']) {
+				$markerArray['HEADING_TOTAL']=ucfirst($this->pi_getLL('total_excl_vat'));
+			} else {
+				$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+			}
 			$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 			$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
 			//ITEMS_HEADER_WRAPPER EOF
