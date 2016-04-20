@@ -9300,7 +9300,8 @@ class mslib_fe {
 				  dataType: \'json\',
 				  type: \'post\',
 				  success: function (j) {
-					  if (j.length > 0) {
+				  	if(typeof j !== \'undefined\') {
+					//if ( j.length > 0) {
 						  	toastr.options = {
 							  "closeButton": true,
 							  "debug": false,
