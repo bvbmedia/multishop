@@ -359,7 +359,7 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
 	$js_detail_page_triggers[]='
-		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');
+		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : 1).'\');
 		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');
 		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'\');
 		if ($("#quantity").val() == "") {
