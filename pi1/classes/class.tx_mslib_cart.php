@@ -1127,8 +1127,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		return $products_tax;
 	}
 	function convertCartToOrder($cart) {
-		//print_r($cart);
-		//die();
 		// var for total amount
 		$tax_separation=array();
 		$total_price=0;
@@ -1194,8 +1192,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$grand_total['payment_tax']=0;
 			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_tax']=0;
 			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_tax']=0;
-			$address['shipping_method_costs']=mslib_fe::taxDecimalCrop($address['shipping_method_costs'], 2, false);
-			$address['payment_method_costs']=mslib_fe::taxDecimalCrop($address['payment_method_costs'], 2, false);
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$address['shipping_method_costs'] = mslib_fe::taxDecimalCrop($address['shipping_method_costs'], 2, false);
+				$address['payment_method_costs'] = mslib_fe::taxDecimalCrop($address['payment_method_costs'], 2, false);
+			}
 		}
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
@@ -2211,6 +2211,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$updateArray['coupon_discount_value']=$cart['discount'];
 				};
 				$updateArray['orders_last_modified']=time();
+
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderDiscountPreProc'])) {
@@ -2371,7 +2372,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$this->cart['user']['payment_method_costs']=$payment_method['handling_costs'];
 			} else {
 				// calculate total payment costs based by %
-				$subtotal=$this->cart['summarize']['sub_total_including_vat'];
+				$subtotal=$this->cart['summarize']['grand_total_excluding_vat']-$this->cart['user']['payment_method_costs'];
 				if ($subtotal) {
 					if (strstr($payment_method['handling_costs'], "%")) {
 						$percentage=str_replace("%", '', $payment_method['handling_costs']);
@@ -2671,7 +2672,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 			$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
 			$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
-			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+			if (!$this->cart['summarize']['grand_total_vat']) {
+				$markerArray['HEADING_TOTAL']=ucfirst($this->pi_getLL('total_excl_vat'));
+			} else {
+				$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+			}
 			$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 			$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
 			//ITEMS_HEADER_WRAPPER EOF
@@ -2773,7 +2778,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 			//GRAND_TOTAL_WRAPPER
 			$key='GRAND_TOTAL_WRAPPER';
-			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+			if (!$this->cart['summarize']['grand_total_vat']) {
+				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total_excl_vat'));
+			} else {
+				$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+			}
 			// $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 			$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($this->cart['summarize']['grand_total']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');

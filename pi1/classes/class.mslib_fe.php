@@ -5364,6 +5364,7 @@ class mslib_fe {
 					}
 				}
 				$shipping_cost=$current_price;
+				$shipping_cost_method_box=$current_price;
 			} elseif ($row3['shipping_costs_type']=='quantity') {
 				$total_quantity=mslib_fe::countCartQuantity();
 				$steps=explode(",", $row3['price']);
@@ -5379,6 +5380,7 @@ class mslib_fe {
 					}
 				}
 				$shipping_cost=$current_price;
+				$shipping_cost_method_box=$current_price;
 			} else {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'])) {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'] as $funcRef) {
@@ -5387,10 +5389,12 @@ class mslib_fe {
 						$params['shipping_method']=&$shipping_method;
 						$params['shipping_method_id']= &$shipping_method_id;
 						$params['shipping_cost']= &$shipping_cost;
+						$params['shipping_cost_method_box']=&$shipping_cost_method_box;
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				} else {
 					$shipping_cost=$row3['price'];
+					$shipping_cost_method_box=$row3['price'];
 				}
 			}
 			//
@@ -5400,6 +5404,8 @@ class mslib_fe {
 			if (!empty($row3['override_shippingcosts'])) {
 				$old_shipping_costs=$shipping_cost;
 				$shipping_cost=$row3['override_shippingcosts'];
+
+
 				// custom code to change the shipping costs based on cart amount
 				if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 					$steps=explode(",", $shipping_cost);
@@ -5411,9 +5417,11 @@ class mslib_fe {
 						if (is_numeric($split[0])) {
 							if ($subtotal>$split[0] and isset($split[1])) {
 								$shipping_cost=$split[1];
+								$shipping_cost_method_box=$split[1];
 								next();
 							} else {
 								$shipping_cost=$old_shipping_costs;
+								$shipping_cost_method_box=$old_shipping_costs;
 							}
 						}
 						$count++;
@@ -5432,13 +5440,16 @@ class mslib_fe {
 						if ($count==0) {
 							if (isset($split[1])) {
 								$shipping_cost=$split[1];
+								$shipping_cost_method_box=$split[1];
 							} else {
 								$shipping_cost=$split[0];
+								$shipping_cost_method_box=$split[0];
 								next();
 							}
 						}
 						if ($subtotal>$split[0] and isset($split[1])) {
 							$shipping_cost=$split[1];
+							$shipping_cost_method_box=$split[0];
 							next();
 						}
 					}
@@ -5495,6 +5506,32 @@ class mslib_fe {
 */
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$shipping_cost=round($shipping_cost, 2);
+				$shipping_cost_method_box=round($shipping_cost_method_box, 2);
+			}
+			// shipping costs only for shipping method box display
+			if ($shipping_cost_method_box) {
+				if ($shipping_method['tax_id'] && $shipping_cost_method_box) {
+					$shipping_method_box_total_tax_rate=$shipping_method['tax_rate'];
+					if ($shipping_method['country_tax_rate']) {
+						$shipping_method_box_country_tax_rate=$shipping_method['country_tax_rate'];
+						$shipping_method_box_country_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['country_tax_rate']));
+					} else {
+						$shipping_method_box_country_tax_rate=0;
+						$shipping_method_box_country_tax=0;
+					}
+					if ($shipping_method['region_tax_rate']) {
+						$shipping_method_box_region_tax_rate=$shipping_method['region_tax_rate'];
+						$shipping_method_box_region_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['region_tax_rate']));
+					} else {
+						$shipping_method_box_region_tax_rate=0;
+						$shipping_method_box_region_tax=0;
+					}
+					if ($shipping_method_box_region_tax && $shipping_method_box_country_tax) {
+						$shipping_method_box_tax=$shipping_method_box_country_tax+$shipping_method_box_region_tax;
+					} else {
+						$shipping_method_box_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['tax_rate']));
+					}
+				}
 			}
 			if ($shipping_cost) {
 				if ($shipping_method['tax_id'] && $shipping_cost) {
@@ -5564,6 +5601,10 @@ class mslib_fe {
 			}
 			$shipping_cost+=$handling_cost;
 			$shipping_tax+=$handling_tax;
+			$shipping_cost_method_box+=$handling_cost;
+			$shipping_method_box_tax+=$handling_tax;
+			$shipping_method['shipping_costs_method_box']=$shipping_cost_method_box;
+			$shipping_method['shipping_costs_method_box_including_vat']=$shipping_cost_method_box+$shipping_method_box_tax;
 			$shipping_method['shipping_costs']=$shipping_cost;
 			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
 			return $shipping_method;
@@ -6309,7 +6350,9 @@ class mslib_fe {
 			if ($total_warnings>0) {
 				$tmpcontent='';
 				foreach ($messages as $message) {
-					$tmpcontent.=$message."<br /><br />\n";
+					if ($message) {
+						$tmpcontent.=$message."<br /><br />\n";
+					}
 				}
 				if ($tmpcontent) {
 					$html='
@@ -6535,7 +6578,8 @@ class mslib_fe {
 		}
 		$order_status_array=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$ms_menu=array();
-		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank">';
+		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home').'">';
+		//$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank">';
 		if ($this->conf['admin_development_company_logo']) {
 			// Display custom logo of development company
 			$ms_menu['header']['ms_admin_logo']['description'].='<img src="'.$this->conf['admin_development_company_logo'].'">';
@@ -7557,7 +7601,7 @@ class mslib_fe {
 				//var_dump($foreign_catid);
 				//die();
 				if (!$foreign_catid) {
-					$cat_data=mslib_fe::getCategoryData($cat['id'], $external_page_uid);
+					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
 					//
 					$exclude_columns=array();
 					$exclude_columns[]='categories_id';
@@ -9256,7 +9300,8 @@ class mslib_fe {
 				  dataType: \'json\',
 				  type: \'post\',
 				  success: function (j) {
-					  if (j.length > 0) {
+				  	if(typeof j !== \'undefined\') {
+					//if ( j.length > 0) {
 						  	toastr.options = {
 							  "closeButton": true,
 							  "debug": false,

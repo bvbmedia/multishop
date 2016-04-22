@@ -67,8 +67,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
 				$iso_customer['country']=$iso_customer['cn_short_en'];
 				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
-				$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
-				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
+				//$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
+				if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
 					if (strtolower($row['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
@@ -880,6 +880,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
 		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
 		$markerArray['HEADING_PRICE']=$this->pi_getLL('price');
+		if (!$order['orders_tax_data']['total_orders_tax']) {
+			$markerArray['HEADING_TOTAL']=ucfirst($this->pi_getLL('total_excl_vat'));
+		} else {
+			$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+		}
 		$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
 		$markerArray['HEADING_VAT_RATE']=$this->pi_getLL('vat');
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
@@ -976,7 +981,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
-		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+		if (!$order['orders_tax_data']['total_orders_tax']) {
+			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total_excl_vat'));
+		} else {
+			$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total'));
+		}
 //		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
@@ -1021,7 +1030,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$params=array(
 				'content'=>&$content,
 				'order'=>&$order,
-				'template_type'=>&$template_type
+				'template_type'=>&$template_type,
+				'subparts'=>&$subparts,
+				'subpartArray'=>&$subpartArray,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1308,6 +1319,29 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['customer_comments']='';
 			}
 			$insertArray['hash']=md5(uniqid('', true));
+			$types=array();
+			$types[]='billing';
+			$types[]='delivery';
+			foreach ($types as $type) {
+				$str2='select st.* from static_countries sc, static_territories st where sc.cn_short_en=\''.addslashes($insertArray[$type.'_country']).'\' and st.tr_iso_nr=sc.cn_parent_tr_iso_nr';
+				$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+				$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+				if ($rows2) {
+					$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+					$insertArray[$type.'_tr_iso_nr']=$row2['tr_iso_nr'];
+					$insertArray[$type.'_tr_name_en']=$row2['tr_name_en'];
+
+					$str2='select * from static_territories where tr_iso_nr='.$row2['tr_parent_iso_nr'];
+					$query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+					$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+					if ($rows2) {
+						$row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+
+						$insertArray[$type.'_tr_parent_iso_nr']=$row2['tr_iso_nr'];
+						$insertArray[$type.'_tr_parent_name_en']=$row2['tr_name_en'];
+					}
+				}
+			}
 			//hook to let other plugins further manipulate the replacers
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'])) {
 				$params=array(

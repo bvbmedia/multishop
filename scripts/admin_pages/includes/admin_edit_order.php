@@ -1357,7 +1357,7 @@ if (is_numeric($this->get['orders_id'])) {
 					</div>
 				</div>
             ';
-			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 				$filter=array();
 				$filter[]='orders_id='.$orders['orders_id'];
 				//$filter[]='deleted=0';
@@ -2755,7 +2755,7 @@ if (is_numeric($this->get['orders_id'])) {
 			//print_r($orders_tax_data);
 			$content_total='
             <div class="form-group">
-                <label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
+                <label class="control-label col-md-10">'.(!$orders_tax_data['total_orders_tax'] ? $this->pi_getLL('total_excl_vat') : $this->pi_getLL('total')).'</label>
                 <div class="col-md-2">
                 <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</p>
                 </div>

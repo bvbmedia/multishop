@@ -1287,6 +1287,11 @@
             <label index="the_requested_manufacturer_does_not_exist">The requested manufacturer cannot be found</label>
             <label index="new_subtotal_excl_vat">Total Excl. VAT</label>
             <label index="new_subtotal_incl_vat">Total Incl. VAT</label>
+            <label index="total_excl_vat">Total</label>
+            <label index="admin_ordered_manufacturer">Ordered manufacturers</label>
+            <label index="admin_ordered_category">Ordered categories</label>
+            <label index="territory">Territory</label>
+            <label index="sales_volume_by_month_per_product">Monthly sales volume per product group</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1455,7 +1460,7 @@
             <label index="admin_label_click_here_to_add_zones">Klik hier om een zone toe te voegen</label>
             <label index="admin_label_click_here_to_map_country_to_a_zone">Klik hier om een land te koppelen aan een zone</label>
             <label index="admin_label_cms_marker_billing_address">Factuuradres</label>
-            <label index="admin_label_cms_marker_billing_company">Afleveradres</label>
+            <label index="admin_label_cms_marker_billing_company">Factuur bedrijfsnaam</label>
             <label index="admin_label_cms_marker_create_account_confirmation_link">Account aanmaken bevestigingslink</label>
             <label index="admin_label_cms_marker_current_date_in_long_format">Huidige datum in volledige formaat (verzenddatum van bericht)</label>
             <label index="admin_label_cms_marker_customer_comments_update_status">Opmerking van debiteur (wordt gebruikt door order status wijzigingsbericht)</label>
@@ -1464,7 +1469,7 @@
             <label index="admin_label_cms_marker_customer_email_delivery">E-mailadres (afleveradres)</label>
             <label index="admin_label_cms_marker_customer_id">Debiteurnummer</label>
             <label index="admin_label_cms_marker_delivery_address">Afleveradres</label>
-            <label index="admin_label_cms_marker_delivery_company">Bedrijf afleveradres</label>
+            <label index="admin_label_cms_marker_delivery_company">Afleveradres bedrijfsnaam</label>
             <label index="admin_label_cms_marker_expected_delivery_date">Verwachte leverdatum</label>
             <label index="admin_label_cms_marker_first_name_billing">Voornaam (factuuradres)</label>
             <label index="admin_label_cms_marker_first_name_delivery">Voornaam (afleveradres)</label>
@@ -2566,6 +2571,8 @@
             <label index="the_requested_manufacturer_does_not_exist">De opgevraagde merkenpagina is niet gevonden</label>
             <label index="new_subtotal_excl_vat">Totaal Excl. BTW</label>
             <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
+            <label index="total_excl_vat">Totaal</label>
+            <label index="sales_volume_by_month_per_product">Omzet per productgroep</label>
         </languageKey>
     </data>
 </T3locallang>

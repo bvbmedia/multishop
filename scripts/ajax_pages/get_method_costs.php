@@ -27,6 +27,18 @@ $mslib_cart->setCountry($this->post['b_cc'], $tmp_countries['cn_iso_nr']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
+// disable tax if the country is different and vat id is valid (NL & BE only)
+if (isset($this->post['b_cc']) && !empty($this->post['b_cc']) && $this->post['tx_multishop_vat_id']) {
+	$iso_customer=mslib_fe::getCountryByName($this->post['b_cc']);
+	$iso_customer['country']=$iso_customer['cn_short_en'];
+	$vat_id=$this->post['tx_multishop_vat_id'];
+}
+$this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
+if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $vat_id) {
+	if (strtolower($iso_customer['country']) != strtolower($this->tta_shop_info['country'])) {
+		$this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+	}
+}
 $countries_id=$tmp_countries['cn_iso_nr'];
 $payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
 if ($payment_method['handling_costs']) {
@@ -34,7 +46,7 @@ if ($payment_method['handling_costs']) {
 		$payment_method_costs=$payment_method['handling_costs'];
 	} else {
 		// calculate total payment costs based by %
-		$subtotal=$cart['summarize']['sub_total_including_vat'];
+		$subtotal=$cart['summarize']['grand_total_excluding_vat']-$cart['user']['payment_method_costs'];
 		if ($subtotal) {
 			if (strstr($payment_method['handling_costs'], "%")) {
 				$percentage=str_replace("%", '', $payment_method['handling_costs']);
@@ -185,19 +197,23 @@ $data['available_shipping']=implode(';', $available_sid);
 foreach ($available_sid as $sids) {
 	$this->post['caller_segment']='available_shipping_costs';
 	$priceArray=mslib_fe::getShippingCosts($countries_id, $sids);
-	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['DISABLE_VAT_RATE']) {
 		$data['available_shippingcost'][$sids]='';
 		if ($priceArray['shipping_costs_including_vat']>0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat'], 0, 0);
+			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box_including_vat'], 0, 0);
 		} else if ($priceArray['shipping_costs_including_vat']<0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat'], 0, 0);
+			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box_including_vat'], 0, 0);
 		}
 	} else {
 		$data['available_shippingcost'][$sids]='';
 		if ($priceArray['shipping_costs']>0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs'], 0, 0);
+			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box'], 0, 0);
 		} else if ($priceArray['shipping_costs']<0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs'], 0, 0);
+			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box'], 0, 0);
 		}
 	}
 }

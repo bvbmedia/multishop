@@ -365,6 +365,4 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
     }
     return admin_content;
 }
-$(document).ready(function($){
-    $('[data-toggle="tooltip"]').tooltip({html:true});
-});
+

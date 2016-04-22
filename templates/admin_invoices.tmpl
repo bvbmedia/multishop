@@ -13,12 +13,12 @@ jQuery(document).ready(function ($) {
         return false;
     });
     $("#invoice_date_from").datetimepicker({
-        dateFormat: "dd/mm/yy",
+        dateFormat: "###DATE_TIME_JS_FORMAT0###",
         showSecond: true,
         timeFormat: "HH:mm:ss"
     });
     $("#invoice_date_till").datetimepicker({
-        dateFormat: "dd/mm/yy",
+        dateFormat: "###DATE_TIME_JS_FORMAT1###",
         showSecond: true,
         timeFormat: "HH:mm:ss"
     });
@@ -75,11 +75,19 @@ jQuery(document).ready(function ($) {
                                     ###OPTION_ITEM_SELECTBOX###
                                 </div>
                                 <div class="form-group">
-                                    <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
-                                    ###USERGROUP_SELECTBOX###
+                                    <label class="control-label" for="ordered_manufacturers">###LABEL_ORDERED_MANUFACTURER###</label>
+                                    <div class="form-inline">
+                                        <input type="hidden" class="ordered_manufacturer" name="ordered_manufacturer" value="###VALUE_ORDERED_MANUFACTURER###" />
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="type_search">###LABEL_ORDERED_PRODUCT###</label>
+                                    <label class="control-label" for="ordered_category">###LABEL_ORDERED_CATEGORY###</label>
+                                    <div class="form-inline">
+                                        <input type="hidden" class="ordered_category" name="ordered_category" value="###VALUE_ORDERED_CATEGORY###" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="ordered_product">###LABEL_ORDERED_PRODUCT###</label>
                                     <div class="form-inline">
                                         <input type="hidden" class="ordered_product" name="ordered_product" value="###VALUE_ORDERED_PRODUCT###" />
                                     </div>
@@ -96,10 +104,6 @@ jQuery(document).ready(function ($) {
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
-                                    ###INVOICES_STATUS_LIST_SELECTBOX###
-                                </div>
-                                <div class="form-group">
                                     <div class="checkbox checkbox-success checkbox-inline">
                                         <input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"###FILTER_BY_PAID_INVOICES_ONLY_CHECKED### ><label for="paid_invoices_only">###LABEL_FILTER_BY_PAID_INVOICES_ONLY###</label>
                                     </div>
@@ -107,6 +111,18 @@ jQuery(document).ready(function ($) {
                                         <input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"###EXCLUDING_VAT_CHECKED###>
                                         <label for="filter_by_excluding_vat">###EXCLUDING_VAT_LABEL###</label>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
+                                    ###USERGROUP_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label for="order_customer" class="labelInbetween">###LABEL_USERS###</label>
+                                    <input type="hidden" class="order_customer" name="order_customer" value="###VALUE_ORDER_CUSTOMER###" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
+                                    ###INVOICES_STATUS_LIST_SELECTBOX###
                                 </div>
                             </div>
                             <div class="col-md-4 formfield-wrapper">
@@ -119,10 +135,13 @@ jQuery(document).ready(function ($) {
                                     ###SHIPPING_METHOD_SELECTBOX###
                                 </div>
                                 <div class="form-group">
+                                    <label for="order_territory">###LABEL_TERRITORIES###</label>
+                                    <input type="hidden" class="order_territory" name="order_territory" value="###VALUE_ORDER_TERRITORY###" />
+                                </div>
+                                <div class="form-group">
                                     <label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
                                     ###COUNTRIES_SELECTBOX###
                                 </div>
-
                             </div>
                         </div>
                     </div>

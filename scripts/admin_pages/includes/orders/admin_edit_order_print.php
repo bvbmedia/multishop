@@ -3,8 +3,8 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if (is_numeric($this->get['orders_id'])) {
-	$invoice=mslib_fe::getOrderInvoice($this->get['orders_id']);
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] && $this->get['print']!='pakbon') {
+		$invoice=mslib_fe::getOrderInvoice($this->get['orders_id']);
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
 		exit();
 	}

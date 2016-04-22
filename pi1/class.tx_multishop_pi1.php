@@ -161,7 +161,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->lang=$GLOBALS['TSFE']->config['config']['language'];
 		setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
 		// In TYPO3 7.6.5 suddenly caused buggy calculations, because the dot is returned as a comma. Below line is added to force numeric to be in default system locale.
-		setlocale(LC_NUMERIC, NULL);
+		setlocale(LC_NUMERIC, 'en_US.UTF-8');
 		$this->sys_language_uid=$GLOBALS['TSFE']->config['config']['sys_language_uid'];
 		if (!isset($this->sys_language_uid)) {
 			$this->sys_language_uid=0;

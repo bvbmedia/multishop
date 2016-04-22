@@ -151,7 +151,9 @@ foreach ($products as $product) {
 				'markerArray'=>&$markerArray,
 				'product'=>&$product,
 				'output'=>&$output,
-				'plugins_item_extra_content'=>&$plugins_item_extra_content
+				'plugins_item_extra_content'=>&$plugins_item_extra_content,
+				'limit_per_page'=>&$limit_per_page,
+				'p'=>&$p
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -176,7 +178,9 @@ $subpartArray['###SPECIALS_SECTIONS_CODE_ID###']=$this->section_code;
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'])) {
 	$params=array(
-		'subpartArray'=>&$subpartArray
+		'subpartArray'=>&$subpartArray,
+		'current'=>&$current,
+		'output_array'=>&$output_array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

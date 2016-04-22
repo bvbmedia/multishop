@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->productsLimit) {
 	$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->productsLimit;
 }
+$output_array=array();
 $filter=array();
 $having=array();
 $match=array();
@@ -39,7 +40,7 @@ if ($contentType=='specials_listing_page') {
 		//$string=$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 		$string=md5(serialize($this->conf)).$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 	}
-	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
+	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get($string)) {
 		// $content.='<div class="main-heading"><h2>'.$this->pi_getLL('specials').'</h2></div>';
 		// product search
 		if ($this->get['price_filter']) {
@@ -145,8 +146,9 @@ if ($contentType=='specials_listing_page') {
 		} else {
 			$content.='<p>'.$this->pi_getLL('no_specials_available_description').'</p>'."\n";
 		}
+		$output_array['content']=$content;
 		if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-			$Cache_Lite->save($content);
+			$Cache_Lite->save(serialize($output_array));
 		}
 	}
 } elseif ($contentType=='specials_box' or $contentType=='single_special' or $contentType=='specials_section') {
@@ -166,7 +168,7 @@ if ($contentType=='specials_listing_page') {
 		$Cache_Lite=new Cache_Lite($options);
 		$string=$this->cObj->data['uid'].'_'.$contentType.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 	}
-	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
+	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get($string)) {
 		if ($this->section_code) {
 			if ($contentType=='specials_section') {
 				$str="SELECT p.products_id, s.start_date as special_start_date, s.expires_date as special_expired_date FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by ss.sort_order";
@@ -318,8 +320,9 @@ if ($contentType=='specials_listing_page') {
 				}
 			}
 		}
+		$output_array['content']=$content;
 		if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-			$Cache_Lite->save($content);
+			$Cache_Lite->save(serialize($output_array));
 		}
 	}
 } else {
@@ -344,7 +347,7 @@ if ($contentType=='specials_listing_page') {
 		$Cache_Lite=new Cache_Lite($options);
 		$string=$this->cObj->data['uid'].'_'.$parent_id.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 	}
-	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
+	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get($string)) {
 		$str='';
 		$filter=array();
 		if ($parent_id) {
@@ -483,9 +486,18 @@ if ($contentType=='specials_listing_page') {
 				}
 			}
 		}
+		$output_array['content']=$content;
 		if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-			$Cache_Lite->save($content);
+			$Cache_Lite->save(serialize($output_array));
 		}
 	}
+}
+if ($output_array && !is_array($output_array)) {
+	$output_array=unserialize($output_array);
+	$content=$output_array['content'];
+}
+if (is_array($output_array['meta'])) {
+	$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
+	unset($output_array);
 }
 ?>
