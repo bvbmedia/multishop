@@ -7601,7 +7601,7 @@ class mslib_fe {
 				//var_dump($foreign_catid);
 				//die();
 				if (!$foreign_catid) {
-					$cat_data=mslib_fe::getCategoryData($cat['id'], $external_page_uid);
+					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
 					//
 					$exclude_columns=array();
 					$exclude_columns[]='categories_id';
