@@ -122,6 +122,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 								}
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartAttributesIteratorPreType'])) {
+									$params=array(
+										'attribute_key'=>&$attribute_key,
+										'attribute_values'=>&$attribute_values,
+										'row'=>&$row,
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartAttributesIteratorPreType'] as $funcRef) {
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									}
+								}
 								switch ($row['listtype']) {
 									case 'checkbox':
 										if (is_array($attribute_values) && count($attribute_values)) {
@@ -145,6 +155,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 										$multiple=0;
 										$continue=1;
 										break;
+								}
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartAttributesIteratorPostType'])) {
+									$params=array(
+										'attribute_key'=>&$attribute_key,
+										'attribute_values'=>&$attribute_values,
+										'continue'=>&$continue,
+										'multiple'=>&$multiple,
+										'row'=>&$row,
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartAttributesIteratorPostType'] as $funcRef) {
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									}
 								}
 								if ($continue) {
 									$array=array($attribute_values);
@@ -2539,6 +2561,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 							}
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsAttributesIteratorPreType'])) {
+								$params=array(
+									'attribute_key'=>&$attribute_key,
+									'attribute_values'=>&$attribute_values,
+									'row'=>&$row,
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsAttributesIteratorPreType'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
 							switch ($row['listtype']) {
 								case 'checkbox':
 									$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
@@ -2573,6 +2605,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									$continue=1;
 									break;
 							}
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsAttributesIteratorPostType'])) {
+								$params=array(
+									'attribute_key'=>&$attribute_key,
+									'attribute_values'=>&$attribute_values,
+									'continue'=>&$continue,
+									'multiple'=>&$multiple,
+									'row'=>&$row,
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsAttributesIteratorPostType'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
 							if ($continue) {
 								$array=array($attribute_values);
 								foreach ($array as $attribute_item) {
@@ -2582,7 +2626,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 											$region_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['region_tax_rate']));
 											$item_tax_rate=$country_tax_rate+$region_tax_rate;
 										} else {
-											$item_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($product['tax_rate']));
+											$item_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['tax_rate']));
 										}
 										$attribute_item['options_values_price']=$attribute_item['options_values_price']+($item_tax_rate);
 									} else {
