@@ -3060,7 +3060,7 @@ class mslib_befe {
 					'orders_id'=>&$orders_id,
 					'orders_status'=>&$orders_status,
 					'mail_customer'=>&$mail_customer,
-					'continue'=>$continue
+					'continue'=>&$continue
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPreProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
