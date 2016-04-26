@@ -422,12 +422,17 @@ $headerData.='
 			var confirm_label="'.$this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x').'";
 			confirm_label=confirm_label.replace(\'OrdersId\', orders_id).replace(\'OrdersStatusLabel\', orders_status_label);
 			if (confirm(confirm_label)) {
-				$.ajax({
-					type:   "POST",
-					url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
-					dataType: \'json\',
-					data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
-					success: function(msg) {}
+				var request = $.ajax({
+						type:   "POST",
+						url:    "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status') . '",
+						dataType: \'json\',
+						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
+						dataType: "html"
+				});
+				request.done(function(msg) {
+				    if (msg) {
+				        $("body").append(msg);
+				    }
 				});
 			}
 		});
