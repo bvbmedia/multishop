@@ -246,11 +246,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				switch(rowType)
 				{
 					';
-        foreach ($layouts as $layout => $cols) {
-            $headerData .= '
+        if (is_array($layouts)) {
+            foreach ($layouts as $layout => $cols) {
+                $headerData .= '
 						case "' . $layout . '": var cols=\'' . $cols . '\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
 						break;
 						';
+            }
         }
         $headerData .= '
 					default: html =\'<div class="column">dummy</div>\';
@@ -269,17 +271,19 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $pageLayout = array();
         if (isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
             $cookie_json_decode = json_decode($_COOKIE['widget_position']);
-            foreach ($cookie_json_decode as $row_index => $rows) {
-                $pageLayout[$row_index]['class'] = $rows->rclass;
-                if (count($rows->column) > 0) {
-                    foreach ($rows->column as $column_index => $columns) {
-                        $widgets = array();
-                        if (count($columns->widget_key) > 0) {
-                            foreach ($columns->widget_key as $wkey) {
-                                $widgets[] = $wkey;
+            if (is_array($cookie_json_decode)) {
+                foreach ($cookie_json_decode as $row_index => $rows) {
+                    $pageLayout[$row_index]['class'] = $rows->rclass;
+                    if (count($rows->column) > 0) {
+                        foreach ($rows->column as $column_index => $columns) {
+                            $widgets = array();
+                            if (count($columns->widget_key) > 0) {
+                                foreach ($columns->widget_key as $wkey) {
+                                    $widgets[] = $wkey;
+                                }
                             }
+                            $pageLayout[$row_index]['cols'][$column_index] = $widgets;
                         }
-                        $pageLayout[$row_index]['cols'][$column_index] = $widgets;
                     }
                 }
             }
@@ -331,24 +335,25 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         }
         $content .= '<div class="column-wrapper">';
         //shuffle($layouts);
-        foreach ($pageLayout as $rowNr => $cols) {
-            $content .= '<div class="widgetRow ' . $cols['class'] . '" id="' . $cols['class'] . '_' . $rowNr . '">';
-            $colNr = 0;
-            foreach ($cols['cols'] as $col) {
-                $colNr++;
-                $content .= '<div class="column columnCol' . ($colNr) . '" id="' . $cols['class'] . '_' . $rowNr . '_' . ($colNr - 1) . '">';
-                foreach ($col as $widget_key) {
-                    $intCounter++;
-                    if ($intCounter == 1) {
-                        //$idName='intro';
-                        $idName = 'widget' . $intCounter;
-                    } else {
-                        $idName = 'widget' . $intCounter;
-                    }
-                    if ($this->compiledWidgets[$widget_key]['content']) {
-                        $widget = $this->compiledWidgets[$widget_key];
-                        $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">';
-                        $content .= '
+        if (is_array($pageLayout)) {
+            foreach ($pageLayout as $rowNr => $cols) {
+                $content .= '<div class="widgetRow ' . $cols['class'] . '" id="' . $cols['class'] . '_' . $rowNr . '">';
+                $colNr = 0;
+                foreach ($cols['cols'] as $col) {
+                    $colNr++;
+                    $content .= '<div class="column columnCol' . ($colNr) . '" id="' . $cols['class'] . '_' . $rowNr . '_' . ($colNr - 1) . '">';
+                    foreach ($col as $widget_key) {
+                        $intCounter++;
+                        if ($intCounter == 1) {
+                            //$idName='intro';
+                            $idName = 'widget' . $intCounter;
+                        } else {
+                            $idName = 'widget' . $intCounter;
+                        }
+                        if ($this->compiledWidgets[$widget_key]['content']) {
+                            $widget = $this->compiledWidgets[$widget_key];
+                            $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">';
+                            $content .= '
 					<div class="portlet-header">
 						<h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
 					</div>
@@ -356,12 +361,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						' . $widget['content'] . '
 					</div>
 					';
-                        $content .= '</div>';
+                            $content .= '</div>';
+                        }
                     }
+                    $content .= '</div>';
                 }
                 $content .= '</div>';
             }
-            $content .= '</div>';
         }
         $content .= '</div>';
         return $content;
