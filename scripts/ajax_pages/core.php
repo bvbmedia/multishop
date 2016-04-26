@@ -1108,12 +1108,14 @@ switch ($this->ms['page']) {
 		break;
 	case 'admin_update_orders_status':
 		if ($this->ADMIN_USER) {
+			$returnOutput='';
 			if (is_numeric($this->post['tx_multishop_pi1']['orders_id']) and is_numeric($this->post['tx_multishop_pi1']['orders_status_id'])) {
 				// hook
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatus'])) {
 					$params=array(
 						'orders_id'=>&$this->post['tx_multishop_pi1']['orders_id'],
-						'orders_status_id'=>$this->post['tx_multishop_pi1']['orders_status_id']
+						'orders_status_id'=>$this->post['tx_multishop_pi1']['orders_status_id'],
+						'returnOutput'=>&$returnOutput
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatus'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1121,6 +1123,7 @@ switch ($this->ms['page']) {
 				}
 				// hook eof
 				mslib_befe::updateOrderStatus($this->post['tx_multishop_pi1']['orders_id'], $this->post['tx_multishop_pi1']['orders_status_id'], 1);
+				echo $returnOutput;
 			}
 		}
 		exit();

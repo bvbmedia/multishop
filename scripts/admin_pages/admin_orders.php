@@ -102,8 +102,25 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$orders=mslib_fe::getOrder($orders_id);
 					if ($orders['orders_id'] and ($orders['status']!=$this->post['tx_multishop_pi1']['update_to_order_status'])) {
 						// mslib_befe::updateOrderStatus($orders['orders_id'],$this->post['tx_multishop_pi1']['update_to_order_status']);
-						mslib_befe::updateOrderStatus($orders['orders_id'], $this->post['tx_multishop_pi1']['update_to_order_status'], 1);
+						if (mslib_befe::updateOrderStatus($orders['orders_id'], $this->post['tx_multishop_pi1']['update_to_order_status'], 1)) {
+							$postErno[]=array(
+									'status'=>'info',
+									'message'=>'Updated order status for orders is: '.$orders['orders_id']
+							);
+						} else {
+							$postErno[]=array(
+									'status'=>'error',
+									'message'=>'Order status not updated for orders id: '.$orders['orders_id']
+							);
+						}
 					}
+				}
+			}
+			//hook to let other plugins further manipulate the settings
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersUpdateOrderStatusForSelectedOrdersPostProc'])) {
+				$params=array('content'=>&$content);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersUpdateOrderStatusForSelectedOrdersPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		}

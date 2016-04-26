@@ -3053,279 +3053,301 @@ class mslib_befe {
 		if (!is_numeric($orders_id)) {
 			return false;
 		}
-		// dynamic variables
-		$order=mslib_fe::getOrder($orders_id);
-		if (isset($order['language_id'])) {
-			// Switch to language that is stored in the order
-			mslib_befe::setSystemLanguage($order['language_id']);
-		}
-		$billing_address='';
-		$delivery_address='';
-		$full_customer_name=$order['billing_first_name'];
-		if ($order['billing_middle_name']) {
-			$full_customer_name.=' '.$order['billing_middle_name'];
-		}
-		if ($order['billing_last_name']) {
-			$full_customer_name.=' '.$order['billing_last_name'];
-		}
-		$delivery_full_customer_name=$order['delivery_first_name'];
-		if ($order['delivery_middle_name']) {
-			$delivery_full_customer_name.=' '.$order['delivery_middle_name'];
-		}
-		if ($order['delivery_last_name']) {
-			$delivery_full_customer_name.=' '.$order['delivery_last_name'];
-		}
-		$full_customer_name=preg_replace('/\s+/', ' ', $full_customer_name);
-		$delivery_full_customer_name=preg_replace('/\s+/', ' ', $delivery_full_customer_name);
-		if (!$order['delivery_address'] or !$order['delivery_city']) {
-			$order['delivery_company']=$order['billing_company'];
-			$order['delivery_address']=$order['billing_address'];
-			$order['delivery_street_name']=$order['billing_street_name'];
-			$order['delivery_address_number']=$order['billing_address_number'];
-			$order['delivery_address_ext']=$order['billing_address_ext'];
-			$order['delivery_building']=$order['billing_building'];
-			$order['delivery_zip']=$order['billing_zip'];
-			$order['delivery_city']=$order['billing_city'];
-			$order['delivery_telephone']=$order['billing_telephone'];
-			$order['delivery_mobile']=$order['billing_mobile'];
-		}
-		if ($order['delivery_company']) {
-			$delivery_address=$order['delivery_company']."<br />";
-		}
-		if ($delivery_full_customer_name) {
-			$delivery_address.=$delivery_full_customer_name."<br />";
-		}
-		if ($order['delivery_address']) {
-			$delivery_address.=$order['delivery_address']."<br />";
-		}
-		if ($order['delivery_building']) {
-			$delivery_address.=$order['delivery_building']."<br />";
-		}
-		if ($order['delivery_zip'] and $order['delivery_city']) {
-			$delivery_address.=$order['delivery_zip']." ".$order['delivery_city'];
-		}
-		//if ($order['delivery_telephone']) 		$delivery_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['delivery_telephone']."<br />";
-		//if ($order['delivery_mobile']) 			$delivery_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['delivery_mobile']."<br />";
-		if ($order['billing_company']) {
-			$billing_address=$order['billing_company']."<br />";
-		}
-		if ($full_customer_name) {
-			$billing_address.=$full_customer_name."<br />";
-		}
-		if ($order['billing_address']) {
-			$billing_address.=$order['billing_address']."<br />";
-		}
-		if ($order['billing_zip'] and $order['billing_city']) {
-			$billing_address.=$order['billing_zip']." ".$order['billing_city'];
-		}
-		//if ($order['billing_telephone']) 		$billing_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['billing_telephone']."<br />";
-		//if ($order['billing_mobile']) 			$billing_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['billing_mobile']."<br />";
-		$array1=array();
-		$array2=array();
-		$array1[]='###GENDER_SALUTATION###';
-		$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
-		$array1[]='###DELIVERY_FIRST_NAME###';
-		$array2[]=$order['delivery_first_name'];
-		$array1[]='###DELIVERY_LAST_NAME###';
-		$array2[]=preg_replace('/\s+/', ' ', $order['delivery_middle_name'].' '.$order['delivery_last_name']);
-		$array1[]='###BILLING_FIRST_NAME###';
-		$array2[]=$order['billing_first_name'];
-		$array1[]='###BILLING_LAST_NAME###';
-		$array2[]=preg_replace('/\s+/', ' ', $order['billing_middle_name'].' '.$order['billing_last_name']);
-		$array1[]='###BILLING_TELEPHONE###';
-		$array2[]=$order['billing_telephone'];
-		$array1[]='###DELIVERY_TELEPHONE###';
-		$array2[]=$order['delivery_telephone'];
-		$array1[]='###BILLING_MOBILE###';
-		$array2[]=$order['billing_mobile'];
-		$array1[]='###DELIVERY_MOBILE###';
-		$array2[]=$order['delivery_mobile'];
-		$array1[]='###BILLING_FULL_NAME###';
-		$array2[]=$full_customer_name;
-		$array1[]='###FULL_NAME###';
-		$array2[]=$full_customer_name;
-		$array1[]='###DELIVERY_FULL_NAME###';
-		$array2[]=$delivery_full_customer_name;
-		$array1[]='###BILLING_NAME###';
-		$array2[]=$order['billing_name'];
-		$array1[]='###BILLING_EMAIL###';
-		$array2[]=$order['billing_email'];
-		$array1[]='###DELIVERY_EMAIL###';
-		$array2[]=$order['delivery_email'];
-		$array1[]='###DELIVERY_NAME###';
-		$array2[]=$order['delivery_name'];
-		$array1[]='###CUSTOMER_EMAIL###';
-		$array2[]=$order['billing_email'];
-		$array1[]='###STORE_NAME###';
-		$array2[]=$this->ms['MODULES']['STORE_NAME'];
-		$array1[]='###TOTAL_AMOUNT###';
-		$array2[]=mslib_fe::amount2Cents($order['total_amount']);
-		$ORDER_DETAILS=mslib_fe::printOrderDetailsTable($order, 'email');
-		$array1[]='###ORDER_DETAILS###';
-		$array2[]=$ORDER_DETAILS;
-		$array1[]='###BILLING_ADDRESS###';
-		$array2[]=$billing_address;
-		$array1[]='###DELIVERY_ADDRESS###';
-		$array2[]=$delivery_address;
-		$array1[]='###CUSTOMER_ID###';
-		$array2[]=$order['customer_id'];
-		$array1[]='###SHIPPING_METHOD###';
-		$array2[]=$order['shipping_method_label'];
-		$array1[]='###PAYMENT_METHOD###';
-		$array2[]=$order['payment_method_label'];
-		$invoice=mslib_fe::getOrderInvoice($order['orders_id'], 0);
-		$invoice_id='';
-		$invoice_link='';
-		if (is_array($invoice)) {
-			$invoice_id=$invoice['invoice_id'];
-			$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
-		}
-		$array1[]='###INVOICE_NUMBER###';
-		$array2[]=$invoice_id;
-		$array1[]='###INVOICE_LINK###';
-		$array2[]=$invoice_link;
-		$time=$order['crdate'];
-		$long_date=strftime($this->pi_getLL('full_date_format'), $time);
-		$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
-		$array2[]=$long_date;
-		// backwards compatibility
-		$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
-		$array2[]=strftime("%x", $time);
-		$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
-		$array2[]=$long_date;
-		$time=time();
-		$long_date=strftime($this->pi_getLL('full_date_format'), $time);
-		$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
-		$array2[]=$long_date;
-		$array1[]='###STORE_NAME###';
-		$array2[]=$this->ms['MODULES']['STORE_NAME'];
-		$array1[]='###TOTAL_AMOUNT###';
-		$array2[]=mslib_fe::amount2Cents($order['total_amount']);
-		$array1[]='###PROPOSAL_NUMBER###';
-		$array2[]=$order['orders_id'];
-		$array1[]='###ORDER_NUMBER###';
-		$array2[]=$order['orders_id'];
-		$array1[]='###ORDER_LINK###';
-		$array2[]='';
-		$array1[]='###CUSTOMER_ID###';
-		$array2[]=$order['customer_id'];
-		$array1[]='###CUSTOMER_COMMENTS###';
-		$array2[]=$order['customer_comments'];
-		$array1[]='###MESSAGE###';
-		$array2[]=$this->post['comments'];
-		$array1[]='###OLD_ORDER_STATUS###';
-		$array2[]=mslib_fe::getOrderStatusName($order['status'], $order['language_id']);
-		$array1[]='###ORDER_STATUS###';
-		$array2[]=mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
-		$array1[]='###EXPECTED_DELIVERY_DATE###';
-		$array2[]=strftime("%x", $order['expected_delivery_date']);
-		$array1[]='###TRACK_AND_TRACE_CODE###';
-		$array2[]=$order['track_and_trace_code'];
-		$array1[]='###BILLING_STREET_NAME###';
-		$array2[]=$order['billing_street_name'];
-		$array1[]='###BILLING_ADDRESS_NUMBER###';
-		$array2[]=$order['billing_address_number'];
-		$array1[]='###BILLING_ADDRESS_EXT###';
-		$array2[]=$order['billing_address_ext'];
-		$array1[]='###BILLING_ZIP###';
-		$array2[]=$order['billing_zip'];
-		$array1[]='###BILLING_CITY###';
-		$array2[]=$order['billing_city'];
-		$array1[]='###BILLING_COUNTRY###';
-		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
-		$array1[]='###BILLING_COUNTRY_CODE###';
-		$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['billing_country']);
-
-		$array1[]='###DELIVERY_STREET_NAME###';
-		$array2[]=$order['delivery_street_name'];
-		$array1[]='###DELIVERY_ADDRESS_NUMBER###';
-		$array2[]=$order['delivery_address_number'];
-		$array1[]='###DELIVERY_ADDRESS_EXT###';
-		$array2[]=$order['delivery_address_ext'];
-		$array1[]='###DELIVERY_ZIP###';
-		$array2[]=$order['delivery_zip'];
-		$array1[]='###DELIVERY_CITY###';
-		$array2[]=$order['delivery_city'];
-		$array1[]='###DELIVERY_COUNTRY###';
-		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
-		$array1[]='###DELIVERY_COUNTRY_CODE###';
-		$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['delivery_country']);
-		// dynamic variablese eof
-		if ($this->post['comments']) {
-			$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);
-		}
-		$status_last_modified=time();
-		$updateArray=array();
-		$updateArray['orders_id']=$order['orders_id'];
-		$updateArray['old_value']=$order['status'];
-		$updateArray['comments']=$this->post['comments'];
-		$updateArray['customer_notified']=$mail_customer;
-		$updateArray['crdate']=$status_last_modified;
-		$updateArray['new_value']=$orders_status;
-		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
-		if ($orders_status==$order['status']) {
-			if (!empty($this->post['comments']) && $mail_customer) {
-				// always save the order status history even when order status is the same as the old one when e-mail to client is filled
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			}
-		} else {
-			// save if new order status history is different than the old status
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		}
-		$updateArray=array();
-		$updateArray['status']=$orders_status;
-		$updateArray['status_last_modified']=$status_last_modified;
-		$order['old_status']=$order['status'];
-		$order['status']=$orders_status;
-		$updateArray['orders_last_modified']=time();
-		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		//send e-mail
-		if ($mail_customer) {
-			$subject=$this->ms['MODULES']['STORE_NAME'];
-			$message=$this->post['comments'];
-			if ($orders_status) {
-				$orders_status_name=mslib_fe::getOrderStatusName($orders_status, 0);
-				$keys=array();
-				$keys[]='email_order_status_changed_'.mslib_befe::strtolower($orders_status_name);
-				$keys[]='email_order_status_changed';
-				foreach ($keys as $key) {
-					//$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
-					$page=mslib_fe::getCMScontent($key, $order['language_id']);
-					if ($page[0]) {
-						if ($page[0]['content']) {
-							$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-						}
-						if ($page[0]['name']) {
-							$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-						}
-						$user=array();
-						$user['email']=$order['billing_email'];
-						$user['name']=$order['billing_name'];
-						if ($user['email']) {
-							mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-						}
-						break;
-					}
-				}
-			}
-		}
-		if (isset($order['language_id'])) {
-			// Switch back to default language
-			mslib_befe::resetSystemLanguage();
-		}
+		$continue=1;
 		//hook to let other plugins further manipulate
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPreProc'])) {
 			$params=array(
 					'orders_id'=>&$orders_id,
 					'orders_status'=>&$orders_status,
 					'mail_customer'=>&$mail_customer,
-					'order'=>&$order,
-					'array1'=>&$array1,
-					'array2'=>&$array2
+					'continue'=>&$continue
 			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPreProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if ($continue) {
+			$order=mslib_fe::getOrder($orders_id);
+			if ($order['orders_id']) {
+				// dynamic variables
+				if (isset($order['language_id'])) {
+					// Switch to language that is stored in the order
+					mslib_befe::setSystemLanguage($order['language_id']);
+				}
+				$billing_address='';
+				$delivery_address='';
+				$full_customer_name=$order['billing_first_name'];
+				if ($order['billing_middle_name']) {
+					$full_customer_name.=' '.$order['billing_middle_name'];
+				}
+				if ($order['billing_last_name']) {
+					$full_customer_name.=' '.$order['billing_last_name'];
+				}
+				$delivery_full_customer_name=$order['delivery_first_name'];
+				if ($order['delivery_middle_name']) {
+					$delivery_full_customer_name.=' '.$order['delivery_middle_name'];
+				}
+				if ($order['delivery_last_name']) {
+					$delivery_full_customer_name.=' '.$order['delivery_last_name'];
+				}
+				$full_customer_name=preg_replace('/\s+/', ' ', $full_customer_name);
+				$delivery_full_customer_name=preg_replace('/\s+/', ' ', $delivery_full_customer_name);
+				if (!$order['delivery_address'] or !$order['delivery_city']) {
+					$order['delivery_company']=$order['billing_company'];
+					$order['delivery_address']=$order['billing_address'];
+					$order['delivery_street_name']=$order['billing_street_name'];
+					$order['delivery_address_number']=$order['billing_address_number'];
+					$order['delivery_address_ext']=$order['billing_address_ext'];
+					$order['delivery_building']=$order['billing_building'];
+					$order['delivery_zip']=$order['billing_zip'];
+					$order['delivery_city']=$order['billing_city'];
+					$order['delivery_telephone']=$order['billing_telephone'];
+					$order['delivery_mobile']=$order['billing_mobile'];
+				}
+				if ($order['delivery_company']) {
+					$delivery_address=$order['delivery_company']."<br />";
+				}
+				if ($delivery_full_customer_name) {
+					$delivery_address.=$delivery_full_customer_name."<br />";
+				}
+				if ($order['delivery_address']) {
+					$delivery_address.=$order['delivery_address']."<br />";
+				}
+				if ($order['delivery_building']) {
+					$delivery_address.=$order['delivery_building']."<br />";
+				}
+				if ($order['delivery_zip'] and $order['delivery_city']) {
+					$delivery_address.=$order['delivery_zip']." ".$order['delivery_city'];
+				}
+				//if ($order['delivery_telephone']) 		$delivery_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['delivery_telephone']."<br />";
+				//if ($order['delivery_mobile']) 			$delivery_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['delivery_mobile']."<br />";
+				if ($order['billing_company']) {
+					$billing_address=$order['billing_company']."<br />";
+				}
+				if ($full_customer_name) {
+					$billing_address.=$full_customer_name."<br />";
+				}
+				if ($order['billing_address']) {
+					$billing_address.=$order['billing_address']."<br />";
+				}
+				if ($order['billing_zip'] and $order['billing_city']) {
+					$billing_address.=$order['billing_zip']." ".$order['billing_city'];
+				}
+				//if ($order['billing_telephone']) 		$billing_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['billing_telephone']."<br />";
+				//if ($order['billing_mobile']) 			$billing_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['billing_mobile']."<br />";
+				$array1=array();
+				$array2=array();
+				$array1[]='###GENDER_SALUTATION###';
+				$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
+				$array1[]='###DELIVERY_FIRST_NAME###';
+				$array2[]=$order['delivery_first_name'];
+				$array1[]='###DELIVERY_LAST_NAME###';
+				$array2[]=preg_replace('/\s+/', ' ', $order['delivery_middle_name'].' '.$order['delivery_last_name']);
+				$array1[]='###BILLING_FIRST_NAME###';
+				$array2[]=$order['billing_first_name'];
+				$array1[]='###BILLING_LAST_NAME###';
+				$array2[]=preg_replace('/\s+/', ' ', $order['billing_middle_name'].' '.$order['billing_last_name']);
+				$array1[]='###BILLING_TELEPHONE###';
+				$array2[]=$order['billing_telephone'];
+				$array1[]='###DELIVERY_TELEPHONE###';
+				$array2[]=$order['delivery_telephone'];
+				$array1[]='###BILLING_MOBILE###';
+				$array2[]=$order['billing_mobile'];
+				$array1[]='###DELIVERY_MOBILE###';
+				$array2[]=$order['delivery_mobile'];
+				$array1[]='###BILLING_FULL_NAME###';
+				$array2[]=$full_customer_name;
+				$array1[]='###FULL_NAME###';
+				$array2[]=$full_customer_name;
+				$array1[]='###DELIVERY_FULL_NAME###';
+				$array2[]=$delivery_full_customer_name;
+				$array1[]='###BILLING_NAME###';
+				$array2[]=$order['billing_name'];
+				$array1[]='###BILLING_EMAIL###';
+				$array2[]=$order['billing_email'];
+				$array1[]='###DELIVERY_EMAIL###';
+				$array2[]=$order['delivery_email'];
+				$array1[]='###DELIVERY_NAME###';
+				$array2[]=$order['delivery_name'];
+				$array1[]='###CUSTOMER_EMAIL###';
+				$array2[]=$order['billing_email'];
+				$array1[]='###STORE_NAME###';
+				$array2[]=$this->ms['MODULES']['STORE_NAME'];
+				$array1[]='###TOTAL_AMOUNT###';
+				$array2[]=mslib_fe::amount2Cents($order['total_amount']);
+				$ORDER_DETAILS=mslib_fe::printOrderDetailsTable($order, 'email');
+				$array1[]='###ORDER_DETAILS###';
+				$array2[]=$ORDER_DETAILS;
+				$array1[]='###BILLING_ADDRESS###';
+				$array2[]=$billing_address;
+				$array1[]='###DELIVERY_ADDRESS###';
+				$array2[]=$delivery_address;
+				$array1[]='###CUSTOMER_ID###';
+				$array2[]=$order['customer_id'];
+				$array1[]='###SHIPPING_METHOD###';
+				$array2[]=$order['shipping_method_label'];
+				$array1[]='###PAYMENT_METHOD###';
+				$array2[]=$order['payment_method_label'];
+				$invoice=mslib_fe::getOrderInvoice($order['orders_id'], 0);
+				$invoice_id='';
+				$invoice_link='';
+				if (is_array($invoice)) {
+					$invoice_id=$invoice['invoice_id'];
+					$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
+				}
+				$array1[]='###INVOICE_NUMBER###';
+				$array2[]=$invoice_id;
+				$array1[]='###INVOICE_LINK###';
+				$array2[]=$invoice_link;
+				$time=$order['crdate'];
+				$long_date=strftime($this->pi_getLL('full_date_format'), $time);
+				$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
+				$array2[]=$long_date;
+				// backwards compatibility
+				$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
+				$array2[]=strftime("%x", $time);
+				$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
+				$array2[]=$long_date;
+				$time=time();
+				$long_date=strftime($this->pi_getLL('full_date_format'), $time);
+				$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+				$array2[]=$long_date;
+				$array1[]='###STORE_NAME###';
+				$array2[]=$this->ms['MODULES']['STORE_NAME'];
+				$array1[]='###TOTAL_AMOUNT###';
+				$array2[]=mslib_fe::amount2Cents($order['total_amount']);
+				$array1[]='###PROPOSAL_NUMBER###';
+				$array2[]=$order['orders_id'];
+				$array1[]='###ORDER_NUMBER###';
+				$array2[]=$order['orders_id'];
+				$array1[]='###ORDER_LINK###';
+				$array2[]='';
+				$array1[]='###CUSTOMER_ID###';
+				$array2[]=$order['customer_id'];
+				$array1[]='###CUSTOMER_COMMENTS###';
+				$array2[]=$order['customer_comments'];
+				$array1[]='###MESSAGE###';
+				$array2[]=$this->post['comments'];
+				$array1[]='###OLD_ORDER_STATUS###';
+				$array2[]=mslib_fe::getOrderStatusName($order['status'], $order['language_id']);
+				$array1[]='###ORDER_STATUS###';
+				$array2[]=mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
+				$array1[]='###EXPECTED_DELIVERY_DATE###';
+				$array2[]=strftime("%x", $order['expected_delivery_date']);
+				$array1[]='###TRACK_AND_TRACE_CODE###';
+				$array2[]=$order['track_and_trace_code'];
+				$array1[]='###BILLING_STREET_NAME###';
+				$array2[]=$order['billing_street_name'];
+				$array1[]='###BILLING_ADDRESS_NUMBER###';
+				$array2[]=$order['billing_address_number'];
+				$array1[]='###BILLING_ADDRESS_EXT###';
+				$array2[]=$order['billing_address_ext'];
+				$array1[]='###BILLING_ZIP###';
+				$array2[]=$order['billing_zip'];
+				$array1[]='###BILLING_CITY###';
+				$array2[]=$order['billing_city'];
+				$array1[]='###BILLING_COUNTRY###';
+				$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+				$array1[]='###BILLING_COUNTRY_CODE###';
+				$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['billing_country']);
+
+				$array1[]='###DELIVERY_STREET_NAME###';
+				$array2[]=$order['delivery_street_name'];
+				$array1[]='###DELIVERY_ADDRESS_NUMBER###';
+				$array2[]=$order['delivery_address_number'];
+				$array1[]='###DELIVERY_ADDRESS_EXT###';
+				$array2[]=$order['delivery_address_ext'];
+				$array1[]='###DELIVERY_ZIP###';
+				$array2[]=$order['delivery_zip'];
+				$array1[]='###DELIVERY_CITY###';
+				$array2[]=$order['delivery_city'];
+				$array1[]='###DELIVERY_COUNTRY###';
+				$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
+				$array1[]='###DELIVERY_COUNTRY_CODE###';
+				$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['delivery_country']);
+				// dynamic variablese eof
+				if ($this->post['comments']) {
+					$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);
+				}
+				$status_last_modified=time();
+				$updateArray=array();
+				$updateArray['orders_id']=$order['orders_id'];
+				$updateArray['old_value']=$order['status'];
+				$updateArray['comments']=$this->post['comments'];
+				$updateArray['customer_notified']=$mail_customer;
+				$updateArray['crdate']=$status_last_modified;
+				$updateArray['new_value']=$orders_status;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
+				if ($orders_status==$order['status']) {
+					if (!empty($this->post['comments']) && $mail_customer) {
+						// always save the order status history even when order status is the same as the old one when e-mail to client is filled
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+					$returnTrue=0;
+				} else {
+					// save if new order status history is different than the old status
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$returnTrue=1;
+				}
+				$updateArray=array();
+				$updateArray['status']=$orders_status;
+				$updateArray['status_last_modified']=$status_last_modified;
+				$order['old_status']=$order['status'];
+				$order['status']=$orders_status;
+				$updateArray['orders_last_modified']=time();
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				//send e-mail
+				if ($mail_customer) {
+					$subject=$this->ms['MODULES']['STORE_NAME'];
+					$message=$this->post['comments'];
+					if ($orders_status) {
+						$orders_status_name=mslib_fe::getOrderStatusName($orders_status, 0);
+						$keys=array();
+						$keys[]='email_order_status_changed_'.mslib_befe::strtolower($orders_status_name);
+						$keys[]='email_order_status_changed';
+						foreach ($keys as $key) {
+							//$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
+							$page=mslib_fe::getCMScontent($key, $order['language_id']);
+							if ($page[0]) {
+								if ($page[0]['content']) {
+									$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+								}
+								if ($page[0]['name']) {
+									$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+								}
+								$user=array();
+								$user['email']=$order['billing_email'];
+								$user['name']=$order['billing_name'];
+								if ($user['email']) {
+									mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+								}
+								break;
+							}
+						}
+					}
+				}
+				if (isset($order['language_id'])) {
+					// Switch back to default language
+					mslib_befe::resetSystemLanguage();
+				}
+				//hook to let other plugins further manipulate
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'])) {
+					$params=array(
+							'orders_id'=>&$orders_id,
+							'orders_status'=>&$orders_status,
+							'mail_customer'=>&$mail_customer,
+							'order'=>&$order,
+							'array1'=>&$array1,
+							'array2'=>&$array2
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				if ($returnTrue) {
+					return true;
+				}
 			}
 		}
 	}
