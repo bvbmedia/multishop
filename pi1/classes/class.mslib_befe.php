@@ -3283,9 +3283,11 @@ class mslib_befe {
 						// always save the order status history even when order status is the same as the old one when e-mail to client is filled
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
+					$returnTrue=0;
 				} else {
 					// save if new order status history is different than the old status
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$returnTrue=1;
 				}
 				$updateArray=array();
 				$updateArray['status']=$orders_status;
@@ -3342,6 +3344,9 @@ class mslib_befe {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
+				}
+				if ($returnTrue) {
+					return true;
 				}
 			}
 		}
