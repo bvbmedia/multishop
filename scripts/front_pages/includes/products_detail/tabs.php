@@ -268,21 +268,6 @@ if (!$product['products_id']) {
 		<div class="tab_container">
 			'.$tab_content.'
 		</div>
-		<script type="text/javascript">
-			jQuery(document).ready(function($) {
-				jQuery(".tab_content").hide();
-				jQuery("ul.tabs li:first").addClass("active").show();
-				jQuery(".tab_content:first").show();
-				jQuery("ul.tabs li").click(function() {
-					jQuery("ul.tabs li").removeClass("active");
-					jQuery(this).addClass("active");
-					jQuery(".tab_content").hide();
-					var activeTab = jQuery(this).find("a").attr("href");
-					jQuery(activeTab).show();
-					return false;
-				});
-			});
-		</script>
 	';
 	$output['PRODUCTS_SHORT_DESCRIPTION']=$product['products_shortdescription'];
 	$output['products_extra_description']=$product['products_extra_description'];
@@ -475,7 +460,8 @@ if (!$product['products_id']) {
 			'markerArray'=>&$markerArray,
 			'product'=>&$product,
 			'output'=>&$output,
-			'plugins_extra_content'=>&$plugins_extra_content
+			'plugins_extra_content'=>&$plugins_extra_content,
+			'js_detail_page_triggers'=>&$js_detail_page_triggers
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -490,7 +476,18 @@ if (!$product['products_id']) {
 		$output_array['meta']['details_page_js']='
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-			'.implode("\n", $js_detail_page_triggers).'
+				jQuery(".tab_content").hide();
+				jQuery("ul.tabs li:first").addClass("active").show();
+				jQuery(".tab_content:first").show();
+				jQuery("ul.tabs li").click(function() {
+					jQuery("ul.tabs li").removeClass("active");
+					jQuery(this).addClass("active");
+					jQuery(".tab_content").hide();
+					var activeTab = jQuery(this).find("a").attr("href");
+					jQuery(activeTab).show();
+					return false;
+				});
+				'.implode("\n", $js_detail_page_triggers).'
 			});
 			</script>
 		';
