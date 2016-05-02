@@ -2,6 +2,12 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $content='';
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
@@ -994,4 +1000,10 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 ?>

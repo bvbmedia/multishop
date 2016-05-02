@@ -2,6 +2,14 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersMainPreProc'])) {
+	// hook
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersMainPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+	// hook oef
+}
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -3803,5 +3811,13 @@ if (url.match("#")) {
 	} else {
 		$content.='<div class="alert alert-danger"><h3>'.$this->pi_getLL('order_not_found').'</h3></div>';
 	}
+}
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersMainPostProc'])) {
+	// hook
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersMainPostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+	// hook oef
 }
 ?>
