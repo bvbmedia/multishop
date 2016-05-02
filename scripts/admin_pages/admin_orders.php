@@ -2,6 +2,12 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPreProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $content='';
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
@@ -38,7 +44,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			}
 			if (count($attachments)) {
 				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
-				$prog=t3lib_utility_Command::exec('which gs');
+				$prog=\TYPO3\CMS\Core\Utility\CommandUtility::exec('which gs');
 				//hook to let other plugins further manipulate the settings
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'])) {
 					$params=array(
@@ -50,7 +56,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 				}
 				if ($prog && is_file($prog)) {
 					$cmd=$prog.' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='.$combinedPdfFile.' '.implode(' ', $attachments);
-					t3lib_utility_Command::exec($cmd);
+					\TYPO3\CMS\Core\Utility\CommandUtility::exec($cmd);
 					if (file_exists($combinedPdfFile)) {
 						header("Content-type:application/pdf");
 						readfile($combinedPdfFile);
@@ -994,4 +1000,10 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'])) {
+	$params=array();
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 ?>

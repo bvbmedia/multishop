@@ -548,7 +548,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .shipping_cost_input_field_wrapper > div > .form-group { margin-bottom:20px; }
 
-.blockUI.blockOverlay { z-index:8888889 !important; }
+.blockUI.blockOverlay { z-index:8888891 !important; }
 
 @media (min-width:992px) {
 	#Order_Details > .row,
@@ -654,6 +654,7 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 .categories_select2_input,
 .products_select2_input,
 #manual_product_name_select2 { display:inline-block; vertical-align:middle; }
+.categories_products_select2_wrapper .categories_select2_input { margin-bottom:10px; }
 
 #msEditProductInputProductVolume .input-group .input-group-addon { border-left:none; }
 #msEditProductInputProductVolume .input-group .input-group-addon,
