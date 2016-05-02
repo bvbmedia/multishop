@@ -281,7 +281,7 @@ class mslib_befe {
 				if (count($commands)) {
 					// background running is not working on all boxes well, so we reverted it
 					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
-					//				t3lib_utility_Command::exec($final_command);
+					//				\TYPO3\CMS\Core\Utility\CommandUtility::exec($final_command);
 					foreach ($commands as $command) {
 						exec($command);
 					}
@@ -455,7 +455,7 @@ class mslib_befe {
 				if (count($commands)) {
 					// background running is not working on all boxes well, so we reverted it
 					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
-					//				t3lib_utility_Command::exec($final_command);
+					//				\TYPO3\CMS\Core\Utility\CommandUtility::exec($final_command);
 					foreach ($commands as $command) {
 						exec($command);
 					}
@@ -1731,7 +1731,7 @@ class mslib_befe {
 						$commands[]=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					} else {
 						exec(\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
-						//t3lib_utility_Command::exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
+						//\TYPO3\CMS\Core\Utility\CommandUtility::exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
 						$newsize=@getimagesize($target);
 						$text_width=$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_WIDTH'];
 						$text_height=$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_HEIGHT'];
@@ -1802,7 +1802,7 @@ class mslib_befe {
 				if (count($commands)) {
 					// background running is not working on all boxes well, so we reverted it
 					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
-					//				t3lib_utility_Command::exec($final_command);
+					//				\TYPO3\CMS\Core\Utility\CommandUtility::exec($final_command);
 					foreach ($commands as $command) {
 						exec($command);
 					}
@@ -1950,7 +1950,7 @@ class mslib_befe {
 				if (count($commands)) {
 					// background running is not working on all boxes well, so we reverted it
 					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
-					//				t3lib_utility_Command::exec($final_command);
+					//				\TYPO3\CMS\Core\Utility\CommandUtility::exec($final_command);
 					foreach ($commands as $command) {
 						exec($command);
 					}
