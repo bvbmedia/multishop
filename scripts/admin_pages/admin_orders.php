@@ -44,7 +44,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			}
 			if (count($attachments)) {
 				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
-				$prog=t3lib_utility_Command::exec('which gs');
+				$prog=\TYPO3\CMS\Core\Utility\CommandUtility::exec('which gs');
 				//hook to let other plugins further manipulate the settings
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['overrideGhostScripPath'])) {
 					$params=array(
@@ -56,7 +56,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 				}
 				if ($prog && is_file($prog)) {
 					$cmd=$prog.' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='.$combinedPdfFile.' '.implode(' ', $attachments);
-					t3lib_utility_Command::exec($cmd);
+					\TYPO3\CMS\Core\Utility\CommandUtility::exec($cmd);
 					if (file_exists($combinedPdfFile)) {
 						header("Content-type:application/pdf");
 						readfile($combinedPdfFile);
