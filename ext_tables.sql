@@ -553,14 +553,14 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `combined` (`page_uid`,`deleted`),
  KEY `combined_payment_method` (`payment_method`(75),`payment_method_label`(75)),
  KEY `combined_shipping_method` (`shipping_method`(75),`shipping_method_label`(75)),
- KEY `billing_tr_iso_nr` (billing_tr_iso_nr),
- KEY `billing_tr_name_en` (billing_tr_name_en),
- KEY `billing_tr_parent_iso_nr` (billing_tr_parent_iso_nr),
- KEY `billing_tr_parent_name_en` (billing_tr_parent_name_en),
- KEY `delivery_tr_iso_nr` (delivery_tr_iso_nr),
- KEY `delivery_tr_name_en` (delivery_tr_name_en),
- KEY `delivery_tr_parent_iso_nr` (delivery_tr_parent_iso_nr),
- KEY `delivery_tr_parent_name_en` (delivery_tr_parent_name_en)
+ KEY `billing_tr_iso_nr` (`billing_tr_iso_nr`),
+ KEY `billing_tr_name_en` (`billing_tr_name_en`),
+ KEY `billing_tr_parent_iso_nr` (`billing_tr_parent_iso_nr`),
+ KEY `billing_tr_parent_name_en` (`billing_tr_parent_name_en`),
+ KEY `delivery_tr_iso_nr` (`delivery_tr_iso_nr`),
+ KEY `delivery_tr_name_en` (`delivery_tr_name_en`),
+ KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
+ KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
