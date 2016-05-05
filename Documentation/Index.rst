@@ -9,7 +9,7 @@
 .. _start:
 
 =============================================================
-Extension Name
+Multishop
 =============================================================
 
 .. only:: html
@@ -54,14 +54,9 @@ Extension Name
 .. toctree::
 	:maxdepth: 3
 	:titlesonly:
-		:glob:
+	:glob:
 
-		Introduction/Index
-		User/Index
-		Administrator/Index
-		Configuration/Index
-		Developer/Index
-		KnownProblems/Index
-		ToDoList/Index
-		ChangeLog/Index
-		Targets
+	Introduction/Index
+	Administrator/Index
+	Support/Index
+
