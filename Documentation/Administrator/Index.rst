@@ -80,19 +80,19 @@ After you have installed the plugin go to the extension manager and press the pl
 - "jQuery UI Version": select 1.10.x
 - "jQuery TOOLS Version": select 1.2.x (or later)
 
-Do not enable the checkbox “Integrate jQuery to footer” because many interfaces of Multishop renders inline JavaScript (most of it is actually attached to the head tag). If you active this checkbox than this code would then be executed before the browser loads the jQuery library.
+Do not enable the checkbox "Integrate jQuery to footer" because many interfaces of Multishop renders inline JavaScript (most of it is actually attached to the head tag). If you active this checkbox than this code would then be executed before the browser loads the jQuery library.
 
 Finally press Update to save the T3jQuery configuration.
 
 Configuring components T3jQuery
 """""""""""""""""""""""""""""""
-Now you have to configure which components of jQuery should be loaded. At the left panel of TYPO3 press on the menu item “T3 jQuery”.
-On the top right there is a dropdown menu. Change the selection to: “Process & Analyze t3jquery.txt in extensions”.
-Press “Select all” to select all extensions and then press “Check”.
+Now you have to configure which components of jQuery should be loaded. At the left panel of TYPO3 press on the menu item "T3 jQuery".
+On the top right there is a dropdown menu. Change the selection to: "Process & Analyze t3jquery.txt in extensions".
+Press "Select all" to select all extensions and then press "Check".
 
-Now the list of jQuery components will be displayed. Browse to the bottom of the page and press “Use”.
+Now the list of jQuery components will be displayed. Browse to the bottom of the page and press "Use".
 
-The required components are now automatically selected. Browse to the bottom of the page and press “Create jQuery Library”.
+The required components are now automatically selected. Browse to the bottom of the page and press "Create jQuery Library".
 
 Configuring phpexcel_service to download the phpexcel library
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -111,7 +111,7 @@ Adding the front-end customer, admin and rootadmin usergroups
 - At the left panel press List
 - Click the page Webusers
 - Click the + icon to create a new Website Usergroup
-- In the “Group Title” field define: Customers
+- In the "Group Title" field define: Customers
 - Click the save with X icon to add the usergroup and go back to the previous screen.
 - Repeat the steps to create the usergroup Admin and Rootadmin.
 
@@ -122,7 +122,7 @@ Adding the front-end admin user
 At the left panel press List
 - Click the page Webusers
 - Click the + icon to create a new Website User
-- In the “Username” and “Password” field define your desired user credentials
+- In the "Username" and "Password" field define your desired user credentials
 - In the Groups form (Available Items) click the Admin usergroup
 - Click the save with X icon to add the usergroup and go back to the previous screen.
 - Repeat the steps to also create the rootadmin user, but make this user member of Admin users and Rootadmin users.
@@ -147,22 +147,22 @@ Write the number down, because you need to define this number also as constant v
 
 Define the web shop page as Multishop core shop
 """""""""""""""""""""""""""""""""""""""""""""""
-Since Multishop 3 you also have to define this page as a Multishop core shop page. You can do this by editing the page and select Multishop: core shop in the ”contains plugin” form field.
+Since Multishop 3 you also have to define this page as a Multishop core shop page. You can do this by editing the page and select Multishop: core shop in the "contains plugin" form field.
 
 Creating the content element on the web shop page
 """""""""""""""""""""""""""""""""""""""""""""""""
-Now that the page is created it's time to add a content element on the middle column that will display the shop. This is called the “Core Shop” content element.
+Now that the page is created it's time to add a content element on the middle column that will display the shop. This is called the "Core Shop" content element.
 
-- At the left panel press “Page”
-- Click on the page “Shop”
+- At the left panel press "Page"
+- Click on the page "Shop"
 - In the middle column press the icon to create a new content element
-- Click the tab “Plugins”
-- Choose “Multishop”
-- Press the tab “Multishop”
+- Click the tab "Plugins"
+- Choose "Multishop"
+- Press the tab "Multishop"
 
-Now you see the Multishop Flexform. On default the form activated the first tab which is “Module”. This section tells which type of content element you want to add.
+Now you see the Multishop Flexform. On default the form activated the first tab which is "Module". This section tells which type of content element you want to add.
 
-- In “Choose section” select “Core Shop”.
+- In "Choose section" select "Core Shop".
 - Click the save with X icon to add the content element and go back to the previous screen.
 
 Now it is time to configure the constants inside the TYPO3 root template.
@@ -175,21 +175,21 @@ We need to include two static templates. One for the root of the web site. The o
 
 Web shop page
 """""""""""""
-At the left panel press “Template”
+At the left panel press "Template"
 
-- Click the page “Shop”
-- Click “Click here to create an extension template.”
-- Press the tab “Includes”
-- Inside “Include static (from extensions)” add the static template “Multishop Core Page Setup (multishop)”
+- Click the page "Shop"
+- Click "Click here to create an extension template."
+- Press the tab "Includes"
+- Inside "Include static (from extensions)" add the static template "Multishop Core Page Setup (multishop)"
 - Click the save with X icon to add the content element and go back to the previous screen.
 
 Root page
 """""""""
-- At the left panel press “Template”
+- At the left panel press "Template"
 - Click the root page
-- Click “Edit the whole template record”
-- Press the tab “Includes”
-- Inside “Include static (from extensions)” add the following static templates:
+- Click "Edit the whole template record"
+- Press the tab "Includes"
+- Inside "Include static (from extensions)" add the following static templates:
 
   - Multishop Root Page Setup (multishop)
   - 4.5 jQuery ColorBox Base for t3jquery
@@ -198,10 +198,10 @@ Root page
 
 Configuring the TYPO3 template
 """"""""""""""""""""""""""""""
-- At the left panel press “Template”
+- At the left panel press "Template"
 - Click the root page
-- In the third frame of the TYPO3 admin panel on top press the dropdown menu and select “Constant Editor”
-- After the “Category” label open the dropdown menu and select: “PLUGIN.MULTISHOP – MAIN”
+- In the third frame of the TYPO3 admin panel on top press the dropdown menu and select "Constant Editor"
+- After the "Category" label open the dropdown menu and select: "PLUGIN.MULTISHOP – MAIN"
 
 Now you see a form with all the Multishop constants that makes Multishop run properly. We explain the required constants:
 
@@ -222,15 +222,15 @@ The id number of the customers usergroup. When Multishop has to create a new cus
 
 plugin.multishop.fe_customer_pid
 --------------------------------
-The id number of the page that contains the front-end users and usergroups. In the introduction it's the id of the page “Frontend users and groups”.
+The id number of the page that contains the front-end users and usergroups. In the introduction it's the id of the page "Frontend users and groups".
 
 plugin.multishop.fe_rootadmin_usergroup
 ---------------------------------------
-The id number of the rootadmin usergroup. Members of the rootadmin usergroup have the ability to clear the whole catalog with just one single mouse click. Not really the right permission for “normal” admin users. This usergroup is meant for the the developer.
+The id number of the rootadmin usergroup. Members of the rootadmin usergroup have the ability to clear the whole catalog with just one single mouse click. Not really the right permission for "normal" admin users. This usergroup is meant for the the developer.
 
 plugin.multishop.shop_pid
 -------------------------
-This constant tells Multishop where the products are saved to. This number is also used to create the deeplinks inside the shop. This should reflect the id of the “Core Shop” page, which is in our case the page “Shop”.
+This constant tells Multishop where the products are saved to. This number is also used to create the deeplinks inside the shop. This should reflect the id of the "Core Shop" page, which is in our case the page "Shop".
 
 plugin.multishop.fe_admin_usergroup
 -----------------------------------
@@ -557,7 +557,7 @@ We advice you to use the search engine as much as possible to win a lot of time.
 Define the store name, e-mail address and location
 """"""""""""""""""""""""""""""""""""""""""""""""""
 Image here
-* Now press “Store Name” and change the CURRENT VALUE
+* Now press "Store Name" and change the CURRENT VALUE
 
 
 Define the enabled countries, zones, shipping and payment methods
@@ -574,7 +574,7 @@ F.A.Q.
 ======
 The admin panel is not showing in the front
 """""""""""""""""""""""""""""""""""""""""""
-First of all make sure you are logged in with your front-end username and that this user is member of the admin usergroup. In the TYPO3 template the constants field “plugin.multishop.fe_admin_usergroup” should contain the id number of the admin usergroup.
+First of all make sure you are logged in with your front-end username and that this user is member of the admin usergroup. In the TYPO3 template the constants field "plugin.multishop.fe_admin_usergroup" should contain the id number of the admin usergroup.
 
 If this is all true than most likely you have a jQuery issue. Open FireBug in FireFox and login the front-end. Check the console for any errors. It happens a lot that developers load jQuery double cause of included plugins that ship their own jQuery library. Make sure that other plugins are configured so that they don't include their own jQuery library and validate that T3jQuery is configured properly.
 
@@ -586,10 +586,10 @@ When I'm opening CUSTOMERS and/or ORDERS in the admin panel I don't see any expe
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Maybe the page_uid is not correctly defined. You could install the phpmyadmin plugin to analyse your database. Example queries to fix it:
 
-- update `fe_users` set page_uid=206
-- update `fe_users` set pid=262
-- update `fe_users` set usergroup=1
-- update `tx_multishop_orders` set page_uid=206
+- update fe_users set page_uid=206
+- update fe_users set pid=262
+- update fe_users set usergroup=1
+- update tx_multishop_orders set page_uid=206
 
 Explanation
 -----------
