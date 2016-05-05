@@ -31,12 +31,12 @@ You can do this by adding the following configuration to the php.ini file (.htac
 
 If you run your TYPO3 web site on a shared host and you are not able to adjust the server settings you can try to add the following lines to the .htaccess file that is located in the root folder of the web site:
 
-- php_value memory_limit 256MB
-- php_value upload_max_filesize 25M
-- php_value post_max_size 25M
 - php_value max_execution_time 240
 - php_value max_input_time 240
 - php_value max_input_vars 10000
+- php_value memory_limit 256MB
+- php_value post_max_size 25M
+- php_value upload_max_filesize 25M
 
 
 jQuery / t3jquery notice
@@ -556,7 +556,6 @@ We advice you to use the search engine as much as possible to win a lot of time.
 
 Define the store name, e-mail address and location
 """"""""""""""""""""""""""""""""""""""""""""""""""
-Image here
 * Now press "Store Name" and change the CURRENT VALUE
 
 
@@ -567,8 +566,6 @@ Go to SYSTEM / SHIPPING AND PAYMENT and press COUNTRIES.
 Define here to which countries are able to deliver.
 
 After the countries are enabled it's time to create shipping zones. A shipping zone could contain one or more countries. This makes configuring the shipping costs easier.
-
-Image here
 
 F.A.Q.
 ======
@@ -593,6 +590,7 @@ Maybe the page_uid is not correctly defined. You could install the phpmyadmin pl
 
 Explanation
 -----------
+
 - page_uid = the value of plugin.multishop.shop_pid
 - pid = the value of plugin.multishop.fe_customer_pid
 - usergroup = the value of plugin.multishop.fe_customer_usergroup
