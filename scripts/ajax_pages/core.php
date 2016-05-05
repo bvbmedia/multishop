@@ -590,10 +590,10 @@ switch ($this->ms['page']) {
 							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);
 						}
 					}
-					/*$return_data[]=array(
+					$return_data[]=array(
 						'id'=>0,
 						'text'=>$this->pi_getLL('admin_main_category')
-					);*/
+					);
 				}
 				break;
 			case'getFullTree':

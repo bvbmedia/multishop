@@ -542,6 +542,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				</div>
 			</form>
 			';
+			//hook to let other plugins further manipulate the method
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceSearchFormPostProc'])) {
+				$interfaceKey=&$this->interfaceKey;
+				$params_searchform=array(
+					'interfaceKey'=>&$interfaceKey,
+					'searchForm'=>&$searchForm,
+					'adminInterfaceParams'=>&$params,
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceSearchFormPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_searchform, $this);
+				}
+			}
 		}
 		if (!$params['settings']['skipTabMarkup']) {
 			$content.='
