@@ -203,6 +203,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 							$updateArray=array('paid'=>0);
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$return_data['status']='OK';
 						} else {
 							$return_data['error']=array(
 								'status'=>'error',
