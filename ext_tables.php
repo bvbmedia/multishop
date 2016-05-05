@@ -92,6 +92,7 @@ $tempColumns=array(
 		'label'=>'Gender:',
 		'config'=>array(
 			'type'=>'select',
+			'renderType' => 'selectSingleBox',
 			'items'=>array(
 				array(
 					'Male',
@@ -178,6 +179,7 @@ $tempColumns=array(
 		'label'=>'Multishop address type:',
 		'config'=>array(
 			'type'=>'select',
+			'renderType' => 'selectSingleBox',
 			'items'=>array(
 				array(
 					'Default',

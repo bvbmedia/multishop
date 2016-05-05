@@ -548,12 +548,15 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
 					$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+					$updateArray['expected_delivery_date']='';
 					if ($this->post['expected_delivery_date']) {
 						$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
 					}
+					$updateArray['track_and_trace_code']='';
 					if ($this->post['track_and_trace_code']) {
 						$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
 					}
+					$updateArray['order_memo']='';
 					if ($this->post['order_memo']) {
 						$updateArray['order_memo']=$this->post['order_memo'];
 					}
