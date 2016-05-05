@@ -6,7 +6,7 @@
 .. include:: ../Includes.txt
 
 
-.. _changelog:
+.. _user:
 
 User
 =========

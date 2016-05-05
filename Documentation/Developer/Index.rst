@@ -6,9 +6,8 @@
 .. include:: ../Includes.txt
 
 
-.. _changelog:
+.. _developer:
 
 Developer
 =========
-
 
