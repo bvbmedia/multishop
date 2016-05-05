@@ -447,10 +447,10 @@ CREATE TABLE `tx_multishop_orders` (
  `delivery_mobile` varchar(150) default '',
  `delivery_fax` varchar(150) default '',
  `delivery_vat_id` varchar(150) default '',
- `billing_tr_iso_nr` int(11) default '0',
- `billing_tr_name_en` varchar(150) default '',
- `billing_tr_parent_iso_nr` int(11) default '0',
- `billing_tr_parent_name_en` varchar(150) default '',
+ `delivery_tr_iso_nr` int(11) default '0',
+ `delivery_tr_name_en` varchar(150) default '',
+ `delivery_tr_parent_iso_nr` int(11) default '0',
+ `delivery_tr_parent_name_en` varchar(150) default '',
  `status` int(3) default '1',
  `crdate` int(11) default '0',
  `ordercreated` tinyint(1) default '0',
@@ -553,14 +553,14 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `combined` (`page_uid`,`deleted`),
  KEY `combined_payment_method` (`payment_method`(75),`payment_method_label`(75)),
  KEY `combined_shipping_method` (`shipping_method`(75),`shipping_method_label`(75)),
- KEY `billing_tr_iso_nr` (billing_tr_iso_nr),
- KEY `billing_tr_name_en` (billing_tr_iso_nr),
- KEY `billing_tr_parent_iso_nr` (billing_tr_iso_nr),
- KEY `billing_tr_parent_name_en` (billing_tr_iso_nr),
- KEY `delivery_tr_iso_nr` (delivery_tr_iso_nr),
- KEY `delivery_tr_name_en` (delivery_tr_iso_nr),
- KEY `delivery_tr_parent_iso_nr` (delivery_tr_iso_nr),
- KEY `delivery_tr_parent_name_en` (delivery_tr_iso_nr)
+ KEY `billing_tr_iso_nr` (`billing_tr_iso_nr`),
+ KEY `billing_tr_name_en` (`billing_tr_name_en`),
+ KEY `billing_tr_parent_iso_nr` (`billing_tr_parent_iso_nr`),
+ KEY `billing_tr_parent_name_en` (`billing_tr_parent_name_en`),
+ KEY `delivery_tr_iso_nr` (`delivery_tr_iso_nr`),
+ KEY `delivery_tr_name_en` (`delivery_tr_name_en`),
+ KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
+ KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
