@@ -180,7 +180,7 @@ if (count($active_shop)>1) {
 	}
 	$content.='</div></div>';
 } else {
-	$content.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
+	$content.='<input type="hidden" name="related_shop_pid" value="'.$edit_row['page_uid'].'">';
 }
 $content.='<div class="form-group">
 	<div class="col-md-10 col-md-offset-2">
