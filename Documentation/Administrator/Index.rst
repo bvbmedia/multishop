@@ -593,6 +593,7 @@ Maybe the page_uid is not correctly defined. You could install the phpmyadmin pl
 
 Explanation
 -----------
-page_uid = the value of plugin.multishop.shop_pid
-pid = the value of plugin.multishop.fe_customer_pid
-usergroup = the value of plugin.multishop.fe_customer_usergroup
+- page_uid = the value of plugin.multishop.shop_pid
+- pid = the value of plugin.multishop.fe_customer_pid
+- usergroup = the value of plugin.multishop.fe_customer_usergroup
+
