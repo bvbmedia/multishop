@@ -263,12 +263,14 @@ CREATE TABLE `tx_multishop_coupons` (
  `crdate` int(11) default '0',
  `max_usage` int(11) default '0',
  `discount_type` varchar(25) default 'percentage',
+ `page_uid` int(11) default '0'
  PRIMARY KEY (`id`),
  UNIQUE KEY `code` (`code`),
  KEY `status` (`status`),
  KEY `startdate` (`startdate`),
  KEY `enddate` (`enddate`),
- KEY `times_used` (`times_used`)
+ KEY `times_used` (`times_used`),
+ KEY `page_uid` (`page_uid`)
 );
 
 CREATE TABLE `tx_multishop_import_jobs` (
