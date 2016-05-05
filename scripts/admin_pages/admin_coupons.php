@@ -53,7 +53,8 @@ if ($this->post) {
 		'discount_type'=>$this->post['discount_type'],
 		'max_usage'=>$this->post['max_usage'],
 		'startdate'=>$s_time,
-		'enddate'=>$e_time
+		'enddate'=>$e_time,
+		'page_uid'=>$this->post['related_shop_pid']
 	);
 	if ($this->post['coupons_id']) {
 		// edit
@@ -68,7 +69,7 @@ if ($this->post) {
 }
 if (is_numeric($this->get['status'])) {
 	$updateArray=array(
-		'status'=>$status
+		'status'=>$this->get['status']
 	);
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_coupons', 'id='.$this->get['coupons_id'], $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -167,8 +168,21 @@ $content.='</select>
 	<div class="col-md-10">
 		<input type="text" class="form-control" name="max_usage" value="'.$edit_row['max_usage'].'" />
 	</div>
-</div>
-<div class="form-group">
+</div>';
+$active_shop=mslib_fe::getActiveShop();
+if (count($active_shop)>1) {
+	$content.='<div class="form-group">
+			<label for="related_shop_pid" class="control-label col-md-2">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($edit_row['page_uid']==0) ? ' checked="checked"' : '').' /><label>'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
+	foreach ($active_shop as $pageinfo) {
+		$content.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($edit_row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
+	}
+	$content.='</div></div>';
+} else {
+	$content.='<input type="hidden" name="related_shop_pid" value="'.$edit_row['page_uid'].'">';
+}
+$content.='<div class="form-group">
 	<div class="col-md-10 col-md-offset-2">
 		<input type="hidden" name="coupons_id" value="'.$edit_row['id'].'" />
 		<button type="submit" class="btn btn-success" name="editpost" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
@@ -177,7 +191,7 @@ $content.='</select>
 </form>
 ';
 // list the existing coupon codes
-$str="SELECT * from tx_multishop_coupons order by discount";
+$str="SELECT * from tx_multishop_coupons where (page_uid=0 or page_uid='".$this->showCatalogFromPage."') order by discount";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $coupons_options=array();
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {

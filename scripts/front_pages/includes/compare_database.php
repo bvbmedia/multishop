@@ -1012,6 +1012,13 @@ if (!$skipMultishopUpdates) {
 				break;
 		}
 	}
+	$str="select `page_uid` from tx_multishop_coupons limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_coupons` ADD `page_uid` int(11) default '0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
