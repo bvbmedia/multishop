@@ -46,7 +46,7 @@ if ($this->cookie['stats_year_sb']>0) {
 }
 $content.='
 <form action="index.php" method="get" id="orders_stats_form" class="float_right">
-<div class="stat-years float_right">'.$year_select.'</div>
+<div class="stat-years">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_products" />
@@ -101,10 +101,20 @@ foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime('+1 month -1 second',$start_time);
-	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 25";
+
+	$filter=array();
+	$filter[]='('.implode(' AND ', $data_query['where']).')';
+	$filter[]='o.crdate BETWEEN '.$start_time.' and '.$end_time;
+	$filter[]='o.orders_id=op.orders_id';
+	$str=$GLOBALS['TYPO3_DB']->SELECTquery('sum(op.qty) as total, op.products_name, op.products_id, op.categories_id', // SELECT ...
+			'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
+			implode(' AND ',$filter), // WHERE...
+			'op.products_name having total > 0', // GROUP BY...
+			'total desc', // ORDER BY...
+			'25' // LIMIT ...
+	);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$content.='<td valign="top">
-		';
+	$content.='<td valign="top">';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
 		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
@@ -169,5 +179,5 @@ $content.='<p class="extra_padding_bottom">';
 $content.='<a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
 $content.='
 </p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content='<div class="panel panel-default"><div class="panel-body">'.mslib_fe::shadowBox($content).'</div></div>';
 ?>
