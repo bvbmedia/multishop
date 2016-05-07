@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if ($this->ms['MODULES']['DELETE_PDF_PACKING_SLIP_AFTER_BEING_DOWNLOADED']) {
+	$this->get['tx_multishop_pi1']['forceRecreate']=1;
+}
 $order=array();
 if ($this->get['tx_multishop_pi1']['order_id'] && $this->ADMIN_USER) {
 	$order_id=$this->get['tx_multishop_pi1']['order_id'];
@@ -15,6 +18,9 @@ if (!count($order)) {
 }
 $pdfFileName='packingslip_'.$order['hash'].'.pdf';
 $pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+if ($this->ms['MODULES']['DELETE_PDF_PACKING_SLIP_AFTER_BEING_DOWNLOADED'] && file_exists($pdfFilePath)) {
+	unlink($pdfFilePath);
+}
 if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $order['hash']) {
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
