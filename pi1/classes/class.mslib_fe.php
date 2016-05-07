@@ -4117,7 +4117,7 @@ class mslib_fe {
 							case 'radio':
 								if (count($vars['options'])>0) {
 									foreach ($vars['options'] as $radio_option) {
-										$content.='<div class="radio radio-success radio-inline"><input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><label>'.$radio_option.'</label></div>';
+										$content.='<div class="radio radio-success radio-inline"><input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><label for="'.$field_key.'_'.$radio_option.'">'.$radio_option.'</label></div>';
 									}
 								}
 								break;
