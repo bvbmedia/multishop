@@ -51,7 +51,8 @@ $content.='
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_products" />
 <input name="tx_multishop_pi1[stats_section]" type="hidden" value="stats_per_months" />
-<div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /> '.$this->pi_getLL('show_paid_orders_only').'</div>
+
+<div class="checkbox checkbox-success checkbox-inline"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /><label for="checkbox_paid_orders_only">'.htmlspecialchars($this->pi_getLL('show_paid_orders_only')).'</label></div>
 </form>
 <script type="text/javascript" language="JavaScript">
 	jQuery(document).ready(function($) {
@@ -99,16 +100,14 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
-	//$end_time=strtotime($value."-31 23:59:59");
-	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	//
-	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 10";
+	$end_time=strtotime('+1 month -1 second',$start_time);
+	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 25";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$content.='<td valign="top">
 		';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
 			<tr class="'.$tr_type.'">
 				<th valign="top">Qty</td>
 				<th valign="top">Product</td>
@@ -148,14 +147,14 @@ foreach ($dates as $key=>$value) {
 			$total_amount+=round($product['total'], 2);
 			$content.='
 			<tr class="'.$tr_type.'">
-				<td valign="top" align="right"><strong>'.round($product['total'], 2).'</strong></td>
+				<td valign="top" class="text-right"><strong>'.round($product['total'], 2).'</strong></td>
 				<td valign="top"><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>
 			</tr>
 			';
 		}
 		$content.='
 			<tr class="'.$tr_type.'">
-				<th valign="top" align="right">'.round($total_amount, 2).'</td>
+				<th valign="top" class="text-right">'.round($total_amount, 2).'</td>
 				<th valign="top">Product</td>
 			</tr>
 		';
