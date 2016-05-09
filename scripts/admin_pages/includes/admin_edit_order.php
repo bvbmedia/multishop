@@ -137,9 +137,15 @@ if (is_numeric($this->get['orders_id'])) {
 								$updateArray['final_price']=$this->post['product_price'];
 								// disocunt update
 								if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-									$updateArray['discount_amount']=$this->post['product_discount_amount'];
-									$discount_percentage=($this->post['product_discount_amount']/$this->post['product_price'])*100;
-									$updateArray['discount_percentage']=$discount_percentage;
+									if (isset($this->post['product_discount_percentage']) && is_numeric($this->post['product_discount_percentage']) && $this->post['product_discount_percentage']>0) {
+										$updateArray['discount_percentage'] = $this->post['product_discount_percentage'];
+										$discount_amount = ($this->post['product_price']*$this->post['product_discount_percentage']) / 100;
+										$updateArray['discount_amount'] = $discount_amount;
+									} else if (isset($this->post['product_discount_amount']) && !empty($this->post['product_discount_amount'])) {
+										$updateArray['discount_amount'] = $this->post['product_discount_amount'];
+										$discount_percentage = ($this->post['product_discount_amount'] / $this->post['product_price']) * 100;
+										$updateArray['discount_percentage'] = $discount_percentage;
+									}
 								}
 								$updateArray['products_tax']=$this->post['product_tax'];
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
@@ -1784,7 +1790,16 @@ if (is_numeric($this->get['orders_id'])) {
 							//$order_products_body_data['products_discount']['value']=$this->pi_getLL('discount') . ' input';
 							$order_products_discount_amount_display=mslib_fe::taxDecimalCrop($order['discount_amount'], 2, false);
 							$order_products_discount_amount_display_incl=mslib_fe::taxDecimalCrop($order['discount_amount']+(($order['discount_amount']*$order['products_tax'])/100), 2, false);
-							$order_products_body_data['products_discount']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_discount_amount_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+							$percentage_sb='<div class="discount_percentage_wrapper">
+							<select name="product_discount_percentage" id="product_discount_percentage" style="width:210px">
+								<option value="">'.$this->pi_getLL('use_discount_amount').'</option>
+							';
+							for ($p=1; $p<=100; $p++) {
+								$percentage_sb.='<option value="'.$p.'">'.$p.'%</option>';
+							}
+							$percentage_sb.='</select>
+							</div>';
+							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_discount_amount_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
 							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.$order_products_discount_amount_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
 							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
 							//if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
@@ -3278,6 +3293,7 @@ if (is_numeric($this->get['orders_id'])) {
                     var select2_element_id="#" + $(v).attr("id");
                     select2_values_sb(select2_element_id, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 });
+                $("#product_discount_percentage").select2();
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
                     var d = new Date();

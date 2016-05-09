@@ -1292,6 +1292,7 @@
             <label index="admin_ordered_category">Ordered categories</label>
             <label index="territory">Territory</label>
             <label index="sales_volume_by_month_per_product">Monthly sales volume per product group</label>
+            <label index="use_discount_amount">Use discount amount</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
