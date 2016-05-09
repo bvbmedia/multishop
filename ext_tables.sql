@@ -574,6 +574,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  `products_description` text,
  `products_price` decimal(24,14) default '0.00000000000000',
  `final_price` decimal(24,14) default '0.00000000000000',
+ `discount_percentage` decimal(8,2) default '0.00000000000000',
+ `discount_amount` decimal(24,14) default '0.00000000000000',
  `products_tax` decimal(8,2) default '0.00',
  `comments` varchar(150) default '',
  `status` int(3) default '1',
