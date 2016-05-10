@@ -25,9 +25,28 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		</thead><tbody>
 	';
 	while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+		if ($row['categories_id']) {
+			// get all cats to generate multilevel fake url
+			$level=0;
+			$cats=mslib_fe::Crumbar($row['categories_id']);
+			$cats=array_reverse($cats);
+			$where='';
+			if (count($cats)>0) {
+				foreach ($cats as $cat) {
+					$where.="categories_id[".$level."]=".$cat['id']."&";
+					$level++;
+				}
+				$where=substr($where, 0, (strlen($where)-1));
+			}
+			// get all cats to generate multilevel fake url eof
+			$productLink=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+		} else {
+			$productLink='';
+		}
+
 		$content.='<tr>';
 		$content.='<td class="text-right">'.number_format(round($row['total'],1),0,'','.').'</td>';
-		$content.='<td>'.htmlspecialchars($row['products_name']).'</td>';
+		$content.='<td><a href="'.$productLink.'" target="_blank">'.htmlspecialchars($row['products_name']).'</a></td>';
 		$content.='</tr>';
 	}
 	$content.='</tbody></table>';

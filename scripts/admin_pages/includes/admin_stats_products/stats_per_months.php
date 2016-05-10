@@ -111,7 +111,7 @@ foreach ($dates as $key=>$value) {
 			implode(' AND ',$filter), // WHERE...
 			'op.products_name having total > 0', // GROUP BY...
 			'total desc', // ORDER BY...
-			'25' // LIMIT ...
+			'10000' // LIMIT ...
 	);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$content.='<td valign="top">';
@@ -158,7 +158,7 @@ foreach ($dates as $key=>$value) {
 			$content.='
 			<tr class="'.$tr_type.'">
 				<td valign="top" class="text-right"><strong>'.round($product['total'], 2).'</strong></td>
-				<td valign="top"><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>
+				<td valign="top"><a href="'.$productLink.'" target="_blank">'.htmlspecialchars($product['products_name']).'</a></td>
 			</tr>
 			';
 		}
