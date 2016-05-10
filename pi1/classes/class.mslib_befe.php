@@ -4043,6 +4043,10 @@ class mslib_befe {
 		$markerArray=array();
 		$markerArray['LABEL_HEADER_VAT']=$this->pi_getLL('vat');
 		$markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE']=$this->pi_getLL('normal_price');
+		$markerArray['LABEL_HEADER_ITEM_DISCOUNT']='';
+		if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+			$markerArray['LABEL_HEADER_ITEM_DISCOUNT']='<th align="right" class="cell_products_normal_price">'.$this->pi_getLL('discount').'</th>';
+		}
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$markerArray['LABEL_HEADER_ITEM_FINAL_PRICE']=$this->pi_getLL('final_price_inc_vat');
 			$subpartArray['###HEADER_INCLUDE_VAT_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['HEADER_INCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
@@ -4159,6 +4163,18 @@ class mslib_befe {
 					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']), $customer_currency, $display_currency_symbol, 0);
 					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), $customer_currency, $display_currency_symbol, 0);
 				}
+				$markerArray['ITEM_DISCOUNT_AMOUNT']='';
+				if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+					$markerArray['ITEM_DISCOUNT_AMOUNT']='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['discount_amount'], 0).'</td>';
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$markerArray['ITEM_DISCOUNT_AMOUNT']='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['discount_amount']+(($product['discount_amount']*$product['products_tax'])/100), 0).'</td>';
+						$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']+(($product['final_price']*$product['products_tax'])/100)), $customer_currency, $display_currency_symbol, 0);
+						$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.(($product['final_price']-$product['discount_amount'])+$product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+					} else {
+						$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['final_price']), $customer_currency, $display_currency_symbol, 0);
+						$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']-$product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
+					}
+				}
 				$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
 				if (is_array($product['attributes']) && count($product['attributes'])) {
 					foreach ($product['attributes'] as $tmpkey=>$options) {
@@ -4187,6 +4203,10 @@ class mslib_befe {
 								}
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE']=$cell_products_normal_price;
+							$attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT']='';
+							if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+								$attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT']='<td align="right" class="cell_products_normal_price">&nbsp;</td>';
+							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE']=$cell_products_final_price;
 						}
 						$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
@@ -4334,7 +4354,13 @@ class mslib_befe {
 				break;
 			}
 		}
+		$hr_colspan=3;
 		$colspan=5;
+		if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+			$hr_colspan=4;
+			$colspan=6;
+		}
+		$subpartArray['###INVOICE_HR_COLSPAN###']=$hr_colspan;
 		$subpartArray['###INVOICE_TOTAL_COLSPAN###']=$colspan;
 		$subpartArray['###LABEL_SUBTOTAL###']=$this->pi_getLL('sub_total');
 		//$subpartArray['###LABEL_VAT###']=$this->pi_getLL('vat');

@@ -44,7 +44,7 @@ $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
-$content.='
+/*$content.='
 <form action="index.php" method="get" id="orders_stats_form" class="float_right">
 <div class="stat-years">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
@@ -65,7 +65,7 @@ $content.='
 		});
 	});
 </script>
-';
+';*/
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
 for ($i=1; $i<13; $i++) {
@@ -81,7 +81,82 @@ foreach ($dates as $key=>$value) {
 //$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
 $content.='</tr>';
 $content.='<tr class="even">';
+$search_start_time='';
+$search_end_time='';
+$filter=array();
 $data_query=array();
+if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
+	list($from_date, $from_time)=explode(" ", $this->get['order_date_from']);
+	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($till_date, $till_time)=explode(" ", $this->get['order_date_till']);
+	list($td, $tm, $ty)=explode('/', $till_date);
+	$search_start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
+	$search_end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
+	$data_query['where'][]="o.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
+}
+if ($this->get['orders_status_search']>0) {
+	$data_query['where'][]="(o.status='".$this->get['orders_status_search']."')";
+}
+if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
+	if ($this->get['payment_method']=='nopm') {
+		$data_query['where'][]="(o.payment_method is null)";
+	} else {
+		$data_query['where'][]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
+	}
+}
+if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
+	if ($this->get['shipping_method']=='nosm') {
+		$data_query['where'][]="(o.shipping_method is null)";
+	} else {
+		$data_query['where'][]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
+	}
+}
+if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
+	$data_query['where'][]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
+}
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
+}
+if ($this->get['payment_status']=='paid_only') {
+	$data_query['where'][]="(o.paid='1')";
+} else {
+	if ($this->get['payment_status']=='unpaid_only') {
+		$data_query['where'][]="(o.paid='0')";
+	}
+}
+if (!$this->masterShop) {
+	$data_query['where'][]='o.page_uid='.$this->shop_pid;
+}
+$grandTotalColumnName='grand_total';
+if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+	$grandTotalColumnName='grand_total_excluding_vat';
+}
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// search processor eol
+$dates=array();
+//$content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h3>';
+if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
+	$globalStartTime=$search_start_time;
+	$globalEndTime=$search_end_time;
+} else {
+	$globalStartTime=strtotime(date($selected_year.'1'."-01")." 00:00:00");
+	$globalEndTime=strtotime(date($selected_year.'12'."-01")." 00:00:00");
+}
+for ($i=0; $i<12; $i++) {
+	$time=strtotime('+'.$i.' month',$globalStartTime);
+	if ($time <= $globalEndTime) {
+		//$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
+		$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
+	}
+}
 if ($this->cookie['paid_orders_only']) {
 	$data_query['where'][]='(o.paid=1)';
 } else {

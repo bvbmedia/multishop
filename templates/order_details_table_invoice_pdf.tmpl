@@ -9,11 +9,13 @@
             <!-- ###HEADER_INCLUDE_VAT_WRAPPER### begin -->
             <th align="right" class="cell_products_vat">###LABEL_HEADER_VAT###</th>
             <th align="right" class="cell_products_normal_price">###LABEL_HEADER_ITEM_NORMAL_PRICE###</th>
+            ###LABEL_HEADER_ITEM_DISCOUNT###
             <th align="right" class="cell_products_final_price">###LABEL_HEADER_ITEM_FINAL_PRICE###</th>
             <!-- ###HEADER_INCLUDE_VAT_WRAPPER### end -->
             <!-- ###HEADER_EXCLUDE_VAT_WRAPPER### begin -->
             <th align="right" class="cell_products_normal_price">###LABEL_HEADER_ITEM_NORMAL_PRICE###</th>
             <th align="right" class="cell_products_vat">###LABEL_HEADER_VAT###</th>
+            ###LABEL_HEADER_ITEM_DISCOUNT###
             <th align="right" class="cell_products_final_price">###LABEL_HEADER_ITEM_FINAL_PRICE###</th>
             <!-- ###HEADER_EXCLUDE_VAT_WRAPPER### end -->
         </tr>
@@ -27,11 +29,13 @@
             <!-- ###ITEM_INCLUDE_VAT_WRAPPER### begin -->
             <td align="right" class="cell_products_vat">###ITEM_VAT###</td>
             <td align="right" class="cell_products_normal_price">###ITEM_NORMAL_PRICE###</td>
+            ###ITEM_DISCOUNT_AMOUNT###
             <td align="right" class="cell_products_final_price">###ITEM_FINAL_PRICE###</td>
             <!-- ###ITEM_INCLUDE_VAT_WRAPPER### end -->
             <!-- ###ITEM_EXCLUDE_VAT_WRAPPER### begin -->
             <td align="right" class="cell_products_normal_price">###ITEM_NORMAL_PRICE###</td>
             <td align="right" class="cell_products_vat">###ITEM_VAT###</td>
+            ###ITEM_DISCOUNT_AMOUNT###
             <td align="right" class="cell_products_final_price">###ITEM_FINAL_PRICE###</td>
             <!-- ###ITEM_EXCLUDE_VAT_WRAPPER### end -->
         </tr>
@@ -43,11 +47,13 @@
             <!-- ###ITEM_ATTRIBUTE_INCLUDE_VAT_WRAPPER### begin -->
             <td align="right" class="cell_products_vat">###ITEM_ATTRIBUTE_VAT###</td>
             <td align="right" class="cell_products_normal_price">###ITEM_ATTRIBUTE_NORMAL_PRICE###</td>
+            ###ITEM_ATTRIBUTE_DISCOUNT_AMOUNT###
             <td align="right" class="cell_products_final_price">###ITEM_ATTRIBUTE_FINAL_PRICE###</td>
             <!-- ###ITEM_ATTRIBUTE_INCLUDE_VAT_WRAPPER### end -->
             <!-- ###ITEM_ATTRIBUTE_EXCLUDE_VAT_WRAPPER### begin -->
             <td align="right" class="cell_products_normal_price">###ITEM_ATTRIBUTE_NORMAL_PRICE###</td>
             <td align="right" class="cell_products_vat">###ITEM_ATTRIBUTE_VAT###</td>
+            ###ITEM_ATTRIBUTE_DISCOUNT_AMOUNT###
             <td align="right" class="cell_products_final_price">###ITEM_ATTRIBUTE_FINAL_PRICE###</td>
             <!-- ###ITEM_ATTRIBUTE_EXCLUDE_VAT_WRAPPER### end -->
         </tr>
@@ -55,8 +61,7 @@
         <!-- ###ITEMS_WRAPPER### end -->
         <tr class="hrWrapper">
             <td align="right" colspan="2">&nbsp;</td>
-            <td align="right" colspan="3">
-            </td>
+            <td align="right" colspan="###INVOICE_HR_COLSPAN###">&nbsp;</td>
         </tr>
         <tr>
             <td class="order_total_wrapper" align="right" colspan="###INVOICE_TOTAL_COLSPAN###">
