@@ -1484,15 +1484,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 	}
 	function getOrderWeight($orders_id) {
-		$weight=0;
-		$order=mslib_fe::getOrder($orders_id);
-		foreach ($order['products'] as $product) {
-			if (is_numeric($product['products_id'])) {
-				$product_db=mslib_fe::getProduct($product['products_id']);
-				$weight=($weight+($product['qty']*$product_db['products_weight']));
+		if (is_numeric($orders_id)) {
+			$weight=0;
+			$order=mslib_fe::getOrder($orders_id);
+			foreach ($order['products'] as $product) {
+				if (is_numeric($product['products_id'])) {
+					$product_db=mslib_fe::getProduct($product['products_id']);
+					$weight=($weight+($product['qty']*$product_db['products_weight']));
+				}
 			}
+			return $weight;
 		}
-		return $weight;
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_order.php"]) {
