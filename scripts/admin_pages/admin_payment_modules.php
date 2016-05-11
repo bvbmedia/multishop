@@ -76,6 +76,8 @@ if ($this->post) {
 			} else {
 				$insertArray['handling_costs']=$this->post['handling_costs'];
 			}
+			$insertArray['cart_minimum_amount']=$this->post['cart_minimum_amount'];
+			$insertArray['cart_maximum_amount']=$this->post['cart_maximum_amount'];
 			$insertArray['tax_id']=$this->post['tax_id'];
 			$insertArray['sort_order']=$this->post['sort_order'];
 			$insertArray['date']=time();
@@ -121,6 +123,8 @@ if ($this->post) {
 			} else {
 				$updateArray['handling_costs']=$this->post['handling_costs'];
 			}
+			$updateArray['cart_minimum_amount']=$this->post['cart_minimum_amount'];
+			$updateArray['cart_maximum_amount']=$this->post['cart_maximum_amount'];
 			$updateArray['tax_id']=$this->post['tax_id'];
 			$updateArray['vars']=serialize($this->post);
 			$updateArray['enable_on_default']=$this->post['enable_on_default'];
@@ -370,6 +374,16 @@ if ($this->get['edit']) {
 	$cost_tax=mslib_fe::taxDecimalCrop(($amount_handling_cost*$cost_tax_rate)/100);
 	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost, 2, false);
 	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
+
+	$cart_minimum_amount=$row['cart_minimum_amount'];
+	$cart_minimum_amount_cost_tax=mslib_fe::taxDecimalCrop(($cart_minimum_amount*$cost_tax_rate)/100);
+	$cart_minimum_amount_excl_vat_display=mslib_fe::taxDecimalCrop($cart_minimum_amount, 2, false);
+	$cart_minimum_amount_incl_vat_display=mslib_fe::taxDecimalCrop($cart_minimum_amount+$cart_minimum_amount_cost_tax, 2, false);
+	$cart_maximum_amount=$row['cart_maximum_amount'];
+	$cart_maximum_amount_cost_tax=mslib_fe::taxDecimalCrop(($cart_maximum_amount*$cost_tax_rate)/100);
+	$cart_maximum_amount_excl_vat_display=mslib_fe::taxDecimalCrop($cart_maximum_amount, 2, false);
+	$cart_maximum_amount_incl_vat_display=mslib_fe::taxDecimalCrop($cart_maximum_amount+$cart_maximum_amount_cost_tax, 2, false);
+
 	$tmpcontent.='<div class="form-group">
 		<label class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
 		<div class="col-md-10">
@@ -425,6 +439,26 @@ if ($this->get['edit']) {
 			</div>
 			</div>
 		</div>
+		<div class="form-group" id="min_amount_to_show">
+			<label class="control-label col-md-2">'.$this->pi_getLL('cart_minimum_amount').'</label>
+			<div class="col-md-10">
+				<div class="msAttribute">
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_minimum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_minimum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" value="'.$cart_minimum_amount.'" id="cart_minimum_amount" /></div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" id="max_amount_to_show">
+			<label class="control-label col-md-2">'.$this->pi_getLL('cart_maximum_amount').'</label>
+			<div class="col-md-10">
+				<div class="msAttribute">
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_maximum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_maximum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" value="'.$cart_maximum_amount.'" id="cart_maximum_amount" /></div>
+				</div>
+			</div>
+		</div>
 		<div class="form-group">
 		<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
 		<div class="col-md-10">
@@ -442,7 +476,7 @@ if ($this->get['edit']) {
 		</select>
 		</div>
 	</div>
-			'.$inner_content.'
+		'.$inner_content.'
 		<div class="form-group">
 			<label class="control-label col-md-2">'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
 			<div class="col-md-10">
