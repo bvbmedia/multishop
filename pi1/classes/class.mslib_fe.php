@@ -6929,13 +6929,17 @@ class mslib_fe {
 				$counter=0;
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
+					$pageTitle=$pageinfo['title'];
+					if ($pageinfo['nav_title']) {
+						$pageTitle=$pageinfo['nav_title'];
+					}
 					$counter++;
 					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['label']=$pageinfo['title'].' ('.$pageinfo["uid"].')';
+						$ms_menu['footer']['ms_admin_stores']['label']=$pageTitle.' ('.$pageinfo["uid"].')';
 						$ms_menu['footer']['ms_admin_stores']['class']='fa fa-shopping-cart';
 					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=$pageinfo['title'].' ('.$pageinfo["uid"].')';
-						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=$pageTitle.' ('.$pageinfo["uid"].')';
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageTitle.' '.$this->pi_getLL('web_shop');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"].',2003', 'tx_multishop_pi1[page_section]=admin_home');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['class']='fa fa-shopping-cart';
 					}
