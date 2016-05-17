@@ -1293,6 +1293,8 @@
             <label index="territory">Territory</label>
             <label index="sales_volume_by_month_per_product">Monthly sales volume per product group</label>
             <label index="use_discount_amount">Use discount amount</label>
+            <label index="cart_minimum_amount">Cart minimum amount</label>
+            <label index="cart_maximum_amount">Cart maximum amount</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

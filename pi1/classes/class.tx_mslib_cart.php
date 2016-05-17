@@ -1666,6 +1666,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 				$insertArray['delivery_region']=$insertArray['billing_region'];
 				$insertArray['delivery_name']=$insertArray['billing_name'];
+				$insertArray['delivery_birthday']=$insertArray['billing_birthday'];
 			} else {
 				$insertArray['delivery_company']=$address['delivery_company'];
 				$insertArray['delivery_first_name']=$address['delivery_first_name'];
@@ -1703,6 +1704,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_mobile']=$address['delivery_mobile'];
 				$insertArray['delivery_fax']='';
 				$insertArray['delivery_vat_id']='';
+				$insertArray['delivery_birthday']=strtotime($address['delivery_birthday']);
 			}
 			$insertArray['bill']=1;
 			$insertArray['crdate']=time();
