@@ -7499,7 +7499,7 @@ class mslib_fe {
 		return $ms_menu;
 	}
 	public function getActiveShop() {
-		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title,nav_title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 		return $multishop_content_objects;
 	}
 	public function getSignedInUsers($groupid='', $orderby='company') {
