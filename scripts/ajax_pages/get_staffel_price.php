@@ -19,6 +19,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 }
 // hook eof
 // convert the dec sign from comma to dot
+$qty=$this->get['quantity'];
 if (strpos($qty, ',')!==false) {
 	$qty=str_replace(',', '.', $qty);
 }
@@ -161,6 +162,17 @@ if ($price>0) {
 	$data['price']=$price;
 	$data['qty_correction']=$qty_decimal_correction;
 }
+// hook to let other plugins further manipulate the option values display
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['getPricePostProc'])) {
+	$params=array(
+		'product_id'=>$products_id,
+		'data'=>&$data
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['getPricePostProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// hook
 echo json_encode($data, ENT_NOQUOTES);
 exit();
 ?>
