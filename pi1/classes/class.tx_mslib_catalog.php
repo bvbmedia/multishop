@@ -635,6 +635,81 @@ class tx_mslib_catalog {
 							}
 						}
 						break;
+					case 'products_main_categories':
+						$content.='<div class="main-heading"><h2>Sorting products main categories '.$orderBy.' done</h2></div>';
+						//$content.= $item.'<br />';
+						// try to find and sort the products
+						$query_array=array();
+						$query_array['select'][]='c.sort_order, p2c.categories_id, p.products_id';
+						$query_array['from'][]='tx_multishop_products p, tx_multishop_products_to_categories p2c, tx_multishop_categories c';
+						$query_array['where'][]='p.products_status=1 and p.page_uid=\''.$this->showCatalogFromPage.'\' and c.parent_id=\'0\' and p2c.page_uid=p.page_uid and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id';
+						$query_array['order_by'][]='c.sort_order '.$orderBy;
+						$query_array['group_by'][]='p.products_id';
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+							(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+							(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+							(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+							(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+							(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$updateArray=array();
+							$updateArray['sort_order']=$row['sort_order'];
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id='.$row['products_id'].' and page_uid='.$this->showCatalogFromPage, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->conf['debugEnabled']=='1') {
+								$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+								\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
+							}
+							$updateArray=array();
+							$updateArray['sort_order']=$no;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id='.$row['products_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->conf['debugEnabled']=='1') {
+								$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+								\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
+							}
+						}
+						break;
+					case 'products_deepest_categories':
+						$content.='<div class="main-heading"><h2>Sorting products deepest categories '.$orderBy.' done</h2></div>';
+						//$content.= $item.'<br />';
+						// try to find and sort the products
+						$query_array=array();
+						$query_array['select'][]='c.sort_order, p2c.categories_id, p.products_id';
+						$query_array['from'][]='tx_multishop_products p, tx_multishop_products_to_categories p2c, tx_multishop_categories c';
+						$query_array['where'][]='p.products_status=1 and p.page_uid=\''.$this->showCatalogFromPage.'\' and p2c.is_deepest=\'1\' and p2c.page_uid=p.page_uid p.products_id=p2c.products_id and p2c.categories_id=c.categories_id';
+						$query_array['order_by'][]='c.sort_order '.$orderBy;
+						$query_array['group_by'][]='p.products_id';
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+							(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+							(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+							(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+							(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+							(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$no=time();
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$updateArray=array();
+							$updateArray['sort_order']=$row['sort_order'];
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id='.$row['products_id'].' and page_uid='.$this->showCatalogFromPage, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->conf['debugEnabled']=='1') {
+								$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+								\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
+							}
+							$updateArray=array();
+							$updateArray['sort_order']=$no;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id='.$row['products_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->conf['debugEnabled']=='1') {
+								$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+								\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
+							}
+						}
+						break;
 				}
 				break;
 			case 'attribute_values':
