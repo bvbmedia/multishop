@@ -642,7 +642,7 @@ class tx_mslib_catalog {
 						$query_array=array();
 						$query_array['select'][]='c.sort_order, p2c.categories_id, p.products_id';
 						$query_array['from'][]='tx_multishop_products p, tx_multishop_products_to_categories p2c, tx_multishop_categories c';
-						$query_array['where'][]='p.products_status=1 and p.page_uid=\''.$this->showCatalogFromPage.'\' and c.parent_id=\'0\' and p2c.page_uid=p.page_uid and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id';
+						$query_array['where'][]='p.products_status=1 and p.page_uid=\''.$this->showCatalogFromPage.'\' and c.parent_id=\'0\' and p2c.page_uid=p.page_uid and p.products_id=p2c.products_id and p2c.node_id=c.categories_id';
 						$query_array['order_by'][]='c.sort_order '.$orderBy;
 						$query_array['group_by'][]='p.products_id';
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
