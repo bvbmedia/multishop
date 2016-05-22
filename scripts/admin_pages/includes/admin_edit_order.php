@@ -3019,13 +3019,13 @@ if (is_numeric($this->get['orders_id'])) {
                                 if (d.tax_id) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
-                                            $("#product_tax").val(d.tax_id);
+                                        	$("#product_tax").val(d.tax_id);
                                         } else {
                                             d.price_include_vat=0;
                                         }
                                     } else {
                                         if ($("#manual_product_tax").length>0) {
-                                            $("#manual_product_tax").val(d.tax_id);
+                                        	$("#manual_product_tax").val(d.tax_id);
                                         } else {
                                             d.price_include_vat=0;
                                         }
@@ -3033,6 +3033,15 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 if (!d.use_tax_id) {
                                 	d.price_include_vat=0;
+                                	if ($("#product_tax").length>0) {
+                                        if ($("#product_tax").children().length>0) {
+                                        	$("#product_tax").val("");
+                                        }
+                                    } else {
+                                        if ($("#manual_product_tax").length>0) {
+                                        	$("#manual_product_tax").val("");
+                                        }
+                                    }
                                 }
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
