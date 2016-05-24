@@ -398,34 +398,7 @@ if (!$product['products_id']) {
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
     $markerArray['###PRODUCTS_NAME_MARKER###'] = $output['products_name_marker'];
     $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];
-
-    // Create link to detail page
-    $where='';
-    if ($params['current']['categories_id']) {
-        // get all cats to generate multilevel fake url
-        $level=0;
-        $cats=mslib_fe::Crumbar($params['current']['categories_id']);
-        $where='';
-        if (is_array($cats) && count($cats)>0) {
-            $cats=array_reverse($cats);
-            foreach ($cats as $cat) {
-                $where.="categories_id[".$level."]=".$cat['id']."&";
-                $level++;
-            }
-            $where=substr($where, 0, (strlen($where)-1));
-            $where.='&';
-        }
-        // get all cats to generate multilevel fake url eof
-    }
-    $catLink=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-    $imageLink='';
-    if ($params['current']['categories_image']) {
-        $imageLink=$this->FULL_HTTP_URL.mslib_befe::getImagePath($params['current']['categories_image'], 'categories', 'normal');
-    }
-    $params['output_array']['meta']['canonical_url']='<link rel="canonical" href="'.$catLink.'" />';
-
     $markerArray['###PRODUCTS_IMAGE_URL###'] = $imgUrl;
-    $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];
     $markerArray['###CANONICAL_URL###'] = $productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($product['manufacturers_advice_price']);
     $js_detail_page_triggers[] = '
