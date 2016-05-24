@@ -95,33 +95,41 @@ if ($this->post) {
 	if ($this->ms['MODULES']['FLAT_DATABASE']) {
 		mslib_befe::rebuildFlatDatabase();
 	}
+	// custom page hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_mass_product_updater.php']['adminMassProductUpdaterPostProc'])) {
+		$params=array(
+			'content'=>&$content
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_mass_product_updater.php']['adminMassProductUpdaterPostProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
 } else {
-	$content.='
-	<div class="alert alert-danger">
+	$content_html=array();
+	$content_html[]='<div class="alert alert-danger">
 	<h3>'.$this->pi_getLL('admin_mass_updater_warning_a').'</h3>'.$this->pi_getLL('admin_mass_updater_warning_b').'
-	</div>
-	<form class="form-horizontal edit_form"  method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
-		<div class="form-group">
-			<label class="control-label col-md-3" for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
-			<div class="col-md-9">
-				<div class="input-group"><input name="percentage" type="text" class="form-control" value="'.$this->post['percentage'].'" id="percentage" /><span class="input-group-addon width-auto">%.</span></div>
-				<div class="helper-text">'.$this->pi_getLL('admin_mass_updater_example_update').'</div>
-			</div>
+	</div>';
+	$content_html[]='<div class="form-group">
+		<label class="control-label col-md-3" for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
+		<div class="col-md-9">
+			<div class="input-group"><input name="percentage" type="text" class="form-control" value="'.$this->post['percentage'].'" id="percentage" /><span class="input-group-addon width-auto">%.</span></div>
+			<div class="helper-text">'.$this->pi_getLL('admin_mass_updater_example_update').'</div>
 		</div>
-		<div class="form-group">
-			<div class="col-md-9 col-md-offset-3">
-				<p class="form-control-static"><strong>- '.$this->pi_getLL('or').' -</strong></p>
-			</div>
+	</div>';
+	$content_html[]='<div class="form-group">
+		<div class="col-md-9 col-md-offset-3">
+			<p class="form-control-static"><strong>- '.$this->pi_getLL('or').' -</strong></p>
 		</div>
-		<div class="form-group">
-			<label class="control-label col-md-3" for="amount">'.$this->pi_getLL('admin_mass_updater_by_amount').'</label>
-			<div class="col-md-9">
-			<input name="amount" id="amount" type="text" class="form-control" value="'.$this->post['amount'].'" size="10" />
-			<div class="checkbox checkbox-success checkbox-inline"><input name="amount_vat" id="amount_vat" type="checkbox" value="1" checked="checked" /><label for="amount_vat">'.$this->pi_getLL('admin_mass_updater_substract_increase_price_based_in_incl_vat').'</label></div>
-			</div>
-		</div>';
+	</div>';
+	$content_html[]='<div class="form-group">
+		<label class="control-label col-md-3" for="amount">'.$this->pi_getLL('admin_mass_updater_by_amount').'</label>
+		<div class="col-md-9">
+		<input name="amount" id="amount" type="text" class="form-control" value="'.$this->post['amount'].'" size="10" />
+		<div class="checkbox checkbox-success checkbox-inline"><input name="amount_vat" id="amount_vat" type="checkbox" value="1" checked="checked" /><label for="amount_vat">'.$this->pi_getLL('admin_mass_updater_substract_increase_price_based_in_incl_vat').'</label></div>
+		</div>
+	</div>';
 	if ($this->ROOTADMIN_USER) {
-		$content.='<div class="form-group">
+		$content_html[]='<div class="form-group">
 			<label class="control-label col-md-3" for="amount">'.$this->pi_getLL('admin_mass_updater_price_area_for_update').'</label>
 			<div class="col-md-9">
 				<div class="checkbox checkbox-success checkbox-inline">
@@ -136,44 +144,56 @@ if ($this->post) {
 			</div>
 		</div>';
 	}
-	$content.='
-		<hr>
-		<div class="form-group">
-			<label class="control-label col-md-2" for="rules_group_id">'.$this->pi_getLL('admin_vat_rate').'</label>
-			<div class="col-md-10">
+	$content_html[]='<hr>';
+	$vat_rate_sb='<div class="form-group">
+		<label class="control-label col-md-2" for="rules_group_id">'.$this->pi_getLL('admin_vat_rate').'</label>
+		<div class="col-md-10">
 			<select name="rules_group_id" class="form-control"><option value="">'.$this->pi_getLL('skip').'</option>
 				<option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$content.='<option value="'.$row['rules_group_id'].'">'.htmlspecialchars($row['name']).'</option>';
+		$vat_rate_sb.='<option value="'.$row['rules_group_id'].'">'.htmlspecialchars($row['name']).'</option>';
 	}
-	$content.='
+	$vat_rate_sb.='
 			</select>
-			</div>
 		</div>
-		<hr>
-		<div class="clearfix">
-			<div class="pull-right">
-				<button name="Submit" type="submit" value="" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> '.$this->pi_getLL('admin_mass_updater_update_all_products').'</button>
-			</div>
+	</div>';
+	$content_html[]=$vat_rate_sb;
+	$content_html[]='<hr>';
+	$content_html[]='<div class="clearfix">
+		<div class="pull-right">
+			<button name="Submit" type="submit" value="" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> '.$this->pi_getLL('admin_mass_updater_update_all_products').'</button>
 		</div>
-		</form>
-		</div>
-		</div>
-		<script type="text/javascript">
-			jQuery(document).ready(function($) {
-				$(document).on("change", "#percentage", function(){
-					if ($(this).val() != "") {
-						$("#amount").val("");
-					}
-				});
-				$(document).on("change", "#amount", function(){
-					if ($(this).val() != "") {
-						$("#percentage").val("");
-					}
-				});
-			});
-		</script>';
+	</div>';
+	// custom page hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_mass_product_updater.php']['adminMassProductUpdaterFormPostProc'])) {
+		$params=array(
+			'content_html'=>&$content_html
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_mass_product_updater.php']['adminMassProductUpdaterFormPostProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	$content .='<form class="form-horizontal edit_form"  method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
+	'.implode("\n", $content_html).'
+	</form>';
+	$content.='
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(document).on("change", "#percentage", function(){
+			if ($(this).val() != "") {
+				$("#amount").val("");
+			}
+		});
+		$(document).on("change", "#amount", function(){
+			if ($(this).val() != "") {
+				$("#percentage").val("");
+			}
+		});
+	});
+	</script>';
 }
+$content.='</div>
+</div>';
 ?>

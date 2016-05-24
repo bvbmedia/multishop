@@ -910,6 +910,8 @@ class mslib_befe {
 			}
 			//hook to let other plugins further manipulate the create table query eol
 			$updateArray=array();
+			$updateArray['starttime']=0;
+			$updateArray['endtime']=0;
 			$updateArray['products_status']=0;
 			$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$products_id.'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
