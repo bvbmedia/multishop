@@ -406,19 +406,19 @@ if (!$product['products_id']) {
     $formats[]='300';
     foreach ($formats as $format) {
         if ($format) {
-            $markerArray['PRODUCTS_IMAGE_URL_'.$format]='';
-            $markerArray['FULL_PRODUCTS_IMAGE_URL_'.$format]='';
+            $markerArray['###PRODUCTS_IMAGE_URL_'.$format.'###']='';
+            $markerArray['###FULL_PRODUCTS_IMAGE_URL_'.$format.'###']='';
         } else {
-            $markerArray['PRODUCTS_IMAGE_URL']='';
-            $markerArray['FULL_PRODUCTS_IMAGE_URL']='';
+            $markerArray['###PRODUCTS_IMAGE_URL###']='';
+            $markerArray['###FULL_PRODUCTS_IMAGE_URL###']='';
         }
         if ($product['products_image']) {
             if ($format) {
-                $markerArray['PRODUCTS_IMAGE_URL_'.$format]=mslib_befe::getImagePath($product['products_image'], 'products', $format);
-                $markerArray['FULL_PRODUCTS_IMAGE_URL_'.$format]=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $format);
+                $markerArray['###PRODUCTS_IMAGE_URL_'.$format.'###']=mslib_befe::getImagePath($product['products_image'], 'products', $format);
+                $markerArray['###FULL_PRODUCTS_IMAGE_URL_'.$format.'###']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $format);
             } else {
-                $markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
-                $markerArray['FULL_PRODUCTS_IMAGE_URL']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+                $markerArray['###PRODUCTS_IMAGE_URL###']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+                $markerArray['###FULL_PRODUCTS_IMAGE_URL###']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
             }
         }
     }
