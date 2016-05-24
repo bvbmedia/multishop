@@ -111,10 +111,13 @@ if (!$product['products_id']) {
         // get all cats to generate multilevel fake url eof
     }
     $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+    $productLink=$link;
+    $imgUrl='';
     $output_array['meta']['facebook'] = '';
     if ($product['products_image']) {
-        $output_array['meta']['facebook'] .= '<link rel="image_src" href="' . $this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', '300') . '" />
-		<meta property="og:image" content="' . $this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', '300') . '" />';
+        $imgUrl=$this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', '300');
+        $output_array['meta']['facebook'] .= '<link rel="image_src" href="' . $imgUrl . '" />
+		<meta property="og:image" content="' . $imgUrl . '" />';
     }
     $output_array['meta']['facebook'] .= '<meta property="og:title" content="' . htmlspecialchars($product['products_name']) . '" />
 	<meta property="og:type" content="product" />
@@ -394,6 +397,9 @@ if (!$product['products_id']) {
     $markerArray['###MANUFACTURERS_NAME###'] = $output['manufacturers_name'];
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
     $markerArray['###PRODUCTS_NAME_MARKER###'] = $output['products_name_marker'];
+    $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];
+    $markerArray['###PRODUCTS_IMAGE_URL###'] = $imgUrl;
+    $markerArray['###CANONICAL_URL###'] = $productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($product['manufacturers_advice_price']);
     $js_detail_page_triggers[] = '
 		var stepSize=parseFloat(\'' . ($product['products_multiplication'] != '0.00' ? $product['products_multiplication'] : 1) . '\');

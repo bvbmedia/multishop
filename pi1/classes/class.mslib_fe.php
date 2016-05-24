@@ -9452,9 +9452,9 @@ class mslib_fe {
 		if (!is_numeric($page_uid) ) {
 			$page_uid=$this->showCatalogFromPage;
 		}
-		if ($page_uid==$this->shop_pid) {
-			$page_uid='';
-		}
+		//if ($page_uid==$this->shop_pid) {
+		//	$page_uid='';
+		//}
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_attributes', // FROM ...
 			'products_id="'.addslashes($pid).'"'.(is_numeric($page_uid) && $page_uid>0 ? ' and page_uid=\''.$page_uid.'\'' : ''), // WHERE...

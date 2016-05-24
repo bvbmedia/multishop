@@ -35,8 +35,8 @@ $EM_CONF[$_EXTKEY]=array(
 			'typo3'=>'6.2.5-7.6.99',
 		),
 		'conflicts'=>array(
-			'dbal'=>'0.0.0'
-		),
+					'dbal'=>'0.0.0'
+			),
 		'suggests'=>array(
 			't3jquery'=>'2.7.1-',
 			'rzcolorbox_jquery2'=>'1.0.0-1.9.99',
