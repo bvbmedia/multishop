@@ -37,6 +37,12 @@ switch ($this->get['tx_multishop_pi1']['sortItem']) {
 			case 'products_date_added':
 				$content.=tx_mslib_catalog::sortCatalog($this->get['tx_multishop_pi1']['sortItem'], $this->get['tx_multishop_pi1']['sortByField'], $this->get['tx_multishop_pi1']['orderBy']);
 				break;
+			case 'products_main_categories':
+				$content.=tx_mslib_catalog::sortCatalog($this->get['tx_multishop_pi1']['sortItem'], $this->get['tx_multishop_pi1']['sortByField'], $this->get['tx_multishop_pi1']['orderBy']);
+				break;
+			case 'products_deepest_categories':
+				$content.=tx_mslib_catalog::sortCatalog($this->get['tx_multishop_pi1']['sortItem'], $this->get['tx_multishop_pi1']['sortByField'], $this->get['tx_multishop_pi1']['orderBy']);
+				break;
 		}
 		break;
 	case 'attribute_values':

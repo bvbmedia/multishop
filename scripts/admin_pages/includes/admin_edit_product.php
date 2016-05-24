@@ -1153,6 +1153,11 @@ if ($this->post) {
 						$updateArray[$arr_key]=$new_filename;
 					}
 				}
+				if ($update_product_images) {
+					foreach ($update_product_images as $key=>$value) {
+						$updateArray[$key]=$value;
+					}
+				}
 			//}
 			if ($updateArray['products_image']) {
 				$updateArray['contains_image']=1;

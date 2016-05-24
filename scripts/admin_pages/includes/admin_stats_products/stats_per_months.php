@@ -44,14 +44,15 @@ $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
-$content.='
+/*$content.='
 <form action="index.php" method="get" id="orders_stats_form" class="float_right">
-<div class="stat-years float_right">'.$year_select.'</div>
+<div class="stat-years">'.$year_select.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_products" />
 <input name="tx_multishop_pi1[stats_section]" type="hidden" value="stats_per_months" />
-<div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /> '.$this->pi_getLL('show_paid_orders_only').'</div>
+
+<div class="checkbox checkbox-success checkbox-inline"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /><label for="checkbox_paid_orders_only">'.htmlspecialchars($this->pi_getLL('show_paid_orders_only')).'</label></div>
 </form>
 <script type="text/javascript" language="JavaScript">
 	jQuery(document).ready(function($) {
@@ -64,7 +65,7 @@ $content.='
 		});
 	});
 </script>
-';
+';*/
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
 for ($i=1; $i<13; $i++) {
@@ -80,7 +81,82 @@ foreach ($dates as $key=>$value) {
 //$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
 $content.='</tr>';
 $content.='<tr class="even">';
+$search_start_time='';
+$search_end_time='';
+$filter=array();
 $data_query=array();
+if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
+	list($from_date, $from_time)=explode(" ", $this->get['order_date_from']);
+	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($till_date, $till_time)=explode(" ", $this->get['order_date_till']);
+	list($td, $tm, $ty)=explode('/', $till_date);
+	$search_start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
+	$search_end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
+	$data_query['where'][]="o.crdate BETWEEN '".$search_start_time."' and '".$search_end_time."'";
+}
+if ($this->get['orders_status_search']>0) {
+	$data_query['where'][]="(o.status='".$this->get['orders_status_search']."')";
+}
+if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
+	if ($this->get['payment_method']=='nopm') {
+		$data_query['where'][]="(o.payment_method is null)";
+	} else {
+		$data_query['where'][]="(o.payment_method='".addslashes($this->get['payment_method'])."')";
+	}
+}
+if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
+	if ($this->get['shipping_method']=='nosm') {
+		$data_query['where'][]="(o.shipping_method is null)";
+	} else {
+		$data_query['where'][]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
+	}
+}
+if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
+	$data_query['where'][]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
+}
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$data_query['where'][]="o.billing_country='".addslashes($this->get['country'])."'";
+}
+if ($this->get['payment_status']=='paid_only') {
+	$data_query['where'][]="(o.paid='1')";
+} else {
+	if ($this->get['payment_status']=='unpaid_only') {
+		$data_query['where'][]="(o.paid='0')";
+	}
+}
+if (!$this->masterShop) {
+	$data_query['where'][]='o.page_uid='.$this->shop_pid;
+}
+$grandTotalColumnName='grand_total';
+if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
+	$grandTotalColumnName='grand_total_excluding_vat';
+}
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php']['monthlyStatsOrdersQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+// search processor eol
+$dates=array();
+//$content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h3>';
+if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
+	$globalStartTime=$search_start_time;
+	$globalEndTime=$search_end_time;
+} else {
+	$globalStartTime=strtotime(date($selected_year.'1'."-01")." 00:00:00");
+	$globalEndTime=strtotime(date($selected_year.'12'."-01")." 00:00:00");
+}
+for ($i=0; $i<12; $i++) {
+	$time=strtotime('+'.$i.' month',$globalStartTime);
+	if ($time <= $globalEndTime) {
+		//$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
+		$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
+	}
+}
 if ($this->cookie['paid_orders_only']) {
 	$data_query['where'][]='(o.paid=1)';
 } else {
@@ -99,16 +175,24 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
-	//$end_time=strtotime($value."-31 23:59:59");
-	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	//
-	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 10";
+	$end_time=strtotime('+1 month -1 second',$start_time);
+
+	$filter=array();
+	$filter[]='('.implode(' AND ', $data_query['where']).')';
+	$filter[]='o.crdate BETWEEN '.$start_time.' and '.$end_time;
+	$filter[]='o.orders_id=op.orders_id';
+	$str=$GLOBALS['TYPO3_DB']->SELECTquery('sum(op.qty) as total, op.products_name, op.products_id, op.categories_id', // SELECT ...
+			'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
+			implode(' AND ',$filter), // WHERE...
+			'op.products_name having total > 0', // GROUP BY...
+			'total desc', // ORDER BY...
+			'10000' // LIMIT ...
+	);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$content.='<td valign="top">
-		';
+	$content.='<td valign="top">';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
 			<tr class="'.$tr_type.'">
 				<th valign="top">Qty</td>
 				<th valign="top">Product</td>
@@ -148,14 +232,14 @@ foreach ($dates as $key=>$value) {
 			$total_amount+=round($product['total'], 2);
 			$content.='
 			<tr class="'.$tr_type.'">
-				<td valign="top" align="right"><strong>'.round($product['total'], 2).'</strong></td>
-				<td valign="top"><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>
+				<td valign="top" class="text-right"><strong>'.round($product['total'], 2).'</strong></td>
+				<td valign="top"><a href="'.$productLink.'" target="_blank">'.htmlspecialchars($product['products_name']).'</a></td>
 			</tr>
 			';
 		}
 		$content.='
 			<tr class="'.$tr_type.'">
-				<th valign="top" align="right">'.round($total_amount, 2).'</td>
+				<th valign="top" class="text-right">'.round($total_amount, 2).'</td>
 				<th valign="top">Product</td>
 			</tr>
 		';
@@ -170,5 +254,5 @@ $content.='<p class="extra_padding_bottom">';
 $content.='<a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
 $content.='
 </p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content='<div class="panel panel-default"><div class="panel-body">'.mslib_fe::shadowBox($content).'</div></div>';
 ?>

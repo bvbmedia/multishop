@@ -9,7 +9,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			$order_id=$this->post['tx_multishop_pi1']['order_id'];
 			if (is_numeric($order_id)) {
-				$payment_methods=mslib_fe::loadPaymentMethods(1);
+				$payment_methods=mslib_fe::loadPaymentMethods();
 				$order_data=mslib_fe::getOrder($order_id);
 				//
 				$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod row">';
@@ -30,7 +30,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 
 				$orderDetailsItem.='<div class="form-group row">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').': </label>';
-				if ($this->ms['MODULES']['ORDER_EDIT']) {
+				//if ($this->ms['MODULES']['ORDER_EDIT']) {
 					if (is_array($payment_methods) and count($payment_methods)) {
 						$optionItems=array();
 						$dontOverrideDefaultOption=0;
@@ -55,7 +55,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					} else {
 						$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
 					}
-				}/* else {
+				/*} else {
 					$orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
 				}*/
 				$orderDetailsItem.='</div>';
@@ -203,6 +203,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 							$updateArray=array('paid'=>0);
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoice['id'], $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$return_data['status']='OK';
 						} else {
 							$return_data['error']=array(
 								'status'=>'error',

@@ -173,6 +173,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$product_tax_data['total_attributes_tax']=(string)$attributes_tax;
 					$product_tax_data['total_tax_rate']=(string)number_format($tax_rate, 2, '.', ',');
 					$final_price=$row_prod['final_price'];
+					if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+						if ($row_prod['discount_amount']>0) {
+							$final_price-=$row_prod['discount_amount'];
+						}
+					}
 					//print_r($row_prod);
 					// b2b mode 1 cent bugfix: 2013-05-09 cbc in grand total. this came from the products final price that must be round first
 					// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
@@ -1097,7 +1102,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
                 $row['products_tax_data']=unserialize($row['products_tax_data']);
                 $product_amount=0;
-                $product_amount=($row['qty']*$row['final_price']);
+				$final_price=$row['final_price'];
+				if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+					$final_price-=$row['discount_amount'];
+				}
+                $product_amount=($row['qty']*$final_price);
                 // now count the attributes
                 $str3="SELECT * from tx_multishop_orders_products_attributes where orders_products_id='".$row['orders_products_id']."' order by orders_products_attributes_id asc";
                 $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
@@ -1472,6 +1481,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 				}
 			}
+		}
+	}
+	function getOrderWeight($orders_id) {
+		if (is_numeric($orders_id)) {
+			$weight=0;
+			$order=mslib_fe::getOrder($orders_id);
+			foreach ($order['products'] as $product) {
+				if (is_numeric($product['products_id'])) {
+					$product_db=mslib_fe::getProduct($product['products_id']);
+					$weight=($weight+($product['qty']*$product_db['products_weight']));
+				}
+			}
+			return $weight;
 		}
 	}
 }

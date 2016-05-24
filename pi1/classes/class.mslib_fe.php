@@ -1685,7 +1685,7 @@ class mslib_fe {
 							if ($hidden_fields) {
 								$get_url.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($value).'">'."\n";
 							} else {
-								$get_url.=$key.'='.urlencode(htmlentities($value)).'&';
+								$get_url.=$key.'='.rawurlencode(htmlentities($value)).'&';
 							}
 						}
 					} else {
@@ -1697,7 +1697,7 @@ class mslib_fe {
 										if ($hidden_fields) {
 											$get_url.='<input name="'.$key.rawurlencode('['.$$key.']').'" type="hidden" value="'.htmlspecialchars($$value).'">'."\n";
 										} else {
-											$get_url.=$key.rawurlencode('['.$$key.']').'='.urlencode(htmlentities($$value)).'&';
+											$get_url.=$key.rawurlencode('['.$$key.']').'='.rawurlencode(htmlentities($$value)).'&';
 										}
 									}
 								}
@@ -1707,7 +1707,7 @@ class mslib_fe {
 										foreach ($v as $final_key=>$final_value) {
 											$string=$key.'['.$$key.']['.$k.']';
 											if (!mslib_fe::tep_in_array($string, $exclude_array)) {
-												$get_url.=$key.rawurlencode('['.$$key.']').rawurlencode('['.$k.']['.$final_key.']').'='.urlencode(htmlentities($final_value)).'&';
+												$get_url.=$key.rawurlencode('['.$$key.']').rawurlencode('['.$k.']['.$final_key.']').'='.rawurlencode(htmlentities($final_value)).'&';
 											}
 										}
 									} else {
@@ -1717,7 +1717,7 @@ class mslib_fe {
 												if ($hidden_fields) {
 													$get_url.='<input name="'.$key.rawurlencode('['.$$$key.'][]').'" type="hidden" value="'.htmlspecialchars($v).'">'."\n";
 												} else {
-													$get_url.=$key.rawurlencode('['.$$key.']['.$k.']').'='.urlencode(htmlentities($v)).'&';
+													$get_url.=$key.rawurlencode('['.$$key.']['.$k.']').'='.rawurlencode(htmlentities($v)).'&';
 												}
 											}
 										}
@@ -3792,6 +3792,15 @@ class mslib_fe {
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+			// check for minimum and maximum cart amount allowed for payment to be use
+			$cart_total_amount=0;
+			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+				$mslib_cart->init($this);
+				$cart=$mslib_cart->getCart();
+				$cart_total_amount=$mslib_cart->countCartTotalPrice(0);
+			}
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				if ($zone_sorting) {
@@ -3803,6 +3812,11 @@ class mslib_fe {
 					}
 				} else {
 					$array[$row['code']]=$row;
+				}
+				if ($cart_total_amount>0) {
+					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
+						unset($array[$row['code']]);
+					}
 				}
 			}
 			return $array;
@@ -3890,6 +3904,15 @@ class mslib_fe {
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+			// check for minimum and maximum cart amount allowed for payment to be use
+			$cart_total_amount=0;
+			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+				$mslib_cart->init($this);
+				$cart=$mslib_cart->getCart();
+				$cart_total_amount=$mslib_cart->countCartTotalPrice(0);
+			}
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				if ($filter) {
@@ -3898,6 +3921,11 @@ class mslib_fe {
 					}
 				} else {
 					$array[$row['code']]=$row;
+				}
+				if ($cart_total_amount>0) {
+					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
+						unset($array[$row['code']]);
+					}
 				}
 			}
 			return $array;
@@ -4117,7 +4145,7 @@ class mslib_fe {
 							case 'radio':
 								if (count($vars['options'])>0) {
 									foreach ($vars['options'] as $radio_option) {
-										$content.='<div class="radio radio-success radio-inline"><input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><label>'.$radio_option.'</label></div>';
+										$content.='<div class="radio radio-success radio-inline"><input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><label for="'.$field_key.'_'.$radio_option.'">'.$radio_option.'</label></div>';
 									}
 								}
 								break;
@@ -6929,13 +6957,17 @@ class mslib_fe {
 				$counter=0;
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
+					$pageTitle=$pageinfo['title'];
+					if ($pageinfo['nav_title']) {
+						$pageTitle=$pageinfo['nav_title'];
+					}
 					$counter++;
 					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['label']=$pageinfo['title'].' ('.$pageinfo["uid"].')';
+						$ms_menu['footer']['ms_admin_stores']['label']=$pageTitle.' ('.$pageinfo["uid"].')';
 						$ms_menu['footer']['ms_admin_stores']['class']='fa fa-shopping-cart';
 					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=$pageinfo['title'].' ('.$pageinfo["uid"].')';
-						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=$pageTitle.' ('.$pageinfo["uid"].')';
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageTitle.' '.$this->pi_getLL('web_shop');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"].',2003', 'tx_multishop_pi1[page_section]=admin_home');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['class']='fa fa-shopping-cart';
 					}
@@ -7268,6 +7300,22 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_desc').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['class']='fa fa-arrow-circle-down';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_asc']['label']=$this->pi_getLL('admin_sort_products_main_categories_asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_main_categories&tx_multishop_pi1[orderBy]=asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_on_main_categories_relation_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_asc']['class']='fa fa-arrow-circle-down';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_desc']['label']=$this->pi_getLL('admin_sort_products_main_categories_desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_main_categories&tx_multishop_pi1[orderBy]=desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_on_main_categories_relation_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_main_categories_desc']['class']='fa fa-arrow-circle-down';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_asc']['label']=$this->pi_getLL('admin_sort_products_deepest_categories_asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_deepest_categories&tx_multishop_pi1[orderBy]=asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_on_deepest_categories_relation_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_asc']['class']='fa fa-arrow-circle-down';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_desc']['label']=$this->pi_getLL('admin_sort_products_deepest_categories_desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_deepest_categories&tx_multishop_pi1[orderBy]=desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_on_deepest_categories_relation_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_deepset_categories_desc']['class']='fa fa-arrow-circle-down';
 				//
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['label']=$this->pi_getLL('products_attributes_values');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['class']='fa fa-puzzle-piece';
@@ -7467,7 +7515,7 @@ class mslib_fe {
 		return $ms_menu;
 	}
 	public function getActiveShop() {
-		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title,nav_title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 		return $multishop_content_objects;
 	}
 	public function getSignedInUsers($groupid='', $orderby='company') {

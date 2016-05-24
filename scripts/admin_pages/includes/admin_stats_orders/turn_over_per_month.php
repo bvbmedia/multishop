@@ -198,8 +198,8 @@ $shipping_method_input.='</select>'."\n";
 // shipping method eol
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="pagination horizontal_list">
-	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
 	<li class="active"><span>'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</span></li>
+	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
 </ul>
 </div>';
 $content.='

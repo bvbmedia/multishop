@@ -611,6 +611,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							} else {
 								$str = "select * from tx_multishop_manufacturers m, tx_multishop_products p, tx_multishop_products_to_categories p2c where p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.node_id = " . addslashes($parent_id) . " group by m.manufacturers_id";
 							}
+						} else {
+							$default_query=1;
 						}
 					}
 				} else {

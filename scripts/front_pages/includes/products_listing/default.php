@@ -197,6 +197,7 @@ if (is_array($products) && count($products)) {
 		}
 		$markerArray['PRODUCTS_STOCK']=$product_qty;
 		// STOCK INDICATOR EOF
+		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LABEL']=$this->pi_getLL('add_to_basket');
 		if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
 			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
 			$button_submit='<a href="'.$link.'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';

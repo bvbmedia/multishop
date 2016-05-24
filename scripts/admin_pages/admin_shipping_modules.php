@@ -59,6 +59,8 @@ if ($this->post) {
 			$updateArray=array();
 			$updateArray['page_uid']=$this->post['related_shop_pid'];
 			$updateArray['handling_costs']=$this->post['handling_costs'];
+			$updateArray['cart_minimum_amount']=$this->post['cart_minimum_amount'];
+			$updateArray['cart_maximum_amount']=$this->post['cart_maximum_amount'];
 			$updateArray['tax_id']=$this->post['tax_id'];
 			$updateArray['vars']=serialize($data);
 			$updateArray['enable_on_default']=$this->post['enable_on_default'];
@@ -102,6 +104,8 @@ if ($this->post) {
 			$insertArray['provider']=$_REQUEST['shipping_method_code'];
 			$insertArray['vars']=serialize($this->post);
 			$insertArray['handling_costs']=$this->post['handling_costs'];
+			$insertArray['cart_minimum_amount']=$this->post['cart_minimum_amount'];
+			$insertArray['cart_maximum_amount']=$this->post['cart_maximum_amount'];
 			$updateArray['enable_on_default']=$this->post['enable_on_default'];
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -373,6 +377,26 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			</div>
 			</div>
 		</div>
+		<div class="form-group" id="min_amount_to_show">
+			<label class="control-label col-md-2">'.$this->pi_getLL('cart_minimum_amount').'</label>
+			<div class="col-md-10">
+				<div class="msAttribute">
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" value="0.00" id="cart_minimum_amount" /></div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" id="max_amount_to_show">
+			<label class="control-label col-md-2">'.$this->pi_getLL('cart_maximum_amount').'</label>
+			<div class="col-md-10">
+				<div class="msAttribute">
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" value="0.00" id="cart_maximum_amount" /></div>
+				</div>
+			</div>
+		</div>
 		<div class="form-group">
 			<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
 			<div class="col-md-10">
@@ -470,6 +494,15 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$cost_tax=mslib_fe::taxDecimalCrop(($amount_handling_cost*$cost_tax_rate)/100);
 	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost, 2, false);
 	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
+
+	$cart_minimum_amount=$row['cart_minimum_amount'];
+	$cart_minimum_amount_cost_tax=mslib_fe::taxDecimalCrop(($cart_minimum_amount*$cost_tax_rate)/100);
+	$cart_minimum_amount_excl_vat_display=mslib_fe::taxDecimalCrop($cart_minimum_amount, 2, false);
+	$cart_minimum_amount_incl_vat_display=mslib_fe::taxDecimalCrop($cart_minimum_amount+$cart_minimum_amount_cost_tax, 2, false);
+	$cart_maximum_amount=$row['cart_maximum_amount'];
+	$cart_maximum_amount_cost_tax=mslib_fe::taxDecimalCrop(($cart_maximum_amount*$cost_tax_rate)/100);
+	$cart_maximum_amount_excl_vat_display=mslib_fe::taxDecimalCrop($cart_maximum_amount, 2, false);
+	$cart_maximum_amount_incl_vat_display=mslib_fe::taxDecimalCrop($cart_maximum_amount+$cart_maximum_amount_cost_tax, 2, false);
 	$tmpcontent.='
 	<div class="form-group">
 		<label class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
@@ -520,10 +553,30 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 		<div class="col-md-10">
 		<div class="msAttribute">
-			<div class="msAttributesField"><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-			<div class="msAttributesField"><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" id="handling_cost_amount_input" value="'.$amount_handling_cost.'"'.($percentage_cost ? ' disabled="disabled"' : '').'/></div>
 		</div>
+		</div>
+	</div>
+	<div class="form-group" id="min_amount_to_show">
+		<label class="control-label col-md-2">'.$this->pi_getLL('cart_minimum_amount').'</label>
+		<div class="col-md-10">
+			<div class="msAttribute">
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_minimum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_minimum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" value="'.$cart_minimum_amount.'" id="cart_minimum_amount" /></div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group" id="max_amount_to_show">
+		<label class="control-label col-md-2">'.$this->pi_getLL('cart_maximum_amount').'</label>
+		<div class="col-md-10">
+			<div class="msAttribute">
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_maximum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_maximum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" value="'.$cart_maximum_amount.'" id="cart_maximum_amount" /></div>
+			</div>
 		</div>
 	</div>
 	<div class="form-group">
