@@ -398,7 +398,30 @@ if (!$product['products_id']) {
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
     $markerArray['###PRODUCTS_NAME_MARKER###'] = $output['products_name_marker'];
     $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];
-    $markerArray['###PRODUCTS_IMAGE_URL###'] = $imgUrl;
+
+    $formats=array();
+    $formats[]='';
+    $formats[]='100';
+    $formats[]='200';
+    $formats[]='300';
+    foreach ($formats as $format) {
+        if ($format) {
+            $markerArray['PRODUCTS_IMAGE_URL_'.$format]='';
+            $markerArray['FULL_PRODUCTS_IMAGE_URL_'.$format]='';
+        } else {
+            $markerArray['PRODUCTS_IMAGE_URL']='';
+            $markerArray['FULL_PRODUCTS_IMAGE_URL']='';
+        }
+        if ($product['products_image']) {
+            if ($format) {
+                $markerArray['PRODUCTS_IMAGE_URL_'.$format]=mslib_befe::getImagePath($product['products_image'], 'products', $format);
+                $markerArray['FULL_PRODUCTS_IMAGE_URL_'.$format]=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $format);
+            } else {
+                $markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+                $markerArray['FULL_PRODUCTS_IMAGE_URL']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+            }
+        }
+    }
     $markerArray['###CANONICAL_URL###'] = $productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($product['manufacturers_advice_price']);
     $js_detail_page_triggers[] = '
