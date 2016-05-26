@@ -147,6 +147,10 @@ if (is_array($rel_products) && count($rel_products)) {
 			$markerArray['ITEM_PRODUCTS_IMAGE_200']='<div class="no_image_50"></div>';
 			$markerArray['ITEM_PRODUCTS_IMAGE_300']='<div class="no_image_50"></div>';
 		}
+		$markerArray['ITEM_PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($rel_rs['products_image'], 'products', '50');
+		$markerArray['ITEM_PRODUCTS_IMAGE_100_URL']=mslib_befe::getImagePath($rel_rs['products_image'], 'products', '100');
+		$markerArray['ITEM_PRODUCTS_IMAGE_200_URL']=mslib_befe::getImagePath($rel_rs['products_image'], 'products', '200');
+		$markerArray['ITEM_PRODUCTS_IMAGE_300_URL']=mslib_befe::getImagePath($rel_rs['products_image'], 'products', '300');
 		$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION_ENCODED']=htmlspecialchars($rel_rs['products_shortdescription']);
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION']=$rel_rs['products_shortdescription'];
