@@ -31,8 +31,10 @@ if (is_array($categories) && count($categories)) {
 		$output['categories_name']=trim($category['categories_name']);
 		if ($category['categories_image']) {
 			$output['image']='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'" alt="'.htmlspecialchars($category['categories_name']).'">';
+			$output['image_url']=mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal');
 		} else {
 			$output['image']='<div class="no_image"></div>';
+			$output['image_url']='';
 		}
 		// get all cats to generate multilevel fake url
 		$level=0;
@@ -79,6 +81,7 @@ if (is_array($categories) && count($categories)) {
 		$markerArray['CATEGORIES_NAME']=$output['categories_name'];
 		$markerArray['CATEGORIES_LINK_TARGET']=$output['target'];
 		$markerArray['CATEGORIES_IMAGE']=$output['image'];
+		$markerArray['CATEGORIES_IMAGE_URL']=$output['image_url'];
 		$markerArray['CATEGORIES_META_DESCRIPTION']=$category['meta_description'];
 		$markerArray['CATEGORIES_META_KEYWORDS']=$category['meta_keywords'];
 		$markerArray['CATEGORIES_META_TITLE']=$category['meta_title'];
