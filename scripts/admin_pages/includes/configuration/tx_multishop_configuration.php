@@ -2383,6 +2383,17 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Address format',
+	'configuration_key'=>'ADDRESS_FORMAT',
+	'configuration_value'=>'###ADDRESS###<br/>###ZIP### ###CITY###<br/>###COUNTRY###',
+	'description'=>'Address format.',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

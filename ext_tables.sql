@@ -24,6 +24,8 @@ CREATE TABLE `fe_users` (
  `tx_multishop_source_id` varchar(50) default '',
  `page_uid` int(11) default '0',
  `street_name` varchar(75) default '',
+ `building` varchar(150) default '',
+ `region` varchar(150) default '',
  `http_referer` text,
  `ip_address` varchar(150) default '',
  `tx_multishop_vat_id` varchar(127) default '',
@@ -62,7 +64,9 @@ CREATE TABLE `fe_users` (
  KEY `coc_id` (`tx_multishop_coc_id`),
  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`),
  KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`),
- KEY `tx_multishop_language` (`tx_multishop_language`)
+ KEY `tx_multishop_language` (`tx_multishop_language`),
+ KEY `building` (`building`),
+ KEY `region` (`region`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
