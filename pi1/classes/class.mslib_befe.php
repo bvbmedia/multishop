@@ -4744,6 +4744,58 @@ class mslib_befe {
 			}
 		}
 	}
+	public function customerAddressFormat($address_data, $address_type='billing') {
+		$address_format_setting=$this->ms['MODULES']['ADDRESS_FORMAT'];
+		//hook to let other plugins further manipulate the settings
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['customerAddressFormatSetting'])) {
+			$params=array(
+				'address_format_setting'=>&$address_format_setting,
+				'address_data'=>&$address_data,
+				'address_type'=>&$address_type,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['customerAddressFormatSetting'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$array1=array();
+		$array2=array();
+		$array1[]='###STREET_NAME###';
+		$array2[]=ucfirst($address_data['street_name']);
+		$array1[]='###BUILDING###';
+		$array2[]=ucfirst($address_data['building']);
+		$array1[]='###ADDRESS###';
+		$array2[]=ucfirst($address_data['address']);
+		$array1[]='###ZIP###';
+		$array2[]=$address_data['zip'];
+		$array1[]='###CITY###';
+		$array2[]=ucfirst($address_data['city']);
+		$array1[]='###COUNTRY###';
+		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address_data['country']);
+		$array1[]='###STATE###';
+		$array2[]=ucfirst($address_data['state']);
+		$array1[]='###FULL_NAME###';
+		$array2[]=$address_data['name'];
+		$array1[]='###FIRST_NAME###';
+		$array2[]=ucfirst($address_data['first_name']);
+		$array1[]='###LAST_NAME###';
+		$array2[]=ucfirst($address_data['last_name']);
+		$array1[]='###EMAIL###';
+		$array2[]=$address_data['email'];
+		$array1[]='###TELEPHONE###';
+		$array2[]=$address_data['telephone'];
+		$array1[]='###FAX###';
+		$array2[]=$address_data['fax'];
+		$array1[]='###VAT_ID###';
+		$array2[]=$address_data['vat_id'];
+		$array1[]='###COC_ID###';
+		$array2[]=$address_data['coc_id'];
+
+		$address_format_value='';
+		if ($address_format_setting) {
+			$address_format_value = str_replace($array1, $array2, $address_format_setting);
+		}
+		return $address_format_value;
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

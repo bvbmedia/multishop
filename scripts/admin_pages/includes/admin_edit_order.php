@@ -926,12 +926,12 @@ if (is_numeric($this->get['orders_id'])) {
 							<a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
 						</div>
 					</div>';
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editBillingDetailsInput'])) {
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInput'])) {
 					$params=array(
 						'order'=>$order,
 						'edit_billing_details'=>&$edit_billing_details
 					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editBillingDetailsInput'] as $funcRef) {
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInput'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
@@ -982,104 +982,122 @@ if (is_numeric($this->get['orders_id'])) {
 			<div class="panel-body">
 				';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+				$edit_delivery_details=array();
 				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
-				$tmpcontent.='<div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_first_name]" type="text" id="edit_delivery_first_name" value="'.$orders['delivery_first_name'].'" />
-                </div>
-                </div>
-                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_middle_name]" type="text" id="edit_delivery_middle_name" value="'.$orders['delivery_middle_name'].'" />
-                </div>
-                </div>
-                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_last_name]" type="text" id="edit_delivery_last_name" value="'.$orders['delivery_last_name'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" /><span  class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'</label>
-                <div class="col-md-7">
-                '.$delivery_countries_sb.'
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
-                </div>
-                </div>
-                <hr>
-                <div class="clearfix">
-                <div class="pull-right">
-                <a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
-                <a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
-                </div>
-                </div>
+				$edit_delivery_details['delivery_company']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
+                	</div>
                 </div>';
+				$edit_delivery_details['delivery_first_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_first_name]" type="text" id="edit_delivery_first_name" value="'.$orders['delivery_first_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_middle_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_middle_name]" type="text" id="edit_delivery_middle_name" value="'.$orders['delivery_middle_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_last_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_last_name]" type="text" id="edit_delivery_last_name" value="'.$orders['delivery_last_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_street_name']='<div class="form-group">
+                	<label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" />
+                		<span  class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_address_number']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_address_ext']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_building']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_zip']='<div class="form-group">
+                	<label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" />
+                		<span class="error-space"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_city']='<div class="form-group">
+                	<label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" />
+                		<span class="error-space"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_country']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'</label>
+                	<div class="col-md-7">
+                		'.$delivery_countries_sb.'
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_email']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_telephone']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_mobile']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_fax']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_save_form']='<hr>
+                <div class="clearfix">
+                	<div class="pull-right">
+                		<a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
+                		<a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
+                	</div>
+                </div>';
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderDeliveryDetailsInput'])) {
+					$params=array(
+							'order'=>$order,
+							'edit_delivery_details'=>&$edit_delivery_details
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderDeliveryDetailsInput'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				$tmpcontent.=implode("\n", $edit_delivery_details);
+				$tmpcontent.='</div>';
 			}
 			$tmpcontent.='<div class="address_details_container" id="delivery_details_container">';
 			if ($orders['delivery_company']) {
@@ -1214,6 +1232,9 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_zip").val("");
                 $("#edit_delivery_zip").val($("#edit_billing_zip").val());
 
+                $("#edit_delivery_region").val("");
+                $("#edit_delivery_region").val($("#edit_billing_region").val());
+
                 $("#edit_delivery_city").val("");
                 $("#edit_delivery_city").val($("#edit_billing_city").val());
 
@@ -1269,6 +1290,8 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_billing_zip") {
                         billing_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_billing_city") {
+                        billing_details += $(this).val() + "<br/>";
+                    } else if ($(this).attr("id") == "edit_billing_region") {
                         billing_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_billing_country") {
                         billing_details += $(this).find(\':selected\').text() + "<br/><br/>";
@@ -1348,6 +1371,8 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_delivery_zip") {
                         delivery_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_city") {
+                        delivery_details += $(this).val() + "<br/>";
+                    } else if ($(this).attr("id") == "edit_delivery_region") {
                         delivery_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_country") {
                         delivery_details += $(this).find(\':selected\').text() + "<br/><br/>";

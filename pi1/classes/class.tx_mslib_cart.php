@@ -1755,6 +1755,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				// hook
 				$params=array(
 					'ms'=>$this->ms,
+					'address'=>&$address,
 					'insertArray'=>&$insertArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'] as $funcRef) {

@@ -23,12 +23,16 @@ if ($this->ADMIN_USER) {
 				if ($order['billing_company']) {
 					$jsonData_content.=$order['billing_company'].'<br />';
 				}
+				$address_data=array();
+				$address_data=$order;
+				$address_data['address']=$order['billing_address'];
+				$address_data['zip']=$order['billing_zip'];
+				$address_data['city']=$order['billing_city'];
+				$address_data['country']=$order['billing_country'];
+				$billing_address_value=mslib_befe::customerAddressFormat($address_data);
 				$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer', 1);
 				$jsonData_content.='<a href="'.$customer_edit_link.'">'.$order['billing_name'].'</a><br />
-'.$order['billing_address'].'<br />
-'.$order['billing_zip'].' '.$order['billing_city'].' <br />
-'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br /><br />
-';
+				'.$billing_address_value.'<br /><br />';
 				if ($order['billing_email']) {
 					$jsonData_content.=$this->pi_getLL('email').': <a href="mailto:'.$order['billing_email'].'">'.$order['billing_email'].'</a><br />';
 				}
@@ -51,11 +55,15 @@ if ($this->ADMIN_USER) {
 				if ($order['delivery_company']) {
 					$jsonData_content.=$order['delivery_company'].'<br />';
 				}
+				$address_data=array();
+				$address_data=$order;
+				$address_data['address']=$order['delivery_address'];
+				$address_data['zip']=$order['delivery_zip'];
+				$address_data['city']=$order['delivery_city'];
+				$address_data['country']=$order['delivery_country'];
+				$delivery_address_value=mslib_befe::customerAddressFormat($address_data, 'delivery');
 				$jsonData_content.=$order['delivery_name'].'<br />
-						'.$order['delivery_address'].'<br />
-						'.$order['delivery_zip'].' '.$order['delivery_city'].' <br />
-						'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']).'<br /><br />
-';
+						'.$delivery_address_value.'<br /><br />';
 				if ($order['delivery_email']) {
 					$jsonData_content.=$this->pi_getLL('email').': <a href="mailto:'.$order['delivery_email'].'">'.$order['delivery_email'].'</a><br />';
 				}

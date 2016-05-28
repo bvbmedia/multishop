@@ -2023,6 +2023,7 @@ switch ($this->ms['page']) {
 				$keys[]='building';
 				$keys[]='zip';
 				$keys[]='city';
+				$keys[]='region';
 				$keys[]='country';
 				$keys[]='email';
 				$keys[]='telephone';
@@ -2048,6 +2049,17 @@ switch ($this->ms['page']) {
 						break;
 				}
 				if (count($updateArray)) {
+					// hook for adding new items to details fieldset
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'])) {
+						$params=array(
+							'details_type'=>$details_type,
+							'updateArray'=>&$updateArray
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+						// hook oef
+					}
 					$updateArray['orders_last_modified']=time();
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
