@@ -88,6 +88,20 @@ if (is_numeric($this->get['orders_id'])) {
 				<div id="logo-invoice"><div id="logo-invoice-img">'.$content_cms[0]['content'].'</div></div>
 				<div style="display: block;" id="Order_Details" class="tab_content"><h1>'.$invheader.'</h1>';
 		}
+		$address_data=array();
+		$address_data=$order;
+		$address_data['address']=$order['billing_address'];
+		$address_data['zip']=$order['billing_zip'];
+		$address_data['city']=$order['billing_city'];
+		$address_data['country']=$order['billing_country'];
+		$billing_address_value=mslib_befe::customerAddressFormat($address_data);
+		$address_data=array();
+		$address_data=$order;
+		$address_data['address']=$order['delivery_address'];
+		$address_data['zip']=$order['delivery_zip'];
+		$address_data['city']=$order['delivery_city'];
+		$address_data['country']=$order['delivery_country'];
+		$delivery_address_value=mslib_befe::customerAddressFormat($address_data, 'delivery');
 		$tmpcontent.='
 		<div class="panel panel-default tabs-fieldset">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('address_details').'</h3></div>
@@ -102,9 +116,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<td>
 							<strong>'.$order['billing_company'].'</strong><br />
 							'.$order['billing_name'].'<br />
-							'.$order['billing_address'].'<br />
-							'.$order['billing_zip'].' '.$order['billing_city'].'<br />
-							'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br /><br />
+							'.$billing_address_value.'<br /><br />
 							'.$order['billing_email'].'<br />
 							'.$order['billing_telephone'].'<BR />
 							'.$order['billing_mobile'].'<BR />
@@ -120,9 +132,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<td>
 							<strong>'.$order['delivery_company'].'</strong><br />
 							'.$order['delivery_name'].'<br />
-							'.$order['delivery_address'].'<br />
-							'.$order['delivery_zip'].' '.$order['delivery_city'].'<br />
-							'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']).'<br /><br />
+							'.$delivery_address_value.'<br /><br />
 							'.$order['delivery_email'].'<br />
 							'.$order['delivery_telephone'].'<BR />
 							'.$order['delivery_mobile'].'<BR />
