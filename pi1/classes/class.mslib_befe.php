@@ -3268,6 +3268,17 @@ class mslib_befe {
 				$array1[]='###DELIVERY_COUNTRY_CODE###';
 				$array2[]=mslib_fe::getCountryCnIsoByEnglishName($order['delivery_country']);
 				// dynamic variablese eof
+				//hook to let other plugins further manipulate
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerProc'])) {
+					$params=array(
+						'array1'=>&$array1,
+						'array2'=>&$array2,
+						'order'=>&$order
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				if ($this->post['comments']) {
 					$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);
 				}
@@ -4744,7 +4755,7 @@ class mslib_befe {
 			}
 		}
 	}
-	public function customerAddressFormat($address_data, $address_type='billing') {
+	public function customerAddressFormat($address_data, $address_type='billing', $address_format='default') {
 		$address_format_setting=$this->ms['MODULES']['ADDRESS_FORMAT'];
 		//hook to let other plugins further manipulate the settings
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['customerAddressFormatSetting'])) {
@@ -4752,6 +4763,7 @@ class mslib_befe {
 				'address_format_setting'=>&$address_format_setting,
 				'address_data'=>&$address_data,
 				'address_type'=>&$address_type,
+				'address_format'=>&$address_format,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['customerAddressFormatSetting'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
