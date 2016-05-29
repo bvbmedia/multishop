@@ -312,6 +312,17 @@ switch ($this->ms['page']) {
 			$array2[]=$order['customer_id'];
 			$array1[]='###CUSTOMER_COMMENTS###';
 			$array2[]=$order['customer_comments'];
+			//hook to let other plugins further manipulate
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentURLCMSPage'])) {
+				$params=array(
+					'array1'=>&$array1,
+					'array2'=>&$array2,
+					'order'=>&$order
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentURLCMSPage'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 		}
 		$page=mslib_fe::getCMScontent($this->ms['page'], $GLOBALS['TSFE']->sys_language_uid);
 		if ($page[0]['name']) {
