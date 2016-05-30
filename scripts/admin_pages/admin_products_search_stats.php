@@ -15,7 +15,6 @@ $content.='<div class="panel-body">
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="'.$this->ms['page'].'" />
 <div class="checkbox checkbox-success checkbox-inline"><input id="negative_keywords_only" name="negative_keywords_only" type="checkbox" value="1" '.($this->cookie['negative_keywords_only'] ? 'checked' : '').' /><label for="negative_keywords_only">'.$this->pi_getLL('display_negative_keywords_only').'</label></div>
 </form>
-
 <br>
 ';
 $GLOBALS['TSFE']->additionalHeaderData[]='
