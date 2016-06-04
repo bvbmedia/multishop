@@ -4320,7 +4320,7 @@ class mslib_befe {
 		foreach ($vat_wrapper_keys as $vat_wrapper_key) {
 			if (!empty($subparts[$vat_wrapper_key])) {
 				$vatItem='';
-				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation'])) {
+				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation']) && !$order['discount']) {
 					foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate=>$tax_sep_data) {
 						$markerArray=array();
 						if (isset($tax_sep_rate)) {
