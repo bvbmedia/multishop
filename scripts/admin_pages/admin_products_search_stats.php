@@ -7,14 +7,15 @@ if ($this->get['Search'] and ($this->get['negative_keywords_only']!=$this->cooki
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-$content.='
+$content.='<div class="panel-body">
 <form method="get" action="index.php" id="search_log_form" class="float_right">
 <input name="id" type="hidden" value="'.$this->shop_pid.'" />
 <input name="Search" type="hidden" value="1" />
 <input name="type" type="hidden" value="2003" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="'.$this->ms['page'].'" />
-<input id="checkbox_negative_keywords_only" name="negative_keywords_only" type="checkbox" value="1" '.($this->cookie['negative_keywords_only'] ? 'checked' : '').' /> '.$this->pi_getLL('display_negative_keywords_only').'
+<div class="checkbox checkbox-success checkbox-inline"><input id="negative_keywords_only" name="negative_keywords_only" type="checkbox" value="1" '.($this->cookie['negative_keywords_only'] ? 'checked' : '').' /><label for="negative_keywords_only">'.$this->pi_getLL('display_negative_keywords_only').'</label></div>
 </form>
+<br>
 ';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript" language="JavaScript">
@@ -173,6 +174,6 @@ foreach ($dates as $key=>$value) {
 }
 $content.='</table>';
 // LAST MONTHS EOF
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<div class="clearfix"><hr><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
