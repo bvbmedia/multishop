@@ -382,6 +382,8 @@ multishop_ajax_server {
 			jqueryPace = EXT:multishop/res/pace/pace.js
 			jqueryPace.compress = 1
 			#jqueryPace.forceOnTop= 1
+			jqueryPace = EXT:multishop/js/jquery.tablesorter/jquery.tablesorter.js
+			jqueryPace.compress = 1
 		}
 	}
 [end]
