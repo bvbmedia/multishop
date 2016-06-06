@@ -740,11 +740,11 @@ if (is_numeric($this->get['orders_id'])) {
                 	<div class="pull-right">
                     <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>';
 			if ($this->get['action']=='edit_order') {
-				$save_block .= '<button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('update') . '</button>';
-				$save_block .= '<button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_update_close') . '</button>';
+				$save_block .= ' <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('update') . '</button>';
+				$save_block .= ' <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_update_close') . '</button>';
 			} else {
-				$save_block .= '<button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
-				$save_block .= '<button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_save_close') . '</button>';
+				$save_block .= ' <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
+				$save_block .= ' <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_save_close') . '</button>';
 			}
 			$save_block.='</div>
                 </div>';
@@ -806,6 +806,26 @@ if (is_numeric($this->get['orders_id'])) {
 				$delivery_countries=array_merge(array('<option value="'.$orders['delivery_country'].'">'.$orders['delivery_country'].'</option>'), $delivery_countries);
 			}
 			$delivery_countries_sb='<select class="form-control" name="tx_multishop_pi1[delivery_country]" id="edit_delivery_country" required="required">'.implode("\n", $delivery_countries).'</select>';
+			// settings for controlling order details
+			$settings=array();
+			$settings['enable_edit_customer_details']=1;
+			$settings['enable_edit_orders_details']=1;
+			if ($orders['is_locked']) {
+				$settings['enable_edit_customer_details']=0;
+				$settings['enable_edit_orders_details']=0;
+			}
+			// hook for adding new items to details fieldset
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreHook'])) {
+				// hook
+				$params=array(
+					'orders'=>&$orders,
+					'settings'=>&$settings
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreHook'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+				// hook oef
+			}
 			$editOrderFormFieldset=array();
 			$tmpcontent.='
         	<div class="row">
@@ -975,7 +995,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders['billing_coc_id']) {
 				$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
@@ -986,7 +1006,7 @@ if (is_numeric($this->get['orders_id'])) {
         	<div class="panel-heading"><h3>'.$this->pi_getLL('delivery_details').'</h3></div>
 			<div class="panel-body">
 				';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$edit_delivery_details=array();
 				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
 				$edit_delivery_details['delivery_company']='<div class="form-group">
@@ -1129,7 +1149,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders['delivery_fax']) {
 				$tmpcontent.=$this->pi_getLL('fax').': '.$orders['delivery_fax'].'<br />';
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
@@ -1474,7 +1494,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetails[]='<hr>';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$shipping_methods=mslib_fe::loadShippingMethods(1);
 				$payment_methods=mslib_fe::loadPaymentMethods(1);
 				if (is_array($shipping_methods) and count($shipping_methods)) {
@@ -1509,7 +1529,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem='';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').'</label>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				if (is_array($payment_methods) and count($payment_methods)) {
 					$optionItems=array();
 					$dontOverrideDefaultOption=0;
@@ -1535,7 +1555,14 @@ if (is_numeric($this->get['orders_id'])) {
 					$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
 				}
 			} else {
-				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
+				$payment_method_id=0;
+				$payment_methods=mslib_fe::loadPaymentMethods(1);
+				foreach ($payment_methods as $code=>$item) {
+					if ($code==$orders['payment_method']) {
+						$payment_method_id=$item['id'];
+					}
+				}
+				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'<input type="hidden" name="payment_method" value="'.$payment_method_id.'"></p></div>';
 			}
 			$orderDetailsItem.='</div>';
 			// Date order paid
@@ -1594,13 +1621,6 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>';
 				$orderDetails[]=$orderDetailsItem;
 			}
-			$settings=array();
-			$settings['enable_edit_customer_details']=1;
-			$settings['enable_edit_orders_products_details']=1;
-			if ($orders['is_locked']) {
-				$settings['enable_edit_customer_details']=0;
-				$settings['enable_edit_orders_products_details']=0;
-			}
 			// hook for adding new items to details fieldset
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
 				// hook
@@ -1625,7 +1645,7 @@ if (is_numeric($this->get['orders_id'])) {
     </div></div>
     ';
 			// order products
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$js_select2_cache='';
 				$js_select2_cache_products=array();
 				$js_select2_cache_options=array();
@@ -1694,7 +1714,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$order_products_header_data['products_action']['class']='cellAction';
 				$order_products_header_data['products_action']['value']='&nbsp;';
 			}
@@ -1979,7 +1999,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
 						$order_products_body_data['products_id']['class']='cellID';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
 							}
@@ -2040,7 +2060,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 						if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
 							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> ';
 							$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><button type="button" onclick="return CONFIRM();" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-trash-o"></i></button></a>';
@@ -2089,7 +2109,7 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 								$order_products_body_data['products_action']['value']='';
 							}
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
@@ -2125,7 +2145,7 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 								$order_products_body_data['products_action']['value']='';
 							}
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
@@ -2226,7 +2246,7 @@ if (is_numeric($this->get['orders_id'])) {
 										$order_products_body_data['products_final_price']['align']='right';
 										$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($optprice, 0);
 									}
-									if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+									if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 										// product final price
 										$order_products_body_data['products_action']['align']='left';
 										$order_products_body_data['products_action']['value']='<button type="button" class="btn btn-danger btn-sm remove_attributes" value=""><i class="fa fa-minus"></i></button>';
@@ -2331,7 +2351,7 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_final_price']['align']='right';
 								$order_products_body_data['products_final_price']['class']='cellFinalPrice';
 								$order_products_body_data['products_final_price']['value']=$cellFinalPrice;
-								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+								if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 									$order_products_body_data['products_action']['value']='';
 								}
 								// count the vat
@@ -2388,7 +2408,7 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_vat']['value']='';
 								}
 								$order_products_body_data['products_final_price']['value']='';
-								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+								if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 									// product action col
 									$order_products_body_data['products_action']['value']='';
 								}
@@ -2405,7 +2425,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$item_tax=$order['qty']*($product_tax_data['total_tax']+$product_tax_data['total_attributes_tax']);
 						$total_tax=$total_tax+$item_tax;
 					}
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked'] and $this->get['edit_product'] and ($this->get['order_pid']==$order['orders_products_id'])) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details'] and $this->get['edit_product'] and ($this->get['order_pid']==$order['orders_products_id'])) {
 						$order_products_body_data=array();
 						// products id col
 						$order_products_body_data['products_id']['class']='last_edit_product_row_pid_col';
@@ -2444,7 +2464,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$order_products_body_data['products_final_price']['class']='last_edit_product_row_pfinalprice_col';
 						$order_products_body_data['products_final_price']['value']='';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							// product action col
 							$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 							$order_products_body_data['products_action']['value']='';
@@ -2469,7 +2489,7 @@ if (is_numeric($this->get['orders_id'])) {
 					// custom hook that can be controlled by third-party plugin eof
 				}
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$colspan=8;
 				$order_products_body_data=array();
 				// products id col
@@ -2602,7 +2622,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_discount']['value']='';
 					}
 					$order_products_body_data['products_final_price']['value']='';
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 						// product action col
 						$order_products_body_data['products_action']['value']='';
 					}
@@ -2646,7 +2666,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				$order_products_body_data['products_final_price']['class']='last_edit_product_row_pfinalprice_col';
 				$order_products_body_data['products_final_price']['value']='';
-				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+				if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 					// product action col
 					$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 					$order_products_body_data['products_action']['value']='';
@@ -2796,7 +2816,7 @@ if (is_numeric($this->get['orders_id'])) {
 			//		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
 			$orders_tax_data=unserialize($orders['orders_tax_data']);
 			$tmpcontent.='<tfoot><tr><td colspan="'.$colspan.'" class="order_total_data text-right">';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$iso_customer=mslib_fe::getCountryByName($orders['billing_country']);
 				$iso_customer['country']=$iso_customer['cn_short_en'];
 				//
@@ -2895,7 +2915,7 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
             </div>';
 			$discount_content='';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
 			} else {
 				if ($orders['discount']>0) {
@@ -2946,7 +2966,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$tmpcontent.='</div>';
 			$tmpcontent.='</td></tr></tfoot></table>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$tmpcontent.='<script type="text/javascript">';
 				$tmpcontent.='
                 // autocomplete for options val
@@ -3695,7 +3715,7 @@ if (is_numeric($this->get['orders_id'])) {
 
 
 		$tmpcontent='';
-		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+		if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 			$new_manual_product_js='
             $(document).on("click", "#button_manual_new_product", function(e) {
                 e.preventDefault();
@@ -3850,7 +3870,7 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                 }
             });
-            '.(($this->ms['MODULES']['ORDER_EDIT'] && !$orders['is_locked']) ? '
+            '.(($this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_orders_details']) ? '
             var result = jQuery(".orders_products_listing").sortable({
                 cursor:     "move",
                 items: "tbody.sortbody",
