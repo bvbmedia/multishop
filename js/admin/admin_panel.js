@@ -74,7 +74,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     counter_tablevel2 = 0;
                     switch(menuType) {
                         case 'collapse':
-                            admin_content += '<a href="#subs' + tablevel1_key + '" id="subsA' + tablevel1_key + '" class="a_dropdown collapsed" role="button" data-toggle="collapse" data-parent="#tx_multishop_admin_header" aria-expanded="false" aria-controls="subs' + tablevel1_key + '">';
+                            admin_content += '<a href="#subs' + tablevel1_key + '" id="subsA' + tablevel1_key + '" class="a_dropdown collapsed" role="button" data-toggle="collapse" data-parent="#tx_multishop_admin_header" data-link="' + (tablevel1.link != undefined ? tablevel1.link : '#') + '" aria-expanded="false" aria-controls="subs' + tablevel1_key + '">';
                             break;
                         case 'dropdown':
                             admin_content += '<a href="' + (tablevel1.link != undefined ? tablevel1.link : '#') + '" id="subsA' + tablevel1_key + '" class="a_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
@@ -365,4 +365,11 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
     }
     return admin_content;
 }
+jQuery(document).ready(function(){
+    jQuery(document).on('click', '.a_dropdown', function(){
+        if ($(this).attr('data-link')!='#') {
+            location.href=$(this).attr('data-link');
+        }
+    });
+});
 
