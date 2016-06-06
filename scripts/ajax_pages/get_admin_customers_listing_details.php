@@ -36,7 +36,7 @@ if ($this->ADMIN_USER) {
 			'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $customer['country']).'<br /><br />
 			';
 			if ($customer['email']) {
-				$jsonData['html'].=$this->pi_getLL('email').': '.$customer['email'].'<br />';
+				$jsonData['html'].=$this->pi_getLL('email').': <a href="mailto:'.$customer['email'].'">'.$customer['email'].'</a><br />';
 			}
 			if ($customer['telephone']) {
 				$jsonData['html'].=$this->pi_getLL('telephone').': '.$customer['telephone'].'<br />';
