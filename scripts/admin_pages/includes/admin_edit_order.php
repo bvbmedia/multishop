@@ -819,7 +819,7 @@ if (is_numeric($this->get['orders_id'])) {
         			<div class="panel-heading"><h3>'.$this->pi_getLL('billing_details').'</h3></div>
 						<div class="panel-body">
 						';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$edit_billing_details=array();
 				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
 				$edit_billing_details['billing_company']='<div class="form-group">
@@ -1593,6 +1593,13 @@ if (is_numeric($this->get['orders_id'])) {
                     <div class="col-md-9"><p class="form-control-static">'.nl2br($orders['customer_comments']).'</p></div>
                 </div>';
 				$orderDetails[]=$orderDetailsItem;
+			}
+			$settings=array();
+			$settings['enable_edit_customer_details']=1;
+			$settings['enable_edit_orders_products_details']=1;
+			if ($orders['is_locked']) {
+				$settings['enable_edit_customer_details']=0;
+				$settings['enable_edit_orders_products_details']=0;
 			}
 			// hook for adding new items to details fieldset
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
