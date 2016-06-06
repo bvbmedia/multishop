@@ -62,41 +62,65 @@ if ($this->ADMIN_USER) {
 				$itemTitle=$customer['name'];
 			}
 			$itemArray=array();
+			if ($customer['company']) {
+				$itemArray['company']=array(
+					'label'=>$this->pi_getLL('company'),
+					'value'=>$customer['company']
+				);
+			}
 			if ($customer['name']) {
-				$itemArray[]=array(
+				$itemArray['name']=array(
 					'label'=>$this->pi_getLL('name'),
 					'value'=>$customer['name']
 				);
 			}
 			if ($customer['email']) {
-				$itemArray[]=array(
+				$itemArray['email']=array(
 					'label'=>$this->pi_getLL('email'),
 					'value'=>$customer['email']
 				);
 			}
 			if ($customer['username']) {
-				$itemArray[]=array(
+				$itemArray['username']=array(
 					'label'=>$this->pi_getLL('username'),
 					'value'=>$customer['username']
 				);
 			}
 			if ($customer['address']) {
-				$itemArray[]=array(
+				$itemArray['address']=array(
 					'label'=>$this->pi_getLL('address'),
 					'value'=>$customer['address']
 				);
 			}
+			if ($customer['city']) {
+				$itemArray['city']=array(
+					'label'=>$this->pi_getLL('city'),
+					'value'=>$customer['city']
+				);
+			}
 			if ($customer['telephone']) {
-				$itemArray[]=array(
+				$itemArray['telephone']=array(
 					'label'=>$this->pi_getLL('telephone'),
 					'value'=>$customer['telephone']
 				);
 			}
 			// CUSTOM HTML MARKUP FOR SELECT2
 			$htmlTitle='<h3>'.$itemTitle.'</h3>';
-			foreach ($itemArray as $rowItem) {
-				$htmlTitle.=$rowItem['label'].': <strong>'.$rowItem['value'].'</strong><br/>';
+			$htmlTitle_array=array();
+			foreach ($itemArray as $item_label => $rowItem) {
+				//$htmlTitle.=$rowItem['label'].': <strong>'.$rowItem['value'].'</strong><br/>';
+				if ($item_label=='company') {
+					$htmlTitle_array[0]=$rowItem['value'];
+				} else if ($item_label=='address') {
+					$htmlTitle_array[1]=$rowItem['value'];
+				} else if ($item_label=='city') {
+					$htmlTitle_array[2]=$rowItem['value'];
+				} else if ($item_label=='name') {
+					$htmlTitle_array[3]=$rowItem['value'];
+				}
 			}
+			ksort($htmlTitle_array);
+			$htmlTitle='<strong>'.implode(' | ', $htmlTitle_array).'</strong>';
 			$return_data[]=array(
 				'id'=>$customer['uid'],
 				'text'=>$htmlTitle
