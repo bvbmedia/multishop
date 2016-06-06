@@ -365,11 +365,3 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
     }
     return admin_content;
 }
-jQuery(document).ready(function(){
-    jQuery(document).on('click', '.a_dropdown', function(){
-        if ($(this).attr('data-link')!='#') {
-            location.href=$(this).attr('data-link');
-        }
-    });
-});
-

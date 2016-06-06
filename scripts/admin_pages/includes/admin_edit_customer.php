@@ -680,7 +680,7 @@ $subpartArray['###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###']='';
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
-$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
+$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=($this->get['action']=='edit_customer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
 $subpartArray['###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###']='';
@@ -1125,7 +1125,11 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_PAYMENT_CONDITION###']=$this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']='';
-		$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
+		if ($_GET['action']=='edit_customer') {
+			$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('update_account'));
+		} else {
+			$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
+		}
 		$subpartArray['###LOGIN_AS_THIS_USER_LINK###']='';
 		$subpartArray['###DETAILS_TAB###']='';
 		$subpartArray['###DETAILS###']='';
@@ -1246,7 +1250,7 @@ if (is_array($user) && $user['uid']) {
 $headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
-$headingButton['title']=$this->pi_getLL('save');
+$headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 $headerButtons[]=$headingButton;
@@ -1254,7 +1258,7 @@ $headerButtons[]=$headingButton;
 $headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
-$headingButton['title']=$this->pi_getLL('admin_save_close');
+$headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 $headerButtons[]=$headingButton;

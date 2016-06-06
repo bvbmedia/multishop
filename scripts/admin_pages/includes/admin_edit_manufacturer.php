@@ -315,8 +315,8 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###LABEL_MANUFACTURER_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 	$subpartArray['###LABEL_MANUFACTURER_ADMIN_NO###']=$this->pi_getLL('admin_no');
 	$subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
-	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
-	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
+	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=($this->get['action']=='edit_manufacturer') ? $this->pi_getLL('admin_update') : $this->pi_getLL('admin_save');
+	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###']=($this->get['action']=='edit_manufacturer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 	$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 	$subpartArray['###VALUE_FORM_MANUFACTURER_ACTION_URL###']=$_REQUEST['action'];
 	$subpartArray['###DELETE_IMAGES_MANUFACTURERS_ID###']=$_REQUEST['manufacturers_id'];
@@ -599,7 +599,7 @@ jQuery(document).ready(function ($) {
 	$headingButton=array();
 	$headingButton['btn_class']='btn btn-success';
 	$headingButton['fa_class']='fa fa-check-circle';
-	$headingButton['title']=$this->pi_getLL('save');
+	$headingButton['title']=($this->get['action']=='edit_manufacturer') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 	$headingButton['href']='#';
 	$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 	$headerButtons[]=$headingButton;
@@ -607,7 +607,7 @@ jQuery(document).ready(function ($) {
 	$headingButton=array();
 	$headingButton['btn_class']='btn btn-success';
 	$headingButton['fa_class']='fa fa-check-circle';
-	$headingButton['title']=$this->pi_getLL('admin_save_close');
+	$headingButton['title']=($this->get['action']=='edit_manufacturer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 	$headingButton['href']='#';
 	$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 	$headerButtons[]=$headingButton;
