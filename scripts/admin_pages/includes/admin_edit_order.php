@@ -738,10 +738,15 @@ if (is_numeric($this->get['orders_id'])) {
 				<hr>
                 <div class="clearfix">
                 	<div class="pull-right">
-                    <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
-                    <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
-                    <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('admin_save_close').'</button>
-                    </div>
+                    <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>';
+			if ($this->get['action']=='edit_order') {
+				$save_block .= '<button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('update') . '</button>';
+				$save_block .= '<button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_update_close') . '</button>';
+			} else {
+				$save_block .= '<button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
+				$save_block .= '<button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_save_close') . '</button>';
+			}
+			$save_block.='</div>
                 </div>';
 			// count total products
 			$total_amount=0;
@@ -3664,7 +3669,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$headingButton=array();
 		$headingButton['btn_class']='btn btn-success';
 		$headingButton['fa_class']='fa fa-check-circle';
-		$headingButton['title']=$this->pi_getLL('save');
+		$headingButton['title']=($this->get['action']=='edit_order') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 		$headingButton['href']='#';
 		$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 		$headerButtons[]=$headingButton;
@@ -3672,7 +3677,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$headingButton=array();
 		$headingButton['btn_class']='btn btn-success';
 		$headingButton['fa_class']='fa fa-check-circle';
-		$headingButton['title']=$this->pi_getLL('admin_save_close');
+		$headingButton['title']=($this->get['action']=='edit_order') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 		$headingButton['href']='#';
 		$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 		$headerButtons[]=$headingButton;

@@ -2382,7 +2382,7 @@ if ($this->post) {
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-success';
 			$headingButton['fa_class']='fa fa-check-circle';
-			$headingButton['title']=$this->pi_getLL('save');
+			$headingButton['title']=($this->get['action']=='edit_product') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 			$headingButton['href']='#';
 			$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 			$headerButtons[]=$headingButton;
@@ -2390,7 +2390,7 @@ if ($this->post) {
 			$headingButton=array();
 			$headingButton['btn_class']='btn btn-success';
 			$headingButton['fa_class']='fa fa-check-circle';
-			$headingButton['title']=$this->pi_getLL('admin_save_close');
+			$headingButton['title']=($this->get['action']=='edit_product') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 			$headingButton['href']='#';
 			$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 			$headerButtons[]=$headingButton;
@@ -3972,8 +3972,13 @@ if ($this->post) {
 		}
 		$subpartArray['###FOOTER_VALUE_ADVANCED_OPTION###']=($_COOKIE['hide_advanced_options']==1 ? $this->pi_getLL('admin_show_options') : $this->pi_getLL('admin_hide_options'));
 		$subpartArray['###FOOTER_LABEL_BUTTON_CANCEL###']=$this->pi_getLL('admin_cancel');
-		$subpartArray['###FOOTER_LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
-		$subpartArray['###FOOTER_LABEL_BUTTON_SAVE_CLOSE###']=$this->pi_getLL('admin_save_close');
+		if ($this->get['action']=='edit_product') {
+			$subpartArray['###FOOTER_LABEL_BUTTON_SAVE###'] = $this->pi_getLL('update');
+			$subpartArray['###FOOTER_LABEL_BUTTON_SAVE_CLOSE###'] = $this->pi_getLL('admin_update_close');
+		} else {
+			$subpartArray['###FOOTER_LABEL_BUTTON_SAVE###'] = $this->pi_getLL('admin_save');
+			$subpartArray['###FOOTER_LABEL_BUTTON_SAVE_CLOSE###'] = $this->pi_getLL('admin_save_close');
+		}
 		$subpartArray['###PRODUCT_PID###']=$product['products_id'];
 		$subpartArray['###FORM_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&pid='.$this->get['pid']."&cid=".$this->get['cid']."&action=edit_product");
 		if ($_COOKIE['hide_advanced_options']==1) {
