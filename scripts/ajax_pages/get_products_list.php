@@ -111,7 +111,7 @@ if ($this->ADMIN_USER) {
                     }
                     // get all cats to generate multilevel fake url eof
                 }
-                $return_data[$counter]['text']=htmlentities(implode(" > ", $catsname).'>'.$row['products_name']);
+                $return_data[$counter]['text']=htmlentities(implode(" > ", $catsname).' > '.$row['products_name']);
                 $return_data[$counter]['id']=$row['products_id'];
                 $counter++;
             }
@@ -135,7 +135,7 @@ if ($this->ADMIN_USER) {
                     }
                     // get all cats to generate multilevel fake url eof
                 }
-                $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . '>' . $product['products_name']);
+                $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $product['products_name']);
                 $return_data[$counter]['id'] = $product['products_id'];
                 $counter++;
             }
