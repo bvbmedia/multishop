@@ -1097,6 +1097,9 @@ switch ($_REQUEST['action']) {
 		//}
 		$subpartArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
 		$subpartArray['###HIDE_PASSWORD###']='';
+		if ($this->ms['MODULES']['HIDE_PASSWORD_FIELD_IN_EDIT_CUSTOMER']=='1') {
+			$subpartArray['###HIDE_PASSWORD###']=' style="display:none"';
+		}
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 		$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 		$subpartArray['###GENDER_MR_CHECKED###']=$mr_checked;
