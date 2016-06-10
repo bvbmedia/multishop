@@ -3,8 +3,14 @@
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
 
-.. include:: ../Includes.txt
+.. include:: ../../Includes.txt
 
+
+.. _typo3_section:
+
+=================
+Multishop section
+=================
 
 Configuration
 -------------
@@ -14,10 +20,11 @@ Configuration
 	This chapter describes how to the extension can be configured.
 
 .. toctree::
-	:maxdepth: 5
+	:maxdepth: 10
 	:titlesonly:
 	:glob:
 
-	Typo3BackendSection/*
-	MultishopFrontendSection/*
+	CMS_templates/*
+	FAQ/*
+	Multishop settings/*
 
