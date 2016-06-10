@@ -591,14 +591,21 @@ if (is_numeric($this->get['orders_id'])) {
 						$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
 						$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
 						$orders['order_memo']=$this->post['order_memo'];
+
+						// repair tax stuff
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+						$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+						$mslib_order->init($this);
+						$mslib_order->repairOrder($this->get['orders_id']);
 					}
 					$close_window=1;
 				} // if ($this->post) eol
+				// disable the repair order in open mode, to prevent data corruption on existing orders.
 				// repair tax stuff
-				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
-				$mslib_order->init($this);
-				$mslib_order->repairOrder($this->get['orders_id']);
+				//require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+				//$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+				//$mslib_order->init($this);
+				//$mslib_order->repairOrder($this->get['orders_id']);
 				//is proposal
 				$is_proposal_params='';
 				if ($order['is_proposal']==1) {
@@ -731,10 +738,15 @@ if (is_numeric($this->get['orders_id'])) {
 				<hr>
                 <div class="clearfix">
                 	<div class="pull-right">
-                    <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
-                    <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
-                    <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('admin_save_close').'</button>
-                    </div>
+                    <a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>';
+			if ($this->get['action']=='edit_order') {
+				$save_block .= ' <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('update') . '</button>';
+				$save_block .= ' <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_update_close') . '</button>';
+			} else {
+				$save_block .= ' <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>';
+				$save_block .= ' <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_save_close') . '</button>';
+			}
+			$save_block.='</div>
                 </div>';
 			// count total products
 			$total_amount=0;
@@ -794,6 +806,26 @@ if (is_numeric($this->get['orders_id'])) {
 				$delivery_countries=array_merge(array('<option value="'.$orders['delivery_country'].'">'.$orders['delivery_country'].'</option>'), $delivery_countries);
 			}
 			$delivery_countries_sb='<select class="form-control" name="tx_multishop_pi1[delivery_country]" id="edit_delivery_country" required="required">'.implode("\n", $delivery_countries).'</select>';
+			// settings for controlling order details
+			$settings=array();
+			$settings['enable_edit_customer_details']=1;
+			$settings['enable_edit_orders_details']=1;
+			if ($orders['is_locked']) {
+				$settings['enable_edit_customer_details']=0;
+				$settings['enable_edit_orders_details']=0;
+			}
+			// hook for adding new items to details fieldset
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreHook'])) {
+				// hook
+				$params=array(
+					'orders'=>&$orders,
+					'settings'=>&$settings
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreHook'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+				// hook oef
+			}
 			$editOrderFormFieldset=array();
 			$tmpcontent.='
         	<div class="row">
@@ -807,124 +839,144 @@ if (is_numeric($this->get['orders_id'])) {
         			<div class="panel-heading"><h3>'.$this->pi_getLL('billing_details').'</h3></div>
 						<div class="panel-body">
 						';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
+				$edit_billing_details=array();
 				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
-				$tmpcontent.='<div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="'.$orders['billing_company'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_first_name]" type="text" id="edit_billing_first_name" value="'.$orders['billing_first_name'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_middle_name]" type="text" id="edit_billing_middle_name" value="'.$orders['billing_middle_name'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_last_name]" type="text" id="edit_billing_last_name" value="'.$orders['billing_last_name'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" />
-                </div>
-                <span  class="error-space left-this"></span>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 billing_account-address_ext" for="billing_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_address_ext]" type="text" id="edit_billing_address_ext" value="'.$orders['billing_address_ext'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 billing_account-building" for="billing_building">&nbsp;</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="'.$orders['billing_building'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'*</label>
-                <div class="col-md-7">
-                '.$billing_countries_sb.'
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" />
-                </div>
-                </div>
-                <div class="form-group">';
-				$tmpcontent.='<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />
-                </div>
-                ';
-				$tmpcontent.='</div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_mobile]" type="text" id="edit_billing_mobile" value="'.$orders['billing_mobile'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_fax]" type="text" id="edit_billing_fax" value="'.$orders['billing_fax'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_vat_id]" type="text" id="edit_billing_vat_id" value="'.$orders['billing_vat_id'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
-                </div>
-                </div>
-                <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
-                </div>';
+				$edit_billing_details['billing_company']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="'.$orders['billing_company'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_first_name']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_first_name]" type="text" id="edit_billing_first_name" value="'.$orders['billing_first_name'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_middle_name']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_middle_name]" type="text" id="edit_billing_middle_name" value="'.$orders['billing_middle_name'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_last_name']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_last_name]" type="text" id="edit_billing_last_name" value="'.$orders['billing_last_name'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_street_name']='<div class="form-group">
+						<label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" />
+						</div>
+						<span  class="error-space left-this"></span>
+					</div>';
+				$edit_billing_details['billing_address_number']='<div class="form-group">
+						<label class="control-label col-md-5 billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" /><span class="error-space left-this"></span>
+						</div>
+					</div>';
+				$edit_billing_details['billing_address_ext']='<div class="form-group">
+						<label class="control-label col-md-5 billing_account-address_ext" for="billing_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_address_ext]" type="text" id="edit_billing_address_ext" value="'.$orders['billing_address_ext'].'" /><span class="error-space left-this"></span>
+						</div>
+					</div>';
+				$edit_billing_details['billing_building']='<div class="form-group">
+						<label class="control-label col-md-5 billing_account-building" for="billing_building">&nbsp;</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="'.$orders['billing_building'].'" /><span class="error-space left-this"></span>
+						</div>
+					</div>';
+				$edit_billing_details['billing_zip']='<div class="form-group">
+						<label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" /><span class="error-space"></span>
+						</div>
+					</div>';
+				$edit_billing_details['billing_city']='<div class="form-group">
+						<label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" /><span class="error-space"></span>
+						</div>
+					</div>';
+				$edit_billing_details['billing_country']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'*</label>
+						<div class="col-md-7">
+							'.$billing_countries_sb.'
+						</div>
+					</div>';
+				$edit_billing_details['billing_email']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_telephone']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_mobile']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_mobile]" type="text" id="edit_billing_mobile" value="'.$orders['billing_mobile'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_fax']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_fax]" type="text" id="edit_billing_fax" value="'.$orders['billing_fax'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_vat_id']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_vat_id]" type="text" id="edit_billing_vat_id" value="'.$orders['billing_vat_id'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_coc_id']='<div class="form-group">
+						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
+						</div>
+					</div>';
+				$edit_billing_details['billing_save_form']='<hr>
+					<div class="clearfix">
+						<div class="pull-right">
+							<a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
+						</div>
+					</div>';
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInput'])) {
+					$params=array(
+						'order'=>$order,
+						'edit_billing_details'=>&$edit_billing_details
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInput'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				$tmpcontent.=implode("\n", $edit_billing_details);
+				$tmpcontent.='</div>';
 			}
 			$tmpcontent.='<div class="address_details_container" id="billing_details_container">';
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
+			$address_data=array();
+			$address_data=$orders;
+			$address_data['address']=$orders['billing_address'];
+			$address_data['zip']=$orders['billing_zip'];
+			$address_data['city']=$orders['billing_city'];
+			$address_data['country']=$orders['billing_country'];
+			$billing_address_value=mslib_befe::customerAddressFormat($address_data);
 			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 			$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
-            '.$orders['billing_address'].'<br />
-            '.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
-            '.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $orders['billing_country']).'<br /><br />';
+            '.$billing_address_value.'<br /><br />';
 			if ($orders['billing_email']) {
 				$tmpcontent.=$this->pi_getLL('email').': <a href="mailto:'.$orders['billing_email'].'">'.$orders['billing_email'].'</a><br />';
 			}
@@ -943,7 +995,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders['billing_coc_id']) {
 				$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
@@ -954,114 +1006,137 @@ if (is_numeric($this->get['orders_id'])) {
         	<div class="panel-heading"><h3>'.$this->pi_getLL('delivery_details').'</h3></div>
 			<div class="panel-body">
 				';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
+				$edit_delivery_details=array();
 				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
-				$tmpcontent.='<div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_first_name]" type="text" id="edit_delivery_first_name" value="'.$orders['delivery_first_name'].'" />
-                </div>
-                </div>
-                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_middle_name]" type="text" id="edit_delivery_middle_name" value="'.$orders['delivery_middle_name'].'" />
-                </div>
-                </div>
-                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_last_name]" type="text" id="edit_delivery_last_name" value="'.$orders['delivery_last_name'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" /><span  class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" /><span class="error-space left-this"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'</label>
-                <div class="col-md-7">
-                '.$delivery_countries_sb.'
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
-                </div>
-                </div>
-                <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
-                <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
-                </div>
-                </div>
-                <hr>
-                <div class="clearfix">
-                <div class="pull-right">
-                <a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
-                <a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
-                </div>
-                </div>
+				$edit_delivery_details['delivery_company']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
+                	</div>
                 </div>';
+				$edit_delivery_details['delivery_first_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('first_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_first_name]" type="text" id="edit_delivery_first_name" value="'.$orders['delivery_first_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_middle_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('middle_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_middle_name]" type="text" id="edit_delivery_middle_name" value="'.$orders['delivery_middle_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_last_name']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('last_name')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_last_name]" type="text" id="edit_delivery_last_name" value="'.$orders['delivery_last_name'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_street_name']='<div class="form-group">
+                	<label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" />
+                		<span  class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_address_number']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_address_ext']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_building']='<div class="form-group">
+                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" />
+                		<span class="error-space left-this"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_zip']='<div class="form-group">
+                	<label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" />
+                		<span class="error-space"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_city']='<div class="form-group">
+                	<label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" />
+                		<span class="error-space"></span>
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_country']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'</label>
+                	<div class="col-md-7">
+                		'.$delivery_countries_sb.'
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_email']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_telephone']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_mobile']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_fax']='<div class="form-group">
+                	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
+                	<div class="col-md-7">
+                		<input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
+                	</div>
+                </div>';
+				$edit_delivery_details['delivery_save_form']='<hr>
+                <div class="clearfix">
+                	<div class="pull-right">
+                		<a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
+                		<a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
+                	</div>
+                </div>';
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderDeliveryDetailsInput'])) {
+					$params=array(
+							'order'=>$order,
+							'edit_delivery_details'=>&$edit_delivery_details
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderDeliveryDetailsInput'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				$tmpcontent.=implode("\n", $edit_delivery_details);
+				$tmpcontent.='</div>';
 			}
 			$tmpcontent.='<div class="address_details_container" id="delivery_details_container">';
 			if ($orders['delivery_company']) {
 				$tmpcontent.='<strong>'.$orders['delivery_company'].'</strong><br />';
 			}
+			$address_data=array();
+			$address_data=$orders;
+			$address_data['address']=$orders['delivery_address'];
+			$address_data['zip']=$orders['delivery_zip'];
+			$address_data['city']=$orders['delivery_city'];
+			$address_data['country']=$orders['delivery_country'];
+			$delivery_address_value=mslib_befe::customerAddressFormat($address_data, 'delivery');
 			$tmpcontent.=$orders['delivery_name'].'<br />
-              '.$orders['delivery_address'].'<br />
-              '.$orders['delivery_zip'].' '.$orders['delivery_city'].' <br />
-              '.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $orders['delivery_country']).'<br /><br />';
+              '.$delivery_address_value.'<br /><br />';
 			if ($orders['delivery_email']) {
 				$tmpcontent.=$this->pi_getLL('email').': <a href="mailto:'.$orders['delivery_email'].'">'.$orders['delivery_email'].'</a><br />';
 			}
@@ -1074,7 +1149,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders['delivery_fax']) {
 				$tmpcontent.=$this->pi_getLL('fax').': '.$orders['delivery_fax'].'<br />';
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
@@ -1182,6 +1257,9 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_zip").val("");
                 $("#edit_delivery_zip").val($("#edit_billing_zip").val());
 
+                $("#edit_delivery_region").val("");
+                $("#edit_delivery_region").val($("#edit_billing_region").val());
+
                 $("#edit_delivery_city").val("");
                 $("#edit_delivery_city").val($("#edit_billing_city").val());
 
@@ -1237,6 +1315,8 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_billing_zip") {
                         billing_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_billing_city") {
+                        billing_details += $(this).val() + "<br/>";
+                    } else if ($(this).attr("id") == "edit_billing_region") {
                         billing_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_billing_country") {
                         billing_details += $(this).find(\':selected\').text() + "<br/><br/>";
@@ -1316,6 +1396,8 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_delivery_zip") {
                         delivery_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_city") {
+                        delivery_details += $(this).val() + "<br/>";
+                    } else if ($(this).attr("id") == "edit_delivery_region") {
                         delivery_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_country") {
                         delivery_details += $(this).find(\':selected\').text() + "<br/><br/>";
@@ -1412,7 +1494,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetails[]='<hr>';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$shipping_methods=mslib_fe::loadShippingMethods(1);
 				$payment_methods=mslib_fe::loadPaymentMethods(1);
 				if (is_array($shipping_methods) and count($shipping_methods)) {
@@ -1447,7 +1529,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem='';
 			$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').'</label>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				if (is_array($payment_methods) and count($payment_methods)) {
 					$optionItems=array();
 					$dontOverrideDefaultOption=0;
@@ -1473,7 +1555,14 @@ if (is_numeric($this->get['orders_id'])) {
 					$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
 				}
 			} else {
-				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
+				$payment_method_id=0;
+				$payment_methods=mslib_fe::loadPaymentMethods(1);
+				foreach ($payment_methods as $code=>$item) {
+					if ($code==$orders['payment_method']) {
+						$payment_method_id=$item['id'];
+					}
+				}
+				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'<input type="hidden" name="payment_method" value="'.$payment_method_id.'"></p></div>';
 			}
 			$orderDetailsItem.='</div>';
 			// Date order paid
@@ -1556,7 +1645,7 @@ if (is_numeric($this->get['orders_id'])) {
     </div></div>
     ';
 			// order products
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$js_select2_cache='';
 				$js_select2_cache_products=array();
 				$js_select2_cache_options=array();
@@ -1625,7 +1714,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$order_products_header_data['products_action']['class']='cellAction';
 				$order_products_header_data['products_action']['value']='&nbsp;';
 			}
@@ -1910,7 +1999,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
 						$order_products_body_data['products_id']['class']='cellID';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
 							}
@@ -1971,7 +2060,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 						if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
 							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> ';
 							$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><button type="button" onclick="return CONFIRM();" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-trash-o"></i></button></a>';
@@ -2020,7 +2109,7 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 								$order_products_body_data['products_action']['value']='';
 							}
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
@@ -2056,7 +2145,7 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 								$order_products_body_data['products_action']['value']='';
 							}
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
@@ -2157,7 +2246,7 @@ if (is_numeric($this->get['orders_id'])) {
 										$order_products_body_data['products_final_price']['align']='right';
 										$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($optprice, 0);
 									}
-									if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+									if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 										// product final price
 										$order_products_body_data['products_action']['align']='left';
 										$order_products_body_data['products_action']['value']='<button type="button" class="btn btn-danger btn-sm remove_attributes" value=""><i class="fa fa-minus"></i></button>';
@@ -2262,7 +2351,7 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_final_price']['align']='right';
 								$order_products_body_data['products_final_price']['class']='cellFinalPrice';
 								$order_products_body_data['products_final_price']['value']=$cellFinalPrice;
-								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+								if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 									$order_products_body_data['products_action']['value']='';
 								}
 								// count the vat
@@ -2319,7 +2408,7 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_vat']['value']='';
 								}
 								$order_products_body_data['products_final_price']['value']='';
-								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+								if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 									// product action col
 									$order_products_body_data['products_action']['value']='';
 								}
@@ -2336,7 +2425,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$item_tax=$order['qty']*($product_tax_data['total_tax']+$product_tax_data['total_attributes_tax']);
 						$total_tax=$total_tax+$item_tax;
 					}
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked'] and $this->get['edit_product'] and ($this->get['order_pid']==$order['orders_products_id'])) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details'] and $this->get['edit_product'] and ($this->get['order_pid']==$order['orders_products_id'])) {
 						$order_products_body_data=array();
 						// products id col
 						$order_products_body_data['products_id']['class']='last_edit_product_row_pid_col';
@@ -2375,7 +2464,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$order_products_body_data['products_final_price']['class']='last_edit_product_row_pfinalprice_col';
 						$order_products_body_data['products_final_price']['value']='';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							// product action col
 							$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 							$order_products_body_data['products_action']['value']='';
@@ -2400,7 +2489,7 @@ if (is_numeric($this->get['orders_id'])) {
 					// custom hook that can be controlled by third-party plugin eof
 				}
 			}
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$colspan=8;
 				$order_products_body_data=array();
 				// products id col
@@ -2533,7 +2622,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_discount']['value']='';
 					}
 					$order_products_body_data['products_final_price']['value']='';
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+					if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 						// product action col
 						$order_products_body_data['products_action']['value']='';
 					}
@@ -2577,7 +2666,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				$order_products_body_data['products_final_price']['class']='last_edit_product_row_pfinalprice_col';
 				$order_products_body_data['products_final_price']['value']='';
-				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+				if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 					// product action col
 					$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 					$order_products_body_data['products_action']['value']='';
@@ -2727,7 +2816,7 @@ if (is_numeric($this->get['orders_id'])) {
 			//		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
 			$orders_tax_data=unserialize($orders['orders_tax_data']);
 			$tmpcontent.='<tfoot><tr><td colspan="'.$colspan.'" class="order_total_data text-right">';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$iso_customer=mslib_fe::getCountryByName($orders['billing_country']);
 				$iso_customer['country']=$iso_customer['cn_short_en'];
 				//
@@ -2826,7 +2915,7 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
             </div>';
 			$discount_content='';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
 			} else {
 				if ($orders['discount']>0) {
@@ -2877,7 +2966,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$tmpcontent.='</div>';
 			$tmpcontent.='</td></tr></tfoot></table>';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 				$tmpcontent.='<script type="text/javascript">';
 				$tmpcontent.='
                 // autocomplete for options val
@@ -3607,7 +3696,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$headingButton=array();
 		$headingButton['btn_class']='btn btn-success';
 		$headingButton['fa_class']='fa fa-check-circle';
-		$headingButton['title']=$this->pi_getLL('save');
+		$headingButton['title']=($this->get['action']=='edit_order') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 		$headingButton['href']='#';
 		$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 		$headerButtons[]=$headingButton;
@@ -3615,7 +3704,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$headingButton=array();
 		$headingButton['btn_class']='btn btn-success';
 		$headingButton['fa_class']='fa fa-check-circle';
-		$headingButton['title']=$this->pi_getLL('admin_save_close');
+		$headingButton['title']=($this->get['action']=='edit_order') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 		$headingButton['href']='#';
 		$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 		$headerButtons[]=$headingButton;
@@ -3626,7 +3715,7 @@ if (is_numeric($this->get['orders_id'])) {
 
 
 		$tmpcontent='';
-		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+		if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 			$new_manual_product_js='
             $(document).on("click", "#button_manual_new_product", function(e) {
                 e.preventDefault();
@@ -3781,7 +3870,7 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                 }
             });
-            '.(($this->ms['MODULES']['ORDER_EDIT'] && !$orders['is_locked']) ? '
+            '.(($this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_orders_details']) ? '
             var result = jQuery(".orders_products_listing").sortable({
                 cursor:     "move",
                 items: "tbody.sortbody",

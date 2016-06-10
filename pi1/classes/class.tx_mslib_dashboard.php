@@ -237,7 +237,6 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $col = 0;
         $intCounter = 0;
         $headerData = '
-        <script type="text/javascript" src="typo3conf/ext/multishop/js/jquery.tablesorter/jquery.tablesorter.js"></script>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			$("#addWidgetButton").click(function(e) {

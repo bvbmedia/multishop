@@ -94,13 +94,16 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				$payment_tax_rate=($tax_rate['total_tax_rate']/100);
 				if ($shipping_tax_rate>0 or $payment_tax_rate>0) {
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+					// disable rounding to prevent cents short issue
+					$shipping_tax=$row['shipping_method_costs']*$shipping_tax_rate;
+					$payment_tax=$row['payment_method_costs']*$payment_tax_rate;
+					/*if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$shipping_tax=round($row['shipping_method_costs']*$shipping_tax_rate, 2);
 						$payment_tax=round($row['payment_method_costs']*$payment_tax_rate, 2);
 					} else {
 						$shipping_tax=$row['shipping_method_costs']*$shipping_tax_rate;
 						$payment_tax=$row['payment_method_costs']*$payment_tax_rate;
-					}
+					}*/
 					$order_tax_data['shipping_total_tax_rate']=(string)number_format($shipping_tax_rate, 2, '.', ',');
 					$order_tax_data['payment_total_tax_rate']=(string)number_format($payment_tax_rate, 2, '.', ',');
 					$order_tax_data['shipping_tax']=(string)$shipping_tax;
@@ -135,7 +138,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$tmp_attributes_tax=0;
 					while ($row_attr=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attr)) {
 						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-							$tmp_attributes_tax=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
+							// remove the rounding to prevent cents short
+							//$tmp_attributes_tax=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
+							$tmp_attributes_tax=($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate);
 						} else {
 							$tmp_attributes_tax=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
 						}
@@ -183,11 +188,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
 					// therefore I disabled below bugfix, cause thats a ducktape solution that can break b2c sites
 					//$final_price=round($final_price,2);
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+					/*
+					 * the rounding for excluding vat price is causing cents short
+					 */
+					/*if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$tax=round($final_price*$tax_rate, 2);
 					} else {
 						$tax=$final_price*$tax_rate;
 					}
+					*/
+					$tax=$final_price*$tax_rate;
+
 					$product_tax_data['total_tax']=(string)$tax;
 					$sub_total_tax+=$tax*$row_prod['qty'];
 					$sub_total+=($final_price+$tax)*$row_prod['qty'];

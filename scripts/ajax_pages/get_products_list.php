@@ -40,36 +40,6 @@ if ($this->ADMIN_USER) {
         if (!empty($this->get['q'])) {
             $filter[] = '(pd.products_name like \'%' . $this->get['q'] . '%\')';
         }
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
-            'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
-            implode(' and ', $filter), // WHERE...
-            'p.products_id', // GROUP BY...
-            'pd.products_name asc', // ORDER BY...
-            '' // LIMIT ...
-        );
-        $res=$GLOBALS['TYPO3_DB']->sql_query($query);
-        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-            $counter=0;
-            while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                $catsname=array();
-                if ($row['categories_id']>0) {
-                    // get all cats to generate multilevel fake url
-                    $level=0;
-                    $cats=mslib_fe::Crumbar($row['categories_id']);
-                    $cats=array_reverse($cats);
-                    $where='';
-                    if (count($cats)>0) {
-                        foreach ($cats as $cat) {
-                            $catsname[]=$cat['name'];
-                        }
-                    }
-                    // get all cats to generate multilevel fake url eof
-                }
-                $return_data[$counter]['text']=htmlentities(implode(" > ", $catsname).'>'.$row['products_name']);
-                $return_data[$counter]['id']=$row['products_id'];
-                $counter++;
-            }
-        }
     } else {
         $filter=array();
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {
@@ -104,26 +74,71 @@ if ($this->ADMIN_USER) {
                 $filter[] = 'p2c.is_deepest=\'1\'';
             }
         }
+    }
+    // hook
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_products_list.php']['getProductListFilterPreProc'])) {
+        $params=array(
+            'filter'=>&$filter,
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_products_list.php']['getProductListFilterPreProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // hook eof
+    if (!empty($this->get['q'])) {
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
+            'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
+            implode(' and ', $filter), // WHERE...
+            'p.products_id', // GROUP BY...
+            'pd.products_name asc', // ORDER BY...
+            '' // LIMIT ...
+        );
+        $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
+            $counter=0;
+            while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                $catsname=array();
+                if ($row['categories_id']>0) {
+                    // get all cats to generate multilevel fake url
+                    $level=0;
+                    $cats=mslib_fe::Crumbar($row['categories_id']);
+                    $cats=array_reverse($cats);
+                    $where='';
+                    if (count($cats)>0) {
+                        foreach ($cats as $cat) {
+                            $catsname[]=$cat['name'];
+                        }
+                    }
+                    // get all cats to generate multilevel fake url eof
+                }
+                $return_data[$counter]['text']=htmlentities(implode(" > ", $catsname).' > '.$row['products_name']);
+                $return_data[$counter]['id']=$row['products_id'];
+                $counter++;
+            }
+        }
+    } else {
         $products=mslib_fe::getProductsPageSet($filter, 0, 100, array($prefix.'products_name asc'));
         $counter=0;
         foreach ($products['products'] as $product) {
-            $catsname=array();
-            if ($product['categories_id']) {
-                // get all cats to generate multilevel fake url
-                $level=0;
-                $cats=mslib_fe::Crumbar($product['categories_id']);
-                $cats=array_reverse($cats);
-                $where='';
-                if (count($cats)>0) {
-                    foreach ($cats as $cat) {
-                        $catsname[]=$cat['name'];
+            if ($product['products_name'] && !empty($product['products_name'])) {
+                $catsname=array();
+                if ($product['categories_id']) {
+                    // get all cats to generate multilevel fake url
+                    $level=0;
+                    $cats=mslib_fe::Crumbar($product['categories_id']);
+                    $cats=array_reverse($cats);
+                    $where='';
+                    if (count($cats)>0) {
+                        foreach ($cats as $cat) {
+                            $catsname[]=$cat['name'];
+                        }
                     }
+                    // get all cats to generate multilevel fake url eof
                 }
-                // get all cats to generate multilevel fake url eof
+                $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $product['products_name']);
+                $return_data[$counter]['id'] = $product['products_id'];
+                $counter++;
             }
-            $return_data[$counter]['text']=htmlentities(implode(" > ", $catsname).'>'.$product['products_name']);
-            $return_data[$counter]['id']=$product['products_id'];
-            $counter++;
         }
     }
     echo json_encode($return_data);

@@ -735,7 +735,7 @@ if ($this->post) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-success';
 				$headingButton['fa_class']='fa fa-check-circle';
-				$headingButton['title']=$this->pi_getLL('save');
+				$headingButton['title']=($this->get['action']=='edit_category') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 				$headingButton['href']='#';
 				$headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
 				$headerButtons[]=$headingButton;
@@ -743,7 +743,7 @@ if ($this->post) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-success';
 				$headingButton['fa_class']='fa fa-check-circle';
-				$headingButton['title']=$this->pi_getLL('admin_save_close');
+				$headingButton['title']=($this->get['action']=='edit_category') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 				$headingButton['href']='#';
 				$headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
 				$headerButtons[]=$headingButton;
@@ -1078,7 +1078,7 @@ if ($this->post) {
 		$subpartArray['###CATEGORIES_META_BLOCK###']=$categories_meta_block;
 		$subpartArray['###LABEL_BUTTON_CANCEL_FOOTER###']=$this->pi_getLL('cancel');
 		$subpartArray['###LABEL_BUTTON_SAVE_FOOTER###']=$this->pi_getLL('save');
-		$subpartArray['###LABEL_BUTTON_SAVE_CLOSE_FOOTER###']=$this->pi_getLL('admin_save_close');
+		$subpartArray['###LABEL_BUTTON_SAVE_CLOSE_FOOTER###']=($this->get['action']=='edit_category') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 		$subpartArray['###CATEGORIES_ID_FOOTER0###']=$category['categories_id'];
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];

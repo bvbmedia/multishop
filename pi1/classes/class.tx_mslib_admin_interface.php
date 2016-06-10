@@ -493,7 +493,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if (is_array($params['settings']['headingButtons'])) {
 			$content.='<div class="form-inline">';
 			foreach ($params['settings']['headingButtons'] as $headingButton) {
-				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a>';
+				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a> ';
 			}
 			$content.='</div>';
 		}

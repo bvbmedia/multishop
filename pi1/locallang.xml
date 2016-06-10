@@ -1303,6 +1303,8 @@
             <label index="admin_are_you_sure_you_want_to_sort_products_on_main_categories_relation_desc">Are you sure want to sort products on main categories relation descending</label>
             <label index="admin_are_you_sure_you_want_to_sort_products_on_deepest_categories_relation_asc">Are you sure want to sort products on deepest categories relation ascending</label>
             <label index="admin_are_you_sure_you_want_to_sort_products_on_deepest_categories_relation_desc">Are you sure want to sort products on deepest categories relation descending</label>
+            <label index="update">Update</label>
+            <label index="admin_update_close">Update and close</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
