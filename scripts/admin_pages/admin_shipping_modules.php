@@ -175,7 +175,7 @@ function productPrice(to_include_vat, o, type) {
 			});
 			// update the hidden excl vat
 			//o.parent().next().next().first().children().val(original_val);
-			$(o).parentsUntil(\'msAttributesField\').next().next().first().children().val(original_val);
+			$(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
 		} else {
 			jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
 				if (json && json.price_excluding_tax) {
@@ -213,7 +213,7 @@ function productPrice(to_include_vat, o, type) {
             // update the excl. vat
             $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
             // update the hidden excl vat
-            $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
+            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
         }
 	}
 }

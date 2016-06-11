@@ -524,10 +524,8 @@ if (count($shipping_methods)>0) {
 						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(original_val);
 					}
     			});
-
 				// update the hidden excl vat
-				jQuery(o).parentsUntil(\'msAttributesField\').next().next().first().children().val(original_val);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
 			} else {
 				jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function(json) {
     				if (json && json.price_excluding_tax) {
@@ -564,7 +562,7 @@ if (count($shipping_methods)>0) {
 				// update the excl. vat
 				jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
 				// update the hidden excl vat
-				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
 			}
 		}
 	}
