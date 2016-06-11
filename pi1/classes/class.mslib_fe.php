@@ -9840,16 +9840,17 @@ class mslib_fe {
 		if ($array[0]>0) {
 			$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
 		}
-		$output='<span class="amount">';
+		$output='<span class="amountWrapper">';
 		if ($include_currency_symbol) {
 			if ($customer_currency) {
-				$output.=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'];
+				$output.='<span class="currencySymbolLeft">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'].'</span>';
 			} else {
-				$output.=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
+				$output.='<span class="currencySymbolLeft">'.$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'].'</span>';
 			}
 			//TODO: 2015-01-03 disabled calling this method, because we use the symbol directly from static_currencies table
 			//$output.=mslib_fe::currency(1, $customer_currency);
 		}
+		$output.='<span class="amount">';
 		if ($cropZeroDecimals) {
 			if ($array[1]=='00') {
 				$array[1]='-';
@@ -9862,6 +9863,7 @@ class mslib_fe {
 		if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right']) {
 			$output.='<span class="currencySymbolRight">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right'].'</span>';
 		}
+		$output.='</span>';
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
 			$params=array(
