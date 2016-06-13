@@ -685,6 +685,8 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
+		//echo $str;
+		//die();
 		//var_dump($str);
 		//die();
 		if ($this->conf['debugEnabled']=='1') {
@@ -6071,6 +6073,15 @@ class mslib_fe {
 			$loadFromPids[]=$this->shop_pid;
 			if ($this->showCatalogFromPage and $this->showCatalogFromPage!=$this->shop_pid) {
 				$loadFromPids[]=$this->showCatalogFromPage;
+			}
+		}
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'])) {
+			$params=array(
+					'loadFromPids'=>&$loadFromPids
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if (is_array($loadFromPids) and count($loadFromPids)) {
