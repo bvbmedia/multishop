@@ -9835,10 +9835,15 @@ class mslib_fe {
 			$cu_thousands_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'];
 			$cu_decimal_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
 		}
+		$prefix='';
+		if (!empty($amount) && strpos($amount, '-')!==false) {
+			$amount=str_replace('-', '', $amount);
+			$prefix='-';
+		}
 		$amount=number_format($amount, 2, '.', '');
 		$array=explode('.', $amount);
 		if ($array[0]>0) {
-			$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
+			$array[0]=$prefix.number_format($array[0], 0, '', $cu_thousands_point);
 		}
 		$output='<span class="amountWrapper">';
 		if ($include_currency_symbol) {
