@@ -464,6 +464,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				$tableContent.='</tr></tfoot>';
 			}
 			$tableContent.='</table>';
+			if ($params['settings']['contentBelowTable']) {
+				$tableContent.=$params['settings']['contentBelowTable'];
+			}
 			$tableContent.='
 			</div>
 			';
