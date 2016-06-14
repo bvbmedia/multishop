@@ -1065,8 +1065,8 @@ switch ($_REQUEST['action']) {
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
 				$params=array(
-						'markerArray'=>&$markerArray,
-						'user'=>&$user
+					'markerArray'=>&$markerArray,
+					'user'=>&$user
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
