@@ -44,9 +44,9 @@ After the countries are enabled it's time to create shipping zones. A shipping z
 
 Go to SYSTEM / SHIPPING AND PAYMENT and click ZONES.
 
-Shipping costs are configured to zones. A zone contains 1 or more countries. In our example we have a shop that is located in the Netherlands. The shop also supports shipping to Germany and Belgium.
+Shipping costs are configured to zones. A zone contains 1 or more countries. In our example we have a shop that is located in the Netherlands and supports shipping to the Netherlands, Belgium and Germany.
 
-For this we would create:
+For this we would create 2 zones:
 
 Zone 1
 - Netherlands
