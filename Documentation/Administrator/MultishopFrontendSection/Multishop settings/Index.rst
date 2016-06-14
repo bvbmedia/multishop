@@ -36,8 +36,25 @@ Define the store name, e-mail address and location
 
 Define the enabled countries, zones, shipping and payment methods
 -----------------------------------------------------------------
-Go to SYSTEM / SHIPPING AND PAYMENT and press COUNTRIES.
+Go to SYSTEM / SHIPPING AND PAYMENT and click COUNTRIES.
 
-Define here to which countries are able to deliver.
+Enable the countries to which you are able to deliver to.
 
 After the countries are enabled it's time to create shipping zones. A shipping zone could contain one or more countries. This makes configuring the shipping costs easier.
+
+Go to SYSTEM / SHIPPING AND PAYMENT and click ZONES.
+
+Shipping costs are configured to zones. A zone contains 1 or more countries. In our example we have a shop that is located in the Netherlands. The shop also supports shipping to Germany and Belgium.
+
+For this we would create:
+
+Zone 1
+- Netherlands
+
+Zone 2
+- Germany
+- Belgium
+
+Now we can create the shipping method(s) and connect them to the shipping zones. After that you can open SHIPPING COSTS and configure the shipping costs per zone and per shipping method. Multishop supports flat rate shipping costs and weight based shipping costs. More options can be implemented by hooking your own plugin to Multishop.
+
+
