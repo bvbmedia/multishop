@@ -1517,7 +1517,7 @@
             <label index="admin_label_create_quotation">Offerte aanmaken</label>
             <label index="admin_label_current_no_countries_mapped_to_this_zone">Op dit moment zijn er geen landen aan deze zone gekoppeld.</label>
             <label index="admin_label_currently_no_payment_method_defined">Op dit moment zijn er geen betaalmethodees ingesteld.</label>
-            <label index="admin_label_currently_no_shipping_method_defined">Op dit moment zijn er geen verzendmethodes ingesteld.</label>
+            <label index="admin_label_currently_no_shipping_method_defined">Op dit moment zijn er geen verzendmethoden ingesteld.</label>
             <label index="admin_label_data_not_available">Data niet beschikbaar</label>
             <label index="admin_label_delete_selected_categories">Verwijder geselecteerde categorieën?</label>
             <label index="admin_label_delivery_address">Afleveradres</label>
@@ -1654,7 +1654,7 @@
             <label index="admin_manufacturer">Fabrikant</label>
             <label index="admin_manufacturers">Fabrikanten</label>
             <label index="admin_manufacturers_products_id">Extern artikelnummer</label>
-            <label index="admin_mapped_methods">Gekoppelde methodes</label>
+            <label index="admin_mapped_methods">Gekoppelde methoden</label>
             <label index="admin_mappings">Koppelingen</label>
             <label index="admin_mass_updater_by_amount">door bedrag</label>
             <label index="admin_mass_updater_example_update">Voorbeeld: -10 om de productprijzen te verlagen met 10% of vul in 10 om de prijzen met 10% te verhogen.</label>
@@ -1703,7 +1703,7 @@
             <label index="admin_paid">Betaald</label>
             <label index="admin_parent">Lid van</label>
             <label index="admin_payment_method">Betaalmethode</label>
-            <label index="admin_payment_methods">Betaalmethodes</label>
+            <label index="admin_payment_methods">Betaalmethoden</label>
             <label index="admin_payment_zone_mapping">Betaalmethode naar zone koppelingen</label>
             <label index="admin_prefix">Prefix</label>
             <label index="admin_price">Prijs</label>
@@ -1739,7 +1739,7 @@
             <label index="admin_shipping_costs">Verzendkosten</label>
             <label index="admin_shipping_kg">Kg.</label>
             <label index="admin_shipping_method">Verzendmethode</label>
-            <label index="admin_shipping_methods">Verzendmethodes</label>
+            <label index="admin_shipping_methods">Verzendmethoden</label>
             <label index="admin_shipping_options">Verzendopties</label>
             <label index="admin_shipping_zone_mapping">Zones koppelen</label>
             <label index="admin_shopping_cart_entries">Winkelwagens</label>
@@ -1885,8 +1885,8 @@
             <label index="current_value">Huidige waarde</label>
             <label index="currently_there_are_no_invoices_export_created">Momenteel is er geen export voor facturen aangemaakt</label>
             <label index="currently_there_are_no_orders_export_created">Op dit moment is er nog geen bestand aangemaakt</label>
-            <label index="currently_there_are_no_payment_methods_defined">Momenteel zijn er geen betaalmethodes ingesteld</label>
-            <label index="currently_there_are_no_shipping_methods_defined">Momenteel zijn er geen verzendmethodes ingesteld</label>
+            <label index="currently_there_are_no_payment_methods_defined">Momenteel zijn er geen betaalmethoden ingesteld</label>
+            <label index="currently_there_are_no_shipping_methods_defined">Momenteel zijn er geen verzendmethoden ingesteld</label>
             <label index="customer">Debiteur</label>
             <label index="customer_action">Handeling door klant</label>
             <label index="customer_added_productx_to_the_shopping_cart">%s heeft %s toegevoegd in zijn/haar winkelwagen</label>
@@ -2266,7 +2266,7 @@
             <label index="payment_reminder_email_templates">Betaalherinnering email sjabloon</label>
             <label index="payment_terms">Betaaltermijn</label>
             <label index="payment_to_shipping_mapping">Betaal- naar aflevermethode koppelingen</label>
-            <label index="payment_to_zone_mapping">Betaalmethodes per zone</label>
+            <label index="payment_to_zone_mapping">Betaalmethoden per zone</label>
             <label index="pdf_invoice_footer_message">PDF factuur beneden tekst onder de bestelregels tabel</label>
             <label index="pdf_invoice_header_message">PDF factuur boven tekst boven de bestelregels tabel</label>
             <label index="percentage">percentage</label>
@@ -2471,8 +2471,8 @@
             <label index="zip_is_required">Postcode is verplicht</label>
             <label index="up_to_and_including">tot en met</label>
             <label index="feed_exporter_fields_label_products_multiplication">Vermeningvuldiging</label>
-            <label index="all_payment_methods">Alle betaalmethodes</label>
-            <label index="all_shipping_methods">Alle verzendmethodes</label>
+            <label index="all_payment_methods">Alle betaalmethoden</label>
+            <label index="all_shipping_methods">Alle verzendmethoden</label>
             <label index="all_countries">Alle landen</label>
             <label index="copy_from_billing_details">Kopie van factuurgegevens</label>
             <label index="vat_nn_from_subtotal_nn">BTW %s van %s</label>
