@@ -58,3 +58,14 @@ Zone 2
 Now we can create the shipping method(s) and connect them to the shipping zones. After that you can open SHIPPING COSTS and configure the shipping costs per zone and per shipping method. Multishop supports flat rate shipping costs and weight based shipping costs. More options can be implemented by hooking your own plugin to Multishop.
 
 
+.. only:: html
+
+	This chapter contains language specific Multishop templates that can be used to quickly setup your shop.
+
+.. toctree::
+	:titlesonly:
+	:maxdepth: 10
+	:glob:
+
+	*/*
+
