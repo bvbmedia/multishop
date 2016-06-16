@@ -1822,7 +1822,7 @@ if (is_numeric($this->get['orders_id'])) {
 							// products status col
 							$order_products_body_data['products_status']['align']='center';
 							$order_products_body_data['products_status']['class']='cellStatus';
-							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
+							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
                             <option value="">'.$this->pi_getLL('choose').'</option>';
 							if (is_array($all_orders_status)) {
 								foreach ($all_orders_status as $item) {
