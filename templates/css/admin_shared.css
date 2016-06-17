@@ -203,5 +203,5 @@ td.cellAction { white-space:nowrap; }
 .cellFluid { width:90%; }
 .cellFixed { min-width:20px; }
 
-.from-date-field,
-.till-date-field { width:50px; }
+.from-date-field > label,
+.till-date-field > label { width:50px; }
