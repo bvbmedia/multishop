@@ -269,7 +269,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
-				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
+				$tdClass=array();
+				if ($valArray['align']) {
+					$tdClass[]='text-'.$valArray['align'];
+				}
+				if ($valArray['nowrap']) {
+					$tdClass[]='cellNoWrap';
+				}
+				if ($valArray['class']) {
+					$tdClass[]=$valArray['class'];
+				}
+				$tableContent.='<th'.(count($tdClass)? ' class="'.implode(' ',$tdClass).'"':'').'>'.$valArray['title'].'</th>';
 			}
 			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
@@ -439,7 +449,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
 						}
 					}
-					$tableContent.='<td'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
+					$tdClass=array();
+					if ($valArray['align']) {
+						$tdClass[]='text-'.$valArray['align'];
+					}
+					if ($valArray['nowrap']) {
+						$tdClass[]='cellNoWrap';
+					}
+					if ($valArray['class']) {
+						$tdClass[]=$valArray['class'];
+					}
+					$tableContent.='<td'.(count($tdClass)? ' class="'.implode(' ',$tdClass).'"':'').'>'.$adjustedValue.'</td>';
 				}
 				$tableContent.='</tr>';
 				if ($params['settings']['returnResultSetAsArray']) {
