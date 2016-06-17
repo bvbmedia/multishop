@@ -202,46 +202,46 @@ class tx_mslib_user {
 		$captcha_code=$this->getCaptcha_code();
 		$session=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
 		if (!$captcha_code or $session['captcha_code']!=md5($captcha_code)) {
-			$erno[]=$this->ref->pi_getLL('captcha_code_is_invalid');
+			$erno['err_captcha_code']=$this->ref->pi_getLL('captcha_code_is_invalid');
 		}
 		if (!$this->getGender() && $this->ref->ms['MODULES']['GENDER_INPUT_REQUIRED']) {
-			$erno[]=$this->ref->pi_getLL('please_select_your_salutation');
+			$erno['err_gender']=$this->ref->pi_getLL('please_select_your_salutation');
 		}
 		if (!$this->getEmail()) {
-			$erno[]=$this->ref->pi_getLL('no_email_address_has_been_specified');
+			$erno['err_email']=$this->ref->pi_getLL('no_email_address_has_been_specified');
 		}
 		if (!$this->getAddress()) {
-			$erno[]=$this->ref->pi_getLL('no_address_has_been_specified');
+			$erno['err_address']=$this->ref->pi_getLL('no_address_has_been_specified');
 		}
 		if (!$this->getAddress_number()) {
-			$erno[]=$this->ref->pi_getLL('no_address_number_has_been_specified');
+			$erno['err_address_number']=$this->ref->pi_getLL('no_address_number_has_been_specified');
 		}
 		if (!$this->getFirst_name()) {
-			$erno[]=$this->ref->pi_getLL('no_first_name_has_been_specified');
+			$erno['err_first_name']=$this->ref->pi_getLL('no_first_name_has_been_specified');
 		}
 		if (!$this->getLast_name()) {
-			$erno[]=$this->ref->pi_getLL('no_last_name_has_been_specified');
+			$erno['err_last_name']=$this->ref->pi_getLL('no_last_name_has_been_specified');
 		}
 		if (!$this->getZip()) {
-			$erno[]=$this->ref->pi_getLL('no_zip_has_been_specified');
+			$erno['err_postal_code']=$this->ref->pi_getLL('no_zip_has_been_specified');
 		}
 		if (!$this->getCity()) {
-			$erno[]=$this->ref->pi_getLL('no_city_has_been_specified');
+			$erno['err_city']=$this->ref->pi_getLL('no_city_has_been_specified');
 		}
 		if (!$this->getCountry()) {
-			$erno[]=$this->ref->pi_getLL('no_country_has_been_specified');
+			$erno['err_country']=$this->ref->pi_getLL('no_country_has_been_specified');
 		}
 		if (!$this->getPassword()) {
-			$erno[]=$this->ref->pi_getLL('password_is_required');
+			$erno['err_password']=$this->ref->pi_getLL('password_is_required');
 		}
 		if ($this->getEmail()!=$this->getConfirmation_email()) {
-			$erno[]=$this->ref->pi_getLL('email_is_not_the_same_as_repeated_email');
+			$erno['err_email_repeat']=$this->ref->pi_getLL('email_is_not_the_same_as_repeated_email');
 		}
 		if ($this->getPassword()!=$this->getConfirmation_password()) {
-			$erno[]=$this->ref->pi_getLL('password_is_not_the_same_as_repeated_password');
+			$erno['err_password_repeat']=$this->ref->pi_getLL('password_is_not_the_same_as_repeated_password');
 		}
 		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->getCompany()) {
-			$erno[]=$this->ref->pi_getLL('company_is_required');
+			$erno['err_company']=$this->ref->pi_getLL('company_is_required');
 		}
 		/*
 				$count = count($erno);
@@ -259,21 +259,31 @@ class tx_mslib_user {
 				// if the quick_checkout indicator is 0 this mean the user already registered as full account before
 				if (!$checkUsername['tx_multishop_quick_checkout']) {
 					if ($this->getEmail()==$username) {
-						$erno[]=$this->ref->pi_getLL('specified_email_address_already_in_use');
+						$erno['err_email_exist']=$this->ref->pi_getLL('specified_email_address_already_in_use');
 					} else {
-						$erno[]=$this->ref->pi_getLL('specified_username_already_in_use');
+						$erno['err_username_exist']=$this->ref->pi_getLL('specified_username_already_in_use');
 					}
 				}
 			}
 			$checkEmail=mslib_fe::getUser($this->getEmail(), 'email');
 			if (!$checkUsername['uid'] && $checkEmail['uid']) {
 				if (!$checkEmail['tx_multishop_quick_checkout']) {
-					$erno[]=$this->ref->pi_getLL('specified_email_address_already_in_use');
+					$erno['err_email_exist']=$this->ref->pi_getLL('specified_email_address_already_in_use');
 				}
 			}
 		} else {
-			$erno[]=$this->ref->pi_getLL('email_is_required');
+			$erno['err_email']=$this->ref->pi_getLL('email_is_required');
 		}
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['checkUserDataPostProc'])) {
+			$params=array(
+				'erno'=>&$erno
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['checkUserDataPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		return $erno;
 	}
 	/**
@@ -721,6 +731,15 @@ class tx_mslib_user {
 			$updateArray['tx_multishop_default']=($is_default) ? 1 : 0;
 			$updateArray['tx_multishop_customer_id']=$customer_id;
 			$updateArray=mslib_befe::rmNullValuedKeys($updateArray);
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressUpdatePreHook'])) {
+				$params=array(
+					'updateArray'=>&$updateArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressUpdatePreHook'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id='.$customer_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
@@ -777,6 +796,15 @@ class tx_mslib_user {
 			$insertArray['tx_multishop_default']=($is_default) ? 1 : 0;
 			$insertArray['tx_multishop_customer_id']=$customer_id;
 			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressSavingPreHook'])) {
+				$params=array(
+					'insertArray'=>&$insertArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressSavingPreHook'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
