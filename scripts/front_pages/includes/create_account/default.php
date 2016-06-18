@@ -214,7 +214,7 @@ if (mslib_fe::loggedin()) {
 			$markerArray['###VALUE_MIDDLE_NAME###']=htmlspecialchars($this->post['middle_name']);
 			$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_LAST_NAME###']=htmlspecialchars($this->post['last_name']);
-			$markerArray['###LABEL_COMPANY###']=$this->pi_getLL('company').($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '');
+			$markerArray['###LABEL_COMPANY###']=$this->pi_getLL('company').($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<span class="text-danger">*</span>' : '');
 			$markerArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
 			$markerArray['###INPUT_VAT_BLOCK###']=$vat_input_block;
 			$markerArray['###INPUT_COC_BLOCK###']=$coc_input_block;

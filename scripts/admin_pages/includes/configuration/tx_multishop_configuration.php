@@ -2373,7 +2373,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Eanble discount on edit product level',
+	'configuration_title'=>'Enable discount on edit product level',
 	'configuration_key'=>'ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT',
 	'configuration_value'=>'0',
 	'description'=>'Enable discount on edit product level',

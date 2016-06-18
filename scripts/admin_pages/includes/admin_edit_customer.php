@@ -679,9 +679,11 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 // global fields
 // VAT ID
 if ($this->ms['MODULES']['ADMIN_VAT_ID_FIELD_REQUIRED']) {
+	$subpartArray['###LABEL_INPUT_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '<span class="text-danger">*</span>';
 	$vat_input_block = '<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '<span class="text-danger">*</span></label>
 	<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" required="required" value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/>';
 } else {
+	$subpartArray['###LABEL_INPUT_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
 	$vat_input_block = '<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
 <input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/>';
 }
@@ -694,6 +696,7 @@ if ($this->ms['MODULES']['ADMIN_COC_ID_FIELD_REQUIRED']) {
 	$coc_input_block.='<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
 }
 
+$subpartArray['###VALUE_INPUT_VAT_ID###']=htmlspecialchars($this->post['tx_multishop_vat_id']);
 $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
@@ -1062,8 +1065,8 @@ switch ($_REQUEST['action']) {
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
 				$params=array(
-						'markerArray'=>&$markerArray,
-						'user'=>&$user
+					'markerArray'=>&$markerArray,
+					'user'=>&$user
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

@@ -834,7 +834,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['payment_method']='nopm';
 		$row['payment_method_label']='Empty payment method';
 	}
-	$payment_methods[$row['payment_method']]=$row['payment_method_label'].($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'];
 }
 $payment_method_input='';
 $payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method">'."\n";
@@ -860,7 +860,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['shipping_method']='nosm';
 		$row['shipping_method_label']='Empty shipping method';
 	}
-	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
+	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'];
 }
 $shipping_method_input='';
 $shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method">'."\n";

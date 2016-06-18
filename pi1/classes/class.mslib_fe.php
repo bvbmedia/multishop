@@ -685,6 +685,8 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
+		//echo $str;
+		//die();
 		//var_dump($str);
 		//die();
 		if ($this->conf['debugEnabled']=='1') {
@@ -6073,6 +6075,15 @@ class mslib_fe {
 				$loadFromPids[]=$this->showCatalogFromPage;
 			}
 		}
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'])) {
+			$params=array(
+					'loadFromPids'=>&$loadFromPids
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		if (is_array($loadFromPids) and count($loadFromPids)) {
 			foreach ($loadFromPids as $loadFromPid) {
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.id,cd.name,cd.content,c.hash,c.type', // SELECT ...
@@ -9835,21 +9846,27 @@ class mslib_fe {
 			$cu_thousands_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'];
 			$cu_decimal_point=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
 		}
+		$prefix='';
+		if (!empty($amount) && strpos($amount, '-')!==false) {
+			$amount=str_replace('-', '', $amount);
+			$prefix='-';
+		}
 		$amount=number_format($amount, 2, '.', '');
 		$array=explode('.', $amount);
 		if ($array[0]>0) {
-			$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
+			$array[0]=$prefix.number_format($array[0], 0, '', $cu_thousands_point);
 		}
-		$output='<span class="amount">';
+		$output='<span class="amountWrapper">';
 		if ($include_currency_symbol) {
 			if ($customer_currency) {
-				$output.=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'];
+				$output.='<span class="currencySymbolLeft">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'].'</span>';
 			} else {
-				$output.=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
+				$output.='<span class="currencySymbolLeft">'.$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'].'</span>';
 			}
 			//TODO: 2015-01-03 disabled calling this method, because we use the symbol directly from static_currencies table
 			//$output.=mslib_fe::currency(1, $customer_currency);
 		}
+		$output.='<span class="amount">';
 		if ($cropZeroDecimals) {
 			if ($array[1]=='00') {
 				$array[1]='-';
@@ -9862,6 +9879,7 @@ class mslib_fe {
 		if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right']) {
 			$output.='<span class="currencySymbolRight">'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_right'].'</span>';
 		}
+		$output.='</span>';
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
 			$params=array(

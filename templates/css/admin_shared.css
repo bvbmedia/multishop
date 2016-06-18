@@ -198,3 +198,10 @@ td.cellAction { white-space:nowrap; }
 .admin_menu > a:hover,
 .admin_menu > a:focus { color:#000; transition:color .5s; }
 .admin_menu > a:first-child { padding-right:5px; }
+
+.cellNoWrap { white-space:nowrap; }
+.cellFluid { width:90%; }
+.cellFixed { min-width:20px; }
+
+.from-date-field > label,
+.till-date-field > label { width:50px; }

@@ -1822,7 +1822,7 @@ if (is_numeric($this->get['orders_id'])) {
 							// products status col
 							$order_products_body_data['products_status']['align']='center';
 							$order_products_body_data['products_status']['class']='cellStatus';
-							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
+							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
                             <option value="">'.$this->pi_getLL('choose').'</option>';
 							if (is_array($all_orders_status)) {
 								foreach ($all_orders_status as $item) {
@@ -2017,7 +2017,7 @@ if (is_numeric($this->get['orders_id'])) {
 							// products status col
 							$order_products_body_data['products_status']['align']='center';
 							$order_products_body_data['products_status']['class']='cellStatus';
-							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
+							$order_products_body_data['products_status']['value']='<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
                             <option value="">'.$this->pi_getLL('choose').'</option>';
 							if (is_array($all_orders_status)) {
 								foreach ($all_orders_status as $item) {
@@ -3793,7 +3793,7 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                     // update the hidden excl vat
                     //o.parent().next().next().first().children().val(original_val);
-                    $(o).parentsUntil(\'msAttributesField\').next().next().first().children().val(original_val);
+                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
                 } else {
                     $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function (json) {
                         if (json && json.price_excluding_tax) {
@@ -3830,7 +3830,7 @@ if (is_numeric($this->get['orders_id'])) {
                     // update the excl. vat
                     $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
                     // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
+                    $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
                 }
             }
         }

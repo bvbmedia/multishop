@@ -129,14 +129,14 @@ function productPrice(to_include_vat, o, type) {
     } else {
         if (to_include_vat) {
             // update the incl. vat
-			$(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
+            $(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
             // update the hidden excl vat
-			$(o).parentsUntil('.msAttributesField').parent().next().next().first().children().val(0);
+            $(o).parentsUntil('msAttributesField').next().next().first().children().val(0);
         } else {
             // update the excl. vat
-			$(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
+            $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
             // update the hidden excl vat
-			$(o).parentsUntil('.msAttributesField').parent().next().next().first().children().val(0);
+            $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(0);
         }
     }
 }

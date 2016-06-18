@@ -59,6 +59,9 @@ if (count($cart['last_visited'])) {
 		$products=$pageset['products'];
 		$no_content=false;
 		if ($pageset['total_rows']>0) {
+			// disable the order by and results limit dropdown
+			$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']=0;
+			$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM']=0;
 			if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
 				die('error in PRODUCTS_LISTING_TYPE value');
 			} else {
@@ -83,7 +86,7 @@ if (count($cart['last_visited'])) {
 		} else {
 			$this->no_database_results=1;
 			if (!$this->hideIfNoResults) {
-				//$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_new_products_found_heading').'</h2></div>'."\n";			
+				//$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_new_products_found_heading').'</h2></div>'."\n";
 				//$content.='<p>'.$this->pi_getLL('no_new_products_found_description').'</p>'."\n";
 			}
 		}
