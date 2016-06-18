@@ -140,7 +140,7 @@ if (is_numeric($this->get['orders_id'])) {
 									if (isset($this->post['product_discount_percentage']) && is_numeric($this->post['product_discount_percentage']) && $this->post['product_discount_percentage']>0) {
 										$updateArray['discount_percentage'] = $this->post['product_discount_percentage'];
 										$discount_amount = ($this->post['product_price']*$this->post['product_discount_percentage']) / 100;
-										$updateArray['discount_amount'] = $discount_amount;
+										$updateArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
 									} else if (isset($this->post['product_discount_amount']) && !empty($this->post['product_discount_amount'])) {
 										$updateArray['discount_amount'] = $this->post['product_discount_amount'];
 										$discount_percentage = ($this->post['product_discount_amount'] / $this->post['product_price']) * 100;
@@ -273,6 +273,18 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 									$insertArray['products_description']=$this->post['manual_order_products_description'];
+								}
+								// disocunt update
+								if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+									if (isset($this->post['manual_product_discount_percentage']) && is_numeric($this->post['manual_product_discount_percentage']) && $this->post['manual_product_discount_percentage']>0) {
+										$insertArray['discount_percentage'] = $this->post['manual_product_discount_percentage'];
+										$discount_amount = ($this->post['manual_product_price']*$this->post['manual_product_discount_percentage']) / 100;
+										$insertArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
+									} else if (isset($this->post['manual_product_discount_amount']) && !empty($this->post['manual_product_discount_amount'])) {
+										$insertArray['discount_amount'] = $this->post['manual_product_discount_amount'];
+										$discount_percentage = ($this->post['manual_product_discount_amount'] / $this->post['manual_product_price']) * 100;
+										$insertArray['discount_percentage'] = $discount_percentage;
+									}
 								}
 								$insertArray['products_price']=$this->post['manual_product_price'];
 								$insertArray['final_price']=$this->post['manual_product_price'];
@@ -1883,8 +1895,13 @@ if (is_numeric($this->get['orders_id'])) {
 							<select name="product_discount_percentage" id="product_discount_percentage" style="width:210px">
 								<option value="">'.$this->pi_getLL('use_discount_amount').'</option>
 							';
+							$selected_percentage=str_replace('.00', '', $order['discount_percentage']);
 							for ($p=1; $p<=100; $p++) {
-								$percentage_sb.='<option value="'.$p.'">'.$p.'%</option>';
+								if ($selected_percentage==$p) {
+									$percentage_sb .= '<option value="' . $p . '" selected="selected">' . $p . '%</option>';
+								} else {
+									$percentage_sb .= '<option value="' . $p . '">'. $p . '%</option>';
+								}
 							}
 							$percentage_sb.='</select>
 							</div>';
@@ -2577,7 +2594,20 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
 					$order_products_body_data['products_discount']['class']='cellDiscount';
-					$order_products_body_data['products_discount']['value']=$this->pi_getLL('discount') . ' add new input';
+					// add manual product korting
+					$percentage_sb='<div class="discount_percentage_wrapper">
+							<select name="manual_product_discount_percentage" id="manual_product_discount_percentage" style="width:210px">
+								<option value="">'.$this->pi_getLL('use_discount_amount').'</option>
+							';
+					$selected_percentage=str_replace('.00', '', $order['discount_percentage']);
+					for ($p=1; $p<=100; $p++) {
+						$percentage_sb .= '<option value="' . $p . '">'. $p . '%</option>';
+					}
+					$percentage_sb.='</select>
+							</div>';
+					$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="0"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
 				}
 				// product final price col
 				$order_products_body_data['products_final_price']['value']='';
@@ -3380,6 +3410,40 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                     });
                 }
+                var select2_discount = function(selector_str) {
+                    $(selector_str).select2().on("select2-selecting", function(e) {
+                    	var product_price=0;
+                    	var manual_product=false;
+                    	var next_cell=$(selector_str).parentsUntil("td").parent().next();
+                    	if ($("#product_price").length) {
+                    		product_price=$("#product_price").val();
+                    	} else if ($("#manual_product_price").length) {
+                    		manual_product=true;
+                    		product_price=$("#manual_product_price").val();
+                    	}
+						if (e.object.id!=\'\' && parseInt(product_price)>0) {
+							jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_product_discount_price').'",{discount_percentage: e.object.id, current_price: product_price, qty: 1}, function(d){
+								console.log(d);
+								if (d.status==\'OK\') {
+									if (!manual_product) {
+										$(next_cell).empty();
+										$(next_cell).html(d.price_after_discount_format);
+										$("#display_name_discount_excluding_vat").val(d.discount_amount);
+										$("#product_discount_amount").val(d.discount_amount);
+									} else {
+										if (!$(next_cell).hasClass("cellPrice")) {
+											$(next_cell).addClass("cellPrice")
+										}
+										$(next_cell).empty();
+										$(next_cell).html(d.price_after_discount_format);
+										$("#manual_display_name_discount_excluding_vat").val(d.discount_amount);
+										$("#manual_product_discount_amount").val(d.discount_amount);
+									}
+								}
+                            });
+						}
+                    });
+                }
                 // eof autocomplete for option
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
                 select2_cn("#categories_filter_id", "categories", "categories_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'");
@@ -3391,7 +3455,7 @@ if (is_numeric($this->get['orders_id'])) {
                     var select2_element_id="#" + $(v).attr("id");
                     select2_values_sb(select2_element_id, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 });
-                $("#product_discount_percentage").select2();
+                select2_discount("#product_discount_percentage");
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
                     var d = new Date();
@@ -3728,6 +3792,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $(".order_product_action").hide();
                 select2_cn("#categories_filter_id", "categories", "categories_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'");
                 select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+                select2_discount("#manual_product_discount_percentage");
             });';
 		}
 		$content.='
