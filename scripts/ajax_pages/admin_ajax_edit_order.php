@@ -275,6 +275,16 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 			$from[]='tx_multishop_products_to_categories p2c';
 			$where[]='p2c.categories_id=\''.$categories_id.'\' and p2c.is_deepest=1 and p2c.products_id=p.products_id';
 		}
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsFilterPostProc'])) {
+			$params = array(
+				'from' => &$from,
+				'where' => &$where
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsFilterPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
 			implode(', ', $from), // FROM ...
 			implode(' and ', $where), // WHERE.
