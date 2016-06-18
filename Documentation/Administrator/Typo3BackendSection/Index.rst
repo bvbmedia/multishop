@@ -29,6 +29,15 @@ You can do this by adding the following configuration to the php.ini file (.htac
 
 - error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
 
+In the install tool you may also need to set the error reporting to:
+
+'systemLogLevel' => '4',
+'systemLog' => '',
+'errorHandlerErrors' => '20480',
+'exceptionalErrors' => '20480',
+'syslogErrorReporting' => '20480',
+'belogErrorReporting' => '20480',
+
 If you run your TYPO3 web site on a shared host and you are not able to adjust the server settings you can try to add the following lines to the .htaccess file that is located in the root folder of the web site:
 
 - php_value max_execution_time 240
