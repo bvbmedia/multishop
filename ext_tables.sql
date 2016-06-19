@@ -1114,6 +1114,7 @@ CREATE TABLE `tx_multishop_products_to_categories` (
  `crumbar_identifier` varchar(250) default '',
  `node_id` int(11) default '0',
  `is_deepest` tinyint(1) default '0',
+ `default_path` tinyint(1) default '0',
  PRIMARY KEY (`products_to_categories_id`),
  UNIQUE KEY `p2c_unique_key` (`products_id`,`categories_id`,`page_uid`,`node_id`,`is_deepest`,`crumbar_identifier`),
  KEY `categories_id` (`categories_id`),
@@ -1123,7 +1124,8 @@ CREATE TABLE `tx_multishop_products_to_categories` (
  KEY `sort_order` (`sort_order`),
  KEY `crumbar_identifier` (`crumbar_identifier`),
  KEY `node_id` (`node_id`),
- KEY `is_deepest` (`is_deepest`)
+ KEY `is_deepest` (`is_deepest`),
+ KEY `default_path` (`default_path`)
 );
 
 CREATE TABLE `tx_multishop_categories_to_categories` (

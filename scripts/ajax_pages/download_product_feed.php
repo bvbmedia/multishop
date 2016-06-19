@@ -326,6 +326,13 @@ if ($this->get['feed_hash']) {
 							$records[]=$row;
 						} else {
 							$product=mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
+							if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+								$product_path=mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+								if (is_array($product_path) && count($product_path)) {
+									$product['categories_id']=$product_path['node_id'];
+									$product['products_to_categories_id']=$product_path['products_to_categories_id'];
+								}
+							}
 							if ($product['products_id']) {
 								// TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
 								//if (!$this->ms['MODULES']['FLAT_DATABASE']) {

@@ -250,6 +250,9 @@ jQuery(document).ready(function($) {
 		var removed_li_id="#products_info_shops'.$this->shop_pid.'_" + e.val;
 		$(removed_li_id).remove();
 		' : '').'
+		if ($("#default_path_categories_id").length && e.choice.id==$("#default_path_categories_id").select2("val")) {
+			$("#default_path_categories_id").select2("val", "");
+		}
 	}).on("select2-selecting", function(e) {
 		'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
 		var page_uid=\''.$this->shop_pid.'\';
@@ -293,6 +296,12 @@ jQuery(document).ready(function($) {
 		}
 		' : '').'
 	});
+	'.($this->get['action']=='edit_product' && $this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']>0 ? '
+	$(\'#default_path_categories_id\').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+	});
+	' : '').'
 	$(\'#manufacturers_id_s2\').select2({
 		placeholder: \''.$this->pi_getLL('admin_choose_manufacturer').'\',
 		dropdownCssClass: "", // apply css that makes the dropdown taller
@@ -1248,6 +1257,7 @@ if ($this->post) {
 								// update the counterpart relation
 								$updateArray=array();
 								$updateArray['related_to']=$catId;
+
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
@@ -2208,6 +2218,19 @@ if ($this->post) {
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
+			}
+		}
+		if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && is_numeric($this->get['pid']) && $this->get['pid']>0 && isset($this->post['default_path_categories_id'])) {
+			$updatePreviousValue=array();
+			$updatePreviousValue['default_path']=0;
+			$queryProduct=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\''.$this->get['pid'].'\'', $updatePreviousValue);
+			$GLOBALS['TYPO3_DB']->sql_query($queryProduct);
+			// update the new one
+			if (is_numeric($this->post['default_path_categories_id'])) {
+				$updateArray=array();
+				$updateArray['default_path']=1;
+				$queryProduct=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$this->post['default_path_categories_id'].'\' and products_id=\''.$this->get['pid'].'\'', $updateArray);
+				$GLOBALS['TYPO3_DB']->sql_query($queryProduct);
 			}
 		}
 		if ($_REQUEST['action']=='edit_product') {
@@ -4007,6 +4030,40 @@ if ($this->post) {
 		}
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$old_current_categories_id; //$product['categories_id'];
 		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />';
+		$subpartArray['###INPUT_CATEGORY_TREE_DEFAULT_PATH###']='ssss';
+
+		if ($this->get['action']=='edit_product' && $this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']>0) {
+			$product_path=mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+			$default_path=0;
+			if (is_array($product_path) && count($product_path)) {
+				$default_path=$product_path['node_id'];
+			}
+			$p2c_cats=explode(',', $old_current_categories_id);
+			$default_path_sb='<select name="default_path_categories_id" id="default_path_categories_id" class="categoriesIdSelect2BigDropWider">';
+			$default_path_sb.='<option value="">'.$this->pi_getLL('choose').'</option>';
+			foreach ($p2c_cats as $p2c_cat) {
+				if ($p2c_cat>0) {
+					$cats=mslib_fe::Crumbar($p2c_cat, '', array());
+					$cats=array_reverse($cats);
+					$catpath=array();
+					foreach ($cats as $cat_idx=>$cat) {
+						$catpath[]=$cat['name'];
+					}
+					if ($default_path>0 && $p2c_cat==$default_path) {
+						$default_path_sb .= '<option value="' . $p2c_cat . '" selected="selected">' . implode(' > ', $catpath) . '</option>';
+					} else {
+						$default_path_sb .= '<option value="' . $p2c_cat . '">' . implode(' > ', $catpath) . '</option>';
+					}
+				}
+			}
+			$default_path_sb.='</select>';
+			$subpartArray['###INPUT_CATEGORY_TREE_DEFAULT_PATH###']='<div class="form-group" id="msEditProductInputCategoryDefaultPath">
+        		<label for="default_path_categories_id" class="col-md-2 control-label">'.$this->pi_getLL('category_default_path').'</label>
+        		<div class="col-md-10">
+        		'.$default_path_sb.'
+				</div>
+			</div>';
+		}
 		$subpartArray['###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###']='';
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;

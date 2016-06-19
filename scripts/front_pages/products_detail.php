@@ -15,6 +15,12 @@ if (is_numeric($this->get['products_id'])) {
 	$relation_cat=mslib_fe::getProductToCategoriesArray($this->get['products_id']);
 	if (count($relation_cat)>1) {
 		$primary_cat=$relation_cat[0];
+		if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+			$product_path=mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+			if (is_array($product_path) && count($product_path)) {
+				$primary_cat=$product_path['node_id'];
+			}
+		}
 		// get all cats to generate multilevel fake url
 		$level=0;
 		$cats=mslib_fe::Crumbar($primary_cat);
