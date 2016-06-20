@@ -4030,8 +4030,7 @@ if ($this->post) {
 		}
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$old_current_categories_id; //$product['categories_id'];
 		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />';
-		$subpartArray['###INPUT_CATEGORY_TREE_DEFAULT_PATH###']='ssss';
-
+		$subpartArray['###INPUT_CATEGORY_TREE_DEFAULT_PATH###']='';
 		if ($this->get['action']=='edit_product' && $this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']>0) {
 			$product_path=mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
 			$default_path=0;
