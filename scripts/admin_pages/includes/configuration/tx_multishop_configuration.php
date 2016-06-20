@@ -2416,6 +2416,17 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Enable the default crumpath for products have multiple categories',
+	'configuration_key'=>'ENABLE_DEFAULT_CRUMPATH',
+	'configuration_value'=>'0',
+	'description'=>'Enable the default crumpath for products have multiple categories',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

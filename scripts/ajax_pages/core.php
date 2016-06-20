@@ -584,7 +584,7 @@ switch ($this->ms['page']) {
 					$categories_tree=array();
 					mslib_fe::getSubcatsArray($categories_tree, '', $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//level 0
-					foreach ($categories_tree[0] as $category_tree_0) {
+					foreach ($categories_tree[$categoriesStartingPoint] as $category_tree_0) {
 						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
 						if (is_array($categories_tree[$category_tree_0['id']])) {
 							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);

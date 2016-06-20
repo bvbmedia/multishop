@@ -1305,6 +1305,7 @@
             <label index="admin_are_you_sure_you_want_to_sort_products_on_deepest_categories_relation_desc">Are you sure want to sort products on deepest categories relation descending</label>
             <label index="update">Update</label>
             <label index="admin_update_close">Update and close</label>
+            <label index="category_default_path">Category default path</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
