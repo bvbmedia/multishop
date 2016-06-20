@@ -642,6 +642,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				if ($send_mail) {
 					if ($user['email']) {
+						if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0) {
+							$filterInvoice=array();
+							$filterInvoice[]='orders_id='.$order['orders_id'];
+							$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filterInvoice,'','id desc');
+							$pdfFileName='invoice_'.$invoices['invoice_id'].'_'.$invoices['hash'].'.pdf';
+							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+							$mail_attachment[]=$pdfFilePath;
+						}
 						mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 					}
 					if ($copy_to_merchant) {
