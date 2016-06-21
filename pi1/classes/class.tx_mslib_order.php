@@ -646,7 +646,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$filterInvoice=array();
 							$filterInvoice[]='orders_id='.$order['orders_id'];
 							$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filterInvoice,'','id desc');
-							$pdfFileName='invoice_'.$invoices['invoice_id'].'_'.$invoices['hash'].'.pdf';
+							$pdfFileName='invoice_'.$invoices[0]['invoice_id'].'_'.$invoices[0]['hash'].'.pdf';
 							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
 							$mail_attachment[]=$pdfFilePath;
 						}
