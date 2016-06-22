@@ -647,7 +647,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$filterInvoice[]='orders_id='.$order['orders_id'];
 							$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filterInvoice,'','id desc');
 							$invoice=$invoices[0];
-							$pdfFileName='email_attachment_invoice_'.$invoice['invoice_id'].'_'.$invoice['hash'].'.pdf';
+							$pdfFileName=$invoice['invoice_id'].'_'.$invoice['orders_id'].'.pdf';
 							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$pdfFileName;
 							// generate the invoice PDF
 							// Get Language code (ie nl, en, de)

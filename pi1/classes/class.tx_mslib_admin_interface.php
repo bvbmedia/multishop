@@ -479,7 +479,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							$row[$col]=$valArray['title'];
 							break;
 					}
-					$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
+					$tdClass=array();
+					if ($valArray['align']) {
+						$tdClass[]='text-'.$valArray['align'];
+					}
+					if ($valArray['nowrap']) {
+						$tdClass[]='cellNoWrap';
+					}
+					if ($valArray['class']) {
+						$tdClass[]=$valArray['class'];
+					}
+					$tableContent.='<th'.(count($tdClass)? ' class="'.implode(' ',$tdClass).'"':'').'>'.$row[$col].'</th>';
+					// $tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 				}
 				$tableContent.='</tr></tfoot>';
 			}
