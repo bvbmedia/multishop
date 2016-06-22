@@ -651,8 +651,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$pdfFileName='invoice_'.$invoice['invoice_id'].'_'.$invoice['hash'].'.pdf';
 							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
 							// generate the invoice PDF
-							$pdf_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
-							$pdfContent=mslib_fe::file_get_contents($pdf_link);
+							// Get Language code (ie nl, en, de)
+							$language_code = mslib_befe::getLanguageIso2ByLanguageUid($order['language_id']);
+							$language_code = strtolower($language_code);
+							// Download invoice in the language of the order
+							$invoice_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash'].'&tx_multishop_pi1[forceRecreate]=1&language='.$language_code));
+
+
 							$mail_attachment[]=$pdfFilePath;
 						}
 						mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
