@@ -651,7 +651,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$pdfFileName='invoice_'.$invoice['invoice_id'].'_'.$invoice['hash'].'.pdf';
 							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
 							// generate the invoice PDF
-							$pdf_link=mslib_fe::$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+							$pdf_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 							$pdfContent=mslib_fe::file_get_contents($pdf_link);
 							$mail_attachment[]=$pdfFilePath;
 						}
