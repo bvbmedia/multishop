@@ -138,7 +138,7 @@ foreach ($tmporders as $order) {
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
 	//$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
-	$markerArray['ORDER_CREATE_DATE']='<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn-xs" data-title="'.htmlspecialchars(strftime("%a. %x<br/>%X", $order['crdate'])).'" data-original-title="" title="">'.strftime("%x", $order['crdate']).'</a>';
+	$markerArray['ORDER_CREATE_DATE']='<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="'.htmlspecialchars(strftime("%a. %x<br/>%X", $order['crdate'])).'" data-original-title="" title="">'.strftime("%x", $order['crdate']).'</a>';
 
 
 	$markerArray['ORDER_GRAND_TOTAL']=mslib_fe::amount2Cents($order[$grandTotalColumnName], 0);
@@ -148,7 +148,7 @@ foreach ($tmporders as $order) {
 
 	$markerArray['ORDER_LAST_MODIFIED']='';
 	if ($order['status_last_modified']) {
-		$markerArray['ORDER_LAST_MODIFIED']='<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn-xs" data-title="'.htmlspecialchars(strftime("%a. %x<br/>%X", $order['status_last_modified'])).'" data-original-title="" title="">'.strftime("%x", $order['status_last_modified']).'</a>';
+		$markerArray['ORDER_LAST_MODIFIED']='<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="'.htmlspecialchars(strftime("%a. %x<br/>%X", $order['status_last_modified'])).'" data-original-title="" title="">'.strftime("%x", $order['status_last_modified']).'</a>';
 	}
 
 	$markerArray['ORDER_PAID_STATUS']=$paid_status;
