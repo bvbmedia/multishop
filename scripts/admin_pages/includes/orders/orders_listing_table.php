@@ -234,9 +234,11 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link='a';
 }
 $subpartArray['###HEADER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-$subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('orders_id');
+//$subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('orders_id');
+$subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('id');
 $subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-$subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('orders_id');
+//$subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('orders_id');
+$subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('id');
 $master_shop_header='';
 if ($this->masterShop) {
 	$master_shop_header='<th width="75" class="cell_store">'.$this->pi_getLL('store').'</th>';
