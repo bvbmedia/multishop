@@ -1012,13 +1012,6 @@ if (!$skipMultishopUpdates) {
 				break;
 		}
 	}
-	$str="select `page_uid` from tx_multishop_coupons limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE `tx_multishop_coupons` ADD `page_uid` int(11) default '0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
 	$str="select `discount_percentage` from tx_multishop_orders_products limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -1074,6 +1067,66 @@ if (!$skipMultishopUpdates) {
 		$str="ALTER TABLE `tx_multishop_orders` ADD `delivery_coc_id` varchar(150) default ''";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+	}
+	$str="select `building` from fe_users limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `fe_users` ADD `building` varchar(150) default '', ADD KEY `building` (`building`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `region` from fe_users limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `fe_users` ADD `region` varchar(150) default '', ADD KEY `region` (`region`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `default_path` from tx_multishop_products_to_categories limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products_to_categories` ADD `default_path` tinyint(1) default '0', ADD KEY `default_path` (`default_path`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	} else {
+		$table='tx_multishop_products_to_categories';
+		$str="describe `".$table."`";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			switch($row['Field']) {
+				case 'default_path':
+					if (!$row['Key']) {
+						$str2="ALTER TABLE  `tx_multishop_products_to_categories` ADD INDEX (  `default_path` ) ;";
+						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+						$messages[]=$str2;
+					}
+					break;
+			}
+		}
+
+	}
+	$str="select `page_uid` from tx_multishop_coupons limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_coupons` ADD `page_uid` int(11) default '0', ADD KEY `page_uid` (`page_uid`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	} else {
+		$table='tx_multishop_coupons';
+		$str="describe `".$table."`";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			switch($row['Field']) {
+				case 'page_uid':
+					if (!$row['Key']) {
+						$str2="ALTER TABLE  `tx_multishop_coupons` ADD INDEX (  `page_uid` ) ;";
+						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+						$messages[]=$str2;
+					}
+					break;
+			}
+		}
+
 	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL

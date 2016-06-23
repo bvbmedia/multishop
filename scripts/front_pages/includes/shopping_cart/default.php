@@ -287,8 +287,10 @@ if ($count_product>0) {
 		$markerArray['PRODUCT_ATTRIBUTES']=$output['product_attributes'];
 		$markerArray['PRODUCT_QTY']=$output['product_qty'];
 		$markerArray['PRODUCT_LINK_DELETE']=$output['product_link_delete'];
+		$markerArray['PRODUCT_CART_ITEM_ID']=$shopping_cart_item;
 		$markerArray['LABEL_REMOVE_PRODUCT']=$output['label_remove_product'];
 		$markerArray['PRODUCT_FINAL_PRICE']=$output['product_final_price'];
+
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'])) {
 			$params=array(

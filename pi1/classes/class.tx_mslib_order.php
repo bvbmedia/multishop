@@ -642,7 +642,26 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				if ($send_mail) {
 					if ($user['email']) {
+						if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0) {
+							$filterInvoice=array();
+							$filterInvoice[]='orders_id='.$order['orders_id'];
+							$invoices=mslib_befe::getRecords('','tx_multishop_invoices','',$filterInvoice,'','id desc');
+							$invoice=$invoices[0];
+							$pdfFileName=$invoice['invoice_id'].'_'.$invoice['orders_id'].'.pdf';
+							$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$pdfFileName;
+							// generate the invoice PDF
+							// Get Language code (ie nl, en, de)
+							$language_code = mslib_befe::getLanguageIso2ByLanguageUid($order['language_id']);
+							$language_code = strtolower($language_code);
+							// Download invoice in the language of the order
+							$invoice_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash'].'&tx_multishop_pi1[forceRecreate]=1&language='.$language_code));
+							file_put_contents($pdfFilePath, $invoice_data);
+							$mail_attachment[]=$pdfFilePath;
+						}
 						mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+						if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0 && file_exists($pdfFilePath)) {
+							unlink($pdfFilePath);
+						}
 					}
 					if ($copy_to_merchant) {
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {

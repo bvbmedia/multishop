@@ -158,8 +158,8 @@ td.cellAction { white-space:nowrap; }
 .alert h3:last-child { margin-bottom:0; }
 
 /* blockUI overrule */
-.blockUI.blockOverlay { z-index:16000 !important; }
-.blockUI.blockMsg.blockPage { z-index:16001 !important; }
+.blockUI.blockOverlay { z-index:8888890 !important; }
+.blockUI.blockMsg.blockPage { z-index:8888891 !important; }
 .blockUI ul.multishop_block_message { margin-bottom:0; padding-left:0; list-style:none; }
 .blockUI ul.multishop_block_message li { background:none; margin:0; padding:0; }
 
@@ -205,3 +205,6 @@ td.cellAction { white-space:nowrap; }
 
 .from-date-field > label,
 .till-date-field > label { width:50px; }
+
+/* #s2id_commission_customer_id.select2-container-active { width:600px !important; }
+.select2-results .select2-result-label { line-height:15px; } */

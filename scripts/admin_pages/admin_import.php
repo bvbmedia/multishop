@@ -1751,6 +1751,10 @@ if ($this->post['action']=='category-insert') {
 						}
 					}
 					if ($item['category_group'] and $this->post['input'][$flipped_select['category_group']]) {
+						if ($this->ms['target-cid']) {
+							// Sometimes category_group is mixed with the standard category level 1-5 mapping. We wanna keep the normal category reference so we copy it first
+							$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
+						}
 						// for supporting multiple paths you have to use aux field like this:
 						// example multiple groups in column:
 						// maincat>subcat|maincat>subcat2

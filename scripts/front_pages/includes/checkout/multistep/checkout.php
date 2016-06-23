@@ -8,14 +8,13 @@ if (!mslib_fe::loggedin() and $this->ms['MODULES']['DISABLE_CHECKOUT_FOR_GUESTS'
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['login_pid']));
 	exit();
 }
-//$this->ms['page']='checkout';
-$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-$count_products=count($cart['products']);
 // minimum order amount
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
+$cart=$mslib_cart->getCart();
 $cart_total_amount=$mslib_cart->countCartTotalPrice(0);
+$count_products=count($cart['products']);
 if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {
 	if ($cart_total_amount<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
 		// redirect to shopping cart page

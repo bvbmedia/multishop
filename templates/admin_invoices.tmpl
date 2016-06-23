@@ -96,13 +96,13 @@ jQuery(document).ready(function ($) {
                             <div class="col-md-4 formfield-wrapper">
                                 <label>###LABEL_FILTER_BY_DATE###</label>
                                 <div class="form-group">
-                                    <div class="form-inline">
+                                    <div class="form-inline from-date-field">
                                         <label for="order_date_from">###LABEL_DATE_FROM###</label>
                                         <input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-inline">
+                                    <div class="form-inline till-date-field">
                                         <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
                                         <input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
                                     </div>
@@ -162,74 +162,73 @@ jQuery(document).ready(function ($) {
         <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th class="cellCheckbox">
+                    <th class="cellNoWrap cellCheckbox">
                         <div class="checkbox checkbox-success checkbox-inline">
                             <input type="checkbox" id="check_all_1"><label for="check_all_1"></label>
                         </div>
                     </th>
-                    <th class="cellID"></th>
+                    <th class="cellNoWrap cellID"></th>
                     ###CUSTOM_MARKER_0_HEADER###
-                    <th class="cellID">###HEADER_INVOICES_NUMBER###</th>
-                    <th class="cellID">###HEADER_INVOICES_ORDER_ID###</th>
+                    <th class="cellNoWrap cellID">###HEADER_INVOICES_NUMBER###</th>
+                    <th class="cellNoWrap cellID">###HEADER_INVOICES_ORDER_ID###</th>
                     ###HEADER_MASTER_SHOP###
-                    <th class="cellName">###HEADER_INVOICES_CUSTOMER###</th>
+                    <th class="cellFluid cellName">###HEADER_INVOICES_CUSTOMER###</th>
                     ###CUSTOM_MARKER_1_HEADER###
-                    <th align="right" class="cellDate">###HEADER_INVOICES_ORDER_DATE###</th>
-                    <th width="50">###HEADER_INVOICES_PAYMENT_METHOD###</th>
-                    <th width="50">###HEADER_INVOICES_PAYMENT_CONDITION###</th>
-                    <th class="cellPrice">###HEADER_INVOICES_AMOUNT###</th>
-                    <th align="right" class="cellDate">###HEADER_INVOICES_DATE_LAST_SENT###</th>
-                    <th class="cellStatus">###HEADER_INVOICES_PAID_STATUS###</th>
-                    <th class="cellAction">###HEADER_INVOICES_ACTION###</th>
+                    <th align="right" class="cellNoWrap cellDate">###HEADER_INVOICES_ORDER_DATE###</th>
+                    <th class="cellFixed">###HEADER_INVOICES_PAYMENT_METHOD###</th>
+                    <th class="cellFixed">###HEADER_INVOICES_PAYMENT_CONDITION###</th>
+                    <th class="cellNoWrap cellPrice">###HEADER_INVOICES_AMOUNT###</th>
+                    <th align="right" class="cellNoWrap cellDate">###HEADER_INVOICES_DATE_LAST_SENT###</th>
+                    <th class="cellNoWrap cellStatus">###HEADER_INVOICES_PAID_STATUS###</th>
+                    <th class="cellNoWrap cellAction">###HEADER_INVOICES_ACTION###</th>
                 </tr>
             </thead>
             <tbody>
             <!-- ###INVOICES_LISTING### begin -->
                 <tr>
-                    <td class="cellCheckbox">
+                    <td class="cellNoWrap cellCheckbox">
                         <div class="checkbox checkbox-success checkbox-inline">
                             <input type="checkbox" name="selected_invoices[]" id="checkbox_###INVOICES_INTERNAL_ID###" value="###INVOICES_INTERNAL_ID###"><label for="checkbox_###INVOICES_INTERNAL_ID###"></label>
                         </div>
                     </td>
-                    <td class="cellID">###INVOICE_CTR###</td>
+                    <td class="cellNoWrap cellID">###INVOICE_CTR###</td>
                     ###CUSTOM_MARKER_0_BODY###
-                    <td class="cellID">
-                    	<a href="###DOWNLOAD_INVOICES_URL###" rel="nofollow" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
-                        <a href="###INVOICES_URL###">###INVOICES_ID###</a>
+                    <td class="cellNoWrap cellID">
+                    	<a href="###DOWNLOAD_INVOICES_URL###" rel="nofollow" target="_blank"><i class="fa fa-file-pdf-o"></i></a>&nbsp;&nbsp;&nbsp;<a href="###INVOICES_URL###">###INVOICES_ID###</a>
                     </td>
-                    <td class="cellID"><a href="###ORDER_URL###">###INVOICES_ORDER_ID###</a></td>
+                    <td class="cellNoWrap cellID"><a href="###ORDER_URL###">###INVOICES_ORDER_ID###</a></td>
                     ###MASTER_SHOP###
-                    <td class="cellName">
+                    <td class="cellFluid cellName">
                         <a href="###INVOICES_URL###" target="_blank">###INVOICES_CUSTOMER_NAME###</a>
                     </td>
                     ###CUSTOM_MARKER_1_BODY###
-                    <td align="right" class="cellDate">###INVOICES_ORDER_DATE###</td>
-                    <td align="center" nowrap>###INVOICES_PAYMENT_METHOD###</td>
-                    <td align="center" nowrap>###INVOICES_PAYMENT_CONDITION###</td>
-                    <td class="cellPrice">###INVOICES_AMOUNT###</td>
-                    <td align="right" class="cellDate">###INVOICES_DATE_LAST_SENT###</td>
-                    <td class="cellStatus">###INVOICES_PAID_STATUS###</td>
-                    <td class="cellAction">###INVOICES_ACTION###</td>
+                    <td align="right" class="cellNoWrap cellDate">###INVOICES_ORDER_DATE###</td>
+                    <td align="center" class="cellFixed">###INVOICES_PAYMENT_METHOD###</td>
+                    <td align="center" class="cellFixed">###INVOICES_PAYMENT_CONDITION###</td>
+                    <td class="cellNoWrap cellPrice">###INVOICES_AMOUNT###</td>
+                    <td align="right" class="cellNoWrap cellDate">###INVOICES_DATE_LAST_SENT###</td>
+                    <td class="cellNoWrap cellStatus">###INVOICES_PAID_STATUS###</td>
+                    <td class="cellNoWrap cellAction">###INVOICES_ACTION###</td>
                 </tr>
             <!-- ###INVOICES_LISTING### end -->
             </tbody>
             <tfoot>
                 <tr>
                     <th>&nbsp;</th>
-                    <th class="cellID"></th>
+                    <th class="cellNoWrap cellID"></th>
                     ###CUSTOM_MARKER_0_FOOTER###
-                    <th class="cellID">###FOOTER_INVOICES_NUMBER###</th>
-                    <th class="cellID">###FOOTER_INVOICES_ORDER_ID###</th>
+                    <th class="cellNoWrap cellID">###FOOTER_INVOICES_NUMBER###</th>
+                    <th class="cellNoWrap cellID">###FOOTER_INVOICES_ORDER_ID###</th>
                     ###FOOTER_MASTER_SHOP###
-                    <th class="cellName">###FOOTER_INVOICES_CUSTOMER###</th>
+                    <th class="cellFluid cellName">###FOOTER_INVOICES_CUSTOMER###</th>
                     ###CUSTOM_MARKER_1_FOOTER###
-                    <th align="right" class="cellDate">###FOOTER_INVOICES_ORDER_DATE###</th>
-                    <th width="50">###FOOTER_INVOICES_PAYMENT_METHOD###</th>
-                    <th width="50">###FOOTER_INVOICES_PAYMENT_CONDITION###</th>
-                    <th class="cellPrice">###FOOTER_INVOICES_AMOUNT###</th>
-                    <th align="right" class="cellDate">###FOOTER_INVOICES_DATE_LAST_SENT###</th>
-                    <th class="cellStatus">###FOOTER_INVOICES_PAID_STATUS###</th>
-                    <th class="cellAction">###FOOTER_INVOICES_ACTION###</th>
+                    <th align="right" class="cellNoWrap cellDate">###FOOTER_INVOICES_ORDER_DATE###</th>
+                    <th class="cellFixed">###FOOTER_INVOICES_PAYMENT_METHOD###</th>
+                    <th class="cellFixed">###FOOTER_INVOICES_PAYMENT_CONDITION###</th>
+                    <th class="cellNoWrap cellPrice">###FOOTER_INVOICES_AMOUNT###</th>
+                    <th align="right" class="cellNoWrap cellDate">###FOOTER_INVOICES_DATE_LAST_SENT###</th>
+                    <th class="cellNoWrap cellStatus">###FOOTER_INVOICES_PAID_STATUS###</th>
+                    <th class="cellNoWrap cellAction">###FOOTER_INVOICES_ACTION###</th>
                 </tr>
             </tfoot>
         </table>

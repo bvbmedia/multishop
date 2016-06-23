@@ -461,6 +461,22 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		}
 		$content=json_encode($data);
 		break;
+	// all calculation are based on excluding vat
+	case 'get_product_discount_price':
+		$return_data=array();
+		$discount_percentage=$this->get['discount_percentage'];
+		$current_price=$this->get['current_price'];
+
+		$return_data['status']='NOTOK';
+		if (isset($discount_percentage) && is_numeric($discount_percentage) && $discount_percentage>0 && $current_price>0) {
+			$discount_amount=mslib_fe::taxDecimalCrop(($current_price*$discount_percentage) / 100, 2, false);
+			$return_data['status']='OK';
+			$return_data['discount_amount'] = $discount_amount;
+			$return_data['price_after_discount'] = ($current_price-$discount_amount);
+			$return_data['price_after_discount_format'] = mslib_fe::amount2Cents(($current_price-$discount_amount));
+		}
+		$content=json_encode($return_data);
+		break;
 }
 echo $content;
 exit();

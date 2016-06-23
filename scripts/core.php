@@ -156,6 +156,8 @@ switch ($this->ms['page']) {
 	case 'psp_declineurl':
 	case 'psp_exceptionurl':
 	case 'psp_cancelurl':
+		$cmsPage=$this->ms['page'];
+
 		$array1=array();
 		$array2=array();
 		$order_session=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_order');
@@ -317,14 +319,15 @@ switch ($this->ms['page']) {
 				$params=array(
 					'array1'=>&$array1,
 					'array2'=>&$array2,
-					'order'=>&$order
+					'order'=>&$order,
+					'cmsPage'=>&$cmsPage
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentURLCMSPage'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		}
-		$page=mslib_fe::getCMScontent($this->ms['page'], $GLOBALS['TSFE']->sys_language_uid);
+		$page=mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
 		if ($page[0]['name']) {
 			if (count($array1) && count($array2)) {
 				$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
