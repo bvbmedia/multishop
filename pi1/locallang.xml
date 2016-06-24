@@ -1306,6 +1306,7 @@
             <label index="update">Update</label>
             <label index="admin_update_close">Update and close</label>
             <label index="category_default_path">Category default path</label>
+            <label index="filter_by_paid_date">Filter by paid date</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
