@@ -572,7 +572,7 @@ $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->get['invoice_date_till'];
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###']=$this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###']=($this->cookie['paid_invoices_only'] ? ' checked' : '');
-$subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###']=$this->pi_getLL('show_paid_date_only');
+$subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###']=$this->pi_getLL('filter_by_paid_date');
 $subpartArray['###FILTER_BY_PAID_DATE_ONLY_CHECKED###']=($this->cookie['filter_by_paid_date'] ? ' checked' : '');
 
 $subpartArray['###EXCLUDING_VAT_LABEL###']=htmlspecialchars($this->pi_getLL('excluding_vat'));
