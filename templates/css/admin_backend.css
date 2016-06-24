@@ -529,9 +529,12 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .hidden { display:none; }
 
-.tooltip { text-align:left; }
-.tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
+.tooltip { text-align:left; opacity:1; }
+.tooltip.top .tooltip-arrow { border-top-color:rgba(0,0,0,.2); }
+.tooltip.top .tooltip-arrow:after { position:absolute; left:-5px; bottom:1px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; }
+.tooltip .tooltip-inner { max-width:250px; border:1px solid rgba(0,0,0,.2); background:#fff; font-size:12px; color:#333; text-align:left; padding:10px; border-radius:6px; box-shadow:0 5px 10px rgba(0,0,0,.2); }
 .tooltip .tooltip-inner h3 { font-size:14px; line-height:18px; color:#fff; margin-bottom:5px; }
+.tooltip.in { opacity:1; }
 
 .admin_status_red,
 .admin_status_green { display:inline-block; width:18px; height:18px; margin:0 2px; border-radius:50%; }

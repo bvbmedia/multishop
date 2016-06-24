@@ -28,7 +28,7 @@ $EM_CONF[$_EXTKEY]=array(
 	'author'=>'Bas van Beek (BVB Media)',
 	'author_email'=>'bvbmedia@gmail.com',
 	'author_company'=>'<a href="http://www.bvbmedia.com/?utm_source=Typo3&utm_medium=cpc&utm_term=multishop+module&utm_content=Listing&utm_campaign=Typo3" target="_blank">BVB Media</a>',
-	'version'=>'4.0.3',
+	'version'=>'4.0.4',
 	'constraints'=>array(
 		'depends'=>array(
 			'php'=>'5.3.15-5.6.99',
