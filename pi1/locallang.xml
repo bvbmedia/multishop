@@ -1307,6 +1307,15 @@
             <label index="admin_update_close">Update and close</label>
             <label index="category_default_path">Category default path</label>
             <label index="filter_by_paid_date">Filter by paid date</label>
+            <label index="admin_store_details">Store details</label>
+            <label index="edit_store_address">Edit store details</label>
+            <label index="store_address_record_not_found">Store details record not found</label>
+            <label index="bank_name">Bank name</label>
+            <label index="iban">IBAN</label>
+            <label index="bic">BIC</label>
+            <label index="vat_id2">VAT ID</label>
+            <label index="vat_number">VAT number</label>
+            <label index="paypal_account">PayPal account</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

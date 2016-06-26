@@ -1128,6 +1128,55 @@ if (!$skipMultishopUpdates) {
 		}
 
 	}
+	$str="select `tx_multishop_bank_name` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_bank_name` varchar(127) default '', ADD KEY `tx_multishop_bank_name` (`tx_multishop_bank_name`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_iban` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_iban` varchar(127) default '', ADD KEY `tx_multishop_iban` (`tx_multishop_iban`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_bic` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_bic` varchar(127) default '', ADD KEY `tx_multishop_bic` (`tx_multishop_bic`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_vat_id` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_vat_id` varchar(127) default '', ADD KEY `tx_multishop_vat_id` (`tx_multishop_vat_id`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_vat_number` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_vat_number` varchar(127) default '', ADD KEY `tx_multishop_vat_number` (`tx_multishop_vat_number`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_coc_id` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_coc_id` varchar(127) default '', ADD KEY `tx_multishop_coc_id` (`tx_multishop_coc_id`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select `tx_multishop_paypal_account` from tt_address limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tt_address` ADD `tx_multishop_paypal_account` varchar(127) default '', ADD KEY `tx_multishop_paypal_account` (`tx_multishop_paypal_account`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

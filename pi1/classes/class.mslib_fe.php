@@ -7193,6 +7193,12 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['active']=1;
 				}
 			}
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['label']=$this->pi_getLL('admin_store_details');
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_store_details');
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['class']='fa fa-map-marker';
+			if ($this->get['tx_multishop_pi1']['page_section']=='admin_store_details' || $this->post['tx_multishop_pi1']['page_section']=='admin_store_details') {
+				$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['active']=1;
+			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label']=$this->pi_getLL('admin_shipping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description']=$this->pi_getLL('admin_shipping').'.';
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class']='fa fa-truck';
