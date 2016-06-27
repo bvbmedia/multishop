@@ -1936,6 +1936,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'])) {
 									// hook
 									$params=array(
+										'ms'=>$this->ms,
+										'value'=>$value,
 										'continue_update_stock'=>&$continue_update_stock
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'] as $funcRef) {
