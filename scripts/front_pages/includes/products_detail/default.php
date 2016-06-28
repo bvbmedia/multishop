@@ -308,9 +308,9 @@ if (!$product['products_id']) {
     $tmpoutput = '';
     for ($i = 1; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
         if ($product['products_image' . $i]) {
-            $tmpoutput .= '<li>';
+            $tmpoutput .= '<li><div class="listing_item">';
             $tmpoutput .= '<a id="thumb_' . $i . '" rel="' . $this->conf['jQueryPopup_rel'] . '" class="' . $this->conf['jQueryPopup_rel'] . '" href="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', 'normal') . '"><img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', $this->imageWidthExtraImages) . '"></a>';
-            $tmpoutput .= '</li>';
+            $tmpoutput .= '</div></li>';
         }
     }
     if ($tmpoutput) {
