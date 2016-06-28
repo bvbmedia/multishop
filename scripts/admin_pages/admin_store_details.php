@@ -44,11 +44,8 @@ $enabled_countries=array();
 while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
 	$enabled_countries[]=$row2;
 }
-// load store details
-$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."'";
-$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)) {
-	$rs_store_details=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
+if (is_array($this->tta_shop_info) && $this->tta_shop_info['tt_uid']==$this->conf['tt_address_record_id_store']) {
+	$rs_store_details=$this->tta_shop_info;
 	// build countries selectbox
 	if (count($enabled_countries)==1) {
 		$countries_input='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';

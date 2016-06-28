@@ -9606,7 +9606,7 @@ class mslib_fe {
 		}
 		if (!$CACHE_FRONT_END or ($CACHE_FRONT_END and !$data=$Cache_Lite->get($string))) {
 			if ($type=='shop') {
-				$sql_tt_address="select *, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.deleted=0 and tta.hidden=0 and tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
+				$sql_tt_address="select *, tta.uid as tt_uid, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.deleted=0 and tta.hidden=0 and tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
