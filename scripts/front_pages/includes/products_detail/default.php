@@ -106,11 +106,11 @@ if (!$product['products_id']) {
                 $level++;
             }
             $where = substr($where, 0, (strlen($where) - 1));
-            $where .= '&';
+
         }
         // get all cats to generate multilevel fake url eof
     }
-    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
     $productLink=$link;
     $imgUrl='';
     $output_array['meta']['facebook'] = '';
