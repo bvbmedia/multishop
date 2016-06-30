@@ -106,11 +106,11 @@ if (!$product['products_id']) {
                 $level++;
             }
             $where = substr($where, 0, (strlen($where) - 1));
-            $where .= '&';
+
         }
         // get all cats to generate multilevel fake url eof
     }
-    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
     $productLink=$link;
     $imgUrl='';
     $output_array['meta']['facebook'] = '';
@@ -308,9 +308,9 @@ if (!$product['products_id']) {
     $tmpoutput = '';
     for ($i = 1; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
         if ($product['products_image' . $i]) {
-            $tmpoutput .= '<li>';
+            $tmpoutput .= '<li><div class="listing_item">';
             $tmpoutput .= '<a id="thumb_' . $i . '" rel="' . $this->conf['jQueryPopup_rel'] . '" class="' . $this->conf['jQueryPopup_rel'] . '" href="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', 'normal') . '"><img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', $this->imageWidthExtraImages) . '"></a>';
-            $tmpoutput .= '</li>';
+            $tmpoutput .= '</div></li>';
         }
     }
     if ($tmpoutput) {
