@@ -79,6 +79,12 @@ if ($this->post) {
 		$user['delivery_telephone']=$this->post['telephone'];
 		$user['delivery_mobile']=$this->post['mobile'];
 		$user['delivery_gender']=$this->post['gender'];
+		if (isset($this->post['tx_multishop_pi1']['www'])) {
+			$user['www']=$this->post['tx_multishop_pi1']['www'];
+			if(!strstr($user['www'], "http://") and !strstr($user['www'], "https://")) {
+				$user['www']='http://'.$user['www'];
+			}
+		}
 		// fe user table holds integer as value: 0 is male, 1 is female
 		// but in tt_address its varchar: m is male, f is female
 		switch ($user['delivery_gender']) {
@@ -175,6 +181,7 @@ if ($this->post) {
 		$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
 		$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 		$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
+		$insertArray['www']=$address['www'];
 		$insertArray['date_of_birth']=$address['date_of_birth'];
 		if($_FILES['tx_multishop_pi1']['error']['image']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
 			$name=$address['company'];
@@ -616,6 +623,8 @@ if ($this->post) {
 	if ($user['image']) {
 		$markerArray['###VALUE_LOGO###']='<img src="uploads/pics/'.$user['image'].'" />';
 	}
+	$markerArray['###LABEL_WEBSITE###']=$this->pi_getLL('website','Website');
+	$markerArray['###VALUE_WEBSITE###']=$user['www'];
 	//
 	$newsletter_subscribe='';
 	if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {

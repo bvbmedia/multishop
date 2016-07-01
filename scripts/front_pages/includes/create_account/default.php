@@ -95,6 +95,13 @@ if (mslib_fe::loggedin()) {
 			$mslib_user->setBirthday($this->post['birthday']);
 			$mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
 			$mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
+			if ($this->post['tx_multishop_pi1']['www']) {
+				if(!strstr($this->post['tx_multishop_pi1']['www'], "http://") and !strstr($this->post['tx_multishop_pi1']['www'], "https://")) {
+					$this->post['tx_multishop_pi1']['www']='http://'.$this->post['tx_multishop_pi1']['www'];
+				}
+				$mslib_user->setCustomField('www', $this->post['tx_multishop_pi1']['www']);
+			}
+
 			if($_FILES['tx_multishop_pi1']['error']['image']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
 				$name=$this->post['tx_multishop_pi1']['company'];
 				if (!$name) {
@@ -246,7 +253,8 @@ if (mslib_fe::loggedin()) {
 			$markerArray['###INPUT_COC_BLOCK###']=$coc_input_block;
 
 			$markerArray['###LABEL_LOGO###']=$this->pi_getLL('logo','Logo');
-
+			$markerArray['###LABEL_WEBSITE###']=$this->pi_getLL('website','Website');
+			$markerArray['###VALUE_WEBSITE###']='';
 
 			//
 			// load enabled countries to array
