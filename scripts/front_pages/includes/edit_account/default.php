@@ -176,12 +176,12 @@ if ($this->post) {
 		$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 		$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 		$insertArray['date_of_birth']=$address['date_of_birth'];
-		if($_FILES['tx_multishop_pi1']['error']['logo']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['logo']) {
+		if($_FILES['tx_multishop_pi1']['error']['image']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
 			$name=$address['company'];
 			if (!$name) {
 				$name=$address['name'];
 			}
-			$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['logo']);
+			$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['image']);
 			if($imgtype) {
 				// valid image
 				$ext=image_type_to_extension($imgtype, false);
@@ -196,8 +196,8 @@ if ($this->post) {
 							$i++;
 						}
 					}
-					if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['logo'], $target)) {
-						$insertArray['logo']=$filename;
+					if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['image'], $target)) {
+						$insertArray['image']=$filename;
 					}
 				}
 			}
@@ -613,8 +613,8 @@ if ($this->post) {
 	$markerArray['###VALUE_DELIVERY_EMAIL###']=htmlspecialchars($user['delivery_email']);
 	$markerArray['###LABEL_LOGO###']=$this->pi_getLL('logo','Logo');
 	$markerArray['###VALUE_LOGO###']='';
-	if ($user['logo']) {
-		$markerArray['###VALUE_LOGO###']='<img src="uploads/pics/'.$user['logo'].'" />';
+	if ($user['image']) {
+		$markerArray['###VALUE_LOGO###']='<img src="uploads/pics/'.$user['image'].'" />';
 	}
 	//
 	$newsletter_subscribe='';

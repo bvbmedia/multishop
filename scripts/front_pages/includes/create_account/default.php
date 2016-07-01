@@ -95,12 +95,12 @@ if (mslib_fe::loggedin()) {
 			$mslib_user->setBirthday($this->post['birthday']);
 			$mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
 			$mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
-			if($_FILES['tx_multishop_pi1']['error']['logo']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['logo']) {
+			if($_FILES['tx_multishop_pi1']['error']['image']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
 				$name=$this->post['tx_multishop_pi1']['company'];
 				if (!$name) {
 					$name=$this->post['tx_multishop_pi1']['name'];
 				}
-				$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['logo']);
+				$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['image']);
 				if($imgtype) {
 					// valid image
 					$ext=image_type_to_extension($imgtype, false);
@@ -115,8 +115,8 @@ if (mslib_fe::loggedin()) {
 								$i++;
 							}
 						}
-						if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['logo'], $target)) {
-							$mslib_user->setCustomField('logo', $filename);
+						if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['image'], $target)) {
+							$mslib_user->setCustomField('image', $filename);
 						}
 					}
 				}
