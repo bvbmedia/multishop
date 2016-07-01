@@ -103,9 +103,9 @@ if (mslib_fe::loggedin()) {
 			}
 
 			if($_FILES['tx_multishop_pi1']['error']['image']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
-				$name=$this->post['tx_multishop_pi1']['company'];
+				$name=$this->post['company'];
 				if (!$name) {
-					$name=$this->post['tx_multishop_pi1']['name'];
+					$name=$this->post['name'];
 				}
 				$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['image']);
 				if($imgtype) {
@@ -254,7 +254,7 @@ if (mslib_fe::loggedin()) {
 
 			$markerArray['###LABEL_LOGO###']=$this->pi_getLL('logo','Logo');
 			$markerArray['###LABEL_WEBSITE###']=$this->pi_getLL('website','Website');
-			$markerArray['###VALUE_WEBSITE###']='';
+			$markerArray['###VALUE_WEBSITE###']=$this->post['tx_multishop_pi1']['www'];
 
 			//
 			// load enabled countries to array
