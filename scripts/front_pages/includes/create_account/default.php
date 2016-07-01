@@ -95,6 +95,32 @@ if (mslib_fe::loggedin()) {
 			$mslib_user->setBirthday($this->post['birthday']);
 			$mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
 			$mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
+			if($_FILES['tx_multishop_pi1']['error']['logo']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['logo']) {
+				$name=$this->post['tx_multishop_pi1']['company'];
+				if (!$name) {
+					$name=$this->post['tx_multishop_pi1']['name'];
+				}
+				$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['logo']);
+				if($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if($ext) {
+						$i=0;
+						$filename=mslib_fe::rewritenamein($name).'.'.$ext;
+						$target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+						if(file_exists($target)) {
+							while(file_exists($target)) {
+								$filename=mslib_fe::rewritenamein($name).($i > 0 ? '-'.$i : '').'.'.$ext;
+								$target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+								$i++;
+							}
+						}
+						if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['logo'], $target)) {
+							$mslib_user->setCustomField('logo', $filename);
+						}
+					}
+				}
+			}
 			$erno=$mslib_user->checkUserData();
 			if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER'] && !isset($this->post['tx_multishop_pi1']['create_account_disclaimer'])) {
 				$erno[]=$this->pi_getLL('you_havent_accepted_the_create_account_disclaimer');
@@ -218,6 +244,10 @@ if (mslib_fe::loggedin()) {
 			$markerArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
 			$markerArray['###INPUT_VAT_BLOCK###']=$vat_input_block;
 			$markerArray['###INPUT_COC_BLOCK###']=$coc_input_block;
+
+			$markerArray['###LABEL_LOGO###']=$this->pi_getLL('logo','Logo');
+
+
 			//
 			// load enabled countries to array
 			$str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";

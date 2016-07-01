@@ -176,6 +176,32 @@ if ($this->post) {
 		$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 		$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 		$insertArray['date_of_birth']=$address['date_of_birth'];
+		if($_FILES['tx_multishop_pi1']['error']['logo']==0 && $_FILES['tx_multishop_pi1']['tmp_name']['logo']) {
+			$name=$address['company'];
+			if (!$name) {
+				$name=$address['name'];
+			}
+			$imgtype=exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['logo']);
+			if($imgtype) {
+				// valid image
+				$ext=image_type_to_extension($imgtype, false);
+				if($ext) {
+					$i=0;
+					$filename=mslib_fe::rewritenamein($name).'.'.$ext;
+					$target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+					if(file_exists($target)) {
+						while(file_exists($target)) {
+							$filename=mslib_fe::rewritenamein($name).($i > 0 ? '-'.$i : '').'.'.$ext;
+							$target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+							$i++;
+						}
+					}
+					if(move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['logo'], $target)) {
+						$insertArray['logo']=$filename;
+					}
+				}
+			}
+		}
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
 			$params=array(
@@ -585,6 +611,11 @@ if ($this->post) {
 	$markerArray['###VALUE_DELIVERY_MOBILE###']=htmlspecialchars($user['delivery_mobile']);
 	$markerArray['###LABEL_DELIVERY_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
 	$markerArray['###VALUE_DELIVERY_EMAIL###']=htmlspecialchars($user['delivery_email']);
+	$markerArray['###LABEL_LOGO###']=$this->pi_getLL('logo','Logo');
+	$markerArray['###VALUE_LOGO###']='';
+	if ($user['logo']) {
+		$markerArray['###VALUE_LOGO###']='<img src="uploads/pics/'.$user['logo'].'" />';
+	}
 	//
 	$newsletter_subscribe='';
 	if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
