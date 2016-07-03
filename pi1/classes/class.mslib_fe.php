@@ -2234,8 +2234,11 @@ class mslib_fe {
 			}
 			$mail->Subject=$subject;
 			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
-			self::MsgHTMLwithEmbedImages($mail, $body);
-//			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
+			if (!$options['withoutImageEmbedding']) {
+				self::MsgHTMLwithEmbedImages($mail, $body);
+			} else {
+				$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
+			}
 			if (!isset($options['skipSending'])) {
 				$options['skipSending']=0;
 			}
