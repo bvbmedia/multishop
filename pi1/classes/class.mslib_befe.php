@@ -3730,7 +3730,11 @@ class mslib_befe {
             exit();
         }
     }
-    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '') {
+    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select=array()) {
+        if (!count($select)) {
+            $select=array();
+            $select[]='*';
+        }
         $queryArray = array();
         $queryArray['from'] = $table;
         if (isset($value) && isset($field) && $field != '') {
@@ -3743,7 +3747,7 @@ class mslib_befe {
                 }
             }
         }
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
                 $queryArray['from'], // FROM ...
                 ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
                 $groupBy, // GROUP BY...

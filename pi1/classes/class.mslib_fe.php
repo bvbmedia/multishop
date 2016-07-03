@@ -2162,6 +2162,11 @@ class mslib_fe {
 					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
 				}
 			}
+			if (is_array($options['add_custom_header'])) {
+				foreach ($options['add_custom_header'] as $custom_header) {
+					$mail->AddCustomHeader($custom_header);
+				}
+			}
 			// $mail->IsSendmail(); // telling the class to use SendMail transport
 			if (isset($options['email_tmpl_path']) && $options['email_tmpl_path']) {
 				$template=$this->cObj->fileResource($options['email_tmpl_path']);
