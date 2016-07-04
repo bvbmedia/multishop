@@ -2670,7 +2670,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$totalPrice=$product['total_price'];
 					}
-					$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice); //.$subPrices;
+					$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice) . $subPrices;
 					$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents($product['final_price']); //.$subPrices;
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
 						$params=array(

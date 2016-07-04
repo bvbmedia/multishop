@@ -494,6 +494,9 @@ if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all'
 if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
 }
+if (isset($this->get['paid_invoices_only']) && !$this->get['paid_invoices_only']) {
+	$filter[]="(i.paid='0')";
+}
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->get['country'])."'";
 }
