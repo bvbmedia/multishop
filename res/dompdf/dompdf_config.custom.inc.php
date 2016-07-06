@@ -15,6 +15,7 @@ if ($document_root) {
 } else {
 	die('noway');
 }
+
 define("DOMPDF_UNICODE_ENABLED", true);
 //define("DOMPDF_DPI", 300);
 //define("DOMPDF_ENABLE_PHP", true);
