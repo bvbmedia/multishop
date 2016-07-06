@@ -2,34 +2,32 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$str="select id from tx_multishop_sessions limit 1";
+$str="select products_id from tx_multishop_orders_products where categories_id=0 group by products_id";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-if (!$qry) {
-	$str="CREATE TABLE `tx_multishop_sessions` (
-		  `id` int(11) auto_increment,
-		  `customer_id` int(11) default '0',
-		  `crdate` int(11) default '0',
-		  `session_id` varchar(150) default '',
-		  `page_uid` int(11) default '0',
-		  `ip_address` varchar(150) default '',
-		  `http_host` varchar(150) default '',
-		  `query_string` text,
-		  `http_user_agent` text,
-		  `http_referer` text,
-		  `url` text,
-		  `segment_type` varchar(50) default '',
-		  `segment_id` varchar(50) default '',
-		  PRIMARY KEY (`id`),
-		  KEY `customer_id` (`customer_id`),
-		  KEY `crdate` (`crdate`),
-		  KEY `page_uid` (`page_uid`),
-		  KEY `session_id` (`session_id`),
-		  KEY `ip_address` (`ip_address`),
-		  KEY `http_host` (`http_host`),
-		  KEY `segment_type` (`segment_type`),
-		  KEY `segment_id` (`segment_id`)
-		);";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$messages[]=$str;
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+	$filter=array();
+	$filter[]='is_deepest=1';
+	$record=mslib_befe::getRecord($row['products_id'],'tx_multishop_products_to_categories','products_id',$filter);
+
+	if (is_array($record) && $record['crumbar_identifier']) {
+		$updateArray=array();
+
+		$catIds=explode(',',$record['crumbar_identifier']);
+		foreach ($catIds as $catId) {
+			$counter=0;
+			$category=mslib_befe::getRecord($catId,'tx_multishop_categories_description','categories_id');
+			if ($category['categories_id']) {
+				$updateArray['categories_id_'.$counter]=$category['categories_id'];
+				$updateArray['categories_name_'.$counter]=$category['categories_name'];
+			}
+			$counter++;
+		}
+		$updateArray['categories_id']=$updateArray['categories_id_'.($counter-1)];
+		//$updateArray['categories_name']=$updateArray['categories_name_'.($counter-1)];
+		$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'products_id=\''.$row['products_id'].'\'', $updateArray);
+		$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+		$messages[]=$query2;
+	}
 }
+
 ?>
