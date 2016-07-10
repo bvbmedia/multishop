@@ -924,7 +924,7 @@ if ($this->post and $_FILES) {
 				switch ($key) {
 					case 'file_location':
 						if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
-							// digital download
+							// Digital download
 							$total_files=count($file['tmp_name']);
 							if ($total_files) {
 								for ($i=0; $i<$total_files; $i++) {
@@ -946,7 +946,6 @@ if ($this->post and $_FILES) {
 									}
 								}
 							}
-							// digital download eof
 						}
 						break;
 					default:
