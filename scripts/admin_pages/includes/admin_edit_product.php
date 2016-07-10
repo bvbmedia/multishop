@@ -929,12 +929,20 @@ if ($this->post and $_FILES) {
 							if ($total_files) {
 								for ($i=0; $i<$total_files; $i++) {
 									preg_match("/\.(.*)$/", $file['name'][$i], $tmp);
-									$ext=$tmp[1];
-									$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
-									$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
-									if (move_uploaded_file($file['tmp_name'][$i], $target)) {
-										$update_product_files[$i]['file_label']=$file['name'][$i];
-										$update_product_files[$i]['file_location']=$target;
+									$ext=mslib_befe::strtolower($tmp[1]);
+									switch($ext) {
+										case 'php3':
+										case 'php':
+											// Dont allow PHP scripts
+											break;
+										default:
+											$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
+											$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop/micro_downloads/'.$file_name;
+											if (move_uploaded_file($file['tmp_name'][$i], $target)) {
+												$update_product_files[$i]['file_label']=$file['name'][$i];
+												$update_product_files[$i]['file_location']=$target;
+											}
+											break;
 									}
 								}
 							}
