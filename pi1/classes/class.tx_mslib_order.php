@@ -865,7 +865,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subtotal=($subtotal+$price);
 			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
 			$subtotalIncludingVatArray[]=$product['total_price'];
-			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_tax'];
+			$subtotalIncludingVatArray[]=mslib_fe::taxDecimalCrop($product['qty']*$product['products_tax_data']['total_tax'], 2, false);
 			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_attributes_tax'];
 			// GRAND TOTAL CALCULATIONS EOF
 			//hook to let other plugins further manipulate the replacers

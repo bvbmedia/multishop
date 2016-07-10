@@ -1101,6 +1101,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
 					}
 					$total_price=($total_price+$subtotal_price);
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
+						$params=array(
+							'shopping_cart_item'=>$shopping_cart_item,
+							'cart_item'=>&$value,
+							'total_price'=>&$total_price
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
 				}
 			}
 		}
@@ -2648,6 +2658,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						// loading the attributes eof
 					}
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPricePreProc'])) {
+						$params=array(
+							'product'=>&$product,
+							'cart'=>&$this->cart,
+							'c'=>&$c,
+							'subPrices'=>&$subPrices,
+							'sectionTemplateType'=>&$sectionTemplateType
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPricePreProc'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
 					if ($subPrices) {
 						$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
 					}
@@ -2678,7 +2700,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'product'=>&$product,
 							'cart'=>&$this->cart,
 							'c'=>&$c,
-							'subPrices'=>&$subPrices,
 							'sectionTemplateType'=>&$sectionTemplateType
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'] as $funcRef) {

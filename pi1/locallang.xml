@@ -1316,6 +1316,7 @@
             <label index="vat_id2">VAT ID</label>
             <label index="vat_number">VAT number</label>
             <label index="paypal_account">PayPal account</label>
+            <label index="encryption_key_not_match">Encryption key not match</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

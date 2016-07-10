@@ -557,6 +557,9 @@ if (count($cart['products'])<1) {
 		//
 		$newsletter_subscribe='';
 		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
+			if ($this->ms['MODULES']['CHECKOUT_NEWSLETTER_CHECKBOX_CHECKED_ON_DEFAULT']) {
+				$user['tx_multishop_newsletter']=1;
+			}
 			$newsletter_subscribe.='
 			<div class="checkboxAgreement accept_newsletter">
 				<div class="checkbox checkbox-success">
