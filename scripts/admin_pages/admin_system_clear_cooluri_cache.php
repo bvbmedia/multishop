@@ -24,8 +24,10 @@ foreach ($tables as $table) {
 }
 $command='rm -rf '.$this->DOCUMENT_ROOT.'typo3conf/temp_CACHED_*';
 exec($command);
-$command='rm -rf '.$this->DOCUMENT_ROOT.'typo3conf/tx_ncstaticfilecache/*';
-exec($command);
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('nc_staticfilecache', 0) && is_dir($this->DOCUMENT_ROOT.'typo3conf/tx_ncstaticfilecache')) {
+	$command='rm -rf '.$this->DOCUMENT_ROOT.'typo3conf/tx_ncstaticfilecache/*';
+	exec($command);
+}
 //$command='chmod 2775 '.$this->DOCUMENT_ROOT.'typo3temp';
 //exec($command);
 $command='rm -f '.$this->DOCUMENT_ROOT.'typo3temp/*';
