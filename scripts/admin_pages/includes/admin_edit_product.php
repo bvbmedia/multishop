@@ -933,7 +933,8 @@ if ($this->post and $_FILES) {
 									switch($ext) {
 										case 'php3':
 										case 'php':
-											// Dont allow PHP scripts
+										case '':
+											// Dont allow PHP scripts or files without an extension
 											break;
 										default:
 											$file_name=md5(uniqid(rand()).uniqid(rand())).'.'.$ext;
