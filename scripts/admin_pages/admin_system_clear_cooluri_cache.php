@@ -33,7 +33,7 @@ exec($command);
 $command = \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT . 'typo3temp/_processed_');
 exec($command);
 // Regenerate link of the shop so Cooluri works again
-$link = mslib_fe::typolink('', '');
+$link = mslib_fe::typolink($this->shop_pid, '');
 // Regenerate link for admin panel
 $link = mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel');
 // if frontend caching is enabled also clear those cache files eof
