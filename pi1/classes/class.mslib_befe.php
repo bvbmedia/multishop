@@ -4841,6 +4841,22 @@ class mslib_befe {
         unset($array[$key]);
         $array[$key] = $value;
     }
+    /**
+     * Find the position of the Xth occurrence of a substring in a string
+     * @param $haystack
+     * @param $needle
+     * @param $number integer > 0
+     * @return int
+     */
+    function strposX($haystack, $needle, $number){
+        if($number == '1'){
+            return strpos($haystack, $needle);
+        }elseif($number > '1'){
+            return strpos($haystack, $needle, mslib_befe::strposX($haystack, $needle, $number - 1) + strlen($needle));
+        }else{
+            return error_log('Error: Value for parameter $number is out of range');
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
