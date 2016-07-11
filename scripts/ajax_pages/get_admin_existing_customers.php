@@ -109,14 +109,19 @@ if ($this->ADMIN_USER) {
 			$htmlTitle_array=array();
 			foreach ($itemArray as $item_label => $rowItem) {
 				//$htmlTitle.=$rowItem['label'].': <strong>'.$rowItem['value'].'</strong><br/>';
-				if ($item_label=='company') {
-					$htmlTitle_array[0]=$rowItem['value'];
-				} else if ($item_label=='address') {
-					$htmlTitle_array[1]=$rowItem['value'];
-				} else if ($item_label=='city') {
-					$htmlTitle_array[2]=$rowItem['value'];
-				} else if ($item_label=='name') {
-					$htmlTitle_array[3]=$rowItem['value'];
+				switch($item_label) {
+					case 'company':
+						$htmlTitle_array[0]=$rowItem['value'];
+						break;
+					case 'name':
+						$htmlTitle_array[1]=$rowItem['value'];
+						break;
+					case 'address':
+						$htmlTitle_array[2]=$rowItem['value'];
+						break;
+					case 'city':
+						$htmlTitle_array[3]=$rowItem['value'];
+						break;
 				}
 			}
 			ksort($htmlTitle_array);
