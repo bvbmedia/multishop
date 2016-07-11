@@ -331,7 +331,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<div><div class="form-group"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminInvoicesExportSelectField">';
+				$content.='<div><div class="form-group"><label>'.htmlspecialchars($this->pi_getLL('type')).': </label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminInvoicesExportSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
@@ -395,7 +395,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div><div class="form-group"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminInvoicesExportSelectField">';
+				var item=\'<div><div class="form-group"><label>Type: </label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminInvoicesExportSelectField">';
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}

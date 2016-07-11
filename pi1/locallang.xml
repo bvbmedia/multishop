@@ -1317,6 +1317,8 @@
             <label index="vat_number">VAT number</label>
             <label index="paypal_account">PayPal account</label>
             <label index="encryption_key_not_match">Encryption key not match</label>
+            <label index="admin_paid_status">Paid status</label>
+            <label index="type">Type</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
