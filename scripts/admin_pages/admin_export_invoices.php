@@ -194,6 +194,8 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_invoices_export_wizard').'</h3></div>
 		<div class="panel-body">
 		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="invoices_export_form" class="form-horizontal">
+		<div class="panel panel-default">
+			<div class="panel-body">
 			<div class="form-group">
 				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 				<div class="col-md-10">
@@ -242,7 +244,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="proposal"'.($post_data['order_type']=='proposal' ? ' selected="selected"' : '').'>'.$this->pi_getLL('admin_proposals').'</option>
 		</select>';
 		// delimeter type selectbox
-		$delimeter_type_sb='<select name="delimeter_type">
+		$delimeter_type_sb='<select class="form-control" name="delimeter_type">
 			<option value=";"'.($post_data['order_type']==';' ? ' selected="selected"' : '').'>semicolon (;)</option>
 			<option value=","'.($post_data['order_type']==',' ? ' selected="selected"' : '').'>comma (,)</option>
 			<option value="\t"'.($post_data['order_type']=='\t' ? ' selected="selected"' : '').'>tabs (\t)</option>
@@ -257,17 +259,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
-			<div class="col-md-10">
-			<div class="input_label_wrapper">
-				<label for="visual_orders_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
-				<input class="form-control" name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="'.$post_data['visual_orders_date_from'].'" />
+			<div class="col-md-10 form-inline">
+				<label class="form-control-static" for="visual_orders_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>&nbsp;
+				<input class="form-control" name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="'.$post_data['visual_orders_date_from'].'" />&nbsp;
 				<input name="orders_date_from" id="orders_date_from" type="hidden" value="'.$post_data['orders_date_from'].'" />
-			</div>
-			<div class="input_label_wrapper">
-				<label for="visual_orders_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
-				<input class="form-control" name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="'.$post_data['visual_orders_date_till'].'" />
+				<label class="form-control-static" for="visual_orders_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>&nbsp;
+				<input class="form-control" name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="'.$post_data['visual_orders_date_till'].'" />&nbsp;
 				<input name="orders_date_till" id="orders_date_till" type="hidden" value="'.$post_data['orders_date_till'].'" />
-			</div>
 			</div>
 		</div>
 		<div class="form-group">
@@ -309,23 +307,26 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
 			<div class="col-md-10">
-				<div class="radio radio-inline">
-					<input name="status0" id="status0" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /><label for="status0">'.htmlspecialchars($this->pi_getLL('disabled')).'</label>
+				<div class="radio radio-inline radio-success">
+					<input name="status" id="status0" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /><label for="status0">'.htmlspecialchars($this->pi_getLL('disabled')).'</label>
 				</div>
-				<div class="radio radio-inline">
-					<input name="status1" id="status1" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /><label for="status1">'.htmlspecialchars($this->pi_getLL('enabled')).'</label>
+				<div class="radio radio-inline radio-success">
+					<input name="status" id="status1" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /><label for="status1">'.htmlspecialchars($this->pi_getLL('enabled')).'</label>
 				</div>
 			</div>
 		</div>
-		<hr>
 		<div class="form-group hide_pf">
-			<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
 			<div class="col-md-10">
 				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
 			</div>
 		</div>
+		</div></div>
+
+		<div class="panel panel-default">
+		<div class="panel-body">
 		<div class="form-group">
-		<div class="col-md-10 col-md-offset-2">
+		<div class="col-md-12">
 		<div id="admin_invoices_exports_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
@@ -346,6 +347,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='
 		</div></div></div>
+		</div></div>
 		<hr>
 		<div class="clearfix">
 			<div class="pull-right">
