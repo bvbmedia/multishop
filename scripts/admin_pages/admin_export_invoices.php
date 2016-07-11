@@ -190,15 +190,19 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_order_qry=$GLOBALS['TYPO3_DB']->sql_query($first_order_sql);
 		$first_order_rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($first_order_qry);
 		$first_year=date('Y', $first_order_rs['crdate']);
-		$content.='
+		$content.='<div class="panel panel-default">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_invoices_export_wizard').'</h3></div>
-		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="invoices_export_form">
+		<div class="panel-body">
+		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="invoices_export_form" class="form-horizontal">
 			<div class="form-group">
-				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+				<div class="col-md-10">
+					<input class="form-control" type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+				</div>
 			</div>';
 		// order status selectbox
 		$all_orders_status=mslib_fe::getAllOrderStatus();
-		$order_status_sb='<select name="order_status">
+		$order_status_sb='<select class="form-control" name="order_status">
 		<option value="all"'.($post_data['order_status']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>';
 		if (is_array($all_orders_status) and count($all_orders_status)) {
 			foreach ($all_orders_status as $row) {
@@ -211,13 +215,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$order_status_sb.='</select>';
 		// payment status selectbox
-		$payment_status_sb='<select name="payment_status">
+		$payment_status_sb='<select class="form-control" name="payment_status">
 			<option value="all"'.($post_data['payment_status']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>
 			<option value="paid"'.($post_data['payment_status']=='paid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('paid').'</option>
 			<option value="unpaid"'.($post_data['payment_status']=='unpaid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('unpaid').'</option>
 		</select>';
 		// order by selectbox
-		$order_by_sb='<select name="order_by">
+		$order_by_sb='<select class="form-control" name="order_by">
 			<option value="orders_id"'.($post_data['order_by']=='orders_id' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders_id').'</option>
 			<option value="status_last_modified"'.($post_data['order_by']=='status_last_modified' ? ' selected="selected"' : '').'>'.$this->pi_getLL('status_last_modified').'</option>
 			<option value="billing_name"'.($post_data['order_by']=='billing_name' ? ' selected="selected"' : '').'>'.$this->pi_getLL('billing_name').'</option>
@@ -227,12 +231,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="payment_method_label"'.($post_data['order_by']=='payment_method_label' ? ' selected="selected"' : '').'>'.$this->pi_getLL('payment_method_label').'</option>
 		</select>';
 		// sort direction selectbox
-		$sort_direction_sb='<select name="sort_direction">
+		$sort_direction_sb='<select class="form-control" name="sort_direction">
 			<option value="desc"'.($post_data['sort_direction']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_desc').'</option>
 			<option value="asc"'.($post_data['sort_direction']=='asc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_asc').'</option>
 		</select>';
 		// order type selectbox
-		$order_type_sb='<select name="order_type">
+		$order_type_sb='<select class="form-control" name="order_type">
 			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders').'</option>
 			<option value="by_phone"'.($post_data['order_type']=='by_phone' ? ' selected="selected"' : '').'>'.ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))).'</option>
 			<option value="proposal"'.($post_data['order_type']=='proposal' ? ' selected="selected"' : '').'>'.$this->pi_getLL('admin_proposals').'</option>
@@ -246,58 +250,82 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</select>';
 		$content.='
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_type')).'</label>
-			'.$order_type_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_type')).'</label>
+			<div class="col-md-10">
+				'.$order_type_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
+			<div class="col-md-10">
 			<div class="input_label_wrapper">
 				<label for="visual_orders_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
-				<input name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="'.$post_data['visual_orders_date_from'].'" />
+				<input class="form-control" name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="'.$post_data['visual_orders_date_from'].'" />
 				<input name="orders_date_from" id="orders_date_from" type="hidden" value="'.$post_data['orders_date_from'].'" />
 			</div>
 			<div class="input_label_wrapper">
 				<label for="visual_orders_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
-				<input name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="'.$post_data['visual_orders_date_till'].'" />
+				<input class="form-control" name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="'.$post_data['visual_orders_date_till'].'" />
 				<input name="orders_date_till" id="orders_date_till" type="hidden" value="'.$post_data['orders_date_till'].'" />
+			</div>
 			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_status')).'</label>
-			'.$order_status_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_status')).'</label>
+			<div class="col-md-10">
+				'.$order_status_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_payment_status')).'</label>
-			'.$payment_status_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_payment_status')).'</label>
+			<div class="col-md-10">
+				'.$payment_status_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_by')).'</label>
-			'.$order_by_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_by')).'</label>
+			<div class="col-md-10">
+				'.$order_by_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('sort_direction')).'</label>
-			'.$sort_direction_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('sort_direction')).'</label>
+			<div class="col-md-10">
+				'.$sort_direction_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
-			'.$delimeter_type_sb.'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
+			<div class="col-md-10">
+				'.$delimeter_type_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('maximum_number_of_order_products')).'</label>
-			<input type="text" name="maximum_number_of_order_products" value="'.($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : '25').'" />
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('maximum_number_of_order_products')).'</label>
+			<div class="col-md-10">
+				<input class="form-control" type="text" name="maximum_number_of_order_products" value="'.($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : '25').'" />
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
-			<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
-			<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
+			<div class="col-md-10">
+				<div class="radio radio-inline">
+					<input name="status0" id="status0" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /><label for="status0">'.htmlspecialchars($this->pi_getLL('disabled')).'</label>
+				</div>
+				<div class="radio radio-inline">
+					<input name="status1" id="status1" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /><label for="status1">'.htmlspecialchars($this->pi_getLL('enabled')).'</label>
+				</div>
+			</div>
 		</div>
+		<hr>
 		<div class="form-group hide_pf">
-			<div class="hr"></div>
-		</div>
-		<div class="form-group hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+			<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+			<div class="col-md-10">
 				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
+			</div>
 		</div>
+		<div class="form-group">
+		<div class="col-md-10 col-md-offset-2">
 		<div id="admin_invoices_exports_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
@@ -317,13 +345,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			}
 		}
 		$content.='
-		</div>
-		<div class="form-group">
-			<div class="hr"></div>
-		</div>
-		<div class="form-group">
-				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" /></span>
+		</div></div></div>
+		<hr>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('save')).'</button>
+			</div>
 		</div>
 		<input name="invoices_export_id" type="hidden" value="'.$this->get['invoices_export_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
@@ -392,7 +419,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				}
 			});
 		});
-		</script>';
+		</script></div></div>';
 	}
 } else {
 	$this->ms['show_main']=1;
