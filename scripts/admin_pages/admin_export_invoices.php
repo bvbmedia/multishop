@@ -325,7 +325,6 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 
 		<div class="panel panel-default">
 		<div class="panel-body">
-		<div class="form-group">
 		<div class="col-md-12">
 		<div id="admin_invoices_exports_fields">';
 		$counter=0;
@@ -346,7 +345,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			}
 		}
 		$content.='
-		</div></div></div>
+		</div></div>
 		</div></div>
 		<hr>
 		<div class="clearfix">
