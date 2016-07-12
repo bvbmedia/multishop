@@ -387,8 +387,8 @@ if (!$product['products_id']) {
     $markerArray['###HIDDEN_PRODUCT_ID###'] = '<input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />';
     // new
     $markerArray['###QUANTITY###'] = $output['quantity'];
-    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($current_product['old_price']);
-    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($current_product['final_price']);
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($product['old_price']);
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
     $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
     $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
 
