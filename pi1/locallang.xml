@@ -1319,6 +1319,7 @@
             <label index="encryption_key_not_match">Encryption key not match</label>
             <label index="admin_paid_status">Paid status</label>
             <label index="type">Type</label>
+            <label index="invoice_has_been_send_to">Sent to</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2600,6 +2601,7 @@
             <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
             <label index="total_excl_vat">Totaal</label>
             <label index="sales_volume_by_month_per_product">Omzet per productgroep</label>
+            <label index="invoice_has_been_send_to">Verzonden aan</label>
         </languageKey>
     </data>
 </T3locallang>

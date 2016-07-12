@@ -100,7 +100,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br/>';
 		}
 		// Another marker that always prints the country name
-		$markerArray['###BILLING_COUNTRY_RAW###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br/>';
+		$markerArray['###BILLING_COUNTRY_RAW###']=mslib_befe::strtoupper(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country'])).'<br/>';
 		// delivery address
 		if (!empty($order['delivery_company'])) {
 			$markerArray['###DELIVERY_COMPANY###']='<strong>'.$order['delivery_company'].'</strong><br/>';
@@ -128,6 +128,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###INVOICE_NUMBER###']=$invoice['invoice_id'];
 		$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']='';
 		$markerArray['###INVOICE_SHIPPING_METHOD###']='';
+		$markerArray['###INVOICE_HAS_BEEN_SEND_TO_MARKER###']=$this->pi_getLL('invoice_has_been_send_to').': '.$order['billing_email'];
 		if ($order['shipping_method_label']) {
 			$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 			$markerArray['###INVOICE_SHIPPING_METHOD###']=$order['shipping_method_label'];
