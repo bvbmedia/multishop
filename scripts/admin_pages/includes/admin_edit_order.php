@@ -1972,8 +1972,8 @@ if (is_numeric($this->get['orders_id'])) {
 								$row[2].='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
 							}
 							$row[2].=$order['products_name'];
-							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
-								$row[2].='('.$order['products_model'].')';
+							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($order['products_model'])) {
+								$row[2].=' ('.$order['products_model'].')';
 							}
 							if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 								$row[2].='<br />EAN: '.$product['ean_code'];
@@ -1989,8 +1989,8 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 						} else {
 							$row[2].=$order['products_name'];
-							if ($order['products_model']) {
-								$row[2].='('.$order['products_model'].')';
+							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($order['products_model'])) {
+								$row[2].=' ('.$order['products_model'].')';
 							}
 						}
 						if (!empty($order['file_label']) && !empty($order['file_location']) && !empty($order['file_download_code'])) {
