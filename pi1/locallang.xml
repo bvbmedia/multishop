@@ -1322,6 +1322,7 @@
             <label index="invoice_has_been_send_to">Sent to</label>
             <label index="mail_to_customer">Mail to customer</label>
             <label index="mail_to_merchant">Mail to merchant</label>
+            <label index="select_customer_groups">Select customer group(s)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2606,6 +2607,7 @@
             <label index="invoice_has_been_send_to">Verzonden aan</label>
             <label index="mail_to_customer">Mail naar debiteur</label>
             <label index="mail_to_merchant">Mail naar beheerder</label>
+            <label index="select_customer_groups">Selecteer debiteurgroep(en)</label>
         </languageKey>
     </data>
 </T3locallang>
