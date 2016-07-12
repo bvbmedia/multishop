@@ -99,6 +99,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
 			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br/>';
 		}
+		// Another marker that always prints the country name
+		$markerArray['###BILLING_COUNTRY_RAW###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br/>';
 		// delivery address
 		if (!empty($order['delivery_company'])) {
 			$markerArray['###DELIVERY_COMPANY###']='<strong>'.$order['delivery_company'].'</strong><br/>';
