@@ -109,7 +109,7 @@ if (is_numeric($this->get['orders_id'])) {
 		<table class="table no-mb">
 		<thead>
 			<tr>
-				<td width="50%" valign="top">
+				<td width="50%" valign="top" class="tdBillingAddressDetails">
 					<table>
 					<tr>
 						<td width="150" align="left" valign="top">'.$this->pi_getLL('billing_details').':</td>
@@ -125,7 +125,7 @@ if (is_numeric($this->get['orders_id'])) {
 					</tr>
 					</table>
 				</td>
-				<td width="50%" valign="top">
+				<td width="50%" valign="top" class="tdDeliveryAddressDetails">
 					<table>
 					<tr>
 						<td width="150" align="left" valign="top">'.$this->pi_getLL('delivery_details').':</td>
