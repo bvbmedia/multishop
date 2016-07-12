@@ -387,6 +387,11 @@ if (!$product['products_id']) {
     $markerArray['###HIDDEN_PRODUCT_ID###'] = '<input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />';
     // new
     $markerArray['###QUANTITY###'] = $output['quantity'];
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($current_product['old_price']);
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($current_product['final_price']);
+    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
+    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
+
     $markerArray['###BACK_BUTTON###'] = $output['back_button'];
     $markerArray['###ADD_TO_CART_BUTTON###'] = $output['add_to_cart_button'];
     $markerArray['###PRODUCTS_META_DESCRIPTION###'] = $product['products_meta_description'];
