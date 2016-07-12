@@ -278,65 +278,65 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<tfoot><tr><td class="order_total_data text-right" colspan="'.$colspan.'">';
 			$tmpcontent.='<div class="order_total form-horizontal">';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<div class="form-group">
+				$tmpcontent.='<div class="form-group no-mb">
 						<label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
 						<div class="col-md-2">
-						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</p>
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</p>
 						</div>
 					</div>';
-				$content_vat='<div class="form-group">
+				$content_vat='<div class="form-group no-mb">
 						<label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
 						<div class="col-md-2">
-						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
 						</div>
 					</div>';
 				if ($order['shipping_method_costs']>0) {
 					$content_shipping_costs='
-						<div class="form-group">
+						<div class="form-group no-mb">
 							<label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
 							<div class="col-md-2">
-							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0).'</p>
+								<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0).'</p>
 							</div>
 						</div>';
 				}
 				if ($order['payment_method_costs']>0) {
 					$content_payment_costs='
-						<div class="form-group">
+						<div class="form-group no-mb">
 							<label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
 							<div class="col-md-2">
-							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0).'</p>
+								<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0).'</p>
 							</div>
 						</div>
 				';
 				}
 			} else {
-				$tmpcontent.='<div class="form-group">
+				$tmpcontent.='<div class="form-group no-mb">
 						<label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
 						<div class="col-md-2">
-						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'], 0).'</p>
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'], 0).'</p>
 						</div>
 					</div>';
-				$content_vat='<div class="form-group">
+				$content_vat='<div class="form-group no-mb">
 						<label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
 						<div class="col-md-2">
-						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
-						</span>
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+						</div>
 					</div>';
 				if ($order['shipping_method_costs']>0) {
 					$content_shipping_costs='
-						<div class="form-group">
+						<div class="form-group no-mb">
 							<label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
 							<div class="col-md-2">
-							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0).'</p>
+								<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0).'</p>
 							</div>
 						</div>';
 				}
 				if ($order['payment_method_costs']>0) {
 					$content_payment_costs='
-						<div class="form-group">
+						<div class="form-group no-mb">
 							<label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
 							<div class="col-md-2">
-							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0).'</p>
+								<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0).'</p>
 							</div>
 						</div>
 				';
