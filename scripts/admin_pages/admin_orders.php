@@ -173,6 +173,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						if ($order['paid']) {
 							$mail_template='email_order_paid_letter';
 						}
+						$mailTo='';
 						switch ($this->post['tx_multishop_pi1']['action']) {
 							case 'mail_selected_orders_to_customer':
 								// Empty to mail to the owner of the order
@@ -182,15 +183,20 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 								$mailTo=$this->ms['MODULES']['STORE_EMAIL'];
 								break;
 						}
+						if ($mailTo) {
+							$printAddress=$mailTo;
+						} else {
+							$printAddress=$order['billing_email'];
+						}
 						if (mslib_fe::mailOrder($orders_id, 0, $mailTo, $mail_template)) {
 							$postErno[]=array(
 								'status'=>'info',
-								'message'=>'Order '.$orders_id.' has been mailed to: '.$order['billing_email']
+								'message'=>'Order '.$orders_id.' has been mailed to: '.$printAddress
 							);
 						} else {
 							$postErno[]=array(
 								'status'=>'error',
-								'message'=>'Failed to mail order '.$orders_id.' to: '.$order['billing_email']
+								'message'=>'Failed to mail order '.$orders_id.' to: '.$printAddress
 							);
 						}
 					} else {
