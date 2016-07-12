@@ -51,6 +51,7 @@ foreach ($groups as $group) {
 	$markerArray['VALUE_GROUP_DISCOUNT']=$group['tx_multishop_discount'];
 	$markerArray['VALUE_GROUP_STATUS']=$status_html;
 	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
+	$markerArray['GROUP_ONCLICK_DELETE_CONFIRM_JS']='return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')';
 	$markerArray['VALUE_GROUP_DELETE_LINK']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
 			'customer_group_id',
 			'delete',
@@ -67,7 +68,7 @@ foreach ($groups as $group) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom page hook that can be controlled by third-party plugin eof	
+	// custom page hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['groups'], $markerArray, '###|###');
 }
 $subpartArray=array();
@@ -114,6 +115,6 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-// custom page hook that can be controlled by third-party plugin eof	
+// custom page hook that can be controlled by third-party plugin eof
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 ?>
