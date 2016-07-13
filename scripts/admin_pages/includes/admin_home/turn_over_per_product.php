@@ -39,7 +39,8 @@ $current_year=date("Y");
 $categories=array();
 $where=array();
 $where[]='(o.deleted=0)';
-$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+//$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+$where[]='(i.crdate BETWEEN '.strtotime(date('Y-m-d 00:00:00')).' and '.time().')';
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('op.categories_id', // SELECT ...
 		'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
 		'('.implode(" AND ", $where).') and o.orders_id=op.orders_id', // WHERE...
@@ -56,6 +57,7 @@ while ($row_categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_categories)) {
 	}
 	$categories[$row_categories['categories_id']]=$catname;
 }
+
 
 $compiledWidget['content'].='<div class="table-responsive"><table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" ><thead>';
 $compiledWidget['content'].='<tr class="odd">';
