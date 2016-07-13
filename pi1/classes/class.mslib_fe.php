@@ -2162,6 +2162,11 @@ class mslib_fe {
 					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
 				}
 			}
+			if (is_array($options['add_custom_header'])) {
+				foreach ($options['add_custom_header'] as $custom_header) {
+					$mail->AddCustomHeader($custom_header);
+				}
+			}
 			// $mail->IsSendmail(); // telling the class to use SendMail transport
 			if (isset($options['email_tmpl_path']) && $options['email_tmpl_path']) {
 				$template=$this->cObj->fileResource($options['email_tmpl_path']);
@@ -2229,8 +2234,11 @@ class mslib_fe {
 			}
 			$mail->Subject=$subject;
 			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
-			self::MsgHTMLwithEmbedImages($mail, $body);
-//			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
+			if (!$options['withoutImageEmbedding']) {
+				self::MsgHTMLwithEmbedImages($mail, $body);
+			} else {
+				$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
+			}
 			if (!isset($options['skipSending'])) {
 				$options['skipSending']=0;
 			}
@@ -7193,6 +7201,12 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['active']=1;
 				}
 			}
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['label']=$this->pi_getLL('admin_store_details');
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_store_details');
+			$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['class']='fa fa-map-marker';
+			if ($this->get['tx_multishop_pi1']['page_section']=='admin_store_details' || $this->post['tx_multishop_pi1']['page_section']=='admin_store_details') {
+				$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_store_details']['active']=1;
+			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label']=$this->pi_getLL('admin_shipping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description']=$this->pi_getLL('admin_shipping').'.';
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class']='fa fa-truck';
@@ -9600,7 +9614,7 @@ class mslib_fe {
 		}
 		if (!$CACHE_FRONT_END or ($CACHE_FRONT_END and !$data=$Cache_Lite->get($string))) {
 			if ($type=='shop') {
-				$sql_tt_address="select *, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.deleted=0 and tta.hidden=0 and tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
+				$sql_tt_address="select *, tta.uid as tt_uid, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.deleted=0 and tta.hidden=0 and tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);

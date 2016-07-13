@@ -137,6 +137,8 @@ if (is_numeric($this->get['orders_id'])) {
 								$updateArray['final_price']=$this->post['product_price'];
 								// disocunt update
 								if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+									$updateArray['discount_amount']=0;
+									$updateArray['discount_percentage']=0;
 									if (isset($this->post['product_discount_percentage']) && is_numeric($this->post['product_discount_percentage']) && $this->post['product_discount_percentage']>0) {
 										$updateArray['discount_percentage'] = $this->post['product_discount_percentage'];
 										$discount_amount = ($this->post['product_price']*$this->post['product_discount_percentage']) / 100;
@@ -146,6 +148,9 @@ if (is_numeric($this->get['orders_id'])) {
 										$discount_percentage = ($this->post['product_discount_amount'] / $this->post['product_price']) * 100;
 										$updateArray['discount_percentage'] = $discount_percentage;
 									}
+								}
+								if ($updateArray['discount_amount']>0) {
+									$updateArray['final_price']=($this->post['product_price']-$updateArray['discount_amount']);
 								}
 								$updateArray['products_tax']=$this->post['product_tax'];
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
@@ -276,6 +281,8 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								// disocunt update
 								if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+									$insertArray['discount_amount']=0;
+									$insertArray['discount_percentage']=0;
 									if (isset($this->post['manual_product_discount_percentage']) && is_numeric($this->post['manual_product_discount_percentage']) && $this->post['manual_product_discount_percentage']>0) {
 										$insertArray['discount_percentage'] = $this->post['manual_product_discount_percentage'];
 										$discount_amount = ($this->post['manual_product_price']*$this->post['manual_product_discount_percentage']) / 100;
@@ -287,7 +294,11 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 								$insertArray['products_price']=$this->post['manual_product_price'];
-								$insertArray['final_price']=$this->post['manual_product_price'];
+								if ($insertArray['discount_amount']>0) {
+									$insertArray['final_price'] = ($this->post['manual_product_price'] - $insertArray['discount_amount']);
+								} else {
+									$insertArray['final_price'] = $this->post['manual_product_price'];
+								}
 								$insertArray['products_tax']=$this->post['manual_product_tax'];
 								$insertArray['sort_order']=$new_sort_order;
 								//
@@ -1747,6 +1758,11 @@ if (is_numeric($this->get['orders_id'])) {
 			$total_tax=0;
 			if (is_array($orders_products) and count($orders_products)) {
 				foreach ($orders_products as $order) {
+					if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+						if ($order['products_price']!=$order['final_price'] && $order['discount_amount']>0) {
+							$order['final_price']+=$order['discount_amount'];
+						}
+					}
 					if ($order['products_id']>0) {
 						$js_select2_cache_products[$order['products_id']]='Products['.$order['products_id'].']={id:"'.$order['products_id'].'", text:"'.$order['products_name'].'"}';
 					} else {
@@ -1956,8 +1972,8 @@ if (is_numeric($this->get['orders_id'])) {
 								$row[2].='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
 							}
 							$row[2].=$order['products_name'];
-							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($product['products_model'])) {
-								$row[2].='('.$order['products_model'].')';
+							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($order['products_model'])) {
+								$row[2].=' ('.$order['products_model'].')';
 							}
 							if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 								$row[2].='<br />EAN: '.$product['ean_code'];
@@ -1973,8 +1989,8 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 						} else {
 							$row[2].=$order['products_name'];
-							if ($order['products_model']) {
-								$row[2].='('.$order['products_model'].')';
+							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($order['products_model'])) {
+								$row[2].=' ('.$order['products_model'].')';
 							}
 						}
 						if (!empty($order['file_label']) && !empty($order['file_location']) && !empty($order['file_download_code'])) {
@@ -2716,7 +2732,13 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
 				}
 			} else {
-				$colspan=7;
+				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+					$colspan = 8;
+				} else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+					$colpsan=9;
+				} else {
+					$colspan=7;
+				}
 			}
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'])) {

@@ -201,6 +201,11 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_cms.php');
 		}
 		break;
+	case 'admin_store_details':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_store_details.php');
+		}
+		break;
 	case 'admin_products_search_and_edit':
 		if ($this->ADMIN_USER) {
 			if (strstr($this->ms['MODULES']['ADMIN_PRODUCTS_SEARCH_AND_EDIT'], "..")) {

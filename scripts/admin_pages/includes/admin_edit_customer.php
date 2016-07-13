@@ -1259,6 +1259,7 @@ if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1
 
 $subpartArray['###AJAX_URL_GET_USERGROUPS0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_usergroups');
 $subpartArray['###AJAX_URL_GET_USERGROUPS1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_usergroups');
+$subpartArray['###CUSTOMER_GROUPS_PLACEHOLDER###']=$this->pi_getLL('select_customer_groups');
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');

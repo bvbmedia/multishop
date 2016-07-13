@@ -16,7 +16,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
 				this.close();
 				msAdminBlockUi();
-				window.location.href=linkTarget;
+				window.location.href=\'/\'+linkTarget;
 			});
 		});
 		$(document).on("click", ".hide_advanced_import_radio", function() {
@@ -227,6 +227,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 			$unserial_task_data=unserialize($task_content);
 			$insertArray=array();
 			$insertArray['page_uid']=$this->showCatalogFromPage;
+			$dtaa=array();
 			foreach ($unserial_task_data as $col_name=>$col_val) {
 				if ($col_name=='code') {
 					$insertArray[$col_name]=md5(uniqid());
@@ -234,12 +235,26 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 					$insertArray[$col_name]=$this->post['new_cron_name'];
 				} else if ($col_name=='prefix_source_name' && isset($this->post['new_prefix_source_name']) && !empty($this->post['new_prefix_source_name'])) {
 					$insertArray[$col_name]=$this->post['new_prefix_source_name'];
+				} else if ($col_name=='data') {
+					$data=unserialize($unserial_task_data['data']);
+					$insertArray[$col_name]='';
 				} else {
 					$insertArray[$col_name]=$col_val;
 				}
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $insertArray);
-			if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+			if ($res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+				$job_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+				if (is_array($data) && count($data)) {
+					$updateArray = array();
+					$data[1]['job_id'] = $job_id;
+					$data[1]['cron_name'] = $this->post['new_cron_name'];
+					$data[1]['prefix_source_name'] = $this->post['new_prefix_source_name'];
+					$updateArray['data'] = serialize($data);
+					$query_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id=\'' . $job_id . '\'', $updateArray);
+					$GLOBALS['TYPO3_DB']->sql_query($query_update);
+				}
+			} else {
 				$erno[]=$query.'<br/>'.$GLOBALS['TYPO3_DB']->sql_error();
 			}
 			@unlink($target);
@@ -3341,7 +3356,7 @@ if ($this->post['action']!='product-import-preview' && $this->get['action']!='ed
 				$schedule_content.='<td>'.$category_name.'</td>';
 				$schedule_content.='<td class="cellDate">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 				if (!$job['period']) {
-					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
+					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
 				} else {
 					$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 				}

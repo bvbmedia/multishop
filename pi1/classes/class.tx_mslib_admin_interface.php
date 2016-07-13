@@ -72,7 +72,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	}
 	public function renderHeaderButtons() {
 		if (is_array($this->headerButtons)) {
-			$content='<div class="form-inline">';
+			$content='<div class="form-inline pull-right">';
 			foreach ($this->headerButtons as $headingButton) {
 				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').($headingButton['target']?' target="'.$headingButton['target'].'"':'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a> ';
 			}

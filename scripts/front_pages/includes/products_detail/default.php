@@ -106,11 +106,11 @@ if (!$product['products_id']) {
                 $level++;
             }
             $where = substr($where, 0, (strlen($where) - 1));
-            $where .= '&';
+
         }
         // get all cats to generate multilevel fake url eof
     }
-    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
     $productLink=$link;
     $imgUrl='';
     $output_array['meta']['facebook'] = '';
@@ -308,9 +308,9 @@ if (!$product['products_id']) {
     $tmpoutput = '';
     for ($i = 1; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
         if ($product['products_image' . $i]) {
-            $tmpoutput .= '<li>';
+            $tmpoutput .= '<li><div class="listing_item">';
             $tmpoutput .= '<a id="thumb_' . $i . '" rel="' . $this->conf['jQueryPopup_rel'] . '" class="' . $this->conf['jQueryPopup_rel'] . '" href="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', 'normal') . '"><img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', $this->imageWidthExtraImages) . '"></a>';
-            $tmpoutput .= '</li>';
+            $tmpoutput .= '</div></li>';
         }
     }
     if ($tmpoutput) {
@@ -387,6 +387,11 @@ if (!$product['products_id']) {
     $markerArray['###HIDDEN_PRODUCT_ID###'] = '<input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />';
     // new
     $markerArray['###QUANTITY###'] = $output['quantity'];
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($product['old_price']);
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
+    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
+    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
+
     $markerArray['###BACK_BUTTON###'] = $output['back_button'];
     $markerArray['###ADD_TO_CART_BUTTON###'] = $output['add_to_cart_button'];
     $markerArray['###PRODUCTS_META_DESCRIPTION###'] = $product['products_meta_description'];

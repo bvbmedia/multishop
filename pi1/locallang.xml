@@ -1306,6 +1306,23 @@
             <label index="update">Update</label>
             <label index="admin_update_close">Update and close</label>
             <label index="category_default_path">Category default path</label>
+            <label index="filter_by_paid_date">Filter by paid date</label>
+            <label index="admin_store_details">Store details</label>
+            <label index="edit_store_address">Edit store details</label>
+            <label index="store_address_record_not_found">Store details record not found</label>
+            <label index="bank_name">Bank name</label>
+            <label index="iban">IBAN</label>
+            <label index="bic">BIC</label>
+            <label index="vat_id2">VAT ID</label>
+            <label index="vat_number">VAT number</label>
+            <label index="paypal_account">PayPal account</label>
+            <label index="encryption_key_not_match">Encryption key not match</label>
+            <label index="admin_paid_status">Paid status</label>
+            <label index="type">Type</label>
+            <label index="invoice_has_been_send_to">Sent to</label>
+            <label index="mail_to_customer">Mail to customer</label>
+            <label index="mail_to_merchant">Mail to merchant</label>
+            <label index="select_customer_groups">Select customer group(s)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2587,6 +2604,10 @@
             <label index="new_subtotal_incl_vat">Totaal Incl. BTW</label>
             <label index="total_excl_vat">Totaal</label>
             <label index="sales_volume_by_month_per_product">Omzet per productgroep</label>
+            <label index="invoice_has_been_send_to">Verzonden aan</label>
+            <label index="mail_to_customer">Mail naar debiteur</label>
+            <label index="mail_to_merchant">Mail naar beheerder</label>
+            <label index="select_customer_groups">Selecteer debiteurgroep(en)</label>
         </languageKey>
     </data>
 </T3locallang>

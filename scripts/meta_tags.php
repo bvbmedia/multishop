@@ -365,7 +365,7 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
         $(".a_dropdown").on("click",function(e) {
             if ($(this).parent(".ms_admin_has_subs").hasClass("open")) {
                 $(this).parent(".ms_admin_has_subs").toggleClass("open", false);
-                console.log($(this).parent(".ms_admin_has_subs").attr("class"));
+                //console.log($(this).parent(".ms_admin_has_subs").attr("class"));
             } else {
                 $(this).parent(".ms_admin_has_subs").toggleClass("open", true);
             }

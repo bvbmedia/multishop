@@ -229,6 +229,11 @@ if ($this->get['Search'] and ($this->get['paid_invoices_only']!=$this->cookie['p
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
+if ($this->get['Search'] and ($this->get['tx_multishop_pi1']['filter_by_paid_date']!=$this->cookie['filter_by_paid_date'])) {
+	$this->cookie['filter_by_paid_date']=$this->get['tx_multishop_pi1']['filter_by_paid_date'];
+	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+	$GLOBALS['TSFE']->storeSessionData();
+}
 if ($this->get['Search'] and ($this->get['limit']!=$this->cookie['limit'])) {
 	$this->cookie['limit']=$this->get['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
@@ -458,7 +463,12 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
 	list($td, $tm, $ty)=explode('-', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
-	$column='i.crdate';
+	if ($this->cookie['filter_by_paid_date']) {
+		$filter[]=' i.reversal_invoice=0';
+		$column = 'o.orders_paid_timestamp';
+	} else {
+		$column = 'i.crdate';
+	}
 	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
@@ -483,6 +493,9 @@ if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all'
 }
 if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
+}
+if (isset($this->get['paid_invoices_only']) && !$this->get['paid_invoices_only']) {
+	$filter[]="(i.paid='0')";
 }
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->get['country'])."'";
@@ -562,6 +575,8 @@ $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->get['invoice_date_till'];
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###']=$this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###']=($this->cookie['paid_invoices_only'] ? ' checked' : '');
+$subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###']=$this->pi_getLL('filter_by_paid_date');
+$subpartArray['###FILTER_BY_PAID_DATE_ONLY_CHECKED###']=($this->cookie['filter_by_paid_date'] ? ' checked' : '');
 
 $subpartArray['###EXCLUDING_VAT_LABEL###']=htmlspecialchars($this->pi_getLL('excluding_vat'));
 $subpartArray['###EXCLUDING_VAT_CHECKED###']=($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'');

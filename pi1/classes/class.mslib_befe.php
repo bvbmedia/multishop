@@ -3730,7 +3730,11 @@ class mslib_befe {
             exit();
         }
     }
-    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '') {
+    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select=array()) {
+        if (!count($select)) {
+            $select=array();
+            $select[]='*';
+        }
         $queryArray = array();
         $queryArray['from'] = $table;
         if (isset($value) && isset($field) && $field != '') {
@@ -3743,7 +3747,7 @@ class mslib_befe {
                 }
             }
         }
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
                 $queryArray['from'], // FROM ...
                 ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
                 $groupBy, // GROUP BY...
@@ -4177,10 +4181,12 @@ class mslib_befe {
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['final_price'] + (($product['final_price'] * $product['products_tax']) / 100)), $customer_currency, $display_currency_symbol, 0);
-                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price'] - $product['discount_amount']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+                        //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price'] - $product['discount_amount']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
                     } else {
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['final_price']), $customer_currency, $display_currency_symbol, 0);
-                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
+                        //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * $product['final_price']), $customer_currency, $display_currency_symbol, 0);
                     }
                 }
                 $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
@@ -4836,6 +4842,22 @@ class mslib_befe {
         $value = $array[$key];
         unset($array[$key]);
         $array[$key] = $value;
+    }
+    /**
+     * Find the position of the Xth occurrence of a substring in a string
+     * @param $haystack
+     * @param $needle
+     * @param $number integer > 0
+     * @return int
+     */
+    function strposX($haystack, $needle, $number){
+        if($number == '1'){
+            return strpos($haystack, $needle);
+        }elseif($number > '1'){
+            return strpos($haystack, $needle, mslib_befe::strposX($haystack, $needle, $number - 1) + strlen($needle));
+        }else{
+            return error_log('Error: Value for parameter $number is out of range');
+        }
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
