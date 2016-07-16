@@ -564,7 +564,7 @@ if ($this->get['edit']) {
 			$tmpcontent.='
 					</div></div>';
 		} else {
-			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
+			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$this->shop_pid.'">';
 		}
 		$tmpcontent.='
 		<div class="form-group">
