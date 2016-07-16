@@ -685,7 +685,8 @@ if (is_numeric($this->get['orders_id'])) {
         // editable properties of orders, even when ORDERS_EDIT is disabled
         if ($this->post) {
             $updateArray=array();
-            if ($this->post['expected_delivery_date']) {
+            $updateArray['expected_delivery_date']='';
+            if ($this->post['expected_delivery_date'] && $this->post['expected_delivery_date_local']) {
                 $updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
             }
             if ($this->post['track_and_trace_code']) {
@@ -699,7 +700,10 @@ if (is_numeric($this->get['orders_id'])) {
                 $updateArray['orders_last_modified']=time();
                 $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
                 $res=$GLOBALS['TYPO3_DB']->sql_query($query);
-                $orders['expected_delivery_date']=$this->post['expected_delivery_date'];
+                $orders['expected_delivery_date']='';
+                if (!empty($this->post['expected_delivery_date_local'])) {
+                    $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
+                }
                 $orders['track_and_trace_code']=$this->post['track_and_trace_code'];
                 $orders['order_memo']=$this->post['order_memo'];
             }
@@ -3603,16 +3607,17 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='</select></div>
             ';
 		}
-		if (!$orders['expected_delivery_date']) {
-			$orders['expected_delivery_date']=time();
+		if ($orders['expected_delivery_date']) {
+			$expected_delivery_date_local=date("d-m-Y", $orders['expected_delivery_date']);
+            $expected_date=date("Y-m-d", $orders['expected_delivery_date']);
 		}
 		$tmpcontent.='
         </div>
         <div class="form-group">
             <label for="expected_delivery_date" class="control-label col-md-2">'.$this->pi_getLL('expected_delivery_date').'</label>
             <div class="col-md-10">
-	            <input type="text" name="expected_delivery_date_local" readonly class="form-control" id="expected_delivery_date_local" value="'.date("d-m-Y", $orders['expected_delivery_date']).'" >
-	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="'.date("Y-m-d", $orders['expected_delivery_date']).'" />
+	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="'.$expected_delivery_date_local.'" >
+	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="'.$expected_date.'" />
             </div>
         </div>
         <div class="form-group">

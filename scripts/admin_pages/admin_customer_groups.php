@@ -2,22 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
-var checkAll = function() {
-	for (var x = 0; x < 100; x++) {
-		if (document.getElementById(\'ordid_\' + x) != null) {
-			document.getElementById(\'ordid_\' + x).checked = true;
-		}
-	}
-}
-var uncheckAll = function() {
-	for (var x = 0; x < 100; x++) {
-		if (document.getElementById(\'ordid_\' + x) != null) {
-			document.getElementById(\'ordid_\' + x).checked = false;
-		}
-	}
-}
-</script>';
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_group_id'])) {
 	$updateArray=array();
 	$updateArray['hidden']=$this->get['disable'];
@@ -84,23 +68,17 @@ $content='<div class="panel panel-default">
 		<input class="form-control" type="text" name="group_name" id="group_name" value="'.htmlspecialchars($this->post['group_name']).'" />
 		</div>
 	</div>
-	<div class="form-group">
-		<label class="control-label col-md-2">Enable usage of budget</label>
-		<div class="col-md-10">
-		<div class="radio radio-success radio-inline">
-		<input name="tx_multishop_pi1[budget_enabled]" id="radio1" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio1">'.$this->pi_getLL('admin_yes').'</label>
-		</div>
-		<div class="radio radio-success radio-inline">
-		<input name="tx_multishop_pi1[budget_enabled]" id="radio2" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio2">'.$this->pi_getLL('admin_no').'</label>
-		</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-md-2">Budget usage</label>
-		<div class="col-md-10">
-		<input class="form-control" type="text" name="tx_multishop_pi1[remaining_budget]" size="8" id="remaining_budget" value="'.htmlspecialchars($this->post['tx_multishop_pi1']['remaining_budget']).'" />
-		</div>
-	</div>
+	';
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customer_groups.php']['adminInsertCustomerGroupFormMarkupProc'])) {
+	$params=array(
+			'content'=>&$content
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customer_groups.php']['adminInsertCustomerGroupFormMarkupProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+$content.='
 	<div class="form-group">
 		<label class="control-label col-md-2">'.$this->pi_getLL('discount').'</label>
 		<div class="col-md-10">
@@ -142,7 +120,6 @@ $content='<div class="panel panel-default">
 		</div></div>
 	</div>
 </form>
-
 ';
 // product search
 $filter=array();
