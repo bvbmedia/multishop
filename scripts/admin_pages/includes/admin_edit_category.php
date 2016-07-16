@@ -1095,20 +1095,20 @@ if ($this->post) {
 					$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($category['categories_id'])."' and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+						$feed_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" id="feed'.$rs_feed['id'].'" checked="checked" /><label for="feed'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
 					} else {
-						$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+						$feed_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" id="feed'.$rs_feed['id'].'" /><label for="feed'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
 					}
 					$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($category['categories_id'])."' and exclude_type='categories'";
 					$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
-						$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+						$feed_stock_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" id="feed_exclude'.$rs_feed['id'].'" /><label for="feed_exclude'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
 					} else {
-						$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+						$feed_stock_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" id="feed_exclude'.$rs_feed['id'].'" /><label for="feed_exclude'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
 					}
 				} else {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+					$feed_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" id="feed'.$rs_feed['id'].'" /><label for="feed'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
+					$feed_stock_checkbox.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" id="feed_exclude'.$rs_feed['id'].'" /><label for="feed_exclude'.$rs_feed['id'].'">'.$rs_feed['name'].'</label></div>';
 				}
 			}
 			$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
