@@ -341,7 +341,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			$tmpcontent.='
 					</div></div>';
 		} else {
-			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
+			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$this->shop_pid.'">';
 		}
 		$percentage_cost=false;
 		if (strpos($this->post['handling_costs'], '%')!==false) {

@@ -13,10 +13,10 @@ function populateRelatedProduct(data) {
                     var existing_cb = '#cb_' + categories_id + '_' + products_data.id;
                     if ($(existing_cb).length == 0) {
                         if (products_data.checked == 1) {
-                            html_elem += '<li><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" />' + products_data.name + '</li>';
+                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '">' + products_data.name + '</label></div></li>';
 
                         } else {
-                            html_elem += '<li><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" />' + products_data.name + '</li>';
+                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '">' + products_data.name + '</label></div></li>';
                         }
                     }
                 });
