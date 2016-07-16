@@ -96,23 +96,28 @@ if ($this->post) {
                 $res=$GLOBALS['TYPO3_DB']->sql_query($query);
             }
             if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-                if (isset($this->post['options_groups'][$products_options_id]) && !empty($this->post['options_groups'][$products_options_id])) {
-                    $updateArray=array();
-                    $updateArray['attributes_options_groups_id']=$this->post['options_groups'][$products_options_id];
-                    $updateArray['products_options_id']=$products_options_id;
-                    $str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
-                            'tx_multishop_attributes_options_groups_to_products_options', // FROM ...
-                            'products_options_id=\''.$products_options_id.'\' and attributes_options_groups_id=\''.$this->post['options_groups'][$products_options_id].'\'', // WHERE...
-                            '', // GROUP BY...
-                            '', // ORDER BY...
-                            '' // LIMIT ...
-                    );
-                    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-                    if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-                        $query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups_to_products_options', $updateArray);
-                        $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                if (isset($this->post['options_groups'][$products_options_id])) {
+                    if (!empty($this->post['options_groups'][$products_options_id])) {
+                        $updateArray=array();
+                        $updateArray['attributes_options_groups_id']=$this->post['options_groups'][$products_options_id];
+                        $updateArray['products_options_id']=$products_options_id;
+                        $str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
+                                'tx_multishop_attributes_options_groups_to_products_options', // FROM ...
+                                'products_options_id=\''.$products_options_id.'\' and attributes_options_groups_id=\''.$this->post['options_groups'][$products_options_id].'\'', // WHERE...
+                                '', // GROUP BY...
+                                '', // ORDER BY...
+                                '' // LIMIT ...
+                        );
+                        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                            $query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups_to_products_options', $updateArray);
+                            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                        } else {
+                            $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\''.$products_options_id.'\'', $updateArray);
+                            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
                     } else {
-                        $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\''.$products_options_id.'\'', $updateArray);
+                        $query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\''.$products_options_id.'\'');
                         $res=$GLOBALS['TYPO3_DB']->sql_query($query);
                     }
                 }
@@ -161,7 +166,7 @@ if ($rows) {
         $content.='<div class="panel-body">';
         $options_group='';
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-            $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'class="form-control row');
+            $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'class="form-control"');
             if (!empty($options_group)) {
                 $options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
             } else {
