@@ -90,6 +90,7 @@ jQuery(document).ready(function ($) {
     ###JS_TRIGGERS_EXTRA###
 });
 </script>
+<form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="admin_interface_form">
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3>###HEADING_TITLE###</h3>
@@ -175,7 +176,6 @@ jQuery(document).ready(function ($) {
         <!-- ###DETAILS### end -->
         <div role="tabpanel" id="edit_customer" class="tab-pane">
             <div id="live-validation">
-                <form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="admin_interface_form">
                     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
                     <div class="row">
                     <div class="col-md-8">
@@ -350,7 +350,6 @@ jQuery(document).ready(function ($) {
                             ###LOGIN_AS_THIS_USER_LINK###
                         </div>
                     </div>
-                </form>
             </div>
         </div>
         ###CONTENT_EXTRA_PLUGIN_TABS###
@@ -358,6 +357,7 @@ jQuery(document).ready(function ($) {
 </div>
 </div>
 </div>
+</form>
 <div id="ajax_message" class="ajax_message"></div>
 <script type="text/javascript">
 jQuery(document).ready(function($) {
