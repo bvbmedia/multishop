@@ -545,19 +545,21 @@ if ($this->post['action']=='category-insert') {
 				}
 				$i=0;
 				$table_cols=array();
-				foreach ($datarows as $datarow) {
-					$s=0;
-					foreach ($datarow as $colname=>$datacol) {
-						$table_cols[$s]=$colname;
-						if (!mb_detect_encoding($table_cols[$s], 'UTF-8', true)) {
-							$table_cols[$s]=$table_cols[$s];
+				if (is_array($datarows)) {
+					foreach ($datarows as $datarow) {
+						$s=0;
+						foreach ($datarow as $colname=>$datacol) {
+							$table_cols[$s]=$colname;
+							if (!mb_detect_encoding($table_cols[$s], 'UTF-8', true)) {
+								$table_cols[$s]=$table_cols[$s];
+							}
+							$rows[$i][$s]=$datacol;
+							$s++;
 						}
-						$rows[$i][$s]=$datacol;
-						$s++;
-					}
-					$i++;
-					if ($i==5) {
-						break;
+						$i++;
+						if ($i==5) {
+							break;
+						}
 					}
 				}
 			} elseif ($this->post['format']=='excel') {
