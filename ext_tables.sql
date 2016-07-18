@@ -1487,6 +1487,7 @@ CREATE TABLE tt_address (
  region varchar(100) default '',
  country varchar(100) default '',
  image tinyblob,
+ image_filename tinytext,
  fax varchar(30) default '',
  deleted tinyint(3) default '0',
  description text,
