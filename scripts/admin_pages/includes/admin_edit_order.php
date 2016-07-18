@@ -3871,7 +3871,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			//
             var tax_id = $(tax_element_id).val();
-            if (current_value > 0) {
+            if (current_value > 0 || current_value < 0) {
                 if (to_include_vat) {
                     $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: tax_id }, function (json) {
                         if (json && json.price_including_tax) {
