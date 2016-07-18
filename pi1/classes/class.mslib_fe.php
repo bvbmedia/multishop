@@ -7447,6 +7447,13 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['class']='fa fa-puzzle-piece';
+            // repair default crumpath
+            if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_default_crumpath']['label'] = $this->pi_getLL('repair_products_default_crumpath');
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_default_crumpath']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_repair_products_default_crumpath');
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_default_crumpath']['link_params'] = 'onClick="return CONFIRM(\'' . $this->pi_getLL('admin_label_are_you_sure_want_to_start_this') . '?\')"';
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_default_crumpath']['class'] = 'fa fa-puzzle-piece';
+            }
 			// footer eof
 		} // end if enableAdminPanelSystem
 		if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
