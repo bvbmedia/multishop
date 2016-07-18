@@ -534,6 +534,14 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				break;
 		}
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['contentPostProc'])) {
+            $params=array(
+                'content'=>&$content,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['contentPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
 		if ($this->skipWrapInBase) {
 			return $content;
 		}
@@ -550,7 +558,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($this->hideHeader) {
 				$this->cObj->data['header']='';
 			}
-			$content=mslib_fe::typobox($this->cObj->data['header'], $content, $this->box_class);
+			$content=mslib_fe::TypoBox($this->cObj->data['header'], $content, $this->box_class);
 		} elseif (!$this->hideHeader) {
 			if (!$this->hideIfNoResults or ($this->hideIfNoResults and !$this->no_database_results)) {
 				$content=$this->cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['lib.']['stdheader'], $GLOBALS['TSFE']->tmpl->setup['lib.']['stdheader.']).$content;
