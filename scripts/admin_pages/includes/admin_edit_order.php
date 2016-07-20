@@ -1736,7 +1736,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// products price total header col
 			//cellFinalPrice
-			$order_products_header_data['products_final_price']['class']='cellPrice';
+			$order_products_header_data['products_final_price']['class']='cellPrice cellNoWrap';
 			$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_ex_vat');
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
