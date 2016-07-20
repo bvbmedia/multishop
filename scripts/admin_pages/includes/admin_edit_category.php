@@ -1030,6 +1030,7 @@ if ($this->post) {
 		$subpartArray['###LINK_BUTTON_CANCEL_FOOTER###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
+		$subpartArray['###CUSTOM_MARKER_ABOVE_CATEGORY_NAME_BLOCK###']='';
 		$subpartArray['###INPUT_CATEGORY_NAME_BLOCK###']=$category_name_block;
 		$subpartArray['###SELECTBOX_CATEGORY_TREE###']=$category_tree;
 		$subpartArray['###LINK_INPUT_CATEGORY_TREE###']=$link_to_categories_elem;
