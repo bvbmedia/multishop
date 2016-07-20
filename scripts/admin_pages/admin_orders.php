@@ -793,6 +793,10 @@ $data['offset']=$offset;
 $data['from'][]='tx_multishop_orders o';
 // Define section, so hooks can control the query
 $data['section']='admin_orders';
+if ($this->get['tx_multishop_pi1']['group_by']) {
+	$data['group_by'][]=addslashes($this->get['tx_multishop_pi1']['group_by']);
+}
+
 $pageset=mslib_fe::getRecordsPageSet($data);
 $tmporders=$pageset['dataset'];
 if ($pageset['total_rows']>0) {

@@ -433,7 +433,7 @@ $head.='
 		jQuery.h5Validate.addPatterns({
 			email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 		});
-		var validate=jQuery(\'#edit_customer\').h5Validate();
+		var validate=jQuery(\'#admin_interface_form\').h5Validate();
 
 		$("#birthday_visitor").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",

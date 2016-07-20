@@ -25,6 +25,34 @@ if ($this->post) {
 		foreach ($this->post['store_details'] as $db_col => $db_value) {
 			$updateArray[$db_col]=$db_value;
 		}
+        if($_FILES['store_details']['error']['image']==0 && $_FILES['store_details']['tmp_name']['image']) {
+            @unlink($this->DOCUMENT_ROOT.'uploads/pics/'.$updateArray['image_filename']);
+            $name=$this->post['store_details']['company'];
+            if (!$name) {
+                $name=$this->post['store_details']['first_name'] . ' ' . $this->post['store_details']['middle_name'] . ' ' . $this->post['store_details']['last_name'];
+                $name=preg_replace('/\s+/', ' ', $name);
+            }
+            $imgtype=exif_imagetype($_FILES['store_details']['tmp_name']['image']);
+            if($imgtype) {
+                // valid image
+                $ext=image_type_to_extension($imgtype, false);
+                if($ext) {
+                    $i=0;
+                    $filename=mslib_fe::rewritenamein($name).'.'.$ext;
+                    $target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+                    if(file_exists($target)) {
+                        while(file_exists($target)) {
+                            $filename=mslib_fe::rewritenamein($name).($i > 0 ? '-'.$i : '').'.'.$ext;
+                            $target=$this->DOCUMENT_ROOT.'uploads/pics/'.$filename;
+                            $i++;
+                        }
+                    }
+                    if(move_uploaded_file($_FILES['store_details']['tmp_name']['image'], $target)) {
+                        $updateArray['image_filename']=$filename;
+                    }
+                }
+            }
+        }
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = '.$this->conf['tt_address_record_id_store'], $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -78,9 +106,28 @@ if (is_array($this->tta_shop_info) && $this->tta_shop_info['tt_uid']==$this->con
 		}
 		$content.='</ul></div>';
 	}
-	$content.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_store_details').'" class="edit_customer" id="admin_interface_form">
+	$content.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_store_details').'" class="edit_customer" id="admin_interface_form" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-8">
+				<div class="form-group">
+                    <div class="row">
+                        '.($rs_store_details['image_filename'] ? '
+                        <div class="col-md-4">
+                            <img src="'.$this->FULL_HTTP_URL.'uploads/pics/'.$rs_store_details['image_filename'].'" width="150px" />
+                        </div>
+                        <div class="col-md-8">
+                            <label for="image" id="account-image">'.ucfirst($this->pi_getLL('admin_image')).'</label>
+                            <input type="file" name="store_details[image]" class="form-control image" id="image">
+                            <input type="hidden" name="store_details[image_filename]" value="'.$rs_store_details['image_filename'].'">
+                        </div>
+                        ' : '
+                        <div class="col-md-12">
+                            <label for="image" id="account-image">'.ucfirst($this->pi_getLL('admin_image')).'</label>
+                            <input type="file" name="store_details[image]" class="form-control image" id="image">
+                        </div>
+                        ').'
+                    </div>
+                </div>
 				<div class="form-group">
                     <div class="row">
                         <div class="col-md-12">

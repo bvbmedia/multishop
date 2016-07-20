@@ -29,5 +29,12 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$messages[]=$query2;
 	}
 }
+$str="select image_filename from tt_address limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tt_address` ADD `image_filename` tinytext";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 
 ?>

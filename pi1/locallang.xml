@@ -1323,6 +1323,8 @@
             <label index="mail_to_customer">Mail to customer</label>
             <label index="mail_to_merchant">Mail to merchant</label>
             <label index="select_customer_groups">Select customer group(s)</label>
+            <label index="repair_products_default_crumpath">Repair products default crumpath</label>
+            <label index="admin_label_repair_products_default_crumpath_done">Repair products default crumpath done!!</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

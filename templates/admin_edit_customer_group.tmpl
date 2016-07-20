@@ -22,6 +22,7 @@ jQuery(document).ready(function ($) {
     ###JS_TRIGGERS_EXTRA###
 });
 </script>
+<form id="form1" name="form1" class="form-horizontal blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
 <div class="panel panel-default">
 <div class="panel-body">
 <div id="tab-container" class="msadminVerticalTabs">
@@ -34,7 +35,6 @@ jQuery(document).ready(function ($) {
             <div class="panel panel-default">
                 <div class="panel-heading"><h3>###LABEL_HEADING###</h3></div>
                 <div class="panel-body">
-                    <form id="form1" name="form1" class="form-horizontal blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
                         <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
                         <input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
                         <input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
@@ -57,25 +57,23 @@ jQuery(document).ready(function ($) {
                             </div>
                         </div>
                         ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                        <hr>
-                        <div class="clearfix">
-                            <div class="pull-right">
-                                <button type="submit" class="btn btn-success" name="Submit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE###</button>
-                            </div>
-                        </div>
-                    </form>
+
                 </div>
             </div>
         </div>
         ###CONTENT_EXTRA_PLUGIN_TABS###
     </div>
-    <hr>
+    <hr/>
     <div class="clearfix">
         <a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+        <div class="pull-right">
+            <button type="submit" class="btn btn-success" name="Submit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE###</button>
+        </div>
     </div>
 </div>
 </div>
 </div>
+</form>
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $(document).on("click", ".payment_method_cb", function() {

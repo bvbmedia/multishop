@@ -463,6 +463,11 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_repair_missing_multilanguages_attributes.php');
 		}
 		break;
+    case 'admin_repair_products_default_crumpath':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_repair_products_default_crumpath.php');
+        }
+        break;
 	case 'merge_categories':
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_categories.php');

@@ -74,6 +74,15 @@ if ($this->post) {
 		}
 		// shipping/payment methods eof
 	}
+    // custom page hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPostProc'])) {
+        $params=array(
+            'customer_group_id'=>&$this->post['customer_group_id']
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 	if ($this->post['tx_multishop_pi1']['referrer']) {
 		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 		exit();
