@@ -8,15 +8,17 @@ $compiledWidget['title']=$this->pi_getLL('sales_volume_by_month_per_product');
 $categoriesTotal=array();
 $allTotal=0;
 $dates=array();
-for ($i=3; $i>=0; $i--) {
+$times=array();
+for ($i=date('m')-1; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
-	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
-	if ($i==3) {
-		$start_time=$time;
-	}
+    $year_month=date("Y-m", $time);
+	$dates[strftime("%B %Y", $time)]=$year_month;
+    $times[strftime("%B %Y", $time)]=$time;
 }
 $end_time=$time;
 $dates = array_reverse($dates);
+$times = array_reverse($times);
+$start_time = array_pop($times);
 
 $where=array();
 $where[]='(o.deleted=0)';
@@ -28,6 +30,7 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('o.crdate', // SELECT ...
 	'o.orders_id asc', // ORDER BY...
 	'1' // LIMIT ...
 );
+var_dump($str);
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($str);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if ($row_year['crdate']>0) {
@@ -40,7 +43,7 @@ $categories=array();
 $where=array();
 $where[]='(o.deleted=0)';
 //$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-$where[]='(i.crdate BETWEEN '.strtotime(date('Y-m-d 00:00:00')).' and '.time().')';
+$where[]='(o.crdate BETWEEN ' . $start_time . ' and '.time().')';
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('op.categories_id', // SELECT ...
 		'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
 		'('.implode(" AND ", $where).') and o.orders_id=op.orders_id', // WHERE...
@@ -48,7 +51,6 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('op.categories_id', // SELECT ...
 		'o.orders_id asc', // ORDER BY...
 		'' // LIMIT ...
 );
-
 $qry_categories=$GLOBALS['TYPO3_DB']->sql_query($str);
 while ($row_categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_categories)) {
 	$catname=mslib_fe::getCategoryName($row_categories['categories_id']);
