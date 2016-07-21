@@ -37,11 +37,12 @@ foreach ($tmporders as $order) {
 	if ($this->masterShop) {
 		$master_shop_col='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($order['page_uid']).'</td>';
 	}
+	$customerNameArray=array();
 	if ($order['billing_company']) {
-		$customer_name=$order['billing_company'];
-	} else {
-		$customer_name=$order['billing_name'];
+		$customerNameArray[]=$order['billing_company'];
 	}
+	$customerNameArray[]=$order['billing_name'];
+
 	$order_status_selectbox='<select name="orders_status" class="form-control change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
 	if (is_array($all_orders_status)) {
@@ -137,7 +138,7 @@ foreach ($tmporders as $order) {
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
 	//$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
-	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
+	$markerArray['ORDER_CUSTOMER_NAME']=implode('<br/>',$customerNameArray);
 	$markerArray['ORDER_CREATE_DATE']='<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="'.htmlspecialchars(strftime("%a. %x<br/>%X", $order['crdate'])).'" data-original-title="" title="">'.strftime("%x", $order['crdate']).'</a>';
 
 
