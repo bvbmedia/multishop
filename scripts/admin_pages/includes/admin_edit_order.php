@@ -53,12 +53,23 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->post) {
+                    if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $this->post['tx_multishop_pi1']['billing_vat_id']) {
+                        if (strtolower($this->post['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
+                            $this->ms['MODULES']['DISABLE_VAT_RATE']=1;
+                        }
+                    }
 					if (!empty($this->post['product_tax']) && $this->post['product_tax']>0) {
 						$tr=mslib_fe::getTaxes($this->post['product_tax']);
+                        if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                            $tr['rate']=0;
+                        }
 						$this->post['product_tax']=$tr['rate'];
 					}
 					if (!empty($this->post['manual_product_tax']) && $this->post['manual_product_tax']>0) {
 						$tr=mslib_fe::getTaxes($this->post['manual_product_tax']);
+                        if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                            $tr['rate']=0;
+                        }
 						$this->post['manual_product_tax']=$tr['rate'];
 					}
 					if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
@@ -375,6 +386,11 @@ if (is_numeric($this->get['orders_id'])) {
 							$shipping_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
 							$shipping_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
 						}
+                        if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                            $shipping_method['tax_rate']=0;
+                            $shipping_method['country_tax_rate']=0;
+                            $shipping_method['region_tax_rate']=0;
+                        }
 						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -474,6 +490,11 @@ if (is_numeric($this->get['orders_id'])) {
 							$payment_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
 							$payment_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
 						}
+                        if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                            $payment_method['tax_rate']=0;
+                            $payment_method['country_tax_rate']=0;
+                            $payment_method['region_tax_rate']=0;
+                        }
 						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {

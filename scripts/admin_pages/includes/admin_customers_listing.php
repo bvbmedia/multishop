@@ -28,14 +28,15 @@ foreach ($customers as $customer) {
 	if (!$customer['name']) {
 		$customer['name']=$customer['username'];
 	}
+	$customerNameArray=array();
 	if ($customer['company']) {
-		$name=$customer['company'];
-	} else {
-		$name=$customer['name'];
+		$customerNameArray[]=$customer['company'];
 	}
-	$name=trim($name);
-	if (!$name) {
-		$name=$customer['username'];
+	if ($customer['name']) {
+		$customerNameArray[]=$customer['name'];
+	}
+	if (!count($customerNameArray)) {
+		$customerNameArray[]=$customer['username'];
 	}
 	if ($customer['lastlogin']) {
 		$customer['lastlogin']=strftime("%a. %x<br/>%X", $customer['lastlogin']);
@@ -86,8 +87,9 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_EDIT_LINK']=$customer_edit_link;
 	$markerArray['CUSTOMERS_USERNAME']=$customer['username'];
 	$markerArray['CUSTOMERS_COMPANY']=$customer['company'];
-	$markerArray['CUSTOMERS_NAME']=$name;
-
+	$markerArray['CUSTOMERS_NAME']=$customer['name'];
+	$markerArray['CUSTOMERS_COMPANY_AND_NAME']=implode('<br/>',$customerNameArray);
+	
 	$userGroupMarkupArray=array();
 	$userGroupUids=explode(',',$customer['usergroup']);
 	if (is_array($userGroupUids) && count($userGroupUids)) {
