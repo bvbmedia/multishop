@@ -89,7 +89,7 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_COMPANY']=$customer['company'];
 	$markerArray['CUSTOMERS_NAME']=$customer['name'];
 	$markerArray['CUSTOMERS_COMPANY_AND_NAME']=implode('<br/>',$customerNameArray);
-	
+
 	$userGroupMarkupArray=array();
 	$userGroupUids=explode(',',$customer['usergroup']);
 	if (is_array($userGroupUids) && count($userGroupUids)) {
