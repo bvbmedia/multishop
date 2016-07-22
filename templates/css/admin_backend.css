@@ -372,6 +372,7 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 .form-horizontal #sidetree .checkbox-inline > label { padding-left:0; }
 
 .form-horizontal #msAdmin_category_listing_ul.treeview .checkbox { float:left; min-height:16px;}
+#msAdmin_category_listing_ul.treeview li a:hover { border-bottom:none; }
 
 #msAdmin_category_listing_ul.treeview ul { margin-bototm:0; }
 #msAdmin_category_listing_ul.treeview li { padding-left:20px; }
