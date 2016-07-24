@@ -4127,6 +4127,7 @@ class mslib_befe {
         $tr_type = 'even';
         $od_rows_count = 0;
         $product_counter = 1;
+        $real_prefix=$prefix;
         if (is_array($order['products']) && count($order['products'])) {
             $contentItem = '';
             foreach ($order['products'] as $product) {
@@ -4168,6 +4169,52 @@ class mslib_befe {
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
                 $markerArray['ITEM_ORDER_UNIT'] = $product['order_unit_name'];
+                if ($table_type=='invoice' && $prefix=='-') {
+                    if (strpos($product['final_price'], '-')!==false) {
+                        $prefix='';
+                        $product['final_price']=str_replace('-', '', $product['final_price']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['shipping_method_costs'], '-')!==false) {
+                        $prefix='';
+                        $order['shipping_method_costs']=str_replace('-', '', $order['shipping_method_costs']);
+                        $order['orders_tax_data']['shipping_tax']=str_replace('-', '', $order['orders_tax_data']['shipping_tax']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['payment_method_costs'], '-')!==false) {
+                        $prefix='';
+                        $order['payment_method_costs']=str_replace('-', '', $order['payment_method_costs']);
+                        $order['orders_tax_data']['payment_tax']=str_replace('-', '', $order['orders_tax_data']['payment_tax']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['orders_tax_data']['sub_total'], '-')!==false) {
+                        $prefix='';
+                        $order['orders_tax_data']['sub_total']=str_replace('-', '', $order['orders_tax_data']['sub_total']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['subtotal_amount'], '-')!==false) {
+                        $prefix='';
+                        $order['subtotal_amount']=str_replace('-', '', $order['subtotal_amount']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['discount'], '-')!==false) {
+                        $prefix='';
+                        $order['discount']=str_replace('-', '', $order['discount']);
+                    } else {
+                        $prefix='-';
+                    }
+                    if (strpos($order['orders_tax_data']['grand_total'], '-')!==false) {
+                        $prefix='';
+                        $order['orders_tax_data']['grand_total']=str_replace('-', '', $order['orders_tax_data']['grand_total']);
+                    } else {
+                        $prefix='-';
+                    }
+                }
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                     $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['final_price'] + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
                     $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] + $product['products_tax_data']['total_tax'])), $customer_currency, $display_currency_symbol, 0);
@@ -4334,6 +4381,16 @@ class mslib_befe {
                                 if (empty($tax_sep_data['payment_tax'])) {
                                     $tax_sep_data['payment_tax'] = 0;
                                 }
+                                if ($table_type=='invoice' && $real_prefix=='-') {
+                                    if (strpos($tax_sep_data['products_total_tax'], '-')!==false) {
+                                        $prefix='';
+                                        $tax_sep_data['products_total_tax']=str_replace('-', '', $tax_sep_data['products_total_tax']);
+                                        $tax_sep_data['shipping_tax']=str_replace('-', '', $tax_sep_data['shipping_tax']);
+                                        $tax_sep_data['payment_tax']=str_replace('-', '', $tax_sep_data['payment_tax']);
+                                    } else {
+                                        $prefix='-';
+                                    }
+                                }
                                 $tax_sep_total = $prefix . ($tax_sep_data['products_total_tax'] + $tax_sep_data['shipping_tax'] + $tax_sep_data['payment_tax']);
                                 if (count($order['orders_tax_data']['tax_separation']) == 1 || $tax_sep_total > 0) {
                                     // only print TAX rate if there is only 1 seperation OR if there are multiple seperations where each seperation amount is higher than 0
@@ -4358,6 +4415,14 @@ class mslib_befe {
                         $markerArray['LABEL_INCLUDED_VAT_AMOUNT'] = $this->pi_getLL('included_vat_amount');
                     } else {
                         $markerArray['LABEL_VAT'] = $this->pi_getLL('vat');
+                    }
+                    if ($table_type=='invoice' && $real_prefix=='-') {
+                        if (strpos($order['orders_tax_data']['total_orders_tax'], '-')!==false) {
+                            $prefix='';
+                            $order['orders_tax_data']['total_orders_tax']=str_replace('-', '', $order['orders_tax_data']['total_orders_tax']);
+                        } else {
+                            $prefix='-';
+                        }
                     }
                     $markerArray['TOTAL_VAT'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['total_orders_tax']), $customer_currency, $display_currency_symbol, 0);
                     $vatItem .= $this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
