@@ -37,3 +37,9 @@ Explanation
 - page_uid = the value of plugin.multishop.shop_pid
 - pid = the value of plugin.multishop.fe_customer_pid
 - usergroup = the value of plugin.multishop.fe_customer_usergroup
+
+How to automate the update of the Google sitemap
+""""""""""""""""""""""""""""""""""""""""""""""""
+Setup a cronjob like this:
+# Update every night sitemap of webshop catalog
+0 0 * * * /usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "http://webshop.nl/index.php?id=10&type=2002&tx_multishop_pi1[page_section]=sitemap_generator&tx_multishop_pi1[encryptionKey]=c23568e03414ec10f385ac955f8717dd12dd84g36" >/dev/null 2>&1
