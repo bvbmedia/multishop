@@ -103,10 +103,13 @@ foreach ($tmporders as $order) {
 
 	$parentClasses=array();
 	$parentClasses[]='fa-stack';
+
 	$classes=array();
 	if ($order['customer_comments']) {
 		// Show red indicator icon to make merchant aware that order contains: customer comments
-		$parentClasses[]='btn-danger';
+		$parentClasses[]='text-danger';
+	} else {
+		$parentClasses[]='text-info';
 	}
 	if ($order['by_phone']) {
 		$classes[]='fa fa-phone fa-stack-1x fa-inverse';
