@@ -101,17 +101,22 @@ foreach ($tmporders as $order) {
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
 
+	$parentClasses=array();
+	$parentClasses[]='fa-stack';
+
 	$classes=array();
 	if ($order['customer_comments']) {
 		// Show red indicator icon to make merchant aware that order contains: customer comments
-		$classes[]='btn-danger';
+		$parentClasses[]='text-danger';
+	} else {
+		$parentClasses[]='text-info';
 	}
 	if ($order['by_phone']) {
 		$classes[]='fa fa-phone fa-stack-1x fa-inverse';
-		$markerArray['MANUAL_ORDER_ICON']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-phone"></i><i class="'.implode(' ',$classes).'"></i></span>';
+		$markerArray['MANUAL_ORDER_ICON']='<span class="'.implode(' ',$parentClasses).'"><i class="fa fa-circle fa-stack-2x fa-circle-phone"></i><i class="'.implode(' ',$classes).'"></i></span>';
 	} else {
 		$classes[]='fa fa-cart-plus fa-stack-1x fa-inverse';
-		$markerArray['MANUAL_ORDER_ICON']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x fa-circle-cart-plus"></i><i class="'.implode(' ',$classes).'"></i></span>';
+		$markerArray['MANUAL_ORDER_ICON']='<span class="'.implode(' ',$parentClasses).'"><i class="fa fa-circle fa-stack-2x fa-circle-cart-plus"></i><i class="'.implode(' ',$classes).'"></i></span>';
 	}
 	$markerArray['INVOICE_NUMBER']='';
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
