@@ -2464,6 +2464,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->cart['user']['payment_method']=$payment_method['code'];
 		$this->cart['user']['payment_method_label']=$payment_method['name'];
 		// payment eof
+		// hook to rewrite the whole methods
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setPaymentMethodPreSaveHook'])) {
+			$params=array(
+					'cart_user'=>&$this->cart['user']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setPaymentMethodPreSaveHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		self::storeCart();
 	}
 	function setCountry($countries_name, $delivery_country='') {
