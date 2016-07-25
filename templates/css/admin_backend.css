@@ -635,8 +635,11 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .cellPlPrice { min-width:250px; }
 
-.fa-stack .fa-circle-cart-plus { color: #337ab7; }
-.fa-stack .fa-circle-phone { color: orange; }
+/* .fa-stack .fa-circle-cart-plus { color: #337ab7; }
+.fa-stack .fa-circle-phone { color: orange; } */
+
+.text-info { color:#337ab7; }
+.text-danger { color:#d9534f; }
 
 .table-borderless > thead > tr > th,
 .table-borderless > tbody > tr > th,
