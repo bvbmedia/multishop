@@ -2329,7 +2329,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($order['orders_id'] and $order['grand_total']<0.001) {
 					mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 				}
-				//
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderLastPostHook'])) {
+					// hook
+					$params=array(
+							'orders_id'=>&$orders_id
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderLastPostHook'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+					// hook oef
+				}
 				return $orders_id;
 			}
 		}
