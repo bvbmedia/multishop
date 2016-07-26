@@ -21,25 +21,29 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
 		$array[]=$this->pi_getLL('show_all');
 		$content.='<ul>';
 
-		if (count($GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'])>0) {
-			// get all cats to generate multilevel fake url
-			$level=0;
-			$cats=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
-			if (is_array($cats) and count($cats)) {
-				$cats=array_reverse($cats);
-			}
+		if ($this->ms['MODULES']['PRICE_FILTER_WITHOUT_CATEGORY_QUERY_STRING']) {
 			$where='';
-			if (count($cats)>0) {
-				foreach ($cats as $cat) {
-					$where.="categories_id[".$level."]=".$cat['id']."&";
-					$level++;
-				}
-				$where=substr($where, 0, (strlen($where)-1));
-				$where.='&';
-			}
-			// get all cats to generate multilevel fake url eof
 		} else {
-			$where='';
+			if (count($GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'])>0) {
+				// get all cats to generate multilevel fake url
+				$level=0;
+				$cats=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
+				if (is_array($cats) and count($cats)) {
+					$cats=array_reverse($cats);
+				}
+				$where='';
+				if (count($cats)>0) {
+					foreach ($cats as $cat) {
+						$where.="categories_id[".$level."]=".$cat['id']."&";
+						$level++;
+					}
+					$where=substr($where, 0, (strlen($where)-1));
+					$where.='&';
+				}
+				// get all cats to generate multilevel fake url eof
+			} else {
+				$where='';
+			}
 		}
 		$this->get['skeyword']=$_REQUEST['skeyword'];
 		$this->get['skeyword']=trim($this->get['skeyword']);
