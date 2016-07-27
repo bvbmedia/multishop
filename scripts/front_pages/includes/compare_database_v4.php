@@ -68,4 +68,17 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		}
 	}
 }
+$str="describe `tx_multishop_products_options`";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+	if ($row['Field']=='products_options_descriptions') {
+		if ($row['Type']=='varchar(255)') {
+			$str2="ALTER TABLE  `tx_multishop_products_options` CHANGE  `products_options_descriptions`  `products_options_descriptions` text";
+			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+			$messages[]=$str2;
+		}
+	}
+}
+
+
 ?>

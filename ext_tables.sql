@@ -1042,6 +1042,7 @@ CREATE TABLE `tx_multishop_products_options` (
  `attributes_values` tinyint(1) default '0',
  `hide_in_cart` tinyint(1) default '0',
  `required` tinyint(1) default '0',
+ `products_options_descriptions` text,
  PRIMARY KEY (`products_options_id`,`language_id`),
  KEY `products_options_name` (`products_options_name`),
  KEY `products_options_id` (`products_options_id`),

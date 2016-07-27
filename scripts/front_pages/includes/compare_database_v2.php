@@ -127,7 +127,7 @@ foreach ($required_indexes as $required_index) {
 $str="select products_options_descriptions from tx_multishop_products_options limit 1";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-	$str="ALTER TABLE  `tx_multishop_products_options` ADD `products_options_descriptions` varchar(255) default ''";
+	$str="ALTER TABLE  `tx_multishop_products_options` ADD `products_options_descriptions` text";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[]=$str;
 }
