@@ -642,7 +642,8 @@ if (count($cart['products'])<1) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'])) {
 			$params=array(
 				'content'=>&$content,
-				'markerArray'=>&$markerArray
+				'markerArray'=>&$markerArray,
+                'user'=>&$user
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
