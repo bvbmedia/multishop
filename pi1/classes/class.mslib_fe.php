@@ -5609,11 +5609,20 @@ class mslib_fe {
 				}
 				if ($percentage_handling_cost) {
 					$tmp_handling_cost=$handling_cost;
-					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+                    $total_include_vat=0;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $total_include_vat=1;
+                    }
+					$subtotal=mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
 					if ($subtotal) {
 						$handling_cost=($subtotal/100*$tmp_handling_cost);
+                        if ($total_include_vat && $shipping_method['tax_rate']) {
+                            $handling_cost=$handling_cost/(1+$shipping_method['tax_rate']);
+                        }
 					}
 				}
+				//var_dump($shipping_method['tax_rate']);
+                //die();
 				if ($shipping_method['tax_id'] && $handling_cost) {
 					$handling_total_tax_rate=$shipping_method['tax_rate'];
 					if ($shipping_method['country_tax_rate']) {
