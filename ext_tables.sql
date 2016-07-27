@@ -1033,7 +1033,7 @@ CREATE TABLE `tx_multishop_customers_groups_method_mappings` (
 CREATE TABLE `tx_multishop_products_options` (
  `products_options_id` int(11) NOT NULL auto_increment,
  `language_id` int(5) NOT NULL default '0',
- `products_options_name` varchar(64) default '',
+ `products_options_name` varchar(150) default '',
  `listtype` varchar(15) default 'pulldownmenu',
  `description` text,
  `sort_order` int(11) default '0',
@@ -1053,7 +1053,7 @@ CREATE TABLE `tx_multishop_products_options` (
 CREATE TABLE `tx_multishop_products_options_values` (
  `products_options_values_id` int(11) NOT NULL auto_increment,
  `language_id` int(11) NOT NULL default '0',
- `products_options_values_name` varchar(64) default '',
+ `products_options_values_name` varchar(150) default '',
  `hide` tinyint(1) default '0',
  PRIMARY KEY (`products_options_values_id`,`language_id`),
  KEY `products_options_values_id` (`products_options_values_id`),
