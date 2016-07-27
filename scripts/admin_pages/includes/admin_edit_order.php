@@ -53,8 +53,8 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->post) {
-                    if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $this->post['tx_multishop_pi1']['billing_vat_id']) {
-                        if (strtolower($this->post['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
+                    if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] && $this->post['tx_multishop_pi1']['billing_vat_id']) {
+                        if (strtolower($this->post['tx_multishop_pi1']['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
                             $this->ms['MODULES']['DISABLE_VAT_RATE']=1;
                         }
                     }
