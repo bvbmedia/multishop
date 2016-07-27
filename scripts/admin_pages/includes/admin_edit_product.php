@@ -1146,9 +1146,11 @@ if ($this->post) {
 			//if (!$updateArray['products_image']) {
 				$image_tstamp=time();
 				$product_original=mslib_fe::getProduct($this->post['pid']);
+                $original_images=array();
 				foreach ($product_original as $arr_key=>$arr_val) {
 					if (strpos($arr_key, 'products_image')!==false && !empty($arr_val)) {
-						$original_file=$arr_val;
+					    $original_file=$arr_val;
+                        $original_images[$arr_key]=$arr_val;
 						$tmp_filename=explode('.', $original_file);
 						$count_filename=count($tmp_filename);
 						$ext=$tmp_filename[$count_filename-1];
@@ -1172,7 +1174,9 @@ if ($this->post) {
 				}
 				if ($update_product_images) {
 					foreach ($update_product_images as $key=>$value) {
-						$updateArray[$key]=$value;
+					    if ($original_images[$key]!=$value) {
+                            $updateArray[$key] = $value;
+                        }
 					}
 				}
 			//}

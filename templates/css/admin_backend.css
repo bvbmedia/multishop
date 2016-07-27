@@ -635,8 +635,11 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .cellPlPrice { min-width:250px; }
 
-.fa-stack .fa-circle-cart-plus { color: #337ab7; }
-.fa-stack .fa-circle-phone { color: orange; }
+/* .fa-stack .fa-circle-cart-plus { color: #337ab7; }
+.fa-stack .fa-circle-phone { color: orange; } */
+
+.text-info { color:#337ab7; }
+.text-danger { color:#d9534f; }
 
 .table-borderless > thead > tr > th,
 .table-borderless > tbody > tr > th,
@@ -666,3 +669,8 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 #msEditProductInputProductVolume .input-group .input-group-addon { border-left:none; }
 #msEditProductInputProductVolume .input-group .input-group-addon,
 #msEditProductInputProductVolume .input-group .input-group-btn { width:50px; }
+
+#budget_categories_form .msAttributesField:nth-child(2) { margin-top:0; }
+#budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon:first-child {width:90%; text-align:left; }
+#budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon.currencySymbol { border-right:none; }
+#budget_categories_form #msAdmin_category_listing_ul.treeview li.sub_categories_sorting.category .form-group { margin-bottom:2px; }

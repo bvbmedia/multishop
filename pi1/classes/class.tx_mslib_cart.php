@@ -1790,7 +1790,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				// hook oef
 			}
-			if ($orders_id) {
+			if (!$orders_id) {
+				$subject=$this->FULL_HTTP_URL.' - Convert cart to order failed';
+				$body='Warning. Convert cart to order failed.<br/>Website: '.$this->FULL_HTTP_URL.'<br/>Error: '.$GLOBALS['TYPO3_DB']->sql_error().'<br/>Query:<br/>'.$query;
+				$mailuser=array();
+				$mailuser['name']=$this->ms['MODULES']['STORE_NAME'];
+				$mailuser['email']=$this->ms['MODULES']['STORE_EMAIL'];
+				if ($this->ms['MODULES']['DEVELOPER_EMAIL']) {
+					$mailuser['email']=$this->ms['MODULES']['DEVELOPER_EMAIL'];
+				}
+				if ($mailuser['email']) {
+					mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+				}
+			} else {
 				// now add the orders products
 				if ($cart['user']['payment_method']) {
 					$this->ms['payment_method']=$cart['user']['payment_method'];
@@ -2464,6 +2476,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->cart['user']['payment_method']=$payment_method['code'];
 		$this->cart['user']['payment_method_label']=$payment_method['name'];
 		// payment eof
+		// hook to rewrite the whole methods
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setPaymentMethodPreSaveHook'])) {
+			$params=array(
+					'cart_user'=>&$this->cart['user']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setPaymentMethodPreSaveHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		self::storeCart();
 	}
 	function setCountry($countries_name, $delivery_country='') {
