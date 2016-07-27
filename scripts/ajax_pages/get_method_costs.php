@@ -171,14 +171,14 @@ if (count($available_sid)>0) {
 	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 		$data['shipping_cost'] = '';
 		$data['shipping_cost_cur'] = '';
-		if ($priceArray['shipping_costs_including_vat']>0) {
+		if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 			$data['shipping_cost'] = $priceArray['shipping_costs_including_vat'];
 			$data['shipping_cost_cur'] = mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']);
 		}
 	} else {
 		$data['shipping_cost'] = '';
 		$data['shipping_cost_cur'] = '';
-		if ($priceArray['shipping_costs']>0) {
+		if ($priceArray['shipping_costs']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 			$data['shipping_cost'] = $priceArray['shipping_costs'];
 			$data['shipping_cost_cur'] = mslib_fe::amount2Cents($priceArray['shipping_costs']);
 		}
@@ -199,7 +199,7 @@ foreach ($available_sid as $sids) {
 	$priceArray=mslib_fe::getShippingCosts($countries_id, $sids);
 	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['DISABLE_VAT_RATE']) {
 		$data['available_shippingcost'][$sids]='';
-		if ($priceArray['shipping_costs_including_vat']>0) {
+		if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat'], 0, 0);
 			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box_including_vat'], 0, 0);
 		} else if ($priceArray['shipping_costs_including_vat']<0) {
@@ -208,7 +208,7 @@ foreach ($available_sid as $sids) {
 		}
 	} else {
 		$data['available_shippingcost'][$sids]='';
-		if ($priceArray['shipping_costs']>0) {
+		if ($priceArray['shipping_costs']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 			$data['available_shippingcost'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs'], 0, 0);
 			$data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' +' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box'], 0, 0);
 		} else if ($priceArray['shipping_costs']<0) {

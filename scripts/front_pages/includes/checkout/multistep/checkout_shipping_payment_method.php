@@ -143,7 +143,7 @@ if ($erno or $show_shipping_payment_method) {
 			// costs
 			$price_wrap='';
 			$priceArray=mslib_fe::getShippingCosts($cart['user']['countries_id'], $item['id']);
-			if ($priceArray['shipping_costs_including_vat']>0) {
+			if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 				$data['shipping_cost']=$priceArray['shipping_costs_including_vat'];
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']).'</div>';
 			}
