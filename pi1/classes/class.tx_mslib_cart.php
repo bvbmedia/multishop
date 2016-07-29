@@ -1268,6 +1268,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['name']=$address['first_name'].' '.$address['middle_name'].' '.$address['last_name'];
 			$insertArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
 			$insertArray['first_name']=$address['first_name'];
+            $insertArray['middle_name']=$address['middle_name'];
 			$insertArray['last_name']=$address['last_name'];
 			$insertArray['username']=$address['email'];
 			$insertArray['email']=$address['email'];
