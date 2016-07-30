@@ -177,9 +177,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$grand_total+=$attributes_tax*$row_prod['qty'];
 					$product_tax_data['total_attributes_tax']=(string)$attributes_tax;
 					$product_tax_data['total_tax_rate']=(string)number_format($tax_rate, 2, '.', ',');
-					$final_price=$row_prod['final_price'];
+    				$final_price=$row_prod['final_price'];
 					/*if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-						if ($row_prod['discount_amount']>0) {
+						if (!empty($row_prod['discount_amount'])) {
 							$final_price-=$row_prod['discount_amount'];
 						}
 					}*/

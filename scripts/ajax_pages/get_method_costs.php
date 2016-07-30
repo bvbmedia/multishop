@@ -88,7 +88,6 @@ while ($row_s2p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_s2p)) {
 		$available_sid[]=$row_s2p['shipping_method'];
 	}
 }
-
 //
 $mapped_shipping_methods_product=array();
 $mapped_shipping_methods_group=array();
@@ -137,7 +136,7 @@ if (count($mapped_shipping_methods_user)) {
     $mapped_shipping_methods=$mapped_shipping_methods_user;
 } else if (count($mapped_shipping_methods_group)) {
     $mapped_shipping_methods=$mapped_shipping_methods_group;
-} else {
+} else if (count($mapped_shipping_methods_product)) {
     $mapped_shipping_methods=$mapped_shipping_methods_product;
 }
 if (count($mapped_shipping_methods)) {
@@ -148,12 +147,12 @@ if (count($mapped_shipping_methods)) {
 }
 //
 if (count($available_sid)>0) {
-	if (!$this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+	//if (!$this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
 		if (!$this->post['tx_multishop_pi1']['sid'] or !in_array($this->post['tx_multishop_pi1']['sid'], $available_sid)) {
 			// if the posted shipping id is not in the available shipping method array then select the first valid shipping method
 			$this->post['tx_multishop_pi1']['sid']=$available_sid[0];
 		}
-	}
+	//}
 	$shipping_method=mslib_fe::getShippingMethod($this->post['tx_multishop_pi1']['sid'], 's.id', $countries_id, true);
 	$shipping_method_code=$shipping_method['code'];
 	if (strlen($shipping_method['name'])>1) {
@@ -226,6 +225,7 @@ if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multi
 		$this->post['tx_multishop_pi1']['sid']=999999;
 	}
 }
+$data['shipping_preselected_id']=$this->post['tx_multishop_pi1']['sid'];
 $this->post['caller_segment']='getHtmlCartContents';
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);

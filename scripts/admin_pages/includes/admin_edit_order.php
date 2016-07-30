@@ -160,7 +160,7 @@ if (is_numeric($this->get['orders_id'])) {
 										$updateArray['discount_percentage'] = $discount_percentage;
 									}
 								}
-								if ($updateArray['discount_amount']>0) {
+								if (!empty($updateArray['discount_amount'])) {
 									$updateArray['final_price']=($this->post['product_price']-$updateArray['discount_amount']);
 								}
 								$updateArray['products_tax']=$this->post['product_tax'];
@@ -305,7 +305,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 								$insertArray['products_price']=$this->post['manual_product_price'];
-								if ($insertArray['discount_amount']>0) {
+								if (!empty($insertArray['discount_amount'])) {
 									$insertArray['final_price'] = ($this->post['manual_product_price'] - $insertArray['discount_amount']);
 								} else {
 									$insertArray['final_price'] = $this->post['manual_product_price'];
@@ -1784,7 +1784,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if (is_array($orders_products) and count($orders_products)) {
 				foreach ($orders_products as $order) {
 					if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-						if ($order['products_price']!=$order['final_price'] && $order['discount_amount']>0) {
+						if ($order['products_price']!=$order['final_price'] && !empty($order['discount_amount'])) {
 							$order['final_price']+=$order['discount_amount'];
 						}
 					}
@@ -1903,7 +1903,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_price_display=mslib_fe::taxDecimalCrop($order['final_price'], 2, false);
 						$order_products_price_display_incl=mslib_fe::taxDecimalCrop($order['final_price']+$order_products_tax_data['total_tax'], 2, false);
 						if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							if ($order['discount_amount']>0) {
+							if (!empty($order['discount_amount'])) {
 								$order_products_price_display_incl=mslib_fe::taxDecimalCrop($order['final_price']+(($order['final_price']*$order['products_tax'])/100), 2, false);
 							}
 						}
@@ -1950,7 +1950,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.$order_products_discount_amount_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
 							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
 							//if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							if ($order['discount_amount']>0) {
+							if (!empty($order['discount_amount'])) {
 								$order['final_price']-=$order['discount_amount'];
 							}
 							//}
@@ -2548,7 +2548,13 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-				$colspan=8;
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan=9;
+                } else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan = 8;
+                } else {
+                    $colspan=7;
+                }
 				$order_products_body_data=array();
 				// products id col
 				$order_products_body_data['products_id']['th']=true;
@@ -2757,10 +2763,10 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
 				}
 			} else {
-				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan=9;
+                } else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
 					$colspan = 8;
-				} else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-					$colpsan=9;
 				} else {
 					$colspan=7;
 				}
