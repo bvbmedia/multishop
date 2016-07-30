@@ -4695,7 +4695,7 @@ class mslib_befe {
             return false;
         }
         //$this->msDebug=1;
-        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
+        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
         if ($record['lg_iso_2']) {
             return $record['lg_iso_2'];
         }
@@ -4704,7 +4704,7 @@ class mslib_befe {
         if (!$iso2) {
             return false;
         }
-        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
+        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
         if ($record['uid']) {
             return $record['uid'];
         }
