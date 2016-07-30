@@ -5296,6 +5296,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					$count_b=0;
+                    $count_c=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
@@ -5310,6 +5311,7 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
+                                    $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
@@ -5320,7 +5322,7 @@ class mslib_fe {
 						}
 					}
 					//$count_b=count($allmethods);
-					if ($count_a==$count_b) {
+                    if ($count_a==$count_b || (!$count_b && !$count_c)) {
 						$allmethods=array();
 					}
 					break;
@@ -5329,6 +5331,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					$count_b=0;
+                    $count_c=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
@@ -5342,6 +5345,7 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+                                    $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
@@ -5352,7 +5356,7 @@ class mslib_fe {
 						}
 					}
 					//$count_b=count($allmethods);
-					if ($count_a==$count_b) {
+					if ($count_a==$count_b || (!$count_b && !$count_c)) {
 						$allmethods=array();
 					}
 					break;
