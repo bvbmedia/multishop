@@ -23,7 +23,7 @@ foreach ($customers as $customer) {
 		$master_shop_col='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($customer['page_uid']).'</td>';
 	}
 	if (!$customer['name']) {
-		$customer['name']=$customer['last_name'];
+		$customer['name']=preg_replace('/ +/', ' ',$customer['middle_name'].' '.$customer['last_name']);
 	}
 	if (!$customer['name']) {
 		$customer['name']=$customer['username'];
