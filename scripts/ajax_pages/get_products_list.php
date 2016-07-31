@@ -14,8 +14,8 @@ if ($this->ADMIN_USER) {
             $this->get['q']='';
         }
     }
+    $filter=array();
     if (!empty($this->get['q'])) {
-        $filter=array();
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {
             if (!$this->ms['MODULES']['FLAT_DATABASE']) {
                 $prefix='p.';
@@ -34,14 +34,10 @@ if ($this->ADMIN_USER) {
                 $filter[] = 'p2c.is_deepest=\'1\'';
             }
         }
-        $filter[] = 'p.products_id=pd.products_id';
-        $filter[] = 'p.products_id=p2c.products_id';
-        $filter[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
         if (!empty($this->get['q'])) {
             $filter[] = '(pd.products_name like \'%' . $this->get['q'] . '%\')';
         }
     } else {
-        $filter=array();
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {
             if (!$this->ms['MODULES']['FLAT_DATABASE']) {
                 $prefix='p.';
@@ -75,6 +71,9 @@ if ($this->ADMIN_USER) {
             }
         }
     }
+    $filter[] = 'p.products_id=pd.products_id';
+    $filter[] = 'p.products_id=p2c.products_id';
+    $filter[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
     // hook
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_products_list.php']['getProductListFilterPreProc'])) {
         $params=array(
