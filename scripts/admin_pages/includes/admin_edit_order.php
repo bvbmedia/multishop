@@ -2548,12 +2548,15 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-                    $colspan=9;
-                } else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-                    $colspan = 8;
-                } else {
-                    $colspan=7;
+                $colspan=7;
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
                 }
 				$order_products_body_data=array();
 				// products id col
@@ -2763,13 +2766,16 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
 				}
 			} else {
-                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-                    $colspan=9;
-                } else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-					$colspan = 8;
-				} else {
-					$colspan=7;
-				}
+			    $colspan=7;
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
+                }
 			}
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'])) {
