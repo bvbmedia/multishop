@@ -2727,7 +2727,7 @@ class mslib_fe {
 													$items.=' checked="checked"';
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' data-sort="'.$index_key.'" rel="attributes'.$options['products_options_id'].'" />
 											<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 											'.$attribute_value_image.'
 											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
@@ -2750,7 +2750,7 @@ class mslib_fe {
 													}
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" rel="attributes'.$options['products_options_id'].'" />
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" data-sort="'.$index_key.'" rel="attributes'.$options['products_options_id'].'" />
 										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 										'.$attribute_value_image.'
 										<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
@@ -2802,7 +2802,7 @@ class mslib_fe {
 									default:
 										if ($total_values>1) {
 											$html='';
-											$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
+											$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').' data-sort="'.$index_key.'">';
 											if ($options['required']) {
 												$html.='<option value="">'.$this->pi_getLL('choose_selection').'</option>';
 											}

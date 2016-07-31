@@ -2276,6 +2276,8 @@ if ($this->post) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		// set default Crumpath
+        mslib_befe::setProductDefaultCrumpath($prodid);
 		// lets notify plugin that we have update action in product
 		tx_mslib_catalog::productsUpdateNotifierForPlugin($this->post, $prodid);
 		// custom hook that can be controlled by third-party plugin eof
