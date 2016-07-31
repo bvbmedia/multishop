@@ -48,7 +48,10 @@ foreach ($groups as $group) {
 	$markerArray['VALUE_GROUP_ID']=$group['uid'];
 	$markerArray['VALUE_GROUP_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer_group&customer_group_id='.$group['uid']).'&action=edit_customer_group';
 	$markerArray['VALUE_GROUP_NAME']=$group['title'];
-	$markerArray['VALUE_GROUP_DISCOUNT']=$group['tx_multishop_discount'];
+    $markerArray['VALUE_GROUP_DISCOUNT'] = '';
+    if ($this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
+        $markerArray['VALUE_GROUP_DISCOUNT'] = '<td align="right" width="100">'.$group['tx_multishop_discount'].'</td>';
+    }
 	$markerArray['VALUE_GROUP_STATUS']=$status_html;
 	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
 	$markerArray['GROUP_ONCLICK_DELETE_CONFIRM_JS']='return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')';
@@ -102,7 +105,10 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_HEADER_DISCOUNT###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('discount').'</a>';
+$subpartArray['###LABEL_HEADER_DISCOUNT###']='';
+if ($this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
+    $subpartArray['###LABEL_HEADER_DISCOUNT###'] = '<th><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string) . '">' . $this->pi_getLL('discount') . '</a></th>';
+}
 $subpartArray['###LABEL_HEADER_STATUS###']=$this->pi_getLL('status');
 $subpartArray['###LABEL_HEADER_DELETE###']=ucfirst($this->pi_getLL('delete'));
 $subpartArray['###GROUPS###']=$contentItem;
