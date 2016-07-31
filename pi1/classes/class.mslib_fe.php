@@ -5860,7 +5860,7 @@ class mslib_fe {
 		if ($user['tx_multishop_discount']) {
 			$discount=$user['tx_multishop_discount'];
 		}
-		if (!$discount) {
+		if (!$discount && $this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
 			if ($user['usergroup']) {
 				$array=explode(",", $user['usergroup']);
 				foreach ($array as $group) {

@@ -21,6 +21,7 @@ if ($this->post) {
 		$insertArray=array();
 		$insertArray['title']=$this->post['group_name'];
 		$insertArray['pid']=$this->conf['fe_customer_pid'];
+        $insertArray['tx_multishop_discount']=$this->post['discount'];
 		$insertArray['tstamp']=time();
 		$insertArray['crdate']=time();
 		// custom page hook that can be controlled by third-party plugin
@@ -72,22 +73,26 @@ $content='<div class="panel panel-default">
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customer_groups.php']['adminInsertCustomerGroupFormMarkupProc'])) {
 	$params=array(
-			'content'=>&$content
+	    'content'=>&$content
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customer_groups.php']['adminInsertCustomerGroupFormMarkupProc'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-$content.='
+if ($this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
+    $content .= '
 	<div class="form-group">
-		<label class="control-label col-md-2">'.$this->pi_getLL('discount').'</label>
+		<label class="control-label col-md-2">' . $this->pi_getLL('discount') . '</label>
 		<div class="col-md-10">
 		<div class="input-group">
-		<input class="form-control" type="text" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />
+		<input class="form-control" type="text" name="discount" size="2" maxlength="2" id="discount" value="' . htmlspecialchars($this->post['discount']) . '" />
 		<span class="input-group-addon width-auto">%</span>
 		</div>
 		</div>
 	</div>
+';
+}
+$content .='
 	<div class="form-group">
 		<label class="control-label col-md-2">&nbsp;</label>
 		<div class="col-md-10">
