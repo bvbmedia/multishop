@@ -3165,6 +3165,8 @@ if ($this->post['action']=='category-insert') {
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
+                            // set default Crumpath
+                            mslib_befe::setProductDefaultCrumpath($item['added_products_id']);
 						} elseif ($item['updated_products_id']) {
 							// custom hook that can be controlled by third-party plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPostHook'])) {
@@ -3178,6 +3180,8 @@ if ($this->post['action']=='category-insert') {
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
+                            // set default Crumpath
+                            mslib_befe::setProductDefaultCrumpath($item['updated_products_id']);
 						}
 						// custom hook that can be controlled by third-party plugin
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'])) {

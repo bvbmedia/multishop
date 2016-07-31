@@ -4932,6 +4932,24 @@ class mslib_befe {
             return error_log('Error: Value for parameter $number is out of range');
         }
     }
+    function setProductDefaultCrumpath($product_id) {
+        $p2c_records=mslib_befe::getRecords($product_id, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '', 'products_to_categories_id asc');
+        if (is_array($p2c_records) && count($p2c_records)>1) {
+            $set_default_path=true;
+            foreach ($p2c_records as $p2c_record) {
+                if ($p2c_record['default_path']>0) {
+                    $set_default_path=false;
+                    break;
+                }
+            }
+            if ($set_default_path) {
+                $updateArray=array();
+                $updateArray['default_path']=1;
+                $queryProduct=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$p2c_records[0]['products_to_categories_id'].'\' and categories_id=\''.$p2c_records[0]['categories_id'].'\' and products_id=\''.$p2c_records[0]['products_id'].'\'', $updateArray);
+                $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
+            }
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
