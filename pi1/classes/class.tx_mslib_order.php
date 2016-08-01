@@ -627,7 +627,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
 					$params=array(
 							'this'=>&$this,
-							'page'=>$page,
+							'page'=>&$page,
 							'content'=>&$content,
 							'send_mail'=>&$send_mail,
 							'user'=>$user,
@@ -667,7 +667,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
 							$params=array(
 									'this'=>&$this,
-									'page'=>$page,
+									'page'=>&$page,
 									'content'=>&$content,
 									'send_mail'=>&$send_mail,
 									'user'=>$user,
