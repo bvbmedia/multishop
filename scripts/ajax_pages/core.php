@@ -845,7 +845,7 @@ switch ($this->ms['page']) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\')';
 			} else {
-				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\' or op.customer_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\' or o.customer_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
