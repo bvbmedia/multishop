@@ -4027,6 +4027,17 @@ class mslib_befe {
                 }
                 break;
         }
+        if (is_array($order['products']) && count($order['products'])) {
+            $contentItem = '';
+            $displayDiscountColumn = 0;
+            // First check if orders products rows have an discount amount
+            foreach ($order['products'] as $product) {
+                if ($product['discount_amount'] > 0) {
+                    $displayDiscountColumn = 1;
+                    break;
+                }
+            }
+        }
         $customer_currency = 1;
         // Extract the subparts from the template
         $subparts = array();
@@ -4057,7 +4068,7 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_VAT'] = $this->pi_getLL('vat');
         $markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE'] = $this->pi_getLL('normal_price');
         $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '';
-        if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+        if ($displayDiscountColumn) {
             $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '<th align="right" class="cell_products_normal_price">' . $this->pi_getLL('discount') . '</th>';
         }
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -4184,7 +4195,7 @@ class mslib_befe {
                     $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * $product['final_price']), $customer_currency, $display_currency_symbol, 0);
                 }
                 $markerArray['ITEM_DISCOUNT_AMOUNT'] = '';
-                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                if ($displayDiscountColumn) {
                     $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'], 0) . '</td>';
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
@@ -4233,7 +4244,7 @@ class mslib_befe {
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE'] = $cell_products_normal_price;
                             $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '';
-                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                            if ($displayDiscountColumn) {
                                 $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">&nbsp;</td>';
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
@@ -4441,7 +4452,7 @@ class mslib_befe {
         }
         $hr_colspan = 3;
         $colspan = 5;
-        if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+        if ($displayDiscountColumn) {
             $hr_colspan = 4;
             $colspan = 6;
         }
