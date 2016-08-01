@@ -337,10 +337,6 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	// tabs
 	$content.='<script type="text/javascript">
 	jQuery(document).ready(function($) {
-		$(\'#markersModal\').modal({
-            show:false,
-            backdrop:false
-        });
 	 	var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
 		jQuery(".tab_content").hide();
 		jQuery("ul.tabs li:first").addClass("active").show();
@@ -397,17 +393,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
-		$(document).on("click", ".tooltipMarker", function(e){ e.preventDefault(); });
-		var html=$("#msadminMarkersBox .valueField").html();
-
-		$(\'.tooltipMarker\').popover({
-			html : true,
-			placement:\'right\',
-			title:\'Markers\',
-			content: function() {
-			  return \'<div class="form-group">\' + $("#msadminMarkersBox").html() + \'</div>\';
-			}
-		});
+		$(\'#markersModal\').modal({
+            show:false,
+            backdrop:false
+        });
 	});
 </script>
 ';
