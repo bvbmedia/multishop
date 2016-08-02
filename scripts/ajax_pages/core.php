@@ -843,16 +843,16 @@ switch ($this->ms['page']) {
 		$limit=50;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
-				$where[]='m.billing_name like \'%'.addslashes($this->get['q']).'%\'';
+				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\')';
 			} else {
-				$where[]='(m.billing_name like \'%'.addslashes($this->get['q']).'%\' or op.customer_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\' or o.customer_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='o.customer_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
 		$where[]='o.page_uid=' . $this->showCatalogFromPage;
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.customer_id, o.billing_name', // SELECT ...
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.customer_id, o.billing_company, o.billing_name', // SELECT ...
 				'tx_multishop_orders o', // FROM ...
 				implode(' and ', $where), // WHERE...
 				'o.customer_id', // GROUP BY...
@@ -868,10 +868,19 @@ switch ($this->ms['page']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				$customer_names=array();
+				$customer_name='';
+				if (!empty($row['billing_company'])) {
+					$customer_names[]=$row['billing_company'];
+				}
 				if (!empty($row['billing_name'])) {
+					$customer_names[]=$row['billing_name'];
+				}
+				$customer_name=implode(' | ', $customer_names);
+				if (!empty($customer_name)) {
 					$data[]=array(
 						'id'=>$row['customer_id'],
-						'text'=>$row['billing_name']
+						'text'=>$customer_name
 					);
 				}
 			}
