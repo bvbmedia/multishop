@@ -591,13 +591,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$array2[]=strftime("%x", $order['expected_delivery_date']);
 				$array1[]='###CUSTOMER_COMMENTS###';
 				$array2[]=$order['customer_comments'];
-				if (isset($this->post['password']) && !empty($this->post['password']) && $order['customer_id']>0) {
+
+				if ($order['customer_id']> 0) {
 					$user=mslib_fe::getUser($order['customer_id']);
-					//
 					$array1[]='###USERNAME###';
 					$array2[]=$user['username'];
-					$array1[]='###PASSWORD###';
-					$array2[]=$this->post['password'];
+					if (isset($this->post['password']) && !empty($this->post['password']) && $order['customer_id']>0) {
+						$array1[]='###PASSWORD###';
+						$array2[]=$this->post['password'];
+					}
 				}
 				//hook to let other plugins further manipulate the replacers
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
