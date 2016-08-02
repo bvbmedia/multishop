@@ -154,6 +154,8 @@ if (is_array($rel_products) && count($rel_products)) {
 		$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION_ENCODED']=htmlspecialchars($rel_rs['products_shortdescription']);
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION']=$rel_rs['products_shortdescription'];
+		$markerArray['PRODUCTS_SHORT_DESCRIPTION']=$rel_rs['products_shortdescription'];
+
 		$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
 		$quantity_html='<div class="quantity buttons_added">';
 		$quantity_html.='<input type="button" value="-" data-stepSize="'.($rel_rs['products_multiplication']!='0.00' ? $rel_rs['products_multiplication'] : '1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00' ? $rel_rs['minimum_quantity'] : '1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00' ? $rel_rs['maximum_quantity'] : '0').'" class="rel_qty_minus" rel="relation_cart_quantity_'.$i.'">';
