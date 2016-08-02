@@ -2054,7 +2054,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 											}
 										}
 										if ($row['products_quantity']<1) {
-											// stock is negative or zero. lets turn of the product
+											// stock is negative or zero. lets disable the product
 											$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
 											$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 										}
