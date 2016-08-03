@@ -778,8 +778,11 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 if (isset($this->post['country']) && !empty($this->post['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->post['country'])."'";
 }
-if (isset($this->post['ordered_product']) && !empty($this->post['ordered_product'])) {
-	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->post['ordered_product'])."')";
+if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category']!=99999) {
+    $filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id='".addslashes($this->get['ordered_category'])."' or op.categories_id_0='".addslashes($this->get['ordered_category'])."'))";
+}
+if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!=99999) {
+    $filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->get['ordered_product'])."')";
 }
 // Use new method to retrieve records
 $data=array();
@@ -898,7 +901,19 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###']='';
-if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') || (isset($this->get['country']) && !empty($this->get['country'])) || (isset($this->get['usergroup']) && $this->get['usergroup']>0) || (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) || (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) || (isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) || (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') || (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') || (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) || (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) || (isset($this->get['search_by_status_last_modified']) && !empty($this->get['search_by_status_last_modified'])) || (isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
+    (isset($this->get['country']) && !empty($this->get['country'])) ||
+    (isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+    (isset($this->get['ordered_category']) && !empty($this->get['ordered_category'])) ||
+    (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
+    (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
+    (isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) ||
+    (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
+    (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
+    (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
+    (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+    (isset($this->get['search_by_status_last_modified']) && !empty($this->get['search_by_status_last_modified'])) ||
+    (isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
 	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
 }
 //
@@ -957,6 +972,8 @@ $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
 $subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$subpartArray['###LABEL_ORDERED_CATEGORY###']=$this->pi_getLL('admin_ordered_category');
+$subpartArray['###VALUE_ORDERED_CATEGORY###']=$this->get['ordered_category'];
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
@@ -1007,6 +1024,54 @@ jQuery(document).ready(function($) {
 		dropdownCssClass: "orderedProductsDropDownCss",
 		escapeMarkup: function (m) { return m; }
 	});
+	var ordered_select2 = function (selector, ajax_url) {
+        $(selector).select2({
+            placeholder: "'.$this->pi_getLL('all').'",
+            minimumInputLength: 0,
+            query: function(query) {
+                $.ajax(ajax_url, {
+                    data: {
+                        q: query.term
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    query.callback({results: data});
+                });
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=="") {
+                    $.ajax(ajax_url, {
+                        data: {
+                            preselected_id: id
+                        },
+                        dataType: "json"
+                    }).done(function(data) {
+                        callback(data);
+                    });
+                }
+            },
+            formatResult: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function(data){
+                if (data.text === undefined) {
+                    return data[0].text;
+                } else {
+                    return data.text;
+                }
+            },
+            dropdownCssClass: "orderedProductsDropDownCss",
+            escapeMarkup: function (m) { return m; }
+        });
+    }
+    ordered_select2(".ordered_category", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_categories').'");
 });
 </script>
 ';
