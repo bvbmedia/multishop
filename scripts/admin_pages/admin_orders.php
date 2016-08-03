@@ -779,7 +779,7 @@ if (isset($this->post['country']) && !empty($this->post['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->post['country'])."'";
 }
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category']!=99999) {
-    $filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id='".addslashes($this->get['ordered_category'])."' or op.categories_id_0='".addslashes($this->get['ordered_category'])."'))";
+    $filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id_0='".addslashes($this->get['ordered_category'])."'))";
 }
 if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!=99999) {
     $filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".addslashes($this->get['ordered_product'])."')";
