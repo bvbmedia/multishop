@@ -105,6 +105,9 @@ switch ($this->ms['page']) {
 		if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
 			$return_data=array();
 			$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
+			if (!$this->post['tx_multishop_pi1']['qty']) {
+				$this->post['tx_multishop_pi1']['qty']=1;
+			}
 			$return_data['delivery_time']='e';
 			if (!empty($product_data['delivery_time'])) {
 				$return_data['delivery_time']=trim($product_data['delivery_time']);

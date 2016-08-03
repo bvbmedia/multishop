@@ -4921,9 +4921,12 @@ class mslib_fe {
 		}
 		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
+        if (!count($product_mappings)) {
+            $product_mappings=$shipping_method_data;
+        }
 		$shipping_methods=array();
-		foreach ($shipping_method_data as $shipping_method) {
-			$shipping_method_id=$shipping_method['id'];
+		foreach ($shipping_method_data as $load_shipping_method) {
+			$shipping_method_id=$load_shipping_method['id'];
 			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.override_shippingcosts, c.price, c.zone_id', // SELECT ...
 				'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 				'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
