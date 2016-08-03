@@ -50,6 +50,9 @@ switch ($this->ms['page']) {
 		$product_mappings=mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
 		//
 		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
+		if (!count($product_mappings)) {
+			$product_mappings=$shipping_methods;
+		}
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
 			if (isset($product_mappings[$shipping_method['code']])) {
