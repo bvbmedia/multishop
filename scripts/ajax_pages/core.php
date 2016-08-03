@@ -943,20 +943,21 @@ switch ($this->ms['page']) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='cd.categories_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
-				$where[]='(cd.categories_name like \'%'.addslashes($this->get['q']).'%\' or op.categories_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(cd.categories_name like \'%'.addslashes($this->get['q']).'%\' or p2c.node_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-			$where[]='op.categories_id = \''.addslashes($this->get['preselected_id']).'\'';
+			$where[]='p2c.node_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
 		$where[]='o.page_uid=' . $this->showCatalogFromPage;
 		$where[]='cd.language_id=' . $this->sys_language_uid;
 		$where[]='c.status=1';
 		$where[]='c.categories_id=cd.categories_id';
-		$where[]='c.categories_id=op.categories_id';
+		$where[]='c.categories_id=p2c.node_id';
+		$where[]='p2c.categories_id=op.categories_id';
 		$where[]='o.orders_id=op.orders_id';
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*, cd.categories_name', // SELECT ...
-				'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'tx_multishop_orders_products op, tx_multishop_products_to_categories p2c, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 				implode(' and ', $where), // WHERE.
 				'op.categories_id', // GROUP BY...
 				'cd.categories_name asc', // ORDER BY...
@@ -971,10 +972,24 @@ switch ($this->ms['page']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				if (!empty($row['categories_name'])) {
+				$catpath = array();
+				if ($row['categories_id']) {
+					// get all cats to generate multilevel fake url
+					$level = 0;
+					$cats = array();
+					$cats = mslib_fe::Crumbar($row['categories_id']);
+					$cats = array_reverse($cats);
+					if (count($cats) > 0) {
+						foreach ($cats as $cat) {
+							$catpath[] = $cat['name'];
+						}
+					}
+					// get all cats to generate multilevel fake url eof
+				}
+				if (count($catpath)) {
 					$data[]=array(
 						'id'=>$row['categories_id'],
-						'text'=>$row['categories_name']
+						'text'=>implode(' > ', $catpath)
 					);
 				}
 			}

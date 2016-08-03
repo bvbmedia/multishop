@@ -34,7 +34,7 @@ if (is_array($cart['products']) and $count_products) {
 	// load customer country
 	// use for filtering the available payment on the customer country
 	$address=$cart['user'];
-	if ($this->post['country']!=$address['country']) {
+	if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country']!=$address['country']) {
 		$address['country']=$this->post['country'];
 	}
 	if (!$address['country']) {
