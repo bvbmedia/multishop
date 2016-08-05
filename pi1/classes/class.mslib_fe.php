@@ -5806,7 +5806,20 @@ class mslib_fe {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$cats=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$cats[]=$row;
+                $process_cat=true;
+			    //hook to let other plugins further manipulate the query
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyIteratePreProc'])) {
+                    $params=array(
+                        'row'=>&$row,
+                         'process_cat'=>&$process_cat
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyIteratePreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                if ($process_cat) {
+                    $cats[] = $row;
+                }
 			}
 			return $cats;
 		}
