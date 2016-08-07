@@ -1326,6 +1326,11 @@
             <label index="repair_products_default_crumpath">Repair products default crumpath</label>
             <label index="admin_label_repair_products_default_crumpath_done">Repair products default crumpath done!!</label>
             <label index="label_order_details_vendor_code">Vendor code</label>
+            <label index="invoice_paid_status">Paid status</label>
+            <label index="invoice_type">Invoice type</label>
+            <label index="show_unpaid_invoices_only">Show unpaid invoices only</label>
+            <label index="show_credit_invoices_only">Show credit invoices only</label>
+            <label index="show_debit_invoices_only">Show debit invoices only</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

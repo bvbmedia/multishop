@@ -94,6 +94,14 @@ jQuery(document).ready(function ($) {
                                 </div>
                             </div>
                             <div class="col-md-4 formfield-wrapper">
+                                <div class="form-group">
+                                    <label for="invoice_paid_status" class="labelInbetween">###LABEL_INVOICES_PAID_STATUS###</label>
+                                    ###INVOICES_PAID_STATUS_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice_type" class="labelInbetween">###LABEL_INVOICES_TYPE###</label>
+                                    ###INVOICES_TYPE_SELECTBOX###
+                                </div>
                                 <label>###LABEL_FILTER_BY_DATE###</label>
                                 <div class="form-group">
                                     <div class="form-inline from-date-field">
@@ -112,9 +120,6 @@ jQuery(document).ready(function ($) {
                                         <div class="checkbox checkbox-success checkbox-inline">
                                             <input type="checkbox" id="filter_by_paid_date" name="tx_multishop_pi1[filter_by_paid_date]" value="1"###FILTER_BY_PAID_DATE_ONLY_CHECKED### ><label for="filter_by_paid_date">###LABEL_FILTER_BY_PAID_DATE_ONLY###</label>
                                         </div>
-                                    </div>
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"###FILTER_BY_PAID_INVOICES_ONLY_CHECKED### ><label for="paid_invoices_only">###LABEL_FILTER_BY_PAID_INVOICES_ONLY###</label>
                                     </div>
                                     <div class="checkbox checkbox-success checkbox-inline">
                                         <input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"###EXCLUDING_VAT_CHECKED###>
