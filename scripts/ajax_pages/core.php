@@ -50,6 +50,9 @@ switch ($this->ms['page']) {
 		$product_mappings=mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
 		//
 		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
+		if (!count($product_mappings)) {
+			$product_mappings=$shipping_methods;
+		}
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
 			if (isset($product_mappings[$shipping_method['code']])) {
@@ -105,6 +108,9 @@ switch ($this->ms['page']) {
 		if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
 			$return_data=array();
 			$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
+			if (!$this->post['tx_multishop_pi1']['qty']) {
+				$this->post['tx_multishop_pi1']['qty']=1;
+			}
 			$return_data['delivery_time']='e';
 			if (!empty($product_data['delivery_time'])) {
 				$return_data['delivery_time']=trim($product_data['delivery_time']);

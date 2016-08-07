@@ -36,7 +36,7 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
-$key='PRICE_FILTER_WITHOUT_CATEGORY_QUERY_STRING';
+/*$key='PRICE_FILTER_WITHOUT_CATEGORY_QUERY_STRING';
 $title='Price Filter without category query string';
 $description='Optional field.';
 $default_value='0';
@@ -44,7 +44,7 @@ if (!isset($settings['GLOBAL_MODULES'][$key])) {
 	$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', '".$title."', '".$key."', '".$default_value."', '".$description."', 3, NULL, NULL, now(), 'tep_cfg_select_option(array(''0'',''1''),');";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[]=$str;
-}
+}*/
 
 $str="describe `tx_multishop_products_options`";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);

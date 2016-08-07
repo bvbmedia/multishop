@@ -105,6 +105,19 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$markerArray=array();
 					$markerArray['LEVEL_COUNTER']=$output['level_counter'];
 					$markerArray['CRUMBAR_VALUE']=$output['crumbar_value'];
+                    // custom hook that can be controlled by third-party plugin
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPostHook'])) {
+                        $params=array(
+                            'markerArray'=>&$markerArray,
+                            'product'=>&$product,
+                            'output'=>&$output,
+                            'cats'=>$cats,
+                            'iterator_count'=>$i,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPostHook'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
 					$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 				}
 			}
@@ -121,7 +134,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$crum=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 		// completed the template expansion by replacing the "item" marker in the template
 	}
-	// code eof	
+	// code eof
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$tmp=array();
 		$tmp['crum']=$crum;
