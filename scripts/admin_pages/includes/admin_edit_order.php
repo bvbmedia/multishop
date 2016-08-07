@@ -1721,7 +1721,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// order products header definition
 			// products id header col
-			$order_products_header_data['products_id']['class']='cellID';
+			$order_products_header_data['products_id']['class']='cellID cellNoWrap';
 			$order_products_header_data['products_id']['value']=$this->pi_getLL('products_id');
 			// products qty header col
 			$order_products_header_data['products_qty']['class']='cellQty';
@@ -1744,7 +1744,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
 			// products normal price header col
-			$order_products_header_data['products_normal_price']['class']='cellPrice';
+			$order_products_header_data['products_normal_price']['class']='cellPrice cellNoWrap';
 			$order_products_header_data['products_normal_price']['value']=$this->pi_getLL('normal_price');
 			// products vat header col
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1828,7 +1828,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// cols
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
-						$order_products_body_data['products_id']['class']='cellID';
+						$order_products_body_data['products_id']['class']='cellID cellNoWrap';
 						$order_products_body_data['products_id']['id']='edit_order_product_id';
 						$order_products_body_data['products_id']['value']=$order['products_id'];
 						// products qty col
@@ -1897,7 +1897,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['value']=$vat_sb;
 						}
 						// products price col
-						$order_products_body_data['products_normal_price']['class']='cellPrice';
+						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 						// incl excl vat input
 						$order_products_price_display=mslib_fe::taxDecimalCrop($order['final_price'], 2, false);
@@ -1928,7 +1928,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['value']=$vat_sb;
 						}
 						if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							$order_products_body_data['products_discount']['class']='cellPrice';
+							$order_products_body_data['products_discount']['class']='cellPrice cellNoWrap';
 							//$order_products_body_data['products_discount']['value']=$this->pi_getLL('discount') . ' input';
 							$order_products_discount_amount_display=mslib_fe::taxDecimalCrop($order['discount_amount'], 2, false);
 							$order_products_discount_amount_display_incl=mslib_fe::taxDecimalCrop($order['discount_amount']+(($order['discount_amount']*$order['products_tax'])/100), 2, false);
@@ -1959,7 +1959,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_final_price']['align']='right';
 
 						//cellFinalPrice
-						$order_products_body_data['products_final_price']['class']='cellPrice';
+						$order_products_body_data['products_final_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2056,7 +2056,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// custom hook that can be controlled by third-party plugin eof
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
-						$order_products_body_data['products_id']['class']='cellID';
+						$order_products_body_data['products_id']['class']='cellID cellNoWrap';
 						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
@@ -2098,7 +2098,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// products price col
 						$order_products_body_data['products_normal_price']['align']='right';
-						$order_products_body_data['products_normal_price']['class']='cellPrice';
+						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 						$order_products_body_data['products_normal_price']['value']=$row[3];
 						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2114,7 +2114,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
 						//cellFinalPrice
-						$order_products_body_data['products_final_price']['class']='cellPrice';
+						$order_products_body_data['products_final_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
