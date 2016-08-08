@@ -364,7 +364,7 @@ ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child { paddin
 
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
-#ui-datepicker-div { display:none; z-index:100 !important; }
+#ui-datepicker-div { display:none; z-index:10051 !important; }
 .jconfirm-noscroll #ui-datepicker-div { z-index:100000000 !important; }
 
 /* jquery tree overrule */
