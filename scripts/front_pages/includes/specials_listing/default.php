@@ -29,6 +29,32 @@ if (is_array($products)) {
 		} else {
 			$image='';
 		}
+        if ($product['products_image']) {
+            $output['image']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+            $markerArray['ITEM_PRODUCTS_IMAGE']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+            $markerArray['ITEM_PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '100').'">';
+            $markerArray['ITEM_PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '200').'">';
+            $markerArray['ITEM_PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
+            $markerArray['PRODUCTS_IMAGE']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+            $markerArray['PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '100').'">';
+            $markerArray['PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '200').'">';
+            $markerArray['PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
+
+            $markerArray['PRODUCTS_IMAGE_URL']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+            $markerArray['PRODUCTS_IMAGE_URL_100']=mslib_befe::getImagePath($product['products_image'], 'products', '100');
+            $markerArray['PRODUCTS_IMAGE_URL_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
+            $markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($product['products_image'], 'products', '300');
+        } else {
+            $output['image']='<div class="no_image"></div>';
+            $markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
+            $markerArray['ITEM_PRODUCTS_IMAGE_100']=$output['image'];
+            $markerArray['ITEM_PRODUCTS_IMAGE_200']=$output['image'];
+            $markerArray['ITEM_PRODUCTS_IMAGE_300']=$output['image'];
+            $markerArray['PRODUCTS_IMAGE']=$output['image'];
+            $markerArray['PRODUCTS_IMAGE_100']=$output['image'];
+            $markerArray['PRODUCTS_IMAGE_200']=$output['image'];
+            $markerArray['PRODUCTS_IMAGE_300']=$output['image'];
+        }
 		$teller++;
 		if ($product['categories_id']) {
 			// get all cats to generate multilevel fake url
@@ -47,6 +73,7 @@ if (is_array($products)) {
 			// get all cats to generate multilevel fake url eof
 		}
 		$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        $output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 		$tel++;
 		if ($this->conf['disableFeFromCalculatingVatPrices']=='1') {
 			$final_price=$product['final_price'];
@@ -117,6 +144,8 @@ if (is_array($products)) {
 		$markerArray['ITEM_PRODUCTS_EXTERNAL_LINK']=$product['products_url'];
 		$markerArray['ITEM_PRODUCTS_EXTERNAL_LINK_TITLE']=htmlspecialchars($this->pi_getLL('buy')).' '.htmlspecialchars($product['products_name']);
 		$markerArray['ITEM_LABEL_BUY']=htmlspecialchars($this->pi_getLL('buy'));
+        $markerArray['CATEGORIES_NAME']=$product['categories_name'];
+        $markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_listing']['specialsProductsListingHook'])) {
 			$params=array(
