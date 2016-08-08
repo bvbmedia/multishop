@@ -70,6 +70,7 @@ foreach ($products as $product) {
 		$markerArray['ADMIN_MENU']=$admin_menu;
 		$markerArray['ADMIN_ICONS']=$admin_menu;
 		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        $output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 		$final_price=mslib_fe::final_products_price($product);
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 			$old_price=$product['products_price']*(1+$product['tax_rate']);
@@ -144,6 +145,10 @@ foreach ($products as $product) {
 		$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$markerArray['SPECIALS_SECTIONS_ID']=$res['specials_id'];
 		$markerArray['SPECIALS_SECTIONS_CODE']=$this->section_code;
+
+        $markerArray['CATEGORIES_NAME']=$product['categories_name'];
+        $markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
+
 		// custom hook that can be controlled by third-party plugin
 		$plugins_item_extra_content=array();
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'])) {
