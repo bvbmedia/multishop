@@ -892,6 +892,7 @@ if ($this->ms['show_main']) {
 	$tmpcontent='';
 	// load all shipping methods
 	$shipping_methods=mslib_fe::loadShippingMethods();
+
 	$zones=mslib_fe::loadAllCountriesZones();
 	if (count($zones['zone_id'])) {
 		$colspan=4;

@@ -3912,11 +3912,12 @@ class mslib_fe {
 			implode(', ', $orderby), // ORDER BY...
 			'' // LIMIT ...
 		);
+
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			// check for minimum and maximum cart amount allowed for payment to be use
 			$cart_total_amount=0;
-			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+			if (($this->get['type']=='2002' && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type'] != '2003' && $this->get['type']!='2002')) {
 				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 				$mslib_cart->init($this);
@@ -3932,7 +3933,7 @@ class mslib_fe {
 				} else {
 					$array[$row['code']]=$row;
 				}
-				if ($cart_total_amount>0) {
+				if ($this->get['type'] != '2003' && $cart_total_amount>0) {
 					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
 						unset($array[$row['code']]);
 					}
