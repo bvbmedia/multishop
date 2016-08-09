@@ -4296,11 +4296,15 @@ if ($this->post) {
 		$subpartArray['###LABEL_ORDER_UNIT###']=$this->pi_getLL('admin_order_unit', 'Order Unit');
 		$subpartArray['###INPUT_PRODUCT_UNIT###']=$order_unit;
 		$subpartArray['###LABEL_MINIMUM_QTY###']=$this->pi_getLL('admin_minimum_quantity');
+        // round for .00
+        $product['minimum_quantity']=round(number_format($product['minimum_quantity'], 2), 2);
+        $product['maximum_quantity']=round(number_format($product['maximum_quantity'], 2), 2);
+        $product['products_multiplication']=round(number_format($product['products_multiplication'], 2), 2);
 		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']!='0' ? $product['minimum_quantity'] : '');
 		$subpartArray['###LABEL_MAXIMUM_QTY###']=$this->pi_getLL('admin_maximum_quantity');
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
-		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '');
+		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']>0 ? $product['products_multiplication'] : '');
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		$subpartArray['###VALUE_PRODUCT_PID0###']=$product['products_id'];
 		$subpartArray['###VALUE_PRODUCT_PID1###']=$product['products_id'];
