@@ -8123,6 +8123,13 @@ class mslib_fe {
 						$row['paid']=1;
 						$row['invoice_id']=$new_invoice_id;
 						$row['hash']=md5(uniqid('', true));
+                        if ($row['invoice_grand_total']<0) {
+                            $row['invoice_grand_total']=str_replace('-', '', $row['invoice_grand_total']);
+                            $row['invoice_grand_total_excluding_vat']=str_replace('-', '', $row['invoice_grand_total_excluding_vat']);
+                        } else {
+                            $row['invoice_grand_total']='-'.$row['invoice_grand_total'];
+                            $row['invoice_grand_total_excluding_vat']='-'.$row['invoice_grand_total_excluding_vat'];
+                        }
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
 						// update old invoice to paid so its gone from the unpaid list
@@ -8329,6 +8336,7 @@ class mslib_fe {
 			if (($order['orders_id'] and $order['bill']) or ($order['orders_id'] and $force)) {
 				$invoice_id=mslib_fe::generateInvoiceId();
 				if ($invoice_id) {
+                    $order_record=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id', array(), 'grand_total, grand_total_excluding_vat');
 					$hash=md5(uniqid('', true));
 					$insertArray=array();
 					$insertArray['invoice_id']=$invoice_id;
@@ -8339,7 +8347,8 @@ class mslib_fe {
 					$insertArray['status']=1;
 					$insertArray['page_uid']=$this->shop_pid;
 					$insertArray['hash']=$hash;
-					$insertArray['amount']=mslib_fe::getOrderTotalPrice($orders_id);
+					$insertArray['invoice_grand_total']=$order_record['grand_total'];
+                    $insertArray['invoice_grand_total_excluding_vat']=$order_record['grand_total_excluding_vat'];
 					$insertArray['discount']=$order['discount'];
 					$insertArray['payment_condition']=$order['payment_condition'];
 					if ($order['billing_company']) {
