@@ -4300,7 +4300,7 @@ if ($this->post) {
         $product['minimum_quantity']=round(number_format($product['minimum_quantity'], 2), 2);
         $product['maximum_quantity']=round(number_format($product['maximum_quantity'], 2), 2);
         $product['products_multiplication']=round(number_format($product['products_multiplication'], 2), 2);
-		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']!='0' ? $product['minimum_quantity'] : '');
+		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']>0 ? $product['minimum_quantity'] : '');
 		$subpartArray['###LABEL_MAXIMUM_QTY###']=$this->pi_getLL('admin_maximum_quantity');
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
