@@ -996,7 +996,7 @@
             <label index="products_per_page">Products per page</label>
             <label index="qty">Qty</label>
             <label index="quantity">Quantity</label>
-            <label index="re-order">re-order</label>
+            <label index="re-order">Re-order</label>
             <label index="referrer">Referrer</label>
             <label index="refurbished">refurbished</label>
             <label index="region">region</label>
@@ -2323,7 +2323,7 @@
             <label index="products_per_page">Producten per pagina</label>
             <label index="qty">Aantal</label>
             <label index="quantity">Aantal</label>
-            <label index="re-order">herbestellen</label>
+            <label index="re-order">Herbestellen</label>
             <label index="referrer">Verwijzer</label>
             <label index="refurbished">opgeknapt</label>
             <label index="region">regio</label>
