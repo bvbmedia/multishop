@@ -8336,7 +8336,6 @@ class mslib_fe {
 			if (($order['orders_id'] and $order['bill']) or ($order['orders_id'] and $force)) {
 				$invoice_id=mslib_fe::generateInvoiceId();
 				if ($invoice_id) {
-                    $order_record=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id', array(), 'grand_total, grand_total_excluding_vat');
 					$hash=md5(uniqid('', true));
 					$insertArray=array();
 					$insertArray['invoice_id']=$invoice_id;
@@ -8347,8 +8346,8 @@ class mslib_fe {
 					$insertArray['status']=1;
 					$insertArray['page_uid']=$this->shop_pid;
 					$insertArray['hash']=$hash;
-					$insertArray['invoice_grand_total']=$order_record['grand_total'];
-                    $insertArray['invoice_grand_total_excluding_vat']=$order_record['grand_total_excluding_vat'];
+					$insertArray['invoice_grand_total']=$order['grand_total'];
+                    $insertArray['invoice_grand_total_excluding_vat']=$order['grand_total_excluding_vat'];
 					$insertArray['discount']=$order['discount'];
 					$insertArray['payment_condition']=$order['payment_condition'];
 					if ($order['billing_company']) {
