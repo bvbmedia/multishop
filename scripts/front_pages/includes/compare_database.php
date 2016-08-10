@@ -54,6 +54,59 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$query2;
 		}
 	}
+    // rename column amount to invoice_grand_total
+    $str="select amount from tx_multishop_invoices limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if ($qry) {
+        $str="ALTER TABLE `tx_multishop_invoices` CHANGE `amount` `invoice_grand_total` decimal(24,14) default '0.00000000000000'";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    }
+    // add invoice_grand_total column incase renamed "amount/invoice_grand_total" column not yet exist
+	$str="select invoice_grand_total from tx_multishop_invoices limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if (!$qry) {
+        $str="ALTER TABLE `tx_multishop_invoices` ADD `invoice_grand_total` decimal(24,14) default '0.00000000000000'";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    }
+    // add invoice_grand_total_excluding_vat column
+	$str="select invoice_grand_total_excluding_vat from tx_multishop_invoices limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if (!$qry) {
+        $str="ALTER TABLE `tx_multishop_invoices` ADD `invoice_grand_total_excluding_vat` decimal(24,14) default '0.00000000000000'";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    }
+    $sql_order="select id, orders_id, invoice_id, reversal_invoice from tx_multishop_invoices";
+    $qry_order=$GLOBALS['TYPO3_DB']->sql_query($sql_order);
+    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
+        while ($invoices_row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_order)) {
+            $order_record=mslib_befe::getRecord($invoices_row['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'grand_total, grand_total_excluding_vat');
+            if ($order_record['grand_total_excluding_vat']>0) {
+                $updateArray=array();
+                if ($invoices_row['reversal_invoice']>0) {
+                    // credit invoices
+                    if ($order_record['grand_total']<0) {
+                        // reverse to positive value if the tx_multishop_orders.grand_total already minus
+                        $updateArray['invoice_grand_total'] = str_replace('-', '', $order_record['grand_total']);
+                        $updateArray['invoice_grand_total_excluding_vat'] = str_replace('-', '', $order_record['grand_total_excluding_vat']);
+                    } else {
+                        $updateArray['invoice_grand_total'] = '-'.$order_record['grand_total'];
+                        $updateArray['invoice_grand_total_excluding_vat'] = '-'.$order_record['grand_total_excluding_vat'];
+                    }
+                } else {
+                    $updateArray['invoice_grand_total'] = $order_record['grand_total'];
+                    $updateArray['invoice_grand_total_excluding_vat'] = $order_record['grand_total_excluding_vat'];
+                }
+                $query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$invoices_row['id'].' and invoice_id='. $invoices_row['invoice_id'], $updateArray);
+                $res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+            }
+        }
+
+        $messages[]="invoice_grand_total value in tx_multishop_invoices table updated";
+        $messages[]="invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
+    }
 	// CREATE / UPDATE MULTISHOP SETTINGS. CAN BE FURTHER CONTROLLED BY THIRD PARTY PLUGINS. EOL
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/compare_database.php']['compareDatabasePostHook'])) {

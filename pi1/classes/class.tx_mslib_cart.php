@@ -533,6 +533,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$this->post['quantity']=round($this->post['quantity'], 0);
 						$cart['products'][$shopping_cart_item]['qty']=(int)$cart['products'][$shopping_cart_item]['qty'];
 					}
+                    $cart['products'][$shopping_cart_item]['qty']=round(number_format($cart['products'][$shopping_cart_item]['qty'], 2), 2);
 					$current_quantity=$cart['products'][$shopping_cart_item]['qty'];
 					if (!$this->post['tx_multishop_pi1']['cart_item']) {
 						$this->post['quantity']=$current_quantity+$this->post['quantity'];
@@ -544,6 +545,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$this->post['quantity']=$product['minimum_quantity'];
 					}
 					$product['qty']=($this->post['quantity']);
+                    $product['qty']=round(number_format($product['qty'], 2), 2);
+                    $this->post['quantity']=round(number_format($this->post['quantity'], 2), 2);
 					// chk if the product has staffel price
 					if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 						if ($this->post['quantity']) {

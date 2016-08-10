@@ -3804,7 +3804,7 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			// check for minimum and maximum cart amount allowed for payment to be use
 			$cart_total_amount=0;
-			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+			if (($this->get['type']=='2002' && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!='2003' && $this->get['type']!='2002')) {
 				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 				$mslib_cart->init($this);
@@ -3823,7 +3823,7 @@ class mslib_fe {
 				} else {
 					$array[$row['code']]=$row;
 				}
-				if ($cart_total_amount>0) {
+				if ($this->get['type']!='2003' && $cart_total_amount>0) {
 					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
 						unset($array[$row['code']]);
 					}
@@ -8123,6 +8123,13 @@ class mslib_fe {
 						$row['paid']=1;
 						$row['invoice_id']=$new_invoice_id;
 						$row['hash']=md5(uniqid('', true));
+                        if ($row['invoice_grand_total']<0) {
+                            $row['invoice_grand_total']=str_replace('-', '', $row['invoice_grand_total']);
+                            $row['invoice_grand_total_excluding_vat']=str_replace('-', '', $row['invoice_grand_total_excluding_vat']);
+                        } else {
+                            $row['invoice_grand_total']='-'.$row['invoice_grand_total'];
+                            $row['invoice_grand_total_excluding_vat']='-'.$row['invoice_grand_total_excluding_vat'];
+                        }
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
 						// update old invoice to paid so its gone from the unpaid list
@@ -8339,7 +8346,8 @@ class mslib_fe {
 					$insertArray['status']=1;
 					$insertArray['page_uid']=$this->shop_pid;
 					$insertArray['hash']=$hash;
-					$insertArray['amount']=mslib_fe::getOrderTotalPrice($orders_id);
+					$insertArray['invoice_grand_total']=$order['grand_total'];
+                    $insertArray['invoice_grand_total_excluding_vat']=$order['grand_total_excluding_vat'];
 					$insertArray['discount']=$order['discount'];
 					$insertArray['payment_condition']=$order['payment_condition'];
 					if ($order['billing_company']) {
