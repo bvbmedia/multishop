@@ -383,7 +383,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'page'=>&$page,
 						'order'=>&$order,
 						'mail_template'=>$mail_template,
-						'psp_mail_template'=>$psp_mail_template
+						'psp_mail_template'=>$psp_mail_template,
+                        'loadFromPids'=>$loadFromPids
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -436,7 +437,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'page'=>&$page,
 						'order'=>&$order,
 						'mail_template'=>$mail_template,
-						'psp_mail_template'=>$psp_mail_template
+						'psp_mail_template'=>$psp_mail_template,
+                        'loadFromPids'=>$loadFromPids
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPostCMSContent'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -607,7 +609,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'array1'=>&$array1,
 							'array2'=>&$array2,
 							'order'=>&$order,
-							'mail_template'=>$mail_template
+							'mail_template'=>$mail_template,
+                            'loadFromPids'=>$loadFromPids
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -636,7 +639,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'order'=>$order,
 							'order_details'=>$ORDER_DETAILS,
 							'copy_to_merchant'=>$copy_to_merchant,
-							'mail_attachment'=>&$mail_attachment
+							'mail_attachment'=>&$mail_attachment,
+                            'loadFromPids'=>$loadFromPids
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -661,9 +665,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$mail_attachment[]=$pdfFilePath;
 						}
 						mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
-						if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0 && file_exists($pdfFilePath)) {
-							unlink($pdfFilePath);
-						}
+                        // moved to cleaning up section
+						//if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0 && file_exists($pdfFilePath)) {
+						//	unlink($pdfFilePath);
+						//}
 					}
 					if ($copy_to_merchant) {
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
@@ -675,7 +680,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'user'=>$user,
 									'order'=>$order,
 									'order_details'=>$ORDER_DETAILS,
-									'mail_attachment'=>&$mail_attachment
+									'mail_attachment'=>&$mail_attachment,
+                                    'mail_template'=>$mail_template,
+                                    'psp_mail_template'=>$psp_mail_template,
+                                    'loadFromPids'=>$loadFromPids
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'] as $funcRef) {
 								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -703,6 +711,16 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							}
 						}
 					}
+					// cleaning up the temporary attachment files
+                    if (is_array($mail_attachment) && count($mail_attachment)) {
+                        foreach ($mail_attachment as $filepath) {
+                            if (strpos($filepath, 'tx_multishop/tmp')!==false) {
+                                if (file_exists($filepath)) {
+                                    @unlink($filepath);
+                                }
+                            }
+                        }
+                    }
 				}
 			}
 			if (isset($order['language_id'])) {
