@@ -153,6 +153,8 @@ $coltypes['products_specials_section']='Specials section';
 $coltypes['products_order_unit_code']='Products order unit code';
 $coltypes['products_order_unit_id']='Products order unit id';
 $coltypes['alert_quantity_threshold']='Alert minimum stock quantity threshold';
+$coltypes['import_notes']='Import notes';
+
 if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 	$coltypes['manufacturers_advice_price']='Manufacturers advice price';
 }
@@ -2245,6 +2247,9 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['alert_quantity_threshold'])) {
 								$updateArray['alert_quantity_threshold']=$item['alert_quantity_threshold'];
 							}
+							if (isset($item['import_notes'])) {
+								$updateArray['import_notes']=$item['import_notes'];
+							}
 							if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT'] && isset($item['manufacturers_advice_price'])) {
 								$updateArray['manufacturers_advice_price']=$item['manufacturers_advice_price'];
 							}
@@ -2680,6 +2685,9 @@ if ($this->post['action']=='category-insert') {
 							}
 							if (isset($item['alert_quantity_threshold'])) {
 								$updateArray['alert_quantity_threshold']=$item['alert_quantity_threshold'];
+							}
+							if (isset($item['import_notes'])) {
+								$updateArray['import_notes']=$item['import_notes'];
 							}
 							if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT'] && isset($item['manufacturers_advice_price'])) {
 								$updateArray['manufacturers_advice_price']=$item['manufacturers_advice_price'];

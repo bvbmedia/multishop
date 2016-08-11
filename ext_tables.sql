@@ -869,6 +869,7 @@ CREATE TABLE `tx_multishop_products` (
  `endtime` int(11) default '0',
  `specials_price_percentage` varchar(4) default '0',
  `manufacturers_advice_price` decimal(24,14) default '0.00000000000000',
+ `import_notes` varchar(250) default '',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),

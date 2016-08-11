@@ -79,6 +79,12 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		}
 	}
 }
-
+$str="select `import_notes` from tx_multishop_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str="ALTER TABLE `tx_multishop_products` ADD `import_notes` varchar(250) default '')";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[]=$str;
+}
 
 ?>
