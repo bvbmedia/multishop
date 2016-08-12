@@ -95,6 +95,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 		if ($this->get['categories_id']) {
 			// set custom 404 message
 			header('HTTP/1.0 404 Not Found');
+			$output_array['http_header'] = 'HTTP/1.0 404 Not Found';
 			$page=mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
 			if ($page[0]['name']) {
 				$content .= '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
