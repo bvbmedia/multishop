@@ -1181,7 +1181,7 @@ if ($this->post) {
 				$feed_checkbox.='<input name="exclude_feed_list[]" type="hidden" value="'.$rs_feed['id'].'">';
                 $feed_stock_checkbox.='<input name="exclude_stock_feed_list[]" type="hidden" value="'.$rs_feed['id'].'">';
 			}
-			$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
+			$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('include_or_exclude_from_product_feed');
 			if (empty($feed_checkbox)) {
 				$subpartArray['###FEEDS_LIST###']=$this->pi_getLL('admin_label_no_feeds');
 			} else {
