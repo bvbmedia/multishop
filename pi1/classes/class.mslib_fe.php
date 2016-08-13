@@ -9790,7 +9790,7 @@ class mslib_fe {
 					$sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                        $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                        $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
                         if ($row['negate']) {
                             $negate_value = true;
                         } else {
@@ -9805,7 +9805,7 @@ class mslib_fe {
 		    $sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
                 if ($row['negate']) {
                     $negate_value = true;
                 } else {
@@ -9826,7 +9826,7 @@ class mslib_fe {
 					$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and negate=1 and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                        $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                        $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
                         if ($row['negate']) {
                             $negate_value = true;
                         } else {
@@ -9841,7 +9841,7 @@ class mslib_fe {
 			$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and negate=1 and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
                 if ($row['negate']) {
                     $negate_value = true;
                 } else {
