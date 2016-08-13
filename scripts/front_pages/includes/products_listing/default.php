@@ -48,24 +48,28 @@ if (is_array($products) && count($products)) {
 			}
 		}
 		$output=array();
-		$where='';
-		if ($current_product['categories_id']) {
-			// get all cats to generate multilevel fake url
-			$level=0;
-			$cats=mslib_fe::Crumbar($current_product['categories_id']);
-			$cats=array_reverse($cats);
-			$where='';
-			if (count($cats)>0) {
-				foreach ($cats as $cat) {
-					$where.="categories_id[".$level."]=".$cat['id']."&";
-					$level++;
-				}
-				$where=substr($where, 0, (strlen($where)-1));
-				$where.='&';
-			}
-			// get all cats to generate multilevel fake url eof
-		}
-		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        if ($this->get['tx_multishop_pi1']['page_section']=='manufacturers_products_listing' && isset($this->get['manufacturers_id']) && $this->get['manufacturers_id']>0) {
+            $output['link'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], 'manufacturers_id='.$this->get['manufacturers_id'].'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        } else {
+            $where = '';
+            if ($current_product['categories_id']) {
+                // get all cats to generate multilevel fake url
+                $level = 0;
+                $cats = mslib_fe::Crumbar($current_product['categories_id']);
+                $cats = array_reverse($cats);
+                $where = '';
+                if (count($cats) > 0) {
+                    foreach ($cats as $cat) {
+                        $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                        $level++;
+                    }
+                    $where = substr($where, 0, (strlen($where) - 1));
+                    $where .= '&';
+                }
+                // get all cats to generate multilevel fake url eof
+            }
+            $output['link'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $current_product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+        }
 		$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 		$formats=array();
 		$formats[]='100';
