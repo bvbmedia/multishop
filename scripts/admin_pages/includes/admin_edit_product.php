@@ -4129,16 +4129,16 @@ if ($this->post) {
                         $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="1"'.($rs_feed_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
                     } else {
                         $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
                     }
@@ -4150,16 +4150,16 @@ if ($this->post) {
                         $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_stock_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="1"'.($rs_feed_stock_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_stock_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
                     } else {
                         $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
                     }
@@ -4167,15 +4167,15 @@ if ($this->post) {
                     $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
                     $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
                             <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                                 <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
                             </div>
                         </div>';
 				}
