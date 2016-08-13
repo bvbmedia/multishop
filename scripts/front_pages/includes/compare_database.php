@@ -107,6 +107,70 @@ if (!$skipMultishopUpdates) {
         $messages[]="invoice_grand_total value in tx_multishop_invoices table updated";
         $messages[]="invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
     }
+    $str="select id from tx_multishop_feeds_excludelist limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if ($qry) {
+        $str="ALTER TABLE `tx_multishop_feeds_excludelist` ADD `negate` tinyint(1) default '0', ADD KEY `negate` (`negate`)";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+        $str="ALTER TABLE `tx_multishop_feeds_excludelist` RENAME `tx_multishop_catalog_to_feeds`";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+        $str="UPDATE `tx_multishop_catalog_to_feeds` SET `negate`=1";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    } else {
+        $str = "select id from tx_multishop_catalog_to_feeds";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if (!$qry) {
+            $str = "CREATE TABLE IF NOT EXISTS `tx_multishop_catalog_to_feeds` (
+			  	`id` int(11) NULL AUTO_INCREMENT,
+			  	`feed_id` int(11) NULL DEFAULT '0',
+			  	`negate` tinyint(1) NULL DEFAULT '0',
+			  	`exclude_id` int(11) NULL DEFAULT '0',
+			  	`exclude_type` varchar(11) CHARACTER SET utf8 NULL DEFAULT 'categories',
+			  	PRIMARY KEY (`id`),
+			  	KEY `feed_id` (`feed_id`),
+			  	KEY `negate` (`negate`),
+			  	KEY `exclude_id` (`exclude_id`),
+			  	KEY `exclude_type` (`exclude_type`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $messages[] = $str;
+        }
+    }
+    $str="select id from tx_multishop_feeds_stock_excludelist limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if ($qry) {
+        $str="ALTER TABLE `tx_multishop_feeds_stock_excludelist` ADD `negate` tinyint(1) default '0', ADD KEY `negate` (`negate`)";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+        $str="ALTER TABLE `tx_multishop_feeds_stock_excludelist` RENAME `tx_multishop_catalog_to_feeds_stocks`";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+        $str="UPDATE `tx_multishop_catalog_to_feeds_stocks` SET `negate`=1";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    } else {
+        $str = "select id from tx_multishop_catalog_to_feeds_stocks";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if (!$qry) {
+            $str = "CREATE TABLE IF NOT EXISTS `tx_multishop_catalog_to_feeds_stocks` (
+			  	`id` int(11) NULL AUTO_INCREMENT,
+			  	`feed_id` int(11) NULL DEFAULT '0',
+			  	`negate` tinyint(1) NULL DEFAULT '0',
+			  	`exclude_id` int(11) NULL DEFAULT '0',
+			  	`exclude_type` varchar(11) CHARACTER SET utf8 NULL DEFAULT 'categories',
+			  	PRIMARY KEY (`id`),
+			  	KEY `feed_id` (`feed_id`),
+			  	KEY `negate` (`negate`),
+			  	KEY `exclude_id` (`exclude_id`),
+			  	KEY `exclude_type` (`exclude_type`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $messages[] = $str;
+        }
+    }
 	// CREATE / UPDATE MULTISHOP SETTINGS. CAN BE FURTHER CONTROLLED BY THIRD PARTY PLUGINS. EOL
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/compare_database.php']['compareDatabasePostHook'])) {

@@ -1565,24 +1565,28 @@ CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
  KEY `sort_order` (`sort_order`)
 );
 
-CREATE TABLE `tx_multishop_feeds_excludelist` (
+CREATE TABLE `tx_multishop_catalog_to_feeds` (
  `id` int(11) NOT NULL auto_increment,
  `feed_id` int(11) default '0',
+ `negate` tinyint(1) default '0',
  `exclude_id` int(11) default '0',
  `exclude_type` varchar(11) default 'categories',
  PRIMARY KEY (`id`),
  KEY `feed_id` (`feed_id`),
+ KEY `negate` (`negate`),
  KEY `exclude_id` (`exclude_id`),
  KEY `exclude_type` (`exclude_type`)
 );
 
-CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
+CREATE TABLE `tx_multishop_catalog_to_feeds_stocks` (
  `id` int(11) NOT NULL auto_increment,
  `feed_id` int(11) default '0',
+ `negate` tinyint(1) default '0',
  `exclude_id` int(11) default '0',
  `exclude_type` varchar(11) default 'categories',
  PRIMARY KEY (`id`),
  KEY `feed_id` (`feed_id`),
+ KEY `negate` (`negate`),
  KEY `exclude_id` (`exclude_id`),
  KEY `exclude_type` (`exclude_type`)
 );
