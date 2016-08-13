@@ -2081,7 +2081,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 												$array2[]=$row['products_quantity'];
 												$array1[]='###PRODUCT_NAME###';
 												$array2[]=$value['products_name'];
-												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
 												$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
 												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
 												// now mail a copy to the merchant
