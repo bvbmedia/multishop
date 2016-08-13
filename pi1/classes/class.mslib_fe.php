@@ -9783,44 +9783,72 @@ class mslib_fe {
 	function isItemInFeedsExcludeList($feed_id, $exclude_id, $exclude_type='products') {
 		if ($exclude_type=='categories') {
 			$cats=mslib_fe::Crumbar($exclude_id);
+            $cats=array_reverse($cats);
 			if (count($cats)>0) {
-				foreach ($cats as $cat) {
-					$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
+			    $negate_value=false;
+                foreach ($cats as $cat) {
+					$sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						return true;
-						break;
+                        $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                        if ($row['negate']) {
+                            $negate_value = true;
+                        } else {
+                            $negate_value = false;
+                        }
 					}
 				}
+                return $negate_value;
 			}
 		} else if ($exclude_type=='products') {
-			$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
+            $negate_value=false;
+		    $sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-				return true;
+                $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                if ($row['negate']) {
+                    $negate_value = true;
+                } else {
+                    $negate_value = false;
+                }
 			}
+			return $negate_value;
 		}
 		return false;
 	}
 	function isItemInFeedsStockExcludeList($feed_id, $exclude_id, $exclude_type='products') {
 		if ($exclude_type=='categories') {
 			$cats=mslib_fe::Crumbar($exclude_id);
+            $cats=array_reverse($cats);
 			if (count($cats)>0) {
+                $negate_value=false;
 				foreach ($cats as $cat) {
-					$sql_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
+					$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and negate=1 and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						return true;
-						break;
+                        $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                        if ($row['negate']) {
+                            $negate_value = true;
+                        } else {
+                            $negate_value = false;
+                        }
 					}
 				}
+                return $negate_value;
 			}
 		} else if ($exclude_type=='products') {
-			$sql_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
+            $negate_value = false;
+			$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and negate=1 and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-				return true;
+                $row=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check);
+                if ($row['negate']) {
+                    $negate_value = true;
+                } else {
+                    $negate_value = false;
+                }
 			}
+			return $negate_value;
 		}
 		return false;
 	}
