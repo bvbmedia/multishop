@@ -1267,7 +1267,8 @@ if ($this->post['action']=='category-insert') {
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
 				$params=array(
-					'rows'=>&$rows
+					'rows'=>&$rows,
+					'prefix_source_name'=>$this->post['prefix_source_name']
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
