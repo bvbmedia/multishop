@@ -1331,6 +1331,7 @@
             <label index="show_unpaid_invoices_only">Show unpaid invoices only</label>
             <label index="show_credit_invoices_only">Show credit invoices only</label>
             <label index="show_debit_invoices_only">Show debit invoices only</label>
+            <label index="include_or_exclude_from_product_feed">Include or exclude from product feed</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2616,6 +2617,7 @@
             <label index="mail_to_customer">Mail naar debiteur</label>
             <label index="mail_to_merchant">Mail naar beheerder</label>
             <label index="select_customer_groups">Selecteer debiteurgroep(en)</label>
+            <label index="include_or_exclude_from_product_feed">Toevoegen of uitsluiten in productbestand</label>
         </languageKey>
     </data>
 </T3locallang>
