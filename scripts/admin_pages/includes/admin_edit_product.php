@@ -4188,7 +4188,7 @@ if ($this->post) {
 			} else {
 				$markerArray['FEEDS_LIST']=$feed_checkbox;
 			}
-			$markerArray['LABEL_EXCLUDE_STOCK_FROM_FEED']=$this->pi_getLL('exclude_stock_from_feeds', 'Exclude stock from feeds');
+			$markerArray['LABEL_EXCLUDE_STOCK_FROM_FEED']=$this->pi_getLL('visibility_stock_level_in_product_feed');
 			if (empty($feed_stock_checkbox)) {
 				$markerArray['STOCK_FEEDS_LIST']=$this->pi_getLL('admin_label_no_feeds');
 			} else {

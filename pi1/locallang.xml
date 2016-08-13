@@ -1331,7 +1331,8 @@
             <label index="show_unpaid_invoices_only">Show unpaid invoices only</label>
             <label index="show_credit_invoices_only">Show credit invoices only</label>
             <label index="show_debit_invoices_only">Show debit invoices only</label>
-            <label index="visibility_in_product_feed">Visibility in productbestand</label>
+            <label index="visibility_in_product_feed">Visibility in product feed</label>
+            <label index="visibility_stock_level_in_product_feed">Visibility stock level in product feed</label>
             <label index="show">Show</label>
             <label index="dont_show">Don't show</label>
         </languageKey>
@@ -2620,6 +2621,7 @@
             <label index="mail_to_merchant">Mail naar beheerder</label>
             <label index="select_customer_groups">Selecteer debiteurgroep(en)</label>
             <label index="visibility_in_product_feed">Zichtbaarheid in productbestand</label>
+            <label index="visibility_stock_level_in_product_feed">Zichtbaarheid voorraad in productbestand</label>
             <label index="show">Tonen</label>
             <label index="dont_show">Niet tonen</label>
         </languageKey>
