@@ -209,12 +209,12 @@ jQuery(document).ready(function ($) {
                                     shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + labels_deliver_by + '</td>';
                                     shipping_cost_popup+='</tr>';
                                     $.each(j.shipping_costs_display, function(zone_id, shipping_cost_display) {
-                                        $.each(j.shipping_cost_display, function(shipping_method, shipping_data) {
+                                        $.each(shipping_cost_display, function(shipping_method, shipping_data) {
                                             $.each(shipping_data, function(country_iso_nr, shipping_cost) {
                                                 shipping_cost_popup+='<tr>';
-                                                shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col">' + j.deliver_to[shipping_method][country_iso_nr] + '</td>';
+                                                shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col">' + j.deliver_to[zone_id][shipping_method][country_iso_nr] + '</td>';
                                                 shipping_cost_popup+='<td class="product_shippingcost_popup_table_center_col">' + shipping_cost + '</td>';
-                                                shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + j.deliver_by[shipping_method][country_iso_nr] + '</td>';
+                                                shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + j.deliver_by[zone_id][shipping_method][country_iso_nr] + '</td>';
                                                 shipping_cost_popup+='</tr>';
                                             });
                                         });
