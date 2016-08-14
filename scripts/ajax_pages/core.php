@@ -124,15 +124,15 @@ switch ($this->ms['page']) {
 				$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
 				foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
-						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+						$return_data['shipping_cost'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
+						$return_data['shipping_costs_display'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
 					} else {
-						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
-						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+						$return_data['shipping_cost'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
+						$return_data['shipping_costs_display'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
 					}
-					$return_data['deliver_to'][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
-					$return_data['deliver_by'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
-					$return_data['shipping_method'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
+					$return_data['deliver_to'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
+					$return_data['deliver_by'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
+					$return_data['shipping_method'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
 					$return_data['products_name']=$shipping_cost['product_name'];
 				}
 			}
