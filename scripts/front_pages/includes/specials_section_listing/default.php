@@ -194,81 +194,81 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 // custom hook that can be controlled by third-party plugin eof
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-	$content.='
-	<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
-	  <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
-		  </div>
-		  <div class="modal-body"></div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-	  	$(\'#shippingCostsModal\').modal({
-			show:false,
-			backdrop:false
-		});
-		$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
-			var button = $(event.relatedTarget) // Button that triggered the modal
-  			var product_id = button.data(\'productid\') // Extract info from data-* attributes
-			var modalBox = $(this);
-			modalBox.find(\'.modal-body\').empty();
-			if (modalBox.find(\'.modal-body\').html()==\'\') {
-				jQuery.ajax({
-					url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
-					data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
-					type: \'post\',
-					dataType: \'json\',
-					success: function (j) {
-						if (j) {
-							var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
-							shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
-							shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
-							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
-							shipping_cost_popup+=\'<tr>\';
-							shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
-							shipping_cost_popup+=\'</tr>\';
-							shipping_cost_popup+=\'<tr>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
-							shipping_cost_popup+=\'</tr>\';
-							$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-								$.each(shipping_data, function(country_iso_nr, shipping_cost){
-									shipping_cost_popup+=\'<tr>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'</tr>\';
-								});
-							});
-							if (j.delivery_time!=\'e\') {
-								shipping_cost_popup+=\'<tr>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
-								shipping_cost_popup+=\'</tr>\';
-							}
-							shipping_cost_popup+=\'</table>\';
-							shipping_cost_popup+=\'</div>\';
-							shipping_cost_popup+=\'</div>\';
-							//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
-							modalBox.find(\'.modal-body\').html(shipping_cost_popup);
-							//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
-						}
-					}
-				});
-			}
-		});
-	});
-	</script>
-	';
+    $content.='
+    <div class="modal" id="specialsSectionsShippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>';
+    $GLOBALS['TSFE']->additionalHeaderData['special_sections_shipping_costs_overview']='<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $(\'#specialsSectionsShippingCostsModal\').modal({
+            show:false,
+            backdrop:false
+        });
+        $(\'#specialsSectionsShippingCostsModal\').on(\'show.bs.modal\', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var product_id = button.data(\'productid\') // Extract info from data-* attributes
+            var modalBox = $(this);
+            modalBox.find(\'.modal-body\').empty();
+            if (modalBox.find(\'.modal-body\').html()==\'\') {
+                jQuery.ajax({
+                    url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
+                    data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
+                    type: \'post\',
+                    dataType: \'json\',
+                    success: function (j) {
+                        if (j) {
+                            var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
+                            shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
+                            shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
+                            shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
+                            shipping_cost_popup+=\'<tr>\';
+                            shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
+                            shipping_cost_popup+=\'</tr>\';
+                            shipping_cost_popup+=\'<tr>\';
+                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
+                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
+                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
+                            shipping_cost_popup+=\'</tr>\';
+                            $.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
+                                $.each(shipping_data, function(country_iso_nr, shipping_cost){
+                                    shipping_cost_popup+=\'<tr>\';
+                                    shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
+                                    shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+                                    shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
+                                    shipping_cost_popup+=\'</tr>\';
+                                });
+                            });
+                            if (j.delivery_time!=\'e\') {
+                                shipping_cost_popup+=\'<tr>\';
+                                shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
+                                shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
+                                shipping_cost_popup+=\'</tr>\';
+                            }
+                            shipping_cost_popup+=\'</table>\';
+                            shipping_cost_popup+=\'</div>\';
+                            shipping_cost_popup+=\'</div>\';
+                            //modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
+                            modalBox.find(\'.modal-body\').html(shipping_cost_popup);
+                            //msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+                        }
+                    }
+                });
+            }
+        });
+    });
+    </script>
+    ';
 }
 if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 	$content.='

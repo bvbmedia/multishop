@@ -288,7 +288,7 @@ if (is_array($products) && count($products)) {
 		$plugins_item_extra_content=array();
 		// shipping cost popup
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
+			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#productsListingShippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
 		}
 		// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
@@ -491,7 +491,7 @@ if (is_array($products) && count($products)) {
 	}
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$content.='
-		<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+		<div class="modal" id="productsListingShippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
@@ -507,11 +507,11 @@ if (is_array($products) && count($products)) {
 		</div>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			$(\'#shippingCostsModal\').modal({
+			$(\'#productsListingShippingCostsModal\').modal({
 				show:false,
 				backdrop:false
 			});
-			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
+			$(\'#productsListingShippingCostsModal\').on(\'show.bs.modal\', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var product_id = button.data(\'productid\') // Extract info from data-* attributes
 				var modalBox = $(this);
