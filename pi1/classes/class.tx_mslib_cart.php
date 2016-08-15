@@ -922,6 +922,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					unset($cart['products'][$shopping_cart_item]);
 					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 					$GLOBALS['TSFE']->storeSessionData();
+                    tx_mslib_cart::getCart();
+
 				}
 			} elseif (is_array($this->post['qty'])) {
 				// add/update products in cart (from shopping cart page)
@@ -1096,12 +1098,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 					$subtotal_price=($value['qty']*$product_amount);
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="0") {
-						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=="1") {
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
 						}
-					} else if ($value['tax_rate'] && $include_vat) {
-						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
+					} else {
+                        if ($value['tax_rate'] && $include_vat) {
+                            $subtotal_price = ($subtotal_price * ($value['tax_rate'])) + $subtotal_price;
+                        }
 					}
 					$total_price=($total_price+$subtotal_price);
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
@@ -1119,16 +1123,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		if ($subtract_discount and $cart['discount']) {
 			switch ($cart['discount_type']) {
-				case 'percentage':
-					$discount_price=(($total_price)/100*$cart['discount']);
-					break;
-				case 'price':
-					$discount_price=$cart['discount'];
-					break;
-			}
+                case 'percentage':
+                    $discount_price=(($total_price)/100*$cart['discount']);
+                    break;
+                case 'price':
+                    $discount_price=$cart['discount'];
+                    break;
+            }
 			$total_price=$total_price-$discount_price;
 		}
-		return $total_price;
+        return $total_price;
 	}
 	function countCartTotalTax($country_id=0) {
 		$total_product_tax=0;
