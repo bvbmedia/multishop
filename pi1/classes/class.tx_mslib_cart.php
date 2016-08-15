@@ -341,6 +341,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$this->cart['summarize']['grand_total_excluding_vat']=($subtotal-$subtotal_tax)+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
 					$this->cart['summarize']['grand_total']=($subtotal)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
 				}
+				// to make sure the floatings numbers are not infinite
+                $this->cart['summarize']['grand_total']=number_format($this->cart['summarize']['grand_total'], 14);
 				//$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
 				$this->cart['summarize']['grand_total_vat']=$subtotal_tax+$payment_tax+$shipping_tax;
 				// b2b mode 1 cent bugfix: 2013-05-09 cbc
@@ -1121,6 +1123,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 		}
+        $return_total_price = $total_price;
 		if ($subtract_discount and $cart['discount']) {
 			switch ($cart['discount_type']) {
                 case 'percentage':
@@ -1130,9 +1133,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $discount_price=$cart['discount'];
                     break;
             }
-			$total_price=$total_price-$discount_price;
+			$return_total_price = $total_price - $discount_price;
 		}
-        return $total_price;
+        // to make sure the floatings numbers are not infinite
+        $return_total_price=number_format($return_total_price, 14);
+        return $return_total_price;
 	}
 	function countCartTotalTax($country_id=0) {
 		$total_product_tax=0;
@@ -2931,7 +2936,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$key='DISCOUNT_WRAPPER';
 			if ($this->cart['discount_amount']>0) {
 				$this->cart['summarize']['total_orders_tax_including_discount']=($this->cart['summarize']['total_orders_tax_including_discount']-$this->cart['discount_amount']);
-				$this->cart['summarize']['grand_total']=($this->cart['summarize']['grand_total']-$row['discount']);
+				$this->cart['summarize']['grand_total']=round($this->cart['summarize']['grand_total']-$row['discount'], 2);
 				$markerArray=array();
 				$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
 				$markerArray['DISCOUNT']=mslib_fe::amount2Cents($this->cart['discount_amount']);
