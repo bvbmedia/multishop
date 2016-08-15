@@ -63,7 +63,7 @@ foreach ($this->languages as $key=>$language) {
 $pageinfo=mslib_befe::getRecord($this->shop_pid, 'pages', 'uid', array('deleted=0 and hidden=0'));
 $GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
+<script type="text/javascript" data-ignore="1">
 '.implode("\n", $jsSelect2InitialValue).'
 var languages=[];
 languages=['.implode(",", $js_languages).'];
@@ -2595,19 +2595,34 @@ if ($this->post) {
 		 * options tab
 		 */
 		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
-		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
+		$str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product_tax_rate=0;
 		$data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
 		$product_tax_rate=$data['total_tax_rate'];
+        $tax_list_data=array();
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			if ($this->get['action']=='add_product') {
+            $tax_list_data[]='product_tax_rate_list_js["'.$row['rules_group_id'].'"]="'.round(number_format($row['rate'], 2), 2).'"';
+		    if ($this->get['action']=='add_product') {
 				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['default_status']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 			} else {
 				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['rules_group_id']==$product['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 			}
 		}
 		$input_vat_rate.='</select>';
+        // js definition for tax
+        $product_tax_rate_js=array();
+        $product_tax_rate_js[]='var product_tax_rate_list_js=[];';
+        if (count($tax_list_data)) {
+            $product_tax_rate_js = $tax_list_data;
+        }
+        $GLOBALS['TSFE']->additionalHeaderData[]='
+        <script type="text/javascript" data-ignore="1">
+           var product_id="'.$this->get['pid'].'"
+           var product_tax_rate_list_js=[]
+           '.implode("\n", $product_tax_rate_js).'
+        </script>
+        ';
 		if ($_REQUEST['action']=='edit_product') {
 			$str="SELECT * from tx_multishop_specials where products_id='".$_REQUEST['pid']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2716,12 +2731,12 @@ if ($this->post) {
 				}
 				$(document).on("keyup", ".msStaffelPriceExcludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(true, this);
+						priceEditRealtimeCalc(true, this);
 					}
 				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(false, this);
+						priceEditRealtimeCalc(false, this);
 					}
 				});
 				</script>';
@@ -3971,12 +3986,12 @@ if ($this->post) {
 				'.$attribute_values_sb_trigger.'
 				$(document).on("keyup", ".msAttributesPriceExcludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(true, this);
+						priceEditRealtimeCalc(true, this);
 					}
 				});
 				$(document).on("keyup", ".msAttributesPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(false, this);
+						priceEditRealtimeCalc(false, this);
 					}
 				});
 			});
