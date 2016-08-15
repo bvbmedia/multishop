@@ -342,7 +342,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$this->cart['summarize']['grand_total']=($subtotal)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
 				}
 				// to make sure the floatings numbers are not infinite
-                $this->cart['summarize']['grand_total']=number_format($this->cart['summarize']['grand_total'], 14);
+                $this->cart['summarize']['grand_total']=number_format($this->cart['summarize']['grand_total'], 14, ',', '');
+                //var_dump($this->cart['summarize']['grand_total']);
 				//$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
 				$this->cart['summarize']['grand_total_vat']=$subtotal_tax+$payment_tax+$shipping_tax;
 				// b2b mode 1 cent bugfix: 2013-05-09 cbc
@@ -1136,7 +1137,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$return_total_price = $total_price - $discount_price;
 		}
         // to make sure the floatings numbers are not infinite
-        $return_total_price=number_format($return_total_price, 14);
+        $return_total_price=number_format($return_total_price, 14, ',', '');
         return $return_total_price;
 	}
 	function countCartTotalTax($country_id=0) {
