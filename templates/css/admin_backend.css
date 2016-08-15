@@ -680,3 +680,5 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon:first-child {width:90%; text-align:left; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon.currencySymbol { border-right:none; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li.sub_categories_sorting.category .form-group { margin-bottom:2px; }
+
+#msAdmin_category_listing_ul.treeview li > .form-group { margin-left:0; margin-right:0; }
