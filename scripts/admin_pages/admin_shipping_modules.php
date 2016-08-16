@@ -136,98 +136,6 @@ if ($this->post) {
 }
 $GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods_edit']='
 <script type="text/javascript">
-function productPrice(to_include_vat, o, type) {
-	var original_val = $(o).val();
-	var current_value = parseFloat($(o).val());
-	//
-	if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
-		var thousand=original_val.split(".");
-		if (thousand[1].indexOf(",")!=-1) {
-			var hundreds = thousand[1].split(",");
-			original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-			current_value = parseFloat(original_val);
-			//
-			$(o).val(original_val);
-		} else {
-			thousand=original_val.split(",");
-			if (thousand[1].indexOf(".")!=-1) {
-				var hundreds = thousand[1].split(".");
-				original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-				current_value = parseFloat(original_val);
-				//
-				$(o).val(original_val);
-			}
-		}
-	}
-	//
-	var tax_id 			= jQuery("#tax_id").val();
-	if (current_value > 0) {
-		if (to_include_vat) {
-			jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-				if (json && json.price_including_tax) {
-					var incl_tax_crop = decimalCrop(json.price_including_tax);
-					//o.parent().next().first().children().val(incl_tax_crop);
-					$(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(incl_tax_crop);
-				} else {
-					//o.parent().next().first().children().val(current_value);
-					$(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(current_value);
-				}
-			});
-			// update the hidden excl vat
-			//o.parent().next().next().first().children().val(original_val);
-			$(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
-		} else {
-			jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-				if (json && json.price_excluding_tax) {
-					var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-					// update the excl. vat
-					//o.parent().prev().first().children().val(excl_tax_crop);
-					// update the hidden excl vat
-					//o.parent().next().first().children().val(json.price_excluding_tax);
-					//
-                    // update the excl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(excl_tax_crop);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(json.price_excluding_tax);
-
-				} else {
-					// update the excl. vat
-					//o.parent().prev().first().children().val(original_val);
-					// update the hidden excl vat
-					//o.next().parent().first().next().first().children().val(original_val);
-					//
-                    // update the excl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(original_val);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(original_val);
-				}
-			});
-		}
-	} else {
-		if (to_include_vat) {
-            // update the incl. vat
-            $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(0);
-            // update the hidden excl vat
-            $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
-        } else {
-            // update the excl. vat
-            $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
-            // update the hidden excl vat
-            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
-        }
-	}
-}
-function decimalCrop(float) {
-	var numbers = float.toString().split(".");
-	var prime 	= numbers[0];
-	if (numbers[1] > 0 && numbers[1] != "undefined") {
-		var decimal = new String(numbers[1]);
-	} else {
-		var decimal = "00";
-	}
-	var number = prime + "." + decimal.substr(0, 2);
-	return number;
-}
 function mathRound(float) {
 	//return float;
 	return Math.round(float*100)/100;
@@ -239,17 +147,17 @@ jQuery(document).ready(function($) {
 	});
 	$(document).on("keyup", ".msHandlingCostExcludingVat", function(e) {
 		if (e.keyCode!=9) {
-			productPrice(true, this);
+			priceEditRealtimeCalc(true, this);
 		}
 	});
 	$(document).on("change", "#tax_id", function() {
 		jQuery(".msHandlingCostExcludingVat").each(function(i) {
-			productPrice(true, this);
+			priceEditRealtimeCalc(true, this);
 		});
 	});
 	$(document).on("keyup", ".msHandlingCostIncludingVat", function(e) {
 		if (e.keyCode!=9) {
-			productPrice(false, this);
+			priceEditRealtimeCalc(false, this);
 		}
 	});
 	$("#add_shipping_form").submit(function(e) {
@@ -371,9 +279,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.str_replace('%', '', $this->post['handling_costs']).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="'.str_replace('%', '', $this->post['handling_costs']).'" /></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="'.str_replace('%', '', $this->post['handling_costs']).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="0.00" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" class="priceInputReal" value="'.str_replace('%', '', $this->post['handling_costs']).'" /></div>
 			</div>
 			</div>
 		</div>
@@ -381,9 +289,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			<label class="control-label col-md-2">'.$this->pi_getLL('cart_minimum_amount').'</label>
 			<div class="col-md-10">
 				<div class="msAttribute">
-					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-					<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" value="0.00" id="cart_minimum_amount" /></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="0.00" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="0.00" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" class="priceInputReal" value="0.00" id="cart_minimum_amount" /></div>
 				</div>
 			</div>
 		</div>
@@ -391,9 +299,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			<label class="control-label col-md-2">'.$this->pi_getLL('cart_maximum_amount').'</label>
 			<div class="col-md-10">
 				<div class="msAttribute">
-					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-					<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" value="0.00" id="cart_maximum_amount" /></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="0.00" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+					<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="0.00" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+					<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" class="priceInputReal" value="0.00" id="cart_maximum_amount" /></div>
 				</div>
 			</div>
 		</div>
@@ -401,15 +309,31 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
 			<div class="col-md-10">
 				<select name="tax_id" id="tax_id" class="form-control "><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
+        $str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $tax_list_data=array();
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+            $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['rules_group_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'"';
 			if (!$this->get['shipping_method_id']) {
 				$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['default_status']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 			} else {
 				$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$this->post['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 			}
 		}
+        // js definition for tax
+        $product_tax_rate_js=array();
+        $product_tax_rate_js[]='var product_tax_rate_list_js=[];';
+        if (count($tax_list_data)) {
+            $product_tax_rate_js = $tax_list_data;
+        }
+        $GLOBALS['TSFE']->additionalHeaderData[]='
+        <script type="text/javascript" data-ignore="1">
+           var product_id="'.$this->get['pid'].'"
+           var product_tax_rate_list_js=[]
+           '.implode("\n", $product_tax_rate_js).'
+        </script>
+        ';
 		$tmpcontent.='
 				</select>
 			</div>
@@ -553,9 +477,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 		<div class="col-md-10">
 		<div class="msAttribute">
-			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" id="handling_cost_amount_input" value="'.$amount_handling_cost.'"'.($percentage_cost ? ' disabled="disabled"' : '').'/></div>
+			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="'.$cost_excl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+			<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="'.$cost_incl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" id="handling_cost_amount_input" class="priceInputReal" value="'.$amount_handling_cost.'"'.($percentage_cost ? ' disabled="disabled"' : '').'/></div>
 		</div>
 		</div>
 	</div>
@@ -563,9 +487,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		<label class="control-label col-md-2">'.$this->pi_getLL('cart_minimum_amount').'</label>
 		<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_minimum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_minimum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-				<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" value="'.$cart_minimum_amount.'" id="cart_minimum_amount" /></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="'.$cart_minimum_amount_excl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="'.$cart_minimum_amount_incl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField hidden"><input name="cart_minimum_amount" type="hidden" class="priceInputReal" value="'.$cart_minimum_amount.'" id="cart_minimum_amount" /></div>
 			</div>
 		</div>
 	</div>
@@ -573,9 +497,9 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		<label class="control-label col-md-2">'.$this->pi_getLL('cart_maximum_amount').'</label>
 		<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cart_maximum_amount_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cart_maximum_amount_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-				<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" value="'.$cart_maximum_amount.'" id="cart_maximum_amount" /></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat priceInputDisplay" value="'.$cart_maximum_amount_excl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat priceInputDisplay" value="'.$cart_maximum_amount_incl_vat_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField hidden"><input name="cart_maximum_amount" type="hidden" class="priceInputReal" value="'.$cart_maximum_amount.'" id="cart_maximum_amount" /></div>
 			</div>
 		</div>
 	</div>
@@ -584,15 +508,30 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	<div class="col-md-10">
 	<select name="tax_id" id="tax_id" class="form-control">
 	<option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
-	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
+    $str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $tax_list_data=array();
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+        $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['rules_group_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'"';
 		if (!$this->get['shipping_method_id']) {
 			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['default_status']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 		} else {
 			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 		}
 	}
+    // js definition for tax
+    $product_tax_rate_js=array();
+    $product_tax_rate_js[]='var product_tax_rate_list_js=[];';
+    if (count($tax_list_data)) {
+        $product_tax_rate_js = $tax_list_data;
+    }
+    $GLOBALS['TSFE']->additionalHeaderData[]='
+        <script type="text/javascript" data-ignore="1">
+           var product_id="'.$this->get['pid'].'"
+           var product_tax_rate_list_js=[]
+           '.implode("\n", $product_tax_rate_js).'
+        </script>
+        ';
 	$tmpcontent.='
 	</select>
 	</div>

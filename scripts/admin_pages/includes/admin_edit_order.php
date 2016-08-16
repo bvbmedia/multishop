@@ -10,6 +10,24 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	}
 	// hook oef
 }
+// define the tax rate
+$str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+$tax_list_data=array();
+while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+    $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['rules_group_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'"';
+}
+// js definition for tax
+$product_tax_rate_js=array();
+if (count($tax_list_data)) {
+    $product_tax_rate_js = $tax_list_data;
+}
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript" data-ignore="1">
+   var product_tax_rate_list_js=[]
+   '.implode("\n", $product_tax_rate_js).'
+</script>
+';
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -1907,9 +1925,9 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_price_display_incl=mslib_fe::taxDecimalCrop($order['final_price']+(($order['final_price']*$order['products_tax'])/100), 2, false);
 							}
 						}
-						$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.($order_products_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_price" id="product_price" value="'.$order['final_price'].'" /></div>';
+						$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_price_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.($order_products_price_display_incl).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_price" id="product_price" value="'.$order['final_price'].'" /></div>';
 						/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							//$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="'.($order['final_price']+$order_products_tax_data['total_tax']).'" />
 							//<input type="hidden" name="products_normal_price" id="product_price" value="'.($order['final_price']).'" />';
@@ -1946,9 +1964,9 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							$percentage_sb.='</select>
 							</div>';
-							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_discount_amount_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.$order_products_discount_amount_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
+							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_discount_amount_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.$order_products_discount_amount_display_incl.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
 							//if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
 							if (!empty($order['discount_amount'])) {
 								$order['final_price']-=$order['discount_amount'];
@@ -2284,9 +2302,9 @@ if (is_numeric($this->get['orders_id'])) {
 										$order_products_body_data['products_vat']['value']='';
 									}
 									// products price col
-									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="'.number_format($optprice, 2).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="'.number_format($optprice+$attributes_tax_data['tax'], 2).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
+									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="'.number_format($optprice, 2).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="'.number_format($optprice+$attributes_tax_data['tax'], 2).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
 									if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 										// products vat col
 										$order_products_body_data['products_vat']['value']='';
@@ -2626,9 +2644,9 @@ if (is_numeric($this->get['orders_id'])) {
 				// product normal price col
 				$order_products_body_data['products_normal_price']['valign']='top';
 				$order_products_body_data['products_normal_price']['class']='cellPrice';
-				$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_price" id="manual_product_price" value="" /></div>';
+				$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_price" id="manual_product_price" value="" /></div>';
 				/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
 					$order_products_body_data['products_normal_price']['value'].='<input type="hidden" name="manual_product_price" id="product_price" value=""/>';
@@ -2655,9 +2673,9 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$percentage_sb.='</select>
 							</div>';
-					$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="0"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
+					$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="0" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
 				}
 				// product final price col
 				$order_products_body_data['products_final_price']['value']='';
@@ -3540,9 +3558,9 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'</div>\';';
 				$tmpcontent.='
-                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.display_values_price) + \'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
+                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
 				$tmpcontent.='
                     var cloned_row=$(\'#last_edit_product_row\').clone();
                     cloned_row.removeAttr("id");
@@ -4056,35 +4074,35 @@ if (url.match("#")) {
             });
             $(document).on("keyup", ".msOrderProductPriceExcludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(true, $(this), "#product_tax");
+                	priceEditRealtimeCalc(true, $(this), "#product_tax");
                 }
             });
             $(document).on("keyup", ".msOrderProductPriceIncludingVat", function(e) {
                 if (e.keyCode!=9) {
-                	productPrice(false, $(this), "#product_tax");
+                	priceEditRealtimeCalc(false, $(this), "#product_tax");
                 }
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#product_tax", "product_tax");
                 });
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#product_tax", "product_tax");
                 });
             });
             $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(true, $(this), "#manual_product_tax");
+                	priceEditRealtimeCalc(true, $(this), "#manual_product_tax");
                 }
             });
             $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(false, $(this), "#manual_product_tax");
+                	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
                 }
             });
             $("#manual_product_tax").change(function () {
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#manual_product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#manual_product_tax", "product_tax");
                 });
             });
         });

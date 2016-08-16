@@ -1,43 +1,55 @@
-if (!product_id) {
-    var product_id=0;
+if (!price_subject_id) {
+    var price_subject_id=0;
 }
-function priceEditRealtimeCalc(to_include_vat, o, type) {
-    var original_val = $(o).val();
-    var current_value = parseFloat($(o).val());
-    if (!product_id && $(o).attr("rel")!=undefined) {
-        product_id = $(o).attr("rel");
+function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
+    type = typeof type !== 'undefined' ? type : '';
+    trigger_element = typeof trigger_element !== 'undefined' ? trigger_element : '';
+
+    if (trigger_element=="product_tax") {
+        var price_value=$(o).parent().parent().next().next().children().val();
+        var original_val = price_value;
+        var current_value = parseFloat(price_value);
+    } else {
+        var original_val = $(o).val();
+        var current_value = parseFloat($(o).val());
+    }
+    if ($(o).attr("rel")!=undefined) {
+        price_subject_id = $(o).attr("rel");
     }
     var tax_rate=0;
     if (typeof product_tax_rate_js!='undefined') {
-        tax_rate=parseFloat(product_tax_rate_js[product_id]);
-    } else {
+        tax_rate=parseFloat(product_tax_rate_js[price_subject_id]);
+    } else if (typeof product_tax_rate_list_js!='undefined') {
         var tax_id=$("#tax_id").val();
+        if (type) {
+            tax_id = $(type).val();
+        }
         tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
     }
     if (current_value > 0) {
         if (to_include_vat) {
-            var priceIncludeVat=parseFloat(current_value+(current_value*(tax_rate/100)));
             if (tax_rate>0) {
+                var priceIncludeVat=parseFloat(current_value+(current_value*(tax_rate/100)));
                 var incl_tax_crop = decimalCrop(priceIncludeVat);
                 $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
             } else {
-                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(current_value);
+                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(original_val);
             }
             // update the hidden excl vat
-            $(o).parentsUntil('msAttributesField').next().next().first().children().val(original_val);
+            $(o).parentsUntil('msAttributesField').next().next().first().children().val(current_value);
         } else {
-            var priceExcludeVat=parseFloat((current_value/(100+tax_rate))*100);
             if (tax_rate>0) {
+                var priceExcludeVat=parseFloat((current_value/(100+tax_rate))*100);
                 var excl_tax_crop = decimalCrop(priceExcludeVat);
                 // update the excl. vat
                 $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
                 // update the hidden excl vat
-                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(excl_tax_crop);
+                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(priceExcludeVat);
             } else {
                 // update the excl. vat
                 $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(original_val);
                 // update the hidden excl vat
-                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(original_val);
+                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(current_value);
             }
         }
     } else {

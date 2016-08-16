@@ -8,7 +8,7 @@ if ($this->ADMIN_USER) {
 	$based=$_REQUEST['based'];
 	$basedold=$_REQUEST['basedold'];
 	$content="";
-	$str_tid="SELECT tax_id from tx_multishop_shipping_methods where id='".$shipping_id."'";
+	$str_tid="SELECT id, tax_id from tx_multishop_shipping_methods where id='".$shipping_id."'";
 	$qry_tid=$GLOBALS['TYPO3_DB']->sql_query($str_tid);
 	$row_tid=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tid);
 	$str="SELECT * from tx_multishop_zones order by name";
@@ -57,18 +57,18 @@ if ($this->ADMIN_USER) {
 				<div class="form-group">
 					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4">Level 1 :</label>
 					<div class="col-md-8">
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Excl. VAT</span></div></div>
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Incl. VAT</span></div></div>
-						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($sc_price_display).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Excl. VAT</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Incl. VAT</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'" class="priceInputReal" value="'.$row3['price'].'"></div>
 					</div>
 				</div>
 				<hr>
 				<div class="form-group">
 					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4"><div class="checkbox"><input type="checkbox" id="freeshippingcostsabove['.$zone_pid.']" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></label>
 					<div class="col-md-8">
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']" class="priceInputReal" value="'.$free_shippingcosts.'"></div>
 					</div>
 				</div>';
 			$content.='</div></div>';
@@ -132,9 +132,9 @@ if ($this->ADMIN_USER) {
 						</select>
 						<div class="col-md-8">
 							<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Excl. VAT</span></div></div>
-								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Incl. VAT</span></div></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'" class="'.$zone_pid.'_priceInput'.$i.'"></div>
+								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Excl. VAT</span></div></div>
+								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Incl. VAT</span></div></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" class="priceInputReal" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'" class="'.$zone_pid.'_priceInput'.$i.'"></div>
 							</div>
 						</div>
 					</div>';
@@ -172,9 +172,9 @@ if ($this->ADMIN_USER) {
 						$content.='</label>
 							<div class="col-md-8 asdf123">
 								<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Excl. VAT</span></div></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Incl. VAT</span></div></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right;display:none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$shipping_id.'"'.$disabled.' autocomplete="off"><span class="input-group-addon">Excl. VAT</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$shipping_id.'"'.$disabled.' autocomplete="off"><span class="input-group-addon">Incl. VAT</span></div></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right;display:none;" size="3" name="'.$zone_pid.'_Price[]" class="priceInputReal" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></div>
 								</div>
 							</div>
 						</div>';
@@ -198,9 +198,9 @@ if ($this->ADMIN_USER) {
 					<div class="form-group">
 						<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4 secondLabel"><div class="checkbox checkbox-success"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" id="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></label>
 						<div class="col-md-8">
-								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+								<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']" class="priceInputReal" value="'.$free_shippingcosts.'"></div>
 						</div>
 					</div>
 				';
@@ -253,9 +253,9 @@ if ($this->ADMIN_USER) {
 				$content.='</label>
 							<div class="col-md-8">
 								<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Excl. VAT</span></div></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Incl. VAT</span></div></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$shipping_id.'"'.$disabled.' autocomplete="off"><span class="input-group-addon">Excl. VAT</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$shipping_id.'"'.$disabled.' autocomplete="off"><span class="input-group-addon">Incl. VAT</span></div></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" class="priceInputReal" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
 								</div>
 							</div>
 						</div>
@@ -279,9 +279,9 @@ if ($this->ADMIN_USER) {
 					<div class="form-group">
 						<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4 secondLabel"><div class="checkbox checkbox-success"><input type="checkbox" id="freeshippingcostsabove['.$zone_pid.']" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></label>
 						<div class="col-md-8">
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']" class="priceInputReal" value="'.$free_shippingcosts.'"></div>
 						</div>
 					</div>
 				';
@@ -313,18 +313,18 @@ if ($this->ADMIN_USER) {
 				<div class="form-group">
 					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4">Level 1 :</label>
 					<div class="col-md-8">
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Excl. VAT</span></div></div>
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Incl. VAT</span></div></div>
-						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value=""></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Excl. VAT</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">Incl. VAT</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'" class="priceInputReal" value=""></div>
 					</div>
 				</div>
 				<hr>
 				<div class="form-group">
 					<div id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4"><div class="checkbox checkbox-success"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" id="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">Free shippingcosts for order amount above</label></div></div>
 					<div class="col-md-8">
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value=""></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="" rel="'.$shipping_id.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']" class="priceInputReal" value=""></div>
 					</div>
 				</div>';
 				$content.='</div></div>';
@@ -428,12 +428,12 @@ if ($this->ADMIN_USER) {
 			}
 			jQuery(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
 				if (e.keyCode!=9) {
-					productPrice(true, jQuery(this));
+					priceEditRealtimeCalc(true, jQuery(this));
 				}
 			});
 			jQuery("document").on("keyup", ".msProductsPriceIncludingVat", function(e) {
 				if (e.keyCode!=9) {
-					productPrice(false, jQuery(this));
+					priceEditRealtimeCalc(false, jQuery(this));
 				}
 			});
 		});
