@@ -1,3 +1,70 @@
+if (!product_id) {
+    var product_id=0;
+}
+function priceEditRealtimeCalc(to_include_vat, o, type) {
+    var original_val = $(o).val();
+    var current_value = parseFloat($(o).val());
+    if (!product_id && $(o).attr("rel")!=undefined) {
+        product_id = $(o).attr("rel");
+    }
+    var tax_rate=0;
+    if (typeof product_tax_rate_js!='undefined') {
+        tax_rate=parseFloat(product_tax_rate_js[product_id]);
+    } else {
+        var tax_id=$("#tax_id").val();
+        tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
+    }
+    if (current_value > 0) {
+        if (to_include_vat) {
+            var priceIncludeVat=parseFloat(current_value+(current_value*(tax_rate/100)));
+            if (tax_rate>0) {
+                var incl_tax_crop = decimalCrop(priceIncludeVat);
+                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
+            } else {
+                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(current_value);
+            }
+            // update the hidden excl vat
+            $(o).parentsUntil('msAttributesField').next().next().first().children().val(original_val);
+        } else {
+            var priceExcludeVat=parseFloat((current_value/(100+tax_rate))*100);
+            if (tax_rate>0) {
+                var excl_tax_crop = decimalCrop(priceExcludeVat);
+                // update the excl. vat
+                $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
+                // update the hidden excl vat
+                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(excl_tax_crop);
+            } else {
+                // update the excl. vat
+                $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(original_val);
+                // update the hidden excl vat
+                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(original_val);
+            }
+        }
+    } else {
+        if (to_include_vat) {
+            // update the incl. vat
+            $(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
+            // update the hidden excl vat
+            $(o).parentsUntil('msAttributesField').next().next().first().children().val(0);
+        } else {
+            // update the excl. vat
+            $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
+            // update the hidden excl vat
+            $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(0);
+        }
+    }
+}
+function decimalCrop(float) {
+    var numbers = float.toString().split(".");
+    var prime 	= numbers[0];
+    if (numbers[1] > 0 && numbers[1] != "undefined") {
+        var decimal = new String(numbers[1]);
+    } else {
+        var decimal = "00";
+    }
+    var number = prime + "." + decimal.substr(0, 2);
+    return number;
+}
 function CONFIRM(label) {
     if (confirm(label)) {
         return true;

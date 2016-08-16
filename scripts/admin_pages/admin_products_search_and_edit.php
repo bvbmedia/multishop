@@ -445,6 +445,7 @@ if ($this->ms['MODULES']['FLAT_DATABASE'] and count($having)) {
 }
 $pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
 $products=$pageset['products'];
+$product_tax_rate_js=array();
 if ($pageset['total_rows']>0) {
 	$subpartArray=array();
 	$subpartArray['###FORM_ACTION_PRICE_UPDATE_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_products_search_and_edit&'.mslib_fe::tep_get_all_get_params(array(
@@ -629,6 +630,7 @@ if ($pageset['total_rows']>0) {
 		$product_tax_rate=0;
 		$data=mslib_fe::getTaxRuleSet($rs['tax_id'], 0);
 		$product_tax_rate=$data['total_tax_rate'];
+        $product_tax_rate_js[]='product_tax_rate_js["'.$rs['products_id'].'"]="' . $data['total_tax_rate'] . '";';
 		$product_tax=mslib_fe::taxDecimalCrop(($rs['products_price']*$product_tax_rate)/100);
 		$product_price_display=mslib_fe::taxDecimalCrop($rs['products_price'], 2, false);
 		$product_price_display_incl=mslib_fe::taxDecimalCrop($rs['products_price']+$product_tax, 2, false);
@@ -827,4 +829,9 @@ $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
 
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=$prepending_content.'<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+var product_tax_rate_js=[];
+'.implode("\n", $product_tax_rate_js).'
+</script>
+';
 ?>
