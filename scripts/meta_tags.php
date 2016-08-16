@@ -260,12 +260,17 @@ if ($this->ADMIN_USER) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
+    $locale_info = localeconv();
 	$html.='
 			<script type="text/javascript" data-ignore="1">
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_URL=\''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search').'\';
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL=\''.$this->pi_getLL('keyword').'\';
 			var MS_ADMIN_PANEL_FULL_URL=\''.$this->FULL_HTTP_URL.'\';
 			jQuery(document).ready(function($) {
+			    '.($this->get['type']=='2003' ? '
+			    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			    $(\'input.priceInputDisplay\').number(true, 2, \''.$locale_info['decimal_point'].'\', \''.$locale_info['thousands_sep'].'\');
+			    ' : '').'
 				$(document).on("click", ".ms_admin_minimize", function(e) {
 					e.preventDefault();
 					$("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2("close");
@@ -449,6 +454,10 @@ $(document).on("click", "#multishop_update_button", function(e) {
 	}
 });
 ';
+    if ($this->get['type']=='2003') {
+        //$locale_info = localeconv();
+
+    }
 	$html.='
 });
 </script>

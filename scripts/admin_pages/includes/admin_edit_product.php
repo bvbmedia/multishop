@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+$locale_info = localeconv();
 $jsSelect2InitialValue=array();
 $jsSelect2InitialValue[]='var categoriesIdTerm=[];';
 $jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']=[];';
@@ -2618,7 +2619,7 @@ if ($this->post) {
         }
         $GLOBALS['TSFE']->additionalHeaderData[]='
         <script type="text/javascript" data-ignore="1">
-           var product_id="'.$this->get['pid'].'"
+           var price_subject_id="'.$this->get['pid'].'"
            var product_tax_rate_list_js=[]
            '.implode("\n", $product_tax_rate_js).'
         </script>
@@ -2678,9 +2679,9 @@ if ($this->post) {
 								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
 								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
@@ -2703,9 +2704,9 @@ if ($this->post) {
 								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
@@ -2714,6 +2715,8 @@ if ($this->post) {
 								jQuery(\'#sp_end_row\').before(elem);
 							}
 							jQuery(\'#sp_row_counter\').val(counter_data);
+							$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			                $(\'input.priceInputDisplay\').number(true, 2, \''.$locale_info['decimal_point'].'\', \''.$locale_info['thousands_sep'].'\');
 						//}
 						event.preventDefault();
 					});
@@ -2780,9 +2783,9 @@ if ($this->post) {
 							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></span></td>
 							<td>
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($sp_price_display).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($staffel_price_display_incl).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="priceInputReal price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
 							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button></td>
 						</tr>';
 				}
@@ -3097,15 +3100,15 @@ if ($this->post) {
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat priceInputDisplay" autocomplete="off">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('excluding_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" autocomplete="off">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('including_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" class="priceInputReal" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
@@ -3851,9 +3854,9 @@ if ($this->post) {
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
 								$existing_product_attributes_block_columns['attribute_price_col']='<td class="cellPrice">
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat priceInputDisplay" value="'.$attribute_price_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" value="'.$attribute_price_display_incl.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" class="priceInputReal" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_save_col']='<td class="cellAction">
 								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button></div>
