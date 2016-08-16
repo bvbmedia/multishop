@@ -268,8 +268,10 @@ if ($this->ADMIN_USER) {
 			var MS_ADMIN_PANEL_FULL_URL=\''.$this->FULL_HTTP_URL.'\';
 			jQuery(document).ready(function($) {
 			    '.($this->get['type']=='2003' ? '
+			    var decimal_sep=\''.$locale_info['decimal_point'].'\';
+                var thousands_sep=\''.$locale_info['thousands_sep'].'\';
 			    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
-			    $(\'input.priceInputDisplay\').number(true, 2, \''.$locale_info['decimal_point'].'\', \''.$locale_info['thousands_sep'].'\');
+			    $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 			    ' : '').'
 				$(document).on("click", ".ms_admin_minimize", function(e) {
 					e.preventDefault();

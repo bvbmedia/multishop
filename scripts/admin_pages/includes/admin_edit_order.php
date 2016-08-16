@@ -11,11 +11,17 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	// hook oef
 }
 // define the tax rate
-$str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+        'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+        't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1', // WHERE...
+        't.tax_id', // GROUP BY...
+        '', // ORDER BY...
+        '' // LIMIT ...
+);
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $tax_list_data=array();
 while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-    $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['rules_group_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'"';
+    $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['tax_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'";';
 }
 // js definition for tax
 $product_tax_rate_js=array();
