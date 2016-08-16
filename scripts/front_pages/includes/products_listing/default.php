@@ -283,7 +283,16 @@ if (is_array($products) && count($products)) {
 			</form>
 		</div>
 		';
-		$markerArray['MANUFACTURERS_ADVICE_PRICE']=mslib_fe::amount2Cents($current_product['manufacturers_advice_price']);
+		//$markerArray['MANUFACTURERS_ADVICE_PRICE']=mslib_fe::amount2Cents($current_product['manufacturers_advice_price']);
+		$markerArray['MANUFACTURERS_ADVICE_PRICE'] ='';
+		if ($current_product['manufacturers_advice_price']) {
+			if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($current_product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+				$amount = $current_product['manufacturers_advice_price'] * (1 + $current_product['tax_rate']);
+			} else {
+				$amount = $current_product['manufacturers_advice_price'];
+			}
+			$markerArray['MANUFACTURERS_ADVICE_PRICE'] = mslib_fe::amount2Cents($amount);
+		}
 		// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
 		$plugins_item_extra_content=array();
 		// shipping cost popup
