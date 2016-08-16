@@ -428,7 +428,15 @@ if (!$product['products_id']) {
         }
     }
     $markerArray['###CANONICAL_URL###'] = $productLink;
-    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($product['manufacturers_advice_price']);
+    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] ='';
+    if ($product['manufacturers_advice_price']) {
+        if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+            $amount = $product['manufacturers_advice_price'] * (1 + $product['tax_rate']);
+        } else {
+            $amount = $product['manufacturers_advice_price'];
+        }
+        $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($amount);
+    }
     $js_detail_page_triggers[] = '
 		var stepSize=parseFloat(\'' . ($product['products_multiplication'] != '0.00' ? $product['products_multiplication'] : 1) . '\');
 		var minQty=parseFloat(\'' . ($product['minimum_quantity'] != '0.00' ? $product['minimum_quantity'] : '1') . '\');
