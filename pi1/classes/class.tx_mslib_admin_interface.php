@@ -296,6 +296,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
 						case 'number_format_2_decimals':
+                            $summarize[$col]+=$row[$col];
 							$row[$col]=round(number_format($row[$col], 2), 2);
 							break;
 						case 'number_format_thousand_seperator':
@@ -475,6 +476,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						case 'currency':
 							$row[$col]=mslib_fe::amount2Cents($summarize[$col], 0);
 							break;
+                        case 'number_format_2_decimals':
+                            $row[$col]=round(number_format($summarize[$col], 2), 1);
+                            break;
 						default:
 							$row[$col]=$valArray['title'];
 							break;
