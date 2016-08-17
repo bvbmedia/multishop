@@ -477,7 +477,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							$row[$col]=mslib_fe::amount2Cents($summarize[$col], 0);
 							break;
                         case 'number_format_2_decimals':
-                            $row[$col]=round(number_format($summarize[$col], 2), 1);
+                            $row[$col]=round(number_format($summarize[$col], 2), 2);
                             break;
 						default:
 							$row[$col]=$valArray['title'];
