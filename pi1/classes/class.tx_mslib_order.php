@@ -671,7 +671,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						//}
 					}
 					if ($copy_to_merchant) {
-						$mailSubject='Copy for merchant: '.$page[0]['name'], $page[0]['content'];
+						$mailSubject='Copy for merchant: '.$page[0]['name'];
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
 							$params=array(
 									'this'=>&$this,
