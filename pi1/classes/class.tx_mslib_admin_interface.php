@@ -296,8 +296,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
 						case 'number_format_2_decimals':
-                            $summarize[$col]+=$row[$col];
 							$row[$col]=round(number_format($row[$col], 2), 2);
+                            $summarize[$col]+=$row[$col];
 							break;
 						case 'number_format_thousand_seperator':
 							$row[$col]=number_format($row[$col], 0, '', '.');
