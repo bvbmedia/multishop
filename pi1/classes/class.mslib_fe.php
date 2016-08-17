@@ -3021,8 +3021,10 @@ class mslib_fe {
 			$query_elements['select'][]='pd.products_name, p.products_id, c.categories_id';
 			$query_elements['from'][]='tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd';
 			$query_elements['filter'][]="p.products_status=1 and c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."'";
+			$query_elements['filter'][]="p.is_hidden=0";
 			$query_elements['where'][]='cd.language_id=pd.language_id and p.products_id=pd.products_id and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id and c.categories_id=cd.categories_id and p2c.is_deepest=1';
 			$query_elements['orderby'][]="p2c.sort_order ".$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
+			$query_elements['groupby'][]='p.products_id';
 		} else {
 			$query_elements['select'][]='pf.products_name, pf.products_id, pf.categories_id';
 			$query_elements['from'][]='tx_multishop_products_flat pf';
@@ -3059,12 +3061,12 @@ class mslib_fe {
 			$nextKey='next_item';
 		} else {
 			switch ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']) {
-				case 'desc':
+				case 'asc':
 					$prevKey='next_item';
 					$nextKey='previous_item';
 					break;
 				default:
-				case 'asc':
+				case 'desc':
 					$prevKey='previous_item';
 					$nextKey='next_item';
 					break;
@@ -3080,6 +3082,7 @@ class mslib_fe {
 				$pagination_items[$nextKey]['products_id']=$products[($internal+1)];
 			}
 		}
+
 		$cats=mslib_fe::Crumbar($categories_id);
 		$cats=array_reverse($cats);
 		foreach ($pagination_items as $key=>$item) {
