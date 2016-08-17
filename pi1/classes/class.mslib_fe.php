@@ -1189,12 +1189,12 @@ class mslib_fe {
 			$decimal.='0';
 		}
 		if (!$prime && !$decimal) {
-			return '0.00';
+			return '0' . $this->pi_getLL('number_decimal_separator') . '00';
 		}
 		if (!empty($decimal)) {
-			$float=$prime.'.'.$decimal;
+			$float=$prime . $this->pi_getLL('number_decimal_separator') . $decimal;
 		} else {
-			$float=$prime.'.00';
+			$float=$prime . $this->pi_getLL('number_decimal_separator') . '00';
 		}
 		return $float;
 	}

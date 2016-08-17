@@ -4994,23 +4994,27 @@ class mslib_befe {
         }
     }
     function formatNumbersToMysql($numbers) {
-        $locale_info = localeconv();
-        $thousand_array=array();
-        $decimal='00';
-        $thousands=explode($locale_info['thousands_sep'], $numbers);
-        foreach ($thousands as $thousand) {
-            if (strpos($thousand, $locale_info['decimal_point'])===false) {
-                $thousand_array[]=$thousand;
-            } else {
-                list($last_thousand, $decimal)=explode($locale_info['decimal_point'], $thousand);
-                $thousand_array[]=$last_thousand;
+        if ($this->pi_getLL('number_decimal_separator')!='.') {
+            $thousand_array=array();
+            $decimal='00';
+            $thousands=explode($this->pi_getLL('number_thousand_separator'), $numbers);
+            foreach ($thousands as $thousand) {
+                if (strpos($thousand, $this->pi_getLL('number_decimal_separator'))===false) {
+                    $thousand_array[]=$thousand;
+                } else {
+                    list($last_thousand, $decimal)=explode($this->pi_getLL('number_decimal_separator'), $thousand);
+                    $thousand_array[]=$last_thousand;
+                }
             }
+            $full_number=0;
+            if (count($thousand_array)) {
+                $full_number=implode('', $thousand_array) . '.' . $decimal;
+            }
+            return $full_number;
+        } else {
+            $numbers=str_replace($this->pi_getLL('number_thousand_separator'), '', $numbers);
+            return $numbers;
         }
-        $full_number=0;
-        if (count($thousand_array)) {
-            $full_number=implode('', $thousand_array) . '.' . $decimal;
-        }
-        return $full_number;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

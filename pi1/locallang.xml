@@ -1335,6 +1335,8 @@
             <label index="visibility_stock_level_in_product_feed">Visibility stock level in product feed</label>
             <label index="show">Show</label>
             <label index="dont_show">Don't show</label>
+            <label index="number_decimal_separator">.</label>
+            <label index="number_thousand_separator">,</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2624,6 +2626,8 @@
             <label index="visibility_stock_level_in_product_feed">Zichtbaarheid voorraad in productbestand</label>
             <label index="show">Tonen</label>
             <label index="dont_show">Niet tonen</label>
+            <label index="number_decimal_separator">,</label>
+            <label index="number_thousand_separator">.</label>
         </languageKey>
     </data>
 </T3locallang>

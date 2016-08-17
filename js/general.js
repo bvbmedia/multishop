@@ -67,6 +67,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
     }
 }
 function decimalCrop(float) {
+    return float;
     var numbers = float.toString().split(".");
     var prime 	= numbers[0];
     if (numbers[1] > 0 && numbers[1] != "undefined") {
