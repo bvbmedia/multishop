@@ -3772,6 +3772,7 @@ class mslib_befe {
         $lockedFields['tx_multishop_products'][] = 'products_price';
         $lockedFields['tx_multishop_products'][] = 'products_vat_rate';
         $lockedFields['tx_multishop_products'][] = 'products_name';
+        $lockedFields['tx_multishop_products'][] = 'products_model';
         $lockedFields['tx_multishop_products'][] = 'products_quantity';
         $lockedFields['tx_multishop_products'][] = 'products_status';
         $lockedFields['tx_multishop_products_description'][] = 'products_name';

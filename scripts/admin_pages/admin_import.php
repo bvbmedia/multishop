@@ -2292,10 +2292,10 @@ if ($this->post['action']=='category-insert') {
 								}
 								$updateArray['products_quantity']=$item['products_quantity'];
 							}
-							if ($item['products_model']) {
+							if (isset($item['products_model']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_model', $importedProductsLockedFields))))) {
 								$updateArray['products_model']=$item['products_model'];
 							}
-							if (isset($item['products_sku'])) {
+							if (isset($item['sku_code']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('sku_code', $importedProductsLockedFields))))) {
 								$updateArray['sku_code']=$item['products_sku'];
 							}
 							if (isset($item['manufacturers_products_id'])) {
@@ -2500,86 +2500,88 @@ if ($this->post['action']=='category-insert') {
 								}
 								// LANGUAGE OVERLAYS EOL
 							}
-							if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price']>0)) {
-								$updateArray=array();
-								$updateArray['specials_new_products_price']=$item['products_specials_price'];
-								if (strstr($updateArray['specials_new_products_price'], ",")) {
-									$updateArray['specials_new_products_price']=str_replace(",", '.', $updateArray['specials_new_products_price']);
-								}
-								$updateArray['specials_last_modified']=time();
-								if (isset($item['products_special_price_start_date'])) {
-									$time=0;
-									if ($item['products_special_price_start_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_start_date']) || mslib_befe::isValidDate($item['products_special_price_start_date']))) {
-										$time=strtotime($item['products_special_price_start_date']);
+							if (isset($item['products_specials_price']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('specials_new_products_price', $importedProductsLockedFields))))) {
+								if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price']>0)) {
+									$updateArray=array();
+									$updateArray['specials_new_products_price']=$item['products_specials_price'];
+									if (strstr($updateArray['specials_new_products_price'], ",")) {
+										$updateArray['specials_new_products_price']=str_replace(",", '.', $updateArray['specials_new_products_price']);
 									}
-									$updateArray['start_date']=$time;
-								}
-								if (isset($item['products_special_price_expiry_date'])) {
-									$time=0;
-									if ($item['products_special_price_expiry_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_expiry_date']) || mslib_befe::isValidDate($item['products_special_price_expiry_date']))) {
-										$time=strtotime($item['products_special_price_expiry_date']);
-									}
-									$updateArray['expires_date']=$time;
-								}
-								// custom hook that can be controlled by third-party plugin
-								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'])) {
-									$params=array(
-										'updateArray'=>&$updateArray,
-										'item'=>&$item,
-										'prefix_source_name'=>$this->post['prefix_source_name']
-									);
-									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'] as $funcRef) {
-										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-									}
-								}
-								// custom hook that can be controlled by third-party plugin eof
-								$str="select 1 from tx_multishop_specials where products_id='".$item['updated_products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id'], $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-								} else {
-									$updateArray['products_id']=$item['updated_products_id'];
-									$updateArray['specials_date_added']=time();
-									$updateArray['page_uid']=$this->showCatalogFromPage;
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials', $updateArray);
-									if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
-										$erno[]=$query.'<br/>'.$GLOBALS['TYPO3_DB']->sql_error();
-									}
-								}
-								$str="select specials_id from tx_multishop_specials where products_id='".$item['updated_products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-									$specials_id='';
-									while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-										$specials_id=$row['specials_id'];
-										$query2=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials_sections', 'specials_id='.$row['specials_id']);
-										$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
-									}
-									if ($item['products_specials_section'] and $specials_id) {
-										$sections=array();
-										if ($this->post['input'][$i] && strstr($item['products_specials_section'], $this->post['input'][$i])) {
-											$sections=explode($this->post['input'][$i], $item['products_specials_section']);
-										} else {
-											$sections[]=$item['products_specials_section'];
+									$updateArray['specials_last_modified']=time();
+									if (isset($item['products_special_price_start_date'])) {
+										$time=0;
+										if ($item['products_special_price_start_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_start_date']) || mslib_befe::isValidDate($item['products_special_price_start_date']))) {
+											$time=strtotime($item['products_special_price_start_date']);
 										}
-										foreach ($sections as $section) {
-											$updateArray=array();
-											$updateArray['specials_id']=$specials_id;
-											$updateArray['date']=time();
-											$updateArray['name']=$section;
-											$updateArray['status']=1;
-											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials_sections', $updateArray);
-											if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
-												$erno[]=$query.'<br/>'.$GLOBALS['TYPO3_DB']->sql_error();
+										$updateArray['start_date']=$time;
+									}
+									if (isset($item['products_special_price_expiry_date'])) {
+										$time=0;
+										if ($item['products_special_price_expiry_date'] >0 && (mslib_befe::isValidDateTime($item['products_special_price_expiry_date']) || mslib_befe::isValidDate($item['products_special_price_expiry_date']))) {
+											$time=strtotime($item['products_special_price_expiry_date']);
+										}
+										$updateArray['expires_date']=$time;
+									}
+									// custom hook that can be controlled by third-party plugin
+									if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'])) {
+										$params=array(
+												'updateArray'=>&$updateArray,
+												'item'=>&$item,
+												'prefix_source_name'=>$this->post['prefix_source_name']
+										);
+										foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'] as $funcRef) {
+											\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										}
+									}
+									// custom hook that can be controlled by third-party plugin eof
+									$str="select 1 from tx_multishop_specials where products_id='".$item['updated_products_id']."'";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
+										$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id'], $updateArray);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									} else {
+										$updateArray['products_id']=$item['updated_products_id'];
+										$updateArray['specials_date_added']=time();
+										$updateArray['page_uid']=$this->showCatalogFromPage;
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials', $updateArray);
+										if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+											$erno[]=$query.'<br/>'.$GLOBALS['TYPO3_DB']->sql_error();
+										}
+									}
+									$str="select specials_id from tx_multishop_specials where products_id='".$item['updated_products_id']."'";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
+										$specials_id='';
+										while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+											$specials_id=$row['specials_id'];
+											$query2=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials_sections', 'specials_id='.$row['specials_id']);
+											$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+										}
+										if ($item['products_specials_section'] and $specials_id) {
+											$sections=array();
+											if ($this->post['input'][$i] && strstr($item['products_specials_section'], $this->post['input'][$i])) {
+												$sections=explode($this->post['input'][$i], $item['products_specials_section']);
+											} else {
+												$sections[]=$item['products_specials_section'];
+											}
+											foreach ($sections as $section) {
+												$updateArray=array();
+												$updateArray['specials_id']=$specials_id;
+												$updateArray['date']=time();
+												$updateArray['name']=$section;
+												$updateArray['status']=1;
+												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials_sections', $updateArray);
+												if (!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+													$erno[]=$query.'<br/>'.$GLOBALS['TYPO3_DB']->sql_error();
+												}
 											}
 										}
 									}
+								} elseif ($item['products_price'] && $item['updated_products_id']) {
+									// delete any special
+									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
-							} elseif ($item['products_price'] && $item['updated_products_id']) {
-								// delete any special
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 							$content.=ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.($item['products_name'] ? $item['products_name'] : $item['extid']).'</strong>" '.$this->pi_getLL('has_been_adjusted').'.<br />';
 							if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
