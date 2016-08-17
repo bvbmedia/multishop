@@ -671,6 +671,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						//}
 					}
 					if ($copy_to_merchant) {
+						$mailSubject='Copy for merchant: '.$page[0]['name'];
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
 							$params=array(
 									'this'=>&$this,
@@ -683,7 +684,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'mail_attachment'=>&$mail_attachment,
                                     'mail_template'=>$mail_template,
                                     'psp_mail_template'=>$psp_mail_template,
-                                    'loadFromPids'=>$loadFromPids
+                                    'loadFromPids'=>$loadFromPids,
+									'mailSubject'=>&$mailSubject
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'] as $funcRef) {
 								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -693,7 +695,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$merchant=array();
 						$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 						$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-						mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+						mslib_fe::mailUser($merchant, $mailSubject, $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 						if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
 							$email=array();
 							if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {

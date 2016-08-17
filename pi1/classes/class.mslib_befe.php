@@ -3768,16 +3768,18 @@ class mslib_befe {
     }
     public function updateImportedProductsLockedFields($products_id, $table, $updateArray) {
         $lockedFields = array();
+        $lockedFields['tx_multishop_products'][] = 'sku_code';
         $lockedFields['tx_multishop_products'][] = 'products_price';
         $lockedFields['tx_multishop_products'][] = 'products_vat_rate';
         $lockedFields['tx_multishop_products'][] = 'products_name';
-        $lockedFields['tx_multishop_products'][] = 'products_quantity';
         $lockedFields['tx_multishop_products'][] = 'products_model';
+        $lockedFields['tx_multishop_products'][] = 'products_quantity';
         $lockedFields['tx_multishop_products'][] = 'products_status';
         $lockedFields['tx_multishop_products_description'][] = 'products_name';
         $lockedFields['tx_multishop_products_description'][] = 'products_shortdescription';
         $lockedFields['tx_multishop_products_description'][] = 'products_description';
         $lockedFields['tx_multishop_products_to_categories'][] = 'categories_id';
+        $lockedFields['tx_multishop_specials'][] = 'specials_new_products_price';
         $skip = 0;
         //hook to let other plugins further manipulate the settings
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateImportedProductsLockedFieldsPreProc'])) {
@@ -3807,19 +3809,26 @@ class mslib_befe {
                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                     if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
                         foreach ($lockedFields[$table] as $field_key) {
+                            $enableLock=0;
+                            $fieldsToLock=array();
                             if ($row[$field_key] != $updateArray[$field_key]) {
-                                // add to locking table with original value
-                                $filter = array();
-                                $filter[] = 'products_id=' . $row['products_id'];
-                                if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
-                                    $insertArray = array();
-                                    $insertArray['field_key'] = $field_key;
-                                    $insertArray['products_id'] = $row['products_id'];
-                                    $insertArray['crdate'] = time();
-                                    $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                                    $insertArray['original_value'] = $row[$field_key];
-                                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
-                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                $fieldsToLock[]=$field_key;
+                            }
+                            if (count($fieldsToLock)) {
+                                foreach ($fieldsToLock as $field_key) {
+                                    // add to locking table with original value
+                                    $filter = array();
+                                    $filter[] = 'products_id=' . $row['products_id'];
+                                    if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
+                                        $insertArray = array();
+                                        $insertArray['field_key'] = $field_key;
+                                        $insertArray['products_id'] = $row['products_id'];
+                                        $insertArray['crdate'] = time();
+                                        $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                                        $insertArray['original_value'] = $row[$field_key];
+                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
+                                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                    }
                                 }
                             }
                         }

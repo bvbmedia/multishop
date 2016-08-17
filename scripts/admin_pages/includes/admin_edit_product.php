@@ -1865,6 +1865,12 @@ if ($this->post) {
 					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				}	 */
 				$updateArray['status']=$special_status;
+				$filter=array();
+				$filter[]='products_id='.$prodid;
+				if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+					// lock changed columns
+					mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_specials', $updateArray);
+				}
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\''.$prodid.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
