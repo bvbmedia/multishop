@@ -2189,6 +2189,9 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_discount']['class']='cellDiscount';
 								$order_products_body_data['products_discount']['value']='';
 							}
+                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_discount']['value']='';
+                            }
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
@@ -2225,6 +2228,9 @@ if (is_numeric($this->get['orders_id'])) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
 							}
+                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_discount']['value']='';
+                            }
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
                             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
