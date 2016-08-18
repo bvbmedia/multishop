@@ -2191,7 +2191,6 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-                            $order_products_body_data['products_action']['value']='';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 								$order_products_body_data['products_action']['value']='';
 							}
@@ -2228,7 +2227,9 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-                            $order_products_body_data['products_action']['value']='';
+                            if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
+                                $order_products_body_data['products_action']['value']='';
+                            }
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
 								'class'=>$tr_type.' order_products_description',
 								'value'=>$order_products_body_data
