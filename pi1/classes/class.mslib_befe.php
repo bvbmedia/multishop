@@ -5003,15 +5003,15 @@ class mslib_befe {
         }
     }
     function formatNumbersToMysql($numbers) {
-        if ($this->pi_getLL('number_decimal_separator')!='.') {
+        if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point']!='.') {
             $thousand_array=array();
             $decimal='00';
-            $thousands=explode($this->pi_getLL('number_thousand_separator'), $numbers);
+            $thousands=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], $numbers);
             foreach ($thousands as $thousand) {
-                if (strpos($thousand, $this->pi_getLL('number_decimal_separator'))===false) {
+                if (strpos($thousand, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])===false) {
                     $thousand_array[]=$thousand;
                 } else {
-                    list($last_thousand, $decimal)=explode($this->pi_getLL('number_decimal_separator'), $thousand);
+                    list($last_thousand, $decimal)=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], $thousand);
                     $thousand_array[]=$last_thousand;
                 }
             }
@@ -5021,7 +5021,7 @@ class mslib_befe {
             }
             return $full_number;
         } else {
-            $numbers=str_replace($this->pi_getLL('number_thousand_separator'), '', $numbers);
+            $numbers=str_replace($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], '', $numbers);
             return $numbers;
         }
     }

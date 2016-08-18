@@ -267,8 +267,8 @@ if ($this->ADMIN_USER) {
 			var MS_ADMIN_PANEL_FULL_URL=\''.$this->FULL_HTTP_URL.'\';
 			jQuery(document).ready(function($) {
 			    '.($this->get['type']=='2003' ? '
-			    var decimal_sep=\''.$this->pi_getLL('number_decimal_separator').'\';
-                var thousands_sep=\''.$this->pi_getLL('number_thousand_separator').'\';
+			    var decimal_sep=\''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\';
+                var thousands_sep=\''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\';
 			    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
 			    $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 			    ' : '').'

@@ -1189,12 +1189,12 @@ class mslib_fe {
 			$decimal.='0';
 		}
 		if (!$prime && !$decimal) {
-			return '0' . $this->pi_getLL('number_decimal_separator') . '00';
+			return '0' . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . '00';
 		}
 		if (!empty($decimal)) {
-			$float=$prime . $this->pi_getLL('number_decimal_separator') . $decimal;
+			$float=$prime . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . $decimal;
 		} else {
-			$float=$prime . $this->pi_getLL('number_decimal_separator') . '00';
+			$float=$prime . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . '00';
 		}
 		return $float;
 	}
