@@ -22,7 +22,11 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
     } else if (typeof product_tax_rate_list_js!='undefined') {
         var tax_id=$("#tax_id").val();
         if (type) {
-            tax_id = $(type).val();
+            if (type=='rel') {
+                tax_id = $(o).attr("rel");
+            } else {
+                tax_id = $(type).val();
+            }
         }
         tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
     }

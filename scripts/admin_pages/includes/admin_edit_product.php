@@ -2624,7 +2624,7 @@ if ($this->post) {
         }
         $GLOBALS['TSFE']->additionalHeaderData[]='
         <script type="text/javascript" data-ignore="1">
-           var price_subject_id="'.$this->get['pid'].'"
+           //var price_subject_id="'.$this->get['pid'].'"
            var product_tax_rate_list_js=[];
            '.implode("\n", $product_tax_rate_js).'
         </script>
