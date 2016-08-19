@@ -3288,6 +3288,7 @@ class mslib_befe {
                 $updateArray['customer_notified'] = $mail_customer;
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
+                $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
                     if (!empty($this->post['comments']) && $mail_customer) {

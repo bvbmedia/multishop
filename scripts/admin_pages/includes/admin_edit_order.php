@@ -3731,7 +3731,7 @@ if (is_numeric($this->get['orders_id'])) {
          </script>
          ';
 		// load the status history
-		$str="select * from tx_multishop_orders_status_history order by name";
+		//$str="select * from tx_multishop_orders_status_history order by name";
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_orders_status_history', // FROM ...
 			'orders_id=\''.$orders['orders_id'].'\'', // WHERE.
@@ -3756,6 +3756,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <th>'.$this->pi_getLL('old_status').'</th>
                 <th>'.$this->pi_getLL('date').'</th>
                 <th>'.$this->pi_getLL('customer_notified').'</th>
+                <th>'.$this->pi_getLL('requester_ip_address').'</th>
             </tr>
             </thead>
             <tbody>
@@ -3779,6 +3780,7 @@ if (is_numeric($this->get['orders_id'])) {
                     <td>'.$old_status_name.'</td>
                     <td>'.strftime("%a. %x %X", $row['crdate']).'</td>
                     <td align="center">'.($row['customer_notified'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>
+                    <td align="center">'.$row['requester_ip_addr'].'</td>
                 </tr>
                 ';
 				if ($row['comments']) {
