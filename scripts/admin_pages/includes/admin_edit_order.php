@@ -2314,8 +2314,8 @@ if (is_numeric($this->get['orders_id'])) {
 										$order_products_body_data['products_vat']['value']='';
 									}
 									// products price col
-									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="'.number_format($optprice, 2).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="'.number_format($optprice+$attributes_tax_data['tax'], 2).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="'.number_format($optprice, 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="'.number_format($optprice+$attributes_tax_data['tax'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
 									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
 									if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 										// products vat col
@@ -3596,7 +3596,9 @@ if (is_numeric($this->get['orders_id'])) {
                         $(this).removeAttr("class");
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
-
+                    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\', \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\');
+                    
                     select2_sb(".edit_product_manual_option" + n, "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
                     select2_values_sb(".edit_product_manual_values" + n, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 }
@@ -3902,93 +3904,6 @@ if (is_numeric($this->get['orders_id'])) {
                 return number;
             } else {
                 return "0.00";
-            }
-        }
-        function productPrice(to_include_vat, o, tax_element_id, trigger_element) {
-         	trigger_element = typeof trigger_element !== \'undefined\' ? trigger_element : \'\';
-         	//
-         	if (trigger_element=="product_tax") {
-         		var price_value=$(o).parent().parent().next().next().children().val();
-         	} else {
-         		var price_value=$(o).val();
-         	}
-         	var original_val = price_value;
-		    var current_value = parseFloat(price_value);
-		    //
-			if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
-				var thousand=original_val.split(".");
-				if (thousand[1].indexOf(",")!=-1) {
-					var hundreds = thousand[1].split(",");
-					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-					current_value = parseFloat(original_val);
-					//
-					$(o).val(original_val);
-				} else {
-					thousand=original_val.split(",");
-					if (thousand[1].indexOf(".")!=-1) {
-						var hundreds = thousand[1].split(".");
-						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-						current_value = parseFloat(original_val);
-						//
-						$(o).val(original_val);
-					}
-				}
-			}
-			//
-            var tax_id = $(tax_element_id).val();
-            if (current_value > 0 || current_value < 0) {
-                if (to_include_vat) {
-                    $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: tax_id }, function (json) {
-                        if (json && json.price_including_tax) {
-                            var incl_tax_crop = decimalCrop(json.price_including_tax);
-                            //o.parent().next().first().children().val(incl_tax_crop);
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(incl_tax_crop);
-                        } else {
-                            //o.parent().next().first().children().val(current_value);
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(current_value);
-                        }
-                    });
-                    // update the hidden excl vat
-                    //o.parent().next().next().first().children().val(original_val);
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
-                } else {
-                    $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function (json) {
-                        if (json && json.price_excluding_tax) {
-                            var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-                            // update the excl. vat
-                            //o.parent().prev().first().children().val(excl_tax_crop);
-                            // update the hidden excl vat
-                            //o.parent().next().first().children().val(json.price_excluding_tax);
-                            //
-                            // update the excl. vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(excl_tax_crop);
-                            // update the hidden excl vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(json.price_excluding_tax);
-                        } else {
-                            // update the excl. vat
-                            //o.parent().prev().first().children().val(original_val);
-                            // update the hidden excl vat
-                            //o.next().parent().first().next().first().children().val(original_val);
-                            //
-                            // update the excl. vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(original_val);
-                            // update the hidden excl vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(original_val);
-                        }
-                    });
-                }
-            } else {
-                if (to_include_vat) {
-                    // update the incl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(0);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
-                } else {
-                    // update the excl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
-                }
             }
         }
         jQuery(document).ready(function($) {
