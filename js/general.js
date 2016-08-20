@@ -23,7 +23,15 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         var tax_id=$("#tax_id").val();
         if (type) {
             if (type=='rel') {
-                tax_id = $(o).attr("rel");
+                // the tax id value is in other hidden input
+                // $(o).attr('data-tax-id') contain input element id that hold the tax id
+                if ($(o).attr('data-tax-id')!=undefined) {
+                    // reference input
+                    var reference_id=$(o).attr('data-tax-id');
+                    tax_id = $(reference_id).val();
+                } else {
+                    tax_id = $(o).attr("rel");
+                }
             } else {
                 tax_id = $(type).val();
             }
