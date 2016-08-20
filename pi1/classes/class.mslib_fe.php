@@ -1178,9 +1178,9 @@ class mslib_fe {
 	////
 	// wrapper to in_array() for PHP3 compatibility
 	// Checks if the lookup value exists in the lookup array
-	public function taxDecimalCrop($float, $precision=2, $disable=true) {
+	public function taxDecimalCrop($float, $precision=2, $disable=true, $use_cu_decimal_point=true) {
 		if ($disable) {
-			return $float;
+            return $float;
 		}
 		$numbers=explode('.', $float);
 		$prime=$numbers[0];
@@ -1189,12 +1189,12 @@ class mslib_fe {
 			$decimal.='0';
 		}
 		if (!$prime && !$decimal) {
-			return '0' . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . '00';
+			return '0' . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . '00';
 		}
 		if (!empty($decimal)) {
-			$float=$prime . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . $decimal;
+			$float=$prime . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . $decimal;
 		} else {
-			$float=$prime . $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] . '00';
+			$float=$prime . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . '00';
 		}
 		return $float;
 	}
