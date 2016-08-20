@@ -5449,12 +5449,13 @@ class mslib_fe {
 			//
 			// calculate total costs
 			$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+            if (strstr($subtotal, ",")) {
+                $subtotal=str_replace(',', '.', $subtotal);
+            }
 			//
 			if (!empty($row3['override_shippingcosts'])) {
 				$old_shipping_costs=$shipping_cost;
 				$shipping_cost=$row3['override_shippingcosts'];
-
-
 				// custom code to change the shipping costs based on cart amount
 				if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 					$steps=explode(",", $shipping_cost);
@@ -5665,7 +5666,7 @@ class mslib_fe {
 			$shipping_method['shipping_costs_method_box_including_vat']=$shipping_cost_method_box+$shipping_method_box_tax;
 			$shipping_method['shipping_costs']=$shipping_cost;
 			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
-			return $shipping_method;
+            return $shipping_method;
 		} else {
 			return false;
 		}

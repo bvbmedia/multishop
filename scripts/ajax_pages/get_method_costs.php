@@ -171,7 +171,7 @@ if (count($available_sid)>0) {
 		$data['shipping_cost'] = '';
 		$data['shipping_cost_cur'] = '';
 		if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
-			$data['shipping_cost'] = $priceArray['shipping_costs_including_vat'];
+			$data['shipping_cost'] = ''.$priceArray['shipping_costs_including_vat'];
 			$data['shipping_cost_cur'] = mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']);
 		}
 	} else {
