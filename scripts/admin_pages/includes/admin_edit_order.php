@@ -566,9 +566,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
-						if (strpos($this->post['edit_discount_value'], ',')!==false) {
-							$this->post['edit_discount_value']=str_replace(',', '.', $this->post['edit_discount_value']);
-						}
+                        $this->post['edit_discount_value']=mslib_befe::formatNumbersToMysql($this->post['edit_discount_value']);
 						$updateArray['discount']=$this->post['edit_discount_value'];
 					}
 					if (isset($this->post['order_payment_condition'])) {
@@ -3035,7 +3033,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
+				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right priceInputDisplay" type="text" value="'.number_format($orders['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'"></div>';
 			} else {
 				if ($orders['discount']>0) {
 					$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
@@ -3485,13 +3483,13 @@ if (is_numeric($this->get['orders_id'])) {
                                 } else {
                                     jQuery.each(jQuery(price_input_obj), function(i, v) {
                                         if ($(v).attr("id")=="display_manual_name_excluding_vat") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                         if ($(v).attr("id")=="display_manual_name_including_vat") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                         if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                     });
                                 }
@@ -3892,6 +3890,8 @@ if (is_numeric($this->get['orders_id'])) {
 		$content.='
         <script type="text/javascript">
         function decimalCrop(float) {
+        	return float;
+        	//
             if (float!=undefined) {
                 var numbers = float.toString().split(".");
                 var prime = numbers[0];
