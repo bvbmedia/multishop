@@ -8,8 +8,6 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$filter=array();
 	$filter[]='is_deepest=1';
 	$record=mslib_befe::getRecord($row['products_id'],'tx_multishop_products_to_categories','products_id',$filter);
-    //error_log(print_r($record,1));
-
 	if (is_array($record) && $record['crumbar_identifier']) {
 		$updateArray=array();
 
