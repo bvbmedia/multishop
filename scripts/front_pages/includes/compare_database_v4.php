@@ -8,13 +8,14 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$filter=array();
 	$filter[]='is_deepest=1';
 	$record=mslib_befe::getRecord($row['products_id'],'tx_multishop_products_to_categories','products_id',$filter);
+    //error_log(print_r($record,1));
 
 	if (is_array($record) && $record['crumbar_identifier']) {
 		$updateArray=array();
 
+        $counter=0;
 		$catIds=explode(',',$record['crumbar_identifier']);
 		foreach ($catIds as $catId) {
-			$counter=0;
 			$category=mslib_befe::getRecord($catId,'tx_multishop_categories_description','categories_id');
 			if ($category['categories_id']) {
 				$updateArray['categories_id_'.$counter]=$category['categories_id'];
