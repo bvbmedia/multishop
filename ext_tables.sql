@@ -694,6 +694,7 @@ CREATE TABLE `tx_multishop_orders_status_history` (
  `crdate` int(11) default '0',
  `customer_notified` int(1) default '0',
  `comments` text,
+ `requester_ip_addr` varchar(127) default '',
  PRIMARY KEY (`orders_status_history_id`),
  KEY `orders_id` (`orders_id`),
  KEY `crdate` (`crdate`),

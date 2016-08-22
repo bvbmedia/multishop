@@ -2,7 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-$locale_info = localeconv();
 $jsSelect2InitialValue=array();
 $jsSelect2InitialValue[]='var categoriesIdTerm=[];';
 $jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']=[];';
@@ -2625,8 +2624,8 @@ if ($this->post) {
         }
         $GLOBALS['TSFE']->additionalHeaderData[]='
         <script type="text/javascript" data-ignore="1">
-           var price_subject_id="'.$this->get['pid'].'"
-           var product_tax_rate_list_js=[]
+           //var price_subject_id="'.$this->get['pid'].'"
+           var product_tax_rate_list_js=[];
            '.implode("\n", $product_tax_rate_js).'
         </script>
         ';
@@ -2722,7 +2721,7 @@ if ($this->post) {
 							}
 							jQuery(\'#sp_row_counter\').val(counter_data);
 							$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
-			                $(\'input.priceInputDisplay\').number(true, 2, \''.$locale_info['decimal_point'].'\', \''.$locale_info['thousands_sep'].'\');
+			                $(\'input.priceInputDisplay\').number(true, 2, \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\', \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\');
 						//}
 						event.preventDefault();
 					});

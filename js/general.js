@@ -22,7 +22,19 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
     } else if (typeof product_tax_rate_list_js!='undefined') {
         var tax_id=$("#tax_id").val();
         if (type) {
-            tax_id = $(type).val();
+            if (type=='rel') {
+                // the tax id value is in other hidden input
+                // $(o).attr('data-tax-id') contain input element id that hold the tax id
+                if ($(o).attr('data-tax-id')!=undefined) {
+                    // reference input
+                    var reference_id=$(o).attr('data-tax-id');
+                    tax_id = $(reference_id).val();
+                } else {
+                    tax_id = $(o).attr("rel");
+                }
+            } else {
+                tax_id = $(type).val();
+            }
         }
         tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
     }
@@ -67,6 +79,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
     }
 }
 function decimalCrop(float) {
+    return float;
     var numbers = float.toString().split(".");
     var prime 	= numbers[0];
     if (numbers[1] > 0 && numbers[1] != "undefined") {

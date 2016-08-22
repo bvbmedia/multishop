@@ -3288,6 +3288,7 @@ class mslib_befe {
                 $updateArray['customer_notified'] = $mail_customer;
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
+                $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
                     if (!empty($this->post['comments']) && $mail_customer) {
@@ -5003,23 +5004,27 @@ class mslib_befe {
         }
     }
     function formatNumbersToMysql($numbers) {
-        $locale_info = localeconv();
-        $thousand_array=array();
-        $decimal='00';
-        $thousands=explode($locale_info['thousands_sep'], $numbers);
-        foreach ($thousands as $thousand) {
-            if (strpos($thousand, $locale_info['decimal_point'])===false) {
-                $thousand_array[]=$thousand;
-            } else {
-                list($last_thousand, $decimal)=explode($locale_info['decimal_point'], $thousand);
-                $thousand_array[]=$last_thousand;
+        if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point']!='.') {
+            $thousand_array=array();
+            $decimal='00';
+            $thousands=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], $numbers);
+            foreach ($thousands as $thousand) {
+                if (strpos($thousand, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])===false) {
+                    $thousand_array[]=$thousand;
+                } else {
+                    list($last_thousand, $decimal)=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], $thousand);
+                    $thousand_array[]=$last_thousand;
+                }
             }
+            $full_number=0;
+            if (count($thousand_array)) {
+                $full_number=implode('', $thousand_array) . '.' . $decimal;
+            }
+            return $full_number;
+        } else {
+            $numbers=str_replace($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], '', $numbers);
+            return $numbers;
         }
-        $full_number=0;
-        if (count($thousand_array)) {
-            $full_number=implode('', $thousand_array) . '.' . $decimal;
-        }
-        return $full_number;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

@@ -204,4 +204,12 @@ if ($qry) {
         $messages[] = $str;
     }
 }
+// add requester ip address
+$str="select requester_ip_addr from tx_multishop_orders_status_history limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders_status_history` ADD `requester_ip_addr` varchar(127) default ''";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>

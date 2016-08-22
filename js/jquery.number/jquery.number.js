@@ -544,6 +544,31 @@
 							val = original.clipboardData.getData('text/plain');
 						}
 
+						var number=val;
+						if (number) {
+							var thousands = number.split(thousands_sep);
+							var decimal_zero='00';
+							var full_number=0;
+							var thousand_array = [];
+							var counter = 0;
+							$.each(thousands, function (idx, thousand) {
+								if (thousand.indexOf(dec_point) === -1) {
+									thousand_array[counter] = thousand;
+								} else {
+									var decimals = thousand.split(dec_point);
+									decimal_zero = decimals[1];
+									thousand_array[counter] = decimals[0];
+								}
+								counter++;
+							});
+							if (thousand_array.length > 0) {
+								full_number=thousand_array.join('') + '.' + decimal_zero;
+							}
+							if (full_number!=0) {
+								val=full_number;
+							}
+						}
+
 						// Do the reformat operation.
 						$this.val(val);
 
@@ -726,39 +751,30 @@
 	 *
 	 * @return string : The formatted number as a string.
 	 */
-	$.number = function( number, decimals, dec_point, thousands_sep ){
-		// Set the default values here, instead so we can use them in the replace below.
-		thousands_sep	= (typeof thousands_sep === 'undefined') ? ( new Number(1000).toLocaleString() !== '1000' ? new Number(1000).toLocaleString().charAt(1) : '' ) : thousands_sep;
-		dec_point		= (typeof dec_point === 'undefined') ? new Number(0.1).toLocaleString().charAt(1) : dec_point;
-		decimals		= !isFinite(+decimals) ? 0 : Math.abs(decimals);
+	$.number = function( number, decimals, decPoint, thousandsSep ){
+		number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
+		var n = !isFinite(+number) ? 0 : +number
+		var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
+		var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
+		var dec = (typeof decPoint === 'undefined') ? '.' : decPoint
+		var s = ''
 
-		// Work out the unicode representation for the decimal place and thousand sep.
-		var u_dec = ('\\u'+('0000'+(dec_point.charCodeAt(0).toString(16))).slice(-4));
-		var u_sep = ('\\u'+('0000'+(thousands_sep.charCodeAt(0).toString(16))).slice(-4));
+		var toFixedFix = function (n, prec) {
+			var k = Math.pow(10, prec)
+			return '' + (Math.round(n * k) / k).toFixed(prec)
+		}
 
-		// Fix the number, so that it's an actual number.
-		number = (number + '')
-			.replace('\.', dec_point) // because the number if passed in as a float (having . as decimal point per definition) we need to replace this with the passed in decimal point character
-			.replace(new RegExp(u_sep,'g'),'')
-			.replace(new RegExp(u_dec,'g'),'.')
-			.replace(new RegExp('[^0-9+\-Ee.]','g'),'');
-
-		var n = !isFinite(+number) ? 0 : +number,
-			s = '',
-			toFixedFix = function (n, decimals) {
-				return '' + (+(Math.round(('' + n).indexOf('e') > 0 ? n : n + 'e+' + decimals) + 'e-' + decimals));
-			};
-
-		// Fix for IE parseFloat(0.55).toFixed(0) = 0;
-		s = (decimals ? toFixedFix(n, decimals) : '' + Math.round(n)).split('.');
+		// @todo: for IE parseFloat(0.55).toFixed(0) = 0;
+		s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
 		if (s[0].length > 3) {
-			s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, thousands_sep);
+			s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
 		}
-		if ((s[1] || '').length < decimals) {
-			s[1] = s[1] || '';
-			s[1] += new Array(decimals - s[1].length + 1).join('0');
+		if ((s[1] || '').length < prec) {
+			s[1] = s[1] || ''
+			s[1] += new Array(prec - s[1].length + 1).join('0');
 		}
-		return s.join(dec_point);
+
+		return s.join(dec);
 	}
 
 })(jQuery);
