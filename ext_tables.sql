@@ -311,7 +311,7 @@ CREATE TABLE `tx_multishop_invoices` (
  `payment_condition` varchar(50) default '',
  `currency` varchar(5) default '',
  `discount` decimal(24,14) default '0.00000000000000',
- `amount` decimal(24,14) default '0.00000000000000',
+ `invoice_grand_total` decimal(24,14) default '0.00000000000000',
  `page_uid` int(11) default '0',
  `paid` tinyint(1) default '0',
  `hash` varchar(50) default '0',
