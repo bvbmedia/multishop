@@ -4665,7 +4665,7 @@ class mslib_fe {
 							if (is_numeric($split[0])) {
 								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
-									next();
+									@next();
 								} else {
 									$shipping_cost=$old_shipping_costs;
 								}
@@ -4988,19 +4988,21 @@ class mslib_fe {
 						if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 							$steps=explode(",", $shipping_cost);
 							$count=0;
-							foreach ($steps as $step) {
-								// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-								// example setting: 0:6.95,50:0
-								$split=explode(":", $step);
-								if (is_numeric($split[0])) {
-									if ($subtotal>$split[0] and isset($split[1])) {
-										$shipping_cost=$split[1];
-										next();
-									} else {
-										$shipping_cost=$old_shipping_costs;
+							if (is_array($steps) && count($steps)) {
+								foreach ($steps as $step) {
+									// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+									// example setting: 0:6.95,50:0
+									$split=explode(":", $step);
+									if (is_numeric($split[0])) {
+										if ($subtotal>$split[0] and isset($split[1])) {
+											$shipping_cost=$split[1];
+											next();
+										} else {
+											$shipping_cost=$old_shipping_costs;
+										}
 									}
+									$count++;
 								}
-								$count++;
 							}
 						}
 					}
@@ -5464,21 +5466,23 @@ class mslib_fe {
 				if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 					$steps=explode(",", $shipping_cost);
 					$count=0;
-					foreach ($steps as $step) {
-						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-						// example setting: 0:6.95,50:0
-						$split=explode(":", $step);
-						if (is_numeric($split[0])) {
-							if ($subtotal>$split[0] and isset($split[1])) {
-								$shipping_cost=$split[1];
-								$shipping_cost_method_box=$split[1];
-								next();
-							} else {
-								$shipping_cost=$old_shipping_costs;
-								$shipping_cost_method_box=$old_shipping_costs;
+					if (is_array($steps) && count($steps)) {
+						foreach ($steps as $step) {
+							// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+							// example setting: 0:6.95,50:0
+							$split=explode(":", $step);
+							if (is_numeric($split[0])) {
+								if ($subtotal>$split[0] and isset($split[1])) {
+									$shipping_cost=$split[1];
+									$shipping_cost_method_box=$split[1];
+									@next();
+								} else {
+									$shipping_cost=$old_shipping_costs;
+									$shipping_cost_method_box=$old_shipping_costs;
+								}
 							}
+							$count++;
 						}
-						$count++;
 					}
 				}
 			}
