@@ -43,7 +43,11 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 					$content=mslib_fe::amount2Cents($row['discount']);
 					break;
 			}
-			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart->init($this);
+			$cart=$mslib_cart->getCart();
 			$cart['coupon_code']=$code;
 			$cart['discount']=$row['discount'];
 			$cart['discount_type']=$row['discount_type'];
@@ -51,7 +55,11 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 			$GLOBALS['TSFE']->fe_user->storeSessionData();
 		}
 	} else {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$cart['coupon_code']='';
 		$cart['discount']='';
 		$cart['discount_type']='';
@@ -62,7 +70,11 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 	}
 } else {
 	if ($content=='0%') {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$cart['coupon_code'] = '';
 		$cart['discount'] = '';
 		$cart['discount_type'] = '';

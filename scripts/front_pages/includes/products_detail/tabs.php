@@ -171,7 +171,11 @@ if (!$product['products_id']) {
 	$output['products_price'].=$sub_content.'</div>';
 	// show selectbox by products multiplication or show default input
 	if ($this->get['tx_multishop_pi1']['cart_item']) {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$qty=$cart['products'][$this->get['tx_multishop_pi1']['cart_item']]['qty'];
 	}
 	$quantity_html='';

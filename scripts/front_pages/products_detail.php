@@ -47,13 +47,21 @@ if (is_numeric($this->get['products_id'])) {
 		$output_array['meta']['canonical_link']='<link rel="canonical" href="'.$canonical_link.'" />';
 	}
 	//last visited
-	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+	$mslib_cart->init($this);
+	$cart=$mslib_cart->getCart();
 	$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 	$GLOBALS['TSFE']->fe_user->storeSessionData();
 	//last visited eof
 	if (isset($this->get['clear_list'])) {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$cart['last_visited']=array();
 		$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
