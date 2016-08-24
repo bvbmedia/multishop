@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if (is_numeric($this->get['orders_id'])) {
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->get['print']!='packing') {
 		$invoice=mslib_fe::getOrderInvoice($this->get['orders_id']);
+        $invoice_data=mslib_fe::getInvoice($invoice['hash'], 'hash');
 	}
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] && $this->get['print']!='packing') {
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
@@ -13,6 +14,9 @@ if (is_numeric($this->get['orders_id'])) {
 	$order=mslib_fe::getOrder($this->get['orders_id']);
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
+        if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->get['print']!='packing') {
+            $order['crdate']=$invoice_data['crdate'];
+        }
 		// Instantiate admin interface object
 		$objRef= &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 		$objRef->init($this);
