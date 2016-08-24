@@ -12,8 +12,9 @@ $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
 if (isset($this->get['clear_list'])) {
 	$cart['last_visited']=array();
-	$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-	$GLOBALS['TSFE']->fe_user->storeSessionData();
+	//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+	//$GLOBALS['TSFE']->fe_user->storeSessionData();
+	tx_mslib_cart::storeCart($cart);
 }
 if (count($cart['last_visited'])) {
 	if (is_numeric($this->get['p'])) {

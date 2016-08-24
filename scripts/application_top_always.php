@@ -411,7 +411,11 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 		$GLOBALS['TSFE']->storeSessionData();
 	}
 	// move guest cart to member cart?
-	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+	$mslib_cart->init($this);
+	$cart=$mslib_cart->getCart();
 	if (!is_array($cart['products'])) {
 		// maybe guest cart has products that we must migrate
 		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
@@ -431,7 +435,6 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 			$cart['discount_type'] = $cart2['discount_type'];
 			$cart['discount_amount'] = $cart2['discount_amount'];
 			$cart['discount_percentage'] = $cart2['discount_percentage'];
-			//
 
 			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
 			//$GLOBALS['TSFE']->storeSessionData();

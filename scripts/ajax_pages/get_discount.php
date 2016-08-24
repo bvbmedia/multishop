@@ -7,11 +7,16 @@ $content='0%';
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$discount_percentage=mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
 	if ($discount_percentage) {
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$cart['coupon_code']='';
 		$cart['discount']=$discount_percentage;
 		$cart['discount_type']='percentage';
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($cart);
 		$content=number_format($discount_percentage).'%';
 	}
 }
@@ -51,8 +56,9 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 			$cart['coupon_code']=$code;
 			$cart['discount']=$row['discount'];
 			$cart['discount_type']=$row['discount_type'];
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-			$GLOBALS['TSFE']->fe_user->storeSessionData();
+			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+			//$GLOBALS['TSFE']->fe_user->storeSessionData();
+			tx_mslib_cart::storeCart($cart);
 		}
 	} else {
 		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
@@ -64,8 +70,9 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 		$cart['discount']='';
 		$cart['discount_type']='';
 		$cart['discount_amount']='';
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($cart);
 		$content="0%";
 	}
 } else {
@@ -79,8 +86,9 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 		$cart['discount'] = '';
 		$cart['discount_type'] = '';
 		$cart['discount_amount']='';
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($cart);
 		$content = "0%";
 	}
 }

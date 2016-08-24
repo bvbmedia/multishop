@@ -409,6 +409,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 		// error_log("bastest");
+
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCart'])) {
 			$params=array();
@@ -1055,7 +1056,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 			// store cart contents for later analyses
-			$cart_store_content=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			$cart_store_content=$mslib_cart->getCart();
+			//$cart_store_content=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			mslib_befe::storeCustomerCartContent($cart_store_content);
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPostHook'])) {
@@ -2473,7 +2475,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		tx_mslib_cart::storeCart();
+		tx_mslib_cart::storeCart($this->cart);
 	}
 	function setPaymentMethod($payment_method) {
 		if (!$payment_method) {
@@ -2552,7 +2554,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		tx_mslib_cart::storeCart();
+		tx_mslib_cart::storeCart($this->cart);
 	}
 	function setCountry($countries_name, $delivery_country='') {
 		$str3="SELECT * from static_countries where cn_short_en='".addslashes($countries_name)."' ";
@@ -2564,7 +2566,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (!empty($delivery_country)) {
 			$this->cart['user']['delivery_countries_id']=$delivery_country;
 		}
-		tx_mslib_cart::storeCart();
+		tx_mslib_cart::storeCart($this->cart);
 		return $this->cart['user']['countries_id'];
 	}
 	function getCountry() {
@@ -3052,6 +3054,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		} elseif($this->cart) {
 			$cartVariable=&$this->cart;
 		}
+		error_log('Cart: '. count($cart['products']));
+		error_log('This: '. count($this->cart['products']));
+		//return;
 		$continue=1;
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['storeCartPreHook'])) {
@@ -3064,15 +3069,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 		if ($continue) {
-			/*
-			if ($cart) {
-				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-			} elseif($this->cart) {
-				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-			}
-			*/
 			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cartVariable);
-
 			if ($this->ms['eID']) {
 				$GLOBALS['TSFE']->fe_user->storeSessionData();
 			} else {

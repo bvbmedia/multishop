@@ -53,8 +53,9 @@ if (is_numeric($this->get['products_id'])) {
 	$mslib_cart->init($this);
 	$cart=$mslib_cart->getCart();
 	$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
-	$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-	$GLOBALS['TSFE']->fe_user->storeSessionData();
+	//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+	//$GLOBALS['TSFE']->fe_user->storeSessionData();
+	tx_mslib_cart::storeCart($cart);
 	//last visited eof
 	if (isset($this->get['clear_list'])) {
 		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
@@ -64,8 +65,9 @@ if (is_numeric($this->get['products_id'])) {
 		$cart=$mslib_cart->getCart();
 		$cart['last_visited']=array();
 		$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($cart);
 	}
 	unset($cart['last_visited'][$this->get['products_id']]);
 }
