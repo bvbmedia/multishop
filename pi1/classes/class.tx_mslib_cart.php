@@ -87,7 +87,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (is_array($this->cart['products'])) {
 					// redirect if products stock are negative or quantity ordered is greater than the stock itself
 					$redirect_to_cart_page=false;
-					// Todo: remove debugging
 					foreach ($this->cart['products'] as $key=>&$product) {
 						if ($this->get['tx_multishop_pi1']['page_section']=='checkout') {
 							$product_db=mslib_fe::getProduct($product['products_id']);
@@ -312,7 +311,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							break;
 					}
 				}
-				// Todo: remove debugging
 				//error_log(print_r($this->cart['products'],1));
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc'])) {
@@ -371,9 +369,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		// custom hook that can be controlled by third-party plugin eofq
 		tx_mslib_cart::storeCart($this->cart);
-		if (is_array($this->cart['products']) && count($this->cart['products'])) {
+		//if (is_array($this->cart['products']) && count($this->cart['products'])) {
 			//tx_mslib_cart::storeCart($this->cart);
-		}
+		//}
 
 		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
 		//$GLOBALS['TSFE']->fe_user->storeSessionData();
