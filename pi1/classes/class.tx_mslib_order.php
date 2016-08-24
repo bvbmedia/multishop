@@ -671,7 +671,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						//}
 					}
 					if ($copy_to_merchant) {
-						$mailSubject='Copy for merchant: '.$page[0]['name'];
+						$mailSubject=$this->pi_getLL('copy_for_merchant') . ': '.$page[0]['name'];
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
 							$params=array(
 									'this'=>&$this,
@@ -708,7 +708,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									$merchant=array();
 									$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 									$merchant['email']=$item;
-									mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+									mslib_fe::mailUser($merchant, $this->pi_getLL('copy_for_merchant') . ': '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 								}
 							}
 						}

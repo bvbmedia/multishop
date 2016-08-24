@@ -1336,6 +1336,7 @@
             <label index="show">Show</label>
             <label index="dont_show">Don't show</label>
             <label index="requester_ip_address">Requester IP address</label>
+            <label index="copy_for_merchant">Copy for merchant</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
