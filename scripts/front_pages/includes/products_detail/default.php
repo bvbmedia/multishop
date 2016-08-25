@@ -153,17 +153,20 @@ if (!$product['products_id']) {
         $output['products_name'] .= $output['admin_link'];
     }
     $final_price = mslib_fe::final_products_price($product);
-    $tax = mslib_fe::getTaxById($product['tax_id']);
-    if ($tax) {
-        if ($product['staffel_price'] > 0) {
-            $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
-        } else {
-            $price_excl_vat = $product['final_price'];
-        }
-    }
-    if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+    if ($product['tax_id']) {
+        $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
-            $sub_content .= '<div class="price_excluding_vat">' . $this->pi_getLL('excluding_vat') . ' ' . mslib_fe::amount2Cents($price_excl_vat) . '</div>';
+            if ($product['staffel_price'] > 0) {
+                $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
+            } else {
+                $price_excl_vat = $product['final_price'];
+            }
+            $price_excl_vat=mslib_fe::amount2Cents($price_excl_vat);
+        }
+        if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+            if ($tax) {
+                $sub_content .= '<div class="price_excluding_vat">' . $this->pi_getLL('excluding_vat') . ' ' . mslib_fe::amount2Cents($price_excl_vat) . '</div>';
+            }
         }
     }
     $staffel_price_hid = '';
