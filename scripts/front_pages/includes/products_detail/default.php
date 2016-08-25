@@ -389,7 +389,10 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE###'] = $output['products_image'];
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
-    $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat;
+    $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = '';
+    if ($price_excl_vat!='') {
+        $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat.' '.$this->pi_getLL('excluding_vat');
+    }
     $markerArray['###PRODUCTS_STAFFEL_PRICE_TABLE###'] = $output['products_staffel_price_table'];
     $markerArray['###PRODUCTS_SKU###'] = $product['sku_code'];
     $markerArray['###PRODUCTS_EAN###'] = $product['ean_code'];
