@@ -153,14 +153,16 @@ if (!$product['products_id']) {
         $output['products_name'] .= $output['admin_link'];
     }
     $final_price = mslib_fe::final_products_price($product);
+    $tax = mslib_fe::getTaxById($product['tax_id']);
+    if ($tax) {
+        if ($product['staffel_price'] > 0) {
+            $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
+        } else {
+            $price_excl_vat = $product['final_price'];
+        }
+    }
     if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
-        $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
-            if ($product['staffel_price'] > 0) {
-                $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
-            } else {
-                $price_excl_vat = $product['final_price'];
-            }
             $sub_content .= '<div class="price_excluding_vat">' . $this->pi_getLL('excluding_vat') . ' ' . mslib_fe::amount2Cents($price_excl_vat) . '</div>';
         }
     }
@@ -188,6 +190,7 @@ if (!$product['products_id']) {
 	  	<div class="specials_price">' . mslib_fe::amount2Cents($final_price) . '</div>';
     }
     $output['products_price'] .= $sub_content . '</div>';
+
     // staffel price table
     $output['products_staffel_price_table'] = '';
     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
@@ -383,6 +386,7 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE###'] = $output['products_image'];
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
+    $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat;
     $markerArray['###PRODUCTS_STAFFEL_PRICE_TABLE###'] = $output['products_staffel_price_table'];
     $markerArray['###PRODUCTS_SKU###'] = $product['sku_code'];
     $markerArray['###PRODUCTS_EAN###'] = $product['ean_code'];
