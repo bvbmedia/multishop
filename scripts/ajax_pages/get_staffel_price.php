@@ -52,6 +52,11 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 	}
 }
 // hook eof
+$disableFeFromCalculatingVatPrices=$this->conf['disableFeFromCalculatingVatPrices'];
+$this->conf['disableFeFromCalculatingVatPrices']=1;
+$exclude_vat_price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
+$this->conf['disableFeFromCalculatingVatPrices']=$disableFeFromCalculatingVatPrices;
+// count normal price
 $price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
 $original_price=$product['products_price']*$qty;
 if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -136,6 +141,7 @@ if (is_array($attr['attributes'])) {
 		}
 		foreach ($attributes_array as $idx=>$attribute_array) {
 			$original_attribute_values=$original_attr['attributes'][$attribute_key][$idx];
+            $attribute_array_excl_vat=$original_attr['attributes'][$attribute_key][$idx];
 			if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$attribute_array['options_values_price']=round($attribute_array['options_values_price']*(1+$product['tax_rate']), 2);
 				$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
@@ -143,6 +149,7 @@ if (is_array($attr['attributes'])) {
 				$attribute_array['options_values_price']=round($attribute_array['options_values_price'], 2);
 				$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price'], 2);
 			}
+            $exclude_vat_price=$exclude_vat_price+($qty*($attribute_array_excl_vat['price_prefix'].$attribute_array_excl_vat['options_values_price']));
 			$price=$price+($qty*($attribute_array['price_prefix'].$attribute_array['options_values_price']));
 			$original_price=$original_price+($qty*($original_attribute_values['price_prefix'].$original_attribute_values['options_values_price']));
 		}
@@ -152,6 +159,8 @@ $data['old_price_format']='';
 $data['old_price']=0;
 $data['price_format']='';
 $data['price']=0;
+$data['price_format_excl_vat']='';
+$data['price_excl_vat']=0;
 $data['qty_correction']=0;
 if ($price>0) {
 	if ($price!=$original_price && $original_price>0) {
@@ -160,6 +169,8 @@ if ($price>0) {
 	}
 	$data['price_format']=mslib_fe::amount2Cents($price, 1);
 	$data['price']=$price;
+    $data['price_format_excl_vat']=mslib_fe::amount2Cents($exclude_vat_price, 1).' '.$this->pi_getLL('excluding_vat');
+    $data['price_excl_vat']=$exclude_vat_price;
 	$data['qty_correction']=$qty_decimal_correction;
 }
 // hook to let other plugins further manipulate the option values display
