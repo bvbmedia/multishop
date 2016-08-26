@@ -3047,11 +3047,11 @@ if (is_numeric($this->get['orders_id'])) {
                  */
                 $discount_percentage_value_selectbox='<select name="edit_discount_percentage" id="edit_discount_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
                 for ($i=1; $i<=100; $i++) {
-                    //if ($orders['discount_percentage']==$i) {
-                    //    $discount_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
-                    //} else {
+                    if ($orders['discount_percentage']==$i) {
+                        $discount_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
+                    } else {
                         $discount_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
-                    //}
+                    }
                 }
                 $discount_percentage_value_selectbox.='</select>';
 
@@ -4085,13 +4085,13 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $(document).on("change", "#edit_discount_value", function(){
                 var discount_amount=parseFloat($(this).val());
-                //tmp_discount_amount=tmp_discount_amount.replace(decimal_sep, ".");
                 var subtotal=parseFloat($("#hidden_subtotal").val());
+                var percentage=parseInt((discount_amount/subtotal)*100);
                 var shipping_costs=parseFloat($("#shipping_method_costs").val());
                 var payment_costs=parseFloat($("#payment_method_costs").val());
                 var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
                 var grand_total_split=new_grand_total.toString().split(".");
-                //$("#edit_discount_value").val(discount_amount);
+                $("#edit_discount_percentage").val(percentage);
                 $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
                 $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
             });
