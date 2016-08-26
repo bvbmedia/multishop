@@ -83,7 +83,7 @@ if ($this->ADMIN_USER) {
                 if ($order['order_memo']) {
                     $jsonData_content.='<div class="order_memo">';
                     $jsonData_content.=$this->pi_getLL('order_memo').': '.$order['order_memo'];
-                    $jsonData_content.=($orders['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $orders['memo_crdate']).'</span>' : '');
+                    $jsonData_content.=($order['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $order['memo_crdate']).'</span>' : '');
                     $jsonData_content.='</div>';
                 }
 				$jsonData_content.='
