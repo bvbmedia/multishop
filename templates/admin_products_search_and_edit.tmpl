@@ -26,10 +26,30 @@
                     ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
                 </div>
                 <input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
+				<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">###LABEL_ADVANCED_SEARCH###</a>
                 <div class="form-group pull-right">
                     <label>###LABEL_SEARCH_LIMIT###</label>
                     ###SEARCH_LIMIT###
                 </div>
+				<div id="msAdminInterfaceSearch" class="panel-collapse collapse###UNFOLD_SEARCH_BOX###">
+					<div class="panel-body">
+						<div id="search-orders" class="well no-mb">
+							<div class="row formfield-container-wrapper">
+								<div class="col-sm-4 formfield-wrapper">
+									<label class="control-label" for="type_search">###LABEL_STOCK###</label>
+									<div class="form-group">
+										<div class="form-inline">
+											<label class="control-label" for="stock_from">###LABEL_STOCK_FROM###</label>
+											<input class="form-control" type="text" name="stock_from" id="stock_from" value="###VALUE_STOCK_FROM###">
+											<label for="stock_till" class="labelInbetween">###LABEL_STOCK_TO###</label>
+											<input class="form-control" type="text" name="stock_till" id="stock_till" value="###VALUE_STOCK_TO###">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
             </div>
         </form>
     </div>
