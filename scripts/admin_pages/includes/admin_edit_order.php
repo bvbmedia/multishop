@@ -634,16 +634,6 @@ if (is_numeric($this->get['orders_id'])) {
 					if ($this->post['track_and_trace_code']) {
 						$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
 					}
-					$updateArray['order_memo']='';
-					if ($this->post['order_memo']) {
-						$updateArray['order_memo']=$this->post['order_memo'];
-					}
-                    $order_memo_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'order_memo');
-                    if ($this->post['order_memo']) {
-                        if ($order_memo_rec['order_memo']!=$this->post['order_memo']) {
-                            $updateArray['memo_crdate']=time();
-                        }
-                    }
 					if (count($updateArray)) {
 						$close_window=1;
 						$updateArray['orders_last_modified']=time();
@@ -743,6 +733,12 @@ if (is_numeric($this->get['orders_id'])) {
             }
             if ($this->post['order_memo']) {
                 $updateArray['order_memo']=$this->post['order_memo'];
+            }
+            $order_memo_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'order_memo');
+            if ($this->post['order_memo']) {
+                if ($order_memo_rec['order_memo']!=$this->post['order_memo']) {
+                    $updateArray['memo_crdate']=time();
+                }
             }
             if (count($updateArray)) {
                 $close_window=1;
