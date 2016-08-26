@@ -485,6 +485,7 @@ CREATE TABLE `tx_multishop_orders` (
  `shipping_method_label` varchar(150) default '',
  `payment_method_label` varchar(150) default '',
  `discount` decimal(24,14) default '0.00000000000000',
+ `discount_percentage` int(3) default '0',
  `customer_comments` text,
  `is_locked` tinyint(1) default '0',
  `billing_address_ext` varchar(10) default '',
