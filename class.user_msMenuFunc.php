@@ -167,6 +167,12 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		foreach ($cats as $cat) {
 			$menuArr[$tel]['title']=$cat['categories_name'];
 			$menuArr[$tel]['uid']='9999'.$cat['categories_id'];
+			$menuArr[$tel]['description']=$cat['meta_description'];
+			$menuArr[$tel]['image']='';
+			if ($cat['categories_image']) {
+				$menuArr[$tel]['image']='<img src="uploads/tx_multishop/images/categories/normal'.mslib_befe::getImagePath($cat['categories_image'], 'categories', 'normal').'" alt="'.htmlspecialchars($cat['categories_name']).'">';
+			}
+
 			// get all cats to generate multilevel fake url
 			$level=0;
 			$cats=mslib_fe::Crumbar($cat['categories_id']);
@@ -201,6 +207,11 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			foreach ($dataArray['subs'] as $item) {
 				$menuArr[$tel]['title']=$item['categories_name'];
 				$menuArr[$tel]['uid']='9999'.$item['categories_id'];
+				$menuArr[$tel]['description']=$item['meta_description'];
+				$menuArr[$tel]['image']='';
+				if ($item['categories_image']) {
+					$menuArr[$tel]['image']='<img src="uploads/tx_multishop/images/categories/normal'.mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal').'" alt="'.htmlspecialchars($item['categories_name']).'">';
+				}
 				// get all cats to generate multilevel fake url
 				$level=0;
 				$cats=mslib_fe::Crumbar($item['categories_id']);
