@@ -3047,11 +3047,11 @@ if (is_numeric($this->get['orders_id'])) {
                  */
                 $discount_percentage_value_selectbox='<select name="edit_discount_percentage" id="edit_discount_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
                 for ($i=1; $i<=100; $i++) {
-                    if ($orders['discount_percentage']==$i) {
-                        $discount_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
-                    } else {
+                    //if ($orders['discount_percentage']==$i) {
+                    //    $discount_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
+                    //} else {
                         $discount_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
-                    }
+                    //}
                 }
                 $discount_percentage_value_selectbox.='</select>';
 
