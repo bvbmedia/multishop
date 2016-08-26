@@ -45,6 +45,9 @@ if ($this->ADMIN_USER) {
 				if ($order['billing_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['billing_fax'].'<br />';
 				}
+                if ($order['order_memo']) {
+                    $jsonData_content.='<div class="order_memo">'.$this->pi_getLL('order_memo').': '.$order['order_memo'].'</div>';
+                }
 				$jsonData_content.='
 					</div>
 					</div>
@@ -76,6 +79,12 @@ if ($this->ADMIN_USER) {
 				if ($order['delivery_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['delivery_fax'].'<br />';
 				}
+                $jsonData_content.='<div class="customer_comments">';
+                if ($order['customer_comments']) {
+                    $jsonData_content.=$this->pi_getLL('comments').': '.$order['customer_comments'];
+                }
+                $jsonData_content.='</div>';
+
 				$jsonData_content.='
 					</div>
 				</div>
