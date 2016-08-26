@@ -45,9 +45,10 @@ if ($this->ADMIN_USER) {
 				if ($order['billing_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['billing_fax'].'<br />';
 				}
-                if ($order['order_memo']) {
-                    $jsonData_content.='<div class="order_memo">'.$this->pi_getLL('order_memo').': '.$order['order_memo'].'</div>';
+                if ($order['customer_comments']) {
+                    $jsonData_content.='<div class="customer_comments">'.$this->pi_getLL('customer_comments').': '.$order['customer_comments'].'</div>';
                 }
+
 				$jsonData_content.='
 					</div>
 					</div>
@@ -79,10 +80,12 @@ if ($this->ADMIN_USER) {
 				if ($order['delivery_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['delivery_fax'].'<br />';
 				}
-                if ($order['customer_comments']) {
-                    $jsonData_content.='<div class="customer_comments">'.$this->pi_getLL('customer_comments').': '.$order['customer_comments'].'</div>';
+                if ($order['order_memo']) {
+                    $jsonData_content.='<div class="order_memo">';
+                    $jsonData_content.=$this->pi_getLL('order_memo').': '.$order['order_memo'];
+                    $jsonData_content.=($orders['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $orders['memo_crdate']).'</span>' : '');
+                    $jsonData_content.='</div>';
                 }
-
 				$jsonData_content.='
 					</div>
 				</div>
