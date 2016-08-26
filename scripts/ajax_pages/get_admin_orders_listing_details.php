@@ -79,11 +79,9 @@ if ($this->ADMIN_USER) {
 				if ($order['delivery_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['delivery_fax'].'<br />';
 				}
-                $jsonData_content.='<div class="customer_comments">';
                 if ($order['customer_comments']) {
-                    $jsonData_content.=$this->pi_getLL('comments').': '.$order['customer_comments'];
+                    $jsonData_content.='<div class="customer_comments">'.$this->pi_getLL('customer_comments').': '.$order['customer_comments'].'</div>';
                 }
-                $jsonData_content.='</div>';
 
 				$jsonData_content.='
 					</div>
