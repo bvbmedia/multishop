@@ -638,6 +638,12 @@ if (is_numeric($this->get['orders_id'])) {
 					if ($this->post['order_memo']) {
 						$updateArray['order_memo']=$this->post['order_memo'];
 					}
+                    $order_memo_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'order_memo');
+                    if ($this->post['order_memo']) {
+                        if ($order_memo_rec['order_memo']!=$this->post['order_memo']) {
+                            $updateArray['memo_crdate']=time();
+                        }
+                    }
 					if (count($updateArray)) {
 						$close_window=1;
 						$updateArray['orders_last_modified']=time();
@@ -748,7 +754,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                 }
                 $orders['track_and_trace_code']=$this->post['track_and_trace_code'];
-                $orders['order_memo']=$this->post['order_memo'];
+                $orders['order_memo'] = $this->post['order_memo'];
             }
             if ($this->post['order_status']) {
                 // first get current status
@@ -3684,7 +3690,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>
         </div>
         <div class="form-group">
-            <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
+            <label for="track_and_trace_code" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
             <div class="col-md-10">
             	<input class="form-control" name="track_and_trace_code" type="text" value="'.htmlspecialchars($orders['track_and_trace_code']).'" />
             </div>
@@ -3704,6 +3710,7 @@ if (is_numeric($this->get['orders_id'])) {
             <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('order_memo').'</label>
             <div class="col-md-10">
             <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">'.htmlspecialchars($orders['order_memo']).'</textarea>
+            '.($orders['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $orders['memo_crdate']).'</span>' : '').'
             </div>
         </div>
         <div class="form-group">

@@ -516,6 +516,7 @@ CREATE TABLE `tx_multishop_orders` (
  `orders_paid_timestamp` int(11) default '0',
  `debit_order` tinyint(1) default '0',
  `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000',
+ `memo_crdate` int(11) default '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
