@@ -1338,6 +1338,9 @@
             <label index="requester_ip_address">Requester IP address</label>
             <label index="copy_for_merchant">Copy for merchant</label>
             <label index="total_amount_including_vat">Total amount including VAT</label>
+            <label index="order_memo_last_modified">Order memo last modified</label>
+            <label index="switch_to_discount_amount">Switch to discount amount</label>
+            <label index="switch_to_discount_percentage">Switch to discount percentage</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

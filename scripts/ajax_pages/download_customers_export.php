@@ -149,7 +149,16 @@ if ($this->get['customers_export_hash']) {
 					case 'customer_company':
 						$excelCols[]=$row['company'];
 						break;
-					case 'customer_address':
+                    case 'customer_street_address':
+                        $excelCols[]=$row['street_name'];
+                        break;
+                    case 'customer_street_address_number':
+                        $excelCols[]=$row['address_number'];
+                        break;
+                    case 'customer_address_number_extension':
+                        $excelCols[]=$row['address_ext'];
+                        break;
+                    case 'customer_address':
 						$excelCols[]=$row['address'];
 						break;
 					case 'customer_city':

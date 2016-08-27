@@ -210,4 +210,20 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+// add memo_crdate
+$str="select memo_crdate from tx_multishop_orders limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders` ADD `memo_crdate` int(11) default '0'";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
+// add discount_percentage
+$str="select discount_percentage from tx_multishop_orders limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders` ADD `discount_percentage` int(3) default '0'";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>
