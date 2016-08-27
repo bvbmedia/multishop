@@ -134,12 +134,14 @@ $array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_
 $array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 $array['products_price_with_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
 // attributes
-$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
-$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-	$array['attribute_option_name_'.$row['products_options_id']]=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_without_price'), $row['products_options_name']);
-	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
-	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
+if ($this->ms['MODULES']['INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED']) {
+	$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$array['attribute_option_name_'.$row['products_options_id']]=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_without_price'), $row['products_options_name']);
+		$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
+		$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
+	}
 }
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
 	// loading payment methods
