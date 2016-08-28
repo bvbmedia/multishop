@@ -313,6 +313,7 @@ if ($this->get['feed_hash']) {
 				*/
 				//echo print_r($filter);
 				//die();
+				//$this->conf['debugEnabled']=1;
 				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
@@ -333,6 +334,19 @@ if ($this->get['feed_hash']) {
 							$records[]=$row;
 						} else {
 							$product=mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
+							//hook to let other plugins further manipulate the settings
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'])) {
+								$params=array(
+										'fields'=>&$fields,
+										'row'=>&$row,
+										'fetchExtraDataFromProducts'=>&$fetchExtraDataFromProducts,
+										'product'=>&$product
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+
 							if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
 								$product_path=mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
 								if (is_array($product_path) && count($product_path)) {

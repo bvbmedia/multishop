@@ -169,7 +169,7 @@ if ($price>0) {
 	}
 	$data['price_format']=mslib_fe::amount2Cents($price, 1);
 	$data['price']=$price;
-    $data['price_format_excl_vat']=mslib_fe::amount2Cents($exclude_vat_price, 1).' '.$this->pi_getLL('excluding_vat');
+    $data['price_format_excl_vat']=mslib_fe::amount2Cents($exclude_vat_price, 1).' '.lcfirst($this->pi_getLL('excluding_vat'));
     $data['price_excl_vat']=$exclude_vat_price;
 	$data['qty_correction']=$qty_decimal_correction;
 }

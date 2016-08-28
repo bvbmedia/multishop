@@ -685,8 +685,7 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
-		//echo $str;
-		//die();
+
 		//var_dump($str);
 		//die();
 		if ($this->conf['debugEnabled']=='1') {
