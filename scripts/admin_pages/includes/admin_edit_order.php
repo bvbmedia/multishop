@@ -2959,20 +2959,24 @@ if (is_numeric($this->get['orders_id'])) {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
 						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
 						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				} else {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
 						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
 						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				}
 			} else {
@@ -2997,13 +3001,16 @@ if (is_numeric($this->get['orders_id'])) {
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</p>
                     <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total'].'">
+                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <p class="form-control-static order_total_value total_orders_tax">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <input type="hidden" id="hidden_total_orders_tax" value="'.$orders_tax_data['total_orders_tax'].'">
+                    <input type="hidden" id="hidden_orders_products_tax" value="'.($orders_tax_data['total_orders_tax']-($orders_tax_data['shipping_tax']+$orders_tax_data['payment_tax'])).'">
                     </div>
                 </div>';
 			} else {
@@ -3013,13 +3020,16 @@ if (is_numeric($this->get['orders_id'])) {
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</p>
                     <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
+                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value tax_grand_total">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <p class="form-control-static order_total_value total_orders_tax">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <input type="hidden" id="hidden_total_orders_tax" value="'.$orders_tax_data['total_orders_tax'].'">
+                    <input type="hidden" id="hidden_orders_products_tax" value="'.($orders_tax_data['total_orders_tax']-($orders_tax_data['shipping_tax']+$orders_tax_data['payment_tax'])).'">
                     </div>
                 </div>';
 			}
@@ -4086,6 +4096,11 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("change", "#edit_discount_value", function(){
                 var discount_amount=parseFloat($(this).val());
                 var subtotal=parseFloat($("#hidden_subtotal").val());
+                var subtotal_excl_vat=parseFloat($("#hidden_subtotal_excl_vat").val());
+                var shipping_tax=parseFloat($("#hidden_shipping_tax").val());
+                var payment_tax=parseFloat($("#hidden_payment_tax").val());
+                var total_tax=parseFloat($("#hidden_total_orders_tax").val());
+                var product_tax=parseFloat($("#hidden_orders_products_tax").val());
                 var percentage=parseInt((discount_amount/subtotal)*100);
                 var shipping_costs=parseFloat($("#shipping_method_costs").val());
                 var payment_costs=parseFloat($("#payment_method_costs").val());
@@ -4094,18 +4109,38 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_discount_percentage").val(percentage);
                 $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
                 $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
+                // recalculate tax
+                var sub_total_tax=parseFloat(((subtotal-subtotal_excl_vat)/100)*(100-percentage));
+                var total_tax_split=parseFloat(sub_total_tax+shipping_tax+payment_tax);
+                total_tax_split=$.number(total_tax_split, 2, ".").toString().split(".");
+                // refill the tax value
+                $(".total_orders_tax").find(".amount").empty().html(total_tax_split[0] + decimal_sep);
+                $(".total_orders_tax").find(".amount_cents").empty().html(total_tax_split[1]);
             });
             $(document).on("change", "#edit_discount_percentage", function(){
                 var percentage=parseInt($(this).val());
                 var subtotal=parseFloat($("#hidden_subtotal").val());
+                var subtotal_excl_vat=parseFloat($("#hidden_subtotal_excl_vat").val());
+                var shipping_tax=parseFloat($("#hidden_shipping_tax").val());
+                var payment_tax=parseFloat($("#hidden_payment_tax").val());
+                var total_tax=parseFloat($("#hidden_total_orders_tax").val());
+                var product_tax=parseFloat($("#hidden_orders_products_tax").val());
                 var shipping_costs=parseFloat($("#shipping_method_costs").val());
                 var payment_costs=parseFloat($("#payment_method_costs").val());
                 var discount_amount=parseFloat((subtotal/100)*percentage);
                 var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
                 var grand_total_split=new_grand_total.toString().split(".");
+                
                 $("#edit_discount_value").val(discount_amount);
                 $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
                 $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
+                // recalculate tax
+                var sub_total_tax=parseFloat(((subtotal-subtotal_excl_vat)/100)*(100-percentage));
+                var total_tax_split=parseFloat(sub_total_tax+shipping_tax+payment_tax);
+                total_tax_split=$.number(total_tax_split, 2, ".").toString().split(".");
+                // refill the tax value
+                $(".total_orders_tax").find(".amount").empty().html(total_tax_split[0] + decimal_sep);
+                $(".total_orders_tax").find(".amount_cents").empty().html(total_tax_split[1]);
             });
         });
         </script>
