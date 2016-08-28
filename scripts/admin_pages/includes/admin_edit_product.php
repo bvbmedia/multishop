@@ -2103,7 +2103,7 @@ if ($this->post) {
 				$pa_price=$this->post['tx_multishop_pi1']['price'][$opt_sort];
 				if (empty($pa_prefix) && $pa_price>0) {
 					if (!empty($pa_price)) {
-						if ($this->post['specials_new_products_price']) {
+						if ($this->post['specials_new_products_price']>0) {
 							if ($this->post['specials_new_products_price']>$pa_price) {
 								$pa_prefix='-';
 								$pa_price=$this->post['specials_new_products_price']-$pa_price;
@@ -2111,7 +2111,7 @@ if ($this->post) {
 								$pa_prefix='+';
 								$pa_price=$pa_price-$this->post['specials_new_products_price'];
 							}
-						} else {
+						} else if ($this->post['products_price']>0) {
 							if ($this->post['products_price']>$pa_price) {
 								$pa_prefix='-';
 								$pa_price=$this->post['products_price']-$pa_price;
@@ -2289,7 +2289,7 @@ if ($this->post) {
 			// custom hook that can be controlled by third-party plugin eof
 		} else {
 			// custom hook that can be controlled by third-party plugin
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'])) {
 				$params=array(
 					'products_id'=>$prodid
 				);
