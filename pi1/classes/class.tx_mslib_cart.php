@@ -3052,8 +3052,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		} elseif($this->cart) {
 			$cartVariable=&$this->cart;
 		}
-		error_log('Cart: '. count($cart['products']));
-		error_log('This: '. count($this->cart['products']));
+		//error_log('Cart: '. count($cart['products']));
+		//error_log('This: '. count($this->cart['products']));
 		//return;
 		$continue=1;
 		// custom hook that can be controlled by third-party plugin
