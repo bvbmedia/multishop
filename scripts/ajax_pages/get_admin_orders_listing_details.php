@@ -16,7 +16,7 @@ if ($this->ADMIN_USER) {
 				$jsonData_content.='
 				<div class="msAdminTooltipOrderDetailsAddressWrapper">
 					<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 					<div class="msAdminTooltipBillingAddressDetails">
 						<h3>'.$this->pi_getLL('billing_details').'</h3>
 ';
@@ -45,14 +45,16 @@ if ($this->ADMIN_USER) {
 				if ($order['billing_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['billing_fax'].'<br />';
 				}
+				/*
                 if ($order['customer_comments']) {
                     $jsonData_content.='<div class="customer_comments">'.$this->pi_getLL('customer_comments').': '.$order['customer_comments'].'</div>';
                 }
+				*/
 
 				$jsonData_content.='
 					</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 					<div class="msAdminTooltipDeliveryAddressDetails">
 						<h3>'.$this->pi_getLL('delivery_details').'</h3>
 ';
@@ -80,27 +82,44 @@ if ($this->ADMIN_USER) {
 				if ($order['delivery_fax']) {
 					$jsonData_content.=$this->pi_getLL('fax').': '.$order['delivery_fax'].'<br />';
 				}
+				/*
                 if ($order['order_memo']) {
                     $jsonData_content.='<div class="order_memo">';
                     $jsonData_content.=$this->pi_getLL('order_memo').': '.$order['order_memo'];
                     $jsonData_content.=($order['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $order['memo_crdate']).'</span>' : '');
                     $jsonData_content.='</div>';
                 }
+				*/
 				$jsonData_content.='
 					</div>
 				</div>
+				<div class="col-md-4">
+';
+				if ($order['customer_comments']) {
+					$jsonData_content.='<div class="customer_comments">'.mslib_befe::bootstrapPanel($this->pi_getLL('customer_comments'),nl2br($order['customer_comments']),'info').'</div>';
+				}
+				if ($order['order_memo']) {
+					$tmpFooter='';
+					if ($order['memo_crdate']) {
+						$tmpFooter.='<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $order['memo_crdate']).'</span>';
+					}
+					$jsonData_content.='<div class="order_memo">'.mslib_befe::bootstrapPanel($this->pi_getLL('order_memo'),$order['order_memo'],'default',$tmpFooter).'</div>';
+					$tmpContent='';
+				}
+				$jsonData_content.='
+					</div>
 				</div>
 				';
 				$jsonData_content.='
 				<table width="100%" class="table table-bordered">
 				<thead>
 				<tr>
-				<th>'.$this->pi_getLL('products_id').'</th>
-				<th>'.$this->pi_getLL('qty').'</th>
-				<th>'.$this->pi_getLL('products_name').'</th>
-				<th>'.$this->pi_getLL('price').'</th>
+				<th class="cellFixed cellNoWrap">'.$this->pi_getLL('products_id').'</th>
+				<th class="cellFixed cellNoWrap">'.$this->pi_getLL('qty').'</th>
+				<th class="cellFluid">'.$this->pi_getLL('products_name').'</th>
+				<th class="cellFixed cellNoWrap">'.$this->pi_getLL('price').'</th>
 				'.($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0 ? '<th>'.$this->pi_getLL('discount').'</th>' : '').'
-				<th>'.$this->pi_getLL('total_price').'</th>
+				<th class="cellFixed cellNoWrap">'.$this->pi_getLL('total_price').'</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -135,26 +154,30 @@ if ($this->ADMIN_USER) {
 					} else {
 						$productLink='';
 					}
+					$productsName='<a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a>';
+					if ($product['products_description']) {
+						$productsName.='<br/>'.$product['products_description'];
+					}
 					$jsonData_content.='<tr class="'.$tr_subtype.'">
-					<td class="text-right"><a href="'.$productLink.'" target="_blank">'.$product['products_id'].'</a></td>
-					<td class="text-right">'.round($product['qty'], 13).'</td>
-					<td><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>';
+					<td class="cellFixed cellNoWrap text-right"><a href="'.$productLink.'" target="_blank">'.$product['products_id'].'</a></td>
+					<td class="cellFixed cellNoWrap text-right">'.round($product['qty'], 13).'</td>
+					<td class="cellFluid">'.$productsName.'</td>';
                     $normal_price=$product['final_price'];
                     if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                         $normal_price=$product['final_price']+$product['discount_amount'];
                     }
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-						$jsonData_content.='<td class="text-right noWrap">'.mslib_fe::amount2Cents(($normal_price+$product['products_tax_data']['total_tax']), $customer_currency).'</td>';
+						$jsonData_content.='<td class="cellFixed cellNoWrap text-right">'.mslib_fe::amount2Cents(($normal_price+$product['products_tax_data']['total_tax']), $customer_currency,1,0).'</td>';
 					} else {
-						$jsonData_content.='<td class="text-right noWrap">'.mslib_fe::amount2Cents($normal_price, $customer_currency).'</td>';
+						$jsonData_content.='<td class="cellFixed cellNoWrap text-right">'.mslib_fe::amount2Cents($normal_price, $customer_currency,1,0).'</td>';
 					}
                     if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-                        $jsonData_content.='<td class="text-right noWrap">'.mslib_fe::amount2Cents($product['discount_amount'], $customer_currency).'</td>';
+                        $jsonData_content.='<td class="cellFixed cellNoWrap text-right">'.mslib_fe::amount2Cents($product['discount_amount'], $customer_currency,1,0).'</td>';
                     }
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-						$jsonData_content.='<td class="text-right noWrap">'.mslib_fe::amount2Cents($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax']), $customer_currency).'</td>';
+						$jsonData_content.='<td class="cellFixed cellNoWrap text-right">'.mslib_fe::amount2Cents($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax']), $customer_currency,1,0).'</td>';
 					} else {
-						$jsonData_content.='<td class="text-right noWrap">'.mslib_fe::amount2Cents($product['qty']*$product['final_price'], $customer_currency).'</td>';
+						$jsonData_content.='<td class="cellFixed cellNoWrap text-right">'.mslib_fe::amount2Cents($product['qty']*$product['final_price'], $customer_currency,1,0).'</td>';
 					}
 					$jsonData_content.='</tr>';
 					if (count($product['attributes'])) {
@@ -164,17 +187,17 @@ if ($this->ADMIN_USER) {
 							<td class="text-right">&nbsp;</td>
 							<td>'.$attributes['products_options'].': '.$attributes['products_options_values'].'</td>';
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax'], $customer_currency).'</td>';
+								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax'], $customer_currency,1,0).'</td>';
 							} else {
-								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price'], $customer_currency).'</td>';
+								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price'], $customer_currency,1,0).'</td>';
 							}
                             if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                                 $jsonData_content.='<td class="text-right noWrap">&nbsp;</td>';
                             }
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax']), $customer_currency).'</td>';
+								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax']), $customer_currency,1,0).'</td>';
 							} else {
-								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*$attributes['options_values_price'], $customer_currency).'</td>';
+								$jsonData_content.='<td class="text-right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*$attributes['options_values_price'], $customer_currency,1,0).'</td>';
 							}
 							$jsonData_content.='</tr>';
 						}
@@ -192,13 +215,13 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="'.$colspan.'" class="text-right">'.$this->pi_getLL('sub_total').'</td>
-						<td class="text-right">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], $customer_currency).'</td>
+						<td class="text-right">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], $customer_currency,1,0).'</td>
 					</tr>';
 				} else {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="'.$colspan.'" class="text-right">'.$this->pi_getLL('sub_total').'</td>
-						<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_amount'], $customer_currency).'</td>
+						<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_amount'], $customer_currency,1,0).'</td>
 					</tr>';
 				}
 				if ($order['shipping_method_label']) {
@@ -206,13 +229,13 @@ if ($this->ADMIN_USER) {
 						$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.htmlspecialchars($order['shipping_method_label']).'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], $customer_currency,1,0).'</td>
 						</tr>';
 					} else {
 						$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.htmlspecialchars($order['shipping_method_label']).'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['shipping_method_costs'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['shipping_method_costs'], $customer_currency,1,0).'</td>
 						</tr>';
 					}
 				}
@@ -221,13 +244,13 @@ if ($this->ADMIN_USER) {
 						$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.htmlspecialchars($order['payment_method_label']).'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], $customer_currency,1,0).'</td>
 						</tr>';
 					} else {
 						$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.htmlspecialchars($order['payment_method_label']).'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['payment_method_costs'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['payment_method_costs'], $customer_currency,1,0).'</td>
 						</tr>';
 					}
 				}
@@ -235,7 +258,7 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="text-right">'.$this->pi_getLL('vat').'</td>
-						<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_tax']).'</td>
+						<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_tax'],1,0).'</td>
 					</tr>';
 				}*/
 				if ($order['discount']>0) {
@@ -246,7 +269,7 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="'.$colspan.'" class="text-right">'.htmlspecialchars($this->pi_getLL('discount')).$coupon_code.'</td>
-						<td class="text-right">'.mslib_fe::amount2Cents($order['discount'], $customer_currency).'</td>
+						<td class="text-right">'.mslib_fe::amount2Cents($order['discount'], $customer_currency,1,0).'</td>
 					</tr>
 					';
 				}
@@ -258,13 +281,13 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="'.$colspan.'" class="text-right"><strong>'.(!$order['orders_tax_data']['total_orders_tax'] ? ucfirst($this->pi_getLL('total_excl_vat')) : ucfirst($this->pi_getLL('total'))).'</strong></td>
-						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total'], $customer_currency).'</strong></td>
+						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total'], $customer_currency,1,0).'</strong></td>
 					</tr>';
 					//if ($order['payment_method_label']) {
 					$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.$this->pi_getLL('included_vat_amount').'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_tax'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['subtotal_tax'], $customer_currency,1,0).'</td>
 						</tr>';
 					//}
 				} else {
@@ -272,7 +295,7 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="'.$colspan.'" class="text-right">'.$this->pi_getLL('vat').'</td>
-							<td class="text-right">'.mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax'], $customer_currency).'</td>
+							<td class="text-right">'.mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax'], $customer_currency,1,0).'</td>
 						</tr>';
 					//}
 					$jsonData_content.='
@@ -282,7 +305,7 @@ if ($this->ADMIN_USER) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="'.$colspan.'" class="text-right"><strong>'.ucfirst($this->pi_getLL('total')).'</strong></td>
-						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total'], $customer_currency).'</strong></td>
+						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total'], $customer_currency,1,0).'</strong></td>
 					</tr>';
 				}
 				$jsonData_content.='</tbody></table>
