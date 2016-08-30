@@ -330,7 +330,7 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 	#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:950px; }
 }
 
-#msadmin_wrapper #customer_comments .customer_comments_body { overflow:auto; max-height:200px; }
+#msadmin_wrapper #customer_comments .customer_comments_body { overflow:auto; max-height:208px; }
 #msadmin_wrapper #customer_comments .customer_comments_body p:last-child { margin-bottom:0; }
 
 #msadmin_content #tblWidgetOrdersLatest .popover .popover-content table th,
