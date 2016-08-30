@@ -2680,6 +2680,9 @@
             <label index="requester_ip_address">IP-adres aanvrager</label>
             <label index="copy_for_merchant">Kopie voor beheerder</label>
             <label index="total_amount_including_vat">Totaalprijs incl. BTW</label>
+            <label index="order_memo_last_modified">Bericht laatst gewijzigd op</label>
+            <label index="switch_to_discount_amount">Korting toekennen op basis van bedrag</label>
+            <label index="switch_to_discount_percentage">Korting toekennen op basis van percentage</label>
         </languageKey>
     </data>
 </T3locallang>
