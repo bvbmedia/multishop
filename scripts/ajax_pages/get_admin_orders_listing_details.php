@@ -154,10 +154,14 @@ if ($this->ADMIN_USER) {
 					} else {
 						$productLink='';
 					}
+					$productsName='<a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a>';
+					if ($product['products_description']) {
+						$productsName.='<br/>'.$product['products_description'];
+					}
 					$jsonData_content.='<tr class="'.$tr_subtype.'">
 					<td class="cellFixed cellNoWrap text-right"><a href="'.$productLink.'" target="_blank">'.$product['products_id'].'</a></td>
 					<td class="cellFixed cellNoWrap text-right">'.round($product['qty'], 13).'</td>
-					<td class="cellFluid"><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>';
+					<td class="cellFluid">'.$productsName.'</td>';
                     $normal_price=$product['final_price'];
                     if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                         $normal_price=$product['final_price']+$product['discount_amount'];
