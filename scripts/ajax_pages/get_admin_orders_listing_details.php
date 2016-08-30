@@ -96,7 +96,7 @@ if ($this->ADMIN_USER) {
 				<div class="col-md-4">
 ';
 				if ($order['customer_comments']) {
-					$jsonData_content.='<div class="customer_comments">'.mslib_befe::bootstrapPanel($this->pi_getLL('customer_comments'),$order['customer_comments'],'info').'</div>';
+					$jsonData_content.='<div class="customer_comments">'.mslib_befe::bootstrapPanel($this->pi_getLL('customer_comments'),nl2br($order['customer_comments']),'info').'</div>';
 				}
 				if ($order['order_memo']) {
 					$tmpFooter='';
