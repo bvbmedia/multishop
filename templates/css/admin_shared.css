@@ -132,7 +132,8 @@
 .cellCheckbox { vertical-align:middle; }
 .cellCheckbox .checkbox.checkbox-inline { padding-left:17px; }
 .cellCheckbox .checkbox.checkbox-inline label { min-height:18px; padding-left:0; }
-.cellCheckbox .checkbox.checkbox-inline label::before { margin-left:-17px; }
+.cellCheckbox .checkbox.checkbox-inline label::before,
+.cellCheckbox .checkbox.checkbox-inline label::after { margin-left:-17px; }
 .cellDate { white-space:nowrap; }
 .cellModel { min-width: 150px; }
 .cellID { text-align:right; }
