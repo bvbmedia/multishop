@@ -314,8 +314,9 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 
 #msadmin_wrapper #orders_post .popover { max-width:772px; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:740px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments { margin-bottom:10px; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments,
-#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo { word-break:break-word; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo { overflow:auto; max-height:200px; word-break:break-word; }
 @media (min-width:1601px) {
 	#msadmin_wrapper #orders_post .popover { max-width:982px; }
 	#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:950px; }
