@@ -1692,7 +1692,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem='';
 			if ($orders['customer_comments']) {
 				$orderDetailsItem='<div class="form-group" id="customer_comments"><label class="control-label col-md-3">'.htmlspecialchars($this->pi_getLL('customer_comments')).'</label>
-                    <div class="col-md-9"><div class="customer_comments_body">'.nl2br($orders['customer_comments']).'</div></div>
+                    <div class="col-md-9"><div class="customer_comments_body"><p class="form-control-static">'.nl2br($orders['customer_comments']).'</p></div></div>
                 </div>';
 				$orderDetails[]=$orderDetailsItem;
 			}
