@@ -315,12 +315,23 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 #msadmin_wrapper #orders_post .popover { max-width:772px; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:740px; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments { margin-bottom:10px; }
-#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments,
-#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo { overflow:auto; max-height:200px; word-break:break-word; }
-@media (min-width:1601px) {
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-heading,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-heading { padding:7px 10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-heading h3,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-heading h3 { margin-bottom:0; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-body,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body { overflow:auto; max-height:205px; word-break:break-word; padding:7px 10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-body p,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body p { border-bottom:1px solid #e4e7e8; margin-bottom:5px; padding-bottom:5px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-body p:last-child,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body p:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-footer,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-footer { padding:7px 10px; }
+@media (min-width:1600px) {
 	#msadmin_wrapper #orders_post .popover { max-width:982px; }
 	#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:950px; }
 }
+
 
 #msadmin_content #tblWidgetOrdersLatest .popover .popover-content table th,
 #msadmin_content #tblWidgetOrdersLatest .popover .popover-content table td { padding:5px; }
