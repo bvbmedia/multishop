@@ -44,7 +44,7 @@ if (is_numeric($this->get['products_id'])) {
 		}
 		// get all cats to generate multilevel fake url eof
 		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-		$output_array['meta']['canonical_link']='<link rel="canonical" href="'.$canonical_link.'" />';
+		$output_array['meta']['canonical_url']='<link rel="canonical" href="'.$canonical_link.'" />';
 	}
 	//last visited
 	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
