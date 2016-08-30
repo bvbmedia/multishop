@@ -98,8 +98,6 @@ if ($this->ADMIN_USER) {
 				if ($order['customer_comments']) {
 					$jsonData_content.='<div class="customer_comments"><h3>'.$this->pi_getLL('customer_comments').'</h3>'.$order['customer_comments'].'</div>';
 				}
-				echo print_r($order);
-				die();
 				if ($order['order_memo']) {
 					$jsonData_content.='<div class="order_memo">';
 					$jsonData_content.='<h3>'.$this->pi_getLL('order_memo').'</h3>'.$order['order_memo'];
