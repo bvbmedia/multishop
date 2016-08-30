@@ -96,13 +96,15 @@ if ($this->ADMIN_USER) {
 				<div class="col-md-4">
 ';
 				if ($order['customer_comments']) {
-					$jsonData_content.='<div class="customer_comments"><h3>'.$this->pi_getLL('customer_comments').'</h3>'.$order['customer_comments'].'</div>';
+					$jsonData_content.='<div class="customer_comments">'.mslib_befe::bootstrapPanel($this->pi_getLL('customer_comments'),$order['customer_comments'],'info').'</div>';
 				}
 				if ($order['order_memo']) {
-					$jsonData_content.='<div class="order_memo">';
-					$jsonData_content.='<h3>'.$this->pi_getLL('order_memo').'</h3>'.$order['order_memo'];
-					$jsonData_content.=($order['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $order['memo_crdate']).'</span>' : '');
-					$jsonData_content.='</div>';
+					$tmpFooter='';
+					if ($order['memo_crdate']) {
+						$tmpFooter.='<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $order['memo_crdate']).'</span>';
+					}
+					$jsonData_content.='<div class="order_memo">'.mslib_befe::bootstrapPanel($this->pi_getLL('order_memo'),$order['order_memo'],'default',$tmpFooter).'</div>';
+					$tmpContent='';
 				}
 				$jsonData_content.='
 					</div>

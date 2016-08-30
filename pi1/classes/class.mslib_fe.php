@@ -4294,7 +4294,7 @@ class mslib_fe {
 		}
 		return $content;
 	}
-	public function returnBoxedHTML($title='', $content='') {
+	public function returnBoxedHTML($title='', $content='', $footerContent='') {
 		$output='
 		 <div class="panel panel-default">
 			<div class="panel-heading"><h3>'.$title.'</h3></div>
