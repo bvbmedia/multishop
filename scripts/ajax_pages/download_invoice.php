@@ -372,6 +372,12 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
+		$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']='';
+		$markerArray['###INVOICE_PAYMENT_CONDITION###']='';
+		if ($order['payment_condition']) {
+			$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('payment_condition');
+			$markerArray['###INVOICE_PAYMENT_CONDITION###']=$order['payment_condition'].' '.$this->pi_getLL('days');
+		}
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
@@ -390,12 +396,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		}
 		if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
 			$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']=str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
-		}
-		$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']='';
-		$markerArray['###INVOICE_PAYMENT_CONDITION###']='';
-		if ($order['payment_condition']) {
-			$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('payment_condition');
-			$markerArray['###INVOICE_PAYMENT_CONDITION###']=$order['payment_condition'].' '.$this->pi_getLL('days');
 		}
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
