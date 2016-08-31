@@ -58,6 +58,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		} else {
 			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_invoice_pdf.tmpl');
 		}
+		$array1=array();
+		$array2=array();
 		$markerArray=array();
 		$markerArray['###GENDER_SALUTATION###']=mslib_fe::genderSalutation($order['billing_gender']);
 		if ($this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE']) {
@@ -229,8 +231,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			}
 		}
 		// MARKERS
-		$array1=array();
-		$array2=array();
 		$array1[]='###BILLING_FULL_NAME###';
 		$array2[]=$order['billing_name'];
 		$array1[]='###FULL_NAME###';
