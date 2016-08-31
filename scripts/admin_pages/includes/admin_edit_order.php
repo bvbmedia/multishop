@@ -177,7 +177,7 @@ if (is_numeric($this->get['orders_id'])) {
 									if (isset($this->post['product_discount_percentage']) && is_numeric($this->post['product_discount_percentage']) && $this->post['product_discount_percentage']>0) {
 										$updateArray['discount_percentage'] = $this->post['product_discount_percentage'];
 										$discount_amount = ($this->post['product_price']*$this->post['product_discount_percentage']) / 100;
-										$updateArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
+										$updateArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, true);
 									} else if (isset($this->post['product_discount_amount']) && !empty($this->post['product_discount_amount'])) {
 										$updateArray['discount_amount'] = $this->post['product_discount_amount'];
 										$discount_percentage = ($this->post['product_discount_amount'] / $this->post['product_price']) * 100;
@@ -321,7 +321,7 @@ if (is_numeric($this->get['orders_id'])) {
 									if (isset($this->post['manual_product_discount_percentage']) && is_numeric($this->post['manual_product_discount_percentage']) && $this->post['manual_product_discount_percentage']>0) {
 										$insertArray['discount_percentage'] = $this->post['manual_product_discount_percentage'];
 										$discount_amount = ($this->post['manual_product_price']*$this->post['manual_product_discount_percentage']) / 100;
-										$insertArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
+										$insertArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2);
 									} else if (isset($this->post['manual_product_discount_amount']) && !empty($this->post['manual_product_discount_amount'])) {
 										$insertArray['discount_amount'] = $this->post['manual_product_discount_amount'];
 										$discount_percentage = ($this->post['manual_product_discount_amount'] / $this->post['manual_product_price']) * 100;
@@ -2772,6 +2772,11 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				$order_products_body_data['products_normal_price']['class']='last_edit_product_row_pprice_col';
 				$order_products_body_data['products_normal_price']['value']='';
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                    // products vat col
+                    $order_products_body_data['products_discount']['class']='last_edit_product_row_discount_col';
+                    $order_products_body_data['products_discount']['value']='';
+                }
 				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					// products vat col
 					$order_products_body_data['products_vat']['class']='last_edit_product_row_pvat_col';
@@ -3547,8 +3552,62 @@ if (is_numeric($this->get['orders_id'])) {
                     		product_price=$("#manual_product_price").val();
                     	}
 						if (e.object.id!=\'\' && parseInt(product_price)>0) {
+							var discount_percentage=parseInt(e.object.id);
+							var current_price=parseFloat(product_price);
+							var discount_amount=parseFloat((current_price/100)*discount_percentage);
+							var price_after_discount=parseFloat(current_price-discount_amount);
+							if (!manual_product) {
+                                $("#display_name_discount_excluding_vat").val(discount_amount);
+                                $("#product_discount_amount").val(discount_amount);
+                                priceEditRealtimeCalc(true, $("#display_name_discount_excluding_vat"), "#product_tax");
+                                if (SHOW_PRICES_INCLUDING_VAT) {
+                                    var display_name_including_vat = parseFloat($("#display_name_including_vat").val());
+                                    var price_discount_include_vat= parseFloat($("#display_name_discount_including_vat").val());
+                                    var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
+                                    console.log(display_name_including_vat);
+                                    console.log(price_discount_include_vat);
+                                    console.log(total_incl_vat);
+                                    var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
+                                } else {
+                                    var price_split=price_after_discount.toString().split(decimal_sep);
+                                }
+                                if (price_split[1]==undefined) {
+                                    price_split[1]=\'-\';
+                                }
+                                $(next_cell).find("span.amountWrapper > span.amount").html(price_split[0] + decimal_sep);
+                                $(next_cell).find("span.amountWrapper > span.amount_cents").html(price_split[1]);
+                            } else {
+                                if (!$(next_cell).hasClass("cellPrice")) {
+                                    $(next_cell).addClass("cellPrice")
+                                }
+                                //$(next_cell).empty();
+                                //$(next_cell).html(price_after_discount_format);
+                                $("#manual_display_name_discount_excluding_vat").val(discount_amount);
+                                $("#manual_product_discount_amount").val(discount_amount);
+                                priceEditRealtimeCalc(true, $("#manual_display_name_discount_excluding_vat"), "#manual_product_tax");
+                                if (SHOW_PRICES_INCLUDING_VAT) {
+                                    var display_name_including_vat = parseFloat($("#display_manual_name_including_vat").val());
+                                    var price_discount_include_vat= parseFloat($("#manual_display_name_discount_including_vat").val());
+                                    var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
+                                    console.log(display_name_including_vat);
+                                    console.log(price_discount_include_vat);
+                                    console.log(total_incl_vat);
+                                    var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
+                                } else {
+                                    var price_split=price_after_discount.toString().split(decimal_sep);
+                                }
+                                if (price_split[1]==undefined) {
+                                    price_split[1]=\'-\';
+                                }
+                                if ($(next_cell).html()=="" || $(next_cell).html()=="&nbsp;") {
+                                    $(next_cell).append($("td.cellPrice").html());
+                                }
+                                $(next_cell).find("span.amountWrapper > span.amount").html(price_split[0] + decimal_sep);
+                                $(next_cell).find("span.amountWrapper > span.amount_cents").html(price_split[1]);
+                            }
+                            // plan for removal
+							/*
 							jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_product_discount_price').'",{discount_percentage: e.object.id, current_price: product_price, qty: 1}, function(d){
-								console.log(d);
 								if (d.status==\'OK\') {
 									if (!manual_product) {
 										$(next_cell).empty();
@@ -3566,6 +3625,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
                             });
+                            */
 						}
                     });
                 }
