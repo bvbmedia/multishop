@@ -3564,9 +3564,6 @@ if (is_numeric($this->get['orders_id'])) {
                                     var display_name_including_vat = parseFloat($("#display_name_including_vat").val());
                                     var price_discount_include_vat= parseFloat($("#display_name_discount_including_vat").val());
                                     var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
-                                    console.log(display_name_including_vat);
-                                    console.log(price_discount_include_vat);
-                                    console.log(total_incl_vat);
                                     var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
                                 } else {
                                     var price_split=price_after_discount.toString().split(decimal_sep);
@@ -3589,9 +3586,6 @@ if (is_numeric($this->get['orders_id'])) {
                                     var display_name_including_vat = parseFloat($("#display_manual_name_including_vat").val());
                                     var price_discount_include_vat= parseFloat($("#manual_display_name_discount_including_vat").val());
                                     var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
-                                    console.log(display_name_including_vat);
-                                    console.log(price_discount_include_vat);
-                                    console.log(total_incl_vat);
                                     var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
                                 } else {
                                     var price_split=price_after_discount.toString().split(decimal_sep);
