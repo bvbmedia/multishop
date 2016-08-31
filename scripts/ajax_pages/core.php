@@ -543,11 +543,16 @@ switch ($this->ms['page']) {
 						$cats=mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
 						$cats=array_reverse($cats);
 						$catpath=array();
+						$level=0;
+						$where='';
 						foreach ($cats as $cat) {
+							$where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
 							$catpath[]=$cat['name'];
+							$level++;
 						}
 						if (count($catpath)>0) {
-							$tmp_return_data[$preselected_id]=implode(' > ', $catpath);
+							$cat_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
+							$tmp_return_data[$preselected_id]='<a href="'.$cat_link.'" target="_blank" class="innerLink">'.implode(' > ', $catpath).'</a>';
 						}
 					}
 				}

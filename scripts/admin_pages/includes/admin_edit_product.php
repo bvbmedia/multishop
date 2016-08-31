@@ -296,6 +296,10 @@ jQuery(document).ready(function($) {
 		}
 		' : '').'
 	});
+	$(document).on("mouseup", "li.select2-search-choice > div > .innerLink", function(e){
+	    var href=$(this).attr("href");
+	    window.open(href, "_blank");
+	});
 	'.($this->get['action']=='edit_product' && $this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']>0 ? '
 	$(\'#default_path_categories_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
