@@ -41,7 +41,11 @@ switch ($this->ms['page']) {
 		$return_data=array();
 		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];
 		//
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$products=$cart['products'];
 		$pids=array();
 		foreach ($products as $product) {
@@ -50,6 +54,9 @@ switch ($this->ms['page']) {
 		$product_mappings=mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
 		//
 		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
+		if (!count($product_mappings)) {
+			$product_mappings=$shipping_methods;
+		}
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
 			if (isset($product_mappings[$shipping_method['code']])) {
@@ -105,11 +112,14 @@ switch ($this->ms['page']) {
 		if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
 			$return_data=array();
 			$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
+			if (!$this->post['tx_multishop_pi1']['qty']) {
+				$this->post['tx_multishop_pi1']['qty']=1;
+			}
 			$return_data['delivery_time']='e';
 			if (!empty($product_data['delivery_time'])) {
 				$return_data['delivery_time']=trim($product_data['delivery_time']);
 			}
-			$str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+			$str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by c2z.zone_id asc, sc.cn_short_" . $this->lang . " asc";
 			//$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 			$enabled_countries=array();
@@ -118,15 +128,15 @@ switch ($this->ms['page']) {
 				$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
 				foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
-						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+						$return_data['shipping_cost'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
+						$return_data['shipping_costs_display'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
 					} else {
-						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
-						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+						$return_data['shipping_cost'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
+						$return_data['shipping_costs_display'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
 					}
-					$return_data['deliver_to'][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
-					$return_data['deliver_by'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
-					$return_data['shipping_method'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
+					$return_data['deliver_to'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
+					$return_data['deliver_by'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
+					$return_data['shipping_method'][$row2['zone_id']][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
 					$return_data['products_name']=$shipping_cost['product_name'];
 				}
 			}
@@ -533,11 +543,16 @@ switch ($this->ms['page']) {
 						$cats=mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
 						$cats=array_reverse($cats);
 						$catpath=array();
+						$level=0;
+						$where='';
 						foreach ($cats as $cat) {
+							$where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
 							$catpath[]=$cat['name'];
+							$level++;
 						}
 						if (count($catpath)>0) {
-							$tmp_return_data[$preselected_id]=implode(' > ', $catpath);
+							$cat_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
+							$tmp_return_data[$preselected_id]='<a href="'.$cat_link.'" target="_blank" class="innerLink">'.implode(' > ', $catpath).'</a>';
 						}
 					}
 				}
@@ -843,16 +858,16 @@ switch ($this->ms['page']) {
 		$limit=50;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			if (!is_numeric($this->get['q'])) {
-				$where[]='m.billing_name like \'%'.addslashes($this->get['q']).'%\'';
+				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\')';
 			} else {
-				$where[]='(m.billing_name like \'%'.addslashes($this->get['q']).'%\' or op.customer_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(o.billing_name like \'%'.addslashes($this->get['q']).'%\' or o.billing_company like \'%'.addslashes($this->get['q']).'%\' or o.customer_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='o.customer_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
 		$where[]='o.page_uid=' . $this->showCatalogFromPage;
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.customer_id, o.billing_name', // SELECT ...
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('o.customer_id, o.billing_company, o.billing_name', // SELECT ...
 				'tx_multishop_orders o', // FROM ...
 				implode(' and ', $where), // WHERE...
 				'o.customer_id', // GROUP BY...
@@ -868,10 +883,19 @@ switch ($this->ms['page']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				$customer_names=array();
+				$customer_name='';
+				if (!empty($row['billing_company'])) {
+					$customer_names[]=$row['billing_company'];
+				}
 				if (!empty($row['billing_name'])) {
+					$customer_names[]=$row['billing_name'];
+				}
+				$customer_name=implode(' | ', $customer_names);
+				if (!empty($customer_name)) {
 					$data[]=array(
 						'id'=>$row['customer_id'],
-						'text'=>$row['billing_name']
+						'text'=>$customer_name
 					);
 				}
 			}
@@ -934,20 +958,21 @@ switch ($this->ms['page']) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='cd.categories_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
-				$where[]='(cd.categories_name like \'%'.addslashes($this->get['q']).'%\' or op.categories_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(cd.categories_name like \'%'.addslashes($this->get['q']).'%\' or p2c.node_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-			$where[]='op.categories_id = \''.addslashes($this->get['preselected_id']).'\'';
+			$where[]='p2c.node_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
 		$where[]='o.page_uid=' . $this->showCatalogFromPage;
 		$where[]='cd.language_id=' . $this->sys_language_uid;
 		$where[]='c.status=1';
 		$where[]='c.categories_id=cd.categories_id';
-		$where[]='c.categories_id=op.categories_id';
+		$where[]='c.categories_id=p2c.node_id';
+		$where[]='p2c.categories_id=op.categories_id';
 		$where[]='o.orders_id=op.orders_id';
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*, cd.categories_name', // SELECT ...
-				'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'tx_multishop_orders_products op, tx_multishop_products_to_categories p2c, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 				implode(' and ', $where), // WHERE.
 				'op.categories_id', // GROUP BY...
 				'cd.categories_name asc', // ORDER BY...
@@ -962,10 +987,24 @@ switch ($this->ms['page']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				if (!empty($row['categories_name'])) {
+				$catpath = array();
+				if ($row['categories_id']) {
+					// get all cats to generate multilevel fake url
+					$level = 0;
+					$cats = array();
+					$cats = mslib_fe::Crumbar($row['categories_id']);
+					$cats = array_reverse($cats);
+					if (count($cats) > 0) {
+						foreach ($cats as $cat) {
+							$catpath[] = $cat['name'];
+						}
+					}
+					// get all cats to generate multilevel fake url eof
+				}
+				if (count($catpath)) {
 					$data[]=array(
 						'id'=>$row['categories_id'],
-						'text'=>$row['categories_name']
+						'text'=>implode(' > ', $catpath)
 					);
 				}
 			}

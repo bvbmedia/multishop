@@ -2,7 +2,11 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart->init($this);
+$cart=$mslib_cart->getCart();
 if (count($cart['products'])<1) {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 } else {
@@ -642,7 +646,8 @@ if (count($cart['products'])<1) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'])) {
 			$params=array(
 				'content'=>&$content,
-				'markerArray'=>&$markerArray
+				'markerArray'=>&$markerArray,
+                'user'=>&$user
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

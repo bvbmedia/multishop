@@ -46,7 +46,7 @@ if ($payment_method['handling_costs']) {
 		$payment_method_costs=$payment_method['handling_costs'];
 	} else {
 		// calculate total payment costs based by %
-		$subtotal=$cart['summarize']['grand_total_excluding_vat']-$cart['user']['payment_method_costs'];
+		$subtotal=$cart['summarize']['grand_total_excluding_vat']-($cart['user']['shipping_method_costs']+$cart['user']['payment_method_costs']);
 		if ($subtotal) {
 			if (strstr($payment_method['handling_costs'], "%")) {
 				$percentage=str_replace("%", '', $payment_method['handling_costs']);
@@ -88,7 +88,6 @@ while ($row_s2p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_s2p)) {
 		$available_sid[]=$row_s2p['shipping_method'];
 	}
 }
-
 //
 $mapped_shipping_methods_product=array();
 $mapped_shipping_methods_group=array();
@@ -137,7 +136,7 @@ if (count($mapped_shipping_methods_user)) {
     $mapped_shipping_methods=$mapped_shipping_methods_user;
 } else if (count($mapped_shipping_methods_group)) {
     $mapped_shipping_methods=$mapped_shipping_methods_group;
-} else {
+} else if (count($mapped_shipping_methods_product)) {
     $mapped_shipping_methods=$mapped_shipping_methods_product;
 }
 if (count($mapped_shipping_methods)) {
@@ -148,12 +147,12 @@ if (count($mapped_shipping_methods)) {
 }
 //
 if (count($available_sid)>0) {
-	if (!$this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+	//if (!$this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
 		if (!$this->post['tx_multishop_pi1']['sid'] or !in_array($this->post['tx_multishop_pi1']['sid'], $available_sid)) {
 			// if the posted shipping id is not in the available shipping method array then select the first valid shipping method
 			$this->post['tx_multishop_pi1']['sid']=$available_sid[0];
 		}
-	}
+	//}
 	$shipping_method=mslib_fe::getShippingMethod($this->post['tx_multishop_pi1']['sid'], 's.id', $countries_id, true);
 	$shipping_method_code=$shipping_method['code'];
 	if (strlen($shipping_method['name'])>1) {
@@ -172,7 +171,7 @@ if (count($available_sid)>0) {
 		$data['shipping_cost'] = '';
 		$data['shipping_cost_cur'] = '';
 		if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
-			$data['shipping_cost'] = $priceArray['shipping_costs_including_vat'];
+			$data['shipping_cost'] = ''.$priceArray['shipping_costs_including_vat'];
 			$data['shipping_cost_cur'] = mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']);
 		}
 	} else {
@@ -226,6 +225,7 @@ if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multi
 		$this->post['tx_multishop_pi1']['sid']=999999;
 	}
 }
+$data['shipping_preselected_id']=$this->post['tx_multishop_pi1']['sid'];
 $this->post['caller_segment']='getHtmlCartContents';
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);

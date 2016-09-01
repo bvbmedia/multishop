@@ -94,6 +94,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 	} else {
 		if ($this->get['categories_id']) {
 			// set custom 404 message
+			header('HTTP/1.0 404 Not Found');
+			$output_array['http_header'] = 'HTTP/1.0 404 Not Found';
 			$page=mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
 			if ($page[0]['name']) {
 				$content .= '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
@@ -154,6 +156,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 			}
 		}
 		if (is_array($categories) and count($categories)>0) {
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingPreProc'])) {
+				$params=array();
+				$params['categories']=&$categories;
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			// create the meta tags
 			// category listing
 			if (strstr($this->ms['MODULES']['CATEGORIES_LISTING_TYPE'], "..")) {

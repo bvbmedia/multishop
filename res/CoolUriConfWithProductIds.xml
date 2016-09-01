@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cooluri>
   <cooluris>1</cooluris>
-  
+
   <cache>
     <usecache>1</usecache>
     <params2cool>
@@ -12,7 +12,7 @@
       <oldlinksvalidfor>365</oldlinksvalidfor>
     </cool2params>
     <cacheparams>0</cacheparams>
-    
+
     <pagenotfound>
       <status>HTTP/1.0 404 Not Found</status>
       <behavior type="userfunc">tx_cooluri->pageNotFound</behavior>
@@ -22,11 +22,11 @@
   <pagepath>
     <title>tx_realurl_pathsegment,alias,subtitle,title</title>
     <saveto>id</saveto>
-    <default>0</default>    
+    <default>0</default>
     <userfunc>tx_cooluri->getPageTitle</userfunc>
     <t3conv>1</t3conv>
   </pagepath>
- 
+
   <uriparts>
 	<part pagepath="1">
 	  <parameter>p1</parameter>
@@ -39,25 +39,25 @@
 	</part>
 	<part pagepath="1">
 	  <parameter>p4</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p5</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p6</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p7</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p8</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p9</parameter>
-	</part>   
+	</part>
 	<part pagepath="1">
 	  <parameter>p10</parameter>
-	</part>       
+	</part>
     <part>
       <parameter>tx_ttnews[tt_news]</parameter>
       <lookindb>
@@ -125,10 +125,10 @@
     </part>
     <part>
       <parameter>tx_multishop_pi1[sort_type]</parameter>
-    </part>	
+    </part>
     <part>
       <parameter>tx_multishop_pi1[listing_type]</parameter>
-    </part>	
+    </part>
     <part>
       <parameter>tx_eeblog[backPID]</parameter>
     </part>
@@ -147,7 +147,7 @@
         </translatetoif>
         <t3conv>1</t3conv>
       </lookindb>
-    </part>	
+    </part>
     <part>
       <parameter>categories_id</parameter>
       <lookindb>
@@ -237,7 +237,7 @@
         </translatetoif>
         <t3conv>1</t3conv>
       </lookindb>
-    </part>	
+    </part>
     <part>
       <parameter>categories_id[8]</parameter>
       <lookindb>
@@ -247,7 +247,7 @@
         </translatetoif>
         <t3conv>1</t3conv>
       </lookindb>
-    </part>	
+    </part>
 	<part>
 	  <parameter>tx_multishop_pi1[uid]</parameter>
 	  <lookindb>
@@ -257,7 +257,7 @@
 		</translatetoif>
 		<t3conv>1</t3conv>
 	  </lookindb>
-	</part>		
+	</part>
 	<part>
 	  <parameter>products_id</parameter>
 	  <lookindb>
@@ -267,7 +267,7 @@
 		</translatetoif>
 		<t3conv>1</t3conv>
 	  </lookindb>
-	</part>	
+	</part>
     <part>
       <parameter>tx_mmforum_pi3[messid]</parameter>
       <lookindb>
@@ -351,10 +351,10 @@
     </part>
     <part>
       <parameter>tx_multishop_pi1[previous_checkout_section]</parameter>
-    </part>	
+    </part>
     <part>
       <parameter>tx_multishop_spider_pi1[page_section]</parameter>
-    </part>	
+    </part>
     <part>
       <parameter>skeyword</parameter>
     </part>
@@ -419,8 +419,8 @@
       <value key="">products_listing</value>
       <value key="">products_detail</value>
       <value key="zoeken">products_search</value>
-      <value key="merk">manufacturers_products_listing</value>		  
-    </valuemap>      
+      <value key="merk">manufacturers_products_listing</value>
+    </valuemap>
   </valuemaps>
   <paramorder>
     <param>L</param>
@@ -442,6 +442,7 @@
     <param>categories_id[4]</param>
     <param>categories_id[5]</param>
     <param>categories_id</param>
+    <param>manufacturers_id</param>
     <param>products_id</param>
     <param>p</param>
   </paramorder>

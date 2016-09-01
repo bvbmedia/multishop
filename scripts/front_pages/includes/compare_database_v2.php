@@ -127,7 +127,7 @@ foreach ($required_indexes as $required_index) {
 $str="select products_options_descriptions from tx_multishop_products_options limit 1";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-	$str="ALTER TABLE  `tx_multishop_products_options` ADD `products_options_descriptions` varchar(255) default ''";
+	$str="ALTER TABLE  `tx_multishop_products_options` ADD `products_options_descriptions` text";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[]=$str;
 }
@@ -2941,38 +2941,6 @@ if ($rows) {
 		`status` tinyint( 1 ) NULL DEFAULT '0' ,
 		INDEX (  `orders_id` ,  `transaction_id` ,  `crdate` ,  `status` )
 		) ";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
-	$str="select id from tx_multishop_feeds_excludelist";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="CREATE TABLE IF NOT EXISTS `tx_multishop_feeds_excludelist` (
-			  	`id` int(11) NULL AUTO_INCREMENT,
-			  	`feed_id` int(11) NULL DEFAULT '0',
-			  	`exclude_id` int(11) NULL DEFAULT '0',
-			  	`exclude_type` varchar(11) CHARACTER SET utf8 NULL DEFAULT 'categories',
-			  	PRIMARY KEY (`id`),
-			  	KEY `feed_id` (`feed_id`),
-			  	KEY `exclude_id` (`exclude_id`),
-			  	KEY `exclude_type` (`exclude_type`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
-	$str="select id from tx_multishop_feeds_stock_excludelist";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="CREATE TABLE IF NOT EXISTS `tx_multishop_feeds_stock_excludelist` (
-			  	`id` int(11) NULL AUTO_INCREMENT,
-			  	`feed_id` int(11) NULL DEFAULT '0',
-			  	`exclude_id` int(11) NULL DEFAULT '0',
-			  	`exclude_type` varchar(11) CHARACTER SET utf8 NULL DEFAULT 'categories',
-			  	PRIMARY KEY (`id`),
-			  	KEY `feed_id` (`feed_id`),
-			  	KEY `exclude_id` (`exclude_id`),
-			  	KEY `exclude_type` (`exclude_type`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}

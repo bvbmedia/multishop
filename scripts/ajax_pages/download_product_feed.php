@@ -306,6 +306,14 @@ if ($this->get['feed_hash']) {
 				} else {
 					$includeDisabled=0;
 				}
+				/*
+				if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+					$filter[]='NOT EXISTS (SELECT subp.products_id from tx_multishop_products subp, tx_multishop_catalog_to_feeds subctf, tx_multishop_products_to_categories subp2c where subp2c.categories_id=c.categories_id and subp2c.node_id=subctf.exclude_id and subctf.exclude_type=\'categories\' and subctf.feed_id=\''.$feed['id'].'\' and subctf.negate=1 order by subp2c.crumbar_identifier asc)';
+				}
+				*/
+				//echo print_r($filter);
+				//die();
+				//$this->conf['debugEnabled']=1;
 				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
@@ -326,6 +334,19 @@ if ($this->get['feed_hash']) {
 							$records[]=$row;
 						} else {
 							$product=mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
+							//hook to let other plugins further manipulate the settings
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'])) {
+								$params=array(
+										'fields'=>&$fields,
+										'row'=>&$row,
+										'fetchExtraDataFromProducts'=>&$fetchExtraDataFromProducts,
+										'product'=>&$product
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+
 							if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
 								$product_path=mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
 								if (is_array($product_path) && count($product_path)) {
@@ -402,22 +423,22 @@ if ($this->get['feed_hash']) {
 								$feed_id=$feed['id'];
 								$in_feed_exclude_list=false;
 								$in_feed_stock_exclude_list=false;
+                                if (!$in_feed_exclude_list) {
+                                    if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['categories_id'], 'categories')) {
+                                        $in_feed_exclude_list=true;
+                                    }
+                                }
 								if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
 									$in_feed_exclude_list=true;
 								}
 								if (!$in_feed_exclude_list) {
-									if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['categories_id'], 'categories')) {
-										$in_feed_exclude_list=true;
-									}
-								}
-								if (!$in_feed_exclude_list) {
-									if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['products_id'])) {
+                                    if (!$in_feed_stock_exclude_list) {
+                                        if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {
+                                            $in_feed_stock_exclude_list=true;
+                                        }
+                                    }
+								    if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['products_id'])) {
 										$in_feed_stock_exclude_list=true;
-									}
-									if (!$in_feed_stock_exclude_list) {
-										if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {
-											$in_feed_stock_exclude_list=true;
-										}
 									}
 									if ($in_feed_stock_exclude_list) {
 										if (isset($product['products_quantity'])) {

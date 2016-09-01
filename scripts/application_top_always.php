@@ -323,19 +323,19 @@ if ($GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar']) {
 }
 if (!$this->ms['MODULES']['DISABLE_REALTIME_CHECK_PRODUCTS_STARTTIME_ENDTIME']) {
 	if (is_numeric($this->get['categories_id']) && $this->get['categories_id']>0) {
-		$sql='select p.products_id, p.starttime, p.endtime from tx_multishop_products p, tx_multishop_products_to_categories p2c where p.products_id=p2c.products_id and p2c.categories_id=\''.$this->get['categories_id'].'\' and p2c.is_deepest=1 and (p.starttime>0 or p.endtime>0)';
+		$sql='select p.products_id, p.starttime, p.endtime, p.products_status from tx_multishop_products p, tx_multishop_products_to_categories p2c where p.products_id=p2c.products_id and p2c.categories_id=\''.$this->get['categories_id'].'\' and p2c.is_deepest=1 and (p.starttime>0 or p.endtime>0)';
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 			$current_tstamp=time();
 			while ($rs_product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				if ($rs_product['starttime']>0) {
-					if ($rs_product['starttime']>$current_tstamp) {
+					if ($rs_product['products_status']=='1' && $rs_product['starttime']>$current_tstamp) {
 						mslib_befe::disableProduct($rs_product['products_id']);
-					} else if ($product['starttime']<=$current_tstamp) {
+					} else if ($rs_product['products_status']=='0' && $product['starttime']<=$current_tstamp) {
 						mslib_befe::enableProduct($rs_product['products_id']);
 					}
 				}
-				if ($rs_product['endtime']>0) {
+				if ($rs_product['products_status']=='1' && $rs_product['endtime']>0) {
 					if ($rs_product['endtime']<=$current_tstamp) {
 						mslib_befe::disableProduct($rs_product['products_id']);
 					}
@@ -411,16 +411,23 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 		$GLOBALS['TSFE']->storeSessionData();
 	}
 	// move guest cart to member cart?
-	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
-	//
+	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid.'_'.$GLOBALS["TSFE"]->fe_user->user['uid']);
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+	$mslib_cart->init($this);
+	$cart=$mslib_cart->getCart();
 	if (!is_array($cart['products'])) {
 		// maybe guest cart has products that we must migrate
 		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		//
 		if (is_array($cart2['products']) && count($cart2['products'])) {
 			$cart['products']=$cart2['products'];
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
-			$GLOBALS['TSFE']->storeSessionData();
+			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			//$GLOBALS['TSFE']->storeSessionData();
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart->init($this);
+			$mslib_cart->storeCart($cart);
 		}
 		if (isset($cart2['coupon_code']) && !empty($cart2['coupon_code'])) {
 			$cart['coupon_code'] = $cart2['coupon_code'];
@@ -428,15 +435,23 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 			$cart['discount_type'] = $cart2['discount_type'];
 			$cart['discount_amount'] = $cart2['discount_amount'];
 			$cart['discount_percentage'] = $cart2['discount_percentage'];
-			//
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
-			$GLOBALS['TSFE']->storeSessionData();
+
+			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			//$GLOBALS['TSFE']->storeSessionData();
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart->init($this);
+			$mslib_cart->storeCart($cart);
 		}
 		if (is_array($cart2['summarize']) && count($cart2['summarize'])) {
 			$cart['summarize'] = $cart2['summarize'];
 			//
-			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
-			$GLOBALS['TSFE']->storeSessionData();
+			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+			//$GLOBALS['TSFE']->storeSessionData();
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart->init($this);
+			$mslib_cart->storeCart($cart);
 		}
 	}
 	$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];

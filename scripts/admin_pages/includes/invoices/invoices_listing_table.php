@@ -11,7 +11,6 @@ foreach ($invoices as $invoice) {
 		$grandTotalColumnName='grand_total_excluding_vat';
 	}
 	$cb_ctr++;
-	$user=mslib_fe::getUser($invoice['customer_id']);
 	$master_shop_col='';
 	if ($this->masterShop) {
 		$master_shop_col='<td class="cellName">'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
@@ -73,17 +72,27 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$invoice['customer_id'].'&action=edit_customer', 1);
-	$link_name=$invoice['ordered_by'];
-	if ($user['username']) {
-		$link_name.=" (".$user['username'].")";
+
+	$customerNameArray=array();
+	if ($invoice['ordered_by']) {
+		$customerNameArray[]=$invoice['ordered_by'];
 	}
+	if (!count($customerNameArray)) {
+		$customerNameArray[]=$invoice['username'];
+	}
+	$link_name=implode('<br/>',$customerNameArray);
 	$markerArray['INVOICES_CUSTOMER_NAME']='<a href="'.$customer_edit_link.'">'.$link_name.'</a>';
 	$markerArray['INVOICES_ORDER_DATE']=strftime('%x', $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0);
 	//$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['grand_total'], 0);
-	$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice[$grandTotalColumnName], 0);
+    if (strpos($invoice[$grandTotalColumnName], '-')!==false && $invoice['reversal_invoice']) {
+        $invoice_grand_total=str_replace('-', '', $invoice[$grandTotalColumnName]);
+        $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents($invoice_grand_total, 0);
+    } else {
+        $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
+    }
 
 	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime('%x', $invoice['date_mail_last_sent']) : '');
 	$markerArray['INVOICES_PAID_STATUS']=$paid_status;

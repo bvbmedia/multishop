@@ -26,10 +26,30 @@
                     ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
                 </div>
                 <input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
+				<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">###LABEL_ADVANCED_SEARCH###</a>
                 <div class="form-group pull-right">
                     <label>###LABEL_SEARCH_LIMIT###</label>
                     ###SEARCH_LIMIT###
                 </div>
+				<div id="msAdminInterfaceSearch" class="panel-collapse collapse###UNFOLD_SEARCH_BOX###">
+					<div class="panel-body">
+						<div id="search-orders" class="well no-mb">
+							<div class="row formfield-container-wrapper">
+								<div class="col-sm-4 formfield-wrapper">
+									<label class="control-label" for="type_search">###LABEL_STOCK###</label>
+									<div class="form-group">
+										<div class="form-inline">
+											<label class="control-label" for="stock_from">###LABEL_STOCK_FROM###</label>
+											<input class="form-control" type="text" name="stock_from" id="stock_from" value="###VALUE_STOCK_FROM###">
+											<label for="stock_till" class="labelInbetween">###LABEL_STOCK_TO###</label>
+											<input class="form-control" type="text" name="stock_till" id="stock_till" value="###VALUE_STOCK_TO###">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
             </div>
         </form>
     </div>
@@ -82,16 +102,16 @@
 		</td>
 
         <td class="cellPrice">
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY0###</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><span class="input-group-addon">###SUFFIX_PRICE_EXCL_VAT###</span></div></div>
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY1###</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><span class="input-group-addon">###SUFFIX_PRICE_INCL_VAT###</span></div></div>
-			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY0###</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><span class="input-group-addon">###SUFFIX_PRICE_EXCL_VAT###</span></div></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY1###</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><span class="input-group-addon">###SUFFIX_PRICE_INCL_VAT###</span></div></div>
+			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" class="priceInputReal" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
             <input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
 		</td>
 
         <td class="cellSpecialPrice">
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY2###</span><input type="text" id="display_name" name="display_name" class="form-control msSpecialsPriceExcludingVat" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_EXCL_VAT###</span></div></div>
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY3###</span><input type="text" name="display_name" id="display_name" class="form-control msSpecialsPriceIncludingVat" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_INCL_VAT###</span></div></div>
-			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY2###</span><input type="text" id="display_name" name="display_name" class="form-control msSpecialsPriceExcludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_EXCL_VAT###</span></div></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY3###</span><input type="text" name="display_name" id="display_name" class="form-control msSpecialsPriceIncludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_INCL_VAT###</span></div></div>
+			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" class="priceInputReal" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
 		</td>
 
         <td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control width-auto" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" /></td>
@@ -122,6 +142,7 @@
 	</table>
 </div>
 	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
+	<div class="text-right mb10"><input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" /> <input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" /></div>
 <hr>
 		<div class="form-group">
 		###INPUT_ACTION_SELECTBOX###
@@ -132,8 +153,6 @@
 			<div class="form-group">
 			<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
 		</div>
-		<input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
-		<input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
 </form>
 
 <form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
@@ -168,263 +187,161 @@
 <!-- ###NORESULTS### end -->
 </div></div>
 <script type="text/javascript">
-	jQuery(document).ready(function($) {
-		$('.categories_select2_top').select2({
-			 dropdownCssClass: "", // apply css that makes the dropdown taller
-			 minimumInputLength: 0,
-			 multiple: false,
-			 //allowClear: true,
-			 query: function (query) {
-				 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
+jQuery(document).ready(function($) {
+	$('.categories_select2_top').select2({
+		 dropdownCssClass: "", // apply css that makes the dropdown taller
+		 minimumInputLength: 0,
+		 multiple: false,
+		 //allowClear: true,
+		 query: function (query) {
+			 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
+				 data: {
+					 q: query.term
+				 },
+				 dataType: "json"
+			 }).done(function (data) {
+				 //categoriesIdSearchTerm[query.term]=data;
+				 query.callback({results: data});
+			 });
+		 },
+		 initSelection: function (element, callback) {
+			 var id = $(element).val();
+			 if (id !== "") {
+				 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###', {
 					 data: {
-						 q: query.term
+						 preselected_id: id
 					 },
 					 dataType: "json"
 				 }).done(function (data) {
-					 //categoriesIdSearchTerm[query.term]=data;
-					 query.callback({results: data});
+					 callback(data);
 				 });
-			 },
-			 initSelection: function (element, callback) {
-				 var id = $(element).val();
-				 if (id !== "") {
-					 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###', {
-						 data: {
-							 preselected_id: id
-						 },
-						 dataType: "json"
-					 }).done(function (data) {
-						 callback(data);
-					 });
-				 }
-			 },
-			 formatResult: function (data) {
-				 if (data.text === undefined) {
-					 $.each(data, function (i, val) {
-						 return val.text;
-					 });
-				 } else {
-					 return data.text;
-				 }
-			 },
-			 formatSelection: function (data) {
-				 if (data.text === undefined) {
-					 return data[0].text;
-				 } else {
-					 return data.text;
-				 }
-			 },
-			 escapeMarkup: function (m) {
-				 return m;
 			 }
-		 });
-		$('.categories_select2').select2({
-			 dropdownCssClass: "", // apply css that makes the dropdown taller
-			 minimumInputLength: 0,
-			 multiple: false,
-			 //allowClear: true,
-			 query: function (query) {
-				 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL1###', {
+		 },
+		 formatResult: function (data) {
+			 if (data.text === undefined) {
+				 $.each(data, function (i, val) {
+					 return val.text;
+				 });
+			 } else {
+				 return data.text;
+			 }
+		 },
+		 formatSelection: function (data) {
+			 if (data.text === undefined) {
+				 return data[0].text;
+			 } else {
+				 return data.text;
+			 }
+		 },
+		 escapeMarkup: function (m) {
+			 return m;
+		 }
+	});
+	$('.categories_select2').select2({
+		 dropdownCssClass: "", // apply css that makes the dropdown taller
+		 minimumInputLength: 0,
+		 multiple: false,
+		 //allowClear: true,
+		 query: function (query) {
+			 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL1###', {
+				 data: {
+					 q: query.term
+				 },
+				 dataType: "json"
+			 }).done(function (data) {
+				 //categoriesIdSearchTerm[query.term]=data;
+				 query.callback({results: data});
+			 });
+		 },
+		 initSelection: function (element, callback) {
+			 var id = $(element).val();
+			 if (id !== "") {
+				 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###', {
 					 data: {
-						 q: query.term
+						 preselected_id: id
 					 },
 					 dataType: "json"
 				 }).done(function (data) {
-					 //categoriesIdSearchTerm[query.term]=data;
-					 query.callback({results: data});
+					 callback(data);
 				 });
-			 },
-			 initSelection: function (element, callback) {
-				 var id = $(element).val();
-				 if (id !== "") {
-					 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###', {
-						 data: {
-							 preselected_id: id
-						 },
-						 dataType: "json"
-					 }).done(function (data) {
-						 callback(data);
-					 });
-				 }
-			 },
-			 formatResult: function (data) {
-				 if (data.text === undefined) {
-					 $.each(data, function (i, val) {
-						 return val.text;
-					 });
-				 } else {
-					 return data.text;
-				 }
-			 },
-			 formatSelection: function (data) {
-				 if (data.text === undefined) {
-					 return data[0].text;
-				 } else {
-					 return data.text;
-				 }
-			 },
-			 escapeMarkup: function (m) {
-				 return m;
 			 }
-		 });
-		$('#check_all_1').click(function () {
-			$('input:checkbox').prop('checked', this.checked);
-		});
-		$('#products_search_action').change(function() {
-			if ($(this).val()=='move') {
-				$("#target_categories_id").show();
-			} else if ($(this).val()=='duplicate') {
-				$("#target_categories_id").show();
-			} else {
-				$("#target_categories_id").hide();
-			}
-		});
-		$("#target_categories_id").hide();
-		//
-		$(document).on("click", ".update_product_status", function(e) {
-			e.preventDefault();
-			var products_id=$(this).attr("rel");
-			var enabled_label='###LABEL_ADMIN_YES###';
-			var disabled_label='###LABEL_ADMIN_NO###';
-			var tthis=$(this).parent();
-			$.ajax({
-					   type:   "POST",
-					   url:    "###AJAX_UPDATE_PRODUCT_STATUS_URL###",
-					   dataType: 'json',
-					   data:   "products_id="+products_id,
-					   success: function(msg) {
-						   if (msg.html == '0') {
-							   var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
-						   } else if (msg.html==1) {
-							   var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
-						   }
-						   tthis.html(return_string);
-					   }
-				   });
-		});
-		function productPrice(to_include_vat, o, type) {
-			var original_val = $(o).val();
-			var current_value = parseFloat($(o).val());
-			//
-			if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
-				var thousand=original_val.split(".");
-				if (thousand[1].indexOf(",")!=-1) {
-					var hundreds = thousand[1].split(",");
-					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-					current_value = parseFloat(original_val);
-					//
-					$(o).val(original_val);
-				} else {
-					thousand=original_val.split(",");
-					if (thousand[1].indexOf(".")!=-1) {
-						var hundreds = thousand[1].split(".");
-						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-						current_value = parseFloat(original_val);
-						//
-						$(o).val(original_val);
-					}
-				}
-			}
-			//
-			var tax_id_holder = "#product_tax_id_" + $(o).attr("rel");
-			var tax_id = $(tax_id_holder).val();
-
-			if (current_value > 0) {
-				if (to_include_vat) {
-					$.getJSON("###AJAX_GET_TAX_RULESET_URL0###", { current_price: original_val, to_tax_include: true, tax_group_id: $(tax_id_holder).val() }, function(json) {
-						if (json && json.price_including_tax) {
-							var incl_tax_crop = decimalCrop(json.price_including_tax);
-							//o.parent().next().first().children().val(incl_tax_crop);
-							$(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
-						} else {
-							//o.parent().next().first().children().val(original_val);
-							$(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(current_value);
-						}
-					});
-
-					// update the hidden excl vat
-					//o.parent().next().next().first().children().val(original_val);
-					$(o).parentsUntil('msAttributesField').next().next().first().children().val(original_val);
-
-				} else {
-					$.getJSON("###AJAX_GET_TAX_RULESET_URL1###", { current_price: original_val, to_tax_include: false, tax_group_id: $(tax_id_holder).val() }, function(json) {
-						if (json && json.price_excluding_tax) {
-							var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-							// update the excl. vat
-							//o.parent().prev().first().children().val(excl_tax_crop);
-							// update the hidden excl vat
-							//o.parent().next().first().children().val(json.price_excluding_tax);
-							//
-							// update the excl. vat
-							$(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
-							// update the hidden excl vat
-							$(o).parentsUntil('.msAttributesField').parent().next().first().children().val(json.price_excluding_tax);
-
-						} else {
-							// update the excl. vat
-							//o.parent().prev().first().children().val(original_val);
-							// update the hidden excl vat
-							//o.parent().next().first().children().val(original_val);
-							//
-							// update the excl. vat
-							$(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(original_val);
-							// update the hidden excl vat
-							$(o).parentsUntil('.msAttributesField').parent().next().first().children().val(original_val);
-						}
-					});
-				}
-
-			} else {
-				if (to_include_vat) {
-					// update the incl. vat
-					$(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
-					// update the hidden excl vat
-					$(o).parentsUntil('msAttributesField').next().next().first().children().val(0);
-				} else {
-					// update the excl. vat
-					$(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
-					// update the hidden excl vat
-					$(o).parentsUntil('.msAttributesField').parent().next().first().children().val(0);
-				}
-			}
+		 },
+		 formatResult: function (data) {
+			 if (data.text === undefined) {
+				 $.each(data, function (i, val) {
+					 return val.text;
+				 });
+			 } else {
+				 return data.text;
+			 }
+		 },
+		 formatSelection: function (data) {
+			 if (data.text === undefined) {
+				 return data[0].text;
+			 } else {
+				 return data.text;
+			 }
+		 },
+		 escapeMarkup: function (m) {
+			 return m;
+		 }
+	});
+	$('#check_all_1').click(function () {
+		$('input:checkbox').prop('checked', this.checked);
+	});
+	$('#products_search_action').change(function() {
+		if ($(this).val()=='move') {
+			$("#target_categories_id").show();
+		} else if ($(this).val()=='duplicate') {
+			$("#target_categories_id").show();
+		} else {
+			$("#target_categories_id").hide();
 		}
-
-		function decimalCrop(float) {
-			var numbers = float.toString().split(".");
-			var prime 	= numbers[0];
-			if (numbers[1] > 0 && numbers[1] != "undefined") {
-				var decimal = new String(numbers[1]);
-			} else {
-				var decimal = "00";
-			}
-			var number = prime + "." + decimal.substr(0, 2);
-			return number;
-		}
-
-		$(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
-			if (e.keyCode!=9) {
-				productPrice(true, this);
-			}
-		});
-
-		$(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
-			if (e.keyCode!=9) {
-				productPrice(false, this);
-			}
-		});
-
-		$(document).on("keyup", ".msSpecialsPriceExcludingVat", function(e) {
-			if (e.keyCode!=9) {
-				productPrice(true, this);
-			}
-		});
-
-		$(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
-			if (e.keyCode!=9) {
-				productPrice(false, this);
-			}
+	});
+	$("#target_categories_id").hide();
+	//
+	$(document).on("click", ".update_product_status", function(e) {
+		e.preventDefault();
+		var products_id=$(this).attr("rel");
+		var enabled_label='###LABEL_ADMIN_YES###';
+		var disabled_label='###LABEL_ADMIN_NO###';
+		var tthis=$(this).parent();
+		$.ajax({
+		   type:   "POST",
+		   url:    "###AJAX_UPDATE_PRODUCT_STATUS_URL###",
+		   dataType: 'json',
+		   data:   "products_id="+products_id,
+		   success: function(msg) {
+			   if (msg.html == '0') {
+				   var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
+			   } else if (msg.html==1) {
+				   var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
+			   }
+			   tthis.html(return_string);
+		   }
 		});
 	});
+	$(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(true, this);
+		}
+	});
+	$(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(false, this);
+		}
+	});
+	$(document).on("keyup", ".msSpecialsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(true, this);
+		}
+	});
+	$(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(false, this);
+		}
+	});
+});
 </script>
 
 <!-- ###TEMPLATE### end -->

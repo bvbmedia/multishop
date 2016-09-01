@@ -997,6 +997,10 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$user['first_name']=$array[0];
 							unset($array[0]);
 							$user['last_name']=implode(' ', $array);
+						} else {
+							if ($item['last_name']) {
+								$user['name']=preg_replace('/\s+/', ' ', $item['first_name'].' '.$item['middle_name'].' '.$item['last_name']);
+							}
 						}
 						if ($item['company_name']) {
 							$user['company']=$item['company_name'];

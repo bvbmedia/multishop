@@ -180,8 +180,15 @@ $subpartArray['###FORM_INPUT_ACTION###']=$_REQUEST['action'];
 $subpartArray['###LABEL_NAME###']=$this->pi_getLL('name');
 $subpartArray['###VALUE_GROUP_NAME###']=htmlspecialchars($group['title']);
 $subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
-$subpartArray['###LABEL_DISCOUN###']=$this->pi_getLL('discount');
-$subpartArray['###VALUE_DISCOUNT###']=htmlspecialchars($group['tx_multishop_discount']);
+$subpartArray['###DISCOUNT_INPUT###']='';
+if ($this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
+    $subpartArray['###DISCOUNT_INPUT###']='<div class="form-group">
+        <label class="control-label col-md-2">'.$this->pi_getLL('discount').'</label>
+        <div class="col-md-10">
+            <div class="input-group"><input type="text" class="form-control" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($group['tx_multishop_discount']).'" /><span class="input-group-addon width-auto">%</span></div>
+        </div>
+    </div>';
+}
 $subpartArray['###MEMBERS_SELECTED###']=implode(',', $members_selected);
 $subpartArray['###LABEL_MEMBERS###']='MEMBERS';
 $subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');

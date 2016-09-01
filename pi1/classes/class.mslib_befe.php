@@ -2284,7 +2284,7 @@ class mslib_befe {
 		*/
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('p.products_id', // SELECT ...
                 'tx_multishop_products p, tx_multishop_categories c, tx_multishop_products_to_categories p2c', // FROM ...
-                'p.products_status=1 and c.status=1 and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id', // WHERE...
+                'p.products_status=1 and p2c.is_deepest=1 AND c.status=1 and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id', // WHERE...
                 '', // GROUP BY...
                 'p2c.sort_order ' . $this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'], // ORDER BY...
                 '' // LIMIT ...
@@ -3288,6 +3288,7 @@ class mslib_befe {
                 $updateArray['customer_notified'] = $mail_customer;
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
+                $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
                     if (!empty($this->post['comments']) && $mail_customer) {
@@ -3768,16 +3769,18 @@ class mslib_befe {
     }
     public function updateImportedProductsLockedFields($products_id, $table, $updateArray) {
         $lockedFields = array();
+        $lockedFields['tx_multishop_products'][] = 'sku_code';
         $lockedFields['tx_multishop_products'][] = 'products_price';
         $lockedFields['tx_multishop_products'][] = 'products_vat_rate';
         $lockedFields['tx_multishop_products'][] = 'products_name';
-        $lockedFields['tx_multishop_products'][] = 'products_quantity';
         $lockedFields['tx_multishop_products'][] = 'products_model';
+        $lockedFields['tx_multishop_products'][] = 'products_quantity';
         $lockedFields['tx_multishop_products'][] = 'products_status';
         $lockedFields['tx_multishop_products_description'][] = 'products_name';
         $lockedFields['tx_multishop_products_description'][] = 'products_shortdescription';
         $lockedFields['tx_multishop_products_description'][] = 'products_description';
         $lockedFields['tx_multishop_products_to_categories'][] = 'categories_id';
+        $lockedFields['tx_multishop_specials'][] = 'specials_new_products_price';
         $skip = 0;
         //hook to let other plugins further manipulate the settings
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateImportedProductsLockedFieldsPreProc'])) {
@@ -3807,19 +3810,26 @@ class mslib_befe {
                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                     if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
                         foreach ($lockedFields[$table] as $field_key) {
+                            $enableLock=0;
+                            $fieldsToLock=array();
                             if ($row[$field_key] != $updateArray[$field_key]) {
-                                // add to locking table with original value
-                                $filter = array();
-                                $filter[] = 'products_id=' . $row['products_id'];
-                                if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
-                                    $insertArray = array();
-                                    $insertArray['field_key'] = $field_key;
-                                    $insertArray['products_id'] = $row['products_id'];
-                                    $insertArray['crdate'] = time();
-                                    $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                                    $insertArray['original_value'] = $row[$field_key];
-                                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
-                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                $fieldsToLock[]=$field_key;
+                            }
+                            if (count($fieldsToLock)) {
+                                foreach ($fieldsToLock as $field_key) {
+                                    // add to locking table with original value
+                                    $filter = array();
+                                    $filter[] = 'products_id=' . $row['products_id'];
+                                    if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
+                                        $insertArray = array();
+                                        $insertArray['field_key'] = $field_key;
+                                        $insertArray['products_id'] = $row['products_id'];
+                                        $insertArray['crdate'] = time();
+                                        $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                                        $insertArray['original_value'] = $row[$field_key];
+                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
+                                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                    }
                                 }
                             }
                         }
@@ -4027,6 +4037,17 @@ class mslib_befe {
                 }
                 break;
         }
+        if (is_array($order['products']) && count($order['products'])) {
+            $contentItem = '';
+            $displayDiscountColumn = 0;
+            // First check if orders products rows have an discount amount
+            foreach ($order['products'] as $product) {
+                if ($product['discount_amount'] > 0) {
+                    $displayDiscountColumn = 1;
+                    break;
+                }
+            }
+        }
         $customer_currency = 1;
         // Extract the subparts from the template
         $subparts = array();
@@ -4052,12 +4073,32 @@ class mslib_befe {
         $markerArray = array();
         $markerArray['LABEL_HEADER_QTY'] = ucfirst($this->pi_getLL('qty'));
         $markerArray['LABEL_HEADER_PRODUCT_NAME'] = $this->pi_getLL('products_name');
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'])) {
+            $params_internal = array(
+                'markerArray' => &$markerArray,
+                'table_type' => $table_type
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
+        }
         $subpartArray['###HEADER_NORMAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['HEADER_NORMAL_WRAPPER'], $markerArray, '###|###');
         $markerArray = array();
         $markerArray['LABEL_HEADER_VAT'] = $this->pi_getLL('vat');
         $markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE'] = $this->pi_getLL('normal_price');
         $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '';
-        if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
+            $params_internal = array(
+                'markerArray' => &$markerArray,
+                'table_type' => $table_type
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
+        }
+        if ($displayDiscountColumn) {
             $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '<th align="right" class="cell_products_normal_price">' . $this->pi_getLL('discount') . '</th>';
         }
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -4184,7 +4225,7 @@ class mslib_befe {
                     $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * $product['final_price']), $customer_currency, $display_currency_symbol, 0);
                 }
                 $markerArray['ITEM_DISCOUNT_AMOUNT'] = '';
-                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                if ($displayDiscountColumn) {
                     $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'], 0) . '</td>';
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
@@ -4195,6 +4236,18 @@ class mslib_befe {
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price']), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
                         $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * $product['final_price']), $customer_currency, $display_currency_symbol, 0);
+                    }
+                }
+                //hook to let other plugins further manipulate the replacers
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductIteratorPostProc'])) {
+                    $params_internal = array(
+                            'markerArray' => &$markerArray,
+                            'table_type' => $table_type,
+                            'product'=>$product_tmp,
+                            'order_product'=>$product,
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductIteratorPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
                     }
                 }
                 $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
@@ -4233,7 +4286,7 @@ class mslib_befe {
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE'] = $cell_products_normal_price;
                             $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '';
-                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                            if ($displayDiscountColumn) {
                                 $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">&nbsp;</td>';
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
@@ -4441,7 +4494,7 @@ class mslib_befe {
         }
         $hr_colspan = 3;
         $colspan = 5;
-        if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+        if ($displayDiscountColumn) {
             $hr_colspan = 4;
             $colspan = 6;
         }
@@ -4629,13 +4682,16 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default') {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer='') {
         $content = '<div class="panel panel-' . $panelClass . '">';
         if ($heading) {
             $content .= '<div class="panel-heading"><h3 class="panel-title">' . $heading . '</h3></div>';
         }
         if ($body) {
             $content .= '<div class="panel-body">' . $body . '</div>';
+        }
+        if ($footer) {
+            $content .= '<div class="panel-footer">' . $footer . '</div>';
         }
         $content .= '</div>';
         return $content;
@@ -4695,7 +4751,7 @@ class mslib_befe {
             return false;
         }
         //$this->msDebug=1;
-        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
+        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
         if ($record['lg_iso_2']) {
             return $record['lg_iso_2'];
         }
@@ -4704,7 +4760,7 @@ class mslib_befe {
         if (!$iso2) {
             return false;
         }
-        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
+        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
         if ($record['uid']) {
             return $record['uid'];
         }
@@ -4930,6 +4986,47 @@ class mslib_befe {
             return strpos($haystack, $needle, mslib_befe::strposX($haystack, $needle, $number - 1) + strlen($needle));
         }else{
             return error_log('Error: Value for parameter $number is out of range');
+        }
+    }
+    function setProductDefaultCrumpath($product_id) {
+        $p2c_records=mslib_befe::getRecords($product_id, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '', 'products_to_categories_id asc');
+        if (is_array($p2c_records) && count($p2c_records)>1) {
+            $set_default_path=true;
+            foreach ($p2c_records as $p2c_record) {
+                if ($p2c_record['default_path']>0) {
+                    $set_default_path=false;
+                    break;
+                }
+            }
+            if ($set_default_path) {
+                $updateArray=array();
+                $updateArray['default_path']=1;
+                $queryProduct=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$p2c_records[0]['products_to_categories_id'].'\' and categories_id=\''.$p2c_records[0]['categories_id'].'\' and products_id=\''.$p2c_records[0]['products_id'].'\'', $updateArray);
+                $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
+            }
+        }
+    }
+    function formatNumbersToMysql($numbers) {
+        if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point']!='.') {
+            $thousand_array=array();
+            $decimal='00';
+            $thousands=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], $numbers);
+            foreach ($thousands as $thousand) {
+                if (strpos($thousand, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])===false) {
+                    $thousand_array[]=$thousand;
+                } else {
+                    list($last_thousand, $decimal)=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], $thousand);
+                    $thousand_array[]=$last_thousand;
+                }
+            }
+            $full_number=0;
+            if (count($thousand_array)) {
+                $full_number=implode('', $thousand_array) . '.' . $decimal;
+            }
+            return $full_number;
+        } else {
+            $numbers=str_replace($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], '', $numbers);
+            return $numbers;
         }
     }
 }

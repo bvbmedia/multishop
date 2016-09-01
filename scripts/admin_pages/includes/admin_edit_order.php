@@ -10,6 +10,30 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	}
 	// hook oef
 }
+// define the tax rate
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+        'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+        't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1', // WHERE...
+        't.tax_id', // GROUP BY...
+        '', // ORDER BY...
+        '' // LIMIT ...
+);
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+$tax_list_data=array();
+while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+    $tax_list_data[]='product_tax_rate_list_js["'.$tax_group['tax_id'].'"]="'.round(number_format($tax_group['rate'], 2), 2).'";';
+}
+// js definition for tax
+$product_tax_rate_js=array();
+if (count($tax_list_data)) {
+    $product_tax_rate_js = $tax_list_data;
+}
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript" data-ignore="1">
+   var product_tax_rate_list_js=[]
+   '.implode("\n", $product_tax_rate_js).'
+</script>
+';
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -53,8 +77,8 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->post) {
-                    if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $this->post['tx_multishop_pi1']['billing_vat_id']) {
-                        if (strtolower($this->post['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
+                    if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] && $this->post['tx_multishop_pi1']['billing_vat_id']) {
+                        if (strtolower($this->post['tx_multishop_pi1']['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
                             $this->ms['MODULES']['DISABLE_VAT_RATE']=1;
                         }
                     }
@@ -153,14 +177,14 @@ if (is_numeric($this->get['orders_id'])) {
 									if (isset($this->post['product_discount_percentage']) && is_numeric($this->post['product_discount_percentage']) && $this->post['product_discount_percentage']>0) {
 										$updateArray['discount_percentage'] = $this->post['product_discount_percentage'];
 										$discount_amount = ($this->post['product_price']*$this->post['product_discount_percentage']) / 100;
-										$updateArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
+										$updateArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, true);
 									} else if (isset($this->post['product_discount_amount']) && !empty($this->post['product_discount_amount'])) {
 										$updateArray['discount_amount'] = $this->post['product_discount_amount'];
 										$discount_percentage = ($this->post['product_discount_amount'] / $this->post['product_price']) * 100;
 										$updateArray['discount_percentage'] = $discount_percentage;
 									}
 								}
-								if ($updateArray['discount_amount']>0) {
+								if (!empty($updateArray['discount_amount'])) {
 									$updateArray['final_price']=($this->post['product_price']-$updateArray['discount_amount']);
 								}
 								$updateArray['products_tax']=$this->post['product_tax'];
@@ -297,7 +321,7 @@ if (is_numeric($this->get['orders_id'])) {
 									if (isset($this->post['manual_product_discount_percentage']) && is_numeric($this->post['manual_product_discount_percentage']) && $this->post['manual_product_discount_percentage']>0) {
 										$insertArray['discount_percentage'] = $this->post['manual_product_discount_percentage'];
 										$discount_amount = ($this->post['manual_product_price']*$this->post['manual_product_discount_percentage']) / 100;
-										$insertArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2, false);
+										$insertArray['discount_amount'] = mslib_fe::taxDecimalCrop($discount_amount, 2);
 									} else if (isset($this->post['manual_product_discount_amount']) && !empty($this->post['manual_product_discount_amount'])) {
 										$insertArray['discount_amount'] = $this->post['manual_product_discount_amount'];
 										$discount_percentage = ($this->post['manual_product_discount_amount'] / $this->post['manual_product_price']) * 100;
@@ -305,7 +329,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 								$insertArray['products_price']=$this->post['manual_product_price'];
-								if ($insertArray['discount_amount']>0) {
+								if (!empty($insertArray['discount_amount'])) {
 									$insertArray['final_price'] = ($this->post['manual_product_price'] - $insertArray['discount_amount']);
 								} else {
 									$insertArray['final_price'] = $this->post['manual_product_price'];
@@ -542,11 +566,12 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
-						if (strpos($this->post['edit_discount_value'], ',')!==false) {
-							$this->post['edit_discount_value']=str_replace(',', '.', $this->post['edit_discount_value']);
-						}
+                        $this->post['edit_discount_value']=mslib_befe::formatNumbersToMysql($this->post['edit_discount_value']);
 						$updateArray['discount']=$this->post['edit_discount_value'];
 					}
+                    if (isset($this->post['edit_discount_percentage'])) {
+                        $updateArray['discount_percentage']=$this->post['edit_discount_percentage'];
+                    }
 					if (isset($this->post['order_payment_condition'])) {
 						$updateArray['payment_condition']=$this->post['order_payment_condition'];
 					}
@@ -611,10 +636,6 @@ if (is_numeric($this->get['orders_id'])) {
 					$updateArray['track_and_trace_code']='';
 					if ($this->post['track_and_trace_code']) {
 						$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
-					}
-					$updateArray['order_memo']='';
-					if ($this->post['order_memo']) {
-						$updateArray['order_memo']=$this->post['order_memo'];
 					}
 					if (count($updateArray)) {
 						$close_window=1;
@@ -716,6 +737,12 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->post['order_memo']) {
                 $updateArray['order_memo']=$this->post['order_memo'];
             }
+            $order_memo_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'order_memo');
+            if ($this->post['order_memo']) {
+                if ($order_memo_rec['order_memo']!=$this->post['order_memo']) {
+                    $updateArray['memo_crdate']=time();
+                }
+            }
             if (count($updateArray)) {
                 $close_window=1;
                 $updateArray['orders_last_modified']=time();
@@ -726,7 +753,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                 }
                 $orders['track_and_trace_code']=$this->post['track_and_trace_code'];
-                $orders['order_memo']=$this->post['order_memo'];
+                $orders['order_memo'] = $this->post['order_memo'];
             }
             if ($this->post['order_status']) {
                 // first get current status
@@ -1657,15 +1684,15 @@ if (is_numeric($this->get['orders_id'])) {
 				if (!$orders['is_locked']) {
 					$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
 				} else {
-					$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.$orders['payment_condition'].' '.$this->pi_getLL('days').'</p></div>';
+					$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.htmlspecialchars($orders['payment_condition'].' '.$this->pi_getLL('days')).'</p></div>';
 				}
 				$orderDetailsItem.='</div><hr>';
 				$orderDetails[]=$orderDetailsItem;
 			}
 			$orderDetailsItem='';
 			if ($orders['customer_comments']) {
-				$orderDetailsItem='<div class="form-group" id="customer_comments"><label class="control-label col-md-3">'.$this->pi_getLL('customer_comments').'</label>
-                    <div class="col-md-9"><p class="form-control-static">'.nl2br($orders['customer_comments']).'</p></div>
+				$orderDetailsItem='<div class="form-group" id="customer_comments"><label class="control-label col-md-3">'.htmlspecialchars($this->pi_getLL('customer_comments')).'</label>
+                    <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">'.nl2br($orders['customer_comments']).'</div></div></div>
                 </div>';
 				$orderDetails[]=$orderDetailsItem;
 			}
@@ -1721,7 +1748,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// order products header definition
 			// products id header col
-			$order_products_header_data['products_id']['class']='cellID';
+			$order_products_header_data['products_id']['class']='cellID cellNoWrap';
 			$order_products_header_data['products_id']['value']=$this->pi_getLL('products_id');
 			// products qty header col
 			$order_products_header_data['products_qty']['class']='cellQty';
@@ -1744,7 +1771,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
 			// products normal price header col
-			$order_products_header_data['products_normal_price']['class']='cellPrice';
+			$order_products_header_data['products_normal_price']['class']='cellPrice cellNoWrap';
 			$order_products_header_data['products_normal_price']['value']=$this->pi_getLL('normal_price');
 			// products vat header col
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1784,7 +1811,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if (is_array($orders_products) and count($orders_products)) {
 				foreach ($orders_products as $order) {
 					if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-						if ($order['products_price']!=$order['final_price'] && $order['discount_amount']>0) {
+						if ($order['products_price']!=$order['final_price'] && !empty($order['discount_amount'])) {
 							$order['final_price']+=$order['discount_amount'];
 						}
 					}
@@ -1828,7 +1855,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// cols
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
-						$order_products_body_data['products_id']['class']='cellID';
+						$order_products_body_data['products_id']['class']='cellID cellNoWrap';
 						$order_products_body_data['products_id']['id']='edit_order_product_id';
 						$order_products_body_data['products_id']['value']=$order['products_id'];
 						// products qty col
@@ -1897,19 +1924,19 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['value']=$vat_sb;
 						}
 						// products price col
-						$order_products_body_data['products_normal_price']['class']='cellPrice';
+						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 						// incl excl vat input
 						$order_products_price_display=mslib_fe::taxDecimalCrop($order['final_price'], 2, false);
 						$order_products_price_display_incl=mslib_fe::taxDecimalCrop($order['final_price']+$order_products_tax_data['total_tax'], 2, false);
 						if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							if ($order['discount_amount']>0) {
+							if (!empty($order['discount_amount'])) {
 								$order_products_price_display_incl=mslib_fe::taxDecimalCrop($order['final_price']+(($order['final_price']*$order['products_tax'])/100), 2, false);
 							}
 						}
-						$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.($order_products_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_price" id="product_price" value="'.$order['final_price'].'" /></div>';
+						$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_price_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.($order_products_price_display_incl).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+						$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_price" id="product_price" value="'.$order['final_price'].'" /></div>';
 						/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							//$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="'.($order['final_price']+$order_products_tax_data['total_tax']).'" />
 							//<input type="hidden" name="products_normal_price" id="product_price" value="'.($order['final_price']).'" />';
@@ -1928,7 +1955,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['value']=$vat_sb;
 						}
 						if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							$order_products_body_data['products_discount']['class']='cellPrice';
+							$order_products_body_data['products_discount']['class']='cellPrice cellNoWrap';
 							//$order_products_body_data['products_discount']['value']=$this->pi_getLL('discount') . ' input';
 							$order_products_discount_amount_display=mslib_fe::taxDecimalCrop($order['discount_amount'], 2, false);
 							$order_products_discount_amount_display_incl=mslib_fe::taxDecimalCrop($order['discount_amount']+(($order['discount_amount']*$order['products_tax'])/100), 2, false);
@@ -1946,11 +1973,11 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							$percentage_sb.='</select>
 							</div>';
-							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value="'.$order_products_discount_amount_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="'.$order_products_discount_amount_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
+							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_discount_amount_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.$order_products_discount_amount_display_incl.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
 							//if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-							if ($order['discount_amount']>0) {
+							if (!empty($order['discount_amount'])) {
 								$order['final_price']-=$order['discount_amount'];
 							}
 							//}
@@ -1959,7 +1986,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_final_price']['align']='right';
 
 						//cellFinalPrice
-						$order_products_body_data['products_final_price']['class']='cellPrice';
+						$order_products_body_data['products_final_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2056,7 +2083,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// custom hook that can be controlled by third-party plugin eof
 						// products id col
 						$order_products_body_data['products_id']['align']='right';
-						$order_products_body_data['products_id']['class']='cellID';
+						$order_products_body_data['products_id']['class']='cellID cellNoWrap';
 						if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
 							if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 								$order_products_body_data['products_id']['id'] = 'edit_order_product_id';
@@ -2098,7 +2125,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// products price col
 						$order_products_body_data['products_normal_price']['align']='right';
-						$order_products_body_data['products_normal_price']['class']='cellPrice';
+						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 						$order_products_body_data['products_normal_price']['value']=$row[3];
 						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2114,7 +2141,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
 						//cellFinalPrice
-						$order_products_body_data['products_final_price']['class']='cellPrice';
+						$order_products_body_data['products_final_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
@@ -2165,6 +2192,9 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_discount']['class']='cellDiscount';
 								$order_products_body_data['products_discount']['value']='';
 							}
+                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_discount']['value']='';
+                            }
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
@@ -2201,11 +2231,14 @@ if (is_numeric($this->get['orders_id'])) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
 							}
+                            if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_discount']['value']='';
+                            }
 							// product final price
 							$order_products_body_data['products_final_price']['value']='';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-								$order_products_body_data['products_action']['value']='';
-							}
+                            if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
+                                $order_products_body_data['products_action']['value']='';
+                            }
 							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
 								'class'=>$tr_type.' order_products_description',
 								'value'=>$order_products_body_data
@@ -2284,9 +2317,9 @@ if (is_numeric($this->get['orders_id'])) {
 										$order_products_body_data['products_vat']['value']='';
 									}
 									// products price col
-									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="'.number_format($optprice, 2).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="'.number_format($optprice+$attributes_tax_data['tax'], 2).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
+									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="'.number_format($optprice, 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="'.number_format($optprice+$attributes_tax_data['tax'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
 									if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 										// products vat col
 										$order_products_body_data['products_vat']['value']='';
@@ -2548,7 +2581,16 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-				$colspan=8;
+                $colspan=7;
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
+                }
 				$order_products_body_data=array();
 				// products id col
 				$order_products_body_data['products_id']['th']=true;
@@ -2617,9 +2659,9 @@ if (is_numeric($this->get['orders_id'])) {
 				// product normal price col
 				$order_products_body_data['products_normal_price']['valign']='top';
 				$order_products_body_data['products_normal_price']['class']='cellPrice';
-				$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_price" id="manual_product_price" value="" /></div>';
+				$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+				$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_price" id="manual_product_price" value="" /></div>';
 				/*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
 					$order_products_body_data['products_normal_price']['value'].='<input type="hidden" name="manual_product_price" id="product_price" value=""/>';
@@ -2646,9 +2688,9 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$percentage_sb.='</select>
 							</div>';
-					$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat" value="0"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
+					$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="0" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+					$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
 				}
 				// product final price col
 				$order_products_body_data['products_final_price']['value']='';
@@ -2730,6 +2772,11 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				$order_products_body_data['products_normal_price']['class']='last_edit_product_row_pprice_col';
 				$order_products_body_data['products_normal_price']['value']='';
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+                    // products vat col
+                    $order_products_body_data['products_discount']['class']='last_edit_product_row_discount_col';
+                    $order_products_body_data['products_discount']['value']='';
+                }
 				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					// products vat col
 					$order_products_body_data['products_vat']['class']='last_edit_product_row_pvat_col';
@@ -2757,13 +2804,16 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
 				}
 			} else {
-				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 || $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-					$colspan = 8;
-				} else if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
-					$colpsan=9;
-				} else {
-					$colspan=7;
-				}
+			    $colspan=7;
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
+                }
 			}
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'])) {
@@ -2913,21 +2963,25 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[payment_method_costs]" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				} else {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				}
 			} else {
@@ -2951,29 +3005,36 @@ if (is_numeric($this->get['orders_id'])) {
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</p>
+                    <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total'].'">
+                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <p class="form-control-static order_total_value total_orders_tax">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <input type="hidden" id="hidden_total_orders_tax" value="'.$orders_tax_data['total_orders_tax'].'">
+                    <input type="hidden" id="hidden_orders_products_tax" value="'.($orders_tax_data['total_orders_tax']-($orders_tax_data['shipping_tax']+$orders_tax_data['payment_tax'])).'">
                     </div>
                 </div>';
 			} else {
-
 				$tmpcontent.='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</p>
+                    <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
+                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <p class="form-control-static order_total_value total_orders_tax">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+                    <input type="hidden" id="hidden_total_orders_tax" value="'.$orders_tax_data['total_orders_tax'].'">
+                    <input type="hidden" id="hidden_orders_products_tax" value="'.($orders_tax_data['total_orders_tax']-($orders_tax_data['shipping_tax']+$orders_tax_data['payment_tax'])).'">
                     </div>
                 </div>';
 			}
@@ -2993,7 +3054,29 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
+				$discount_content='<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;">';
+                $discount_content.='<span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" id="edit_discount_value" class="form-control text-right priceInputDisplay" type="text" value="'.number_format($orders['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'">';
+                $discount_content.='</div>';
+                /*
+                 * discount percentage
+                 */
+                $discount_percentage_value_selectbox='<select name="edit_discount_percentage" id="edit_discount_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
+                for ($i=1; $i<=100; $i++) {
+                    if ($orders['discount_percentage']==$i) {
+                        $discount_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
+                    } else {
+                        $discount_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
+                    }
+                }
+                $discount_percentage_value_selectbox.='</select>';
+
+                $discount_content.='<div class="input-group pull-right" id="discount_percentage_wrapper" style="display:none; width:140px;">';
+                $discount_content.=$discount_percentage_value_selectbox;
+                $discount_content.='</div>';
+                $discount_content.='<div class="input-group pull-right">';
+                $discount_content.='<a href="#" id="switch_to_discount_amount" style="display:none">'.$this->pi_getLL('switch_to_discount_amount').'</a><a href="#" id="switch_to_discount_percentage">'.$this->pi_getLL('switch_to_discount_percentage').'</a>';
+                $discount_content.='</div>';
+
 			} else {
 				if ($orders['discount']>0) {
 					$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
@@ -3017,7 +3100,7 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group">
                 <label class="control-label col-md-10">'.(!$orders_tax_data['total_orders_tax'] ? $this->pi_getLL('total_excl_vat') : $this->pi_getLL('total')).'</label>
                 <div class="col-md-2">
-                <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</p>
+                <p class="form-control-static order_total_value grand_total">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</p>
                 </div>
             </div>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -3443,13 +3526,13 @@ if (is_numeric($this->get['orders_id'])) {
                                 } else {
                                     jQuery.each(jQuery(price_input_obj), function(i, v) {
                                         if ($(v).attr("id")=="display_manual_name_excluding_vat") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                         if ($(v).attr("id")=="display_manual_name_including_vat") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                         if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
-                                            $(v).val("0.00");
+                                            $(v).val("0" + decimal_sep + "00");
                                         }
                                     });
                                 }
@@ -3469,8 +3552,56 @@ if (is_numeric($this->get['orders_id'])) {
                     		product_price=$("#manual_product_price").val();
                     	}
 						if (e.object.id!=\'\' && parseInt(product_price)>0) {
+							var discount_percentage=parseInt(e.object.id);
+							var current_price=parseFloat(product_price);
+							var discount_amount=parseFloat((current_price/100)*discount_percentage);
+							var price_after_discount=parseFloat(current_price-discount_amount);
+							if (!manual_product) {
+                                $("#display_name_discount_excluding_vat").val(discount_amount);
+                                $("#product_discount_amount").val(discount_amount);
+                                priceEditRealtimeCalc(true, $("#display_name_discount_excluding_vat"), "#product_tax");
+                                if (SHOW_PRICES_INCLUDING_VAT) {
+                                    var display_name_including_vat = parseFloat($("#display_name_including_vat").val());
+                                    var price_discount_include_vat= parseFloat($("#display_name_discount_including_vat").val());
+                                    var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
+                                    var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
+                                } else {
+                                    var price_split=price_after_discount.toString().split(decimal_sep);
+                                }
+                                if (price_split[1]==undefined) {
+                                    price_split[1]=\'-\';
+                                }
+                                $(next_cell).find("span.amountWrapper > span.amount").html(price_split[0] + decimal_sep);
+                                $(next_cell).find("span.amountWrapper > span.amount_cents").html(price_split[1]);
+                            } else {
+                                if (!$(next_cell).hasClass("cellPrice")) {
+                                    $(next_cell).addClass("cellPrice")
+                                }
+                                //$(next_cell).empty();
+                                //$(next_cell).html(price_after_discount_format);
+                                $("#manual_display_name_discount_excluding_vat").val(discount_amount);
+                                $("#manual_product_discount_amount").val(discount_amount);
+                                priceEditRealtimeCalc(true, $("#manual_display_name_discount_excluding_vat"), "#manual_product_tax");
+                                if (SHOW_PRICES_INCLUDING_VAT) {
+                                    var display_name_including_vat = parseFloat($("#display_manual_name_including_vat").val());
+                                    var price_discount_include_vat= parseFloat($("#manual_display_name_discount_including_vat").val());
+                                    var total_incl_vat=parseFloat(display_name_including_vat-price_discount_include_vat);
+                                    var price_split=$.number(total_incl_vat, 2, ".", "").toString().split(".");
+                                } else {
+                                    var price_split=price_after_discount.toString().split(decimal_sep);
+                                }
+                                if (price_split[1]==undefined) {
+                                    price_split[1]=\'-\';
+                                }
+                                if ($(next_cell).html()=="" || $(next_cell).html()=="&nbsp;") {
+                                    $(next_cell).append($("td.cellPrice").html());
+                                }
+                                $(next_cell).find("span.amountWrapper > span.amount").html(price_split[0] + decimal_sep);
+                                $(next_cell).find("span.amountWrapper > span.amount_cents").html(price_split[1]);
+                            }
+                            // plan for removal
+							/*
 							jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_product_discount_price').'",{discount_percentage: e.object.id, current_price: product_price, qty: 1}, function(d){
-								console.log(d);
 								if (d.status==\'OK\') {
 									if (!manual_product) {
 										$(next_cell).empty();
@@ -3488,6 +3619,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
                             });
+                            */
 						}
                     });
                 }
@@ -3528,9 +3660,9 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'</div>\';';
 				$tmpcontent.='
-                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.display_values_price) + \'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
+                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
 				$tmpcontent.='
                     var cloned_row=$(\'#last_edit_product_row\').clone();
                     cloned_row.removeAttr("id");
@@ -3554,7 +3686,9 @@ if (is_numeric($this->get['orders_id'])) {
                         $(this).removeAttr("class");
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
-
+                    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'", "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'");
+                    
                     select2_sb(".edit_product_manual_option" + n, "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
                     select2_values_sb(".edit_product_manual_values" + n, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 }
@@ -3642,7 +3776,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>
         </div>
         <div class="form-group">
-            <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
+            <label for="track_and_trace_code" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
             <div class="col-md-10">
             	<input class="form-control" name="track_and_trace_code" type="text" value="'.htmlspecialchars($orders['track_and_trace_code']).'" />
             </div>
@@ -3662,6 +3796,7 @@ if (is_numeric($this->get['orders_id'])) {
             <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('order_memo').'</label>
             <div class="col-md-10">
             <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">'.htmlspecialchars($orders['order_memo']).'</textarea>
+            '.($orders['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $orders['memo_crdate']).'</span>' : '').'
             </div>
         </div>
         <div class="form-group">
@@ -3689,7 +3824,7 @@ if (is_numeric($this->get['orders_id'])) {
          </script>
          ';
 		// load the status history
-		$str="select * from tx_multishop_orders_status_history order by name";
+		//$str="select * from tx_multishop_orders_status_history order by name";
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_orders_status_history', // FROM ...
 			'orders_id=\''.$orders['orders_id'].'\'', // WHERE.
@@ -3714,6 +3849,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <th>'.$this->pi_getLL('old_status').'</th>
                 <th>'.$this->pi_getLL('date').'</th>
                 <th>'.$this->pi_getLL('customer_notified').'</th>
+                <th>'.$this->pi_getLL('requester_ip_address').'</th>
             </tr>
             </thead>
             <tbody>
@@ -3737,6 +3873,7 @@ if (is_numeric($this->get['orders_id'])) {
                     <td>'.$old_status_name.'</td>
                     <td>'.strftime("%a. %x %X", $row['crdate']).'</td>
                     <td align="center">'.($row['customer_notified'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>
+                    <td align="center">'.$row['requester_ip_addr'].'</td>
                 </tr>
                 ';
 				if ($row['comments']) {
@@ -3846,6 +3983,8 @@ if (is_numeric($this->get['orders_id'])) {
 		$content.='
         <script type="text/javascript">
         function decimalCrop(float) {
+        	return float;
+        	//
             if (float!=undefined) {
                 var numbers = float.toString().split(".");
                 var prime = numbers[0];
@@ -3858,93 +3997,6 @@ if (is_numeric($this->get['orders_id'])) {
                 return number;
             } else {
                 return "0.00";
-            }
-        }
-        function productPrice(to_include_vat, o, tax_element_id, trigger_element) {
-         	trigger_element = typeof trigger_element !== \'undefined\' ? trigger_element : \'\';
-         	//
-         	if (trigger_element=="product_tax") {
-         		var price_value=$(o).parent().parent().next().next().children().val();
-         	} else {
-         		var price_value=$(o).val();
-         	}
-         	var original_val = price_value;
-		    var current_value = parseFloat(price_value);
-		    //
-			if (original_val.indexOf(",")!=-1 && original_val.indexOf(".")!=-1) {
-				var thousand=original_val.split(".");
-				if (thousand[1].indexOf(",")!=-1) {
-					var hundreds = thousand[1].split(",");
-					original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-					current_value = parseFloat(original_val);
-					//
-					$(o).val(original_val);
-				} else {
-					thousand=original_val.split(",");
-					if (thousand[1].indexOf(".")!=-1) {
-						var hundreds = thousand[1].split(".");
-						original_val = thousand[0] + hundreds[0] + "." + hundreds[1];
-						current_value = parseFloat(original_val);
-						//
-						$(o).val(original_val);
-					}
-				}
-			}
-			//
-            var tax_id = $(tax_element_id).val();
-            if (current_value > 0 || current_value < 0) {
-                if (to_include_vat) {
-                    $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: tax_id }, function (json) {
-                        if (json && json.price_including_tax) {
-                            var incl_tax_crop = decimalCrop(json.price_including_tax);
-                            //o.parent().next().first().children().val(incl_tax_crop);
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(incl_tax_crop);
-                        } else {
-                            //o.parent().next().first().children().val(current_value);
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input.form-control\').val(current_value);
-                        }
-                    });
-                    // update the hidden excl vat
-                    //o.parent().next().next().first().children().val(original_val);
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(original_val);
-                } else {
-                    $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function (json) {
-                        if (json && json.price_excluding_tax) {
-                            var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-                            // update the excl. vat
-                            //o.parent().prev().first().children().val(excl_tax_crop);
-                            // update the hidden excl vat
-                            //o.parent().next().first().children().val(json.price_excluding_tax);
-                            //
-                            // update the excl. vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(excl_tax_crop);
-                            // update the hidden excl vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(json.price_excluding_tax);
-                        } else {
-                            // update the excl. vat
-                            //o.parent().prev().first().children().val(original_val);
-                            // update the hidden excl vat
-                            //o.next().parent().first().next().first().children().val(original_val);
-                            //
-                            // update the excl. vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input.form-control\').val(original_val);
-                            // update the hidden excl vat
-                            $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(original_val);
-                        }
-                    });
-                }
-            } else {
-                if (to_include_vat) {
-                    // update the incl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(0);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
-                } else {
-                    // update the excl. vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
-                    // update the hidden excl vat
-                    $(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(0);
-                }
             }
         }
         jQuery(document).ready(function($) {
@@ -4004,19 +4056,17 @@ if (is_numeric($this->get['orders_id'])) {
             });
             ' : '').'
             var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
-
-var url = document.location.toString();
-if (url.match("#")) {
-    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
-} else {
-		$(".nav-tabs a:first").tab("show");
-	}
-
-// Change hash for page-reload
-	$(".nav-tabs a").on("shown.bs.tab", function (e) {
-		window.location.hash = e.target.hash;
-		$("body,html,document").scrollTop(0);
-	});
+            var url = document.location.toString();
+            if (url.match("#")) {
+                $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+            } else {
+                $(".nav-tabs a:first").tab("show");
+            }
+            // Change hash for page-reload
+            $(".nav-tabs a").on("shown.bs.tab", function (e) {
+                window.location.hash = e.target.hash;
+                $("body,html,document").scrollTop(0);
+            });
 
             $("#load").hide();
             $().ajaxStart(function() {
@@ -4044,36 +4094,107 @@ if (url.match("#")) {
             });
             $(document).on("keyup", ".msOrderProductPriceExcludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(true, $(this), "#product_tax");
+                	priceEditRealtimeCalc(true, $(this), "#product_tax");
                 }
             });
             $(document).on("keyup", ".msOrderProductPriceIncludingVat", function(e) {
                 if (e.keyCode!=9) {
-                	productPrice(false, $(this), "#product_tax");
+                	priceEditRealtimeCalc(false, $(this), "#product_tax");
                 }
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#product_tax", "product_tax");
                 });
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#product_tax", "product_tax");
                 });
             });
             $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(true, $(this), "#manual_product_tax");
+                	priceEditRealtimeCalc(true, $(this), "#manual_product_tax");
                 }
             });
             $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
             	if (e.keyCode!=9) {
-                	productPrice(false, $(this), "#manual_product_tax");
+                	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
                 }
             });
             $("#manual_product_tax").change(function () {
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {
-                    productPrice(true, $(this), "#manual_product_tax", "product_tax");
+                    priceEditRealtimeCalc(true, $(this), "#manual_product_tax", "product_tax");
                 });
+            });
+            $(document).on("click", "#switch_to_discount_amount", function(e){
+                e.preventDefault();
+                $(this).hide();
+                //$("#edit_discount_value").prop("disabled", false);
+                $("#edit_discount_percentage").select2("destroy");
+                //$("#edit_discount_percentage").prop("disabled", true);
+                $("#switch_to_discount_percentage").show();
+                $("#discount_percentage_wrapper").hide();
+                $("#discount_amount_wrapper").show();
+            });
+            $(document).on("click", "#switch_to_discount_percentage", function(e){
+                e.preventDefault();
+                $(this).hide();
+                //$("#edit_discount_value").prop("disabled", true);
+                //$("#edit_discount_percentage").prop("disabled", false);
+                $("#edit_discount_percentage").select2({
+                    width:"140px"
+                });
+                $("#switch_to_discount_amount").show();
+                $("#discount_percentage_wrapper").show();
+                $("#discount_amount_wrapper").hide();
+            });
+            $(document).on("change", "#edit_discount_value", function(){
+                var discount_amount=parseFloat($(this).val());
+                var subtotal=parseFloat($("#hidden_subtotal").val());
+                var subtotal_excl_vat=parseFloat($("#hidden_subtotal_excl_vat").val());
+                var shipping_tax=parseFloat($("#hidden_shipping_tax").val());
+                var payment_tax=parseFloat($("#hidden_payment_tax").val());
+                var total_tax=parseFloat($("#hidden_total_orders_tax").val());
+                var product_tax=parseFloat($("#hidden_orders_products_tax").val());
+                var percentage=parseInt((discount_amount/subtotal)*100);
+                var shipping_costs=parseFloat($("#shipping_method_costs").val());
+                var payment_costs=parseFloat($("#payment_method_costs").val());
+                var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
+                var grand_total_split=new_grand_total.toString().split(".");
+                $("#edit_discount_percentage").val(percentage);
+                $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
+                $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
+                // recalculate tax
+                var sub_total_tax=parseFloat(((subtotal-subtotal_excl_vat)/100)*(100-percentage));
+                var total_tax_split=parseFloat(sub_total_tax+shipping_tax+payment_tax);
+                total_tax_split=$.number(total_tax_split, 2, ".").toString().split(".");
+                // refill the tax value
+                $(".total_orders_tax").find(".amount").empty().html(total_tax_split[0] + decimal_sep);
+                $(".total_orders_tax").find(".amount_cents").empty().html(total_tax_split[1]);
+            });
+            $(document).on("change", "#edit_discount_percentage", function(){
+                var percentage=parseInt($(this).val());
+                var subtotal=parseFloat($("#hidden_subtotal").val());
+                var subtotal_excl_vat=parseFloat($("#hidden_subtotal_excl_vat").val());
+                var shipping_tax=parseFloat($("#hidden_shipping_tax").val());
+                var payment_tax=parseFloat($("#hidden_payment_tax").val());
+                var total_tax=parseFloat($("#hidden_total_orders_tax").val());
+                var product_tax=parseFloat($("#hidden_orders_products_tax").val());
+                var shipping_costs=parseFloat($("#shipping_method_costs").val());
+                var payment_costs=parseFloat($("#payment_method_costs").val());
+                var discount_amount=parseFloat((subtotal/100)*percentage);
+                var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
+                var grand_total_split=new_grand_total.toString().split(".");
+                
+                $("#edit_discount_value").val(discount_amount);
+                $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
+                $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
+                // recalculate tax
+                var sub_total_tax=parseFloat(((subtotal-subtotal_excl_vat)/100)*(100-percentage));
+                var total_tax_split=parseFloat(sub_total_tax+shipping_tax+payment_tax);
+                total_tax_split=$.number(total_tax_split, 2, ".").toString().split(".");
+                // refill the tax value
+                $(".total_orders_tax").find(".amount").empty().html(total_tax_split[0] + decimal_sep);
+                $(".total_orders_tax").find(".amount_cents").empty().html(total_tax_split[1]);
             });
         });
         </script>

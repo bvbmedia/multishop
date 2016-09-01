@@ -48,24 +48,28 @@ if (is_array($products) && count($products)) {
 			}
 		}
 		$output=array();
-		$where='';
-		if ($current_product['categories_id']) {
-			// get all cats to generate multilevel fake url
-			$level=0;
-			$cats=mslib_fe::Crumbar($current_product['categories_id']);
-			$cats=array_reverse($cats);
-			$where='';
-			if (count($cats)>0) {
-				foreach ($cats as $cat) {
-					$where.="categories_id[".$level."]=".$cat['id']."&";
-					$level++;
-				}
-				$where=substr($where, 0, (strlen($where)-1));
-				$where.='&';
-			}
-			// get all cats to generate multilevel fake url eof
-		}
-		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        if ($this->get['tx_multishop_pi1']['page_section']=='manufacturers_products_listing' && isset($this->get['manufacturers_id']) && $this->get['manufacturers_id']>0) {
+            $output['link'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], 'manufacturers_id='.$this->get['manufacturers_id'].'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        } else {
+            $where = '';
+            if ($current_product['categories_id']) {
+                // get all cats to generate multilevel fake url
+                $level = 0;
+                $cats = mslib_fe::Crumbar($current_product['categories_id']);
+                $cats = array_reverse($cats);
+                $where = '';
+                if (count($cats) > 0) {
+                    foreach ($cats as $cat) {
+                        $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                        $level++;
+                    }
+                    $where = substr($where, 0, (strlen($where) - 1));
+                    $where .= '&';
+                }
+                // get all cats to generate multilevel fake url eof
+            }
+            $output['link'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $current_product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+        }
 		$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 		$formats=array();
 		$formats[]='100';
@@ -150,6 +154,7 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_MODEL']=$current_product['products_model'];
 		$markerArray['PRODUCTS_DESCRIPTION']=$current_product['products_description'];
 		$markerArray['PRODUCTS_SHORTDESCRIPTION']=$current_product['products_shortdescription'];
+		$markerArray['PRODUCTS_SHORT_DESCRIPTION']=$current_product['products_shortdescription'];
 		$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
 		$markerArray['CATEGORIES_NAME']=$current_product['categories_name'];
 		$markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
@@ -278,12 +283,21 @@ if (is_array($products) && count($products)) {
 			</form>
 		</div>
 		';
-		$markerArray['MANUFACTURERS_ADVICE_PRICE']=mslib_fe::amount2Cents($current_product['manufacturers_advice_price']);
+		//$markerArray['MANUFACTURERS_ADVICE_PRICE']=mslib_fe::amount2Cents($current_product['manufacturers_advice_price']);
+		$markerArray['MANUFACTURERS_ADVICE_PRICE'] ='';
+		if ($current_product['manufacturers_advice_price']) {
+			if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($current_product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+				$amount = $current_product['manufacturers_advice_price'] * (1 + $current_product['tax_rate']);
+			} else {
+				$amount = $current_product['manufacturers_advice_price'];
+			}
+			$markerArray['MANUFACTURERS_ADVICE_PRICE'] = mslib_fe::amount2Cents($amount);
+		}
 		// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
 		$plugins_item_extra_content=array();
 		// shipping cost popup
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
+			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#productsListingShippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
 		}
 		// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
@@ -486,7 +500,7 @@ if (is_array($products) && count($products)) {
 	}
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$content.='
-		<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+		<div class="modal" id="productsListingShippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
@@ -502,11 +516,11 @@ if (is_array($products) && count($products)) {
 		</div>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			$(\'#shippingCostsModal\').modal({
+			$(\'#productsListingShippingCostsModal\').modal({
 				show:false,
 				backdrop:false
 			});
-			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
+			$(\'#productsListingShippingCostsModal\').on(\'show.bs.modal\', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var product_id = button.data(\'productid\') // Extract info from data-* attributes
 				var modalBox = $(this);
@@ -532,14 +546,16 @@ if (is_array($products) && count($products)) {
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 								shipping_cost_popup+=\'</tr>\';
-								$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-									$.each(shipping_data, function(country_iso_nr, shipping_cost){
-										shipping_cost_popup+=\'<tr>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'</tr>\';
-									});
+								$.each(j.shipping_costs_display, function(zone_id, shipping_cost_display) {
+                                    $.each(shipping_cost_display, function(shipping_method, shipping_data) {
+                                        $.each(shipping_data, function(country_iso_nr, shipping_cost) {
+                                            shipping_cost_popup+=\'<tr>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'</tr>\';
+                                        });
+                                    });
 								});
 								if (j.delivery_time!=\'e\') {
 									shipping_cost_popup+=\'<tr>\';

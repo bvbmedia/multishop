@@ -312,6 +312,27 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 #msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td { border:none; font-size:13px; line-height:20px; padding:0 5px; }
 #msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td hr { border-top-color:#ddd; margin-top:5px; margin-bottom:5px; }
 
+#msadmin_wrapper #orders_post .popover { max-width:772px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:740px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments { margin-bottom:10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-heading,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-heading { padding:7px 10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-heading h3,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-heading h3 { margin-bottom:0; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-body,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body { overflow:auto; max-height:205px; word-break:break-word; padding:7px 10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-body p:last-child,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body p:last-child { margin-bottom:0; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-footer,
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-footer { padding:7px 10px; }
+@media (min-width:1600px) {
+	#msadmin_wrapper #orders_post .popover { max-width:982px; }
+	#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:950px; }
+}
+
+#msadmin_wrapper #customer_comments .customer_comments_body { overflow:auto; max-height:178px; }
+#msadmin_wrapper #customer_comments .customer_comments_body p:last-child { margin-bottom:0; }
+
 #msadmin_content #tblWidgetOrdersLatest .popover .popover-content table th,
 #msadmin_content #tblWidgetOrdersLatest .popover .popover-content table td { padding:5px; }
 #msadmin_wrapper #tblWidgetOrdersLatest .popover .popover-content table tr.removeTableCellBorder td { padding:0 5px; }
@@ -364,7 +385,7 @@ ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child { paddin
 
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
-#ui-datepicker-div { display:none; z-index:100 !important; }
+#ui-datepicker-div { display:none; z-index:10051 !important; }
 .jconfirm-noscroll #ui-datepicker-div { z-index:100000000 !important; }
 
 /* jquery tree overrule */
@@ -598,8 +619,14 @@ select.form-control { padding-left:8px; padding-right:8px; }
 #msAdmin_category_listing_ul.treeview ul { padding:0; list-style:none; }
 
 /* redactor overrule */
+/* .form-group .col-md-10 .redactor-box { margin-bottom:0; }
+.redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
+.redactor-editor, .redactor-box, .redactor-box textarea { z-index:8888890; } */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 .redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
+.redactor-editor, .redactor-box, .redactor-box textarea { }
+.redactor-box-fullscreen { z-index:8888890; }
+#msadmin_content .redactor-toolbar.toolbar-fixed-box { position:fixed !important; left:auto !important; top:38px !important; }
 
 /* select2 overrule */
 .select2-container .select2-choice { height:34px; padding-left:12px; }
@@ -674,3 +701,5 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon:first-child {width:90%; text-align:left; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li .input-group > .input-group-addon.currencySymbol { border-right:none; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li.sub_categories_sorting.category .form-group { margin-bottom:2px; }
+
+#msAdmin_category_listing_ul.treeview li > .form-group { margin-left:0; margin-right:0; }

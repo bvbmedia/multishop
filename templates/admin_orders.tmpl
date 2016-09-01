@@ -61,9 +61,15 @@
                             ###COUNTRIES_SELECTBOX###
                         </div>
                         <div class="form-group">
+                            <label class="control-label" for="ordered_category">###LABEL_ORDERED_CATEGORY###</label>
+                            <div class="form-inline">
+                                <input type="hidden" class="ordered_category" name="ordered_category" id="ordered_category" value="###VALUE_ORDERED_CATEGORY###" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label" for="type_search">###LABEL_ORDERED_PRODUCT###</label>
                             <div class="form-inline">
-                                <input type="hidden" class="ordered_product" name="ordered_product" value="###VALUE_ORDERED_PRODUCT###" />
+                                <input type="hidden" class="ordered_product" name="ordered_product" id="ordered_product" value="###VALUE_ORDERED_PRODUCT###" />
                             </div>
                         </div>
                     </div>
@@ -143,7 +149,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminOrdersListing" class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th align="center" width="17">
+                            <th class="cellCheckbox">
                                 <div class="checkbox checkbox-success checkbox-inline">
                                 <input type="checkbox" id="check_all_1">
                                 <label for="check_all_1"></label>
@@ -168,12 +174,12 @@
                         <tbody>
                         <!-- ###ORDERS_LISTING### begin -->
                         <tr class="###ROW_TYPE###">
-                            <th nowrap>
+                            <td class="cellCheckbox">
                                 <div class="checkbox checkbox-success checkbox-inline">
                                 <input type="checkbox" name="selected_orders[]" id="checkbox_###ORDER_ID###" value="###ORDER_ID###">
                                 <label for="checkbox_###ORDER_ID###"></label>
                                 </div>
-                            </th>
+                            </td>
                             <td width="5" class="cellNoWrap cell_phone_icon">###MANUAL_ORDER_ICON###</td>
                             <td align="right" class="cellNoWrap cell_orders_id" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
                             ###INVOICE_NUMBER###

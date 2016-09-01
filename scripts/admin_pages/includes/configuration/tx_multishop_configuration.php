@@ -2254,7 +2254,7 @@ $records[]=array(
 $records[]=array(
 		'configuration_title'=>'Delete PDF invoice from disk after being downloaded',
 		'configuration_key'=>'DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED',
-		'configuration_value'=>'0',
+		'configuration_value'=>'1',
 		'description'=>'Delete PDF invoice from disk after being downloaded.',
 		'group_id'=>'12',
 		'use_function'=>'',
@@ -2364,7 +2364,7 @@ $records[]=array(
 $records[]=array(
 	'configuration_title'=>'Delete packingslip PDF after downloading',
 	'configuration_key'=>'DELETE_PDF_PACKING_SLIP_AFTER_BEING_DOWNLOADED',
-	'configuration_value'=>'0',
+	'configuration_value'=>'1',
 	'description'=>'Delete packingslip PDF after downloading',
 	'group_id'=>'9',
 	'use_function'=>'',
@@ -2460,6 +2460,40 @@ $records[]=array(
     'depend_on_configuration_key'=>'',
     'use_function'=>''
 );
+$records[]=array(
+    'configuration_title'=>'Enable fe_groups discount percentage',
+    'configuration_key'=>'ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE',
+    'configuration_value'=>'0',
+    'description'=>'Enable fe_groups discount percentage',
+    'group_id'=>'3',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Price Filter without category query string',
+    'configuration_key'=>'PRICE_FILTER_WITHOUT_CATEGORY_QUERY_STRING',
+    'configuration_value'=>'0',
+    'description'=>'Optional field.',
+    'group_id'=>'3',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+		'configuration_title'=>'Include attributes in product feed',
+		'configuration_key'=>'INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED',
+		'configuration_value'=>'1',
+		'description'=>'Optional field.',
+		'group_id'=>'11',
+		'use_function'=>'',
+		'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+		'depend_on_configuration_key'=>'',
+		'use_function'=>''
+);
+
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

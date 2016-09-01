@@ -311,7 +311,7 @@ CREATE TABLE `tx_multishop_invoices` (
  `payment_condition` varchar(50) default '',
  `currency` varchar(5) default '',
  `discount` decimal(24,14) default '0.00000000000000',
- `amount` decimal(24,14) default '0.00000000000000',
+ `invoice_grand_total` decimal(24,14) default '0.00000000000000',
  `page_uid` int(11) default '0',
  `paid` tinyint(1) default '0',
  `hash` varchar(50) default '0',
@@ -485,6 +485,7 @@ CREATE TABLE `tx_multishop_orders` (
  `shipping_method_label` varchar(150) default '',
  `payment_method_label` varchar(150) default '',
  `discount` decimal(24,14) default '0.00000000000000',
+ `discount_percentage` int(3) default '0',
  `customer_comments` text,
  `is_locked` tinyint(1) default '0',
  `billing_address_ext` varchar(10) default '',
@@ -516,6 +517,7 @@ CREATE TABLE `tx_multishop_orders` (
  `orders_paid_timestamp` int(11) default '0',
  `debit_order` tinyint(1) default '0',
  `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000',
+ `memo_crdate` int(11) default '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -694,6 +696,7 @@ CREATE TABLE `tx_multishop_orders_status_history` (
  `crdate` int(11) default '0',
  `customer_notified` int(1) default '0',
  `comments` text,
+ `requester_ip_addr` varchar(127) default '',
  PRIMARY KEY (`orders_status_history_id`),
  KEY `orders_id` (`orders_id`),
  KEY `crdate` (`crdate`),
@@ -869,6 +872,7 @@ CREATE TABLE `tx_multishop_products` (
  `endtime` int(11) default '0',
  `specials_price_percentage` varchar(4) default '0',
  `manufacturers_advice_price` decimal(24,14) default '0.00000000000000',
+ `import_notes` varchar(250) default '',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -1033,7 +1037,7 @@ CREATE TABLE `tx_multishop_customers_groups_method_mappings` (
 CREATE TABLE `tx_multishop_products_options` (
  `products_options_id` int(11) NOT NULL auto_increment,
  `language_id` int(5) NOT NULL default '0',
- `products_options_name` varchar(64) default '',
+ `products_options_name` varchar(150) default '',
  `listtype` varchar(15) default 'pulldownmenu',
  `description` text,
  `sort_order` int(11) default '0',
@@ -1042,6 +1046,7 @@ CREATE TABLE `tx_multishop_products_options` (
  `attributes_values` tinyint(1) default '0',
  `hide_in_cart` tinyint(1) default '0',
  `required` tinyint(1) default '0',
+ `products_options_descriptions` text,
  PRIMARY KEY (`products_options_id`,`language_id`),
  KEY `products_options_name` (`products_options_name`),
  KEY `products_options_id` (`products_options_id`),
@@ -1053,7 +1058,7 @@ CREATE TABLE `tx_multishop_products_options` (
 CREATE TABLE `tx_multishop_products_options_values` (
  `products_options_values_id` int(11) NOT NULL auto_increment,
  `language_id` int(11) NOT NULL default '0',
- `products_options_values_name` varchar(64) default '',
+ `products_options_values_name` varchar(150) default '',
  `hide` tinyint(1) default '0',
  PRIMARY KEY (`products_options_values_id`,`language_id`),
  KEY `products_options_values_id` (`products_options_values_id`),
@@ -1563,24 +1568,28 @@ CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
  KEY `sort_order` (`sort_order`)
 );
 
-CREATE TABLE `tx_multishop_feeds_excludelist` (
+CREATE TABLE `tx_multishop_catalog_to_feeds` (
  `id` int(11) NOT NULL auto_increment,
  `feed_id` int(11) default '0',
+ `negate` tinyint(1) default '0',
  `exclude_id` int(11) default '0',
  `exclude_type` varchar(11) default 'categories',
  PRIMARY KEY (`id`),
  KEY `feed_id` (`feed_id`),
+ KEY `negate` (`negate`),
  KEY `exclude_id` (`exclude_id`),
  KEY `exclude_type` (`exclude_type`)
 );
 
-CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
+CREATE TABLE `tx_multishop_catalog_to_feeds_stocks` (
  `id` int(11) NOT NULL auto_increment,
  `feed_id` int(11) default '0',
+ `negate` tinyint(1) default '0',
  `exclude_id` int(11) default '0',
  `exclude_type` varchar(11) default 'categories',
  PRIMARY KEY (`id`),
  KEY `feed_id` (`feed_id`),
+ KEY `negate` (`negate`),
  KEY `exclude_id` (`exclude_id`),
  KEY `exclude_type` (`exclude_type`)
 );

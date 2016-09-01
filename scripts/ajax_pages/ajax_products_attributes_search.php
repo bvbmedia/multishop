@@ -42,11 +42,11 @@ if ($this->ADMIN_USER) {
                             $data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
                             $product_tax_rate=$data['total_tax_rate'];
                             $attributes_tax=mslib_fe::taxDecimalCrop(($rs_value['options_values_price']*$product_tax_rate)/100);
-                            $attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_value['options_values_price']+$attributes_tax, 2, false);
+                            $attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_value['options_values_price']+$attributes_tax, 2, false, false);
                             $option_data[$rs_option['sort_order_option_name']]['value']['valid']=$rs_value['options_values_id'];
                             $option_data[$rs_option['sort_order_option_name']]['value']['valname']=$rs_value['products_options_values_name'];
                             $option_data[$rs_option['sort_order_option_name']]['value']['values_price']=$rs_value['options_values_price'];
-                            $option_data[$rs_option['sort_order_option_name']]['value']['display_values_price']=mslib_fe::taxDecimalCrop($rs_value['options_values_price'], 2, false);
+                            $option_data[$rs_option['sort_order_option_name']]['value']['display_values_price']=mslib_fe::taxDecimalCrop($rs_value['options_values_price'], 2, false, false);
                             $option_data[$rs_option['sort_order_option_name']]['value']['display_values_price_including_vat']=$attribute_price_display_incl;
                             $option_data[$rs_option['sort_order_option_name']]['value']['price_prefix']=$rs_value['price_prefix'];
                         }
@@ -68,13 +68,13 @@ if ($this->ADMIN_USER) {
                     $data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
                     $product_tax_rate=$data['total_tax_rate'];
                     $attributes_tax=mslib_fe::taxDecimalCrop(($rs_option['options_values_price']*$product_tax_rate)/100);
-                    $attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_option['options_values_price']+$attributes_tax, 2, false);
+                    $attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_option['options_values_price']+$attributes_tax, 2, false, false);
                     $option_data[$ctr]['sort_order']=(int)$rs_option['sort_order_option_name'];
                     $option_data[$ctr]['optid']=$this->get['optid'];
                     $option_data[$ctr]['valid']=$rs_option['options_values_id'];
                     $option_data[$ctr]['valname']=$rs_option['products_options_values_name'];
                     $option_data[$ctr]['values_price']=$rs_option['options_values_price'];
-                    $option_data[$ctr]['display_values_price']=mslib_fe::taxDecimalCrop($rs_option['options_values_price'], 2, false);
+                    $option_data[$ctr]['display_values_price']=mslib_fe::taxDecimalCrop($rs_option['options_values_price'], 2, false, false);
                     $option_data[$ctr]['display_values_price_including_vat']=$attribute_price_display_incl;
                     $option_data[$ctr]['price_prefix']=$rs_option['price_prefix'];
                     $ctr++;

@@ -40,11 +40,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
-			$params=array();
+			$params=array(
+				'cart'=>&$this->cart
+			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		//echo '<pre>'.print_r($this->cart,1);
+		//die();
 		// custom hook that can be controlled by third-party plugin eof
 		if ($this->cart['user']['country']) {
 			$this->tta_user_info['default']['country']=$this->cart['user']['country'];
@@ -70,7 +74,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$vat_id=$this->post['tx_multishop_vat_id'];
 		}
 		$this->cart['user']['countries_id']=$iso_customer['cn_iso_nr'];
-		if (is_array($this->cart['products'])) {
+		if (is_array($this->cart['products']) && count($this->cart['products'])) {
 			if ($iso_customer['cn_iso_nr']) {
 				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
 				$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
@@ -211,8 +215,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				// rounding was needed to fix 1 cents grand total difference
 				// adjusted 25/11/2014 14:02 CET
 				// shipping cost bugfix because of the fractions, changed from 2 decimal to 14
-				$this->cart['user']['shipping_method_costs']=round($this->cart['user']['shipping_method_costs'], 14);
-				$this->cart['user']['payment_method_costs']=round($this->cart['user']['payment_method_costs'], 2);
+                $this->cart['user']['shipping_method_costs'] = round($this->cart['user']['shipping_method_costs'], 14);
+                $this->cart['user']['payment_method_costs'] = round($this->cart['user']['payment_method_costs'], 14);
 				// get shipping tax rate
 				$shipping_method=mslib_fe::getShippingMethod($this->cart['user']['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
@@ -307,6 +311,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							break;
 					}
 				}
+				//error_log(print_r($this->cart['products'],1));
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc'])) {
 					$params=array(
@@ -341,6 +346,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$this->cart['summarize']['grand_total_excluding_vat']=($subtotal-$subtotal_tax)+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
 					$this->cart['summarize']['grand_total']=($subtotal)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
 				}
+				// to make sure the floatings numbers are not infinite
+                $this->cart['summarize']['grand_total']=number_format($this->cart['summarize']['grand_total'], 14, '.', '');
+                //var_dump($this->cart['summarize']['grand_total']);
 				//$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
 				$this->cart['summarize']['grand_total_vat']=$subtotal_tax+$payment_tax+$shipping_tax;
 				// b2b mode 1 cent bugfix: 2013-05-09 cbc
@@ -360,8 +368,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eofq
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($this->cart);
+		//if (is_array($this->cart['products']) && count($this->cart['products'])) {
+			//tx_mslib_cart::storeCart($this->cart);
+		//}
+
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
 		return $this->cart;
 	}
 	function updateCart() {
@@ -394,6 +407,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 		// error_log("bastest");
+
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCart'])) {
 			$params=array();
@@ -413,7 +427,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			// custom hook that can be controlled by third-party plugin eof
 			$GLOBALS['dont_update_cart']=1;
-			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart->init($this);
+			$cart=$mslib_cart->getCart();
 			if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action']=='add_to_cart') {
 				$this->post['products_id']=$this->get['products_id'];
 			}
@@ -533,6 +551,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$this->post['quantity']=round($this->post['quantity'], 0);
 						$cart['products'][$shopping_cart_item]['qty']=(int)$cart['products'][$shopping_cart_item]['qty'];
 					}
+                    $cart['products'][$shopping_cart_item]['qty']=round(number_format($cart['products'][$shopping_cart_item]['qty'], 2), 2);
 					$current_quantity=$cart['products'][$shopping_cart_item]['qty'];
 					if (!$this->post['tx_multishop_pi1']['cart_item']) {
 						$this->post['quantity']=$current_quantity+$this->post['quantity'];
@@ -544,6 +563,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$this->post['quantity']=$product['minimum_quantity'];
 					}
 					$product['qty']=($this->post['quantity']);
+                    $product['qty']=round(number_format($product['qty'], 2), 2);
+                    $this->post['quantity']=round(number_format($this->post['quantity'], 2), 2);
 					// chk if the product has staffel price
 					if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 						if ($this->post['quantity']) {
@@ -756,12 +777,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
+					/*
 					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 					if ($this->ms['eID']) {
 						$GLOBALS['TSFE']->fe_user->storeSessionData();
 					} else {
 						$GLOBALS['TSFE']->storeSessionData();
 					}
+					*/
+					tx_mslib_cart::storeCart($cart);
 				}
 				if ($this->post['winkelwagen']) {
 					// if products relatives are selected
@@ -776,7 +800,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							if ($rel_carty_quantity and strstr($rel_carty_quantity, ",")) {
 								$rel_carty_quantity=str_replace(",", ".", $rel_carty_quantity);
 							}
-							$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+							//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+							require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+							$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+							$mslib_cart->init($this);
+							$cart=$mslib_cart->getCart();
 							if (preg_match("/^[0-9]+$/", $rel_products_id)) {
 								$product=mslib_fe::getProduct($rel_products_id);
 								if ($product['products_id']) {
@@ -856,13 +884,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 												}
 											}
 										}
-										//
+										/*
 										$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 										if ($this->ms['eID']) {
 											$GLOBALS['TSFE']->fe_user->storeSessionData();
 										} else {
 											$GLOBALS['TSFE']->storeSessionData();
 										}
+										*/
+										tx_mslib_cart::storeCart($cart);
 									}
 								}
 							}
@@ -917,8 +947,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (is_array($cart['products'][$shopping_cart_item])) {
 					// remove the cart item
 					unset($cart['products'][$shopping_cart_item]);
-					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-					$GLOBALS['TSFE']->storeSessionData();
+					//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+					//$GLOBALS['TSFE']->storeSessionData();
+					tx_mslib_cart::storeCart($cart);
+                    tx_mslib_cart::getCart();
+
 				}
 			} elseif (is_array($this->post['qty'])) {
 				// add/update products in cart (from shopping cart page)
@@ -1005,8 +1038,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 				}
 				//die();
-				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-				$GLOBALS['TSFE']->storeSessionData();
+				//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+				//$GLOBALS['TSFE']->storeSessionData();
+				tx_mslib_cart::storeCart($cart);
 			}
 			// group discount
 			if ($GLOBALS['TSFE']->fe_user->user['uid']) {
@@ -1014,12 +1048,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($discount) {
 					$cart['coupon_discount']=$discount;
 					$cart['discount_type']='percentage';
-					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-					$GLOBALS['TSFE']->storeSessionData();
+					//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+					//$GLOBALS['TSFE']->storeSessionData();
+					tx_mslib_cart::storeCart($cart);
 				}
 			}
 			// store cart contents for later analyses
-			$cart_store_content=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+			$cart_store_content=$mslib_cart->getCart();
+			//$cart_store_content=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			mslib_befe::storeCustomerCartContent($cart_store_content);
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPostHook'])) {
@@ -1058,7 +1094,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 	}
 	function countCartQuantity() {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$products=$cart['products'];
 		$weight=0;
 		foreach ($products as $products_id=>$value) {
@@ -1070,7 +1110,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	}
 	function countCartTotalPrice($subtract_discount=1, $include_vat=0, $country_id=0) {
 		$order=array();
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$address=$cart['user'];
 		if (is_array($cart['products']) && count($cart['products'])) {
 			foreach ($cart['products'] as $shopping_cart_item=>$value) {
@@ -1093,12 +1137,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 					}
 					$subtotal_price=($value['qty']*$product_amount);
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=="0") {
-						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']=="1") {
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$subtotal_price=$subtotal_price+($tmp_product_tax*$value['qty']);
 						}
-					} else if ($value['tax_rate'] && $include_vat) {
-						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
+					} else {
+                        if ($value['tax_rate'] && $include_vat) {
+                            $subtotal_price = ($subtotal_price * ($value['tax_rate'])) + $subtotal_price;
+                        }
 					}
 					$total_price=($total_price+$subtotal_price);
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
@@ -1114,23 +1160,30 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 		}
+        $return_total_price = $total_price;
 		if ($subtract_discount and $cart['discount']) {
 			switch ($cart['discount_type']) {
-				case 'percentage':
-					$discount_price=(($total_price)/100*$cart['discount']);
-					break;
-				case 'price':
-					$discount_price=$cart['discount'];
-					break;
-			}
-			$total_price=$total_price-$discount_price;
+                case 'percentage':
+                    $discount_price=(($total_price)/100*$cart['discount']);
+                    break;
+                case 'price':
+                    $discount_price=$cart['discount'];
+                    break;
+            }
+			$return_total_price = $total_price - $discount_price;
 		}
-		return $total_price;
+        // to make sure the floatings numbers are not infinite
+        $return_total_price=number_format($return_total_price, 14, '.', '');
+        return $return_total_price;
 	}
 	function countCartTotalTax($country_id=0) {
 		$total_product_tax=0;
 		$products_tax=array();
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$address=$cart['user'];
 		if (is_array($cart['products']) && count($cart['products'])) {
 			foreach ($cart['products'] as $shopping_cart_item=>$value) {
@@ -1268,6 +1321,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['name']=$address['first_name'].' '.$address['middle_name'].' '.$address['last_name'];
 			$insertArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
 			$insertArray['first_name']=$address['first_name'];
+            $insertArray['middle_name']=$address['middle_name'];
 			$insertArray['last_name']=$address['last_name'];
 			$insertArray['username']=$address['email'];
 			$insertArray['email']=$address['email'];
@@ -2019,9 +2073,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 												$array2[]=$row['products_quantity'];
 												$array1[]='###PRODUCT_NAME###';
 												$array2[]=$value['products_name'];
-												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
 												$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
-												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
+												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">'.htmlspecialchars($this->pi_getLL('admin_edit_product')).'</a>';
 												// now mail a copy to the merchant
 												$merchant=array();
 												$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
@@ -2053,7 +2107,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 											}
 										}
 										if ($row['products_quantity']<1) {
-											// stock is negative or zero. lets turn of the product
+											// stock is negative or zero. lets disable the product
 											$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
 											$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 										}
@@ -2077,7 +2131,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 												$array2[]=$row['products_quantity'];
 												$array1[]='###PRODUCT_NAME###';
 												$array2[]=$value['products_name'];
-												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+												$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
 												$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
 												$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
 												// now mail a copy to the merchant
@@ -2306,24 +2360,28 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					// hook oef
 				}
-				unset($cart['products']);
+				$cart['products']=array();
 				unset($cart['user']);
 				unset($cart['discount_type']);
 				unset($cart['discount_amount']);
-				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-				$GLOBALS['TSFE']->storeSessionData();
+				//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+				//$GLOBALS['TSFE']->storeSessionData();
+
+				tx_mslib_cart::storeCart($cart);
 				// unset the cart with original key
 				$plain_cart_key='tx_multishop_cart';
 				if ($this->ms['MODULES']['CART_PAGE_UID']) {
 					$plain_cart_key.='_'.$this->ms['MODULES']['CART_PAGE_UID'];
 				}
 				$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $plain_cart_key);
-				unset($cart2['products']);
+				$cart2['products']=array();
 				unset($cart2['user']);
 				unset($cart2['discount_type']);
 				unset($cart2['discount_amount']);
-				$GLOBALS['TSFE']->fe_user->setKey('ses', $plain_cart_key, $cart2);
-				$GLOBALS['TSFE']->storeSessionData();
+				//TODO: plain cart key?
+				//$GLOBALS['TSFE']->fe_user->setKey('ses', $plain_cart_key, $cart2);
+				//$GLOBALS['TSFE']->storeSessionData();
+				tx_mslib_cart::storeCart($cart2);
 				// custom error script for checkout
 				if ($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT']) {
 					if (strstr($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT'], "..")) {
@@ -2415,27 +2473,36 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		self::storeCart();
-	}
-	function storeCart() {
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-		$GLOBALS['TSFE']->storeSessionData();
+		tx_mslib_cart::storeCart($this->cart);
 	}
 	function setPaymentMethod($payment_method) {
 		if (!$payment_method) {
 			return 0;
 		}
 		$payment_method=mslib_fe::getPaymentMethod($payment_method);
+        $iso_customer=mslib_fe::getCountryByName($this->cart['user']['country']);
+        $countries_id=$iso_customer['cn_iso_nr'];
 		if ($payment_method['handling_costs']) {
 			if (!strstr($payment_method['handling_costs'], "%")) {
 				$this->cart['user']['payment_method_costs']=$payment_method['handling_costs'];
 			} else {
 				// calculate total payment costs based by %
-				$subtotal=$this->cart['summarize']['grand_total_excluding_vat']-$this->cart['user']['payment_method_costs'];
+				$subtotal=$this->cart['summarize']['grand_total_excluding_vat']-($this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs']);
 				if ($subtotal) {
 					if (strstr($payment_method['handling_costs'], "%")) {
 						$percentage=str_replace("%", '', $payment_method['handling_costs']);
-						$this->cart['user']['payment_method_costs']=($subtotal/100*$percentage);
+                        $total_include_vat=0;
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $total_include_vat=1;
+                        }
+                        $subtotal=mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
+                        if ($subtotal) {
+                            $handling_cost=($subtotal/100*$percentage);
+                            if ($total_include_vat && $payment_method['tax_rate']) {
+                                $handling_cost=$handling_cost/(1+$payment_method['tax_rate']);
+                            }
+                            $this->cart['user']['payment_method_costs']=$handling_cost;
+                        }
 					} else {
 						$this->cart['user']['payment_method_costs']=$payment_method['handling_costs'];
 					}
@@ -2463,7 +2530,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($this->cart['user']['payment_region_tax'] && $this->cart['user']['payment_country_tax']) {
 				$this->cart['user']['payment_tax']=$this->cart['user']['payment_country_tax']+$this->cart['user']['payment_region_tax'];
 			} else {
-				$this->cart['user']['payment_tax']=mslib_fe::taxDecimalCrop($this->cart['user']['payment_method_costs']*($payment_method['tax_rate']));
+				$this->cart['user']['payment_tax']=$this->cart['user']['payment_method_costs']*$payment_method['tax_rate'];
 			}
 		} else {
 			$this->cart['user']['payment_tax']=0;
@@ -2485,7 +2552,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		self::storeCart();
+		tx_mslib_cart::storeCart($this->cart);
 	}
 	function setCountry($countries_name, $delivery_country='') {
 		$str3="SELECT * from static_countries where cn_short_en='".addslashes($countries_name)."' ";
@@ -2497,7 +2564,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (!empty($delivery_country)) {
 			$this->cart['user']['delivery_countries_id']=$delivery_country;
 		}
-		self::storeCart();
+		tx_mslib_cart::storeCart($this->cart);
 		return $this->cart['user']['countries_id'];
 	}
 	function getCountry() {
@@ -2910,7 +2977,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$key='DISCOUNT_WRAPPER';
 			if ($this->cart['discount_amount']>0) {
 				$this->cart['summarize']['total_orders_tax_including_discount']=($this->cart['summarize']['total_orders_tax_including_discount']-$this->cart['discount_amount']);
-				$this->cart['summarize']['grand_total']=($this->cart['summarize']['grand_total']-$row['discount']);
+				$this->cart['summarize']['grand_total']=round($this->cart['summarize']['grand_total']-$row['discount'], 2);
 				$markerArray=array();
 				$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
 				$markerArray['DISCOUNT']=mslib_fe::amount2Cents($this->cart['discount_amount']);
@@ -2969,13 +3036,44 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	}
 	function removeFromCart($itemKey) {
 		unset($this->cart['products'][$itemKey]);
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($this->cart);
 	}
 	function emptyCart() {
 		unset($this->cart['products']);
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($this->cart);
+	}
+	function storeCart(&$cart=array()) {
+		if (is_array($cart) && count($cart)) {
+			$cartVariable=&$cart;
+		} elseif($this->cart) {
+			$cartVariable=&$this->cart;
+		}
+		//error_log('Cart: '. count($cart['products']));
+		//error_log('This: '. count($this->cart['products']));
+		//return;
+		$continue=1;
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['storeCartPreHook'])) {
+			$params=array(
+				'continue'=>&$continue,
+				'cart'=>&$cartVariable
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['storeCartPreHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if ($continue) {
+			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cartVariable);
+			if ($this->ms['eID']) {
+				$GLOBALS['TSFE']->fe_user->storeSessionData();
+			} else {
+				$GLOBALS['TSFE']->storeSessionData();
+			}
+		}
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_cart.php"]) {

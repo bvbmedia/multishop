@@ -22,10 +22,11 @@ $start_time = array_pop($times);
 
 $where=array();
 $where[]='(o.deleted=0)';
-$where[]='(i.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-$str=$GLOBALS['TYPO3_DB']->SELECTquery('i.crdate', // SELECT ...
-    'tx_multishop_orders o, tx_multishop_invoices i, tx_multishop_orders_products op', // FROM ...
-    '('.implode(" AND ", $where).') and o.orders_id=op.orders_id and (o.orders_id = i.orders_id)', // WHERE...
+$where[]='(o.paid=1)';
+$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.crdate', // SELECT ...
+    'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
+    '('.implode(" AND ", $where).') and o.orders_id=op.orders_id', // WHERE...
     '', // GROUP BY...
     'o.orders_id asc', // ORDER BY...
     '1' // LIMIT ...
@@ -41,26 +42,21 @@ $current_year=date("Y");
 $categories=array();
 $where=array();
 $where[]='(o.deleted=0)';
+$where[]='(o.paid=1)';
 //$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-$where[]='(i.crdate BETWEEN '.strtotime(date('Y-01-01 00:00:00')).' and '.time().')';
-$str=$GLOBALS['TYPO3_DB']->SELECTquery('op.categories_id', // SELECT ...
-    'tx_multishop_orders o, tx_multishop_invoices i, tx_multishop_orders_products op', // FROM ...
-    '('.implode(" AND ", $where).') and o.orders_id=op.orders_id and (o.orders_id = i.orders_id)', // WHERE...
-    'op.categories_id', // GROUP BY...
+$where[]='(o.crdate BETWEEN '.strtotime(date('Y-01-01 00:00:00')).' and '.time().')';
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('op.categories_id_0,op.categories_name_0', // SELECT ...
+    'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
+    '('.implode(" AND ", $where).') and o.orders_id=op.orders_id', // WHERE...
+    'op.categories_id_0', // GROUP BY...
     'o.orders_id asc', // ORDER BY...
     '' // LIMIT ...
 );
 
 $qry_categories=$GLOBALS['TYPO3_DB']->sql_query($str);
 while ($row_categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_categories)) {
-	$catname=mslib_fe::getCategoryName($row_categories['categories_id']);
-	if (!$catname) {
-		$catname='Onbekende groep (ID: '.$row_categories['categories_id'].')';
-	}
-	$categories[$row_categories['categories_id']]=$catname;
+	$categories[$row_categories['categories_id_0']]=$row_categories['categories_name_0'];
 }
-
-
 $compiledWidget['content'].='<div class="table-responsive"><table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" ><thead>';
 $compiledWidget['content'].='<tr class="odd">';
 $compiledWidget['content'].='<th align="left">'.$this->pi_getLL('month').'</th>';
@@ -72,8 +68,6 @@ $compiledWidget['content'].='</tr></thead><tbody>';
 $row_ctr=0;
 foreach ($dates as $key=>$value) {
 	$total_amount=0;
-
-
 	$compiledWidget['content'].='<tr class="'.$tr_type.'">';
 	$compiledWidget['content'].='<td align="right" nowrap>'.ucfirst($key).'</td>';
 	foreach ($categories as $cid => $category_name) {
@@ -87,26 +81,24 @@ foreach ($dates as $key=>$value) {
 		//$end_time=strtotime($value."-31 23:59:59");
 		$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
 		$data_query['where']=array();
-		$data_query['where'][]='(o.paid=1 or o.paid=0)';
+		$data_query['where'][]='(o.paid=1)';
 		$data_query['where'][]='(o.deleted=0)';
 		$data_query['where'][]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('sum(op.final_price*op.qty) as total_final_price', // SELECT ...
-				'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
-				'('.implode(" AND ", $data_query['where']).') and op.categories_id=' . $cid . ' and o.orders_id=op.orders_id', // WHERE...
-				'', // GROUP BY...
-				'', // ORDER BY...
-				'' // LIMIT ...
+            'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...
+            '('.implode(" AND ", $data_query['where']).') and op.categories_id_0=' . $cid . ' and o.orders_id=op.orders_id', // WHERE...
+            '', // GROUP BY...
+            '', // ORDER BY...
+            '' // LIMIT ...
 		);
-
 		// start time and edn time for search params
-		$start_time_date=date('d-m-Y 00:00:00', $start_time);
-		$end_time_date=date('d-m-Y 23:59:59', $end_time);
+		$start_time_date=date('d/m/Y 00:00:00', $start_time);
+		$end_time_date=date('d/m/Y 23:59:59', $end_time);
 
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$total_price+=$row['total_final_price'];
-			$compiledWidget['content'].='<td class="text-right"><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&ordered_category='.$cid.'&type_search=all">'.mslib_fe::amount2Cents($row['total_final_price'], 0, 1, 0).'</a></td>';
+			$compiledWidget['content'].='<td class="text-right"><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&order_date_from='.$start_time_date.'&order_date_till='.$end_time_date.'&ordered_category='.$cid.'&payment_status=paid_only&type_search=all">'.mslib_fe::amount2Cents($row['total_final_price'], 0, 1, 0).'</a></td>';
 		}
 		//$compiledWidget['content'].='<td class="text-right">'.mslib_fe::amount2Cents($total_price, 0, 1, 0).'</td>';
 		$total_amount=$total_amount+$total_price;
@@ -119,7 +111,7 @@ foreach ($dates as $key=>$value) {
 		$currentMonth=0;
 	}
 	//$compiledWidget['content'].='<td class="text-right" nowrap>'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</td>';
-	$compiledWidget['content'].='<td class="text-right" nowrap><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&invoice_date_from='.$start_time_date.'&invoice_date_till='.$end_time_date.'&type_search=all">'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</a></td>';
+	$compiledWidget['content'].='<td class="text-right" nowrap><a href="index.php?id='.$this->shop_pid.'&skeyword=&Search=Zoeken&limit=15&tx_multishop_pi1%5Bpage_section%5D=admin_orders&type=2003&order_date_from='.$start_time_date.'&order_date_till='.$end_time_date.'&payment_status=paid_only&type_search=all">'.mslib_fe::amount2Cents($total_amount, 0, 1, 0).'</a></td>';
 	$compiledWidget['content'].='</tr>';
 }
 $compiledWidget['content'].='</tbody><tfoot><tr><th class="text-right" nowrap>Total</th>';

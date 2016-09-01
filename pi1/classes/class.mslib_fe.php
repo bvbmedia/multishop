@@ -685,8 +685,7 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
-		//echo $str;
-		//die();
+
 		//var_dump($str);
 		//die();
 		if ($this->conf['debugEnabled']=='1') {
@@ -1178,9 +1177,9 @@ class mslib_fe {
 	////
 	// wrapper to in_array() for PHP3 compatibility
 	// Checks if the lookup value exists in the lookup array
-	public function taxDecimalCrop($float, $precision=2, $disable=true) {
+	public function taxDecimalCrop($float, $precision=2, $disable=true, $use_cu_decimal_point=true) {
 		if ($disable) {
-			return $float;
+            return $float;
 		}
 		$numbers=explode('.', $float);
 		$prime=$numbers[0];
@@ -1189,12 +1188,12 @@ class mslib_fe {
 			$decimal.='0';
 		}
 		if (!$prime && !$decimal) {
-			return '0.00';
+			return '0' . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . '00';
 		}
 		if (!empty($decimal)) {
-			$float=$prime.'.'.$decimal;
+			$float=$prime . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . $decimal;
 		} else {
-			$float=$prime.'.00';
+			$float=$prime . ($use_cu_decimal_point ? $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] : '.') . '00';
 		}
 		return $float;
 	}
@@ -2727,7 +2726,7 @@ class mslib_fe {
 													$items.=' checked="checked"';
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' data-sort="'.$index_key.'" rel="attributes'.$options['products_options_id'].'" />
 											<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 											'.$attribute_value_image.'
 											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
@@ -2750,7 +2749,7 @@ class mslib_fe {
 													}
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" rel="attributes'.$options['products_options_id'].'" />
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" data-sort="'.$index_key.'" rel="attributes'.$options['products_options_id'].'" />
 										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 										'.$attribute_value_image.'
 										<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
@@ -2802,7 +2801,7 @@ class mslib_fe {
 									default:
 										if ($total_values>1) {
 											$html='';
-											$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
+											$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').' data-sort="'.$index_key.'">';
 											if ($options['required']) {
 												$html.='<option value="">'.$this->pi_getLL('choose_selection').'</option>';
 											}
@@ -3021,8 +3020,10 @@ class mslib_fe {
 			$query_elements['select'][]='pd.products_name, p.products_id, c.categories_id';
 			$query_elements['from'][]='tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd';
 			$query_elements['filter'][]="p.products_status=1 and c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."'";
+			$query_elements['filter'][]="p.is_hidden=0";
 			$query_elements['where'][]='cd.language_id=pd.language_id and p.products_id=pd.products_id and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id and c.categories_id=cd.categories_id and p2c.is_deepest=1';
 			$query_elements['orderby'][]="p2c.sort_order ".$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
+			$query_elements['groupby'][]='p.products_id';
 		} else {
 			$query_elements['select'][]='pf.products_name, pf.products_id, pf.categories_id';
 			$query_elements['from'][]='tx_multishop_products_flat pf';
@@ -3059,12 +3060,12 @@ class mslib_fe {
 			$nextKey='next_item';
 		} else {
 			switch ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']) {
-				case 'desc':
+				case 'asc':
 					$prevKey='next_item';
 					$nextKey='previous_item';
 					break;
 				default:
-				case 'asc':
+				case 'desc':
 					$prevKey='previous_item';
 					$nextKey='next_item';
 					break;
@@ -3080,6 +3081,7 @@ class mslib_fe {
 				$pagination_items[$nextKey]['products_id']=$products[($internal+1)];
 			}
 		}
+
 		$cats=mslib_fe::Crumbar($categories_id);
 		$cats=array_reverse($cats);
 		foreach ($pagination_items as $key=>$item) {
@@ -3804,7 +3806,7 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			// check for minimum and maximum cart amount allowed for payment to be use
 			$cart_total_amount=0;
-			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+			if (($this->get['type']=='2002' && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!='2003' && $this->get['type']!='2002')) {
 				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 				$mslib_cart->init($this);
@@ -3823,7 +3825,7 @@ class mslib_fe {
 				} else {
 					$array[$row['code']]=$row;
 				}
-				if ($cart_total_amount>0) {
+				if ($this->get['type']!='2003' && $cart_total_amount>0) {
 					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
 						unset($array[$row['code']]);
 					}
@@ -3912,11 +3914,12 @@ class mslib_fe {
 			implode(', ', $orderby), // ORDER BY...
 			'' // LIMIT ...
 		);
+
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			// check for minimum and maximum cart amount allowed for payment to be use
 			$cart_total_amount=0;
-			if (($this->get['type']==2002 && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type']!==2003 && $this->get['type']!==2002)) {
+			if (($this->get['type']=='2002' && $this->get['tx_multishop_pi1']['page_section']=='get_country_payment_methods') || ($this->get['type'] != '2003' && $this->get['type']!='2002')) {
 				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 				$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 				$mslib_cart->init($this);
@@ -3932,7 +3935,7 @@ class mslib_fe {
 				} else {
 					$array[$row['code']]=$row;
 				}
-				if ($cart_total_amount>0) {
+				if ($this->get['type'] != '2003' && $cart_total_amount>0) {
 					if (($row['cart_minimum_amount']>0 && $cart_total_amount<$row['cart_minimum_amount']) || ($row['cart_maximum_amount'] > 0 && $cart_total_amount>$row['cart_maximum_amount'])) {
 						unset($array[$row['code']]);
 					}
@@ -4291,7 +4294,7 @@ class mslib_fe {
 		}
 		return $content;
 	}
-	public function returnBoxedHTML($title='', $content='') {
+	public function returnBoxedHTML($title='', $content='', $footerContent='') {
 		$output='
 		 <div class="panel panel-default">
 			<div class="panel-heading"><h3>'.$title.'</h3></div>
@@ -4661,7 +4664,7 @@ class mslib_fe {
 							if (is_numeric($split[0])) {
 								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
-									next();
+									@next();
 								} else {
 									$shipping_cost=$old_shipping_costs;
 								}
@@ -4883,7 +4886,11 @@ class mslib_fe {
 		return $row;
 	}
 	public function countCartWeight() {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$products=$cart['products'];
 		$weight=0;
 		foreach ($products as $products_id=>$value) {
@@ -4921,9 +4928,12 @@ class mslib_fe {
 		}
 		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
+        if (!count($product_mappings)) {
+            $product_mappings=$shipping_method_data;
+        }
 		$shipping_methods=array();
-		foreach ($shipping_method_data as $shipping_method) {
-			$shipping_method_id=$shipping_method['id'];
+		foreach ($shipping_method_data as $load_shipping_method) {
+			$shipping_method_id=$load_shipping_method['id'];
 			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.override_shippingcosts, c.price, c.zone_id', // SELECT ...
 				'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 				'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
@@ -4977,19 +4987,21 @@ class mslib_fe {
 						if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 							$steps=explode(",", $shipping_cost);
 							$count=0;
-							foreach ($steps as $step) {
-								// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-								// example setting: 0:6.95,50:0
-								$split=explode(":", $step);
-								if (is_numeric($split[0])) {
-									if ($subtotal>$split[0] and isset($split[1])) {
-										$shipping_cost=$split[1];
-										next();
-									} else {
-										$shipping_cost=$old_shipping_costs;
+							if (is_array($steps) && count($steps)) {
+								foreach ($steps as $step) {
+									// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+									// example setting: 0:6.95,50:0
+									$split=explode(":", $step);
+									if (is_numeric($split[0])) {
+										if ($subtotal>$split[0] and isset($split[1])) {
+											$shipping_cost=$split[1];
+											next();
+										} else {
+											$shipping_cost=$old_shipping_costs;
+										}
 									}
+									$count++;
 								}
-								$count++;
 							}
 						}
 					}
@@ -5296,6 +5308,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					$count_b=0;
+                    $count_c=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
@@ -5310,6 +5323,7 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
+                                    $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
@@ -5320,7 +5334,7 @@ class mslib_fe {
 						}
 					}
 					//$count_b=count($allmethods);
-					if ($count_a==$count_b) {
+                    if ($count_a==$count_b || (!$count_b && !$count_c)) {
 						$allmethods=array();
 					}
 					break;
@@ -5329,6 +5343,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					$count_b=0;
+                    $count_c=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
@@ -5342,6 +5357,7 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+                                    $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
@@ -5352,7 +5368,7 @@ class mslib_fe {
 						}
 					}
 					//$count_b=count($allmethods);
-					if ($count_a==$count_b) {
+					if ($count_a==$count_b || (!$count_b && !$count_c)) {
 						$allmethods=array();
 					}
 					break;
@@ -5438,31 +5454,34 @@ class mslib_fe {
 			//
 			// calculate total costs
 			$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+            if (strstr($subtotal, ",")) {
+                $subtotal=str_replace(',', '.', $subtotal);
+            }
 			//
 			if (!empty($row3['override_shippingcosts'])) {
 				$old_shipping_costs=$shipping_cost;
 				$shipping_cost=$row3['override_shippingcosts'];
-
-
 				// custom code to change the shipping costs based on cart amount
 				if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 					$steps=explode(",", $shipping_cost);
 					$count=0;
-					foreach ($steps as $step) {
-						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-						// example setting: 0:6.95,50:0
-						$split=explode(":", $step);
-						if (is_numeric($split[0])) {
-							if ($subtotal>$split[0] and isset($split[1])) {
-								$shipping_cost=$split[1];
-								$shipping_cost_method_box=$split[1];
-								next();
-							} else {
-								$shipping_cost=$old_shipping_costs;
-								$shipping_cost_method_box=$old_shipping_costs;
+					if (is_array($steps) && count($steps)) {
+						foreach ($steps as $step) {
+							// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+							// example setting: 0:6.95,50:0
+							$split=explode(":", $step);
+							if (is_numeric($split[0])) {
+								if ($subtotal>$split[0] and isset($split[1])) {
+									$shipping_cost=$split[1];
+									$shipping_cost_method_box=$split[1];
+									@next();
+								} else {
+									$shipping_cost=$old_shipping_costs;
+									$shipping_cost_method_box=$old_shipping_costs;
+								}
 							}
+							$count++;
 						}
-						$count++;
 					}
 				}
 			}
@@ -5609,11 +5628,20 @@ class mslib_fe {
 				}
 				if ($percentage_handling_cost) {
 					$tmp_handling_cost=$handling_cost;
-					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+                    $total_include_vat=0;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $total_include_vat=1;
+                    }
+					$subtotal=mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
 					if ($subtotal) {
 						$handling_cost=($subtotal/100*$tmp_handling_cost);
+                        if ($total_include_vat && $shipping_method['tax_rate']) {
+                            $handling_cost=$handling_cost/(1+$shipping_method['tax_rate']);
+                        }
 					}
 				}
+				//var_dump($shipping_method['tax_rate']);
+                //die();
 				if ($shipping_method['tax_id'] && $handling_cost) {
 					$handling_total_tax_rate=$shipping_method['tax_rate'];
 					if ($shipping_method['country_tax_rate']) {
@@ -5645,7 +5673,7 @@ class mslib_fe {
 			$shipping_method['shipping_costs_method_box_including_vat']=$shipping_cost_method_box+$shipping_method_box_tax;
 			$shipping_method['shipping_costs']=$shipping_cost;
 			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
-			return $shipping_method;
+            return $shipping_method;
 		} else {
 			return false;
 		}
@@ -5790,7 +5818,20 @@ class mslib_fe {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$cats=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$cats[]=$row;
+                $process_cat=true;
+			    //hook to let other plugins further manipulate the query
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyIteratePreProc'])) {
+                    $params=array(
+                        'row'=>&$row,
+                         'process_cat'=>&$process_cat
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyIteratePreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                if ($process_cat) {
+                    $cats[] = $row;
+                }
 			}
 			return $cats;
 		}
@@ -5847,7 +5888,7 @@ class mslib_fe {
 		if ($user['tx_multishop_discount']) {
 			$discount=$user['tx_multishop_discount'];
 		}
-		if (!$discount) {
+		if (!$discount && $this->ms['MODULES']['ENABLE_FE_GROUP_DISCOUNT_PERCENTAGE']) {
 			if ($user['usergroup']) {
 				$array=explode(",", $user['usergroup']);
 				foreach ($array as $group) {
@@ -5890,6 +5931,7 @@ class mslib_fe {
 				}
 				*/
 				$filter[]=$field.'=\''.addslashes($value).'\'';
+				$filter[]='deleted=0';
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 					'fe_users', // FROM ...
 					implode(' AND ',$filter), // WHERE...
@@ -6638,7 +6680,7 @@ class mslib_fe {
 //		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_home').'" title="Home dashboard" alt="Home dashboard"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
 		if ($this->ROOTADMIN_USER or $this->CATALOGADMIN_USER) {
 			$ms_menu['header']['ms_admin_catalog']['label']=$this->pi_getLL('admin_catalog');
-			$ms_menu['header']['ms_admin_catalog']['link']=mslib_fe::typolink($this->shop_pid, '', 1);
+			$ms_menu['header']['ms_admin_catalog']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid='.$this->get['categories_id']);//mslib_fe::typolink($this->shop_pid, '', 1);
 			$ms_menu['header']['ms_admin_catalog']['class']='fa fa-book';
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['label']=$this->pi_getLL('admin_categories');
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['description']=$this->pi_getLL('admin_add_and_modify_categories_here').'.';
@@ -8092,6 +8134,13 @@ class mslib_fe {
 						$row['paid']=1;
 						$row['invoice_id']=$new_invoice_id;
 						$row['hash']=md5(uniqid('', true));
+                        if ($row['invoice_grand_total']<0) {
+                            $row['invoice_grand_total']=str_replace('-', '', $row['invoice_grand_total']);
+                            $row['invoice_grand_total_excluding_vat']=str_replace('-', '', $row['invoice_grand_total_excluding_vat']);
+                        } else {
+                            $row['invoice_grand_total']='-'.$row['invoice_grand_total'];
+                            $row['invoice_grand_total_excluding_vat']='-'.$row['invoice_grand_total_excluding_vat'];
+                        }
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
 						// update old invoice to paid so its gone from the unpaid list
@@ -8308,7 +8357,8 @@ class mslib_fe {
 					$insertArray['status']=1;
 					$insertArray['page_uid']=$this->shop_pid;
 					$insertArray['hash']=$hash;
-					$insertArray['amount']=mslib_fe::getOrderTotalPrice($orders_id);
+					$insertArray['invoice_grand_total']=$order['grand_total'];
+                    $insertArray['invoice_grand_total_excluding_vat']=$order['grand_total_excluding_vat'];
 					$insertArray['discount']=$order['discount'];
 					$insertArray['payment_condition']=$order['payment_condition'];
 					if ($order['billing_company']) {
@@ -9744,44 +9794,72 @@ class mslib_fe {
 	function isItemInFeedsExcludeList($feed_id, $exclude_id, $exclude_type='products') {
 		if ($exclude_type=='categories') {
 			$cats=mslib_fe::Crumbar($exclude_id);
+            $cats=array_reverse($cats);
 			if (count($cats)>0) {
-				foreach ($cats as $cat) {
-					$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
+			    $negate_value=false;
+                foreach ($cats as $cat) {
+					$sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						return true;
-						break;
+                        $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+                        if ($row['negate']) {
+                            $negate_value = true;
+                        } else {
+                            $negate_value = false;
+                        }
 					}
 				}
+                return $negate_value;
 			}
 		} else if ($exclude_type=='products') {
-			$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
+            $negate_value=false;
+		    $sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-				return true;
+                $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+                if ($row['negate']) {
+                    $negate_value = true;
+                } else {
+                    $negate_value = false;
+                }
 			}
+			return $negate_value;
 		}
 		return false;
 	}
 	function isItemInFeedsStockExcludeList($feed_id, $exclude_id, $exclude_type='products') {
 		if ($exclude_type=='categories') {
 			$cats=mslib_fe::Crumbar($exclude_id);
+            $cats=array_reverse($cats);
 			if (count($cats)>0) {
+                $negate_value=false;
 				foreach ($cats as $cat) {
-					$sql_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
+					$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and negate=1 and exclude_type='categories'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						return true;
-						break;
+                        $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+                        if ($row['negate']) {
+                            $negate_value = true;
+                        } else {
+                            $negate_value = false;
+                        }
 					}
 				}
+                return $negate_value;
 			}
 		} else if ($exclude_type=='products') {
-			$sql_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
+            $negate_value = false;
+			$sql_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and negate=1 and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-				return true;
+                $row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+                if ($row['negate']) {
+                    $negate_value = true;
+                } else {
+                    $negate_value = false;
+                }
 			}
+			return $negate_value;
 		}
 		return false;
 	}

@@ -53,11 +53,26 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
 		if ($this->get['skeyword']) {
 			$where.='&skeyword='.urlencode($this->get['skeyword']).'&';
 		}
+		$steps=count($array);
+		$stepCounter=0;
 		foreach ($array as $item) {
+			$stepCounter++;
 			if ($item!=$this->pi_getLL('show_all')) {
 				$label=$item.' euro';
 			} else {
 				$label=$this->pi_getLL('show_all');
+			}
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/price_filter_navigation_box.php']['priceFilterSteppingIteratorPreProc'])) {
+				$params=array(
+						'item'=>&$item,
+						'label'=>&$label,
+						'steps'=>$steps,
+						'stepCounter'=>$stepCounter,
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/price_filter_navigation_box.php']['priceFilterSteppingIteratorPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
 			}
 			$content.='<li'.($this->get['price_filter']==$item ? ' class="active"' : '').'><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&'.$where.'price_filter='.urlencode($item)).'" class="ajax_link">'.$label.'</a></li>'."\n";
 		}

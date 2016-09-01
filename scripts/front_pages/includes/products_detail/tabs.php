@@ -171,7 +171,11 @@ if (!$product['products_id']) {
 	$output['products_price'].=$sub_content.'</div>';
 	// show selectbox by products multiplication or show default input
 	if ($this->get['tx_multishop_pi1']['cart_item']) {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$qty=$cart['products'][$this->get['tx_multishop_pi1']['cart_item']]['qty'];
 	}
 	$quantity_html='';
@@ -425,14 +429,16 @@ if (!$product['products_id']) {
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 								shipping_cost_popup+=\'</tr>\';
-								$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-									$.each(shipping_data, function(country_iso_nr, shipping_cost) {
-										shipping_cost_popup+=\'<tr>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'</tr>\';
-									});
+								$.each(j.shipping_costs_display, function(zone_id, shipping_cost_display) {
+                                    $.each(shipping_cost_display, function(shipping_method, shipping_data) {
+                                        $.each(shipping_data, function(country_iso_nr, shipping_cost) {
+                                            shipping_cost_popup+=\'<tr>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'</tr>\';
+                                        });
+                                    });
 								});
 								if (j.delivery_time!=\'e\') {
 									shipping_cost_popup+=\'<tr>\';

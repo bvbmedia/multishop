@@ -13,14 +13,22 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 if (is_numeric($this->get['products_id'])) {
 	// canonical link tag
 	$relation_cat=mslib_fe::getProductToCategoriesArray($this->get['products_id']);
-	if (count($relation_cat)>1) {
-		$primary_cat=$relation_cat[0];
-		if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
-			$product_path=mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
-			if (is_array($product_path) && count($product_path)) {
-				$primary_cat=$product_path['node_id'];
-			}
-		}
+    $count_relation_cat=count($relation_cat);
+	if ($count_relation_cat>1 || (isset($this->get['manufacturers_id']) && $this->get['manufacturers_id']>0)) {
+	    if ($count_relation_cat>1) {
+            $primary_cat = $relation_cat[0];
+            if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+                $product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+                if (is_array($product_path) && count($product_path)) {
+                    $primary_cat = $product_path['node_id'];
+                }
+            }
+        } else {
+            $product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'));
+            if (is_array($product_path) && count($product_path)) {
+                $primary_cat = $product_path['node_id'];
+            }
+        }
 		// get all cats to generate multilevel fake url
 		$level=0;
 		$cats=mslib_fe::Crumbar($primary_cat);
@@ -36,20 +44,30 @@ if (is_numeric($this->get['products_id'])) {
 		}
 		// get all cats to generate multilevel fake url eof
 		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-		$output_array['meta']['canonical_link']='<link rel="canonical" href="'.$canonical_link.'" />';
+		$output_array['meta']['canonical_url']='<link rel="canonical" href="'.$canonical_link.'" />';
 	}
 	//last visited
-	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+	$mslib_cart->init($this);
+	$cart=$mslib_cart->getCart();
 	$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
-	$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-	$GLOBALS['TSFE']->fe_user->storeSessionData();
+	//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+	//$GLOBALS['TSFE']->fe_user->storeSessionData();
+	tx_mslib_cart::storeCart($cart);
 	//last visited eof
 	if (isset($this->get['clear_list'])) {
-		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$cart=$mslib_cart->getCart();
 		$cart['last_visited']=array();
 		$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->fe_user->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->fe_user->storeSessionData();
+		tx_mslib_cart::storeCart($cart);
 	}
 	unset($cart['last_visited'][$this->get['products_id']]);
 }

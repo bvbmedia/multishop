@@ -72,7 +72,11 @@ if ($this->ms['MODULES']['COUPONS']) {
 }
 $output['shopping_cart_colspan']=5;
 $output['shopping_cart_header']=ucfirst($this->pi_getLL('basket'));
-$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart->init($this);
+$cart=$mslib_cart->getCart();
 $count_product=count($cart['products']);
 if ($count_product===1) {
 	foreach ($cart['products'] as $shopping_cart_item=>$value) {

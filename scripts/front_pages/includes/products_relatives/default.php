@@ -154,6 +154,8 @@ if (is_array($rel_products) && count($rel_products)) {
 		$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION_ENCODED']=htmlspecialchars($rel_rs['products_shortdescription']);
 		$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION']=$rel_rs['products_shortdescription'];
+		$markerArray['PRODUCTS_SHORT_DESCRIPTION']=$rel_rs['products_shortdescription'];
+
 		$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
 		$quantity_html='<div class="quantity buttons_added">';
 		$quantity_html.='<input type="button" value="-" data-stepSize="'.($rel_rs['products_multiplication']!='0.00' ? $rel_rs['products_multiplication'] : '1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00' ? $rel_rs['minimum_quantity'] : '1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00' ? $rel_rs['maximum_quantity'] : '0').'" class="rel_qty_minus" rel="relation_cart_quantity_'.$i.'">';
@@ -245,15 +247,17 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
 							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 							shipping_cost_popup+=\'</tr>\';
-							$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-								$.each(shipping_data, function(country_iso_nr, shipping_cost){
-									shipping_cost_popup+=\'<tr>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-									shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-									shipping_cost_popup+=\'</tr>\';
-								});
-							});
+							$.each(j.shipping_costs_display, function(zone_id, shipping_cost_display) {
+                                $.each(shipping_cost_display, function(shipping_method, shipping_data) {
+                                    $.each(shipping_data, function(country_iso_nr, shipping_cost) {
+                                        shipping_cost_popup+=\'<tr>\';
+                                        shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                        shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+                                        shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                        shipping_cost_popup+=\'</tr>\';
+                                    });
+                                });
+                            });
 							if (j.delivery_time!=\'e\') {
 								shipping_cost_popup+=\'<tr>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';

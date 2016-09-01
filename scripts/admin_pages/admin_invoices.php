@@ -224,10 +224,15 @@ $subparts['invoices_results']=$this->cObj->getSubpart($subparts['template'], '##
 $subparts['invoices_listing']=$this->cObj->getSubpart($subparts['invoices_results'], '###INVOICES_LISTING###');
 $subparts['invoices_noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
 //
-if ($this->get['Search'] and ($this->get['paid_invoices_only']!=$this->cookie['paid_invoices_only'])) {
-	$this->cookie['paid_invoices_only']=$this->get['paid_invoices_only'];
+if ($this->get['Search'] and ($this->get['invoice_paid_status']!=$this->cookie['invoice_paid_status'])) {
+	$this->cookie['invoice_paid_status']=$this->get['invoice_paid_status'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->get['Search'] and ($this->get['invoice_type']!=$this->cookie['invoice_type'])) {
+    $this->cookie['invoice_type']=$this->get['invoice_type'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
 }
 if ($this->get['Search'] and ($this->get['tx_multishop_pi1']['filter_by_paid_date']!=$this->cookie['filter_by_paid_date'])) {
 	$this->cookie['filter_by_paid_date']=$this->get['tx_multishop_pi1']['filter_by_paid_date'];
@@ -491,11 +496,15 @@ if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all'
 		$filter[]="(o.shipping_method='".addslashes($this->get['shipping_method'])."')";
 	}
 }
-if ($this->cookie['paid_invoices_only']) {
+if ($this->cookie['invoice_paid_status']=='paid') {
 	$filter[]="(i.paid='1')";
+} else if ($this->cookie['invoice_paid_status']=='unpaid') {
+    $filter[]="(i.paid='0')";
 }
-if (isset($this->get['paid_invoices_only']) && !$this->get['paid_invoices_only']) {
-	$filter[]="(i.paid='0')";
+if ($this->cookie['invoice_type']=='credit') {
+    $filter[]="(i.reversal_invoice='1')";
+} else if ($this->cookie['invoice_type']=='debit') {
+    $filter[]="(i.reversal_invoice='0')";
 }
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="o.billing_country='".addslashes($this->get['country'])."'";
@@ -550,7 +559,8 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
 	(isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
 	(isset($this->get['invoice_date_from']) && !empty($this->get['invoice_date_from'])) ||
 	(isset($this->get['invoice_date_till']) && !empty($this->get['invoice_date_till'])) ||
-	(isset($this->get['paid_invoices_only']) && !empty($this->get['paid_invoices_only']))) {
+    (isset($this->get['invoice_type']) && !empty($this->get['invoice_type'])) ||
+    (isset($this->get['invoice_paid_status']) && !empty($this->get['invoice_paid_status']))) {
 	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
 }
 
@@ -603,6 +613,24 @@ $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
 
 $subpartArray['###DATE_TIME_JS_FORMAT0###']=$this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###']=$this->pi_getLL('locale_date_format_js');
+// paid status
+$paid_status_sb='<select name="invoice_paid_status" id="invoice_paid_status" class="invoice_select2">
+<option value="">'.$this->pi_getLL('all').'</option>
+<option value="paid"'.($this->get['invoice_paid_status']=='paid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('show_paid_invoices_only').'</option>
+<option value="unpaid"'.($this->get['invoice_paid_status']=='unpaid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('show_unpaid_invoices_only').'</option>
+</select>';
+$subpartArray['###LABEL_INVOICES_PAID_STATUS###']=$this->pi_getLL('invoice_paid_status');
+$subpartArray['###INVOICES_PAID_STATUS_SELECTBOX###']=$paid_status_sb;
+// invoice type
+$invoice_type_sb='<select name="invoice_type" id="invoice_type" class="invoice_select2">
+<option value="">'.$this->pi_getLL('all').'</option>
+<option value="credit"'.($this->get['invoice_type']=='credit' ? ' selected="selected"' : '').'>'.$this->pi_getLL('show_credit_invoices_only').'</option>
+<option value="debit"'.($this->get['invoice_type']=='debit' ? ' selected="selected"' : '').'>'.$this->pi_getLL('show_debit_invoices_only').'</option>
+</select>';
+$subpartArray['###LABEL_INVOICES_TYPE###']=$this->pi_getLL('invoice_type');
+$subpartArray['###INVOICES_TYPE_SELECTBOX###']=$invoice_type_sb;
+
+
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');

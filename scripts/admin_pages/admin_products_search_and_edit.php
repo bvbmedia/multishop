@@ -443,8 +443,13 @@ if ($this->ms['MODULES']['FLAT_DATABASE'] and count($having)) {
 	$filter[]=$having[0];
 	unset($having);
 }
+if (isset($this->get['stock_from']) && !empty($this->get['stock_from']) && isset($this->get['stock_till']) && !empty($this->get['stock_till'])) {
+    $prefix='p.';
+    $filter[]="(".$prefix."products_quantity between ".$this->get['stock_from']." and ".$this->get['stock_till'].")";
+}
 $pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
 $products=$pageset['products'];
+$product_tax_rate_js=array();
 if ($pageset['total_rows']>0) {
 	$subpartArray=array();
 	$subpartArray['###FORM_ACTION_PRICE_UPDATE_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_products_search_and_edit&'.mslib_fe::tep_get_all_get_params(array(
@@ -629,6 +634,7 @@ if ($pageset['total_rows']>0) {
 		$product_tax_rate=0;
 		$data=mslib_fe::getTaxRuleSet($rs['tax_id'], 0);
 		$product_tax_rate=$data['total_tax_rate'];
+        $product_tax_rate_js[]='product_tax_rate_js["'.$rs['products_id'].'"]="' . $data['total_tax_rate'] . '";';
 		$product_tax=mslib_fe::taxDecimalCrop(($rs['products_price']*$product_tax_rate)/100);
 		$product_price_display=mslib_fe::taxDecimalCrop($rs['products_price'], 2, false);
 		$product_price_display_incl=mslib_fe::taxDecimalCrop($rs['products_price']+$product_tax, 2, false);
@@ -769,6 +775,17 @@ if ($postMessageArray) {
 	$subpartArray['###POST_MESSAGE###']=$postmessage;
 }
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
+$subpartArray['###UNFOLD_SEARCH_BOX###']='';
+if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
+    (isset($this->get['stock_till']) && !empty($this->get['stock_till']))) {
+    $subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
+}
+$subpartArray['###LABEL_STOCK_FROM###']=$this->pi_getLL('from');
+$subpartArray['###LABEL_STOCK###']=$this->pi_getLL('stock');
+$subpartArray['###VALUE_STOCK_FROM###']=$this->get['stock_from'];
+$subpartArray['###LABEL_STOCK_TO###']=$this->pi_getLL('to');
+$subpartArray['###VALUE_STOCK_TO###']=$this->get['stock_till'];
+
 $subpartArray['###PAGE_HEADER###']=$this->pi_getLL('products');
 $subpartArray['###LABEL_SEARCH_KEYWORD###']=$this->pi_getLL('admin_search_for');
 $subpartArray['###VALUE_SEARCH_KEYWORD###']=((isset($this->get['keyword'])) ? htmlspecialchars($this->get['keyword']) : '');
@@ -778,6 +795,7 @@ $subpartArray['###LABEL_SEARCH_IN###']=$this->pi_getLL('in');
 $subpartArray['###SEACRH_IN_CATEGORY_TREE_SELECTBOX###']=$search_category_selectbox;
 $subpartArray['###LABEL_SEARCH_LIMIT###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###SEARCH_LIMIT###']=$search_limit;
+$subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
 $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');
 //
 $subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_products_status');
@@ -827,4 +845,9 @@ $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
 
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=$prepending_content.'<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+var product_tax_rate_js=[];
+'.implode("\n", $product_tax_rate_js).'
+</script>
+';
 ?>

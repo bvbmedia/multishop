@@ -153,7 +153,7 @@ if (!$product['products_id']) {
         $output['products_name'] .= $output['admin_link'];
     }
     $final_price = mslib_fe::final_products_price($product);
-    if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+    if ($product['tax_id']) {
         $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
             if ($product['staffel_price'] > 0) {
@@ -161,7 +161,12 @@ if (!$product['products_id']) {
             } else {
                 $price_excl_vat = $product['final_price'];
             }
-            $sub_content .= '<div class="price_excluding_vat">' . $this->pi_getLL('excluding_vat') . ' ' . mslib_fe::amount2Cents($price_excl_vat) . '</div>';
+            $price_excl_vat=mslib_fe::amount2Cents($price_excl_vat);
+        }
+        if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+            if ($tax) {
+                $sub_content .= '<div class="price_excluding_vat">' . $this->pi_getLL('excluding_vat') . ' ' . mslib_fe::amount2Cents($price_excl_vat) . '</div>';
+            }
         }
     }
     $staffel_price_hid = '';
@@ -188,6 +193,7 @@ if (!$product['products_id']) {
 	  	<div class="specials_price">' . mslib_fe::amount2Cents($final_price) . '</div>';
     }
     $output['products_price'] .= $sub_content . '</div>';
+
     // staffel price table
     $output['products_staffel_price_table'] = '';
     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
@@ -220,7 +226,11 @@ if (!$product['products_id']) {
     }
     // show selectbox by products multiplication or show default input
     if ($this->get['tx_multishop_pi1']['cart_item']) {
-        $cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+        $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+        $mslib_cart->init($this);
+        $cart=$mslib_cart->getCart();
+        //$cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         $qty = $cart['products'][$this->get['tx_multishop_pi1']['cart_item']]['qty'];
     }
     $quantity_html = '';
@@ -321,13 +331,13 @@ if (!$product['products_id']) {
     // loading the attributes eof
     // add to basket
     if (($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) && !$product['products_status'] && !$this->ms['MODULES']['FLAT_DATABASE']) {
-        $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
+        $order_now_button .= '<input id="multishop_add_to_cart" class="disabled" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
     } else {
         if ($product['products_quantity'] < 1) {
             if ($this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
                 $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('add_to_basket')) . '" />';
             } else {
-                $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
+                $order_now_button .= '<input id="multishop_add_to_cart" class="disabled" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
             }
         } else {
             $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('add_to_basket')) . '" />';
@@ -379,6 +389,10 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE###'] = $output['products_image'];
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
+    $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = '';
+    if ($price_excl_vat!='') {
+        $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat.' '.lcfirst($this->pi_getLL('excluding_vat'));
+    }
     $markerArray['###PRODUCTS_STAFFEL_PRICE_TABLE###'] = $output['products_staffel_price_table'];
     $markerArray['###PRODUCTS_SKU###'] = $product['sku_code'];
     $markerArray['###PRODUCTS_EAN###'] = $product['ean_code'];
@@ -428,7 +442,15 @@ if (!$product['products_id']) {
         }
     }
     $markerArray['###CANONICAL_URL###'] = $productLink;
-    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($product['manufacturers_advice_price']);
+    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] ='';
+    if ($product['manufacturers_advice_price']) {
+        if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+            $amount = $product['manufacturers_advice_price'] * (1 + $product['tax_rate']);
+        } else {
+            $amount = $product['manufacturers_advice_price'];
+        }
+        $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = mslib_fe::amount2Cents($amount);
+    }
     $js_detail_page_triggers[] = '
 		var stepSize=parseFloat(\'' . ($product['products_multiplication'] != '0.00' ? $product['products_multiplication'] : 1) . '\');
 		var minQty=parseFloat(\'' . ($product['minimum_quantity'] != '0.00' ? $product['minimum_quantity'] : '1') . '\');
@@ -512,14 +534,16 @@ if (!$product['products_id']) {
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">' . $this->pi_getLL('shipping_and_handling_cost_overview') . '</td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">' . $this->pi_getLL('deliver_by') . '</td>\';
 								shipping_cost_popup+=\'</tr>\';
-								$.each(j.shipping_costs_display, function(shipping_method, shipping_data) {
-									$.each(shipping_data, function(country_iso_nr, shipping_cost) {
-										shipping_cost_popup+=\'<tr>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
-										shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[shipping_method][country_iso_nr] + \'</td>\';
-										shipping_cost_popup+=\'</tr>\';
-									});
+								$.each(j.shipping_costs_display, function(zone_id, shipping_cost_display) {
+                                    $.each(shipping_cost_display, function(shipping_method, shipping_data) {
+                                        $.each(shipping_data, function(country_iso_nr, shipping_cost) {
+                                            shipping_cost_popup+=\'<tr>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+                                            shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[zone_id][shipping_method][country_iso_nr] + \'</td>\';
+                                            shipping_cost_popup+=\'</tr>\';
+                                        });
+                                    });
 								});
 								if (j.delivery_time!=\'e\') {
 									shipping_cost_popup+=\'<tr>\';

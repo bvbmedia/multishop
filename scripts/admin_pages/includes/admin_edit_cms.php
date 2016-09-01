@@ -213,8 +213,16 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				updateForm();
 			});
 		</script>
-		<div class="form-group" style="display:none" id="msadminMarkersBox">
-				<table id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered table-condensed msadmin_orders_listing no-mb">
+		
+		<div class="modal" id="markersModal" tabindex="-1" role="dialog" aria-labelledby="markersModalTitle" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="smarkersModalTitle">CMS Markers</h4>
+			  </div>
+			  <div class="modal-body">
+			  <table id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered table-condensed msadmin_orders_listing no-mb">
 				<thead>
 				<tr>
 					<th>'.$this->pi_getLL('marker').'</th>
@@ -284,7 +292,16 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		$tmpcontent.='<tr><td class="marker_key">###'.$key.'###</td><td class="marker_description">'.htmlspecialchars($label).'</td></tr>'."\n";
 	}
 	$tmpcontent.='</tbody></table>
-			</div>';
+			  </div>
+			  <div class="modal-footer"></div>
+			</div>
+		  </div>
+		</div>
+		';
+
+
+
+
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 		<div class="form-group">
@@ -302,7 +319,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		</div>
 		<div class="form-group">
 			<div class="col-md-10 col-md-offset-2">
-				<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#markersModal">Markers</button>
 			</div>
 		</div>
 		<div class="form-group">
@@ -376,17 +393,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
-		$(document).on("click", ".tooltipMarker", function(e){ e.preventDefault(); });
-		var html=$("#msadminMarkersBox .valueField").html();
-
-		$(\'.tooltipMarker\').popover({
-			html : true,
-			placement:\'right\',
-			title:\'Markers\',
-			content: function() {
-			  return \'<div class="form-group">\' + $("#msadminMarkersBox").html() + \'</div>\';
-			}
-		});
+		$(\'#markersModal\').modal({
+            show:false,
+            backdrop:false
+        });
 	});
 </script>
 ';

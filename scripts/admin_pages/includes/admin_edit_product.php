@@ -63,7 +63,7 @@ foreach ($this->languages as $key=>$language) {
 $pageinfo=mslib_befe::getRecord($this->shop_pid, 'pages', 'uid', array('deleted=0 and hidden=0'));
 $GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
+<script type="text/javascript" data-ignore="1">
 '.implode("\n", $jsSelect2InitialValue).'
 var languages=[];
 languages=['.implode(",", $js_languages).'];
@@ -295,6 +295,10 @@ jQuery(document).ready(function($) {
 
 		}
 		' : '').'
+	});
+	$(document).on("mouseup", "li.select2-search-choice > div > .innerLink", function(e){
+	    var href=$(this).attr("href");
+	    window.open(href, "_blank");
 	});
 	'.($this->get['action']=='edit_product' && $this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']>0 ? '
 	$(\'#default_path_categories_id\').select2({
@@ -1865,6 +1869,12 @@ if ($this->post) {
 					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				}	 */
 				$updateArray['status']=$special_status;
+				$filter=array();
+				$filter[]='products_id='.$prodid;
+				if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+					// lock changed columns
+					mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_specials', $updateArray);
+				}
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\''.$prodid.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -2097,7 +2107,7 @@ if ($this->post) {
 				$pa_price=$this->post['tx_multishop_pi1']['price'][$opt_sort];
 				if (empty($pa_prefix) && $pa_price>0) {
 					if (!empty($pa_price)) {
-						if ($this->post['specials_new_products_price']) {
+						if ($this->post['specials_new_products_price']>0) {
 							if ($this->post['specials_new_products_price']>$pa_price) {
 								$pa_prefix='-';
 								$pa_price=$this->post['specials_new_products_price']-$pa_price;
@@ -2105,7 +2115,7 @@ if ($this->post) {
 								$pa_prefix='+';
 								$pa_price=$pa_price-$this->post['specials_new_products_price'];
 							}
-						} else {
+						} else if ($this->post['products_price']>0) {
 							if ($this->post['products_price']>$pa_price) {
 								$pa_prefix='-';
 								$pa_price=$this->post['products_price']-$pa_price;
@@ -2200,36 +2210,61 @@ if ($this->post) {
 			}
 		}
 		if ($this->ms['MODULES']['DISPLAY_EXCLUDE_FROM_FEED_INPUT']) {
-			$sql_check="delete from tx_multishop_feeds_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
-			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-			//
 			if (count($this->post['exclude_feed'])) {
-				foreach ($this->post['exclude_feed'] as $feed_id=>$feed_value) {
-					if ($feed_value>0) {
-						$updateArray=array();
-						$updateArray['feed_id']=$feed_id;
-						$updateArray['exclude_id']=$prodid;
-						$updateArray['exclude_type']='products';
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_excludelist', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					}
-				}
+				foreach ($this->post['exclude_feed_list'] as $feed_id) {
+                    if (isset($this->post['exclude_feed'][$feed_id])) {
+                        $negate=$this->post['exclude_feed'][$feed_id];
+                        $catalog_to_feed_rec=mslib_befe::getRecord($prodid, 'tx_multishop_catalog_to_feeds', 'exclude_id', array('feed_id=' . $feed_id . ' and exclude_type=\'products\''), 'id');
+                        if (isset($catalog_to_feed_rec['id'])) {
+                            $updateArray=array();
+                            $updateArray['negate']=$negate;
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_catalog_to_feeds', 'id=' . $catalog_to_feed_rec['id'], $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        } else {
+                            $insertArray = array();
+                            $insertArray['feed_id'] = $feed_id;
+                            $insertArray['exclude_id'] = $prodid;
+                            $insertArray['negate'] = $negate;
+                            $insertArray['exclude_type'] = 'products';
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_catalog_to_feeds', $insertArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                    } else {
+                        $sql_check="delete from tx_multishop_catalog_to_feeds where exclude_id='".addslashes($prodid)."' and feed_id=".$feed_id." and exclude_type='products'";
+                        $qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                    }
+                }
+			} else {
+				$sql_check="delete from tx_multishop_catalog_to_feeds where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
+				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			}
-			//
-			$sql_check="delete from tx_multishop_feeds_stock_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
-			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-			//
 			if (count($this->post['exclude_stock_feed'])) {
-				foreach ($this->post['exclude_stock_feed'] as $feed_id=>$feed_value) {
-					if ($feed_value>0) {
-						$updateArray=array();
-						$updateArray['feed_id']=$feed_id;
-						$updateArray['exclude_id']=$prodid;
-						$updateArray['exclude_type']='products';
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_stock_excludelist', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					}
-				}
+                foreach ($this->post['exclude_stock_feed_list'] as $feed_id) {
+                    if (isset($this->post['exclude_stock_feed'][$feed_id])) {
+                        $negate=$this->post['exclude_stock_feed'][$feed_id];
+                        $catalog_to_feed_stock_rec=mslib_befe::getRecord($prodid, 'tx_multishop_catalog_to_feeds_stocks', 'exclude_id', array('feed_id=' . $feed_id . ' and exclude_type=\'products\''), 'id');
+                        if (isset($catalog_to_feed_stock_rec['id'])) {
+                            $updateArray=array();
+                            $updateArray['negate']=$negate;
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_catalog_to_feeds_stocks', 'id=' . $catalog_to_feed_stock_rec['id'], $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        } else {
+                            $insertArray = array();
+                            $insertArray['feed_id'] = $feed_id;
+                            $insertArray['exclude_id'] = $prodid;
+                            $insertArray['negate'] = $negate;
+                            $insertArray['exclude_type'] = 'products';
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_catalog_to_feeds_stocks', $insertArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                    } else {
+                        $sql_check="delete from tx_multishop_catalog_to_feeds_stocks where exclude_id='".addslashes($prodid)."' and feed_id=".$feed_id." and exclude_type='products'";
+                        $qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                    }
+                }
+			} else {
+				$sql_check="delete from tx_multishop_catalog_to_feeds_stocks where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
+				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 			}
 		}
 		if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && is_numeric($this->get['pid']) && $this->get['pid']>0 && isset($this->post['default_path_categories_id'])) {
@@ -2258,7 +2293,7 @@ if ($this->post) {
 			// custom hook that can be controlled by third-party plugin eof
 		} else {
 			// custom hook that can be controlled by third-party plugin
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'])) {
 				$params=array(
 					'products_id'=>$prodid
 				);
@@ -2276,6 +2311,8 @@ if ($this->post) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		// set default Crumpath
+        mslib_befe::setProductDefaultCrumpath($prodid);
 		// lets notify plugin that we have update action in product
 		tx_mslib_catalog::productsUpdateNotifierForPlugin($this->post, $prodid);
 		// custom hook that can be controlled by third-party plugin eof
@@ -2568,19 +2605,34 @@ if ($this->post) {
 		 * options tab
 		 */
 		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
-		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
+		$str="SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product_tax_rate=0;
 		$data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
 		$product_tax_rate=$data['total_tax_rate'];
+        $tax_list_data=array();
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			if ($this->get['action']=='add_product') {
+            $tax_list_data[]='product_tax_rate_list_js["'.$row['rules_group_id'].'"]="'.round(number_format($row['rate'], 2), 2).'"';
+		    if ($this->get['action']=='add_product') {
 				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['default_status']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 			} else {
 				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['rules_group_id']==$product['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 			}
 		}
 		$input_vat_rate.='</select>';
+        // js definition for tax
+        $product_tax_rate_js=array();
+        $product_tax_rate_js[]='var product_tax_rate_list_js=[];';
+        if (count($tax_list_data)) {
+            $product_tax_rate_js = $tax_list_data;
+        }
+        $GLOBALS['TSFE']->additionalHeaderData[]='
+        <script type="text/javascript" data-ignore="1">
+           //var price_subject_id="'.$this->get['pid'].'"
+           var product_tax_rate_list_js=[];
+           '.implode("\n", $product_tax_rate_js).'
+        </script>
+        ';
 		if ($_REQUEST['action']=='edit_product') {
 			$str="SELECT * from tx_multishop_specials where products_id='".$_REQUEST['pid']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2636,9 +2688,9 @@ if ($this->post) {
 								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
 								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
@@ -2661,9 +2713,9 @@ if ($this->post) {
 								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
@@ -2672,6 +2724,8 @@ if ($this->post) {
 								jQuery(\'#sp_end_row\').before(elem);
 							}
 							jQuery(\'#sp_row_counter\').val(counter_data);
+							$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			                $(\'input.priceInputDisplay\').number(true, 2, "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'", "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'");
 						//}
 						event.preventDefault();
 					});
@@ -2689,12 +2743,12 @@ if ($this->post) {
 				}
 				$(document).on("keyup", ".msStaffelPriceExcludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(true, this);
+						priceEditRealtimeCalc(true, this);
 					}
 				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(false, this);
+						priceEditRealtimeCalc(false, this);
 					}
 				});
 				</script>';
@@ -2738,9 +2792,9 @@ if ($this->post) {
 							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></span></td>
 							<td>
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="'.htmlspecialchars($sp_price_display).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="'.htmlspecialchars($staffel_price_display_incl).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="priceInputReal price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
 							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button></td>
 						</tr>';
 				}
@@ -3055,15 +3109,15 @@ if ($this->post) {
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat priceInputDisplay" autocomplete="off">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('excluding_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
-			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" autocomplete="off">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.addslashes(htmlspecialchars($this->pi_getLL('including_vat'))).'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" class="priceInputReal" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
@@ -3809,9 +3863,9 @@ if ($this->post) {
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
 								$existing_product_attributes_block_columns['attribute_price_col']='<td class="cellPrice">
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat priceInputDisplay" value="'.$attribute_price_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" value="'.$attribute_price_display_incl.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" class="priceInputReal" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_save_col']='<td class="cellAction">
 								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button></div>
@@ -3944,12 +3998,12 @@ if ($this->post) {
 				'.$attribute_values_sb_trigger.'
 				$(document).on("keyup", ".msAttributesPriceExcludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(true, this);
+						priceEditRealtimeCalc(true, this);
 					}
 				});
 				$(document).on("keyup", ".msAttributesPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
-						productPrice(false, this);
+						priceEditRealtimeCalc(false, this);
 					}
 				});
 			});
@@ -4086,18 +4140,8 @@ if ($this->post) {
 			$feed_stock_checkbox='';
 			$sql_feed='SELECT * from tx_multishop_product_feeds';
 			$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
-			$feed_checkbox='<div class="form-group div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeeds">
-								<label></label>
-								<div class="innerbox_methods">
-									<div class="innerbox_exclude_feeds">
-
-										';
-			$feed_stock_checkbox='<div class="form-group div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeedsStock">
-								<label></label>
-								<div class="innerbox_methods">
-									<div class="innerbox_exclude_stock_feeds">
-
-										';
+			$feed_checkbox='';
+			$feed_stock_checkbox='';
 			while ($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
 				if ($_REQUEST['action']=='edit_product') {
 					if (!$tr_type or $tr_type=='even') {
@@ -4105,43 +4149,73 @@ if ($this->post) {
 					} else {
 						$tr_type='even';
 					}
-					$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
+					$sql_check="select id, negate from tx_multishop_catalog_to_feeds where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-					$feed_checkbox.='<div class="form-group col-md-12"><div class="checkbox checkbox-success checkbox-inline">';
-					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" checked="checked" />';
-					} else {
-						$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" />';
-					}
-					$feed_checkbox.='<label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$rs_feed['name'].'</label>';
-					$feed_checkbox.='</div></div>';
-					$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                        $rs_feed_list=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+                        $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="1"'.($rs_feed_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
+                    } else {
+                        $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
+                    }
+                    // feed stock
+                    $sql_stock_check="select id, negate from tx_multishop_catalog_to_feeds_stocks where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 					$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
-					$feed_stock_checkbox.='<div class="form-group col-md-12"><div class="checkbox checkbox-success checkbox-inline">';
-					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
-						$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" checked="checked" /><label for="enable_exclude_stock_feed_'.$rs_feed['id'].'">'.$rs_feed['name'].'</label>';
-					} else {
-						$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_stock_feed_'.$rs_feed['id'].'">'.$rs_feed['name'].'</label>';
-					}
-					$feed_stock_checkbox.='</div></div>';
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
+                        $rs_feed_stock_list=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_stock_check);
+                        $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="1"'.($rs_feed_stock_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" type="radio" value="0"'.(!$rs_feed_stock_list['negate'] ? ' checked="checked" data-radio-state="checked"' : '').'><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
+                    } else {
+                        $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
+                    }
 				} else {
-					$feed_checkbox.='<div class="form-group col-md-12"><div class="checkbox checkbox-success checkbox-inline">';
-					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$rs_feed['name'].'</label>';
-					$feed_checkbox.='</div></div>';
-					$feed_stock_checkbox.='<div class="form-group"><div class="checkbox checkbox-success checkbox-inline">';
-					$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_stock_feed_'.$rs_feed['id'].'">'.$rs_feed['name'].'</label>';
-					$feed_stock_checkbox.='</div></div>';
+                    $feed_checkbox.='<div class="form-group exclude_feed" id="exclude_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_feed['.$rs_feed['id'].']" class="feed_radio" id="exclude_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
+                    $feed_stock_checkbox.='<div class="form-group exclude_stock_feed" id="exclude_stock_feed'.$rs_feed['id'].'">
+                            <label class="control-label col-md-2">'.$rs_feed['name'].'</label>
+                            <div class="col-md-10">
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_disable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="1"><label for="exclude_stock_feed'.$rs_feed['id'].'_disable">'.htmlspecialchars($this->pi_getLL('dont_show')).'</label></div>
+                                <div class="checkbox checkbox-success checkbox-inline"><input name="exclude_stock_feed['.$rs_feed['id'].']" class="feed_stock_radio" id="exclude_stock_feed'.$rs_feed['id'].'_enable" data-feed-id="'.$rs_feed['id'].'" data-radio-state="unchecked" type="radio" value="0"><label for="exclude_stock_feed'.$rs_feed['id'].'_enable">'.htmlspecialchars($this->pi_getLL('show')).'</label></div>
+                            </div>
+                        </div>';
 				}
+                $feed_checkbox.='<input name="exclude_feed_list[]" type="hidden" value="'.$rs_feed['id'].'">';
+                $feed_stock_checkbox.='<input name="exclude_stock_feed_list[]" type="hidden" value="'.$rs_feed['id'].'">';
 			}
-			$feed_checkbox.='</div></div></div>';
-			$feed_stock_checkbox.='</div></div></div>';
-			$markerArray['LABEL_EXCLUDE_FROM_FEED']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
+			$markerArray['LABEL_EXCLUDE_FROM_FEED']=$this->pi_getLL('visibility_in_product_feed');
 			if (empty($feed_checkbox)) {
 				$markerArray['FEEDS_LIST']=$this->pi_getLL('admin_label_no_feeds');
 			} else {
 				$markerArray['FEEDS_LIST']=$feed_checkbox;
 			}
-			$markerArray['LABEL_EXCLUDE_STOCK_FROM_FEED']=$this->pi_getLL('exclude_stock_from_feeds', 'Exclude stock from feeds');
+			$markerArray['LABEL_EXCLUDE_STOCK_FROM_FEED']=$this->pi_getLL('visibility_stock_level_in_product_feed');
 			if (empty($feed_stock_checkbox)) {
 				$markerArray['STOCK_FEEDS_LIST']=$this->pi_getLL('admin_label_no_feeds');
 			} else {
@@ -4149,6 +4223,33 @@ if ($this->post) {
 			}
 			$exclude_stock_from_feed=$this->cObj->substituteMarkerArray($subparts['exclude_from_feed'], $markerArray, '###|###');
 			$subpartArray['###EXCLUDE_FROM_FEED_INPUT###']=$exclude_stock_from_feed;
+            $GLOBALS['TSFE']->additionalHeaderData[]='
+            <script type="text/javascript">
+            $(document).ready(function(){
+            	$(document).on(\'click\', \'.feed_radio, .feed_stock_radio\', function(){
+                    var feed_id=$(this).attr(\'data-feed-id\');
+                    var radio_id=$(this).attr(\'id\');
+                    var radio_state=$(this).attr(\'data-radio-state\');
+                    var radio_id_element=\'exclude_stock_feed\';
+                    var counter_id=\'#\' + radio_id_element + feed_id + \'_enable\';
+                    if ($(this).hasClass(\'feed_radio\')) {
+                        radio_id_element=\'exclude_feed\';
+                    }
+                    if (radio_id.indexOf(\'enable\')>-1) {
+                        counter_id=\'#\' + radio_id_element + feed_id + \'_disable\';
+                    }
+                    $(counter_id).prop(\'checked\', false).attr(\'data-radio-state\', \'unchecked\');
+                    if (radio_state==\'checked\') {
+                        $(this).attr(\'data-radio-state\', \'unchecked\');
+                        $(this).prop(\'checked\', false);
+                    } else {
+                        $(this).attr(\'data-radio-state\', \'checked\');
+                        $(this).prop(\'checked\', true); 
+                    }
+                });
+            });
+            </script>
+            ';
 		}
 		//exclude list products eol
 
@@ -4294,11 +4395,15 @@ if ($this->post) {
 		$subpartArray['###LABEL_ORDER_UNIT###']=$this->pi_getLL('admin_order_unit', 'Order Unit');
 		$subpartArray['###INPUT_PRODUCT_UNIT###']=$order_unit;
 		$subpartArray['###LABEL_MINIMUM_QTY###']=$this->pi_getLL('admin_minimum_quantity');
-		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']!='0' ? $product['minimum_quantity'] : '');
+        // round for .00
+        $product['minimum_quantity']=round(number_format($product['minimum_quantity'], 2), 2);
+        $product['maximum_quantity']=round(number_format($product['maximum_quantity'], 2), 2);
+        $product['products_multiplication']=round(number_format($product['products_multiplication'], 2), 2);
+		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']>0 ? $product['minimum_quantity'] : '');
 		$subpartArray['###LABEL_MAXIMUM_QTY###']=$this->pi_getLL('admin_maximum_quantity');
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
-		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '');
+		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']>0 ? $product['products_multiplication'] : '');
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		$subpartArray['###VALUE_PRODUCT_PID0###']=$product['products_id'];
 		$subpartArray['###VALUE_PRODUCT_PID1###']=$product['products_id'];
