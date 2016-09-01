@@ -552,7 +552,11 @@ switch ($this->ms['page']) {
 						}
 						if (count($catpath)>0) {
 							$cat_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-							$tmp_return_data[$preselected_id]='<a href="'.$cat_link.'" target="_blank" class="innerLink">'.implode(' > ', $catpath).'</a>';
+							if (isset($this->get['tx_multishop_pi1']['calledFrom']) && $this->get['tx_multishop_pi1']['calledFrom']=='edit_product') {
+								$tmp_return_data[$preselected_id] = '<a href="' . $cat_link . '" target="_blank" class="innerLink">' . implode(' > ', $catpath) . '</a>';
+							} else {
+								$tmp_return_data[$preselected_id] = implode(' > ', $catpath);
+							}
 						}
 					}
 				}
