@@ -2,9 +2,10 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$output_array=array();
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'])) {
-	$params=array();
+	$params=array('output_array'=>&$output_array);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
