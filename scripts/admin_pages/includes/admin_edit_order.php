@@ -2063,12 +2063,14 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
 							$row[5]=mslib_fe::amount2Cents($order['qty']*(($order['final_price']-$order['discount_amount'])), 0);
-							$row[6]=mslib_fe::amount2Cents($order['discount_amount'], 0);
+                            $discount_amount=$order['discount_amount'];
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								$row[3]=mslib_fe::amount2Cents($order['final_price']+(($order['final_price']*$order['products_tax'])/100), 0);
 								$row[5]=mslib_fe::amount2Cents($order['qty']*(($order['final_price']-$order['discount_amount'])+$order_products_tax_data['total_tax']), 0);
-								$row[6]=mslib_fe::amount2Cents($order['discount_amount']+(($order['discount_amount']*$order['products_tax'])/100), 0);
+                                $discount_amount=$discount_amount+(($discount_amount*$order['products_tax'])/100);
 							}
+                            $discount_amount=intval($discount_amount) . '.' . substr(end(explode('.', $discount_amount)), 0, 2);
+                            $row[6]=mslib_fe::amount2Cents($discount_amount, 0);
 						}
 						// custom hook that can be controlled by third-party plugin
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'])) {
