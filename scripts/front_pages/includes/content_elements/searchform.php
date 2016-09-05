@@ -111,6 +111,15 @@ $subpartArray['###LABEL_PLACEHOLDER_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###LANGUAGE_UID###']=$this->sys_language_uid;
 $subpartArray['###KEYWORD_VALUE###']=htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
 $subpartArray['###LABEL_SUBMIT_BUTTON###']=htmlspecialchars($this->pi_getLL('search'));
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform.php']['searchFormCEPostHook'])) {
+    $params = array(
+        'subpartArray' => &$subpartArray,
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform.php']['searchFormCEPostHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 // completed the template expansion by replacing the "item" marker in the template
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 ?>
