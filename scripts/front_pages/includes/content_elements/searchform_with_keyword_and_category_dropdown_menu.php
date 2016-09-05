@@ -64,4 +64,13 @@ $content.='
 </div>
 </form>
 ';
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_keyword_and_category_dropdown_menu.php']['searchFormWithCategoriesDropdownCEPostHook'])) {
+    $params = array(
+        'content' => &$content,
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_keyword_and_category_dropdown_menu.php']['searchFormWithCategoriesDropdownCEPostHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 ?>

@@ -29,4 +29,13 @@ $content.='</select>
 	   jQuery(this).closest("form").submit();
 	});
 </script>';
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php']['searchFormWithManufacturersDropdownCEPostHook'])) {
+    $params = array(
+        'content' => &$content,
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php']['searchFormWithManufacturersDropdownCEPostHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 ?>
