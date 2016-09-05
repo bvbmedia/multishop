@@ -2150,7 +2150,8 @@ switch ($this->ms['page']) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				$array=mslib_fe::xml2array($row['pi_flexform']);
-				if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
+				if (is_array($array) && count($array)){
+				//if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
 					if ($array['T3FlexForms']['data']['sheet'][4]['language']['field'][0]['value']=='specials_section') {
 						$code=$array['T3FlexForms']['data']['sheet'][4]['language']['field'][3]['value'];
 						if ($code) {
