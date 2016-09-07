@@ -416,6 +416,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['region_tax_rate']=0;
                         }
 						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
+                            $this->post['tx_multishop_pi1']['shipping_method_costs']=mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
 							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								$tax_rate_for_shipping=((1+$shipping_method['tax_rate'])*100);
@@ -520,6 +521,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $payment_method['region_tax_rate']=0;
                         }
 						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
+                            $this->post['tx_multishop_pi1']['payment_method_costs']=mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['payment_method_costs']);
 							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								$tax_rate_for_payment=((1+$payment_method['tax_rate'])*100);
@@ -2965,24 +2967,24 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right priceInputDisplay" value="'.number_format($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" class="align_right" />
 						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" class="form-control text-right priceInputDisplay" value="'.number_format($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" class="align_right" />
 						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				} else {
 					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" value="'.number_format($orders['shipping_method_costs'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" class="form-control text-right priceInputDisplay">
 						<input type="hidden" id="hidden_shipping_tax" value="'.$orders_tax_data['shipping_tax'].'">
 					</div>';
 					$payment_costs='<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">'.mslib_fe::currency().'</span>
-						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+						<input name="tx_multishop_pi1[payment_method_costs]" id="payment_method_costs" type="text" value="'.number_format($orders['payment_method_costs'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" class="form-control text-right priceInputDisplay">
 						<input type="hidden" id="hidden_payment_tax" value="'.$orders_tax_data['payment_tax'].'">
 					</div>';
 				}
