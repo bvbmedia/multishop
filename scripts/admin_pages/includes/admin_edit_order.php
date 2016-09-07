@@ -3252,14 +3252,14 @@ if (is_numeric($this->get['orders_id'])) {
                         if (e.object.id == e.object.text) {
                             if ($("#product_tax").length>0) {
                                 $("#product_tax").val("");
-                                $("#display_name_including_vat").val("0.00");
-                                $("#display_name_excluding_vat").val("0.00");
-                                $("#product_price").val("0.00");
+                                $("#display_name_including_vat").val("0" + decimal_sep + "00");
+                                $("#display_name_excluding_vat").val("0" + decimal_sep + "00");
+                                $("#product_price").val("0" + decimal_sep + "00");
                             } else {
                                 $("#manual_product_tax").val("");
-                                $("#display_manual_name_including_vat").val("0.00");
-                                $("#display_manual_name_excluding_vat").val("0.00");
-                                $("#manual_product_price").val("0.00");
+                                $("#display_manual_name_including_vat").val("0" + decimal_sep + "00");
+                                $("#display_manual_name_excluding_vat").val("0" + decimal_sep + "00");
+                                $("#manual_product_price").val("0" + decimal_sep + "00");
                             }
                             '.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
                             $("#custom_manual_product_name_wrapper").hide();
@@ -3664,9 +3664,11 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'</div>\';';
 				$tmpcontent.='
-                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
+                    var number_class_display = "attributesPriceInputDisplay" + optid_value + optvalid_value;
+                    var number_class_real = "attributesPriceInputReal" + optid_value + optvalid_value;
+                    var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay \' + number_class_display + \'" value="\' + decimalCrop(price_data.display_values_price) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay \' + number_class_display + \'" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="priceInputReal text \' + number_class_real + \'" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
 				$tmpcontent.='
                     var cloned_row=$(\'#last_edit_product_row\').clone();
                     cloned_row.removeAttr("id");
@@ -3690,8 +3692,8 @@ if (is_numeric($this->get['orders_id'])) {
                         $(this).removeAttr("class");
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
-                    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
-			        $(\'input.priceInputDisplay\').number(true, 2, "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'", "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'");
+                    $(\'input.\' + number_class_real).number(true, 2, \'.\', \'\');
+			        $(\'input.\' + number_class_display).number(true, 2, "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'", "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'");
                     
                     select2_sb(".edit_product_manual_option" + n, "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
                     select2_values_sb(".edit_product_manual_values" + n, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
@@ -4122,6 +4124,7 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
             	if (e.keyCode!=9) {
                 	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
+                	
                 }
             });
             $("#manual_product_tax").change(function () {
