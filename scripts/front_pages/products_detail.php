@@ -84,6 +84,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get(
 		// get all cats to generate multilevel fake url eof
 		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 		$output_array['meta']['canonical_url']='<link rel="canonical" href="'.$canonical_link.'" />';
+		$output_array['canonical_url']=$canonical_link;
 	}
 	if (strstr($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'], "/")) {
 		require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'].'.php');
