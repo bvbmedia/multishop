@@ -2,51 +2,8 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$output_array=array();
-// custom hook that can be controlled by third-party plugin
-if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'])) {
-	$params=array('output_array'=>&$output_array);
-	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'] as $funcRef) {
-		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-	}
-}
 // custom hook that can be controlled by third-party plugin eof
 if (is_numeric($this->get['products_id'])) {
-	// canonical link tag
-	$relation_cat=mslib_fe::getProductToCategoriesArray($this->get['products_id']);
-    $count_relation_cat=count($relation_cat);
-	if ($count_relation_cat>1 || (isset($this->get['manufacturers_id']) && $this->get['manufacturers_id']>0)) {
-	    if ($count_relation_cat>1) {
-            $primary_cat = $relation_cat[0];
-            if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
-                $product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
-                if (is_array($product_path) && count($product_path)) {
-                    $primary_cat = $product_path['node_id'];
-                }
-            }
-        } else {
-            $product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'));
-            if (is_array($product_path) && count($product_path)) {
-                $primary_cat = $product_path['node_id'];
-            }
-        }
-		// get all cats to generate multilevel fake url
-		$level=0;
-		$cats=mslib_fe::Crumbar($primary_cat);
-		$cats=array_reverse($cats);
-		$where='';
-		if (count($cats)>0) {
-			foreach ($cats as $cat) {
-				$where.="categories_id[".$level."]=".$cat['id']."&";
-				$level++;
-			}
-			$where=substr($where, 0, (strlen($where)-1));
-			$where.='&';
-		}
-		// get all cats to generate multilevel fake url eof
-		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-		$output_array['meta']['canonical_url']='<link rel="canonical" href="'.$canonical_link.'" />';
-	}
 	//last visited
 	//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
@@ -85,6 +42,50 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$string=md5($this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING']);
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get($string)) {
+	$output_array=array();
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'])) {
+		$params=array('output_array'=>&$output_array);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPageJSHook'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// canonical link tag
+	$relation_cat=mslib_fe::getProductToCategoriesArray($this->get['products_id']);
+	$count_relation_cat=count($relation_cat);
+	if ($count_relation_cat>1 || (isset($this->get['manufacturers_id']) && $this->get['manufacturers_id']>0)) {
+		if ($count_relation_cat>1) {
+			$primary_cat = $relation_cat[0];
+			if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+				$product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+				if (is_array($product_path) && count($product_path)) {
+					$primary_cat = $product_path['node_id'];
+				}
+			}
+		} else {
+			$product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'));
+			if (is_array($product_path) && count($product_path)) {
+				$primary_cat = $product_path['node_id'];
+			}
+		}
+		// get all cats to generate multilevel fake url
+		$level=0;
+		$cats=mslib_fe::Crumbar($primary_cat);
+		$cats=array_reverse($cats);
+		$where='';
+		if (count($cats)>0) {
+			foreach ($cats as $cat) {
+				$where.="categories_id[".$level."]=".$cat['id']."&";
+				$level++;
+			}
+			$where=substr($where, 0, (strlen($where)-1));
+			$where.='&';
+		}
+		// get all cats to generate multilevel fake url eof
+		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+		$output_array['meta']['canonical_url']='<link rel="canonical" href="'.$canonical_link.'" />';
+		$output_array['canonical_url']=$canonical_link;
+	}
 	if (strstr($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'], "/")) {
 		require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'].'.php');
 	} elseif ($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE']) {
