@@ -1680,7 +1680,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem.='</div>';
 			$orderDetails[]=$orderDetailsItem;
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
-				if (!$orders['is_locked'] || $orders['payment_condition']!='') {
+				if (!$orders['is_locked'] || ($orders['is_locked'] && $orders['payment_condition'] !='')) {
 					$orderDetailsItem='';
 					$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentConditions">';
 					$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_condition').'</label>';
