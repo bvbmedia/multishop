@@ -102,6 +102,10 @@ if (count($cart['products'])<1) {
 				}
 				$content .= '</div></div>';
 			}
+            $page = mslib_fe::getCMScontent('checkout_message', $GLOBALS['TSFE']->sys_language_uid);
+            if ($page[0]['content']) {
+                $content.='<hr/><div class="checkout_message">'.$page[0]['content'].'</div>';
+            }
 			if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
 				$page=mslib_fe::getCMScontent('privacy_statement', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {

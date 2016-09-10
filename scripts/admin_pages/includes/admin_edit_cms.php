@@ -174,6 +174,8 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['product_not_found_message']=$this->pi_getLL('product_not_found_message');
 	$types['category_not_found_message']=$this->pi_getLL('category_not_found_message');
 	$types['manufacturer_not_found_message']=$this->pi_getLL('manufacturer_not_found_message');
+    $types['shopping_cart_message']=$this->pi_getLL('shopping_cart_message');
+    $types['checkout_message']=$this->pi_getLL('checkout_message');
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array(
