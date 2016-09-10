@@ -1078,7 +1078,7 @@ class mslib_fe {
 				}
 				*/
 			}
-			if (!$row_shop_address) {
+			if (!$row_shop_address || !$row_shop_address['country']) {
 				$row_shop_address=$this->tta_shop_info;
 			}
 			$sql_local_tax_rate=$GLOBALS['TYPO3_DB']->SELECTquery('mt.rate as tax_rate,mt_c.rate as country_tax_rate,sc.cn_iso_nr as country_id,sc.cn_short_en as country_name,scz.uid as state_id,scz.zn_name_local as state_name,mtr.state_modus', // SELECT ...
