@@ -185,7 +185,8 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 								if (!empty($updateArray['discount_amount'])) {
-									$updateArray['final_price']=($this->post['product_price']-$updateArray['discount_amount']);
+								    $final_price_after_discount=($this->post['product_price']-$updateArray['discount_amount']);
+									$updateArray['final_price']=number_format($final_price_after_discount, 12, '.', '');
 								}
 								$updateArray['products_tax']=$this->post['product_tax'];
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
@@ -1979,7 +1980,7 @@ if (is_numeric($this->get['orders_id'])) {
 							</div>';
 							$order_products_body_data['products_discount']['value']=$percentage_sb.'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_discount_excluding_vat" name="display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_discount_amount_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
 							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_discount" id="display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.$order_products_discount_amount_display_incl.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
-							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
+							$order_products_body_data['products_discount']['value'].='<div class="msAttributesField hidden"><input class="text priceInputReal" type="hidden" name="product_discount_amount" id="product_discount_amount" value="'.$order['discount_amount'].'" /></div>';
 							//if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
 							if (!empty($order['discount_amount'])) {
 								$order['final_price']-=$order['discount_amount'];
@@ -3563,9 +3564,17 @@ if (is_numeric($this->get['orders_id'])) {
 							var discount_amount=parseFloat((current_price/100)*discount_percentage);
 							var price_after_discount=parseFloat(current_price-discount_amount);
 							if (!manual_product) {
-                                $("#display_name_discount_excluding_vat").val(discount_amount);
-                                $("#product_discount_amount").val(discount_amount);
+							    if (discount_percentage==100) {
+							        $("#display_name_discount_excluding_vat").val($("#display_name_excluding_vat").val());
+                                    $("#product_discount_amount").val(product_price);
+							    } else {
+                                    $("#display_name_discount_excluding_vat").val(discount_amount);
+                                    $("#product_discount_amount").val(discount_amount);
+                                }
                                 priceEditRealtimeCalc(true, $("#display_name_discount_excluding_vat"), "#product_tax");
+                                if (discount_percentage==100) {
+                                    $("#display_name_discount_including_vat").val($("#display_name_including_vat").val());
+                                }
                                 if (SHOW_PRICES_INCLUDING_VAT) {
                                     var display_name_including_vat = parseFloat($("#display_name_including_vat").val());
                                     var price_discount_include_vat= parseFloat($("#display_name_discount_including_vat").val());
@@ -3990,23 +3999,6 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		$content.='
         <script type="text/javascript">
-        function decimalCrop(float) {
-        	return float;
-        	//
-            if (float!=undefined) {
-                var numbers = float.toString().split(".");
-                var prime = numbers[0];
-                if (numbers[1] > 0 && numbers[1] != "undefined") {
-                    var decimal = new String(numbers[1]);
-                } else {
-                    var decimal = "00";
-                }
-                var number = prime + "." + decimal.substr(0, 2);
-                return number;
-            } else {
-                return "0.00";
-            }
-        }
         jQuery(document).ready(function($) {
             '.$new_manual_product_js.'
             if ($(\'#shipping_method_sb\').val()!=\'\') {

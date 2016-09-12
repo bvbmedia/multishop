@@ -72,6 +72,7 @@ if ($this->ms['MODULES']['COUPONS']) {
 }
 $output['shopping_cart_colspan']=5;
 $output['shopping_cart_header']=ucfirst($this->pi_getLL('basket'));
+
 //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
@@ -422,6 +423,11 @@ if ($count_product>0) {
 	$subpartArray=array();
 	$subpartArray['###SHOPPING_CART_FORM_ACTION_URL###']=$output['shopping_cart_form_action_url'];
 	$subpartArray['###SHOPPING_CART_HEADER###']=$output['shopping_cart_header'];
+    $page = mslib_fe::getCMScontent('shopping_cart_message', $GLOBALS['TSFE']->sys_language_uid);
+    $subpartArray['###SHOPPING_CART_MESSAGE###']='';
+    if ($page[0]['content']) {
+        $subpartArray['###SHOPPING_CART_MESSAGE###']='<div class="shopping_cart_message">'.$page[0]['content'].'</div>';
+    }
 	$subpartArray['###COL_HEADER_SHOPPING_CART_PRODUCT###']=$output['col_header_shopping_cart_product'];
 	$subpartArray['###COL_HEADER_SHOPPING_CART_QTY###']=$output['col_header_shopping_cart_qty'];
 	$subpartArray['###COL_HEADER_SHOPPING_CART_TOTAL###']=$output['col_header_shopping_cart_total'];

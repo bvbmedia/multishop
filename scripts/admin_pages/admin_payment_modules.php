@@ -308,7 +308,11 @@ if ($this->get['edit']) {
 			<div class="col-md-10">
 			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' /><label>'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
 		foreach ($active_shop as $pageinfo) {
-			$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
+            $pageTitle=$pageinfo['title'];
+            if ($pageinfo['nav_title']) {
+                $pageTitle=$pageinfo['nav_title'];
+            }
+			$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageTitle.'</label></div>';
 		}
 		$tmpcontent.='</div></div>';
 	} else {
@@ -484,7 +488,11 @@ if ($this->get['edit']) {
 						<div class="col-md-10">
 						<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/><label for="related_shop_pid">'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
 			foreach ($active_shop as $pageinfo) {
-				$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid'.$pageinfo['uid'].'" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label for="related_shop_pid'.$pageinfo['uid'].'">'.$pageinfo['title'].'</label></div>';
+                $pageTitle=$pageinfo['title'];
+                if ($pageinfo['nav_title']) {
+                    $pageTitle=$pageinfo['nav_title'];
+                }
+				$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid'.$pageinfo['uid'].'" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label for="related_shop_pid'.$pageinfo['uid'].'">'.$pageTitle.'</label></div>';
 			}
 			$tmpcontent.='
 					</div></div>';
