@@ -364,12 +364,12 @@ class mslib_fe {
 		if (!count($groupby)) {
 			if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 				$prefix='p.';
-				$groupby[]=$prefix.'products_id';
+				//$groupby[]=$prefix.'products_id';
 			} else {
 				$prefix='pf.';
 			}
 			// only add groupby to query without flat mode. cause when using it on the flat table it resorts the products and returns strange order
-			//$groupby[]=$prefix.'products_id';
+			$groupby[]=$prefix.'products_id';
 		}
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			// do normal search (join the seperate tables)

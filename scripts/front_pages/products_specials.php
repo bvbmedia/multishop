@@ -204,6 +204,7 @@ if ($contentType=='specials_listing_page') {
 						$tbl='p.';
 					}
 					$filter[]="(".$tbl."products_id IN (".implode(",", $product_ids)."))";
+                    $filter[]="case when ss.specials_id > 0 then ss.name='".addslashes($this->section_code)."' end";
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
 						$extrajoin[]='left join tx_multishop_specials s on s.products_id='.$tbl.'products_id left join tx_multishop_specials_sections ss on s.specials_id=ss.specials_id';
 						$orderby[]='ss.sort_order';
@@ -300,8 +301,18 @@ if ($contentType=='specials_listing_page') {
 		if ($this->no_database_results) {
 			return '';
 		}
+		$groupby=array();
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $tbl='pf.';
+        } else {
+            $tbl='p.';
+        }
+        $groupby=$tbl.'products_id';
 		$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials', '', 0, 1, $extrajoin);
+        //$this->msDebug=1;
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), $groupby, 'products_specials', '', 0, 1, $extrajoin);
+        //var_dump($this->msDebugInfo);
+        //die();
 		$products=$pageset['products'];
 		if (!count($products)) {
 			// return nothing
