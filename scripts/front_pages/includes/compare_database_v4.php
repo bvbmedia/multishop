@@ -226,4 +226,11 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+$str="select `is_hidden` from tx_multishop_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_products` ADD `is_hidden` tinyint(1) default '0'";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>
