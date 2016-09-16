@@ -73,6 +73,12 @@ if (is_numeric($this->get['orders_id'])) {
 						$GLOBALS['TYPO3_DB']->sql_query($sql);
 						$sql="delete from tx_multishop_orders_products_attributes where orders_products_id = ".$this->get['order_pid'];
 						$GLOBALS['TYPO3_DB']->sql_query($sql);
+                        // repair tax stuff
+                        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+                        $mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                        $mslib_order->init($this);
+                        $mslib_order->repairOrder($this->get['orders_id']);
+                        // redirect
 						$redirect_after_delete=true;
 					}
 				}
