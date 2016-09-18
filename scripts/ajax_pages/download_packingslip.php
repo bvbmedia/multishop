@@ -17,6 +17,7 @@ if (!count($order)) {
 	exit();
 }
 $pdfFileName='packingslip_'.$order['hash'].'.pdf';
+$pdfFileName='packingslip_'.$order['hash'].'.pdf';
 $pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
 if ($this->ms['MODULES']['DELETE_PDF_PACKING_SLIP_AFTER_BEING_DOWNLOADED'] && file_exists($pdfFilePath)) {
 	unlink($pdfFilePath);
@@ -58,6 +59,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		} else {
 			$markerArray['###DELIVERY_COMPANY###']='';
 		}
+        if (!empty($order['delivery_building'])) {
+            $markerArray['###DELIVERY_BUILDING###']='<strong>'.$order['delivery_building'].'</strong><br/>';
+        } else {
+            $markerArray['###DELIVERY_BUILDING###']='';
+        }
 		$markerArray['###DELIVERY_NAME###']=$order['delivery_name'];
 		$markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
 		$markerArray['###DELIVERY_ZIP###']=$order['delivery_zip'];
