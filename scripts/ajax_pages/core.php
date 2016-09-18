@@ -547,7 +547,7 @@ switch ($this->ms['page']) {
 						$where='';
 						foreach ($cats as $cat) {
 							$where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-							$catpath[]=$cat['name'];
+							$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							$level++;
 						}
 						if (count($catpath)>0) {
@@ -583,14 +583,14 @@ switch ($this->ms['page']) {
 						$cats=array_reverse($cats);
 						$catpath=array();
 						foreach ($cats as $cat) {
-							$catpath[]=$cat['name'];
+							$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 						}
 						// fetch subcat if any
 						$subcategories_tree=array();
 						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 						if (count($subcategories_tree)) {
 							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 									mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree);
 								}
@@ -604,7 +604,7 @@ switch ($this->ms['page']) {
 					mslib_fe::getSubcatsArray($categories_tree, '', $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[$categoriesStartingPoint] as $category_tree_0) {
-						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'] . (!$category_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 						if (is_array($categories_tree[$category_tree_0['id']])) {
 							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);
 						}
@@ -638,11 +638,11 @@ switch ($this->ms['page']) {
 								foreach ($cats as $cat_idx=>$cat) {
 									if (!in_array($cat['id'], $skip_ids)) {
 										if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
+											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 										} else {
-											$tmp_return_data[$cat['id']]=$cat['name'];
+											$tmp_return_data[$cat['id']]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 										}
-										$catpath[]=$cat['name'];
+										$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 									}
 								}
 								// fetch subcat if any
@@ -667,11 +667,11 @@ switch ($this->ms['page']) {
 							$catpath=array();
 							foreach ($cats as $cat_idx=>$cat) {
 								if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
+									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								} else {
-									$tmp_return_data[$cat['id']]=$cat['name'];
+									$tmp_return_data[$cat['id']]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								}
-								$catpath[]=$cat['name'];
+								$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							}
 							// fetch subcat if any
 							$subcategories_tree=array();
