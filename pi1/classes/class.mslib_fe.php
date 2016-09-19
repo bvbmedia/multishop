@@ -3063,13 +3063,13 @@ class mslib_fe {
 		} else {
 			switch ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']) {
 				case 'asc':
-					$prevKey='next_item';
-					$nextKey='previous_item';
+                    $prevKey='previous_item';
+                    $nextKey='next_item';
 					break;
 				default:
 				case 'desc':
-					$prevKey='previous_item';
-					$nextKey='next_item';
+                    $prevKey='next_item';
+                    $nextKey='previous_item';
 					break;
 			}
 		}
