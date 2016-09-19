@@ -233,4 +233,16 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+
+$str="select `products_id` from tx_multishop_products_flat limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if ($qry) {
+    $str="select `image` from tx_multishop_products_flat limit 1";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    if (!$qry) {
+        $str="ALTER TABLE `tx_multishop_products_flat` ADD `image` varchar(50) default ''";
+        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[]=$str;
+    }
+}
 ?>
