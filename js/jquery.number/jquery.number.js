@@ -211,11 +211,8 @@
 							if( chara == '' ) chara = String.fromCharCode(code);
 //						}
 
-
-
-
 						// Stop executing if the user didn't type a number key, a decimal character, backspace, or delete.
-						if( code != 8 && code != 45 && code != 127 && chara != dec_point && !chara.match(/[0-9]/) )
+						if( code != 46 && code != 8 && code != 45 && code != 127 && chara != dec_point && !chara.match(/[0-9]/) )
 						{
 							// We need the original keycode now...
 							var key = (e.keyCode ? e.keyCode : e.which);
@@ -386,7 +383,6 @@
 							this.value = val;
 							setPos = start;
 						}*/
-
 						// If we need to re-position the characters.
 						if( setPos !== false )
 						{
@@ -395,7 +391,7 @@
 						}
                         clearTimeout(typeTimer);  //clear any running timeout on key up
                         typeTimer = setTimeout(function() { //then give it a second to see if the user is finished
-                            $this.val($this.val());
+                            $this.val(this.value);
                         }, 1000);
                         data.init	= 1;
                         $this.data('numFormat', data);
@@ -435,7 +431,7 @@
 						}*/
 
 						// Stop executing if the user didn't type a number key, a decimal, or a comma.
-						if( this.value === '' || (code < 48 || code > 57) && (code < 96 || code > 105 ) && code !== 8 && code !== 46 && code !== 110 ) return;
+						//if( this.value === '' || (code < 48 || code > 57) && (code < 96 || code > 105 ) && code !== 8 && code !== 46 && code !== 110 && code !==190 ) return;
 
 						// Re-format the textarea.
 						//$this.val($this.val());
@@ -477,12 +473,22 @@
 
 						//console.log( 'Setting pos: ', start, decimals, this.value.length + data.c, this.value.length, data.c );
 
+                        var typed_value=this.value;
+                        if (typed_value.indexOf('.')>-1) {
+                            this.value=typed_value.replace('.', ',');
+                        }
+
 						// Set the selection position.
 						setPos = this.value.length+data.c;
 						//setSelectionRange.apply(this, [setPos, setPos]);
+                        var this_input=this;
 						clearTimeout(typeTimer);  //clear any running timeout on key up
 						typeTimer = setTimeout(function() { //then give it a second to see if the user is finished
-							$this.val($this.val());
+                            typed_value=this_input.value;
+                            if (typed_value.indexOf(',')>-1) {
+                                this_input.value=typed_value.replace(',', '.');
+                            }
+                            $this.val($this.val());
 						}, 1000);
 						//data.value=this.value;
                         //data.init	= 1;
