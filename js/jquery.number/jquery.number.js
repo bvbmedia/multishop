@@ -143,7 +143,8 @@
 		// Work out the unicode character for the decimal placeholder.
 		var u_dec			= ('\\u'+('0000'+(dec_point.charCodeAt(0).toString(16))).slice(-4)),
 			regex_dec_num	= new RegExp('[^'+u_dec+'0-9]','g'),
-			regex_dec		= new RegExp(u_dec,'g');
+			regex_dec		= new RegExp(u_dec,'g'),
+			typeTimer;
 
 		// If we've specified to take the number from the target element,
 		// we loop over the collection, and get the number.
@@ -236,54 +237,7 @@
 							return false;
 						}
 
-						// The whole lot has been selected, or if the field is empty...
-						if( start == 0 && end == this.value.length ) //|| $this.val() == 0 )
-						{
-							if( code == 8 )		// Backspace
-							{
-								// Blank out the field, but only if the data object has already been instantiated.
-								start = end = 1;
-								this.value = '';
 
-								// Reset the cursor position.
-								data.init = (decimals>0?-1:0);
-								data.c = (decimals>0?-(decimals+1):0);
-								setSelectionRange.apply(this, [0,0]);
-							}
-							else if( chara == dec_point )
-							{
-								start = end = 1;
-								this.value = '0'+ dec_point + (new Array(decimals+1).join('0'));
-
-								// Reset the cursor position.
-								data.init = (decimals>0?1:0);
-								data.c = (decimals>0?-(decimals+1):0);
-							}
-							else if( code == 45 )	// Negative sign
-							{
-								start = end = 2;
-								this.value = '-0'+dec_point + (new Array(decimals+1).join('0'));
-
-								// Reset the cursor position.
-								data.init = (decimals>0?1:0);
-								data.c = (decimals>0?-(decimals+1):0);
-
-								setSelectionRange.apply(this, [2,2]);
-							}
-							else
-							{
-								// Reset the cursor position.
-								data.init = (decimals>0?-1:0);
-								data.c = (decimals>0?-(decimals):0);
-							}
-						}
-
-						// Otherwise, we need to reset the caret position
-						// based on the users selection.
-						else
-						{
-							data.c = end-this.value.length;
-						}
 
 						// Track if partial selection was used
 						data.isPartialSelection = start == end ? false : true;
@@ -291,14 +245,18 @@
 						// If the start position is before the decimal point,
 						// and the user has typed a decimal point, we need to move the caret
 						// past the decimal place.
+                        data.init	= 1;
+                        if (this.value=='0,00' || this.value=='0.00') {
+                            this.value='';
+                        }
 						if( decimals > 0 && chara == dec_point && start == this.value.length-decimals-1 )
 						{
-							data.c++;
+							/*data.c++;
 							data.init = Math.max(0,data.init);
 							e.preventDefault();
 
 							// Set the selection position.
-							setPos = this.value.length+data.c;
+							setPos = this.value.length+data.c;*/
 						}
 
 						// Ignore negative sign unless at beginning of number (and it's not already present)
@@ -312,7 +270,7 @@
 						else if( chara == dec_point )
 						{
 							data.init = Math.max(0,data.init);
-							e.preventDefault();
+							//e.preventDefault();
 						}
 
 						// If hitting the delete key, and the cursor is before a decimal place,
@@ -320,25 +278,25 @@
 						else if( decimals > 0 && code == 127 && start == this.value.length-decimals-1 )
 						{
 							// Just prevent default but don't actually move the caret here because it's done in the keyup event
-							e.preventDefault();
+							//e.preventDefault();
 						}
 
 						// If hitting the backspace key, and the cursor is behind a decimal place,
 						// we simply move the cursor to the other side of the decimal place.
 						else if( decimals > 0 && code == 8 && start == this.value.length-decimals )
 						{
-							e.preventDefault();
-							data.c--;
+							//e.preventDefault();
+							//data.c--;
 
 							// Set the selection position.
-							setPos = this.value.length+data.c;
+							//setPos = this.value.length+data.c;
 						}
 
 						// If hitting the delete key, and the cursor is to the right of the decimal
 						// we replace the character after the caret with a 0.
 						else if( decimals > 0 && code == 127 && start > this.value.length-decimals-1 )
 						{
-							if( this.value === '' ) return;
+							/*if( this.value === '' ) return;
 
 							// If the character following is not already a 0,
 							// replace it with one.
@@ -354,7 +312,7 @@
 							e.preventDefault();
 
 							// Set the selection position.
-							setPos = this.value.length+data.c;
+							setPos = this.value.length+data.c;*/
 						}
 
 						// If hitting the backspace key, and the cursor is to the right of the decimal
@@ -366,20 +324,20 @@
 
 							// If the character preceding is not already a 0,
 							// replace it with one.
-							if( this.value.slice(start-1, start) != '0' )
-							{
-								val = this.value.slice(0, start-1) + '0' + this.value.slice(start);
+							//if( this.value.slice(start-1, start) != '0' )
+						//	{
+								//val = this.value.slice(0, start-1) + '0' + this.value.slice(start);
 								// The regex replacement below removes negative sign from numbers...
 								// not sure why they're necessary here when none of the other cases use them
 								//$this.val(val.replace(regex_dec_num,'').replace(regex_dec,dec_point));
-								$this.val(val);
-							}
+								//$this.val(val);
+//							}
 
-							e.preventDefault();
-							data.c--;
+							//e.preventDefault();
+							//data.c--;
 
 							// Set the selection position.
-							setPos = this.value.length+data.c;
+							//setPos = this.value.length+data.c;
 						}
 
 						// If the delete key was pressed, and the character immediately
@@ -388,7 +346,7 @@
 						else if( code == 127 && this.value.slice(start, start+1) == thousands_sep )
 						{
 							// Just prevent default but don't actually move the caret here because it's done in the keyup event
-							e.preventDefault();
+							//e.preventDefault();
 						}
 
 						// If the backspace key was pressed, and the character immediately
@@ -396,16 +354,16 @@
 						// step over it.
 						else if( code == 8 && this.value.slice(start-1, start) == thousands_sep )
 						{
-							e.preventDefault();
-							data.c--;
+							//e.preventDefault();
+							//data.c--;
 
 							// Set the selection position.
-							setPos = this.value.length+data.c;
+							//setPos = this.value.length+data.c;
 						}
 
 						// If the caret is to the right of the decimal place, and the user is entering a
 						// number, remove the following character before putting in the new one.
-						else if(
+						/*else if(
 							decimals > 0 &&
 							start == end &&
 							this.value.length > decimals+1 &&
@@ -427,18 +385,20 @@
 							// Reset the position.
 							this.value = val;
 							setPos = start;
-						}
+						}*/
 
 						// If we need to re-position the characters.
 						if( setPos !== false )
 						{
 							//console.log('Setpos keydown: ', setPos );
-							setSelectionRange.apply(this, [setPos, setPos]);
+							//setSelectionRange.apply(this, [setPos, setPos]);
 						}
-
-						// Store the data on the element.
-						$this.data('numFormat', data);
-
+                        clearTimeout(typeTimer);  //clear any running timeout on key up
+                        typeTimer = setTimeout(function() { //then give it a second to see if the user is finished
+                            $this.val($this.val());
+                        }, 1000);
+                        data.init	= 1;
+                        $this.data('numFormat', data);
 					},
 
 					/**
@@ -458,10 +418,9 @@
 							end		= getSelection.apply(this,['end']),
 							setPos;
 
-
 						// Check for negative characters being entered at the start of the string.
 						// If there's any kind of selection, just ignore the input.
-						if( start === 0 && end === 0 && ( code === 189 || code === 109 ) )
+						/*if( start === 0 && end === 0 && ( code === 189 || code === 109 ) )
 						{
 							$this.val('-'+$this.val());
 
@@ -473,15 +432,15 @@
 
 							setPos = this.value.length+data.c;
 							setSelectionRange.apply(this, [setPos, setPos]);
-						}
+						}*/
 
 						// Stop executing if the user didn't type a number key, a decimal, or a comma.
 						if( this.value === '' || (code < 48 || code > 57) && (code < 96 || code > 105 ) && code !== 8 && code !== 46 && code !== 110 ) return;
 
 						// Re-format the textarea.
-						$this.val($this.val());
+						//$this.val($this.val());
 
-						if( decimals > 0 )
+						/*if( decimals > 0 )
 						{
 							// If we haven't marked this item as 'initialized'
 							// then do so now. It means we should place the caret just
@@ -505,22 +464,29 @@
 								// Store the data, now that it's changed.
 								$this.data('numFormat', data);
 							}
-						}
+						}*/
 
 						// Move caret to the right after delete key pressed
-						if (code == 46 && !data.isPartialSelection)
+						/*if (code == 46 && !data.isPartialSelection)
 						{
 							data.c++;
 
 							// Store the data, now that it's changed.
 							$this.data('numFormat', data);
-						}
+						}*/
 
 						//console.log( 'Setting pos: ', start, decimals, this.value.length + data.c, this.value.length, data.c );
 
 						// Set the selection position.
 						setPos = this.value.length+data.c;
-						setSelectionRange.apply(this, [setPos, setPos]);
+						//setSelectionRange.apply(this, [setPos, setPos]);
+						clearTimeout(typeTimer);  //clear any running timeout on key up
+						typeTimer = setTimeout(function() { //then give it a second to see if the user is finished
+							$this.val($this.val());
+						}, 1000);
+						//data.value=this.value;
+                        //data.init	= 1;
+						//$this.data('numFormat', data);
 					},
 
 					/**
