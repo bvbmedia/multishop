@@ -547,12 +547,16 @@ switch ($this->ms['page']) {
 						$where='';
 						foreach ($cats as $cat) {
 							$where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-							$catpath[]=$cat['name'];
+							$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							$level++;
 						}
 						if (count($catpath)>0) {
 							$cat_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-							$tmp_return_data[$preselected_id]='<a href="'.$cat_link.'" target="_blank" class="innerLink">'.implode(' > ', $catpath).'</a>';
+							if (isset($this->get['tx_multishop_pi1']['calledFrom']) && $this->get['tx_multishop_pi1']['calledFrom']=='edit_product') {
+								$tmp_return_data[$preselected_id] = '<a href="' . $cat_link . '" target="_blank" class="innerLink">' . implode(' > ', $catpath) . '</a>';
+							} else {
+								$tmp_return_data[$preselected_id] = implode(' > ', $catpath);
+							}
 						}
 					}
 				}
@@ -579,14 +583,14 @@ switch ($this->ms['page']) {
 						$cats=array_reverse($cats);
 						$catpath=array();
 						foreach ($cats as $cat) {
-							$catpath[]=$cat['name'];
+							$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 						}
 						// fetch subcat if any
 						$subcategories_tree=array();
 						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 						if (count($subcategories_tree)) {
 							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
+								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'] . (!$subcategory_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 									mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree);
 								}
@@ -600,7 +604,7 @@ switch ($this->ms['page']) {
 					mslib_fe::getSubcatsArray($categories_tree, '', $categoriesStartingPoint, $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[$categoriesStartingPoint] as $category_tree_0) {
-						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'] . (!$category_tree_0['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 						if (is_array($categories_tree[$category_tree_0['id']])) {
 							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);
 						}
@@ -634,11 +638,11 @@ switch ($this->ms['page']) {
 								foreach ($cats as $cat_idx=>$cat) {
 									if (!in_array($cat['id'], $skip_ids)) {
 										if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
+											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 										} else {
-											$tmp_return_data[$cat['id']]=$cat['name'];
+											$tmp_return_data[$cat['id']]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 										}
-										$catpath[]=$cat['name'];
+										$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 									}
 								}
 								// fetch subcat if any
@@ -663,11 +667,11 @@ switch ($this->ms['page']) {
 							$catpath=array();
 							foreach ($cats as $cat_idx=>$cat) {
 								if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
+									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								} else {
-									$tmp_return_data[$cat['id']]=$cat['name'];
+									$tmp_return_data[$cat['id']]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 								}
-								$catpath[]=$cat['name'];
+								$catpath[]=$cat['name'] . (!$cat['status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
 							}
 							// fetch subcat if any
 							$subcategories_tree=array();
@@ -2146,7 +2150,8 @@ switch ($this->ms['page']) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				$array=mslib_fe::xml2array($row['pi_flexform']);
-				if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
+				if (is_array($array) && count($array)){
+				//if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
 					if ($array['T3FlexForms']['data']['sheet'][4]['language']['field'][0]['value']=='specials_section') {
 						$code=$array['T3FlexForms']['data']['sheet'][4]['language']['field'][3]['value'];
 						if ($code) {

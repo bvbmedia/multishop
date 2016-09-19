@@ -667,6 +667,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .text-info { color:#337ab7; }
 .text-danger { color:#d9534f; }
+.text-orange { color:#f90;}
 
 .table-borderless > thead > tr > th,
 .table-borderless > tbody > tr > th,

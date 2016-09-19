@@ -78,17 +78,22 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         }
     }
 }
-function decimalCrop(float) {
-    return float;
-    var numbers = float.toString().split(".");
-    var prime 	= numbers[0];
-    if (numbers[1] > 0 && numbers[1] != "undefined") {
-        var decimal = new String(numbers[1]);
+function decimalCrop(float, precision, enable) {
+    enable = typeof enable !== 'undefined' ? enable : false;
+    precision = typeof precision !== 'undefined' ? precision : 2;
+    if (enable) {
+        var numbers = float.toString().split(".");
+        var prime = numbers[0];
+        if (numbers[1] > 0 && numbers[1] != "undefined") {
+            var decimal = new String(numbers[1]);
+        } else {
+            var decimal = "00";
+        }
+        var number = prime + "." + decimal.substr(0, precision);
+        return number;
     } else {
-        var decimal = "00";
+        return float;
     }
-    var number = prime + "." + decimal.substr(0, 2);
-    return number;
 }
 function CONFIRM(label) {
     if (confirm(label)) {

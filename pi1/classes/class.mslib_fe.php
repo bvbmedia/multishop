@@ -1078,7 +1078,7 @@ class mslib_fe {
 				}
 				*/
 			}
-			if (!$row_shop_address) {
+			if (!$row_shop_address || !$row_shop_address['country']) {
 				$row_shop_address=$this->tta_shop_info;
 			}
 			$sql_local_tax_rate=$GLOBALS['TYPO3_DB']->SELECTquery('mt.rate as tax_rate,mt_c.rate as country_tax_rate,sc.cn_iso_nr as country_id,sc.cn_short_en as country_name,scz.uid as state_id,scz.zn_name_local as state_name,mtr.state_modus', // SELECT ...
@@ -3045,6 +3045,8 @@ class mslib_fe {
 			(count($query_elements['orderby']) ? implode(' AND ', $query_elements['orderby']) : ''), // ORDER BY...
 			'' // LIMIT ...
 		);
+        //var_dump($str);
+        //die();
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$count=0;
 		$products=array();
@@ -3061,13 +3063,13 @@ class mslib_fe {
 		} else {
 			switch ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']) {
 				case 'asc':
-					$prevKey='next_item';
-					$nextKey='previous_item';
+                    $prevKey='previous_item';
+                    $nextKey='next_item';
 					break;
 				default:
 				case 'desc':
-					$prevKey='previous_item';
-					$nextKey='next_item';
+                    $prevKey='next_item';
+                    $nextKey='previous_item';
 					break;
 			}
 		}

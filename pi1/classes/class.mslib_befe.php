@@ -5029,6 +5029,13 @@ class mslib_befe {
             return $numbers;
         }
     }
+    function getDefaultOrderStatus() {
+        $filter=array();
+        $filter[]='default_status=1';
+        $filter[]='(o.page_uid=\'0\' or o.page_uid=\''.$this->showCatalogFromPage.'\') and o.deleted=0 and o.id=od.orders_status_id and od.language_id=\'0\'';
+        $record=mslib_befe::getRecord('','tx_multishop_orders_status o, tx_multishop_orders_status_description od','',$filter);
+        return $record;
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

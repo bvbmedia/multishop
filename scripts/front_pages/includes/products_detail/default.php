@@ -412,11 +412,30 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_META_KEYWORDS###'] = $product['products_meta_keywords'];
     $markerArray['###PRODUCTS_META_TITLE###'] = $product['products_meta_title'];
     $markerArray['###PRODUCTS_URL###'] = $product['products_url'];
+    $markerArray['###PRODUCTS_ID###'] = $product['products_id'];
     $markerArray['###ORDER_UNIT_NAME###'] = $product['order_unit_name'];
     $markerArray['###MANUFACTURERS_NAME###'] = $output['manufacturers_name'];
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
     $markerArray['###PRODUCTS_NAME_MARKER###'] = $output['products_name_marker'];
     $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];
+    $where = '';
+    if ($product['categories_id']) {
+        // get all cats to generate multilevel fake url
+        $level = 0;
+        $cats = mslib_fe::Crumbar($product['categories_id']);
+        $cats = array_reverse($cats);
+        $where = '';
+        if (count($cats) > 0) {
+            foreach ($cats as $cat) {
+                $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                $level++;
+            }
+            $where = substr($where, 0, (strlen($where) - 1));
+            $where .= '&';
+        }
+        // get all cats to generate multilevel fake url eof
+    }
+    $markerArray['###CATEGORIES_URL###']=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 
     $formats=array();
     $formats[]='';
