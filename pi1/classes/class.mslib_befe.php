@@ -5036,6 +5036,23 @@ class mslib_befe {
         $record=mslib_befe::getRecord('','tx_multishop_orders_status o, tx_multishop_orders_status_description od','',$filter);
         return $record;
     }
+    function getOrderStatusHistoryByOrdersId($orders_id) {
+        if (is_numeric($orders_id)) {
+            $query=$GLOBALS['TYPO3_DB']->SELECTquery('new_value', // SELECT ...
+                    'tx_multishop_orders_status_history', // FROM ...
+                    'orders_id=\''.$orders_id.'\'', // WHERE.
+                    '', // GROUP BY...
+                    'orders_status_history_id desc', // ORDER BY...
+                    '' // LIMIT ...
+            );
+            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+            $order_status_history_items=array();
+            while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
+                $order_status_history_items[]=$row['new_value'];
+            }
+            return $order_status_history_items;
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
