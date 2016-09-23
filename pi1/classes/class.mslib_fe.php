@@ -5121,7 +5121,7 @@ class mslib_fe {
 		}
 		return false;
 	}
-	public function getProduct($products_id, $categories_id='', $extra_fields='', $include_disabled_products=0, $skipFlatDatabase=0) {
+	public function getProduct($products_id, $categories_id='', $extra_fields='', $include_disabled_products=0, $skipFlatDatabase=0, $ignoreStartEndTime=0) {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
@@ -5274,14 +5274,16 @@ class mslib_fe {
 					$product['categories_crumbar']=$product_crumbar_tree;
 				}
 			}
-			if ($product['starttime']>0) {
-				if ($product['starttime']>$current_tstamp) {
-					$disable_product=true;
+			if (!$ignoreStartEndTime) {
+				if ($product['starttime']>0) {
+					if ($product['starttime']>$current_tstamp) {
+						$disable_product=true;
+					}
 				}
-			}
-			if ($product['endtime']>0) {
-				if ($product['endtime']<=$current_tstamp) {
-					$disable_product=true;
+				if ($product['endtime']>0) {
+					if ($product['endtime']<=$current_tstamp) {
+						$disable_product=true;
+					}
 				}
 			}
 			if ($disable_product && !$include_disabled_products) {
