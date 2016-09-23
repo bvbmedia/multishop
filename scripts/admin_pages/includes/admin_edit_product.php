@@ -4273,14 +4273,14 @@ if ($this->post) {
 			$product['specials_start_date_visual']='';
 		} else {
 			$product['specials_start_date_visual']=date($this->pi_getLL('locale_datetime_format'), $product['specials_start_date']);
-			$product['specials_start_date_sys']=date("Y-m-d H:i:s", $product['specials_start_date']);
+			$product['specials_start_date_sys']=date("Y-m-d G:i:s", $product['specials_start_date']);
 		}
 		if ($product['specials_expired_date']==0 || empty($product['specials_expired_date'])) {
 			$product['specials_expired_date_sys']='';
 			$product['specials_expired_date_visual']='';
 		} else {
 			$product['specials_expired_date_visual']=date($this->pi_getLL('locale_datetime_format'), $product['specials_expired_date']);
-			$product['specials_expired_date_sys']=date("Y-m-d H:i:s", $product['specials_expired_date']);
+			$product['specials_expired_date_sys']=date("Y-m-d G:i:s", $product['specials_expired_date']);
 		}
 		$subpartArray['###LABEL_HEADING_TAB_OPTION###']=$this->pi_getLL('admin_product_options');
 		$subpartArray['###LABEL_VAT_RATE###']=$this->pi_getLL('admin_vat_rate');
@@ -4344,14 +4344,14 @@ if ($this->post) {
 			$product['endtime_visual']='';
 		} else {
 			$product['starttime_visual']=date($this->pi_getLL('locale_datetime_format'), $product['starttime']);
-			$product['starttime_sys']=date("Y-m-d H:i:s", $product['starttime']);
+			$product['starttime_sys']=date("Y-m-d G:i:s", $product['starttime']);
 		}
 		if ($product['endtime']==0) {
 			$product['endtime_sys']='';
 			$product['endtime_visual']='';
 		} else {
 			$product['endtime_visual']=date($this->pi_getLL('locale_datetime_format'), $product['endtime']);
-			$product['endtime_sys']=date("Y-m-d H:i:s", $product['endtime']);
+			$product['endtime_sys']=date("Y-m-d G:i:s", $product['endtime']);
 		}
 		$subpartArray['###LABEL_STARTTIME###']=$this->pi_getLL('admin_label_starttime');
 		$subpartArray['###LABEL_ENDTIME###']=$this->pi_getLL('admin_label_endtime');
