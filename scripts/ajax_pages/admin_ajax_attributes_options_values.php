@@ -560,13 +560,36 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 		exit();
 		break;
 	case 'fetch_attributes':
+	    $sort_by='povp.sort_order asc';
+        if (isset($this->get['tx_multishop_pi1']['sort_by']) && !empty($this->get['tx_multishop_pi1']['sort_by'])) {
+            switch($this->get['tx_multishop_pi1']['sort_by']) {
+                case 'id_asc':
+                    $sort_by='pov.products_options_values_id asc';
+                    break;
+                case 'id_desc':
+                    $sort_by='pov.products_options_values_id desc';
+                    break;
+                case 'alpha_asc':
+                    $sort_by='pov.products_options_values_name asc';
+                    break;
+                case 'alpha_desc':
+                    $sort_by='pov.products_options_values_name desc';
+                    break;
+                case 'alpha_nat_asc':
+                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' asc,  pov.products_options_values_name+0 asc, pov.products_options_values_name asc';
+                    break;
+                case 'alpha_nat_desc':
+                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' desc,  pov.products_options_values_name+0 desc, pov.products_options_values_name desc';
+                    break;
+            }
+        }
 		$option_id=$this->post['data_id'];
 		$return_data=array();
 		$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_options_values pov', // FROM ...
 			'povp.products_options_id=\''.$option_id.'\' and povp.products_options_values_id=pov.products_options_values_id and pov.language_id=\'0\'', // WHERE...
 			'', // GROUP BY...
-			'povp.sort_order', // ORDER BY...
+            $sort_by, // ORDER BY...
 			'' // LIMIT ...
 		);
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
