@@ -576,10 +576,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                     $sort_by='pov.products_options_values_name desc';
                     break;
                 case 'alpha_nat_asc':
-                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' asc,  pov.products_options_values_name+0 asc, pov.products_options_values_name asc';
+                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' asc, pov.products_options_values_name+0 asc, pov.products_options_values_name asc';
                     break;
                 case 'alpha_nat_desc':
-                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' desc,  pov.products_options_values_name+0 desc, pov.products_options_values_name desc';
+                    $sort_by='pov.products_options_values_name REGEXP \'^\d*[^\da-z&\.\\\' \-\\"\!\@\#\$\%\^\*\(\)\;\:\\,\?\/\~\`\|\_\-]\' desc, pov.products_options_values_name+0 desc, pov.products_options_values_name desc';
                     break;
             }
         }
