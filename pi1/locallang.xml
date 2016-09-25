@@ -1349,6 +1349,7 @@
             <label index="female_abbreviation_long">Madam</label>
             <label index="female_abbreviation">Mrs.</label>
             <label index="female_salutation">Dear madam</label>
+            <label index="building">Building</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

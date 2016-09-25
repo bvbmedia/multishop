@@ -57,6 +57,10 @@
         <input type="text" name="zip" id="zip" class="zip" value="###VALUE_ZIP###" required="required" data-h5-errorid="invalid-zip" title="###LABEL_ERROR_ZIP_IS_REQUIRED###">
         <div id="invalid-zip" class="error-space" style="display:none"></div>
     </div>
+    <div class="account-field col-sm-3" id="input-building">
+        <label class="account-building" for="building">###LABEL_BUILDING###</label>
+        <input type="text" name="building" id="building" class="building" value="###VALUE_BUILDING###">
+    </div>
     <div class="account-field col-sm-3" id="input-address">
         <label class="account-address" for="address">###LABEL_STREET_NAME###*</label>
         <input type="text" name="street_name" id="address" class="address" value="###VALUE_STREET_NAME###" required="required" data-h5-errorid="invalid-address" title="###LABEL_ERROR_STREET_NAME_IS_REQUIRED###">
@@ -121,6 +125,10 @@
             <label for="delivery_company">###LABEL_DELIVERY_COMPANY###:</label>
             <input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="###VALUE_DELIVERY_COMPANY###"###COMPANY_VALIDATION###>
             <div id="invalid-delivery_company" class="error-space" style="display:none"></div>
+        </div>
+        <div class="account-field col-sm-6" id="input-dfbuilding">
+            <label class="account-delivery_building" for="delivery_building">###LABEL_DELIVERY_BUILDING###</label>
+            <input type="text" name="delivery_building" id="delivery_building" class="delivery_building" value="###VALUE_DELIVERY_BUILDING###">
         </div>
         <div class="account-field col-sm-6" id="input-dfaddress">
             <label for="delivery_address">###LABEL_DELIVERY_STREET_NAME###*</label>

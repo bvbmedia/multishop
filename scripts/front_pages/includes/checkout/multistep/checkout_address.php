@@ -24,9 +24,10 @@ if (count($cart['products'])<1) {
 				$user['company']=$billing_address['company'];
 				$user['tx_multishop_newsletter']=$billing_address['tx_multishop_newsletter'];
 				$user['address_ext']=$billing_address['address_ext'];
-				$user['street_name']=$billing_address['street_name'];
+                $user['building']=$billing_address['building'];
+                $user['street_name']=$billing_address['street_name'];
 				$user['address_number']=$billing_address['address_number'];
-				$user['address']=$billing_address['street_name'].' '.$billing_address['address_number'].($billing_address['address_ext'] ? '-'.$billing_address['address_ext'] : '');
+				$user['address']=$billing_address['building'].' '.$billing_address['street_name'].' '.$billing_address['address_number'].($billing_address['address_ext'] ? '-'.$billing_address['address_ext'] : '');
 				$user['address']=preg_replace('/\s+/', ' ', $user['address']);
 				$user['zip']=$billing_address['zip'];
 				$user['city']=$billing_address['city'];
@@ -46,6 +47,7 @@ if (count($cart['products'])<1) {
 				$user['company']=$GLOBALS['TSFE']->fe_user->user['company'];
 				$user['tx_multishop_newsletter']=$GLOBALS['TSFE']->fe_user->user['tx_multishop_newsletter'];
 				$user['address_ext']=$GLOBALS['TSFE']->fe_user->user['address_ext'];
+                $user['building']=$GLOBALS['TSFE']->fe_user->user['building'];
 				$user['street_name']=$GLOBALS['TSFE']->fe_user->user['street_name'];
 				$user['address_number']=$GLOBALS['TSFE']->fe_user->user['address_number'];
 				$user['address']=$GLOBALS['TSFE']->fe_user->user['street_name'].' '.$GLOBALS['TSFE']->fe_user->user['address_number'].($GLOBALS['TSFE']->fe_user->user['address_ext'] ? '-'.$GLOBALS['TSFE']->fe_user->user['address_ext'] : '');
@@ -125,6 +127,7 @@ if (count($cart['products'])<1) {
 			$user['telephone']=$this->post['telephone'];
 			$user['mobile']=$this->post['mobile'];
 			$user['gender']=$this->post['gender'];
+            $user['building']=$this->post['building'];
 			$user['street_name']=$this->post['street_name'];
 			$user['address_number']=$this->post['address_number'];
 			$user['address_ext']=$this->post['address_ext'];
@@ -159,6 +162,7 @@ if (count($cart['products'])<1) {
 				$user['delivery_telephone']=$this->post['delivery_telephone'];
 				$user['delivery_mobile']=$this->post['delivery_mobile'];
 				$user['delivery_gender']=$this->post['delivery_gender'];
+                $user['delivery_building']=$this->post['delivery_building'];
 				$user['delivery_street_name']=$this->post['delivery_street_name'];
 				$user['delivery_address_number']=$this->post['delivery_address_number'];
 				$user['delivery_address_ext']=$this->post['delivery_address_ext'];
@@ -522,7 +526,9 @@ if (count($cart['products'])<1) {
 		$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip'));
 		$markerArray['###VALUE_ZIP###']=htmlspecialchars($user['zip']);
 		$markerArray['###LABEL_ERROR_ZIP_IS_REQUIRED###']=$this->pi_getLL('zip_is_required');
-		$markerArray['###LABEL_STREET_NAME###']=ucfirst($this->pi_getLL('street_address'));
+        $markerArray['###LABEL_BUILDING###']=ucfirst($this->pi_getLL('building'));
+        $markerArray['###VALUE_BUILDING###']=htmlspecialchars($user['building']);
+        $markerArray['###LABEL_STREET_NAME###']=ucfirst($this->pi_getLL('street_address'));
 		$markerArray['###VALUE_STREET_NAME###']=htmlspecialchars($user['street_name']);
 		$markerArray['###LABEL_ERROR_STREET_NAME_IS_REQUIRED###']=$this->pi_getLL('street_address_is_required');
 		$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
@@ -590,7 +596,9 @@ if (count($cart['products'])<1) {
 		$markerArray['###LABEL_DELIVERY_COMPANY###']=ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '');
 		$markerArray['###VALUE_DELIVERY_COMPANY###']=htmlspecialchars($user['delivery_company']);
 		$markerArray['###COMPANY_VALIDATION###']=($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').'"' : '');
-		$markerArray['###LABEL_DELIVERY_STREET_NAME###']=ucfirst($this->pi_getLL('street_address'));
+        $markerArray['###LABEL_DELIVERY_BUILDING###']=ucfirst($this->pi_getLL('building'));
+        $markerArray['###VALUE_DELIVERY_BUILDING###']=htmlspecialchars($user['delivery_building']);
+        $markerArray['###LABEL_DELIVERY_STREET_NAME###']=ucfirst($this->pi_getLL('street_address'));
 		$markerArray['###VALUE_DELIVERY_STREET_NAME###']=htmlspecialchars($user['delivery_street_name']);
 		$markerArray['###LABEL_DELIVERY_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
 		$markerArray['###VALUE_DELIVERY_ADDRESS_NUMBER###']=htmlspecialchars($user['delivery_address_number']);

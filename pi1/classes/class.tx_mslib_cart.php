@@ -1327,12 +1327,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['email']=$address['email'];
 			if (!$address['street_name']) {
 				// fallback for old custom checkouts
-				$insertArray['street_name']=$address['address'];
+                $insertArray['building']=$address['building'];
+                $insertArray['street_name']=$address['address'];
 				$insertArray['address_number']=$address['address_number'];
 				$insertArray['address_ext']=$address['address_ext'];
-				$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+				$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 				$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 			} else {
+                $insertArray['building']=$address['building'];
 				$insertArray['street_name']=$address['street_name'];
 				$insertArray['address_number']=$address['address_number'];
 				$insertArray['address_ext']=$address['address_ext'];
@@ -1389,12 +1391,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['email']=$address['email'];
 				if (!$address['street_name']) {
 					// fallback for old custom checkouts
-					$insertArray['street_name']=$address['address'];
+                    $insertArray['building']=$address['building'];
+                    $insertArray['street_name']=$address['address'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
-					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
+                    $insertArray['building']=$address['building'];
 					$insertArray['street_name']=$address['street_name'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
@@ -1439,12 +1443,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['email']=$address['email'];
 					if (!$address['street_name']) {
 						// fallback for old custom checkouts
-						$insertArray['street_name']=$address['address'];
+                        $insertArray['building']=$address['building'];
+                        $insertArray['street_name']=$address['address'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
-						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
+                        $insertArray['building']=$address['building'];
 						$insertArray['street_name']=$address['street_name'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
@@ -1476,12 +1482,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['email']=$address['delivery_email'];
 					if (!$address['delivery_street_name']) {
 						// fallback for old custom checkouts
-						$insertArray['street_name']=$address['delivery_address'];
+                        $insertArray['building']=$address['delivery_building'];
+                        $insertArray['street_name']=$address['delivery_address'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
-						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
+                        $insertArray['building']=$address['delivery_building'];
 						$insertArray['street_name']=$address['delivery_street_name'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
@@ -1536,12 +1544,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['email']=$address['email'];
 				if (!$address['street_name']) {
 					// fallback for old custom checkouts
+                    $insertArray['building']=$address['building'];
 					$insertArray['street_name']=$address['address'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
-					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
+                    $insertArray['building']=$address['delivery_building'];
 					$insertArray['street_name']=$address['street_name'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
@@ -1584,12 +1594,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['email']=$address['email'];
 					if (!$address['street_name']) {
 						// fallback for old custom checkouts
+                        $insertArray['building']=$address['building'];
 						$insertArray['street_name']=$address['address'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
-						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
+                        $insertArray['building']=$address['building'];
 						$insertArray['street_name']=$address['street_name'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
@@ -1621,12 +1633,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['email']=$address['delivery_email'];
 					if (!$address['delivery_street_name']) {
 						// fallback for old custom checkouts
+                        $insertArray['building']=$address['building'];
 						$insertArray['street_name']=$address['delivery_address'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
-						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
+                        $insertArray['building']=$address['building'];
 						$insertArray['street_name']=$address['delivery_street_name'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
@@ -1678,12 +1692,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['billing_birthday']=strtotime($address['birthday']);
 			if (!$address['street_name']) {
 				// fallback for old custom checkouts
+                $insertArray['billing_building']=$address['building'];
 				$insertArray['billing_street_name']=$address['address'];
 				$insertArray['billing_address_number']=$address['address_number'];
 				$insertArray['billing_address_ext']=$address['address_ext'];
-				$insertArray['billing_address']=$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
+				$insertArray['billing_address']=$insertArray['billing_building'].' '.$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
 				$insertArray['billing_address']=preg_replace('/\s+/', ' ', $insertArray['billing_address']);
 			} else {
+                $insertArray['billing_building']=$address['building'];
 				$insertArray['billing_street_name']=$address['street_name'];
 				$insertArray['billing_address_number']=$address['address_number'];
 				$insertArray['billing_address_ext']=$address['address_ext'];
@@ -1696,7 +1712,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$insertArray['billing_address']				=	$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext']? '-'.$insertArray['billing_address_ext']:'');
 						$insertArray['billing_address'] 			=	preg_replace('/\s+/', ' ', $insertArray['billing_address']);
 			*/
-			$insertArray['billing_building']='';
 			$insertArray['billing_room']='';
 			$insertArray['billing_city']=$address['city'];
 			$insertArray['billing_zip']=$address['zip'];
@@ -1720,7 +1735,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 				$insertArray['delivery_mobile']=$insertArray['billing_mobile'];
 				$insertArray['delivery_gender']=$insertArray['billing_gender'];
-				$insertArray['delivery_street_name']=$insertArray['billing_street_name'];
+                $insertArray['delivery_building']=$insertArray['billing_building'];
+                $insertArray['delivery_street_name']=$insertArray['billing_street_name'];
 				$insertArray['delivery_address_number']=$insertArray['billing_address_number'];
 				$insertArray['delivery_address_ext']=$insertArray['billing_address_ext'];
 				$insertArray['delivery_address']=$insertArray['billing_address'];
@@ -1741,12 +1757,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_gender']=$address['delivery_gender'];
 				if (!$address['street_name']) {
 					// fallback for old custom checkouts
+                    $insertArray['delivery_building']=$address['delivery_building'];
 					$insertArray['delivery_street_name']=$address['delivery_address'];
 					$insertArray['delivery_address_number']=$address['delivery_address_number'];
 					$insertArray['delivery_address_ext']=$address['delivery_address_ext'];
-					$insertArray['delivery_address']=$insertArray['delivery_street_name'].' '.$insertArray['delivery_address_number'].($insertArray['delivery_address_ext'] ? '-'.$insertArray['delivery_address_ext'] : '');
+					$insertArray['delivery_address']=$insertArray['delivery_building'].' '.$insertArray['delivery_street_name'].' '.$insertArray['delivery_address_number'].($insertArray['delivery_address_ext'] ? '-'.$insertArray['delivery_address_ext'] : '');
 					$insertArray['delivery_address']=preg_replace('/\s+/', ' ', $insertArray['delivery_address']);
 				} else {
+                    $insertArray['delivery_building']=$address['delivery_building'];
 					$insertArray['delivery_street_name']=$address['delivery_street_name'];
 					$insertArray['delivery_address_number']=$address['delivery_address_number'];
 					$insertArray['delivery_address_ext']=$address['delivery_address_ext'];
