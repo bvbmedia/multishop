@@ -1463,7 +1463,7 @@ if ($this->post) {
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									// remove the custom page desc if the cat id is not related anymore in p2c
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
-									var_dump($query);
+									//var_dump($query);
 									//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}

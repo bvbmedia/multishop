@@ -204,7 +204,8 @@ class tx_mslib_catalog {
 		}
 	}
 	function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
-		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->shop_pid.'\''));
+		//$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->shop_pid.'\''));
+        $rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and page_uid=\''.$this->shop_pid.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
 			return $rec;
 		} else {
@@ -955,7 +956,8 @@ class tx_mslib_catalog {
             while ($row_p2c=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c)) {
                 $query_p2c_del=$GLOBALS['TYPO3_DB']->SELECTquery('products_to_categories_id', // SELECT ...
                         'tx_multishop_products_to_categories', // FROM ...
-                        'products_id = \''.$row_p2c['products_id'].'\' and categories_id = \''.$row_p2c['categories_id'].'\' and node_id=\''.$row_p2c['node_id'].'\' and crumbar_identifier=\''.$row_p2c['crumbar_identifier'].'\' and is_deepest=\''.$row_p2c['is_deepest'].'\'', // WHERE.
+                        //'products_id = \''.$row_p2c['products_id'].'\' and categories_id = \''.$row_p2c['categories_id'].'\' and node_id=\''.$row_p2c['node_id'].'\' and crumbar_identifier=\''.$row_p2c['crumbar_identifier'].'\' and is_deepest=\''.$row_p2c['is_deepest'].'\'', // WHERE.
+                        'products_id = \''.$row_p2c['products_id'].'\' and categories_id = \''.$row_p2c['categories_id'].'\' and node_id=\''.$row_p2c['node_id'].'\' and is_deepest=\''.$row_p2c['is_deepest'].'\'', // WHERE.
                         '', // GROUP BY...
                         'products_to_categories_id asc', // ORDER BY...
                         '' // LIMIT ...
@@ -1060,9 +1062,14 @@ class tx_mslib_catalog {
 						}
 					}
 					$level++;
+                    /*if ($pid==508) {
+                        echo "<pre>";
+                        var_dump($query);
+                        echo "<br/>";
+                    }*/
 				}
 			}
-			return true;
+			//return true;
 		}
 	}
 }
