@@ -169,7 +169,7 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($current_product['products_image'], 'products', '300');
 
 		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
-		$markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
+		$markerArray['OLD_PRICE_WITH_CONTAINER'] = $output['old_price_with_container'];
 		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 		$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 		$markerArray['PRODUCTS_URL']=$current_product['products_url'];
