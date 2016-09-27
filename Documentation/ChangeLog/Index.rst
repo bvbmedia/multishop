@@ -12,8 +12,8 @@
 ChangeLog
 =========
 
-The latest changes/commits can be found on: https://bitbucket.org/bvbmedia/multishop
-
+2016-09-27 [BUGFIX] New version of phpexcel extension contains the library but is saved on a different location. (Commit 411c897 by Bas van Beek)
+2016-09-27 [BUGFIX] New version of phpexcel extension contains the library but is saved on a different location. (Commit 22b4d8e by Bas van Beek)
 2016-09-26 [IMPROVEMENT] replace the th to td for check all in orders listing (Commit e42a370 by anuwidy)
 2016-09-26 [IMPROVEMENT] replace the th to td for check all in orders listing (Commit f9295be by anuwidy)
 2016-09-26 [IMPROVEMENT] remove categories not working in edit product, that because the crumbar_identifier is incomplete, need to run compare database first to fix the corrupted crumbar_identifier (Commit 1102c8b by anuwidy)
@@ -441,3 +441,4 @@ The latest changes/commits can be found on: https://bitbucket.org/bvbmedia/multi
 2016-06-23 [IMPROVEMENT] ext_tables.sql (Commit 4802203 by anuwidy)
 2016-06-23 [TASK] passed cmsPage key as seperate variable into hook (Commit 6d6eb46 by Bas van Beek)
 
+The latest changes/commits can be found on: https://bitbucket.org/bvbmedia/multishop
