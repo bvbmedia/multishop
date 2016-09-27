@@ -2,7 +2,15 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+$paths=array();
+$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/Service/PHPExcel.php';
+$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php';
+foreach ($paths as $path) {
+	if (file_exists($path)) {
+		require_once($path);
+		break;
+	}
+}
 $option_search=array(
 	"orders_id"=>$this->pi_getLL('admin_order_id'),
 	"invoice"=>$this->pi_getLL('admin_invoice_number'),

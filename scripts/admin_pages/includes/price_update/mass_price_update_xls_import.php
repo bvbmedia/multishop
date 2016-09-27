@@ -192,8 +192,15 @@ function removeProductAttributeExtra($pid, $paid) {
 }
 
 if (!empty($filename)) {
-	// +--------------------------------------------------------------------------------------------------------------------+
-	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+	$paths=array();
+	$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Resources/Private/Contributed/PHPExcel/IOFactory.php';
+	$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php';
+	foreach ($paths as $path) {
+		if (file_exists($path)) {
+			require_once($path);
+			break;
+		}
+	}
 	$phpexcel=PHPExcel_IOFactory::load($dest);
 	foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 		$colname=array();

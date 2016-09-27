@@ -108,7 +108,7 @@ jQuery(document).ready(function ($) {
 
     $("#tax_id").change(function () {
         $(".msPriceExcludingVat").each(function (i) {
-            priceEditRealtimeCalc(true, $(this));
+            priceEditRealtimeCalc(true, this);
         });
     });
 

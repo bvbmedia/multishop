@@ -841,6 +841,8 @@ class mslib_befe {
                     $flat_product['sort_order'] = $row['p2c_sort_order'];
                     $flat_product['product_capital_price'] = $row['product_capital_price'];
                     $flat_product['page_uid'] = $row['page_uid'];
+                    $flat_product['starttime'] = $row['starttime'];
+                    $flat_product['endtime'] = $row['endtime'];
                     if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
                         foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
                             if ($option_id) {
@@ -2196,6 +2198,8 @@ class mslib_befe {
 		  `order_unit_name` varchar(25) default '',
 		  `products_condition` varchar(20) default 'new',
 		  `vendor_code` varchar(25) default '',
+		  `starttime` int(11) default '0',
+		  `endtime` int(11) default '0',
 		";
         if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
             $additional_indexes = '';
@@ -2247,6 +2251,8 @@ class mslib_befe {
 		  KEY `contains_image` (`contains_image`),
 		  KEY `vendor_code` (`vendor_code`),
 		  KEY `sku_code` (`sku_code`),
+		  KEY `starttime` (`starttime`),
+		  KEY `endtime` (`endtime`),
 		  " . $additional_indexes . "
 		  FULLTEXT KEY `products_name` (`products_name`),
 		  FULLTEXT KEY `products_model_2` (`products_model`),
@@ -5035,6 +5041,23 @@ class mslib_befe {
         $filter[]='(o.page_uid=\'0\' or o.page_uid=\''.$this->showCatalogFromPage.'\') and o.deleted=0 and o.id=od.orders_status_id and od.language_id=\'0\'';
         $record=mslib_befe::getRecord('','tx_multishop_orders_status o, tx_multishop_orders_status_description od','',$filter);
         return $record;
+    }
+    function getOrderStatusHistoryByOrdersId($orders_id) {
+        if (is_numeric($orders_id)) {
+            $query=$GLOBALS['TYPO3_DB']->SELECTquery('new_value', // SELECT ...
+                    'tx_multishop_orders_status_history', // FROM ...
+                    'orders_id=\''.$orders_id.'\'', // WHERE.
+                    '', // GROUP BY...
+                    'orders_status_history_id desc', // ORDER BY...
+                    '' // LIMIT ...
+            );
+            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+            $order_status_history_items=array();
+            while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
+                $order_status_history_items[]=$row['new_value'];
+            }
+            return $order_status_history_items;
+        }
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

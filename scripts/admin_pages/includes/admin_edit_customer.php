@@ -60,10 +60,11 @@ if ($this->post && $this->post['email']) {
 		$updateArray['name']=preg_replace('/\s+/', ' ', $updateArray['name']);
 		$updateArray['gender']=$this->post['gender'];
 		$updateArray['company']=$this->post['company'];
-		$updateArray['street_name']=$this->post['street_name'];
+        $updateArray['building']=$this->post['building'];
+        $updateArray['street_name']=$this->post['street_name'];
 		$updateArray['address_number']=$this->post['address_number'];
 		$updateArray['address_ext']=$this->post['address_ext'];
-		$updateArray['address']=$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
+		$updateArray['address']=$updateArray['building'].' '.$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
 		$updateArray['address']=preg_replace('/\s+/', ' ', $updateArray['address']);
 		$updateArray['zip']=$this->post['zip'];
 		$updateArray['city']=$this->post['city'];
@@ -165,12 +166,14 @@ if ($this->post && $this->post['email']) {
 				$updateTTAddressArray['email']=$updateArray['email'];
 				if (!$updateArray['street_name']) {
 					// fallback for old custom checkouts
+                    $updateTTAddressArray['building']=$updateArray['building'];
 					$updateTTAddressArray['street_name']=$updateArray['address'];
 					$updateTTAddressArray['address_number']=$updateArray['address_number'];
 					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
-					$updateTTAddressArray['address']=$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
+					$updateTTAddressArray['address']=$updateTTAddressArray['building'].' '.$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
 					$updateTTAddressArray['address']=preg_replace('/\s+/', ' ', $updateTTAddressArray['address']);
 				} else {
+                    $updateTTAddressArray['building']=$updateArray['building'];
 					$updateTTAddressArray['street_name']=$updateArray['street_name'];
 					$updateTTAddressArray['address_number']=$updateArray['address_number'];
 					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
@@ -312,12 +315,14 @@ if ($this->post && $this->post['email']) {
 				$insertArray['email']=$updateArray['email'];
 				if (!$updateArray['street_name']) {
 					// fallback for old custom checkouts
-					$insertArray['street_name']=$updateArray['address'];
+                    $insertArray['building']=$updateArray['building'];
+                    $insertArray['street_name']=$updateArray['address'];
 					$insertArray['address_number']=$updateArray['address_number'];
 					$insertArray['address_ext']=$updateArray['address_ext'];
-					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
+                    $insertArray['building']=$updateArray['building'];
 					$insertArray['street_name']=$updateArray['street_name'];
 					$insertArray['address_number']=$updateArray['address_number'];
 					$insertArray['address_ext']=$updateArray['address_ext'];
@@ -841,7 +846,9 @@ switch ($_REQUEST['action']) {
 			$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
 			$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
 			//
-			$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
+            $subpartArray['###LABEL_BUILDING###']=ucfirst($this->pi_getLL('building'));
+            $subpartArray['###VALUE_BUILDING###']=htmlspecialchars($this->post['building']);
+            $subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
 			$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
 			$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
 			$subpartArray['###VALUE_STREET_ADDRESS_NUMBER###']=htmlspecialchars($this->post['address_number']);
@@ -1125,6 +1132,8 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
 		$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
 		//
+        $subpartArray['###LABEL_BUILDING###']=ucfirst($this->pi_getLL('building'));
+        $subpartArray['###VALUE_BUILDING###']=htmlspecialchars($this->post['building']);
 		$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
 		$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
 		$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));

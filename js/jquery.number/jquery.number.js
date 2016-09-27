@@ -474,10 +474,11 @@
 						//console.log( 'Setting pos: ', start, decimals, this.value.length + data.c, this.value.length, data.c );
 
                         var typed_value=this.value;
-                        if (typed_value.indexOf('.')>-1) {
-                            this.value=typed_value.replace('.', ',');
-                        }
-
+						if (dec_point!='.') {
+							if (typed_value.indexOf('.')>-1 && typed_value.indexOf(dec_point)==-1) {
+								this.value = typed_value.replace('.', dec_point);
+							}
+						}
 						// Set the selection position.
 						setPos = this.value.length+data.c;
 						//setSelectionRange.apply(this, [setPos, setPos]);
@@ -485,9 +486,9 @@
 						clearTimeout(typeTimer);  //clear any running timeout on key up
 						typeTimer = setTimeout(function() { //then give it a second to see if the user is finished
                             typed_value=this_input.value;
-                            if (typed_value.indexOf(',')>-1) {
-                                this_input.value=typed_value.replace(',', '.');
-                            }
+                            //if (typed_value.indexOf(',')>-1) {
+                                //this_input.value=typed_value.replace(',', '.');
+                            //}
                             $this.val($this.val());
 						}, 1000);
 						//data.value=this.value;

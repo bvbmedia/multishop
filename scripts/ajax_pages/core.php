@@ -2079,7 +2079,7 @@ switch ($this->ms['page']) {
 							$string='delivery_'.$key;
 							$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
 						}
-						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_building'].' '.$updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
 						break;
 					case "billing_details":
 						$keys[]='vat_id';
@@ -2088,7 +2088,7 @@ switch ($this->ms['page']) {
 							$string='billing_'.$key;
 							$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
 						}
-						$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
+						$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_building'].' '.$updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
 						break;
 				}
 				if (count($updateArray)) {

@@ -576,7 +576,15 @@ if ($this->post['action']=='category-insert') {
 					fclose($handle);
 				}
 				// excel
-				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+				$paths=array();
+				$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Resources/Private/Contributed/PHPExcel/IOFactory.php';
+				$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php';
+				foreach ($paths as $path) {
+					if (file_exists($path)) {
+						require_once($path);
+						break;
+					}
+				}
 				$phpexcel=PHPExcel_IOFactory::load($file_location);
 				foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 					$counter=0;
@@ -1156,7 +1164,15 @@ if ($this->post['action']=='category-insert') {
 					}
 				} elseif ($this->post['format']=='excel') {
 					// excel
-					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+					$paths=array();
+					$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Resources/Private/Contributed/PHPExcel/IOFactory.php';
+					$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php';
+					foreach ($paths as $path) {
+						if (file_exists($path)) {
+							require_once($path);
+							break;
+						}
+					}
 					$phpexcel=PHPExcel_IOFactory::load($file);
 					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;

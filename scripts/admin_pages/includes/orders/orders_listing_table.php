@@ -529,7 +529,7 @@ $headerData.='});
 		});
 		$(\'#check_all_1\').click(function(){
 			//checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
-			$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+			$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 		});
 	});
 </script>';

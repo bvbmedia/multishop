@@ -1343,6 +1343,12 @@
             <label index="switch_to_discount_percentage">Switch to discount percentage</label>
             <label index="shopping_cart_message">Shopping cart message CMS</label>
             <label index="checkout_message">Checkout message CMS</label>
+            <label index="male_abbreviation_long">Mister</label>
+            <label index="male_abbreviation">Mistr.</label>
+            <label index="male_salutation">Dear sire</label>
+            <label index="female_abbreviation_long">Madam</label>
+            <label index="female_abbreviation">Mrs.</label>
+            <label index="female_salutation">Dear madam</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2685,6 +2691,12 @@
             <label index="order_memo_last_modified">Bericht laatst gewijzigd op</label>
             <label index="switch_to_discount_amount">Korting toekennen op basis van bedrag</label>
             <label index="switch_to_discount_percentage">Korting toekennen op basis van percentage</label>
+            <label index="male_abbreviation_long">De heer</label>
+            <label index="male_abbreviation">Dhr.</label>
+            <label index="male_salutation">Geachte heer</label>
+            <label index="female_abbreviation_long">Mevrouw</label>
+            <label index="female_abbreviation">Mevr.</label>
+            <label index="female_salutation">Geachte mevrouw</label>
         </languageKey>
     </data>
 </T3locallang>

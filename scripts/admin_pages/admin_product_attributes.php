@@ -207,15 +207,32 @@ if ($rows) {
         $content.='</div>';
 		$content.='</div>';
         //$content.='<a href="#" class="btn btn-success fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
+
+        $content.='<div class="panel panel-default" style="display: none">';
+        $content.='<div class="panel-body">';
+        $content.='<div class="form-group">';
+        $content.='<label for="sort_order_attributes_option_values" class="col-md-4">Sort by</label>';
+        $content.='<div class="col-md-8">';
+        $content.='<select id="sort_order_attributes_option_values" class="form-control sort_order_attributes_option_values" rel="' . $row['products_options_id'] . '">';
+        $content.='<option value="id_asc">Product option values id ('.$this->pi_getLL('ascending').')</option>';
+        $content.='<option value="id_desc">Product option values id ('.$this->pi_getLL('descending').')</option>';
+        $content.='<option value="alpha_asc">'.$this->pi_getLL('admin_sort_alphabet_asc').'</option>';
+        $content.='<option value="alpha_desc">'.$this->pi_getLL('admin_sort_alphabet_desc').'</option>';
+        $content.='<option value="alpha_nat_asc">'.$this->pi_getLL('admin_sort_alphabet_natural_asc').'</option>';
+        $content.='<option value="alpha_nat_desc">'.$this->pi_getLL('admin_sort_alphabet_natural_desc').'</option>';
+        $content.='</select>';
+        $content.='</div>';
+        $content.='</div>';
+
         $content.='<div class="attribute_option_values_sortable" rel="'.$row['products_options_id'].'" id="vc_'.$row['products_options_id'].'" style="display:none">';
         $content.='<div id="last_line_'.$row['products_options_id'].'">';
         $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a> ';
         $content.='<a href="#" class="btn btn-success hide_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a>';
         $content.='</div>';
         $content.='</div>';
+        $content.='</div>';
+        $content.='</div>';
         $content.='<input type="hidden" name="values_fetched_'.$row['products_options_id'].'" id="values_fetched_'.$row['products_options_id'].'" value="0" />';
-
-
         $content.='</div>';
         $content.='</div>';
     }
@@ -490,13 +507,32 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
 
-							new_option_html+=\'<div class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
+                            new_option_html+=\'<div class="panel panel-default" style="display:none">\';
+                            new_option_html+=\'<div class="panel-body">\';
+                            new_option_html+=\'<div class="form-group">\';
+                            new_option_html+=\'<label for="sort_order_attributes_option_values" class="col-md-4">Sort by</label>\';
+                            new_option_html+=\'<div class="col-md-8">\';
+                            new_option_html+=\'<select id="sort_order_attributes_option_values" class="form-control sort_order_attributes_option_values" rel="\' + s.option_id + \'">\';
+                            new_option_html+=\'<option value="id_asc">Product option values id ('.$this->pi_getLL('ascending').')</option>\';
+                            new_option_html+=\'<option value="id_desc">Product option values id ('.$this->pi_getLL('descending').')</option>\';
+                            new_option_html+=\'<option value="alpha_asc">'.$this->pi_getLL('admin_sort_alphabet_asc').'</option>\';
+                            new_option_html+=\'<option value="alpha_desc">'.$this->pi_getLL('admin_sort_alphabet_desc').'</option>\';
+                            new_option_html+=\'<option value="alpha_nat_asc">'.$this->pi_getLL('admin_sort_alphabet_natural_asc').'</option>\';
+                            new_option_html+=\'<option value="alpha_nat_desc">'.$this->pi_getLL('admin_sort_alphabet_natural_desc').'</option>\';
+                            new_option_html+=\'</select>\';
+                            new_option_html+=\'</div>\';
+                            new_option_html+=\'</div>\';
+                            
+                            new_option_html+=\'<div class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
 							new_option_html+=\'<div id="last_line_\' + s.option_id + \'">\';
 							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
 							new_option_html+=\'<a href="#" class="btn btn-success hide_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a>\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
 							new_option_html+=\'</div>\';
+                            new_option_html+=\'</div>\'; // panel-body
+                            new_option_html+=\'</div>\'; // panel-default
+                            
 
 							new_option_html+=\'</div>\'; // .panel-body
 							new_option_html+=\'</div>\'; // .panel .panel-default
@@ -556,6 +592,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 
 			$(new_li).insertBefore(last_line_id);
 			if ($(ul_parent_id).is(":hidden")) {
+				$(ul_parent_id).parent().parent().show();
 				$(ul_parent_id).show();
 			}
 			select2_options_value("." + new_values_input, "new options values", "new_values_input_drop", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_attributes_values').'");
@@ -732,23 +769,130 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 							$(container_id).append(values_data);
 
 							$(fetched_id).val("1");
+							$(container_id).parent().parent().show();
 							$(container_id).show();
 							$(button_label_id).html(\'<i class="fa fa-eye"></i>  '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
 						} else {
+							$(container_id).parent().parent().show();
 							$(container_id).show();
+							
 							$(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
 						}
 					}
 				});
 			} else if ($(fetched_id).val() == "1") {
 				if ($(container_id).is(":hidden")) {
+					$(container_id).parent().parent().show();
 					$(container_id).show();
 					$(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
 				} else {
+				    $(container_id).parent().parent().hide();
 					$(container_id).hide();
 					$(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('show_attributes_values')).'\');
 				}
 			}
+		});
+		$(document).on("change", ".sort_order_attributes_option_values", function(e) {
+			e.preventDefault();
+			var opt_id = $(this).attr("rel");
+			var container_id = "#vc_" + opt_id;
+			var fetched_id = "#values_fetched_" + opt_id;
+			var button_label_id = "#button_label_" + opt_id;
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=fetch_attributes').'&tx_multishop_pi1[sort_by]=" + $(this).val();
+            $.ajax({
+                type:   "POST",
+                url:    href,
+                data:   \'data_id=\' + opt_id,
+                dataType: "json",
+                success: function(r) {
+                    if (r.results) {
+                        var attributeImageUploader=[];
+                        var classItem=\'even\';
+                        $(container_id).empty();
+                        $.each(r.results, function(i, v) {
+                            var values_data = "";
+                            if (classItem==\'even\') {
+                                classItem=\'odd\';
+                            } else {
+                                classItem=\'even\';
+                            }
+                            attributesValues[v.values_id]={id: v.values_id, text: v.values_name}
+                            values_data+=\'<div id="option_values_\' + v.values_id + \'" class="panel panel-default option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">\';
+                            values_data+=\'<div class="panel-heading">\';
+                            values_data+=\'<h3>'.addslashes($this->pi_getLL('admin_label_option_value')).': \';
+                            values_data+=v.values_name;
+                            values_data+=\'<span class="values_edit">\';
+                            values_data += \'&nbsp;<a href="#" class="edit_options_values btn btn-primary btn-xs" rel="\' + v.pov2po_id + \'"><i class="fa fa-pencil"></i></a>\';
+                            values_data += \'&nbsp;<a href="#" class="delete_options_values btn btn-danger btn-xs" rel="\' + opt_id + \':\' + v.values_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
+                            values_data+=\'</span>\';
+                            values_data+=\'</h3>\';
+                            values_data+=\'</div>\';
+                            values_data+=\'<div class="panel-body">\';
+                            if (v.values_image!=\'disabled\') {
+                                values_data+=\'<span class="values_image">\';
+                                values_data+=\'<label for="attribute_values_image\' + v.pov2po_id + \'">'.addslashes($this->pi_getLL('admin_image')).'</label>\';
+                                values_data+=\'<div id="attribute_values_image\' + v.pov2po_id + \'">\';
+                                values_data+=\'<noscript>\';
+                                values_data+=\'<input name="attribute_values_image\' + v.pov2po_id + \'" type="file" />\';
+                                values_data+=\'</noscript>\';
+                                values_data+=\'</div>\';
+                                values_data+=\'<input name="ajax_attribute_values_image\' + v.pov2po_id + \'" id="ajax_attribute_values_image\' + v.pov2po_id + \'" type="hidden" value="" />\';
+                                values_data+=v.values_image_display;
+                                values_data+=\'</span>\';
+                            }
+                            values_data+=\'</div>\';
+                            values_data += \'</div>\';
+
+                            $(container_id).append(values_data);
+                            if (v.values_image!=\'disabled\') {
+                                var attribute_values_name=\'attribute_values_image_\' + v.pov2po_id;
+                                attributeImageUploader[v.pov2po_id] = new qq.FileUploader({
+                                    element: document.getElementById(\'attribute_values_image\' + v.pov2po_id),
+                                    action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
+                                    params: {
+                                        attribute_values_name: attribute_values_name,
+                                        pov2po_id: v.pov2po_id,
+                                        file_type: \'attribute_values_image\' + v.pov2po_id
+                                    },
+                                    template: \'<div class="qq-uploader">\' +
+                                              \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+                                              \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+                                              \'<ul class="qq-upload-list" style="display:none"></ul>\' +
+                                              \'</div>\',
+                                    onComplete: function(id, fileName, responseJSON){
+                                        console.log(responseJSON);
+                                        var filenameServer = responseJSON[\'filename\'];
+                                        var image_display_val=responseJSON[\'image_display\'];
+                                        var target_after=responseJSON[\'target_after\'];
+                                        var target_delete=responseJSON[\'target_delete\'];
+                                        $(\'#ajax_attribute_values_image\' + v.pov2po_id).val(filenameServer);
+                                        $(target_delete).remove();
+                                        $(image_display_val).insertAfter(target_after);
+
+                                    },
+                                    debug: false
+                                });
+                            }
+
+                        });
+                        var values_data= \'<div id="last_line_\' + opt_id + \'">\';
+                        values_data+= \'<a href="#" class="btn btn-success add_attributes_values" rel="\' + opt_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
+                        values_data+= \'<a href="#" class="btn btn-success hide_attributes_values" rel="\' + opt_id + \'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a>\';
+                        values_data+= \'</div>\';
+                        $(container_id).append(values_data);
+
+                        $(fetched_id).val("1");
+                        $(container_id).parent().parent().show();
+                        $(container_id).show();
+                        $(button_label_id).html(\'<i class="fa fa-eye"></i>  '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
+                    } else {
+                        $(container_id).parent().parent().show();
+                        $(container_id).show();
+                        
+                        $(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
+                    }
+                }
+            });
 		});
 		$(document).on("click", "#delete_attribute_values_image", function(e) {
 			e.preventDefault();
@@ -774,9 +918,11 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes']='<script t
 			var container_id = "#vc_" + opt_id;
 			var button_label_id = "#button_label_" + opt_id;
 			if ($(container_id).is(":hidden")) {
+			    $(container_id).parent().parent().show();
 				$(container_id).show();
 				$(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('admin_label_hide_values')).'\');
 			} else {
+			    $(container_id).parent().parent().hide();
 				$(container_id).hide();
 				$(button_label_id).html(\'<i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('show_attributes_values')).'\');
 			}

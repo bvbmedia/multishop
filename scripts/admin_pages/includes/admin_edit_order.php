@@ -1058,6 +1058,14 @@ if (is_numeric($this->get['orders_id'])) {
 			$address_data['city']=$orders['billing_city'];
 			$address_data['country']=$orders['billing_country'];
 			$billing_address_value=mslib_befe::customerAddressFormat($address_data);
+
+
+
+
+
+
+
+
 			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 			$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
             '.$billing_address_value.'<br /><br />';

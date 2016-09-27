@@ -307,7 +307,7 @@ if ($contentType=='specials_listing_page') {
         } else {
             $tbl='p.';
         }
-        $groupby=$tbl.'products_id';
+        $groupby[]=$tbl.'products_id';
 		$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
         //$this->msDebug=1;
 		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), $groupby, 'products_specials', '', 0, 1, $extrajoin);
