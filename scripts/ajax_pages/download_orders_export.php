@@ -304,7 +304,15 @@ if ($this->get['orders_export_hash']) {
 			}
 		}
 		if ($this->get['format']=='excel') {
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			$paths=array();
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/Service/PHPExcel.php';
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php';
+			foreach ($paths as $path) {
+				if (file_exists($path)) {
+					require_once($path);
+					break;
+				}
+			}
 			$objPHPExcel=new PHPExcel();
 			$objPHPExcel->getSheet(0)->setTitle('Orders Export');
 			$objPHPExcel->getActiveSheet()->fromArray($excelRows);

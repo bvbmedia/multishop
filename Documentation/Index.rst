@@ -59,4 +59,5 @@ Multishop
 	Introduction/Index
 	Administrator/Index
 	Support/Index
+	ChangeLog/Index
 

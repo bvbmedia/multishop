@@ -111,7 +111,15 @@ switch ($this->ms['page']) {
 		break;
 	case 'admin_orders_stats_dl_xls':
 		if ($this->ADMIN_USER) {
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			$paths=array();
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/Service/PHPExcel.php';
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php';
+			foreach ($paths as $path) {
+				if (file_exists($path)) {
+					require_once($path);
+					break;
+				}
+			}
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_stats_orders/orders_stats_xls_export.php');
 		}
 		break;
