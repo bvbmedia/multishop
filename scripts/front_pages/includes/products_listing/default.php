@@ -88,6 +88,7 @@ if (is_array($products) && count($products)) {
 			}
 		}
 		$final_price=mslib_fe::final_products_price($current_product);
+		$final_price_per_each=$current_product['final_price'];
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 			$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
 		} else {
@@ -104,8 +105,11 @@ if (is_array($products) && count($products)) {
 			}
 			$output['old_price_with_container']='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div>';
 			$output['products_price'].='<div class="old_price_wrapper"><div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div></div><div class="specials_price_wrapper"><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div></div>';
+			$output['products_price_per_each'].='<div class="old_price_wrapper"><div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div></div><div class="specials_price_wrapper"><div class="specials_price">'.mslib_fe::amount2Cents($final_price_per_each).'</div></div>';
+			$current_product['old_price']=$old_price;
 		} else {
 			$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
+			$output['products_price_per_each'].='<div class="price">'.mslib_fe::amount2Cents($final_price_per_each).'</div>';
 		}
 		/*$current_product['products_price_including_vat']=$current_product['products_price'];
 		$current_product['final_price_including_vat']=$current_product['final_price'];
@@ -169,12 +173,17 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($current_product['products_image'], 'products', '300');
 
 		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
+		$markerArray['PRODUCTS_PRICE_PER_EACH']=$output['products_price_per_each'];
+
 		$markerArray['OLD_PRICE_WITH_CONTAINER'] = $output['old_price_with_container'];
 		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 		$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 		$markerArray['PRODUCTS_URL']=$current_product['products_url'];
 		$markerArray['ORDER_UNIT_NAME']=$current_product['order_unit_name'];
-		$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
+		$markerArray['OLD_PRICE']='';
+		if ($current_product['old_price']) {
+			$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
+		}
 		$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
 		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'], 2, ',', '.');
 		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'], 2, ',', '.');
