@@ -102,6 +102,7 @@ if (is_array($products) && count($products)) {
 			} else {
 				$old_price=$current_product['products_price'];
 			}
+			$output['old_price_with_container']='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div>';
 			$output['products_price'].='<div class="old_price_wrapper"><div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div></div><div class="specials_price_wrapper"><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div></div>';
 		} else {
 			$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
@@ -168,6 +169,7 @@ if (is_array($products) && count($products)) {
 		$markerArray['PRODUCTS_IMAGE_URL_300']=mslib_befe::getImagePath($current_product['products_image'], 'products', '300');
 
 		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
+		$markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
 		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 		$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 		$markerArray['PRODUCTS_URL']=$current_product['products_url'];
