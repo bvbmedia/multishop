@@ -3,7 +3,15 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 set_time_limit(0);
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+$paths=array();
+$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/Service/PHPExcel.php';
+$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php';
+foreach ($paths as $path) {
+	if (file_exists($path)) {
+		require_once($path);
+		break;
+	}
+}
 $data_query=array();
 $data_query['filter']=array();
 $data_query['from']=array();

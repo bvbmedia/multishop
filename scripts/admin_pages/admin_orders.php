@@ -76,7 +76,15 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		break;
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			$paths=array();
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/Service/PHPExcel.php';
+			$paths[]=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php';
+			foreach ($paths as $path) {
+				if (file_exists($path)) {
+					require_once($path);
+					break;
+				}
+			}
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/orders/orders_xls_export.php');
 		}
 		break;

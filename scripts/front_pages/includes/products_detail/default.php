@@ -182,6 +182,7 @@ if (!$product['products_id']) {
         }
         if ($old_price) {
             $output['products_price'] .= '<div class="old_price">' . mslib_fe::amount2Cents($old_price) . '</div>';
+            $output['old_price_with_container'] = '<div class="old_price">' . mslib_fe::amount2Cents($old_price) . '</div>';
         }
         $output['products_price'] .= '<input type="hidden" name="price_hid" id="price_default" value="' . $final_price . '"/>
 		' . $staffel_price_hid . '
@@ -402,6 +403,8 @@ if (!$product['products_id']) {
     // new
     $markerArray['###QUANTITY###'] = $output['quantity'];
     $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($product['old_price']);
+    $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
+
     $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
     $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
     $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
