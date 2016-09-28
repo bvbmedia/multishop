@@ -1662,16 +1662,18 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
 			$orders_paid_timestamp_visual='';
 			$orders_paid_timestamp='';
-			if (!$this->post && $orders['orders_paid_timestamp']) {
-				$this->post['tx_multishop_pi1']['orders_paid_timestamp']=$orders['orders_paid_timestamp'];
-			}
-			if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']==0 || empty($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
-				$orders_paid_timestamp_visual='';
-				$orders_paid_timestamp='';
-			} else {
-				$orders_paid_timestamp_visual=strftime('%x', $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
-				$orders_paid_timestamp=date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
-			}
+            if ($orders['paid']) {
+                if (!$this->post && $orders['orders_paid_timestamp']) {
+                    $this->post['tx_multishop_pi1']['orders_paid_timestamp'] = $orders['orders_paid_timestamp'];
+                }
+                if ($this->post['tx_multishop_pi1']['orders_paid_timestamp'] == 0 || empty($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+                    $orders_paid_timestamp_visual = '';
+                    $orders_paid_timestamp = '';
+                } else {
+                    $orders_paid_timestamp_visual = strftime('%x', $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+                    $orders_paid_timestamp = date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+                }
+            }
 			$orderDetailsItem.='<div class="col-md-9">
 			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
 			<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
