@@ -7798,14 +7798,12 @@ class mslib_fe {
 		if (!empty($categories_name)) {
 			if ($related_category_id>0) {
 				$filter=array();
-                $filter[]='p2c.related_to=c.categories_id';
-                $filter[]='c.status=1';
 				$filter[]='p2c.products_id=\'' . $product_id . '\'';
                 $filter[]='p2c.related_to=\''.$related_category_id.'\'';
 				$filter[]='p2c.page_uid=\''.$page_uid.'\'';
 				//
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id', // SELECT ...
-					'tx_multishop_products_to_categories p2c, tx_multishop_categories c', // FROM ...
+					'tx_multishop_products_to_categories p2c', // FROM ...
 					implode(' and ', $filter), // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
@@ -7818,7 +7816,6 @@ class mslib_fe {
 					$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
 					$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 					$filter[]='c.page_uid=\''.$page_uid.'\'';
-                    $filter[]='c.status=1';
                     //$filter[]='c.related_to=\''.$related_category_id.'\'';
 					if ($parent_id>0) {
 						$filter[]='c.parent_id=\''.$parent_id.'\'';
@@ -7839,7 +7836,6 @@ class mslib_fe {
 				$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
 				$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 				$filter[]='c.page_uid=\''.$page_uid.'\'';
-                $filter[]='c.status=1';
 				if ($parent_id>0) {
 					$filter[]='c.parent_id=\''.$parent_id.'\'';
 				}
