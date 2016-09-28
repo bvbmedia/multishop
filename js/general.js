@@ -38,43 +38,45 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         }
         tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
     }
-    if (current_value > 0) {
-        if (to_include_vat) {
-            if (tax_rate>0) {
-                var priceIncludeVat=parseFloat(current_value+(current_value*(tax_rate/100)));
-                var incl_tax_crop = decimalCrop(priceIncludeVat);
-                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
-            } else {
-                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(original_val);
-            }
-            // update the hidden excl vat
-            $(o).parentsUntil('msAttributesField').next().next().first().children().val(current_value);
-        } else {
-            if (tax_rate>0) {
-                var priceExcludeVat=parseFloat((current_value/(100+tax_rate))*100);
-                var excl_tax_crop = decimalCrop(priceExcludeVat);
-                // update the excl. vat
-                $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
+    if (!$(o).hasClass('singlePriceInput')) {
+        if (current_value > 0) {
+            if (to_include_vat) {
+                if (tax_rate > 0) {
+                    var priceIncludeVat = parseFloat(current_value + (current_value * (tax_rate / 100)));
+                    var incl_tax_crop = decimalCrop(priceIncludeVat);
+                    $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
+                } else {
+                    $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(original_val);
+                }
                 // update the hidden excl vat
-                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(priceExcludeVat);
+                $(o).parentsUntil('msAttributesField').next().next().first().children().val(current_value);
+            } else {
+                if (tax_rate > 0) {
+                    var priceExcludeVat = parseFloat((current_value / (100 + tax_rate)) * 100);
+                    var excl_tax_crop = decimalCrop(priceExcludeVat);
+                    // update the excl. vat
+                    $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
+                    // update the hidden excl vat
+                    $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(priceExcludeVat);
+                } else {
+                    // update the excl. vat
+                    $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(original_val);
+                    // update the hidden excl vat
+                    $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(current_value);
+                }
+            }
+        } else {
+            if (to_include_vat) {
+                // update the incl. vat
+                $(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
+                // update the hidden excl vat
+                $(o).parentsUntil('msAttributesField').next().next().first().children().val(0);
             } else {
                 // update the excl. vat
-                $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(original_val);
+                $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
                 // update the hidden excl vat
-                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(current_value);
+                $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(0);
             }
-        }
-    } else {
-        if (to_include_vat) {
-            // update the incl. vat
-            $(o).parentsUntil('.msAttributesField').parent().next().children().find('input').val(0);
-            // update the hidden excl vat
-            $(o).parentsUntil('msAttributesField').next().next().first().children().val(0);
-        } else {
-            // update the excl. vat
-            $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input').val(0);
-            // update the hidden excl vat
-            $(o).parentsUntil('.msAttributesField').parent().next().first().children().val(0);
         }
     }
 }
