@@ -219,7 +219,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				//echo "<pre>";
 				//echo $sub_total."<br/>";
 				//echo $sub_total_excluding_vat."<br/>";
-				if ($row['discount']>0) {
+				if ($row['discount']<0 || $row['discount']>0) {
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$discount_price=round($row['discount'], 2);
 						//$sub_total_excluding_vat-=$discount_price;

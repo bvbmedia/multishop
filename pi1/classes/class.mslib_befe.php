@@ -4130,7 +4130,7 @@ class mslib_befe {
                 $subpartsTemplateWrapperRemove['###TOTAL_VAT_ROW_EXCLUDE_VAT_HAVE_SHIPPING_PAYMENT_TAX###'] = '';
             }
         }
-        if ($order['discount'] < 0 || $order['discount'] == 0) {
+        if ($order['discount'] > -1 && $order['discount'] < 0.01) {
             $subpartsTemplateWrapperRemove['###DISCOUNT_WRAPPER###'] = '';
             $subpartsTemplateWrapperRemove['###NEWSUBTOTAL_WRAPPER###'] = '';
         }
@@ -4534,11 +4534,11 @@ class mslib_befe {
             $subpartArray['###TOTAL_SHIPPING_COSTS###'] = mslib_fe::amount2Cents($prefix . ($order['shipping_method_costs']), $customer_currency, $display_currency_symbol, 0);
             $subpartArray['###TOTAL_PAYMENT_COSTS###'] = mslib_fe::amount2Cents($prefix . ($order['payment_method_costs']), $customer_currency, $display_currency_symbol, 0);
         }
-        if ($order['discount'] > 0) {
+        if ($order['discount'] < 0 || $order['discount'] > 0) {
             $subpartArray['###LABEL_DISCOUNT###'] = $this->pi_getLL('discount');
             $subpartArray['###TOTAL_DISCOUNT###'] = mslib_fe::amount2Cents($prefix . ($order['discount']), $customer_currency, $display_currency_symbol, 0);
             //
-            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = $this->pi_getLL('subtotal');
+            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = 'sssssssssss'.$this->pi_getLL('subtotal');
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
