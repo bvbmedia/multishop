@@ -7798,24 +7798,28 @@ class mslib_fe {
 		if (!empty($categories_name)) {
 			if ($related_category_id>0) {
 				$filter=array();
+                $filter[]='p2c.related_to=c.categories_id';
+                $filter[]='c.status=1';
 				$filter[]='p2c.products_id=\'' . $product_id . '\'';
-				$filter[]='p2c.related_to=\''.$related_category_id.'\'';
+                $filter[]='p2c.related_to=\''.$related_category_id.'\'';
 				$filter[]='p2c.page_uid=\''.$page_uid.'\'';
 				//
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id', // SELECT ...
-					'tx_multishop_products_to_categories p2c', // FROM ...
+					'tx_multishop_products_to_categories p2c, tx_multishop_categories c', // FROM ...
 					implode(' and ', $filter), // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
 				);
+
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
 					$filter=array();
 					$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
 					$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 					$filter[]='c.page_uid=\''.$page_uid.'\'';
-					$filter[]='c.related_to=\''.$related_category_id.'\'';
+                    $filter[]='c.status=1';
+                    //$filter[]='c.related_to=\''.$related_category_id.'\'';
 					if ($parent_id>0) {
 						$filter[]='c.parent_id=\''.$parent_id.'\'';
 					}
@@ -7835,6 +7839,7 @@ class mslib_fe {
 				$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
 				$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
 				$filter[]='c.page_uid=\''.$page_uid.'\'';
+                $filter[]='c.status=1';
 				if ($parent_id>0) {
 					$filter[]='c.parent_id=\''.$parent_id.'\'';
 				}
@@ -7850,7 +7855,7 @@ class mslib_fe {
 				);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
-			//var_dump($query) . "\n";
+            //var_dump($query) . "\n";
 			//die();
 			//
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
@@ -7871,10 +7876,12 @@ class mslib_fe {
 						//
 						if (count($external_shop_crumbar)>0) {
 							foreach ($external_shop_crumbar as $idx => $item) {
-								if ($item['name']!=$current_shop_crumbar[$idx]['name']) {
-									$identical=false;
-									break;
-								}
+                                if ($item['name']!=$current_shop_crumbar[$idx]['name']) {
+                                    $identical=false;
+                                }
+                                if ($item['name']==$current_shop_crumbar[$idx]['name'] && $item['status']!=$current_shop_crumbar[$idx]['status']) {
+                                    $identical=false;
+                                }
 							}
 							if ($identical) {
 								return $row['categories_id'];
