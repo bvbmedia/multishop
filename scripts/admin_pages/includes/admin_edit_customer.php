@@ -1259,7 +1259,7 @@ if (!count($js_extra['triggers'])) {
 	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 }
 if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1']['cid']>0) {
-	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer');
+	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer').' (ID: '.$this->get['tx_multishop_pi1']['cid'].')';
 	$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 } else {
 	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_new_customer');
