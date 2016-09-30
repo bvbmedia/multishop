@@ -463,7 +463,7 @@ if (is_numeric($this->get['orders_id'])) {
 												}
 												if ($subtotal>$split[0]) {
 													$price=$split[1];
-													next();
+                                                    continue;
 												}
 											}
 											$count++;

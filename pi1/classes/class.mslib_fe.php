@@ -4675,7 +4675,7 @@ class mslib_fe {
 							if (is_numeric($split[0])) {
 								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
-									@next();
+									continue;
 								} else {
 									$shipping_cost=$old_shipping_costs;
 								}
@@ -4699,12 +4699,12 @@ class mslib_fe {
 									$shipping_cost=$split[1];
 								} else {
 									$shipping_cost=$split[0];
-									next();
+                                    continue;
 								}
 							}
 							if ($subtotal>$split[0] and isset($split[1])) {
 								$shipping_cost=$split[1];
-								next();
+                                continue;
 							}
 						}
 						$count++;
@@ -5006,7 +5006,7 @@ class mslib_fe {
 									if (is_numeric($split[0])) {
 										if ($subtotal>$split[0] and isset($split[1])) {
 											$shipping_cost=$split[1];
-											next();
+                                            continue;
 										} else {
 											$shipping_cost=$old_shipping_costs;
 										}
@@ -5031,12 +5031,12 @@ class mslib_fe {
 										$shipping_cost=$split[1];
 									} else {
 										$shipping_cost=$split[0];
-										next();
+                                        continue;
 									}
 								}
 								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
-									next();
+                                    continue;
 								}
 							}
 							$count++;
@@ -5487,7 +5487,7 @@ class mslib_fe {
 								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
 									$shipping_cost_method_box=$split[1];
-									@next();
+                                    continue;
 								} else {
 									$shipping_cost=$old_shipping_costs;
 									$shipping_cost_method_box=$old_shipping_costs;
@@ -5514,13 +5514,13 @@ class mslib_fe {
 							} else {
 								$shipping_cost=$split[0];
 								$shipping_cost_method_box=$split[0];
-								next();
+                                continue;
 							}
 						}
 						if ($subtotal>$split[0] and isset($split[1])) {
 							$shipping_cost=$split[1];
 							$shipping_cost_method_box=$split[0];
-							next();
+                            continue;
 						}
 					}
 					$count++;
