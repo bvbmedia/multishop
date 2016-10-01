@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 	$(document).on("click", ".movecats", function() {
 		var current_id = $(this).attr("id");
 		var selectbox_id= "#" + current_id.replace("cb-", "sl-");
-		var childrens = $(this).parent().find("ul>li.category > input.movecats");
+		var childrens = $(this).parent().parent().find("ul>li.category > div.checkbox > input.movecats");
 		if ($(this).is(":checked")) {
 			$(selectbox_id).attr("disabled", "disabled");
 			if ($(childrens).length > 0) {
