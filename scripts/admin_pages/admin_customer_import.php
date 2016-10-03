@@ -87,6 +87,7 @@ $coltypes['last_name']=$this->pi_getLL('last_name');
 $coltypes['full_name']=$this->pi_getLL('full_name');
 $coltypes['email']=$this->pi_getLL('email');
 $coltypes['address']=$this->pi_getLL('address');
+$coltypes['building']=$this->pi_getLL('building');
 $coltypes['street_name']=$this->pi_getLL('street_address');
 $coltypes['address_number']=$this->pi_getLL('street_address_number');
 $coltypes['address_ext']=$this->pi_getLL('address_number_extension');
@@ -1097,6 +1098,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($item['www']) {
 							$user['www']=$item['www'];
 						}
+                        if ($item['building']) {
+                            $user['building']=$item['building'];
+                        }
 						if ($item['street_name']) {
 							$user['street_name']=$item['street_name'];
 						}
@@ -1346,6 +1350,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$address['phone']=$user['telephone'];
 							$address['mobile']=$user['mobile'];
 							$address['www']=$user['www'];
+                            $address['building']=$user['building'];
 							$address['street_name']=$user['street_name'];
 							$address['address']=$user['address'];
 							$address['address_number']=$user['address_number'];
