@@ -13,7 +13,8 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li { position:relative; float:left; border-right:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs:before { position:absolute; right:10px; top:16px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; transition:opacity .25s; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:before { position:absolute; right:10px; top:12px; border-left:5px solid #cdcdcd; border-top:5px solid transparent; border-bottom:5px solid transparent; content:""; transition:opacity .25s; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover:before { opacity:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs.msAdminPanelMenuHover:before { opacity:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a { position:relative; display:block; font-size:14px; line-height:38px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 15px; z-index:3; }
@@ -41,30 +42,41 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > span,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > span { background:rgba(255,255,255,.03); color:#fff; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul { width:270px; border:none; background:#444; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul { display:block; left:250px; top:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > ul { display:block; left:250px; top:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li { position:relative; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #444; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > span,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li.msAdminPanelMenuHover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li.msAdminPanelMenuHover > span { background:rgba(255,255,255,.03); color:#fff; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul { position:absolute; left:-9999em; width:250px; border:none; background:#555; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > ul { display:block; left:270px; top:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > ul,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li.msAdminPanelMenuHover > ul { display:block; left:270px; top:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #555; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > span,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li.msAdminPanelMenuHover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li.msAdminPanelMenuHover > span { background:rgba(255,255,255,.03); color:#fff; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li { position:relative; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul { position:absolute; left:-9999em; width:250px; border:none; background:#666; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > ul { display:block; left:250px; top:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > ul,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li.msAdminPanelMenuHover > ul { display:block; left:250px; top:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); font-size:13px; color:#cdcdcd; padding:8px 20px 8px 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li :first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #666; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li:hover > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li:hover > span,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li.msAdminPanelMenuHover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li.msAdminPanelMenuHover > span { background:rgba(255,255,255,.03); color:#fff; }
 
 ul#ms_admin_minimize { position:absolute; clear:left; float:left; width:102px; margin: 0; padding:0; list-style:none; }
 ul#ms_admin_minimize li { background:none; margin:0; padding:0; list-style:none; }
