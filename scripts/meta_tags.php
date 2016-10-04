@@ -385,6 +385,22 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 }
 $html.='
 		adminPanelSearch();
+		var msAdminPanelMenuHoverTimer;
+        $(document).on(\'mouseenter\', \'.a_dropdown\', function (e) {
+            if (!$(this).hasClass(\'mainmenu_parents\')) {
+                clearTimeout(msAdminPanelMenuHoverTimer);
+                $(\'.a_dropdown\').parent(\'li\').removeClass(\'msAdminPanelMenuHover\');
+                $(this).parent().addClass(\'msAdminPanelMenuHover\');
+            }
+        });
+        $(document).on(\'mouseleave\', \'.a_dropdown\', function (e) {
+            if (!$(this).hasClass(\'mainmenu_parents\')) {
+                var current_obj=$(this);
+                msAdminPanelMenuHoverTimer = setTimeout(function() {
+                    current_obj.parent().removeClass(\'msAdminPanelMenuHover\');
+                }, 800);
+            }
+        });
 		$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
 			$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
 			return true;
