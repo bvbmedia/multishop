@@ -403,9 +403,11 @@ $html.='
         });
         $(document).on(\'mouseleave\', \'ul>li>a, ul>li>span\', function (e) {
             var current_obj=$(this);
-            msAdminPanelMenuHoverTimer = setTimeout(function() {
-                $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
-            }, 800);
+            if ($(this).parents().hasClass(\'mainmenu_parents\')) {
+                msAdminPanelMenuHoverTimer = setTimeout(function() {
+                    $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
+                }, 800);
+            }
         });
 		$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
 			$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
