@@ -393,7 +393,7 @@ $html.='
 		    }
 		}
 		var msAdminPanelMenuHoverTimer;
-        $(document).on(\'mouseenter\', \'ul.dropdown-menu>li.ms_admin_has_subs>a, ul.dropdown-menu>li.ms_admin_has_subs>span\', function (e) {
+        $(document).on(\'mouseenter\', \'ul.dropdown-menu>li>a, ul.dropdown-menu>li>span\', function (e) {
             if (!$(this).parent().hasClass(\'mainmenu_parents\')) {
                 clearTimeout(msAdminPanelMenuHoverTimer);
                 $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
@@ -401,7 +401,7 @@ $html.='
                 //$(this).parent().addClass(\'msAdminPanelMenuHover\');
             }
         });
-        $(document).on(\'mouseleave\', \'ul.dropdown-menu>li.ms_admin_has_subs>a, ul.dropdown-menu>li.ms_admin_has_subs>span\', function (e) {
+        $(document).on(\'mouseleave\', \'ul.dropdown-menu>li>a, ul.dropdown-menu>li>span\', function (e) {
             var current_obj=$(this);
             msAdminPanelMenuHoverTimer = setTimeout(function() {
                 $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
