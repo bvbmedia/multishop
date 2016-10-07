@@ -3912,7 +3912,7 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($row['comments']) {
 					$tmpcontent.='
                     <tr class="even">
-                        <td colspan="4">'.$row['comments'].'</td>
+                        <td colspan="5">'.$row['comments'].'</td>
                     </tr>
                     ';
 				}
