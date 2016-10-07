@@ -185,8 +185,6 @@ $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###SHOP_PID2###']=$this->shop_pid;
 $subpartArray['###FORM_POST_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
 
-
-
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplPreProc'])) {
 	$params=array(

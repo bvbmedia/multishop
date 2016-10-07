@@ -385,6 +385,30 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 }
 $html.='
 		adminPanelSearch();
+		function getLITree(obj) {
+		    $(obj).parent().addClass(\'msAdminPanelMenuHover\');
+		    if ($(obj).parent().parent().parent().is(\'li\') && !$(obj).parent().parent().parent().hasClass(\'mainmenu_parents\')) {
+		        var obj=$(obj).parent().parent();
+		        getLITree(obj);
+		    }
+		}
+		var msAdminPanelMenuHoverTimer;
+        $(document).on(\'mouseenter\', \'ul>li>a, ul>li>span\', function (e) {
+            if (!$(this).parent().hasClass(\'mainmenu_parents\') && $(this).parents().hasClass(\'mainmenu_parents\')) {
+                clearTimeout(msAdminPanelMenuHoverTimer);
+                $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
+                getLITree(this);
+                //$(this).parent().addClass(\'msAdminPanelMenuHover\');
+            }
+        });
+        $(document).on(\'mouseleave\', \'ul>li>a, ul>li>span\', function (e) {
+            var current_obj=$(this);
+            if ($(this).parents().hasClass(\'mainmenu_parents\')) {
+                msAdminPanelMenuHoverTimer = setTimeout(function() {
+                    $(\'ul\').find(\'li.msAdminPanelMenuHover\').removeClass(\'msAdminPanelMenuHover\');
+                }, 800);
+            }
+        });
 		$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
 			$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
 			return true;
@@ -392,10 +416,10 @@ $html.='
 	';
 	if ($_COOKIE['hide_admin_panel'] && $this->get['type']!='2003') {
 		$html.='
-									$("#tx_multishop_admin_header_bg").hide();
-									$("#tx_multishop_admin_footer_wrapper").hide();
-									$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
-								';
+            $("#tx_multishop_admin_header_bg").hide();
+            $("#tx_multishop_admin_footer_wrapper").hide();
+            $("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
+        ';
 	}
 	$html.='		}
 				}
