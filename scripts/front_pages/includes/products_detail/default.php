@@ -69,10 +69,11 @@ if (!$product['products_id']) {
         // meta tags
         if ($product['products_meta_title']) {
             $this->ms['title'] = $product['products_meta_title'];
+            $output_array['meta']['title'] = '<title>' . htmlspecialchars($this->ms['title']) . '</title>';
         } else {
             $this->ms['title'] = $product['products_name'];
+            $output_array['meta']['title'] = '<title>' . htmlspecialchars($this->ms['title']) . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'] . '</title>';
         }
-        $output_array['meta']['title'] = '<title>' . htmlspecialchars($this->ms['title']) . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'] . '</title>';
         if ($product['products_meta_description']) {
             $this->ms['description'] = $product['products_meta_description'];
         } else {
