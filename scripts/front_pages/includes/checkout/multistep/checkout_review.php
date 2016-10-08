@@ -100,6 +100,9 @@ if (count($cart['products'])<1) {
 				if ($page[0]['content']) {
 					$content .= ' (<a href="' . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]=' . $page[0]['hash']) . '" target="_blank" class="read_general_conditions">' . $this->pi_getLL('view_general_conditions') . '</a>)';
 				}
+				elseif ($this->conf['general_conditions_pid'] > 0) {
+					$content .= ' (<a href="' . mslib_fe::typolink($this->conf['general_conditions_pid']) . '" target="_blank" class="read_general_conditions">' . $this->pi_getLL('view_general_conditions') . '</a>)';
+				}
 				$content .= '</div></div>';
 			}
             $page = mslib_fe::getCMScontent('checkout_message', $GLOBALS['TSFE']->sys_language_uid);

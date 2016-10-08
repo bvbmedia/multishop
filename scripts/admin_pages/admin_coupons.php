@@ -176,7 +176,11 @@ if (count($active_shop)>1) {
 			<div class="col-md-10">
 			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($edit_row['page_uid']==0) ? ' checked="checked"' : '').' /><label>'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
 	foreach ($active_shop as $pageinfo) {
-		$content.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($edit_row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
+        $pageTitle=$pageinfo['title'];
+        if ($pageinfo['nav_title']) {
+            $pageTitle=$pageinfo['nav_title'];
+        }
+		$content.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($edit_row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageTitle.'</label></div>';
 	}
 	$content.='</div></div>';
 } else {
