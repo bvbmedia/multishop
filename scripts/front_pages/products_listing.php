@@ -45,6 +45,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 			$meta_title=$current['meta_title'];
 		} else {
 			$meta_title=$current['categories_name'];
+			$meta_title=$meta_title.$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'];
 		}
 		if ($current['meta_description']) {
 			$meta_description=$current['meta_description'];
@@ -57,7 +58,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 			$meta_keywords='';
 		}
 		if (!$this->conf['disableMetatags']) {
-			$output_array['meta']['title']='<title>'.htmlspecialchars($meta_title).$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'].'</title>';
+			$output_array['meta']['title']='<title>'.htmlspecialchars($meta_title).'</title>';
 			if ($meta_description) {
 				$output_array['meta']['description']='<meta name="description" content="'.$meta_description.'" />';
 			}
