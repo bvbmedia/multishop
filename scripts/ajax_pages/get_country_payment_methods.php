@@ -91,6 +91,7 @@ foreach ($payment_methods as $payment_name=>$payment_data) {
 	$data[$payment_data['sort_order']]['payment_id']=$payment_data['id'];
 	$data[$payment_data['sort_order']]['payment_label']=$payment_data['name'];
 	$data[$payment_data['sort_order']]['payment_description']=$payment_data['description'];
+    $data[$payment_data['sort_order']]['psp_plugin_content']='';
 	$data[$payment_data['sort_order']]['li_class']=$tr_type;
 	$data[$payment_data['sort_order']]['radio_class']='regular-payment';
 	$price='';
