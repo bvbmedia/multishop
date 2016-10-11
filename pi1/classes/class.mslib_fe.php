@@ -1225,7 +1225,14 @@ class mslib_fe {
 		if ($manual_link) {
 			// dont use cObj typolink method (which makes realurl/cooluri version of the link), but instead make manual link
 			if (is_numeric($this->get['L'])) {
-				$conf['additionalParams'].='&L='.$this->get['L'];
+				parse_str($conf['additionalParams'], $output);
+				if (!isset($output['L'])) {
+					$lastChar=substr($conf['additionalParams'],strlen($conf['additionalParams'])-1,1);
+					if ($lastChar!='&') {
+						$conf['additionalParams'].='&';
+					}
+					$conf['additionalParams'].='L='.$this->get['L'];
+				}
 			}
 			if (strstr($page_id, ',')) {
 				$array=explode(',', $page_id);
