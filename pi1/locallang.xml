@@ -1351,6 +1351,18 @@
             <label index="female_salutation">Dear madam</label>
             <label index="female_salutation">Dear madam</label>
             <label index="building">Building</label>
+            <label index="full_month_1">january</label>
+            <label index="full_month_2">february</label>
+            <label index="full_month_3">march</label>
+            <label index="full_month_4">april</label>
+            <label index="full_month_5">may</label>
+            <label index="full_month_6">june</label>
+            <label index="full_month_7">july</label>
+            <label index="full_month_8">august</label>
+            <label index="full_month_9">september</label>
+            <label index="full_month_10">october</label>
+            <label index="full_month_11">november</label>
+            <label index="full_month_12">december</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2700,6 +2712,18 @@
             <label index="female_abbreviation">Mevr.</label>
             <label index="female_salutation">Geachte mevrouw</label>
             <label index="building">Gebouw</label>
+            <label index="full_month_1">januari</label>
+            <label index="full_month_2">februari</label>
+            <label index="full_month_3">maart</label>
+            <label index="full_month_4">april</label>
+            <label index="full_month_5">mei</label>
+            <label index="full_month_6">juni</label>
+            <label index="full_month_7">juli</label>
+            <label index="full_month_8">augustus</label>
+            <label index="full_month_9">september</label>
+            <label index="full_month_10">oktober</label>
+            <label index="full_month_11">november</label>
+            <label index="full_month_12">december</label>
         </languageKey>
     </data>
 </T3locallang>
