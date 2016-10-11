@@ -232,5 +232,7 @@ td.cellAction { white-space:nowrap; }
 .from-date-field > label,
 .till-date-field > label { width:50px; }
 
+table.tablesorter thead tr .header { padding-right:20px; }
+
 /* #s2id_commission_customer_id.select2-container-active { width:600px !important; }
 .select2-results .select2-result-label { line-height:15px; } */
