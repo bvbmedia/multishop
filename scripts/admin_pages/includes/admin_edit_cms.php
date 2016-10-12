@@ -165,6 +165,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
 		$types['right_of_withdrawal']=$this->pi_getLL('right_of_withdrawal');
 	}
+    // right of revocation checkbox in checkout cms type
+    if ($this->ms['MODULES']['RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT']) {
+        $types['right_of_revocation']=$this->pi_getLL('right_of_revocation');
+    }
 	if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE'] || $this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
 		$types['privacy_statement']=$this->pi_getLL('privacy_statement');
 	}

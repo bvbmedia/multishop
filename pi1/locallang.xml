@@ -1363,6 +1363,7 @@
             <label index="full_month_10">october</label>
             <label index="full_month_11">november</label>
             <label index="full_month_12">december</label>
+            <label index="right_of_revocation">Right of revocation</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

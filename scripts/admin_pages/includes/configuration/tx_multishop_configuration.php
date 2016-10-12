@@ -2483,15 +2483,26 @@ $records[]=array(
     'use_function'=>''
 );
 $records[]=array(
-		'configuration_title'=>'Include attributes in product feed',
-		'configuration_key'=>'INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED',
-		'configuration_value'=>'1',
-		'description'=>'Optional field.',
-		'group_id'=>'11',
-		'use_function'=>'',
-		'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
-		'depend_on_configuration_key'=>'',
-		'use_function'=>''
+    'configuration_title'=>'Include attributes in product feed',
+    'configuration_key'=>'INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED',
+    'configuration_value'=>'1',
+    'description'=>'Optional field.',
+    'group_id'=>'11',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Right of revocation link in checkout',
+    'configuration_key'=>'RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT',
+    'configuration_value'=>'0',
+    'description'=>'Right of revocation link in checkout',
+    'group_id'=>'8',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
 );
 
 // custom hook that can be controlled by third-party plugin
