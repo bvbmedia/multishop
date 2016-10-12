@@ -370,6 +370,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			},
 			escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 		});
+		'.(isset($this->get['tx_multishop_pi1']['force_cms_type']) && !empty($this->get['tx_multishop_pi1']['force_cms_type'])? '
+		$(\'#selected_type\').select2("val", "'.$this->get['tx_multishop_pi1']['force_cms_type'].'");
+		' : '' ).'
 	});
 	</script>
 	<div class="panel panel-default">
