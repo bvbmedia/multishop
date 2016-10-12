@@ -338,6 +338,7 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-body p:last-child { margin-bottom:0; }
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .customer_comments .panel-footer,
 #msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper .order_memo .panel-footer { padding:7px 10px; }
+#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper tr.msAdminSubtotalRow > td:last-child { white-space:nowrap; }
 @media (min-width:1600px) {
 	#msadmin_wrapper #orders_post .popover { max-width:982px; }
 	#msadmin_wrapper #orders_post .msAdminTooltipOrderDetailsAddressWrapper { width:950px; }

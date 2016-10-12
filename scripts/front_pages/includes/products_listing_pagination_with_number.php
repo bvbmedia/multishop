@@ -15,7 +15,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 					'page',
 					'mini_foto',
 					'clearcache'
-				))).'">'.$this->pi_getLL('first').'</a>';
+				)),1).'">'.$this->pi_getLL('first').'</a>';
 	} else {
 		$tmp.='<span>'.$this->pi_getLL('first').'</span>';
 	}
@@ -29,7 +29,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 						'page',
 						'mini_foto',
 						'clearcache'
-					))).'">'.$this->pi_getLL('previous').'</a>';
+					)),1).'">'.$this->pi_getLL('previous').'</a>';
 		} else {
 			$tmp.='<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('', 'p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array(
 						'p',
@@ -37,7 +37,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 						'page',
 						'mini_foto',
 						'clearcache'
-					))).'">'.$this->pi_getLL('previous').'</a>';
+					)),1).'">'.$this->pi_getLL('previous').'</a>';
 		}
 	} else {
 		$tmp.='<span>'.$this->pi_getLL('previous').'</span>';
@@ -71,7 +71,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 						'page',
 						'mini_foto',
 						'clearcache'
-					))).'">'.$x.'</a></div></li>';
+					)),1).'">'.$x.'</a></div></li>';
 		}
 	}
 	$tmp.='</ul>
@@ -84,7 +84,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 					'page',
 					'mini_foto',
 					'clearcache'
-				))).'">'.$this->pi_getLL('next').'</a>';
+				)),1).'">'.$this->pi_getLL('next').'</a>';
 	} else {
 		$tmp.='<span>'.$this->pi_getLL('next').'</span>';
 	}
@@ -102,7 +102,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 					'page',
 					'mini_foto',
 					'clearcache'
-				))).'">'.$this->pi_getLL('last').'</a>';
+				)),1).'">'.$this->pi_getLL('last').'</a>';
 	} else {
 		$tmp.='<span>'.$this->pi_getLL('last').'</span>';
 	}
