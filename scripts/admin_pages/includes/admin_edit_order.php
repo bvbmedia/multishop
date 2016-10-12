@@ -574,13 +574,19 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['payment_method']='';
 						$updateArray['payment_method_label']='';
 					}
+                    $updateArray['discount_percentage']=0;
+                    if (isset($this->post['edit_discount_percentage']) && $this->post['edit_discount_percentage']>0) {
+                        $updateArray['discount_percentage']=$this->post['edit_discount_percentage'];
+                        $hidden_subtotal=$this->post['hidden_subtotal'];
+                        $discount_amount=number_format(($hidden_subtotal/100)*$this->post['edit_discount_percentage'], 2, ',', '');
+                        if ($discount_amount!=$this->post['edit_discount_value']) {
+                            $this->post['edit_discount_value'] = $discount_amount;
+                        }
+                    }
 					if (isset($this->post['edit_discount_value'])) {
                         $this->post['edit_discount_value']=mslib_befe::formatNumbersToMysql($this->post['edit_discount_value']);
 						$updateArray['discount']=$this->post['edit_discount_value'];
 					}
-                    if (isset($this->post['edit_discount_percentage'])) {
-                        $updateArray['discount_percentage']=$this->post['edit_discount_percentage'];
-                    }
 					if (isset($this->post['order_payment_condition'])) {
 						$updateArray['payment_condition']=$this->post['order_payment_condition'];
 					}
@@ -3028,8 +3034,8 @@ if (is_numeric($this->get['orders_id'])) {
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</p>
-                    <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total'].'">
-                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
+                    <input type="hidden" name="hidden_subtotal" id="hidden_subtotal" value="'.$orders_tax_data['sub_total'].'">
+                    <input type="hidden" name="hidden_subtotal_excl_vat" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
@@ -3047,8 +3053,8 @@ if (is_numeric($this->get['orders_id'])) {
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
                     <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</p>
-                    <input type="hidden" id="hidden_subtotal" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
-                    <input type="hidden" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
+                    <input type="hidden" name="hidden_subtotal" id="hidden_subtotal" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
+                    <input type="hidden" name="hidden_subtotal_excl_vat" id="hidden_subtotal_excl_vat" value="'.$orders_tax_data['sub_total_excluding_vat'].'">
                     </div>
                 </div>';
 				$content_subtotal_tax='
@@ -3077,7 +3083,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-				$discount_content='<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;">';
+				$discount_content='<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;'.($orders['discount_percentage']>0 ? ' display:none;' : '').'">';
                 $discount_content.='<span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" id="edit_discount_value" class="form-control text-right priceInputDisplay" type="text" value="'.number_format($orders['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'">';
                 $discount_content.='</div>';
                 /*
@@ -3093,11 +3099,11 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 $discount_percentage_value_selectbox.='</select>';
 
-                $discount_content.='<div class="input-group pull-right" id="discount_percentage_wrapper" style="display:none; width:140px;">';
+                $discount_content.='<div class="input-group pull-right" id="discount_percentage_wrapper" style="'.($orders['discount_percentage']>0 ? '' : 'display:none; ').'width:140px;">';
                 $discount_content.=$discount_percentage_value_selectbox;
                 $discount_content.='</div>';
                 $discount_content.='<div class="input-group pull-right">';
-                $discount_content.='<a href="#" id="switch_to_discount_amount" style="display:none">'.$this->pi_getLL('switch_to_discount_amount').'</a><a href="#" id="switch_to_discount_percentage">'.$this->pi_getLL('switch_to_discount_percentage').'</a>';
+                $discount_content.='<a href="#" id="switch_to_discount_amount"'.($orders['discount_percentage']>0 ? '' : ' style="display:none;"').'>'.$this->pi_getLL('switch_to_discount_amount').'</a><a href="#" id="switch_to_discount_percentage"'.($orders['discount_percentage']>0 ? ' style="display:none;"' : '').'>'.$this->pi_getLL('switch_to_discount_percentage').'</a>';
                 $discount_content.='</div>';
 
 			} else {
@@ -3655,6 +3661,11 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                 }
                 // eof autocomplete for option
+                '.( $orders['discount_percentage']>0 ? '
+                $("#edit_discount_percentage").select2({
+                    width:"140px"
+                });
+                ' : '').'
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
                 select2_cn("#categories_filter_id", "categories", "categories_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'");
                 select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
@@ -4164,7 +4175,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#discount_percentage_wrapper").show();
                 $("#discount_amount_wrapper").hide();
             });
-            $(document).on("change", "#edit_discount_value", function(){
+            $(document).on("change", "#edit_discount_value", function() {
                 var discount_amount=parseFloat($(this).val());
                 var subtotal=parseFloat($("#hidden_subtotal").val());
                 var subtotal_excl_vat=parseFloat($("#hidden_subtotal_excl_vat").val());
@@ -4177,7 +4188,8 @@ if (is_numeric($this->get['orders_id'])) {
                 var payment_costs=parseFloat($("#payment_method_costs").val());
                 var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
                 var grand_total_split=new_grand_total.toString().split(".");
-                $("#edit_discount_percentage").val(percentage);
+                // discount percentage
+                $("#edit_discount_percentage").val("");
                 $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
                 $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
                 // recalculate tax
@@ -4201,7 +4213,7 @@ if (is_numeric($this->get['orders_id'])) {
                 var discount_amount=parseFloat((subtotal/100)*percentage);
                 var new_grand_total=$.number(parseFloat((subtotal - discount_amount) + shipping_costs + payment_costs), 2, ".");
                 var grand_total_split=new_grand_total.toString().split(".");
-                
+                // real discount value
                 $("#edit_discount_value").val(discount_amount);
                 $(".grand_total").find(".amount").empty().html(grand_total_split[0] + decimal_sep);
                 $(".grand_total").find(".amount_cents").empty().html(grand_total_split[1]);
