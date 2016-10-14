@@ -1364,6 +1364,7 @@
             <label index="full_month_11">november</label>
             <label index="full_month_12">december</label>
             <label index="right_of_revocation">Right of revocation</label>
+            <label index="submit_form">Submit form</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2725,6 +2726,8 @@
             <label index="full_month_10">oktober</label>
             <label index="full_month_11">november</label>
             <label index="full_month_12">december</label>
+            <label index="right_of_revocation">Herroepingsrecht</label>
+            <label index="submit_form">Verwerken</label>
         </languageKey>
     </data>
 </T3locallang>
