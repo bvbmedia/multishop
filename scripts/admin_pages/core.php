@@ -47,10 +47,6 @@ jQuery().ready(function($){
 </script>
 <link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/print.css" media="print" />
 ';
-if (!$this->ADMIN_USER) {
-    header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid));
-    exit();
-}
 if (strstr($this->conf['admin_template_folder'], "/")) {
 	$prefixed_url=$this->FULL_HTTP_URL;
 } else {
