@@ -219,7 +219,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-$formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
+$formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit_form').'" />';
 $form_fields_block='';
 foreach ($formFields as $key=>$formField) {
 	$form_fields_block.='<div class="form-group msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
