@@ -142,7 +142,7 @@ $form_fields_listing_block.='
 	</select>
 	<span class="input-group-btn">
 	<input name="tx_multishop_pi1[mailto]" type="text" value="'.$this->ms['MODULES']['STORE_EMAIL'].'" id="msadmin_invoices_mailto" />
-	<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
+	<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit_form').'" ></input>
 	</span>
 	</div>
 	</div>';

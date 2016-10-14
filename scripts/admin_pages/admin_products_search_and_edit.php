@@ -738,7 +738,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###CATEGORY_ID1###']=$this->get['cid'];
 	$subpartArray['###INPUT_ACTION_SELECTBOX###']=$action_selectbox;
 	$subpartArray['###INPUT_CATEGORIES_SELECTBOX###']=$input_categories_selectbox;
-	$subpartArray['###LABEL_ADMIN_SUBMIT###']=$this->pi_getLL('submit');
+	$subpartArray['###LABEL_ADMIN_SUBMIT###']=$this->pi_getLL('submit_form');
 	$subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###']=$this->pi_getLL('admin_download_as_excel_file');
 	$subpartArray['###DOWNLOAD_AS_EXCEL_URL###']=$dlink;
 	$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###']=$this->pi_getLL('update_modified_products');
