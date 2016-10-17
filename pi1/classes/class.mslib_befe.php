@@ -1104,7 +1104,7 @@ class mslib_befe {
             return false;
         }
         if (is_numeric($products_id)) {
-            //$row=mslib_fe::getProduct($products_id, '', '', 1, 1);
+            $productRow=mslib_fe::getProduct($products_id, '', '', 1, 1);
             if (is_numeric($products_id)) {
                 if (is_numeric($categories_id)) {
                     //hook to let other plugins further manipulate the create table query
@@ -1122,7 +1122,7 @@ class mslib_befe {
                     // count if there are relations left
                     $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
                             'tx_multishop_products_to_categories', // FROM ...
-                            "products_id='" . $products_id . "'", // WHERE...
+                            "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
                             '', // GROUP BY...
                             '', // ORDER BY...
                             '' // LIMIT ...
@@ -1157,21 +1157,23 @@ class mslib_befe {
                         if ($i == 0) {
                             $i = '';
                         }
-                        $filename = $row['products_image' . $i];
-                        $orFilter = array();
-                        for ($i = 0; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
-                            $s = '';
-                            if ($i > 0) {
-                                $s = $i;
+                        $filename = $productRow['products_image' . $i];
+                        if ($filename) {
+                            $orFilter = array();
+                            for ($i = 0; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+                                $s = '';
+                                if ($i > 0) {
+                                    $s = $i;
+                                }
+                                $orFilter[] = 'products_image' . $s . '=\'' . addslashes($filename) . '\'';
                             }
-                            $orFilter[] = 'products_image' . $s . '=\'' . addslashes($filename) . '\'';
-                        }
-                        $filter = array();
-                        $filter[] = '(' . implode(' OR ', $orFilter) . ')';
-                        $count = mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
-                        if ($count < 2) {
-                            // Only delete the file is we have found 1 product using it
-                            mslib_befe::deleteProductImage($filename);
+                            $filter = array();
+                            $filter[] = '(' . implode(' OR ', $orFilter) . ')';
+                            $count = mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
+                            if ($count < 2) {
+                                // Only delete the file is we have found 1 product using it
+                                mslib_befe::deleteProductImage($filename);
+                            }
                         }
                     }
                     $tables = array();
