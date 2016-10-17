@@ -35,8 +35,12 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 	if (is_array($row) && $row['contents']) {
 		$cart=unserialize($row['contents']);
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-		$GLOBALS['TSFE']->storeSessionData();
+		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+		//$GLOBALS['TSFE']->storeSessionData();
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+		$mslib_cart->init($this);
+		$mslib_cart->storeCart($cart);
 
 		if (is_numeric($this->conf['confirmed_create_account_target_pid'])) {
 			$targetPid=$this->conf['confirmed_create_account_target_pid'];
