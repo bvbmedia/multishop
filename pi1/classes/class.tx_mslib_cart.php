@@ -1374,6 +1374,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 			}
 			$insertArray['tx_multishop_quick_checkout']=1;
+            if ($address['gender'] == 'm' or $address['gender'] == '0') {
+                $insertArray['gender'] = '0';
+            } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
+                $insertArray['gender'] = '1';
+            }
 			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
