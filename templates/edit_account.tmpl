@@ -43,11 +43,6 @@
                         <div id="invalid-last_name" class="error-space" style="display:none"></div>
                     </div>
                     ###INPUT_COUNTRY_BLOCK###
-                    <div id="input-zip" class="account-field col-sm-4">
-                        <label class="account-zip" for="zip">###LABEL_ZIP###</label>
-                        <input type="text" name="zip" id="zip" class="zip" value="###VALUE_ZIP###" required="required" data-h5-errorid="invalid-zip" title="###LABEL_ERROR_ZIP_IS_REQUIRED###">
-                        <div id="invalid-zip" class="error-space" style="display:none"></div>
-                    </div>
                     <div id="input-address" class="account-field col-sm-3">
                         <label class="account-address" for="address">###LABEL_ADDRESS###</label>
                         <input type="text" name="street_name" id="address" class="address" value="###VALUE_ADDRESS###" required="required" data-h5-errorid="invalid-address" title="###LABEL_ERROR_ADDRESS_IS_REQUIRED###">
@@ -62,13 +57,16 @@
                         <label for="address-ext" id="account-ext">###LABEL_ADDRESS_EXT###</label>
                         <input type="text" name="address_ext" class="address-ext" id="address-ext" value="###VALUE_ADDRESS_EXT###"/>
                     </div>
-
-
-                    <div id="input-city" class="account-field col-sm-3">
-                        <label class="account-city" for="city">###LABEL_CITY###*</label>
-                        <input type="text" name="city" id="city" class="city" value="###VALUE_CITY###" required="required" data-h5-errorid="invalid-city" title="###LABEL_ERROR_CITY_IS_REQUIRED###">
-                        <div id="invalid-city" class="error-space" style="display:none"></div>
-                    </div>
+                    <div id="input-zip" class="account-field col-sm-4">
+						<label class="account-zip" for="zip">###LABEL_ZIP###</label>
+						<input type="text" name="zip" id="zip" class="zip" value="###VALUE_ZIP###" required="required" data-h5-errorid="invalid-zip" title="###LABEL_ERROR_ZIP_IS_REQUIRED###">
+						<div id="invalid-zip" class="error-space" style="display:none"></div>
+					</div>
+					<div id="input-city" class="account-field col-sm-3">
+						<label class="account-city" for="city">###LABEL_CITY###</label>
+						<input type="text" name="city" id="city" class="city" value="###VALUE_CITY###" required="required" data-h5-errorid="invalid-city" title="###LABEL_ERROR_CITY_IS_REQUIRED###">
+						<div id="invalid-city" class="error-space" style="display:none"></div>
+					</div>
                     <div id="input-phone" class="account-field col-sm-6">
                         <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
                         <input type="text" name="telephone" id="telephone" class="telephone" value="###VALUE_TELEPHONE###"###TELEPHONE_VALIDATION###>
@@ -128,11 +126,6 @@
                         <div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
                     </div>
                     ###INPUT_DELIVERY_COUNTRY_BLOCK###
-                    <div id="input-dzip" class="account-field col-sm-4">
-                        <label for="delivery_zip">###LABEL_DELIVERY_ZIP###</label>
-                        <input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="###VALUE_DELIVERY_ZIP###">
-                        <div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
-                    </div>
                     <div id="input-daddress" class="account-field col-sm-3">
                         <label for="delivery_address">###LABEL_DELIVERY_ADDRESS###</label>
                         <input type="text" name="delivery_street_name" id="delivery_address" class="delivery_address left-this" value="###VALUE_DELIVERY_ADDRESS###">
@@ -148,6 +141,11 @@
                         <label for="delivery_address-ext" id="delivery_account-ext">###LABEL_DELIVERY_ADDRESS_EXT###</label>
                         <input type="text" name="delivery_address_ext" class="delivery_address-ext" id="delivery_address-ext" value="###VALUE_DELIVERY_ADDRESS_EXT###"/>
                     </div>
+                     <div id="input-dzip" class="account-field col-sm-4">
+                                            <label for="delivery_zip">###LABEL_DELIVERY_ZIP###</label>
+                                            <input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="###VALUE_DELIVERY_ZIP###">
+                                            <div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
+                                        </div>
                     <div id="input-dcity" class="account-field col-sm-3">
                         <label class="account-city" for="delivery_city">###LABEL_DELIVERY_CITY###</label>
                         <input type="text" name="delivery_city" id="delivery_city" class="delivery_city" value="###VALUE_DELIVERY_CITY###">
