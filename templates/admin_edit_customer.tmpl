@@ -266,7 +266,8 @@ jQuery(document).ready(function ($) {
                             <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
                             <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="###VALUE_ADDRESS_EXTENTION###">
                         </div>
-                    </div></div><div class="form-group"><div class="row">
+                    </div></div><div class="form-group">
+                    <div class="row">
                         <div class="col-md-6">
                             <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
                             <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###">
@@ -276,12 +277,11 @@ jQuery(document).ready(function ($) {
 							<label class="account-city" for="city">###LABEL_CITY###</label>
 							<input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
 							<div id="invalid-city" class="error-space" style="display:none"></div>
-								</div>
-								<div class="col-md-6">
-								###COUNTRIES_INPUT###
-								</div>
 						</div>
-                    </div></div>
+						<div class="col-md-6">
+							###COUNTRIES_INPUT###
+						</div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="row">
@@ -341,7 +341,10 @@ jQuery(document).ready(function ($) {
                 </div>
                 ###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###
                 ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                
+                </div>
+                <div class="col-md-4"></div>
+                </div>
+                <hr>
                 <div class="clearfix">
                     <div class="pull-right">
                         <a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
