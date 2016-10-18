@@ -9902,6 +9902,16 @@ class mslib_fe {
 		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https://" : "http://").$this->HTTP_HOST.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
 		$insertArray['segment_type']='';
 		$insertArray['segment_id']='';
+		switch($this->get['tx_multishop_pi1']['page_section']) {
+			case 'products_detail':
+				$insertArray['segment_type']='products_detail';
+				$insertArray['segment_id']=(int) $this->get['products_id'];
+				break;
+			case 'products_listing':
+				$insertArray['segment_type']='products_listing';
+				$insertArray['segment_id']=(int) $this->get['categories_id'][count($this->get['categories_id'])-1];
+				break;
+		}
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPreProc'])) {
 			$params=array(
