@@ -1059,19 +1059,12 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$address_data=array();
 			$address_data=$orders;
-			$address_data['address']=$orders['billing_address'];
+            $address_data['building']=$orders['billing_building'];
+            $address_data['address']=$orders['billing_address'];
 			$address_data['zip']=$orders['billing_zip'];
 			$address_data['city']=$orders['billing_city'];
 			$address_data['country']=$orders['billing_country'];
 			$billing_address_value=mslib_befe::customerAddressFormat($address_data);
-
-
-
-
-
-
-
-
 			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 			$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
             '.$billing_address_value.'<br /><br />';
@@ -1228,6 +1221,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$address_data=array();
 			$address_data=$orders;
+            $address_data['building']=$orders['delivery_building'];
 			$address_data['address']=$orders['delivery_address'];
 			$address_data['zip']=$orders['delivery_zip'];
 			$address_data['city']=$orders['delivery_city'];
@@ -1379,6 +1373,7 @@ if (is_numeric($this->get['orders_id'])) {
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
                 var billing_details 	= "";
+                var building 		= "";
                 var address_data 		= "";
                  var name="";
                 $("[id^=edit_billing]").each(function(){
@@ -1397,7 +1392,11 @@ if (is_numeric($this->get['orders_id'])) {
                         name += " " + $(this).val();
                     }
                     //
-                    if ($(this).attr("id") == "edit_billing_street_name") {
+                    if ($(this).attr("id") == "edit_billing_building") {
+                        if ($(this).val() != "") {
+                            building += $(this).val() + "<br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_billing_street_name") {
                         address_data += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_billing_address_number") {
                         address_data += $(this).val() + " ";
@@ -1406,10 +1405,6 @@ if (is_numeric($this->get['orders_id'])) {
                         address_data_replace = address_data.replace(/\s\s+/g, " ");
                         billing_details += address_data_replace + "<br/>";
 
-                    } else if ($(this).attr("id") == "edit_billing_building") {
-                        if ($(this).val() != "") {
-                            billing_details += $(this).val() + "<br/>";
-                        }
                     } else if ($(this).attr("id") == "edit_billing_zip") {
                         billing_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_billing_city") {
@@ -1448,7 +1443,7 @@ if (is_numeric($this->get['orders_id'])) {
                 	name+="<br/>";
                 }
                 $("#billing_details_container").empty();
-                $("#billing_details_container").html(name + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
+                $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
                 $("#billing_details_container").show();
                 $("#edit_billing_details_container").hide();
@@ -1461,6 +1456,7 @@ if (is_numeric($this->get['orders_id'])) {
             $("#close_edit_delivery_info").click(function(e) {
                 e.preventDefault();
                 var delivery_details 	= "";
+                var building 		= "";
                 var address_data 		= "";
                 var name="";
                 $("[id^=edit_delivery]").each(function() {
@@ -1479,7 +1475,11 @@ if (is_numeric($this->get['orders_id'])) {
                         name += " " + $(this).val();
                     }
                     //
-                    if ($(this).attr("id") == "edit_delivery_street_name") {
+                    if ($(this).attr("id") == "edit_delivery_building") {
+                        if ($(this).val() != "") {
+                            building += $(this).val() + "<br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_delivery_street_name") {
                         address_data += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_address_number") {
                         address_data += $(this).val() + " ";
@@ -1487,10 +1487,6 @@ if (is_numeric($this->get['orders_id'])) {
                         address_data += $(this).val();
                         address_data_replace = address_data.replace(/\s\s+/g, " ");
                         delivery_details += address_data_replace + "<br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_building") {
-                        if ($(this).val() != "") {
-                            delivery_details += $(this).val() + "<br/>";
-                        }
                     } else if ($(this).attr("id") == "edit_delivery_zip") {
                         delivery_details += $(this).val() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_city") {
@@ -1521,7 +1517,7 @@ if (is_numeric($this->get['orders_id'])) {
                 	name+="<br/>";
                 }
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(name + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
+                $("#delivery_details_container").html(name + building + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();

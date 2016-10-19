@@ -4908,7 +4908,11 @@ class mslib_befe {
         $array1[] = '###STREET_NAME###';
         $array2[] = ucfirst($address_data['street_name']);
         $array1[] = '###BUILDING###';
-        $array2[] = ucfirst($address_data['building']);
+        if (!empty($address_data['building'])) {
+            $array2[] = ucfirst($address_data['building']).'<br/>';
+        } else {
+            $array2[] = '';
+        }
         $array1[] = '###ADDRESS###';
         $array2[] = ucfirst($address_data['address']);
         $array1[] = '###ZIP###';
