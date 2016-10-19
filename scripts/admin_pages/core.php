@@ -688,4 +688,8 @@ switch ($this->ms['page']) {
 		}
 		break;
 }
+if (!$this->ADMIN_USER) {
+    header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid));
+    exit();
+}
 ?>
