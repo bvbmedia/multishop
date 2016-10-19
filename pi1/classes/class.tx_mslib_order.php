@@ -590,7 +590,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$array1[]='###PAYMENT_METHOD###';
 				$array2[]=$order['payment_method_label'];
 				$array1[]='###EXPECTED_DELIVERY_DATE###';
-				$array2[]=strftime("%x", $order['expected_delivery_date']);
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '-';
+                }
 				$array1[]='###CUSTOMER_COMMENTS###';
 				$array2[]=$order['customer_comments'];
 

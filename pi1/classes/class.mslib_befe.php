@@ -3242,7 +3242,11 @@ class mslib_befe {
                 $array1[] = '###ORDER_STATUS###';
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
-                $array2[] = strftime("%x", $order['expected_delivery_date']);
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '-';
+                }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
                 $array1[] = '###BILLING_STREET_NAME###';
