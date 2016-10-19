@@ -453,6 +453,8 @@ if ($pageset['total_rows']>0 && isset($pageset['customers'])) {
 		$content.=$tmp;
 	}
 	// pagination eof
+} else {
+    $content.=$this->pi_getLL('no_records_found');
 }
 $tmp=$content;
 $content='';
