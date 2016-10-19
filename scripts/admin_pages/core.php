@@ -60,6 +60,21 @@ if ($this->get['tx_multishop_pi1']['page_section']) {
 } elseif($this->post['tx_multishop_pi1']['page_section']) {
 	$this->ms['page']=$this->post['tx_multishop_pi1']['page_section'];
 }
+if (!$this->ADMIN_USER) {
+	switch($this->ms['page']) {
+		case 'admin_import':
+		case 'admin_customer_import':
+			if ($this->get['action']!='run_job') {
+				// Only allow running the import as a guest user (through cronjob)
+				exit();
+			}
+			break;
+		default:
+			// By default restrict access for guest users
+			exit();
+			break;
+	}
+}
 switch ($this->ms['page']) {
     case 'admin_sort_products':
         if ($this->ADMIN_USER) {
@@ -687,9 +702,5 @@ switch ($this->ms['page']) {
 			// custom page hook that can be controlled by third-party plugin eof
 		}
 		break;
-}
-if (!$this->ADMIN_USER) {
-    header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid));
-    exit();
 }
 ?>
