@@ -88,6 +88,14 @@ if (is_numeric($this->get['orders_id'])) {
                             $this->ms['MODULES']['DISABLE_VAT_RATE']=1;
                         }
                     }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersChangesPreProc'])) {
+                        // hook
+                        $params=array();
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersChangesPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook oef
+                    }
 					if (!empty($this->post['product_tax']) && $this->post['product_tax']>0) {
 						$tr=mslib_fe::getTaxes($this->post['product_tax']);
                         if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
