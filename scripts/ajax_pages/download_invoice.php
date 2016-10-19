@@ -311,7 +311,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         if ($order['expected_delivery_date']>0) {
             $array2[] = strftime("%x", $order['expected_delivery_date']);
         } else {
-            $array2[] = '-';
+            $array2[] = '';
         }
 		$array1[]='###CUSTOMER_COMMENTS###';
 		$array2[]=$order['customer_comments'];
