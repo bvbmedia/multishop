@@ -1675,7 +1675,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$orderDetailsItem.='</div>';
 			// Date order paid
-			$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod">';
+			$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod" id="msAdminEditOrderDatePaid">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
 			$orders_paid_timestamp_visual='';
 			$orders_paid_timestamp='';
