@@ -416,6 +416,14 @@ if ($this->conf['admin_edit_customer_tmpl_path']) {
 $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
+$subparts['birthdate'] = $this->cObj->getSubpart($subparts['template'], '###BIRTHDATE_BLOCK###');
+// remove block
+$subpartsTemplateWrapperRemove=array();
+if ($this->ms['MODULES']['DISABLE_BIRTHDATE_IN_ADMIN_CUSTOMER_FORM']) {
+    $subpartsTemplateWrapperRemove['###BIRTHDATE_BLOCK###'] = '';
+}
+$subparts['template'] = $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
+
 
 // load enabled countries to array
 $str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
