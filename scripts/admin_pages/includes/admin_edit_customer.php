@@ -706,6 +706,7 @@ $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
 $subpartArray['###VALUE_IMAGE###']=$images_tab_block;
+$subpartArray['###CUSTOM_MARKER_ABOVE_PAYMENT_CONDITION_FORM_FIELD###']='';
 $subpartArray['###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###']='';
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
