@@ -2517,7 +2517,7 @@ if ($this->post['action']=='category-insert') {
 								// LANGUAGE OVERLAYS EOL
 							}
 							// delete any special
-							if (isset($item['products_old_price']) && isset($item['products_price']) && $item['products_old_price']==$item['products_price']) {
+							if (isset($item['products_old_price']) && isset($item['products_price']) && ($item['products_old_price'] < $item['products_price'] || $item['products_old_price']==$item['products_price'])) {
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
