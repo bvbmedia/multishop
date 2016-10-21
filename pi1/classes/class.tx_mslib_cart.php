@@ -1948,6 +1948,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$insertArray['ean_code']=$value['ean_code'];
 							$insertArray['sku_code']=$value['sku_code'];
 							$insertArray['vendor_code']=$value['vendor_code'];
+                            $insertArray['products_tax_id']=$value['tax_id'];
 							// micro download
 							if ($value['file_location'] || $value['file_remote_location']) {
 								$insertArray['file_label']=$value['file_label'];

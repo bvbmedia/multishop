@@ -1287,6 +1287,13 @@ if (is_array($user) && $user['uid']) {
 	$headerButtons[]=$headingButton;
 }
 $headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-book';
+$headingButton['title']=$this->pi_getLL('create_order_for_this_customer');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order&tx_multishop_pi1[customer_id]='.$user['uid']);
+$headerButtons[]=$headingButton;
+
+$headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('update') : $this->pi_getLL('save');

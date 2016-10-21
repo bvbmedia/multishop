@@ -208,6 +208,10 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								//$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
 								$updateArray['products_model']=$product_data['products_model'];
+                                $updateArray['products_tax_id'] = 0;
+                                if (!empty($this->post['product_tax'])) {
+                                    $updateArray['products_tax_id'] = $product_data['tax_id'];
+                                }
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
 									// hook
@@ -318,6 +322,11 @@ if (is_numeric($this->get['orders_id'])) {
 									} else {
 										$insertArray['order_unit_code'] = '';
 									}
+                                    $insertArray['products_model']=$product_data['products_model'];
+                                    $insertArray['products_tax_id']=0;
+                                    if ($this->post['manual_product_tax']) {
+                                        $insertArray['products_tax_id'] = $product_data['tax_id'];
+                                    }
 								}
 								//
 								$insertArray['qty']=$this->post['manual_product_qty'];
@@ -351,9 +360,6 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								$insertArray['products_tax']=$this->post['manual_product_tax'];
 								$insertArray['sort_order']=$new_sort_order;
-								//
-								$product_data=mslib_befe::getRecord($this->post['manual_products_id'], 'tx_multishop_products', 'products_id');
-								$insertArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
 									// hook
@@ -1867,7 +1873,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
 							'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
 							't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\''.$customer_country['cn_iso_nr'].'\'', // WHERE...
-							'', // GROUP BY...
+							'trg.rules_group_id', // GROUP BY...
 							'', // ORDER BY...
 							'' // LIMIT ...
 						);
@@ -2670,7 +2676,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name, trg.default_status', // SELECT ...
 					'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
 					't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\''.$customer_country['cn_iso_nr'].'\'', // WHERE...
-					'', // GROUP BY...
+					'trg.rules_group_id', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
 				);

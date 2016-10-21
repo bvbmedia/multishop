@@ -255,6 +255,11 @@ if (count($products)<0) {
 		}
 		$tmpcontent.='<script type="text/javascript">
 			jQuery(document).ready(function($) {
+				'.(isset($this->get['tx_multishop_pi1']['customer_id']) && is_numeric($this->get['tx_multishop_pi1']['customer_id']) && $this->get['tx_multishop_pi1']['customer_id']>0 ? '
+				    $(\'#manual_order_customer_id\').val('.$this->get['tx_multishop_pi1']['customer_id'].');
+				    $("#customer_details_form").hide();
+					$("#ms_checkout_direct").submit();
+				' : '').'
 				$(\'#manual_order_customer_id\').select2({
 					placeholder:\''.htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')).'\',
 					width:\'100%\',
