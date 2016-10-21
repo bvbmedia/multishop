@@ -244,14 +244,6 @@ jQuery(document).ready(function ($) {
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <div class="col-md-12">
-                            <label class="account-building" for="building">###LABEL_BUILDING###</label>
-                            <input type="text" name="building" id="building" class="form-control building" value="###VALUE_BUILDING###">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
 						<div class="col-md-4">
 							<label class="account-address" for="address">###LABEL_STREET_ADDRESS###</label>
 							<input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###">
@@ -266,7 +258,17 @@ jQuery(document).ready(function ($) {
                             <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
                             <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="###VALUE_ADDRESS_EXTENTION###">
                         </div>
-                    </div></div><div class="form-group">
+                	</div>
+               	</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-12">
+							<label class="account-building" for="building">###LABEL_BUILDING###</label>
+							<input type="text" name="building" id="building" class="form-control building" value="###VALUE_BUILDING###">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
                     <div class="row">
                         <div class="col-md-6">
                             <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
@@ -278,11 +280,16 @@ jQuery(document).ready(function ($) {
 							<input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
 							<div id="invalid-city" class="error-space" style="display:none"></div>
 						</div>
-						<div class="col-md-6">
-							###COUNTRIES_INPUT###
-						</div>
+
                     </div>
                 </div>
+                <div class="form-group">
+					<div class="row">
+						<div class="col-md-12">
+							###COUNTRIES_INPUT###
+						</div>
+					</div>
+				</div>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-6">
