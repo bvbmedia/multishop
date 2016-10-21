@@ -918,6 +918,16 @@ if (is_numeric($this->get['orders_id'])) {
 				$settings['enable_edit_customer_details']=0;
 				$settings['enable_edit_orders_details']=0;
 			}
+			$address_data=array();
+			$address_data=$orders;
+			$address_data['building']=$orders['billing_building'];
+			$address_data['address']=$orders['billing_address'];
+			$address_data['zip']=$orders['billing_zip'];
+			$address_data['city']=$orders['billing_city'];
+			$address_data['country']=$orders['billing_country'];
+			$settings['billing_address_value']=mslib_befe::customerAddressFormat($address_data);
+			$settings['customer_edit_link']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
+
 			// hook for adding new items to details fieldset
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreHook'])) {
 				// hook
@@ -1071,17 +1081,8 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
-			$address_data=array();
-			$address_data=$orders;
-            $address_data['building']=$orders['billing_building'];
-            $address_data['address']=$orders['billing_address'];
-			$address_data['zip']=$orders['billing_zip'];
-			$address_data['city']=$orders['billing_city'];
-			$address_data['country']=$orders['billing_country'];
-			$billing_address_value=mslib_befe::customerAddressFormat($address_data);
-			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
-			$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
-            '.$billing_address_value.'<br /><br />';
+			$tmpcontent.='<a href="'.$settings['customer_edit_link'].'">'.$orders['billing_name'].'</a><br />
+            '.$settings['billing_address_value'].'<br /><br />';
 			if ($orders['billing_email']) {
 				$tmpcontent.=$this->pi_getLL('email').': <a href="mailto:'.$orders['billing_email'].'">'.$orders['billing_email'].'</a><br />';
 			}
