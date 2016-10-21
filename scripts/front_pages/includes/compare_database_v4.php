@@ -245,4 +245,14 @@ if ($qry) {
         $messages[]=$str;
     }
 }
+$str="select `products_tax_id` from tx_multishop_orders_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders_products` ADD `products_tax_id` int(11) default '0'";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+    // copy the tx_multishop_products.tax_id to tx_multishop_orders_products.products_tax_id
+    $sql_copy="update tx_multishop_orders_products op set products_tax_id = (select tax_id from tx_multishop_products p where p.products_id=op.products_id)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($sql_copy);
+}
 ?>

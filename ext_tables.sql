@@ -623,6 +623,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `sort_order` int(11) default '0',
  `customer_comments` text,
  `product_capital_price` decimal(24,14) default '0.00000000000000',
+ `products_tax_id` int(11) default '0',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -635,7 +636,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `ean_code` (`ean_code`),
  KEY `sku_code` (`sku_code`),
  KEY `vendor_code` (`vendor_code`),
- KEY `sort_order` (`sort_order`)
+ KEY `sort_order` (`sort_order`),
+ KEY `products_tax_id` (`products_tax_id`)
 ) COMMENT='Orderregels';
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
