@@ -1366,6 +1366,7 @@
             <label index="right_of_revocation">Right of revocation</label>
             <label index="submit_form">Submit form</label>
             <label index="create_order_for_this_customer">Create order for this customer</label>
+            <label index="notes_on_the_conclusion_of_the_contract">Notes on the conclusion of the contract</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

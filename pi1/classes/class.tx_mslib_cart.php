@@ -460,6 +460,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				$product=mslib_fe::getProduct($products_id);
 				if ($product['products_id']) {
+					$product['products_shortdescription_raw']=$product['products_shortdescription'];
+					$product['products_description_raw']=$product['products_description'];
 					if ($product['products_image']) {
 						$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
@@ -808,6 +810,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							if (preg_match("/^[0-9]+$/", $rel_products_id)) {
 								$product=mslib_fe::getProduct($rel_products_id);
 								if ($product['products_id']) {
+									$product['products_shortdescription_raw']=$product['products_shortdescription'];
+									$product['products_description_raw']=$product['products_description'];
 									if ($product['products_image']) {
 										$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 										$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
@@ -1932,6 +1936,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$insertArray['products_tax']=($value['tax_rate']*100);
 							$insertArray['products_name']=$value['products_name'];
 							$insertArray['products_model']=$value['products_model'];
+
 							/*
 							$insertArray['products_description']=$value['products_shortdescription'];
 							if (is_array($value['attributes'])) {
