@@ -1059,7 +1059,9 @@ if (is_numeric($this->get['orders_id'])) {
 							<input class="form-control" name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
 						</div>
 					</div>';
-				$edit_billing_details['billing_save_form']='<hr>
+				$edit_billing_details['billing_save_form']='
+                    <div id="billing_details_erno_wrapper"></div>
+                    <hr>
 					<div class="clearfix">
 						<div class="pull-right">
 							<a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
@@ -1211,7 +1213,9 @@ if (is_numeric($this->get['orders_id'])) {
                 		<input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
                 	</div>
                 </div>';
-				$edit_delivery_details['delivery_save_form']='<hr>
+				$edit_delivery_details['delivery_save_form']='
+                <div id="delivery_details_erno_wrapper"></div>
+                <hr>
                 <div class="clearfix">
                 	<div class="pull-right">
                 		<a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
@@ -1274,7 +1278,18 @@ if (is_numeric($this->get['orders_id'])) {
                     url:    href,
                     data:   data_serial,
                     dataType: "json",
-                    success: function(r) {}
+                    success: function(r) {
+                         var details_container_id="#" + type + "_container";
+                         var edit_details_container_id="#edit_" + type + "_container";
+                         var erno_wrapper_id="#" + type + "_erno_wrapper";
+                         if (r.status=="OK") {
+                            $(details_container_id).show();
+                            $(edit_details_container_id).hide();
+                         } else if (r.status=="NOTOK") {
+                            $(erno_wrapper_id).empty();
+                            $(erno_wrapper_id).append(r.reason);
+                         }  
+                    }
             });
         }
         jQuery(document).ready(function($) {
@@ -1460,8 +1475,6 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#billing_details_container").empty();
                 $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
-                $("#billing_details_container").show();
-                $("#edit_billing_details_container").hide();
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
                 e.preventDefault();
@@ -1534,8 +1547,6 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#delivery_details_container").empty();
                 $("#delivery_details_container").html(name + building + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
-                $("#delivery_details_container").show();
-                $("#edit_delivery_details_container").hide();
             });
         });
         </script>';
