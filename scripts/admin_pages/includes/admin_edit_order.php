@@ -3808,46 +3808,42 @@ if (is_numeric($this->get['orders_id'])) {
 		);
 		// order details tab eof
 		// order memo/status tab
+        $order_status_tab_content=array();
 		$tmpcontent='';
-		$tmpcontent.='
-        <div class="form-group">
-            <label for="order_status" class="control-label col-md-2">'.$this->pi_getLL('order_status').'</label>
-            ';
+        $order_status_input='';
 		$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		if (is_array($all_orders_status) and count($all_orders_status)) {
-			$tmpcontent.='<div class="col-md-10"><select name="order_status" class="form-control">
+            $order_status_input.='<div class="col-md-10"><select name="order_status" class="form-control">
             <option value="">'.$this->pi_getLL('choose').'</option>
             ';
 			foreach ($all_orders_status as $row) {
 				if ($this->get['tx_multishop_pi1']['is_manual']=='1' && $this->get['action']=='edit_order' && $orders['orders_status_id']==0) {
-					$tmpcontent.='<option value="'.$row['id'].'" '.(($row['default_status']>0) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+                    $order_status_input.='<option value="'.$row['id'].'" '.(($row['default_status']>0) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
 				} else {
-					$tmpcontent.='<option value="'.$row['id'].'" '.(($orders['orders_status_id']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+                    $order_status_input.='<option value="'.$row['id'].'" '.(($orders['orders_status_id']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
 				}
 			}
-			$tmpcontent.='</select></div>
-            ';
+            $order_status_input.='</select></div>';
 		}
 		if ($orders['expected_delivery_date']) {
 			$expected_delivery_date_local=date("d-m-Y", $orders['expected_delivery_date']);
             $expected_date=date("Y-m-d", $orders['expected_delivery_date']);
 		}
-		$tmpcontent.='
-        </div>
-        <div class="form-group">
+        $order_status_tab_content['order_status']='<div class="form-group"><label for="order_status" class="control-label col-md-2">'.$this->pi_getLL('order_status').'</label>'.$order_status_input.'</div>';
+        $order_status_tab_content['expected_delivery_date']='<div class="form-group">
             <label for="expected_delivery_date" class="control-label col-md-2">'.$this->pi_getLL('expected_delivery_date').'</label>
             <div class="col-md-10">
 	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="'.$expected_delivery_date_local.'" >
 	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="'.$expected_date.'" />
             </div>
-        </div>
-        <div class="form-group">
+        </div>';
+        $order_status_tab_content['track_and_trace_code']='<div class="form-group">
             <label for="track_and_trace_code" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
             <div class="col-md-10">
             	<input class="form-control" name="track_and_trace_code" type="text" value="'.htmlspecialchars($orders['track_and_trace_code']).'" />
             </div>
-        </div>
-        <div class="form-group">
+        </div>';
+        $order_status_tab_content['customer_notified']='<div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">'.$this->pi_getLL('send_email_to_customer').'</label>
             <div class="col-md-10">
 	            <div class="radio radio-success radio-inline">
@@ -3857,22 +3853,20 @@ if (is_numeric($this->get['orders_id'])) {
 		            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">'.$this->pi_getLL('yes').'</label>
 	            </div>
             </div>
-        </div>
-        <div class="form-group">
+        </div>';
+        $order_status_tab_content['order_memo']='<div class="form-group">
             <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('order_memo').'</label>
             <div class="col-md-10">
             <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">'.htmlspecialchars($orders['order_memo']).'</textarea>
             '.($orders['memo_crdate']>0 ? '<span class="memo_last_modified">'.$this->pi_getLL('order_memo_last_modified').': '.strftime("%a. %x %X", $orders['memo_crdate']).'</span>' : '').'
             </div>
-        </div>
-        <div class="form-group">
+        </div>';
+        $order_status_tab_content['comments']='<div class="form-group">
             <label for="comments" class="control-label col-md-2">'.$this->pi_getLL('email_message').'</label>
             <div class="col-md-10">
             <textarea name="comments" id="comments" class="mceEditor" rows="4"></textarea>
             </div>
-        </div>
-
-        ';
+        </div>';
 		$GLOBALS['TSFE']->additionalHeaderData[]='
         <script type="text/javascript">
             jQuery(document).ready(function($) {
@@ -3903,8 +3897,9 @@ if (is_numeric($this->get['orders_id'])) {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
 			$order_status_history_items[]=$row;
 		}
+        $order_status_tab_content['order_history_table']='';
 		if (count($order_status_history_items)>0) {
-			$tmpcontent.='
+            $order_status_tab_content['order_history_table'].='
             <div class="panel panel-default" id="order_status_history">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('order_status_history').'</h3></div>
 			<div class="panel-body">
@@ -3934,7 +3929,7 @@ if (is_numeric($this->get['orders_id'])) {
 				if (!$status_name) {
 					$status_name=$this->pi_getLL('admin_label_unknown_order_status');
 				}
-				$tmpcontent.='<tr class="odd">
+                $order_status_tab_content['order_history_table'].='<tr class="odd">
                     <td><strong>'.$status_name.'</strong></td>
                     <td>'.$old_status_name.'</td>
                     <td>'.strftime("%a. %x %X", $row['crdate']).'</td>
@@ -3943,19 +3938,22 @@ if (is_numeric($this->get['orders_id'])) {
                 </tr>
                 ';
 				if ($row['comments']) {
-					$tmpcontent.='
+                    $order_status_tab_content['order_history_table'].='
                     <tr class="even">
                         <td colspan="5">'.$row['comments'].'</td>
                     </tr>
                     ';
 				}
 			}
-			$tmpcontent.='
+            $order_status_tab_content['order_history_table'].='
             </tbody>
             </table>
             </div></div>
             ';
 		}
+        if (count($order_status_tab_content)) {
+            $tmpcontent.=implode("\n", $order_status_tab_content);
+        }
 		// load the status history eof
 		$tabs['Order_Status']=array(
 			$this->pi_getLL('order_status'),
@@ -3967,6 +3965,7 @@ if (is_numeric($this->get['orders_id'])) {
 			// hook
 			$params=array(
 				'tabs'=>&$tabs,
+                'order_status_tab_content'=>&$order_status_tab_content,
 				'orders'=>&$orders
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
