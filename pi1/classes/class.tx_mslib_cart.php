@@ -2678,7 +2678,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$item['ITEM_IMAGE']='<img src="'.$product['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
 					}
 					// ITEM_NAME
-					$item['ITEM_NAME']=$product['products_name'];
+                    if ($this->ms['MODULES']['ADD_LINK_TO_PRODUCT_NAME_IN_CHECKOUT_REVIEW']>0) {
+                        $item['ITEM_NAME'] = '<a href="'.$product['link'].'">'.$product['products_name'].'</a>';
+                    } else {
+                        $item['ITEM_NAME'] = $product['products_name'];
+                    }
 
 					if ($product['products_model']) {
 						$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
