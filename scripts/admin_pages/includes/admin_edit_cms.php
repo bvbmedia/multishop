@@ -174,6 +174,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	// right of withdrawal checkbox in checkout cms type
 	if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
 		$types['right_of_withdrawal']=$this->pi_getLL('right_of_withdrawal');
+        $types['default_withdrawal']=$this->pi_getLL('default_withdrawal');
 	}
     // right of revocation checkbox in checkout cms type
     if ($this->ms['MODULES']['RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT']) {
