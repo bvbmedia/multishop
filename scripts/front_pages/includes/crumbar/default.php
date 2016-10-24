@@ -58,11 +58,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
 				$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
 				$contentItem='';
+                $output['product_name'] = '<li class="crumbar_product_level"><a itemprop="item" href="'.mslib_fe::typolink($this->conf['manufacturers_listing_page_pid']).'"><span itemprop="name">' . $this->pi_getLL('manufacturers') . '</span></a></li>';
                 if ($this->get['products_id']) {
-                    $output['product_name'] = '<li class="crumbar_product_level"><a href="'.mslib_fe::typolink($this->conf['products_listing_page_pid'], 'manufacturers_id='.$manufacturers_id.'&tx_multishop_pi1[page_section]=manufacturers_products_listing').'">' . $rowCms['manufacturers_name'] . '</a></li>';
+                    $output['product_name'] .= '<li class="crumbar_product_level"><a href="'.mslib_fe::typolink($this->conf['products_listing_page_pid'], 'manufacturers_id='.$manufacturers_id.'&tx_multishop_pi1[page_section]=manufacturers_products_listing').'">' . $rowCms['manufacturers_name'] . '</a></li>';
                     $output['product_name'] .= '<li class="crumbar_product_level"><strong>' . $product['products_name'] . '</strong></li>';
                 } else {
-                    $output['product_name'] = '<li class="crumbar_product_level"><strong>' . $rowCms['manufacturers_name'] . '</strong></li>';
+                    $output['product_name'] .= '<li class="crumbar_product_level"><strong>' . $rowCms['manufacturers_name'] . '</strong></li>';
                 }
 			}
 		} elseif ($categories_id) {

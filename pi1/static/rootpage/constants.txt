@@ -161,6 +161,9 @@ plugin.multishop {
 	# cat=plugin.multishop - optional; type=int+; label= PID of the categories/products listing page: Optional field. The ID number of the page where the categories/products listing must be shown.
 	products_listing_page_pid =
 
+	# cat=plugin.multishop - optional; type=int+; label= PID of the manufacturers listing page: Optional field. The ID number of the page where the manufacturers listing must be shown.
+	manufacturers_listing_page_pid =
+
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (web site) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_site.tmpl.
 	order_details_table_site_tmpl_path =
 
