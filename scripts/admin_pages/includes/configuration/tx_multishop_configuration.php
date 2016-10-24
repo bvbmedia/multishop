@@ -2493,6 +2493,7 @@ $records[]=array(
     'depend_on_configuration_key'=>'',
     'use_function'=>''
 );
+/*
 $records[]=array(
     'configuration_title'=>'Right of revocation link in checkout',
     'configuration_key'=>'RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT',
@@ -2504,6 +2505,7 @@ $records[]=array(
     'depend_on_configuration_key'=>'',
     'use_function'=>''
 );
+*/
 $records[]=array(
     'configuration_title'=>'Disable birthdate in admin add/edit customer',
     'configuration_key'=>'DISABLE_BIRTHDATE_IN_ADMIN_CUSTOMER_FORM',

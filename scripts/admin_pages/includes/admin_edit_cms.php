@@ -174,12 +174,14 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	// right of withdrawal checkbox in checkout cms type
 	if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
 		$types['right_of_withdrawal']=$this->pi_getLL('right_of_withdrawal');
-        $types['default_withdrawal']=$this->pi_getLL('default_withdrawal');
+        $types['right_of_withdrawal_form']=$this->pi_getLL('right_of_withdrawal_form');
 	}
     // right of revocation checkbox in checkout cms type
+	/*
     if ($this->ms['MODULES']['RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT']) {
         $types['right_of_revocation']=$this->pi_getLL('right_of_revocation');
     }
+	*/
 	if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE'] || $this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
 		$types['privacy_statement']=$this->pi_getLL('privacy_statement');
 	}
@@ -191,7 +193,8 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['manufacturer_not_found_message']=$this->pi_getLL('manufacturer_not_found_message');
     $types['shopping_cart_message']=$this->pi_getLL('shopping_cart_message');
     $types['checkout_message']=$this->pi_getLL('checkout_message');
-	$types['notes_on_the_conclusion_of_the_contract']=$this->pi_getLL('notes_on_the_conclusion_of_the_contract');
+	$types['
+	']=$this->pi_getLL('notes_on_the_conclusion_of_the_contract');
     $types['impressum']=$this->pi_getLL('impressum');
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
