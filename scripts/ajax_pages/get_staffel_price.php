@@ -67,6 +67,9 @@ $attr=array();
 $original_attr=array();
 if (is_array($this->get['attributes'])) {
 	foreach ($this->get['attributes'] as $key=>$value) {
+        if (!$value) {
+            continue;
+        }
 		if (is_numeric($key)) {
 			$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$key."' and language_id='".$this->sys_language_uid."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
