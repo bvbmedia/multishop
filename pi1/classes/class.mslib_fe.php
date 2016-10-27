@@ -9900,7 +9900,7 @@ class mslib_fe {
 			}
 		}
 		if (!$continue) {
-			exit;
+			return;
 		}
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
