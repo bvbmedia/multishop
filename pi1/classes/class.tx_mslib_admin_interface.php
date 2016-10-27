@@ -434,7 +434,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						foreach ($row as $tmpCol=>$tmpVal) {
 							$valArray['href']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['href']);
 						}
-						$adjustedValue='<a href="'.$valArray['href'].'"'.($valArray['href_target']?' target="'.$valArray['href_target'].'""':'').'>'.$adjustedValue.'</a>';
+						$adjustedValue='<a '.($valArray['hrefNoFollow']?' rel="nofollow"':'').($valArray['href_target']?' target="'.$valArray['href_target'].'""':'').'>'.$adjustedValue.'</a>';
 					}
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'])) {
 						$conf=array(
