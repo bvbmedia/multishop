@@ -78,6 +78,7 @@ plugin.tx_multishop_pi1 {
 	cacheConfiguration = {$plugin.multishop.cacheConfiguration}
 	products_detail_page_pid = {$plugin.multishop.products_detail_page_pid}
 	products_listing_page_pid = {$plugin.multishop.products_listing_page_pid}
+	manufacturers_listing_page_pid = {$plugin.multishop.manufacturers_listing_page_pid}
 	order_details_table_site_tmpl_path = {$plugin.multishop.order_details_table_site_tmpl_path}
 	order_details_table_email_tmpl_path = {$plugin.multishop.order_details_table_email_tmpl_path}
 	order_details_table_invoice_pdf_tmpl_path = {$plugin.multishop.order_details_table_invoice_pdf_tmpl_path}
