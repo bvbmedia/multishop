@@ -182,6 +182,7 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 									$updateArray['products_description']=$this->post['order_products_description'];
 								}
+                                $updateArray['product_capital_price']=$this->post['product_capital_price'];
 								$updateArray['products_price']=$this->post['product_price'];
 								$updateArray['final_price']=$this->post['product_price'];
 								// disocunt update
@@ -274,7 +275,10 @@ if (is_numeric($this->get['orders_id'])) {
 						} else {
 							if ($this->post['manual_product_name']) {
 								$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
-								if (empty($this->post['manual_product_price'])) {
+                                if (empty($this->post['manual_product_capital_price'])) {
+                                    $this->post['manual_product_capital_price']='0';
+                                }
+                                if (empty($this->post['manual_product_price'])) {
 									$this->post['manual_product_price']='0';
 								}
 								// determine the sort order for the new orders products
@@ -352,6 +356,7 @@ if (is_numeric($this->get['orders_id'])) {
 										$insertArray['discount_percentage'] = $discount_percentage;
 									}
 								}
+                                $insertArray['product_capital_price']=$this->post['manual_product_capital_price'];
 								$insertArray['products_price']=$this->post['manual_product_price'];
 								if (!empty($insertArray['discount_amount'])) {
 									$insertArray['final_price'] = ($this->post['manual_product_price'] - $insertArray['discount_amount']);
@@ -1883,6 +1888,11 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['class']='cellVat';
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
+            // products capital price header col
+            if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                $order_products_header_data['products_capital_price']['class'] = 'cellPrice cellNoWrap';
+                $order_products_header_data['products_capital_price']['value'] = $this->pi_getLL('capital_price');
+            }
 			// products normal price header col
 			$order_products_header_data['products_normal_price']['class']='cellPrice cellNoWrap';
 			$order_products_header_data['products_normal_price']['value']=$this->pi_getLL('normal_price');
@@ -2036,6 +2046,18 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['class']='cellVat';
 							$order_products_body_data['products_vat']['value']=$vat_sb;
 						}
+						// capital price
+                        if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                            // products price col
+                            $order_products_body_data['products_capital_price']['class']='cellPrice cellNoWrap';
+                            $order_products_body_data['products_capital_price']['id']='edit_order_product_price';
+                            // incl excl vat input
+                            $order_products_capital_price_display=mslib_fe::taxDecimalCrop($order['product_capital_price'], 2, false);
+                            $order_products_capital_price_display_incl=mslib_fe::taxDecimalCrop($order['product_capital_price'] + ($order['product_capital_price']*$order_products_tax_data['total_tax_rate']), 2, false);
+                            $order_products_body_data['products_capital_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="'.$order_products_capital_price_display.'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+                            $order_products_body_data['products_capital_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="'.($order_products_capital_price_display_incl).'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+                            $order_products_body_data['products_capital_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="product_capital_price" id="product_capital_price" value="'.$order['product_capital_price'].'" /></div>';
+                        }
 						// products price col
 						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
 						$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
@@ -2185,6 +2207,12 @@ if (is_numeric($this->get['orders_id'])) {
                             $discount_amount=intval($discount_amount) . '.' . substr(end(explode('.', $discount_amount)), 0, 2);
                             $row[6]=mslib_fe::amount2Cents($discount_amount, 0);
 						}
+                        if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                            $row[7] = mslib_fe::amount2Cents($order['product_capital_price'], 0);
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $row[7] = mslib_fe::amount2Cents($order['product_capital_price'] + ($order['product_capital_price']*$order_products_tax_data['total_tax_rate']), 0);
+                            }
+                        }
 						// custom hook that can be controlled by third-party plugin
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'])) {
 							$params=array(
@@ -2238,6 +2266,13 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['class']='cellVat';
 							$order_products_body_data['products_vat']['value']=$row[4];
 						}
+                        if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                            // products price col
+                            $order_products_body_data['products_capital_price']['align']='right';
+                            $order_products_body_data['products_capital_price']['class']='cellPrice cellNoWrap';
+                            $order_products_body_data['products_capital_price']['id']='edit_order_product_price';
+                            $order_products_body_data['products_capital_price']['value']=$row[7];
+                        }
 						// products price col
 						$order_products_body_data['products_normal_price']['align']='right';
 						$order_products_body_data['products_normal_price']['class']='cellPrice cellNoWrap';
@@ -2297,6 +2332,10 @@ if (is_numeric($this->get['orders_id'])) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
 							}
+                            // products capital price col
+                            if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_capital_price']['value']='';
+                            }
 							// products price col
 							$order_products_body_data['products_normal_price']['value']='';
 							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2340,6 +2379,10 @@ if (is_numeric($this->get['orders_id'])) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
 							}
+                            // products capital price col
+                            if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                $order_products_body_data['products_capital_price']['value']='';
+                            }
 							// products price col
 							$order_products_body_data['products_normal_price']['value']='';
 							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2431,6 +2474,10 @@ if (is_numeric($this->get['orders_id'])) {
 										// products vat col
 										$order_products_body_data['products_vat']['value']='';
 									}
+                                    // products capital price col
+                                    if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                        $order_products_body_data['products_capital_price']['value']='';
+                                    }
 									// products price col
 									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="'.number_format($optprice, 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
 									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="'.number_format($optprice+$attributes_tax_data['tax'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '').'" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
@@ -2541,6 +2588,10 @@ if (is_numeric($this->get['orders_id'])) {
 									// products vat col
 									$order_products_body_data['products_vat']['value']='';
 								}
+                                // products capital price col
+                                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                    $order_products_body_data['products_capital_price']['value']='';
+                                }
 								// products normal price col
 								$order_products_body_data['products_normal_price']['align']='right';
 								$order_products_body_data['products_normal_price']['class']='cellPrice';
@@ -2608,6 +2659,10 @@ if (is_numeric($this->get['orders_id'])) {
 									// products vat col
 									$order_products_body_data['products_vat']['value']='';
 								}
+                                // products capital price col
+                                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                    $order_products_body_data['products_capital_price']['value']='';
+                                }
 								$order_products_body_data['products_normal_price']['value']='';
 								if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									// products vat col
@@ -2657,6 +2712,11 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_vat']['class']='last_edit_product_row_pvat_col';
 							$order_products_body_data['products_vat']['value']='';
 						}
+                        // products capital price col
+                        if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                            $order_products_body_data['products_capital_price']['class']='last_edit_product_row_pcapitalprice_col';
+                            $order_products_body_data['products_capital_price']['value']='';
+                        }
 						$order_products_body_data['products_normal_price']['class']='last_edit_product_row_pprice_col';
 						$order_products_body_data['products_normal_price']['value']='';
 						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2704,6 +2764,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $colspan+=1;
                 }
                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
                     $colspan+=1;
                 }
 				$order_products_body_data=array();
@@ -2771,6 +2834,14 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_vat']['class']='cellVat';
 					$order_products_body_data['products_vat']['value']=$vat_sb;
 				}
+                // products capital price col
+                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                    $order_products_body_data['products_capital_price']['valign']='top';
+                    $order_products_body_data['products_capital_price']['class']='cellPrice';
+                    $order_products_body_data['products_capital_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+                    $order_products_body_data['products_capital_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+                    $order_products_body_data['products_capital_price']['value'].='<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_capital_price" id="manual_product_capital_price" value="" /></div>';
+                }
 				// product normal price col
 				$order_products_body_data['products_normal_price']['valign']='top';
 				$order_products_body_data['products_normal_price']['class']='cellPrice';
@@ -2840,6 +2911,10 @@ if (is_numeric($this->get['orders_id'])) {
 						// products vat col
 						$order_products_body_data['products_vat']['value']='';
 					}
+                    // products capital price col
+                    if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                        $order_products_body_data['products_capital_price']['value']='';
+                    }
 					$order_products_body_data['products_normal_price']['value']='';
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						// products vat col
@@ -2885,6 +2960,11 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_vat']['class']='last_edit_product_row_pvat_col';
 					$order_products_body_data['products_vat']['value']='';
 				}
+                // products capital price col
+                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                    $order_products_body_data['products_capital_price']['class']='last_edit_product_row_pcapitalprice_col';
+                    $order_products_body_data['products_capital_price']['value']='';
+                }
 				$order_products_body_data['products_normal_price']['class']='last_edit_product_row_pprice_col';
 				$order_products_body_data['products_normal_price']['value']='';
                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
@@ -2927,6 +3007,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $colspan+=1;
                 }
                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']>0) {
+                    $colspan+=1;
+                }
+                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
                     $colspan+=1;
                 }
 			}

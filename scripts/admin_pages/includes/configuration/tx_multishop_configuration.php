@@ -2528,6 +2528,28 @@ $records[]=array(
     'depend_on_configuration_key'=>'',
     'use_function'=>''
 );
+$records[]=array(
+    'configuration_title'=>'Display capital price column in edit order product',
+    'configuration_key'=>'ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT',
+    'configuration_value'=>'0',
+    'description'=>'Display capital price column in edit order product',
+    'group_id'=>'9',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Restrict capital price input/display in edit order product only for members of certain group',
+    'configuration_key'=>'RESTRICT_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT_ONLY_FOR_MEMBER_OF_GROUP',
+    'configuration_value'=>'0',
+    'description'=>'Restrict capital price input/display in edit order product only for members of certain group',
+    'group_id'=>'9',
+    'use_function'=>'',
+    'set_function'=>'',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
 
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
