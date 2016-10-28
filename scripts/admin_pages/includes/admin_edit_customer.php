@@ -64,7 +64,7 @@ if ($this->post && $this->post['email']) {
         $updateArray['street_name']=$this->post['street_name'];
 		$updateArray['address_number']=$this->post['address_number'];
 		$updateArray['address_ext']=$this->post['address_ext'];
-		$updateArray['address']=$updateArray['building'].' '.$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
+		$updateArray['address']=$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
 		$updateArray['address']=preg_replace('/\s+/', ' ', $updateArray['address']);
 		$updateArray['zip']=$this->post['zip'];
 		$updateArray['city']=$this->post['city'];
@@ -170,7 +170,7 @@ if ($this->post && $this->post['email']) {
 					$updateTTAddressArray['street_name']=$updateArray['address'];
 					$updateTTAddressArray['address_number']=$updateArray['address_number'];
 					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
-					$updateTTAddressArray['address']=$updateTTAddressArray['building'].' '.$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
+					$updateTTAddressArray['address']=$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
 					$updateTTAddressArray['address']=preg_replace('/\s+/', ' ', $updateTTAddressArray['address']);
 				} else {
                     $updateTTAddressArray['building']=$updateArray['building'];
@@ -319,7 +319,7 @@ if ($this->post && $this->post['email']) {
                     $insertArray['street_name']=$updateArray['address'];
 					$insertArray['address_number']=$updateArray['address_number'];
 					$insertArray['address_ext']=$updateArray['address_ext'];
-					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
                     $insertArray['building']=$updateArray['building'];
@@ -992,8 +992,16 @@ switch ($_REQUEST['action']) {
 				$user['lastlogin']='-';
 			}
 			$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
+            $markerArray['BILLING_BUILDING']='';
+            if ($customer_billing_address['building']) {
+                $markerArray['BILLING_BUILDING']=$customer_billing_address['building'].'<br/>';
+            }
 			$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
-			$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
+            $markerArray['DELIVERY_BUILDING']='';
+            if ($customer_delivery_address['building']) {
+                $markerArray['DELIVERY_BUILDING']=$customer_delivery_address['building'].'<br/>';
+            }
+            $markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 			$markerArray['GOOGLE_MAPS_URL_QUERY']='//maps.google.com/maps?f=q&amp;source=s_q&amp;&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 			$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
 
