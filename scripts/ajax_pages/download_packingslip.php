@@ -65,7 +65,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###DELIVERY_BUILDING###']='';
         }
 		$markerArray['###DELIVERY_NAME###']=$order['delivery_name'];
-		$markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
+        $markerArray['###DELIVERY_BUILDING###']=$order['delivery_building'];
+        if (strpos($template, '###DELIVERY_BUILDING###')===false){
+            $order['delivery_address']=$order['delivery_building'].'<br/>'.$order['delivery_address'];
+        }
+        $markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
 		$markerArray['###DELIVERY_ZIP###']=$order['delivery_zip'];
 		$markerArray['###DELIVERY_CITY###']=mslib_befe::strtoupper($order['delivery_city']);
 		$markerArray['###DELIVERY_COUNTRY###']='';
@@ -202,9 +206,13 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$array2[]=$order['orders_status'];
 		$array1[]='###TRACK_AND_TRACE_CODE###';
 		$array2[]=$order['track_and_trace_code'];
-		$array1[]='###BILLING_ADDRESS###';
+        $array1[]='###BILLING_BUILDING###';
+        $array2[]=$order['billing_building'];
+        $array1[]='###BILLING_ADDRESS###';
 		$array2[]=$billing_address;
-		$array1[]='###DELIVERY_ADDRESS###';
+        $array1[]='###DELIVERY_BUILDING###';
+        $array2[]=$order['delivery_building'];
+        $array1[]='###DELIVERY_ADDRESS###';
 		$array2[]=$delivery_address;
 		$array1[]='###CUSTOMER_ID###';
 		$array2[]=$order['customer_id'];

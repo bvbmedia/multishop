@@ -309,7 +309,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (!$order['delivery_address'] or !$order['delivery_city']) {
 				$order['delivery_company']=$order['billing_company'];
 				$order['delivery_street_name']=$order['billing_street_name'];
-				$order['delivery_address']=$order['billing_address'];
+                $order['delivery_building']=$order['billing_building'];
+                $order['delivery_address']=$order['billing_address'];
 				$order['delivery_address_number']=$order['billing_address_number'];
 				$order['delivery_address_ext']=$order['billing_address_ext'];
 				$order['delivery_zip']=$order['billing_zip'];
@@ -323,6 +324,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($delivery_full_customer_name) {
 				$delivery_address.=$delivery_full_customer_name."<br />";
 			}
+            if ($order['delivery_building']) {
+                $delivery_address.=$order['delivery_building']."<br />";
+            }
 			if ($order['delivery_address']) {
 				$delivery_address.=$order['delivery_address']."<br />";
 			}
@@ -340,6 +344,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($full_customer_name) {
 				$billing_address.=$full_customer_name."<br />";
 			}
+            if ($order['billing_building']) {
+                $billing_address.=$order['billing_building']."<br />";
+            }
 			if ($order['billing_address']) {
 				$billing_address.=$order['billing_address']."<br />";
 			}
@@ -1309,6 +1316,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (!$address['street_name']) {
 				$address['street_name']=$address['address'];
 			}
+            $insertArray['billing_building']=$address['building'];
 			$insertArray['billing_street_name']=$address['street_name'];
 			$insertArray['billing_address_number']=$address['address_number'];
 			$insertArray['billing_address_ext']=$address['address_ext'];
@@ -1332,7 +1340,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 				$insertArray['delivery_mobile']=$insertArray['billing_mobile'];
 				$insertArray['delivery_gender']=$insertArray['billing_gender'];
-				$insertArray['delivery_street_name']=$insertArray['billing_street_name'];
+                $insertArray['delivery_building']=$insertArray['billing_building'];
+                $insertArray['delivery_street_name']=$insertArray['billing_street_name'];
 				$insertArray['delivery_address']=$insertArray['billing_address'];
 				$insertArray['delivery_address_number']=$insertArray['billing_address_number'];
 				$insertArray['delivery_address_ext']=$insertArray['billing_address_ext'];
@@ -1354,6 +1363,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (!$address['delivery_street_name']) {
 					$address['delivery_street_name']=$address['delivery_address'];
 				}
+                $insertArray['delivery_building']=$address['delivery_building'];
 				$insertArray['delivery_street_name']=$address['delivery_street_name'];
 				$insertArray['delivery_address_number']=$address['delivery_address_number'];
 				$insertArray['delivery_address_ext']=$address['delivery_address_ext'];

@@ -33,7 +33,8 @@ if ($this->post['proceed_order']) {
 		$insertArray['username']=$unique_id;
 		$insertArray['email']=$this->post['email'];
 		$insertArray['username']=$this->post['tx_multishop_pi1']['telephone'];
-		$insertArray['street_name']=$this->post['street_name'];
+        $insertArray['building']=$this->post['building'];
+        $insertArray['street_name']=$this->post['street_name'];
 		$insertArray['address_number']=$this->post['address_number'];
 		$insertArray['address_ext']=$this->post['address_ext'];
 		$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].$insertArray['address_ext'];
@@ -69,7 +70,8 @@ if ($this->post['proceed_order']) {
 		$insertArray['billing_email']=$this->post['email'];
 		$insertArray['billing_gender']=$this->post['gender'];
 		$insertArray['billing_birthday']=$this->post['birthday'];
-		$insertArray['billing_street_name']=$this->post['street_name'];
+        $insertArray['billing_building']=$this->post['building'];
+        $insertArray['billing_street_name']=$this->post['street_name'];
 		$insertArray['billing_address_number']=$this->post['address_number'];
 		$insertArray['billing_address_ext']=$this->post['address_ext'];
 		$insertArray['billing_address']=preg_replace('/ +/', ' ', $insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].' '.$insertArray['billing_address_ext']);
@@ -91,7 +93,8 @@ if ($this->post['proceed_order']) {
 		$insertArray['delivery_email']=$this->post['delivery_email'];
 		$insertArray['delivery_gender']=$this->post['delivery_gender'];
 		$insertArray['delivery_street_name']=$this->post['delivery_street_name'];
-		$insertArray['delivery_address_number']=$this->post['delivery_address_number'];
+        $insertArray['delivery_building']=$this->post['delivery_building'];
+        $insertArray['delivery_address_number']=$this->post['delivery_address_number'];
 		$insertArray['delivery_address']=preg_replace('/ +/', ' ', $insertArray['delivery_street_name'].' '.$insertArray['delivery_address_number'].' '.$insertArray['delivery_address_ext']);
 		$insertArray['delivery_city']=$this->post['delivery_city'];
 		$insertArray['delivery_zip']=$this->post['delivery_zip'];
@@ -119,7 +122,8 @@ if ($this->post['proceed_order']) {
 			$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 			$insertArray['delivery_mobile']=$insertArray['billing_mobile'];
 			$insertArray['delivery_gender']=$insertArray['billing_gender'];
-			$insertArray['delivery_street_name']=$insertArray['billing_street_name'];
+            $insertArray['delivery_building']=$insertArray['billing_building'];
+            $insertArray['delivery_street_name']=$insertArray['billing_street_name'];
 			$insertArray['delivery_address']=$insertArray['billing_address'];
 			$insertArray['delivery_address_number']=$insertArray['billing_address_number'];
 			$insertArray['delivery_address_ext']=$insertArray['billing_address_ext'];
@@ -138,6 +142,7 @@ if ($this->post['proceed_order']) {
 			$insertArray['delivery_telephone']=$this->post['delivery_telephone'];
 			$insertArray['delivery_mobile']=$this->post['delivery_mobile'];
 			$insertArray['delivery_gender']=$this->post['delivery_gender'];
+            $insertArray['delivery_building']=$this->post['delivery_building'];
 			$insertArray['delivery_street_name']=$this->post['delivery_street_name'];
 			$insertArray['delivery_address_number']=$this->post['delivery_address_number'];
 			$insertArray['delivery_address_ext']=$this->post['delivery_address_ext'];
