@@ -1705,7 +1705,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['billing_street_name']=$address['address'];
 				$insertArray['billing_address_number']=$address['address_number'];
 				$insertArray['billing_address_ext']=$address['address_ext'];
-				$insertArray['billing_address']=$insertArray['billing_building'].' '.$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
+				$insertArray['billing_address']=$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
 				$insertArray['billing_address']=preg_replace('/\s+/', ' ', $insertArray['billing_address']);
 			} else {
                 $insertArray['billing_building']=$address['building'];
