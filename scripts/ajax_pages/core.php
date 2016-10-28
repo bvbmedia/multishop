@@ -2051,6 +2051,9 @@ switch ($this->ms['page']) {
 					if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['billing_company']) {
 						$erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
 					}
+					if (!$this->post['tx_multishop_pi1']['billing_country']) {
+						$erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
+					}
 					// build name
 					if (isset($this->post['tx_multishop_pi1']['billing_first_name'])) {
 						$name = $this->post['tx_multishop_pi1']['billing_first_name'];
@@ -2090,6 +2093,9 @@ switch ($this->ms['page']) {
 					}
 					if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['delivery_company']) {
 						$erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
+					}
+					if (!$this->post['tx_multishop_pi1']['delivery_country']) {
+						$erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
 					}
 					// build delivery name
 					if (isset($this->post['tx_multishop_pi1']['delivery_first_name'])) {

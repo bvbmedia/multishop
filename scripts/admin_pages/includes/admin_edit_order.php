@@ -953,9 +953,39 @@ if (is_numeric($this->get['orders_id'])) {
         			<div class="panel-heading"><h3>'.$this->pi_getLL('billing_details').'</h3></div>
 						<div class="panel-body">
 						';
+            //validate first
+            $validate_erno=array();
+            if (!$orders['billing_email']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_email_address_has_been_specified').'</li>';
+            }
+            if (!$orders['billing_street_name']) {
+                $validate_erno[]='<li>'.'No street name has been specified'.'</li>';
+            }
+            if (!$orders['billing_address_number']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_address_number_has_been_specified').'</li>';
+            }
+            if (!$orders['billing_first_name']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_first_name_has_been_specified').'</li>';
+            }
+            if (!$orders['billing_last_name']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_last_name_has_been_specified').'</li>';
+            }
+            if (!$orders['billing_zip']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_zip_has_been_specified').'</li>';
+            }
+            if (!$orders['billing_city']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_city_has_been_specified').'</li>';
+            }
+            if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['billing_company']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
+            }
+            if (!$orders['billing_country']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
+            }
+            $count_validate_erno=count($validate_erno);
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$edit_billing_details=array();
-				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
+				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container"'.($count_validate_erno ? '' : ' style="display:none"').'>';
 				$edit_billing_details['billing_company']='<div class="form-group">
 						<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
 						<div class="col-md-7">
@@ -1060,7 +1090,9 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>';
 				$edit_billing_details['billing_save_form']='
-                    <div id="billing_details_erno_wrapper"></div>
+                    <div id="billing_details_erno_wrapper">
+                    '.($count_validate_erno ? '<div class="erno_message well text-danger"><ul>' . implode("\n", $validate_erno) . '</ul></div>' : '').'
+                    </div>
                     <hr>
 					<div class="clearfix">
 						<div class="pull-right">
@@ -1079,7 +1111,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_billing_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="billing_details_container">';
+			$tmpcontent.='<div class="address_details_container" id="billing_details_container"'.($count_validate_erno ? ' style="display:none"' : '').'>';
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
@@ -1114,9 +1146,39 @@ if (is_numeric($this->get['orders_id'])) {
         	<div class="panel-heading"><h3>'.$this->pi_getLL('delivery_details').'</h3></div>
 			<div class="panel-body">
 				';
+            //validate first
+            $validate_erno=array();
+            if (!$orders['delivery_email']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_email_address_has_been_specified').'</li>';
+            }
+            if (!$orders['delivery_street_name']) {
+                $validate_erno[]='<li>'.'No street name has been specified'.'</li>';
+            }
+            if (!$orders['delivery_address_number']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_address_number_has_been_specified').'</li>';
+            }
+            if (!$orders['delivery_first_name']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_first_name_has_been_specified').'</li>';
+            }
+            if (!$orders['delivery_last_name']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_last_name_has_been_specified').'</li>';
+            }
+            if (!$orders['delivery_zip']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_zip_has_been_specified').'</li>';
+            }
+            if (!$orders['delivery_city']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('no_city_has_been_specified').'</li>';
+            }
+            if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['delivery_company']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
+            }
+            if (!$orders['delivery_country']) {
+                $validate_erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
+            }
+            $count_validate_erno=count($validate_erno);
 			if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
 				$edit_delivery_details=array();
-				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
+				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container"'.($count_validate_erno ? '' : ' style="display:none"').'>';
 				$edit_delivery_details['delivery_company']='<div class="form-group">
                 	<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
                 	<div class="col-md-7">
@@ -1214,7 +1276,9 @@ if (is_numeric($this->get['orders_id'])) {
                 	</div>
                 </div>';
 				$edit_delivery_details['delivery_save_form']='
-                <div id="delivery_details_erno_wrapper"></div>
+                <div id="delivery_details_erno_wrapper">
+                '.($count_validate_erno ? '<div class="erno_message well text-danger"><ul>' . implode("\n", $validate_erno) . '</ul></div>' : '').'
+                </div>
                 <hr>
                 <div class="clearfix">
                 	<div class="pull-right">
@@ -1234,7 +1298,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_delivery_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="delivery_details_container">';
+			$tmpcontent.='<div class="address_details_container" id="delivery_details_container"'.($count_validate_erno ? ' style="display:none"' : '').'>';
 			if ($orders['delivery_company']) {
 				$tmpcontent.='<strong>'.$orders['delivery_company'].'</strong><br />';
 			}
