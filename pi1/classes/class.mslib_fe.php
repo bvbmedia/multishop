@@ -9888,6 +9888,20 @@ class mslib_fe {
 	}
 	public function logPageView() {
 		$insertArray=array();
+		$continue=1;
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewInitPreProc'])) {
+			$params=array(
+					'insertArray'=>&$insertArray,
+					'continue' =>&$continue
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewInitPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if (!$continue) {
+			return;
+		}
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 		}
