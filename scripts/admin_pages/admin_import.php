@@ -16,7 +16,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
 				this.close();
 				msAdminBlockUi();
-				window.location.href=\'/\'+linkTarget;
+				window.location.replace(linkTarget);
 			});
 		});
 		$(document).on("click", ".hide_advanced_import_radio", function() {
