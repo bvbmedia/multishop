@@ -4907,10 +4907,13 @@ class mslib_befe {
         $array2 = array();
         $array1[] = '###STREET_NAME###';
         $array2[] = ucfirst($address_data['street_name']);
-        $array1[] = '###BUILDING###';
         if (!empty($address_data['building'])) {
+            $array1[] = '###BUILDING###';
             $array2[] = ucfirst($address_data['building']).'<br/>';
         } else {
+            $array1[] = '###BUILDING###<br/>';
+            $array2[] = '';
+            $array1[] = '###BUILDING###';
             $array2[] = '';
         }
         $array1[] = '###ADDRESS###';

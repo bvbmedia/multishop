@@ -282,6 +282,9 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					if ($delivery_full_customer_name) {
 						$delivery_address.=$delivery_full_customer_name."<br />";
 					}
+					if ($tmpArray['delivery_building']) {
+						$delivery_address.=$tmpArray['delivery_building']."<br />";
+					}
 					if ($tmpArray['delivery_address']) {
 						$delivery_address.=$tmpArray['delivery_address']."<br />";
 					}
@@ -296,6 +299,9 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					}
 					if ($full_customer_name) {
 						$billing_address.=$full_customer_name."<br />";
+					}
+					if ($tmpArray['billing_building']) {
+						$billing_address.=$tmpArray['billing_building']."<br />";
 					}
 					if ($tmpArray['billing_address']) {
 						$billing_address.=$tmpArray['billing_address']."<br />";
