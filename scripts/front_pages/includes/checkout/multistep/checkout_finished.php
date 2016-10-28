@@ -34,6 +34,9 @@ if (!$order_session['orders_id']) {
 	if ($delivery_full_customer_name) {
 		$delivery_address.=$delivery_full_customer_name."<br />";
 	}
+    if ($order['delivery_building']) {
+        $delivery_address.=$order['delivery_building']."<br />";
+    }
 	if ($order['delivery_address']) {
 		$delivery_address.=$order['delivery_address']."<br />";
 	}
@@ -49,6 +52,9 @@ if (!$order_session['orders_id']) {
 	if ($full_customer_name) {
 		$billing_address.=$full_customer_name."<br />";
 	}
+    if ($order['billing_building']) {
+        $billing_address.=$order['billing_building']."<br />";
+    }
 	if ($order['billing_address']) {
 		$billing_address.=$order['billing_address']."<br />";
 	}

@@ -783,7 +783,8 @@ switch ($_REQUEST['action']) {
 								$row['billing_first_name']=$user['first_name'];
 								$row['billing_last_name']=$user['last_name'];
 								$row['billing_company']=$user['company'];
-								$row['billing_address']=$user['address'];
+                                $row['billing_building']=$user['building'];
+                                $row['billing_address']=$user['address'];
 								$row['billing_address_number']=$user['address_number'];
 								$row['billing_address_ext']=$user['address_ext'];
 								$row['billing_city']=$user['city'];
@@ -803,7 +804,8 @@ switch ($_REQUEST['action']) {
 //							$row['delivery_first_name']			= $record['delivery_name'];
 								$row['delivery_last_name']=$record['delivery_name'];
 								$row['delivery_company']=$record['delivery_company'];
-								$row['delivery_address']=$record['delivery_street_address'];
+                                $row['delivery_building']=$record['delivery_building'];
+                                $row['delivery_address']=$record['delivery_street_address'];
 								// address
 								$street_address='';
 								$house_number='';

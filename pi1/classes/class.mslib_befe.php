@@ -3119,11 +3119,11 @@ class mslib_befe {
                 if ($delivery_full_customer_name) {
                     $delivery_address .= $delivery_full_customer_name . "<br />";
                 }
-                if ($order['delivery_address']) {
-                    $delivery_address .= $order['delivery_address'] . "<br />";
-                }
                 if ($order['delivery_building']) {
                     $delivery_address .= $order['delivery_building'] . "<br />";
+                }
+                if ($order['delivery_address']) {
+                    $delivery_address .= $order['delivery_address'] . "<br />";
                 }
                 if ($order['delivery_zip'] and $order['delivery_city']) {
                     $delivery_address .= $order['delivery_zip'] . " " . $order['delivery_city'];
@@ -3135,6 +3135,9 @@ class mslib_befe {
                 }
                 if ($full_customer_name) {
                     $billing_address .= $full_customer_name . "<br />";
+                }
+                if ($order['billing_building']) {
+                    $billing_address .= $order['billing_building'] . "<br />";
                 }
                 if ($order['billing_address']) {
                     $billing_address .= $order['billing_address'] . "<br />";
@@ -4906,32 +4909,40 @@ class mslib_befe {
         $array1 = array();
         $array2 = array();
         $array1[] = '###STREET_NAME###';
-        $array2[] = ucfirst($address_data['street_name']);
+        $array2[] = $address_data['street_name'];
         if (!empty($address_data['building'])) {
             $array1[] = '###BUILDING###';
-            $array2[] = ucfirst($address_data['building']).'<br/>';
+            $array2[] = $address_data['building'];
         } else {
-            $array1[] = '###BUILDING###<br/>';
-            $array2[] = '';
-            $array1[] = '###BUILDING###';
-            $array2[] = '';
+            if (strpos($address_format_setting, '###BUILDING###<br/>')!==false) {
+                $array1[] = '###BUILDING###<br/>';
+                $array2[] = '';
+            } else {
+                $array1[] = '###BUILDING###';
+                $array2[] = '';
+            }
         }
-        $array1[] = '###ADDRESS###';
-        $array2[] = ucfirst($address_data['address']);
+        if (strpos($address_format_setting, '###BUILDING###')===false && $address_data['building']) {
+            $array1[] = '###ADDRESS###';
+            $array2[] = $address_data['building'].'<br/>'.$address_data['address'];
+        } else {
+            $array1[] = '###ADDRESS###';
+            $array2[] = $address_data['address'];
+        }
         $array1[] = '###ZIP###';
         $array2[] = $address_data['zip'];
         $array1[] = '###CITY###';
-        $array2[] = ucfirst($address_data['city']);
+        $array2[] = $address_data['city'];
         $array1[] = '###COUNTRY###';
         $array2[] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address_data['country']);
         $array1[] = '###STATE###';
-        $array2[] = ucfirst($address_data['state']);
+        $array2[] = $address_data['state'];
         $array1[] = '###FULL_NAME###';
         $array2[] = $address_data['name'];
         $array1[] = '###FIRST_NAME###';
-        $array2[] = ucfirst($address_data['first_name']);
+        $array2[] = $address_data['first_name'];
         $array1[] = '###LAST_NAME###';
-        $array2[] = ucfirst($address_data['last_name']);
+        $array2[] = $address_data['last_name'];
         $array1[] = '###EMAIL###';
         $array2[] = $address_data['email'];
         $array1[] = '###TELEPHONE###';

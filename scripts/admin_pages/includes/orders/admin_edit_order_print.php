@@ -155,7 +155,8 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		$address_data=array();
 		$address_data=$order;
-		$address_data['address']=$order['billing_address'];
+        $address_data['building']=$order['billing_building'];
+        $address_data['address']=$order['billing_address'];
 		$address_data['zip']=$order['billing_zip'];
 		$address_data['city']=$order['billing_city'];
 		$address_data['country']=$order['billing_country'];
