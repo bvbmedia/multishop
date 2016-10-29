@@ -268,6 +268,26 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='<div class="table-responsive">';
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
+			if ($params['settings']['enableRowBasedCheckboxes']) {
+				$headerData='';
+				$headerData.='
+					<script type="text/javascript">
+						jQuery(document).ready(function($) {
+							$(\'#check_all_1\').click(function(){
+								$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+							});
+						});
+					</script>';
+				$GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
+				$headerData='';
+				$tableContent.='
+				<th class="cellCheckbox">
+					<div class="checkbox checkbox-success checkbox-inline">
+					<input type="checkbox" id="check_all_1">
+					<label for="check_all_1"></label>
+					</div>
+				</th>';
+			}
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tdClass=array();
 				if ($valArray['align']) {
@@ -292,6 +312,25 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					$tr_type='even';
 				}
 				$tableContent.='<tr class="'.$tr_type.'">';
+				if ($params['settings']['enableRowBasedCheckboxes'] && $params['settings']['rowBasedCheckboxColumnName']) {
+					$headerData='';
+					$headerData.='
+					<script type="text/javascript">
+						jQuery(document).ready(function($) {
+							$(\'#check_all_1\').click(function(){
+								$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+							});
+						});
+					</script>';
+					$GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
+					$headerData='';
+					$tableContent.='<td class="cellCheckbox">
+						<div class="checkbox checkbox-success checkbox-inline">
+							<input type="checkbox" name="tx_multishop_pi1[tableOverviewSelection][]" id="tableOverviewSelectionCheckbox_'.$row[$params['settings']['rowBasedCheckboxColumnName']].'" value="'.htmlspecialchars($row[$params['settings']['rowBasedCheckboxColumnName']]).'">
+							<label for="tableOverviewSelectionCheckbox_'.$row[$params['settings']['rowBasedCheckboxColumnName']].'"></label>
+						</div>
+					</td>';
+				}
 				foreach ($params['tableColumns'] as $col=>$valArray) {
 					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
