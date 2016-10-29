@@ -182,7 +182,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 									$updateArray['products_description']=$this->post['order_products_description'];
 								}
-                                $updateArray['product_capital_price']=$this->post['product_capital_price'];
+                                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                    $updateArray['product_capital_price'] = $this->post['product_capital_price'];
+                                }
 								$updateArray['products_price']=$this->post['product_price'];
 								$updateArray['final_price']=$this->post['product_price'];
 								// disocunt update
@@ -275,8 +277,10 @@ if (is_numeric($this->get['orders_id'])) {
 						} else {
 							if ($this->post['manual_product_name']) {
 								$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
-                                if (empty($this->post['manual_product_capital_price'])) {
-                                    $this->post['manual_product_capital_price']='0';
+                                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']>0) {
+                                    if (empty($this->post['manual_product_capital_price'])) {
+                                        $this->post['manual_product_capital_price'] = '0';
+                                    }
                                 }
                                 if (empty($this->post['manual_product_price'])) {
 									$this->post['manual_product_price']='0';
@@ -356,7 +360,9 @@ if (is_numeric($this->get['orders_id'])) {
 										$insertArray['discount_percentage'] = $discount_percentage;
 									}
 								}
-                                $insertArray['product_capital_price']=$this->post['manual_product_capital_price'];
+                                if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                                    $insertArray['product_capital_price'] = $this->post['manual_product_capital_price'];
+                                }
 								$insertArray['products_price']=$this->post['manual_product_price'];
 								if (!empty($insertArray['discount_amount'])) {
 									$insertArray['final_price'] = ($this->post['manual_product_price'] - $insertArray['discount_amount']);
