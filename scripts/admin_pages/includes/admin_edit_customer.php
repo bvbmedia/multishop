@@ -806,6 +806,7 @@ switch ($_REQUEST['action']) {
 			} else {
 				$subpartArray['###USERNAME_READONLY###']='';
 			}
+            $subpartArray['###EDIT_CUSTOMER_HEADER###']=htmlspecialchars($this->pi_getLL('admin_label_tabs_edit_customer'));
 			$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
 			$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 			if ($this->masterShop) {
@@ -1112,6 +1113,7 @@ switch ($_REQUEST['action']) {
 			$mr_checked='checked="checked"';
 			$mrs_checked='';
 		}
+        $subpartArray['###EDIT_CUSTOMER_HEADER###']=htmlspecialchars($this->pi_getLL('admin_new_customer'));
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username')).'<span class="text-danger">*</span>';
 		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
 			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
