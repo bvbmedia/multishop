@@ -90,6 +90,46 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
         // for pagination
         $this->get = $that->get;
+        $this->post = $that->post;
+        if ($this->post) {
+            if ($params['postErno']) {
+                if (count($params['postErno'])) {
+                    $returnMarkup='
+                    <div style="display:none" id="msAdminPostMessage">
+                    <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Status</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    ';
+                    foreach ($params['postErno'] as $item) {
+                        switch ($item['status']) {
+                            case 'error':
+                                $item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+                                break;
+                            case 'info':
+                                $item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+                                break;
+                        }
+                        $returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
+                    }
+                    $returnMarkup.='</tbody></table></div>';
+                    $tableContent.=$returnMarkup;
+                    $GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+                    jQuery(document).ready(function ($) {
+                        $.confirm({
+                            title: \'\',
+                            content: $(\'#msAdminPostMessage\').html()
+                        });
+                    });
+                    </script>
+                    ';
+                }
+            }
+        }
         $updateCookie = 0;
         if ($that->get['Search'] and ($that->get['limit'] != $that->cookie['limit'])) {
             $that->cookie['limit'] = $that->get['limit'];
@@ -549,9 +589,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     $action_selectbox .= '</select>';
                     $tableContent .= $action_selectbox;
                 }
-            }
-            if ($params['settings']['contentBelowTable']) {
-                $tableContent .= $params['settings']['contentBelowTable'];
             }
             if ($params['settings']['contentBelowTable']) {
                 $tableContent .= $params['settings']['contentBelowTable'];
