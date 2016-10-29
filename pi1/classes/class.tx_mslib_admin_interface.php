@@ -550,6 +550,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             if (!$params['settings']['skipSummarize']) {
                 // Summarize footer
                 $tableContent .= '<tfoot><tr>';
+                if ($params['settings']['enableRowBasedCheckboxSelection']) {
+                    $tableContent .= '<th></th>';
+                }
                 foreach ($params['tableColumns'] as $col => $valArray) {
                     switch ($valArray['valueType']) {
                         case 'currency':
