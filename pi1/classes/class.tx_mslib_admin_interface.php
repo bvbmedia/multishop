@@ -538,11 +538,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $tableContent .= '</tr></tfoot>';
             }
             $tableContent .= '</table>';
-            if ($params['settings']['enableActionSelectionForm']) {
-                $actions = array();
-                if (is_array($params['settings']['tableSelectionActions'])) {
-                    $actions = $params['settings']['tableSelectionActions'];
-                }
+            if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {
+                $actions = $params['settings']['tableSelectionActions'];
                 if (count($actions)) {
                     // custom page hook that can be controlled by third-party plugin eof
                     $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
@@ -558,6 +555,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             if ($params['settings']['contentBelowTable']) {
                 $tableContent .= $params['settings']['contentBelowTable'];
+            }
+            if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {;
+                $tableContent.='<div class="form-group">
+                    <input class="btn btn-success" type="submit" name="submit" value="'.htmlspecialchars($this->pi_getLL('submit_form')).'" />
+                </div>';
             }
             $tableContent .= '
 			</div>
