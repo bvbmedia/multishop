@@ -271,13 +271,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if ($params['settings']['enableRowBasedCheckboxes']) {
 				$headerData='';
 				$headerData.='
-					<script type="text/javascript">
-						jQuery(document).ready(function($) {
-							$(\'#check_all_1\').click(function(){
-								$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
-							});
+				<script type="text/javascript">
+					jQuery(document).ready(function($) {
+						$(\'#check_all_1\').click(function(){
+							$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 						});
-					</script>';
+					});
+				</script>';
 				$GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 				$headerData='';
 				$tableContent.='
