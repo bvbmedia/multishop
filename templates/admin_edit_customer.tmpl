@@ -177,195 +177,200 @@ jQuery(document).ready(function ($) {
         </div>
         <!-- ###DETAILS### end -->
         <div role="tabpanel" id="edit_customer" class="tab-pane">
-            <div id="live-validation">
-                <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
-                <div class="row">
-                <div class="col-md-8">
-                ###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                    <label for="username" id="account-username">###LABEL_USERNAME###</label>
-                    <input type="text" name="username" class="form-control username" id="username" ###USERNAME_READONLY### value="###VALUE_USERNAME###" required="required" data-h5-errorid="invalid-username" title="###INVALID_USERNAME_MESSAGE###" />
-                    <div id="invalid-username" class="error-space" style="display:none"></div>
-                        </div>
-                        <div class="col-md-6"###HIDE_PASSWORD###>
-                    <label for="password" id="account-password">###LABEL_PASSWORD###</label>
-                    <input type="text" name="password" class="form-control password" id="password" value="###VALUE_PASSWORD###" title="###INVALID_PASSWORD_MESSAGE###" />
-                    <div id="invalid-password" class="error-space" style="display:none"></div>
-                        </div>
-                    </div>
-                </div>
-                ###CUSTOM_MARKER_BELOW_USERNAME_FIELD###
-                ###MASTER_SHOP###
-                <div class="form-group">
-                    <span id="ValidRadio" class="InputGroup">
-                        <label for="radio" id="account-gender">###LABEL_GENDER###</label>
-                        <div class="radio radio-success radio-inline">
-                            <input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
-                            <label for="radio">###LABEL_GENDER_MR###</label>
-                        </div>
-                        <div class="radio radio-success radio-inline">
-                            <input type="radio" name="gender" value="1" class="InputGroup" id="radio2" ###GENDER_MRS_CHECKED###>
-                            <label for="radio2">###LABEL_GENDER_MRS###</label>
-                        </div>
-                    </span>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-4">
-                    <label class="account-firstname" for="first_name">###LABEL_FIRSTNAME###</label>
-                    <input type="text" name="first_name" class="form-control first-name" id="first_name" value="###VALUE_FIRSTNAME###">
-                    <div id="invalid-first_name" class="error-space" style="display:none"></div>
-                        </div>
-                        <div class="col-md-4">
-                    <label class="account-middlename" for="middle_name">###LABEL_MIDDLENAME###</label>
-                    <input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="###VALUE_MIDDLENAME###">
-                        </div>
-                        <div class="col-md-4">
-                    <label class="account-lastname" for="last_name">###LABEL_LASTNAME###</label>
-                    <input type="text" name="last_name" id="last_name" class="form-control last-name" value="###VALUE_LASTNAME###">
-                    <div id="invalid-last_name" class="error-space" style="display:none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-4">
-                    <label for="company" id="account-company">###LABEL_COMPANY###</label>
-                    <input type="text" name="company" class="form-control company" id="company" value="###VALUE_COMPANY###" />
-                    <div id="invalid-company" class="error-space" style="display:none"></div>
-                        </div>
-                        <div class="col-md-4">
-                    ###INPUT_VAT_ID###
-                        </div>
-                        <div class="col-md-4">
-                    ###INPUT_COC_ID###
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-						<div class="col-md-4">
-							<label class="account-address" for="address">###LABEL_STREET_ADDRESS###</label>
-							<input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###">
-							<div id="invalid-address" class="error-space" style="display:none"></div>
-						</div>
-                        <div class="col-md-4">
-                            <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###</label>
-                            <input type="text" name="address_number" id="address_number" class="form-control address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
-                            <div id="invalid-address-number" class="error-space" style="display:none"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
-                            <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="###VALUE_ADDRESS_EXTENTION###">
-                        </div>
-                	</div>
-               	</div>
-				<div class="form-group">
-					<div class="row">
-						<div class="col-md-12">
-							<label class="account-building" for="building">###LABEL_BUILDING###</label>
-							<input type="text" name="building" id="building" class="form-control building" value="###VALUE_BUILDING###">
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
-                            <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###">
-                            <div id="invalid-zip" class="error-space" style="display:none"></div>
-                        </div>
-                        <div class="col-md-6">
-							<label class="account-city" for="city">###LABEL_CITY###</label>
-							<input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
-							<div id="invalid-city" class="error-space" style="display:none"></div>
-						</div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>###EDIT_CUSTOMER_HEADER###</h3></div>
+                <div class="panel-body">
+                    <div id="live-validation">
+                        <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
+                        <div class="row">
+                            <div class="col-md-8">
+                                ###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="username" id="account-username">###LABEL_USERNAME###</label>
+                                            <input type="text" name="username" class="form-control username" id="username" ###USERNAME_READONLY### value="###VALUE_USERNAME###" required="required" data-h5-errorid="invalid-username" title="###INVALID_USERNAME_MESSAGE###" />
+                                            <div id="invalid-username" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-6"###HIDE_PASSWORD###>
+                                            <label for="password" id="account-password">###LABEL_PASSWORD###</label>
+                                            <input type="text" name="password" class="form-control password" id="password" value="###VALUE_PASSWORD###" title="###INVALID_PASSWORD_MESSAGE###" />
+                                            <div id="invalid-password" class="error-space" style="display:none"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                ###CUSTOM_MARKER_BELOW_USERNAME_FIELD###
+                                ###MASTER_SHOP###
+                                <div class="form-group">
+                                <span id="ValidRadio" class="InputGroup">
+                                    <label for="radio" id="account-gender">###LABEL_GENDER###</label>
+                                    <div class="radio radio-success radio-inline">
+                                        <input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
+                                        <label for="radio">###LABEL_GENDER_MR###</label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline">
+                                        <input type="radio" name="gender" value="1" class="InputGroup" id="radio2" ###GENDER_MRS_CHECKED###>
+                                        <label for="radio2">###LABEL_GENDER_MRS###</label>
+                                    </div>
+                                </span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="account-firstname" for="first_name">###LABEL_FIRSTNAME###</label>
+                                            <input type="text" name="first_name" class="form-control first-name" id="first_name" value="###VALUE_FIRSTNAME###">
+                                            <div id="invalid-first_name" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="account-middlename" for="middle_name">###LABEL_MIDDLENAME###</label>
+                                            <input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="###VALUE_MIDDLENAME###">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="account-lastname" for="last_name">###LABEL_LASTNAME###</label>
+                                            <input type="text" name="last_name" id="last_name" class="form-control last-name" value="###VALUE_LASTNAME###">
+                                            <div id="invalid-last_name" class="error-space" style="display:none"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="company" id="account-company">###LABEL_COMPANY###</label>
+                                            <input type="text" name="company" class="form-control company" id="company" value="###VALUE_COMPANY###" />
+                                            <div id="invalid-company" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            ###INPUT_VAT_ID###
+                                        </div>
+                                        <div class="col-md-4">
+                                            ###INPUT_COC_ID###
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="account-address" for="address">###LABEL_STREET_ADDRESS###</label>
+                                            <input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###">
+                                            <div id="invalid-address" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###</label>
+                                            <input type="text" name="address_number" id="address_number" class="form-control address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
+                                            <div id="invalid-address-number" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
+                                            <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="###VALUE_ADDRESS_EXTENTION###">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="account-building" for="building">###LABEL_BUILDING###</label>
+                                            <input type="text" name="building" id="building" class="form-control building" value="###VALUE_BUILDING###">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
+                                            <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###">
+                                            <div id="invalid-zip" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="account-city" for="city">###LABEL_CITY###</label>
+                                            <input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
+                                            <div id="invalid-city" class="error-space" style="display:none"></div>
+                                        </div>
 
-                    </div>
-                </div>
-                <div class="form-group">
-					<div class="row">
-						<div class="col-md-12">
-							###COUNTRIES_INPUT###
-						</div>
-					</div>
-				</div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-							<label for="email" id="account-email">###LABEL_EMAIL###<span class="text-danger">*</span></label>
-							<input type="email" name="email" id="email" class="form-control email h5-email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
-							<div id="invalid-email" class="error-space" style="display:none"></div>
-						</div>
-						<div class="col-md-6">
-							<label for="www" id="account-www">###LABEL_WEBSITE###</label>
-							<input type="text" name="www" id="www" class="form-control www" value="###VALUE_WEBSITE###">
-						</div>
-					</div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                    		<label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
-                    		<input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###">
-                    		<div id="invalid-telephone" class="error-space" style="display:none"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            ###COUNTRIES_INPUT###
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="email" id="account-email">###LABEL_EMAIL###<span class="text-danger">*</span></label>
+                                            <input type="email" name="email" id="email" class="form-control email h5-email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
+                                            <div id="invalid-email" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="www" id="account-www">###LABEL_WEBSITE###</label>
+                                            <input type="text" name="www" id="www" class="form-control www" value="###VALUE_WEBSITE###">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
+                                            <input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###">
+                                            <div id="invalid-telephone" class="error-space" style="display:none"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="mobile" id="account-mobile">###LABEL_MOBILE###</label>
+                                            <input type="text" name="mobile" id="mobile" class="form-control mobile" value="###VALUE_MOBILE###">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <!-- ###BIRTHDATE_BLOCK### begin -->
+                                        <div class="col-md-6">
+                                            <label for="birthday" id="account-birthday">###LABEL_BIRTHDATE###</label>
+                                            <input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" value="###VALUE_VISIBLE_BIRTHDATE###">
+                                            <input type="hidden" name="birthday" class="birthday" id="birthday" value="###VALUE_HIDDEN_BIRTHDATE###">
+                                        </div>
+                                        <!-- ###BIRTHDATE_BLOCK### end -->
+                                        <div class="col-md-6" id="msAdminFeUserDiscountWrapper">
+                                            <label for="tx_multishop_discount" id="account-tx_multishop_discount">###LABEL_DISCOUNT###</label>
+                                            <input type="text" name="tx_multishop_discount" class="form-control tx_multishop_discount" id="tx_multishop_discount" value="###VALUE_DISCOUNT###" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="language" id="account-language">###LABEL_LANGUAGE###</label>
+                                            ###LANGUAGE_SELECTBOX###
+                                        </div>
+                                    </div>
+                                </div>
+                                ###CUSTOMER_GROUPS_INPUT###
+                                <div class="form-group">
+                                    <label class="account-imge" for="middle_name">###LABEL_IMAGE###</label>
+                                    ###VALUE_IMAGE###
+                                </div>
+                                ###CUSTOM_MARKER_ABOVE_PAYMENT_CONDITION_FORM_FIELD###
+                                <div class="form-group">
+                                    <label for="tx_multishop_payment_condition" id="account-tx_multishop_payment_condition">###LABEL_PAYMENT_CONDITION###</label>
+                                    <input type="text" name="tx_multishop_payment_condition" class="form-control tx_multishop_payment_condition" id="tx_multishop_payment_condition" value="###VALUE_PAYMENT_CONDITION###" />
+                                </div>
+                                ###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###
+                                ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
+                            </div>
+                            <div class="col-md-4"></div>
                         </div>
-                        <div class="col-md-6">
-                   			<label for="mobile" id="account-mobile">###LABEL_MOBILE###</label>
-                    		<input type="text" name="mobile" id="mobile" class="form-control mobile" value="###VALUE_MOBILE###">
+                        <hr>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
+                                <button class="btn btn-success" name="Submit" type="submit" value="" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
+                                <button name="SaveClose" type="submit" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE_CLOSE###</button>
+                                <input type="hidden" id="tx_multishop_pi1[cid]" value="###VALUE_CUSTOMER_ID###" name="tx_multishop_pi1[cid]" />
+                            </div>
+                            <div class="pull-left">
+                                ###LOGIN_AS_THIS_USER_LINK###
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <!-- ###BIRTHDATE_BLOCK### begin -->
-                        <div class="col-md-6">
-                            <label for="birthday" id="account-birthday">###LABEL_BIRTHDATE###</label>
-                            <input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" value="###VALUE_VISIBLE_BIRTHDATE###">
-                            <input type="hidden" name="birthday" class="birthday" id="birthday" value="###VALUE_HIDDEN_BIRTHDATE###">
-                        </div>
-                        <!-- ###BIRTHDATE_BLOCK### end -->
-                        <div class="col-md-6" id="msAdminFeUserDiscountWrapper">
-                            <label for="tx_multishop_discount" id="account-tx_multishop_discount">###LABEL_DISCOUNT###</label>
-                            <input type="text" name="tx_multishop_discount" class="form-control tx_multishop_discount" id="tx_multishop_discount" value="###VALUE_DISCOUNT###" />
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="language" id="account-language">###LABEL_LANGUAGE###</label>
-                            ###LANGUAGE_SELECTBOX###
-                        </div>
-                    </div>
-                </div>
-                ###CUSTOMER_GROUPS_INPUT###
-                <div class="form-group">
-                    <label class="account-imge" for="middle_name">###LABEL_IMAGE###</label>
-                    ###VALUE_IMAGE###
-                </div>
-                ###CUSTOM_MARKER_ABOVE_PAYMENT_CONDITION_FORM_FIELD###
-                <div class="form-group">
-                    <label for="tx_multishop_payment_condition" id="account-tx_multishop_payment_condition">###LABEL_PAYMENT_CONDITION###</label>
-                    <input type="text" name="tx_multishop_payment_condition" class="form-control tx_multishop_payment_condition" id="tx_multishop_payment_condition" value="###VALUE_PAYMENT_CONDITION###" />
-                </div>
-                ###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###
-                ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                </div>
-                <div class="col-md-4"></div>
-                </div>
-                <hr>
-                <div class="clearfix">
-                    <div class="pull-right">
-                        <a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
-                        <button class="btn btn-success" name="Submit" type="submit" value="" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
-                        <button name="SaveClose" type="submit" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE_CLOSE###</button>
-                        <input type="hidden" id="tx_multishop_pi1[cid]" value="###VALUE_CUSTOMER_ID###" name="tx_multishop_pi1[cid]" />
-                    </div>
-                    <div class="pull-left">
-                        ###LOGIN_AS_THIS_USER_LINK###
                     </div>
                 </div>
             </div>
