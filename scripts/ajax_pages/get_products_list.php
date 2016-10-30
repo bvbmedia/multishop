@@ -134,7 +134,7 @@ if ($this->ADMIN_USER) {
                     }
                     // get all cats to generate multilevel fake url eof
                 }
-                $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $product['products_name']);
+                $return_data[$counter]['text'] = htmlspecialchars(implode(" > ", $catsname) . ' > ' . $product['products_name']);
                 $return_data[$counter]['id'] = $product['products_id'];
                 $counter++;
             }
