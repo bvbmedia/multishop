@@ -69,6 +69,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        if (is_array($this->headerButtons) && count($this->headerButtons)) {
+            $sortedHeaderButtonsSorted=array();
+            $sortedHeaderButtons=array();
+            foreach ($this->headerButtons as $item) {
+                if (isset($item['sort'])) {
+                    $sortedHeaderButtonsSorted[]=$item;
+                } else {
+                    $sortedHeaderButtons[]=$item;
+                }
+            }
+            $this->headerButtons=array_merge($sortedHeaderButtons,$sortedHeaderButtonsSorted);
+        }
     }
     public function renderHeaderButtons() {
         if (is_array($this->headerButtons)) {
@@ -559,7 +571,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = mslib_fe::amount2Cents($summarize[$col], 0);
                             break;
                         case 'number_format_2_decimals':
-                            $row[$col] = number_format($summarize[$col], 2, ',', '.');
+                            $row[$col] = round(number_format($summarize[$col], 2, ',', '.'),2);
                             break;
                         default:
                             $row[$col] = $valArray['title'];

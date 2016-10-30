@@ -1306,15 +1306,17 @@ if (is_array($user) && $user['uid']) {
 	$headingButton=array();
 	$headingButton['btn_class']='btn btn-primary';
 	$headingButton['fa_class']='fa fa-sign-in';
-	$headingButton['title']=$this->pi_getLL('login_as_user');
+	$headingButton['title']=$this->pi_getLL('login');
 	$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$user['uid']);
+	$headingButton['sort']=50;
 	$headerButtons[]=$headingButton;
 }
 $headingButton=array();
 $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-book';
-$headingButton['title']=$this->pi_getLL('create_order_for_this_customer');
+$headingButton['title']=$this->pi_getLL('admin_label_create_order');
 $headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order&tx_multishop_pi1[customer_id]='.$user['uid']);
+$headingButton['sort']=55;
 $headerButtons[]=$headingButton;
 
 $headingButton=array();
@@ -1323,6 +1325,7 @@ $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+$headingButton['sort']=60;
 $headerButtons[]=$headingButton;
 
 $headingButton=array();
@@ -1331,6 +1334,7 @@ $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
+$headingButton['sort']=65;
 $headerButtons[]=$headingButton;
 
 // Set header buttons through interface class so other plugins can adjust it
