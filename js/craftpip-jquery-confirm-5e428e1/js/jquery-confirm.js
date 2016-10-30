@@ -17,20 +17,20 @@ var jconfirm, Jconfirm;
     "use strict";
     $.confirm = function (options) {
         /*
-         *  Alias of jconfirm 
+         *  Alias of jconfirm
          */
         return jconfirm(options);
     };
     $.alert = function (options) {
         /*
-         *  Alias of jconfirm 
+         *  Alias of jconfirm
          */
         options.cancelButton = false;
         return jconfirm(options);
     };
     $.dialog = function (options) {
         /*
-         *  Alias of jconfirm 
+         *  Alias of jconfirm
          */
         options.cancelButton = false;
         options.confirmButton = false;
@@ -107,17 +107,16 @@ var jconfirm, Jconfirm;
              * Settings up buttons
              */
             this.$btnc = this.$el.find('.buttons');
-            if (this.confirmButton && this.confirmButton.trim() !== '') {
-                this.$confirmButton = $('<button class="btn">' + this.confirmButton + '</button>')
-                        .appendTo(this.$btnc)
-                        .addClass(this.confirmButtonClass);
-            }
             if (this.cancelButton && this.cancelButton.trim() !== '') {
                 this.$cancelButton = $('<button class="btn">' + this.cancelButton + '</button>')
                         .appendTo(this.$btnc)
                         .addClass(this.cancelButtonClass);
             }
-
+            if (this.confirmButton && this.confirmButton.trim() !== '') {
+                this.$confirmButton = $('<button class="btn">' + this.confirmButton + '</button>')
+                        .appendTo(this.$btnc)
+                        .addClass(this.confirmButtonClass);
+            }
             if (!this.confirmButton && !this.cancelButton) {
                 this.$btnc.remove();
             }
@@ -221,7 +220,7 @@ var jconfirm, Jconfirm;
         },
         _bindEvents: function () {
             var that = this;
-            
+
             this.$el.find('.jconfirm-scrollpane').click(function (e) {
                 if (that.backgroundDismiss) {
                     that.cancel();
@@ -233,11 +232,11 @@ var jconfirm, Jconfirm;
                     }, 400);
                 }
             });
-            
+
             this.$el.find('.jconfirm-box').click(function (e) {
                 e.stopPropagation();
             });
-            
+
             if (this.$confirmButton) {
                 this.$confirmButton.click(function (e) {
                     e.preventDefault();
@@ -275,9 +274,9 @@ var jconfirm, Jconfirm;
 
         },
         reactOnKey: function key(e) {
-            
+
             /*
-             * prevent keyup event if the dialog is not last! 
+             * prevent keyup event if the dialog is not last!
              */
             var a = $('.jconfirm');
             if (a.eq(a.length - 1)[0] !== this.$el[0])
