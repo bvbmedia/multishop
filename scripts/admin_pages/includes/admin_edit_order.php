@@ -1805,7 +1805,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentConditions">';
 					$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_condition').'</label>';
 					if (!$orders['is_locked']) {
-						$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" value="'.htmlspecialchars($orders['payment_condition']).'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
+						$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="'.htmlspecialchars($orders['payment_condition']).'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
 					} else {
 						$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.htmlspecialchars($orders['payment_condition'].' '.$this->pi_getLL('days')).'</p></div>';
 					}
