@@ -2539,6 +2539,17 @@ $records[]=array(
     'depend_on_configuration_key'=>'',
     'use_function'=>''
 );
+$records[]=array(
+        'configuration_title'=>'Default payment method code',
+        'configuration_key'=>'DEFAULT_PAYMENT_METHOD_CODE',
+        'configuration_value'=>'',
+        'description'=>'Defined in admin edit customer and admin edit order.',
+        'group_id'=>'11',
+        'use_function'=>'',
+        'set_function'=>'',
+        'depend_on_configuration_key'=>'',
+        'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
