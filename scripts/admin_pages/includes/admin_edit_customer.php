@@ -438,6 +438,15 @@ $regex_for_character="/[^0-9]$/";
 if (!$this->post && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
 	$user=mslib_fe::getUser($this->get['tx_multishop_pi1']['cid']);
 	$this->post=$user;
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerPreloadData'])) {
+        $params=array(
+            'user'=>$user
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerPreloadData'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 }
 $head='';
 $head.='
