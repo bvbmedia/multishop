@@ -4197,7 +4197,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4208,7 +4208,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4219,7 +4219,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4230,7 +4230,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -10125,6 +10125,13 @@ class mslib_fe {
 			return true;
 		}
 	}
+	public function checkoutValidateProductStatus($product_id) {
+        $product=mslib_fe::getProduct($product_id, '', '', 0, 1);
+        if (!$product || !$product['products_status']) {
+            return false;
+        }
+        return true;
+    }
 	public function updateCart() {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
