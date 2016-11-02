@@ -105,6 +105,7 @@ $array['order_status_last_modified']=$this->pi_getLL('feed_exporter_fields_label
 $array['order_orders_last_modified']=$this->pi_getLL('feed_exporter_fields_label_order_orders_last_modified');
 $array['order_expected_delivery_date']=$this->pi_getLL('feed_exporter_fields_label_order_expected_delivery_date');
 $array['order_by_phone']=$this->pi_getLL('feed_exporter_fields_label_order_by_phone');
+$array['turnover_per_category']=$this->pi_getLL('feed_exporter_fields_label_turnover_per_category');
 
 
 /*

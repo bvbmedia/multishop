@@ -1370,6 +1370,8 @@
             <label index="impressum">impressum</label>
             <label index="these_following_products_no_longer_available">These following products no longer available</label>
             <label index="please_goto_shoppingcart_to_remove_the_products">Please goto %s to remove the products</label>
+            <label index="feed_exporter_fields_label_turnover_per_category">Turnover per category</label>
+            <label index="turnover_per_category">Turnover per category %s</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

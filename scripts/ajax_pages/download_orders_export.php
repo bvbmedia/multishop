@@ -105,20 +105,35 @@ if ($this->get['orders_export_hash']) {
 		$excelRows=array();
 		$excelHeaderCols=array();
 		foreach ($fields as $counter=>$field) {
-			if ($field!='order_products') {
+			if ($field!='order_products' && $field!='turnover_per_category') {
 				$excelHeaderCols[$field]=$field;
 			} else {
-				$max_cols_num=($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
-				for ($i=0; $i<$max_cols_num; $i++) {
-					$excelHeaderCols['product_id'.$i]='product_id'.$i;
-					$excelHeaderCols['product_name'.$i]='product_name'.$i;
-					$excelHeaderCols['product_qty'.$i]='product_qty'.$i;
-					$excelHeaderCols['product_final_price_excl_tax'.$i]='product_final_price_excl_tax'.$i;
-					$excelHeaderCols['product_final_price_incl_tax'.$i]='product_final_price_incl_tax'.$i;
-					$excelHeaderCols['product_price_total_excl_tax'.$i]='product_final_price_total_excl_tax'.$i;
-					$excelHeaderCols['product_price_total_incl_tax'.$i]='product_final_price_total_incl_tax'.$i;
-					$excelHeaderCols['product_tax_rate'.$i]='product_tax_rate'.$i;
-				}
+                if ($field=='order_products') {
+                    $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
+                    for ($i = 0; $i < $max_cols_num; $i++) {
+                        $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
+                        $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
+                        $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
+                        $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
+                        $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
+                        $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
+                        $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
+                        $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
+                    }
+                } else if ($field=='turnover_per_category') {
+                    $categories_data=array();
+                    foreach ($records as $record) {
+                        $order_tmp=mslib_fe::getOrder($record['orders_id']);
+                        foreach ($order_tmp['products'] as $product) {
+                            $categories_data[]=$product['categories_id'];
+                        }
+                    }
+                    if (is_array($categories_data) && count($categories_data)) {
+                        foreach ($categories_data as $category_id) {
+                            $excelHeaderCols['categories_id_' . $category_id] = sprintf($this->pi_getLL('turnover_per_category'), mslib_fe::getCategoryName($category_id));
+                        }
+                    }
+                }
 			}
 		}
 		if ($this->get['format']=='excel') {
@@ -294,6 +309,26 @@ if ($this->get['orders_export_hash']) {
 					case 'order_by_phone':
 						$excelCols[]=($row['by_phone']>0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));
 						break;
+                    case 'turnover_per_category':
+                        $order_products=$order_tmp['products'];
+                        $categories_data_amount=array();
+                        if (is_array($categories_data) && count($categories_data)>0) {
+                            foreach ($order_products as $product_tmp) {
+                                foreach ($categories_data as $categories_id) {
+                                    if ($categories_id==$product_tmp['categories_id']) {
+                                        $categories_data_amount['category_counter_' . $product_tmp['products_id'] . '_' . $product_tmp['categories_id']] += number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                    } else {
+                                        $categories_data_amount['category_counter_' . $product_tmp['products_id'] . '_' . $product_tmp['categories_id']] += 0;
+                                    }
+                                }
+                            }
+                        }
+                        if (is_array($categories_data_amount) && count($categories_data_amount)>0) {
+                            foreach ($categories_data_amount as $categories_total) {
+                                $excelCols[] = $categories_total;
+                            }
+                        }
+                        break;
 				}
 			}
 			// new rows
