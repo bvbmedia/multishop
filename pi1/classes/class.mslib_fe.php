@@ -4197,7 +4197,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4208,7 +4208,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4219,7 +4219,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4230,7 +4230,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';

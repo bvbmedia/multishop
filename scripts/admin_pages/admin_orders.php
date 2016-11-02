@@ -435,7 +435,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					} else {
 						$cms_type='payment_reminder_email_templates_'.$tmpArray['payment_method'];
 						$page=mslib_fe::getCMScontent($cms_type, $GLOBALS['TSFE']->sys_language_uid);
-						if (!count($page[0])) {
+						if (!isset($page[0])) {
 							$page=mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
 						}
 					}
