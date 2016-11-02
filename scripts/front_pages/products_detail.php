@@ -136,6 +136,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get(
 	}
 	$content.=$output_array['content'];
 }
+$output_array=array();
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostJSHook'])) {
+	$params=array('output_array'=>&$output_array);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostJSHook'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 if (is_array($output_array['meta']) && count($output_array['meta'])) {
 	$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
 }
