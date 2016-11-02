@@ -10125,6 +10125,13 @@ class mslib_fe {
 			return true;
 		}
 	}
+	public function checkoutValidateProductStatus($product_id) {
+        $product=mslib_fe::getProduct($product_id, '', '', 0, 1);
+        if (!$product || !$product['products_status']) {
+            return false;
+        }
+        return true;
+    }
 	public function updateCart() {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
