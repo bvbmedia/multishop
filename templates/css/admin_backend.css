@@ -722,4 +722,4 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 
 ul.normal-listing,
 ul.normal-listing ul { margin:0; padding:0; list-style:none; }
-ul.normal-listing li { background-image:url(../images/bullet_gray.png); background-position:left 6px; background-position:no-repeat; margin-left:5px; padding-left:14px; }
+ul.normal-listing li { background-image:url(../images/bullet_gray.png); background-position:left 6px; background-repeat:no-repeat; margin-left:5px; padding-left:14px; }
