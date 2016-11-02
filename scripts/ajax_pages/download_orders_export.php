@@ -125,12 +125,20 @@ if ($this->get['orders_export_hash']) {
                     foreach ($records as $record) {
                         $order_tmp=mslib_fe::getOrder($record['orders_id']);
                         foreach ($order_tmp['products'] as $product) {
-                            $categories_data[]=$product['categories_id'];
+                            if ($product['categories_id']>0) {
+                                $categories_data[] = $product['categories_id'];
+                            } else {
+                                $categories_data[] = $this->pi_getLL('unknown');
+                            }
                         }
                     }
                     if (is_array($categories_data) && count($categories_data)) {
                         foreach ($categories_data as $category_id) {
-                            $excelHeaderCols['categories_id_' . $category_id] = sprintf($this->pi_getLL('turnover_per_category'), mslib_fe::getCategoryName($category_id));
+                            $category_name=mslib_fe::getCategoryName($category_id);
+                            if (!$category_name) {
+                                $category_name=$this->pi_getLL('unknown');
+                            }
+                            $excelHeaderCols['categories_id_' . $category_id] = sprintf($this->pi_getLL('turnover_per_category'), $category_name);
                         }
                     }
                 }
@@ -316,7 +324,7 @@ if ($this->get['orders_export_hash']) {
                             foreach ($order_products as $product_tmp) {
                                 foreach ($categories_data as $categories_id) {
                                     if ($categories_id==$product_tmp['categories_id']) {
-                                        $categories_data_amount['category_counter_' . $product_tmp['products_id'] . '_' . $product_tmp['categories_id']] += number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                        $categories_data_amount['category_counter_' . $product_tmp['products_id'] . '_' . $product_tmp['categories_id']] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
                                     } else {
                                         $categories_data_amount['category_counter_' . $product_tmp['products_id'] . '_' . $product_tmp['categories_id']] += 0;
                                     }
@@ -325,7 +333,7 @@ if ($this->get['orders_export_hash']) {
                         }
                         if (is_array($categories_data_amount) && count($categories_data_amount)>0) {
                             foreach ($categories_data_amount as $categories_total) {
-                                $excelCols[] = $categories_total;
+                                $excelCols[] = number_format($categories_total, 2, ',', '.');
                             }
                         }
                         break;
