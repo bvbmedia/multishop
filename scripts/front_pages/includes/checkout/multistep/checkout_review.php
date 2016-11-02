@@ -41,11 +41,11 @@ if (count($cart['products'])<1) {
                 }
                 if (count($no_products)) {
                     $erno[] = '<div>' . $this->pi_getLL('these_following_products_no_longer_available') . ':
-                    <ul class="removed_products_list">
-                        '.implode("\n", $no_products).'                
-                    </ul>
-                    <span>'.sprintf($this->pi_getLL('please_goto_shoppingcart_to_remove_the_products'), '<a href="'.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart').'">'.$this->pi_getLL('admin_label_shoppingcart').'</a>').'</span>
-                </div>';
+                        <ul class="removed_products_list">
+                            '.implode("\n", $no_products).'                
+                        </ul>
+                        <span>'.sprintf($this->pi_getLL('please_goto_shoppingcart_to_remove_the_products'), '<a href="'.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart').'">'.$this->pi_getLL('admin_label_shoppingcart').'</a>').'</span>
+                    </div>';
                 }
             }
 			if (is_array($erno) and count($erno)>0) {
