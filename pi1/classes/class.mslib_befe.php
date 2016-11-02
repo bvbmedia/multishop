@@ -1316,6 +1316,9 @@ class mslib_befe {
                 }
             }
         }
+        if (is_array($select)) {
+            $select=implode(', ',$select);
+        }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
                 $queryArray['from'], // FROM ...
                 ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
