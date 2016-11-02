@@ -719,3 +719,7 @@ ul.custom_products_description { margin:0; padding:0; list-style:none; }
 #budget_categories_form #msAdmin_category_listing_ul.treeview li.sub_categories_sorting.category .form-group { margin-bottom:2px; }
 
 #msAdmin_category_listing_ul.treeview li > .form-group { margin-left:0; margin-right:0; }
+
+ul.normal-listing,
+ul.normal-listing ul { margin:0; padding:0; list-style:none; }
+ul.normal-listing li { background-image:url(../images/bullet_gray.png); background-position:left 6px; background-position:no-repeat; margin-left:5px; padding-left:14px; }
