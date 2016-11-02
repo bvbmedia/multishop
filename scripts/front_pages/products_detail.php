@@ -136,7 +136,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get(
 	}
 	$content.=$output_array['content'];
 }
-$output_array=array();
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostJSHook'])) {
 	$params=array('output_array'=>&$output_array);
