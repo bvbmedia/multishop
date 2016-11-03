@@ -237,7 +237,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     }
                 }
             }
-            $queryData['where'][] = "(" . implode(" OR ", $keywordOr) . ")";
+            if (is_array($keywordOr) && count($keywordOr)) {
+                $queryData['where'][] = "(" . implode(" OR ", $keywordOr) . ")";
+            }
         }
         if ($params['query']['where']) {
             if (is_array($params['query']['where'])) {
