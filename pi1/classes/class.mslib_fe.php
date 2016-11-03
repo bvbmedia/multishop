@@ -10126,7 +10126,7 @@ class mslib_fe {
 		}
 	}
 	public function checkoutValidateProductStatus($product_id) {
-        $product=mslib_fe::getProduct($product_id, '', '', 0, 1);
+        $product=mslib_fe::getProduct($product_id, '', '', 1, 1);
         if (!$product || !$product['products_status']) {
             return false;
         }
