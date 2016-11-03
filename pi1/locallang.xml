@@ -1373,6 +1373,7 @@
             <label index="feed_exporter_fields_label_turnover_per_category">Turnover per category</label>
             <label index="turnover_per_category">Turnover per category %s</label>
             <label index="unknown">unknown</label>
+            <label index="shopping_cart">shopping cart</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2744,6 +2745,7 @@
             <label index="feed_exporter_fields_label_turnover_per_category">Omzet per categorie</label>
             <label index="turnover_per_category">Omzet per categorie %s</label>
             <label index="unknown">onbekend</label>
+            <label index="shopping_cart">winkelwagen</label>
         </languageKey>
     </data>
 </T3locallang>
