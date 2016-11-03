@@ -1370,10 +1370,12 @@
             <label index="impressum">impressum</label>
             <label index="the_following_products_are_no_longer_available">The following products are no longer available</label>
             <label index="please_goto_shoppingcart_to_remove_the_products">Please goto %s to remove the products</label>
-            <label index="feed_exporter_fields_label_turnover_per_category">Turnover per category</label>
-            <label index="turnover_per_category">Turnover per category %s</label>
             <label index="unknown">unknown</label>
             <label index="shopping_cart">shopping cart</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_incl_vat">Turnover per category (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_excl_vat">Turnover per category (excl. VAT)</label>
+            <label index="turnover_per_category_incl_vat">Turnover per category %s (incl. VAT)</label>
+            <label index="turnover_per_category_excl_vat">Turnover per category %s (excl. VAT)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
