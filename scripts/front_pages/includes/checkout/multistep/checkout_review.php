@@ -40,7 +40,7 @@ if (count($cart['products'])<1) {
                     }
                 }
                 if (count($no_products)) {
-                    $erno[] = '<div>' . $this->pi_getLL('these_following_products_no_longer_available') . ':
+                    $erno[] = '<div>' . $this->pi_getLL('the_following_products_are_no_longer_available') . ':
                         <ul class="removed_products_list">
                             '.implode("\n", $no_products).'                
                         </ul>

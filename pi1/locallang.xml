@@ -1368,7 +1368,7 @@
             <label index="notes_on_the_conclusion_of_the_contract">Notes on the conclusion of the contract</label>
             <label index="right_of_withdrawal_form">Withdrawal form</label>
             <label index="impressum">impressum</label>
-            <label index="these_following_products_no_longer_available">These following products no longer available</label>
+            <label index="the_following_products_are_no_longer_available">The following products are no longer available</label>
             <label index="please_goto_shoppingcart_to_remove_the_products">Please goto %s to remove the products</label>
             <label index="feed_exporter_fields_label_turnover_per_category">Turnover per category</label>
             <label index="turnover_per_category">Turnover per category %s</label>
@@ -2736,6 +2736,14 @@
             <label index="full_month_12">december</label>
             <label index="right_of_revocation">Herroepingsrecht</label>
             <label index="submit_form">Verwerken</label>
+            <label index="notes_on_the_conclusion_of_the_contract">Notes on the conclusion of the contract</label>
+            <label index="right_of_withdrawal_form">Recht op herroeping</label>
+            <label index="impressum">impressum</label>
+            <label index="the_following_products_are_no_longer_available">Onderstaande producten zijn helaas niet meer beschikbaar</label>
+            <label index="please_goto_shoppingcart_to_remove_the_products">Om het afrekenproces te kunnen voltooien, dienen deze producten uit de %s te worden verwijderd</label>
+            <label index="feed_exporter_fields_label_turnover_per_category">Omzet per categorie</label>
+            <label index="turnover_per_category">Omzet per categorie %s</label>
+            <label index="unknown">onbekend</label>
         </languageKey>
     </data>
 </T3locallang>
