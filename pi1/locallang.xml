@@ -2744,10 +2744,12 @@
             <label index="impressum">impressum</label>
             <label index="the_following_products_are_no_longer_available">Onderstaande producten zijn helaas niet meer beschikbaar</label>
             <label index="please_goto_shoppingcart_to_remove_the_products">Om het afrekenproces te kunnen voltooien, dienen deze producten uit de %s te worden verwijderd</label>
-            <label index="feed_exporter_fields_label_turnover_per_category">Omzet per categorie</label>
-            <label index="turnover_per_category">Omzet per categorie %s</label>
             <label index="unknown">onbekend</label>
             <label index="shopping_cart">winkelwagen</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_incl_vat">Omzet per categorie (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_excl_vat">Omzet per categorie (excl. VAT)</label>
+            <label index="turnover_per_category_incl_vat">Omzet per categorie %s (incl. VAT)</label>
+            <label index="turnover_per_category_excl_vat">Omzet per categorie %s (excl. VAT)</label>
         </languageKey>
     </data>
 </T3locallang>
