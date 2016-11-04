@@ -404,6 +404,9 @@ if ($this->ms['MODULES']['CART_PAGE_UID']) {
 }
 $this->cart_page_uid='tx_multishop_cart'.$key;
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
+    $guest_cart_page_uid=$this->cart_page_uid;
+    $this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
+    //die('top_always');
 	// store the customer uid in cookies for later use
 	if (!isset($this->cookie['customer_id'])) {
 		$this->cookie['customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];
@@ -416,9 +419,9 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 	$mslib_cart->init($this);
 	$cart=$mslib_cart->getCart();
-	if (!is_array($cart['products'])) {
+    if (is_array($cart['products']) && !count($cart['products'])) {
 		// maybe guest cart has products that we must migrate
-		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $guest_cart_page_uid);
 		//
 		if (is_array($cart2['products']) && count($cart2['products'])) {
 			$cart['products']=$cart2['products'];
@@ -454,7 +457,7 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 			$mslib_cart->storeCart($cart);
 		}
 	}
-	$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
+    //$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
 }
 if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) {
 	// one time load for the attribute option names. When we have to add or update products to the flat table we already know the attribute option column names, so this way it requires less running queries
