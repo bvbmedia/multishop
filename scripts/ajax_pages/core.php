@@ -2027,7 +2027,7 @@ switch ($this->ms['page']) {
 				$erno=array();
 				if ($details_type=='billing_details') {
 					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
-						// validate essenstial info
+						// validate essential info
 						if (!$this->post['tx_multishop_pi1']['billing_email']) {
 							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
 						}
@@ -2072,7 +2072,7 @@ switch ($this->ms['page']) {
 					}
 				} else if ($details_type=='delivery_details') {
 					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
-						// validate essenstial info
+						// validate essential info
 						if (!$this->post['tx_multishop_pi1']['delivery_email']) {
 							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
 						}
