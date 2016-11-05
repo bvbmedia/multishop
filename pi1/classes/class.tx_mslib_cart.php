@@ -639,6 +639,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									case 'hidden_field':
 									case 'textarea':
 									case 'input':
+									case 'date':
+									case 'datetime':
+									case 'dateofbirth':
+									case 'datecustom':
 										$cart['products'][$shopping_cart_item]['attributes'][$key]=$row;
 										$cart['products'][$shopping_cart_item]['attributes'][$key]['options_id']=$key;
 										$cart['products'][$shopping_cart_item]['attributes'][$key]['products_options_values_name']=$value;

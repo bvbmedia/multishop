@@ -143,6 +143,36 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
+$output_array['meta']['attributesJS']='<script type="text/javascript" data-ignore="1">
+jQuery(document).ready(function($){
+    if ($(".attributeDate").length>0) {
+        jQuery(".attributeDate").datepicker({
+            dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+        });
+    }
+    if ($(".attributeDateOfBirth").length>0) {
+        jQuery(".attributeDateOfBirth").datepicker({
+            dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "'.(date("Y")-110).':'.date("Y").'"
+        });
+    }
+    if ($(".attributeDateTime").length>0) {
+        jQuery(".attributeDateTime").datetimepicker({
+            dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+        });
+    }
+    '.(isset($output_array['attributeDateCustomJS']) && !empty($output_array['attributeDateCustomJS']) ? $output_array['attributeDateCustomJS'] : '').'
+});
+</script>';
 if (is_array($output_array['meta']) && count($output_array['meta'])) {
 	$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
 }

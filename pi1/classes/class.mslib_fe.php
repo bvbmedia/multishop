@@ -2558,6 +2558,26 @@ class mslib_fe {
 						</div>';
 							$load_default=0;
 							break;
+                        case 'date':
+                        case 'datetime':
+                            $output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+                            <label>'.$options['products_options_name'].':</label>
+                            <div class="attribute_item_wrapper">
+                            <input type="text" name="attributes['.$options['products_options_id'].']" class="'.($options['listtype']=='date' ? 'attributeDate' : 'attributeDateTime').'" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" '.($options['required'] ? 'required="required"' : '').' />
+                            </div>
+                            </div>';
+                            $load_default=0;
+                            break;
+                        case 'dateofbirth':
+                        case 'datecustom':
+                            $output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+                            <label>'.$options['products_options_name'].':</label>
+                            <div class="attribute_item_wrapper">
+                            <input type="text" name="attributes['.$options['products_options_id'].']" class="'.($options['listtype']=='dateofbirth' ? 'attributeDateOfBirth' : 'attributeDateCustom').'" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" '.($options['required'] ? 'required="required"' : '').' />
+                            </div>
+                            </div>';
+                            $load_default=0;
+                            break;
 						case 'input':
 							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
