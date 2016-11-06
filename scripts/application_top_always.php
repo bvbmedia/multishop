@@ -432,7 +432,7 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 			$mslib_cart->storeCart($cart);
 		}
 	}
-    if (!$cart['coupon_code']) {
+    if (!isset($cart['coupon_code']) || empty($cart['coupon_code'])) {
         if (isset($guest_cart['coupon_code']) && !empty($guest_cart['coupon_code'])) {
             $cart['coupon_code'] = $guest_cart['coupon_code'];
             $cart['discount'] = $guest_cart['discount'];
