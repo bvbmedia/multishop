@@ -2026,33 +2026,35 @@ switch ($this->ms['page']) {
 				$name='';
 				$erno=array();
 				if ($details_type=='billing_details') {
-					// validate essenstial info
-					if (!$this->post['tx_multishop_pi1']['billing_email']) {
-						$erno[]='<li>'.$this->pi_getLL('no_email_address_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_street_name']) {
-						$erno[]='<li>'.'No street name has been specified'.'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_address_number']) {
-						$erno[]='<li>'.$this->pi_getLL('no_address_number_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_first_name']) {
-						$erno[]='<li>'.$this->pi_getLL('no_first_name_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_last_name']) {
-						$erno[]='<li>'.$this->pi_getLL('no_last_name_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_zip']) {
-						$erno[]='<li>'.$this->pi_getLL('no_zip_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_city']) {
-						$erno[]='<li>'.$this->pi_getLL('no_city_has_been_specified').'</li>';
-					}
-					if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['billing_company']) {
-						$erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['billing_country']) {
-						$erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
+					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+						// validate essential info
+						if (!$this->post['tx_multishop_pi1']['billing_email']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_street_name']) {
+							$erno[] = '<li>' . 'No street name has been specified' . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_address_number']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_first_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_last_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_zip']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_city']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+						}
+						if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['billing_company']) {
+							$erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_country']) {
+							$erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+						}
 					}
 					// build name
 					if (isset($this->post['tx_multishop_pi1']['billing_first_name'])) {
@@ -2069,33 +2071,35 @@ switch ($this->ms['page']) {
 						$this->post['tx_multishop_pi1']['billing_name'] = $name;
 					}
 				} else if ($details_type=='delivery_details') {
-					// validate essenstial info
-					if (!$this->post['tx_multishop_pi1']['delivery_email']) {
-						$erno[]='<li>'.$this->pi_getLL('no_email_address_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_street_name']) {
-						$erno[]='<li>'.'No street name has been specified'.'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_address_number']) {
-						$erno[]='<li>'.$this->pi_getLL('no_address_number_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_first_name']) {
-						$erno[]='<li>'.$this->pi_getLL('no_first_name_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_last_name']) {
-						$erno[]='<li>'.$this->pi_getLL('no_last_name_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_zip']) {
-						$erno[]='<li>'.$this->pi_getLL('no_zip_has_been_specified').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_city']) {
-						$erno[]='<li>'.$this->pi_getLL('no_city_has_been_specified').'</li>';
-					}
-					if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['delivery_company']) {
-						$erno[]='<li>'.$this->pi_getLL('company_is_required').'</li>';
-					}
-					if (!$this->post['tx_multishop_pi1']['delivery_country']) {
-						$erno[]='<li>'.$this->pi_getLL('country_is_required').'</li>';
+					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+						// validate essential info
+						if (!$this->post['tx_multishop_pi1']['delivery_email']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_street_name']) {
+							$erno[] = '<li>' . 'No street name has been specified' . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_address_number']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_first_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_last_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_zip']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_city']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+						}
+						if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['delivery_company']) {
+							$erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_country']) {
+							$erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+						}
 					}
 					// build delivery name
 					if (isset($this->post['tx_multishop_pi1']['delivery_first_name'])) {
@@ -2143,7 +2147,7 @@ switch ($this->ms['page']) {
 					}
 					// hook oef
 				}
-				if (!$erno) {
+				if (!count($erno)) {
 					switch ($details_type) {
 						case "delivery_details":
 							foreach ($keys as $key) {

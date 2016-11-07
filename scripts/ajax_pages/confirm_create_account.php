@@ -22,6 +22,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	$info=$GLOBALS['TSFE']->fe_user->getAuthInfoArray();
 	$user=$GLOBALS['TSFE']->fe_user->fetchUserRecord($info['db_user'], $loginData['uname']);
 	$GLOBALS['TSFE']->fe_user->createUserSession($user);
+    $this->cart_page_uid.='_'.$user['uid'];
 	// auto login the user
 	// RELOAD CART CONTENTS
 	$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
@@ -35,7 +36,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 	if (is_array($row) && $row['contents']) {
 		$cart=unserialize($row['contents']);
-		//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+        //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 		//$GLOBALS['TSFE']->storeSessionData();
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
@@ -74,7 +75,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	}
 	exit();
 } elseif ($user['uid'] and $user['tx_multishop_optin_crdate']) {
-	// user is already confirmed	
+	// user is already confirmed
 	// redirect to specific page
 	$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
 	//hook to let other plugins further manipulate the redirect link
