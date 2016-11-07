@@ -802,7 +802,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (!strstr(mslib_befe::strtolower($product_db['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_db['products_image']), 'https://')) {
 					$product_db['products_image']=mslib_befe::getImagePath($product_db['products_image'], 'products', '50');
 				}
-				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+				if (!file_exists($product_db['products_image'])) {
+                    $item['ITEM_IMAGE']='<div class="no_image_50"></div>';
+                } else {
+                    $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+                }
 			}
 			// ITEM_NAME
 			$tmp_item_name=array();
