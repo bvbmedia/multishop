@@ -66,7 +66,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
 		$markerArray['###DELIVERY_NAME###']=$order['delivery_name'];
         $markerArray['###DELIVERY_BUILDING###']=$order['delivery_building'];
-        if (strpos($template, '###DELIVERY_BUILDING###')===false){
+		if (strpos($template, '###DELIVERY_BUILDING###')===false && $order['delivery_building'] !='') {
             $order['delivery_address']=$order['delivery_building'].'<br/>'.$order['delivery_address'];
         }
         $markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
