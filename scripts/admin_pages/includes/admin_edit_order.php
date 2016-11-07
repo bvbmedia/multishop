@@ -3484,7 +3484,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         }
                                     }
                                 }
-                                if (!d.use_tax_id) {
+                                /*if (!d.use_tax_id) {
                                 	d.price_include_vat=0;
                                 	if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
@@ -3495,7 +3495,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         	$("#manual_product_tax").val("");
                                         }
                                     }
-                                }
+                                }*/
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
                                         $("#display_name_including_vat").val(d.display_price_include_vat);

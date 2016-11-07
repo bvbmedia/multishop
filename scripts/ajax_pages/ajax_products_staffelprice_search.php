@@ -78,7 +78,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			// if at this point $default_tax_id still 0 it mean there are mis-settings in tax interface (multishop backend)
 			if ($tax_id_data[$default_tax_id]['tax_id']>0) {
 				if ($tax_id_data[$default_tax_id]['rate']<0.1) {
-					$staffel_price['use_tax_id']=false;
+					//$staffel_price['use_tax_id']=false;
 				}
 				$product['tax_id']=$tax_id_data[$default_tax_id]['tax_id'];
 			}
