@@ -87,8 +87,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	//
 	$staffel_price['tax_id']=$product['tax_id'];
 	if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-		$staffel_price['use_tax_id']=false;
-		$staffel_price['tax_id']='';
+		//$staffel_price['use_tax_id']=false;
+		//$staffel_price['tax_id']='';
 		$staffel_price['price_include_vat']=$staffel_price['price'];
 		$staffel_price['display_price']=number_format($staffel_price['price'], 2, '.', '');
 		$staffel_price['display_price_include_vat']=number_format($staffel_price['price'], 2, '.', '');
