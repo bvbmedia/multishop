@@ -45,6 +45,7 @@ if ($this->post) {
 			$user['gender']='2';
 			break;
 	}
+    $user['building']=$this->post['building'];
 	$user['street_name']=$this->post['street_name'];
 	$user['address_number']=$this->post['address_number'];
 	$user['address_ext']=$this->post['address_ext'];
@@ -101,6 +102,7 @@ if ($this->post) {
 				$user['delivery_gender']='c';
 				break;
 		}
+        $user['delivery_building']=$this->post['building'];
 		$user['delivery_street_name']=$this->post['street_name'];
 		$user['delivery_address_number']=$this->post['address_number'];
 		$user['delivery_address_ext']=$this->post['address_ext'];
@@ -138,6 +140,7 @@ if ($this->post) {
 				$user['delivery_gender']='c';
 				break;
 		}
+        $user['delivery_building']=$this->post['delivery_building'];
 		$user['delivery_street_name']=$this->post['delivery_street_name'];
 		$user['delivery_address_number']=$this->post['delivery_address_number'];
 		$user['delivery_address_ext']=$this->post['delivery_address_ext'];
@@ -165,7 +168,8 @@ if ($this->post) {
 		$insertArray['middle_name']=$address['middle_name'];
 		$insertArray['last_name']=$address['last_name'];
 		$insertArray['email']=$address['email'];
-		$insertArray['street_name']=$address['street_name'];
+        $insertArray['building']=$address['building'];
+        $insertArray['street_name']=$address['street_name'];
 		$insertArray['address_number']=$address['address_number'];
 		$insertArray['address_ext']=$address['address_ext'];
 		$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['street_name'].' '.$insertArray['address_number'].' '.$insertArray['address_ext']);
@@ -265,7 +269,8 @@ if ($this->post) {
 		$insertTTArray['zip']=$address['zip'];
 		$insertTTArray['city']=$address['city'];
 		$insertTTArray['country']=$address['country'];
-		$insertTTArray['street_name']=$address['street_name'];
+        $insertTTArray['building']=$address['building'];
+        $insertTTArray['street_name']=$address['street_name'];
 		$insertTTArray['address']=$address['address'];
 		$insertTTArray['address_number']=$address['address_number'];
 		$insertTTArray['address_ext']=$address['address_ext'];
@@ -319,11 +324,12 @@ if ($this->post) {
 		$insertTTArray['zip']=$address['delivery_zip'];
 		$insertTTArray['city']=$address['delivery_city'];
 		$insertTTArray['country']=$address['delivery_country'];
+        $insertTTArray['building']=$address['delivery_building'];
 		$insertTTArray['street_name']=$address['delivery_street_name'];
 		$insertTTArray['address']=$address['delivery_address'];
 		$insertTTArray['address_number']=$address['delivery_address_number'];
 		$insertTTArray['address_ext']=$address['delivery_address_ext'];
-		$sql_tt_address="select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0";
+		$sql_tt_address="select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
 		$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 		$rows_tt_address=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
 		if ($rows_tt_address) {
@@ -368,7 +374,8 @@ if ($this->post) {
 			$user['delivery_telephone']=$row_tt_address['phone'];
 			$user['delivery_mobile']=$row_tt_address['mobile'];
 			$user['delivery_gender']=$row_tt_address['gender'];
-			$user['delivery_street_name']=$row_tt_address['street_name'];
+            $user['delivery_building']=$row_tt_address['building'];
+            $user['delivery_street_name']=$row_tt_address['street_name'];
 			$user['delivery_address']=$row_tt_address['address'];
 			$user['delivery_address_number']=$row_tt_address['address_number'];
 			$user['delivery_address_ext']=$row_tt_address['address_ext'];
@@ -386,7 +393,8 @@ if ($this->post) {
 			$user['delivery_telephone']=$user['telephone'];
 			$user['delivery_mobile']=$user['mobile'];
 			$user['delivery_gender']=$user['gender'];
-			$user['delivery_street_name']=$user['street_name'];
+            $user['delivery_building']=$user['building'];
+            $user['delivery_street_name']=$user['street_name'];
 			$user['delivery_address']=$user['address'];
 			$user['delivery_address_number']=$user['address_number'];
 			$user['delivery_address_ext']=$user['address_ext'];
@@ -530,7 +538,7 @@ if ($this->post) {
 			$tmpcontent_con_delivery.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($user['delivery_country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 		}
 		if ($tmpcontent_con) {
-			$country_block='<div id="input-country" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '8').'">
+			$country_block='<div id="input-country" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '12').'">
 				<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 				<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 				<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
@@ -538,7 +546,7 @@ if ($this->post) {
 				</select>
 				<div id="invalid-country" class="error-space" style="display:none"></div>
 			</div>';
-			$delivery_country_block='<div id="input-dcountry" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '8').'">
+			$delivery_country_block='<div id="input-dcountry" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '12').'">
 				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 				<select name="delivery_country" id="delivery_country" class="delivery_country" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 				<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
@@ -554,7 +562,11 @@ if ($this->post) {
 	$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_ZIP###']=htmlspecialchars($user['zip']);
 	$markerArray['###LABEL_ERROR_ZIP_IS_REQUIRED###']=$this->pi_getLL('zip_is_required');
-	$markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>';
+    $markerArray['###LABEL_BUILDING###']=ucfirst($this->pi_getLL('building'));
+    $markerArray['###VALUE_BUILDING###']=htmlspecialchars($user['building']);
+    $markerArray['###LABEL_DELIVERY_BUILDING###']=ucfirst($this->pi_getLL('building'));
+    $markerArray['###VALUE_DELIVERY_BUILDING###']=htmlspecialchars($user['delivery_building']);
+    $markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_ADDRESS###']=htmlspecialchars($user['street_name']);
 	$markerArray['###LABEL_ERROR_ADDRESS_IS_REQUIRED###']=$this->pi_getLL('street_address_is_required');
 	$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span>';

@@ -282,20 +282,27 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					if ($delivery_full_customer_name) {
 						$delivery_address.=$delivery_full_customer_name."<br />";
 					}
+					if ($tmpArray['delivery_building']) {
+						$delivery_address.=$tmpArray['delivery_building']."<br />";
+					}
 					if ($tmpArray['delivery_address']) {
 						$delivery_address.=$tmpArray['delivery_address']."<br />";
 					}
 					if ($tmpArray['delivery_zip'] and $tmpArray['delivery_city']) {
 						$delivery_address.=$tmpArray['delivery_zip']." ".$tmpArray['delivery_city'];
 					}
-					if ($tmpArray['delivery_country']) {
-						$delivery_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['delivery_country']));
-					}
+                    if ($tmpArray['delivery_country'] && mslib_befe::strtolower($tmpArray['delivery_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+                        // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+                        $delivery_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['delivery_country']));
+                    }
 					if ($tmpArray['billing_company']) {
 						$billing_address=$tmpArray['billing_company']."<br />";
 					}
 					if ($full_customer_name) {
 						$billing_address.=$full_customer_name."<br />";
+					}
+					if ($tmpArray['billing_building']) {
+						$billing_address.=$tmpArray['billing_building']."<br />";
 					}
 					if ($tmpArray['billing_address']) {
 						$billing_address.=$tmpArray['billing_address']."<br />";
@@ -303,9 +310,10 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					if ($tmpArray['billing_zip'] and $tmpArray['billing_city']) {
 						$billing_address.=$tmpArray['billing_zip']." ".$tmpArray['billing_city'];
 					}
-					if ($tmpArray['billing_country']) {
-						$billing_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['billing_country']));
-					}
+                    if ($tmpArray['billing_country'] && mslib_befe::strtolower($tmpArray['billing_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+                        // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+                        $billing_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['billing_country']));
+                    }
 					if (empty($tmpArray['hash'])) {
 						$hashcode=md5($orders_id+time());
 						$updateArray=array();

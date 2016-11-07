@@ -25,7 +25,8 @@ if ($this->ADMIN_USER) {
 				}
 				$address_data=array();
 				$address_data=$order;
-				$address_data['address']=$order['billing_address'];
+                $address_data['building']=$order['billing_building'];
+                $address_data['address']=$order['billing_address'];
 				$address_data['zip']=$order['billing_zip'];
 				$address_data['city']=$order['billing_city'];
 				$address_data['country']=$order['billing_country'];
@@ -63,6 +64,7 @@ if ($this->ADMIN_USER) {
 				}
 				$address_data=array();
 				$address_data=$order;
+                $address_data['building']=$order['delivery_building'];
 				$address_data['address']=$order['delivery_address'];
 				$address_data['zip']=$order['delivery_zip'];
 				$address_data['city']=$order['delivery_city'];

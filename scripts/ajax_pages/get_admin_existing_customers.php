@@ -132,6 +132,10 @@ if ($this->ADMIN_USER) {
 			);
 		}
 	}
+	if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id']>0 && count($customers)===1) {
+	    $tmp_return_data=$return_data[0];
+        $return_data=$tmp_return_data;
+    }
 	echo json_encode($return_data, ENT_NOQUOTES);
 }
 exit();

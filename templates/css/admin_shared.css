@@ -232,5 +232,15 @@ td.cellAction { white-space:nowrap; }
 .from-date-field > label,
 .till-date-field > label { width:50px; }
 
+table.tablesorter thead tr .header { padding-right:20px; }
+table.tablesorter thead tr .header.noSort { background-image:none !important; padding-right:0; cursor:default; }
+
+.cellContentWithoutSpace { word-break:break-all; }
+th.cellContentWithoutSpace { word-break:normal; }
+
+@media (min-width:992px) {
+	.form-inline .form-control-static.form-control-inbetween.form-control-align-right-fixed { width:18%; text-align:right; }
+}
+
 /* #s2id_commission_customer_id.select2-container-active { width:600px !important; }
 .select2-results .select2-result-label { line-height:15px; } */

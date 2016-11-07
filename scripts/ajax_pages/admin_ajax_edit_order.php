@@ -263,9 +263,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 				$categories_id=$tmp_value[1];
 			}
 			if (!is_numeric($this->get['q'])) {
-				$where[]='pd.products_name like \'%'.addslashes($this->get['q']).'%\'';
+				$where[]='(pd.products_name like \'%'.addslashes($this->get['q']).'%\' or p.sku_code like \'%'.addslashes($this->get['q']).'%\')';
 			} else {
-				$where[]='(pd.products_name like \'%'.addslashes($this->get['q']).'%\' or p.products_id = \''.addslashes($this->get['q']).'\')';
+				$where[]='(pd.products_name like \'%'.addslashes($this->get['q']).'%\' or p.sku_code like \'%'.addslashes($this->get['q']).'%\' or p.products_id = \''.addslashes($this->get['q']).'\')';
 			}
 			$limit='';
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
@@ -298,7 +298,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 				if (!empty($row['products_name'])) {
-					if ($row['products_status']<1) {
+                    if ($row['products_status']<1) {
 						$row['products_name'].=' [disabled]';
 					}
 					if (isset($row['is_hidden'])) {

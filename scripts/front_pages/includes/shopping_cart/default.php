@@ -302,6 +302,8 @@ if ($count_product>0) {
 		$markerArray['PRODUCT_IMAGE']=$output['product_image'];
 		$markerArray['PRODUCT_LINK']=$output['product_link'];
 		$markerArray['PRODUCT_NAME']=$output['product_name'];
+		$markerArray['PRODUCT_SHORTDESCRIPTION']=$product['product_shortdescription_raw'];
+		$markerArray['PRODUCT_DESCRIPTION']=$product['product_description_raw'];
 		$markerArray['PRODUCT_ATTRIBUTES']=$output['product_attributes'];
 		$markerArray['PRODUCT_QTY']=$output['product_qty'];
 		$markerArray['PRODUCT_LINK_DELETE']=$output['product_link_delete'];

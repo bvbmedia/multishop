@@ -2024,7 +2024,39 @@ switch ($this->ms['page']) {
 				$orders_id=$this->get['orders_id'];
 				//
 				$name='';
+				$erno=array();
 				if ($details_type=='billing_details') {
+					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+						// validate essential info
+						if (!$this->post['tx_multishop_pi1']['billing_email']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_street_name']) {
+							$erno[] = '<li>' . 'No street name has been specified' . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_address_number']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_first_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_last_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_zip']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_city']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+						}
+						if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['billing_company']) {
+							$erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['billing_country']) {
+							$erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+						}
+					}
+					// build name
 					if (isset($this->post['tx_multishop_pi1']['billing_first_name'])) {
 						$name = $this->post['tx_multishop_pi1']['billing_first_name'];
 					}
@@ -2039,6 +2071,37 @@ switch ($this->ms['page']) {
 						$this->post['tx_multishop_pi1']['billing_name'] = $name;
 					}
 				} else if ($details_type=='delivery_details') {
+					if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+						// validate essential info
+						if (!$this->post['tx_multishop_pi1']['delivery_email']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_street_name']) {
+							$erno[] = '<li>' . 'No street name has been specified' . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_address_number']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_first_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_last_name']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_zip']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_city']) {
+							$erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+						}
+						if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['tx_multishop_pi1']['delivery_company']) {
+							$erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+						}
+						if (!$this->post['tx_multishop_pi1']['delivery_country']) {
+							$erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+						}
+					}
+					// build delivery name
 					if (isset($this->post['tx_multishop_pi1']['delivery_first_name'])) {
 						$name = $this->post['tx_multishop_pi1']['delivery_first_name'];
 					}
@@ -2072,41 +2135,62 @@ switch ($this->ms['page']) {
 				$keys[]='telephone';
 				$keys[]='mobile';
 				$keys[]='fax';
+				$return_data=array();
 				$updateArray=array();
-				switch ($details_type) {
-					case "delivery_details":
-						foreach ($keys as $key) {
-							$string='delivery_'.$key;
-							$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-						}
-						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_building'].' '.$updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
-						break;
-					case "billing_details":
-						$keys[]='vat_id';
-						$keys[]='coc_id';
-						foreach ($keys as $key) {
-							$string='billing_'.$key;
-							$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-						}
-						$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_building'].' '.$updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
-						break;
-				}
-				if (count($updateArray)) {
-					// hook for adding new items to details fieldset
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'])) {
-						$params=array(
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'])) {
+					$params=array(
 							'details_type'=>$details_type,
-							'updateArray'=>&$updateArray
-						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'] as $funcRef) {
-							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-						}
-						// hook oef
+							'erno'=>&$erno
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
-					$updateArray['orders_last_modified']=time();
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					// hook oef
 				}
+				if (!count($erno)) {
+					switch ($details_type) {
+						case "delivery_details":
+							foreach ($keys as $key) {
+								$string='delivery_'.$key;
+								$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+							}
+							$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+							break;
+						case "billing_details":
+							$keys[]='vat_id';
+							$keys[]='coc_id';
+							foreach ($keys as $key) {
+								$string='billing_'.$key;
+								$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+							}
+							$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
+							break;
+					}
+					if (count($updateArray)) {
+						// hook for adding new items to details fieldset
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'])) {
+							$params=array(
+									'details_type'=>$details_type,
+									'updateArray'=>&$updateArray
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetails'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+							// hook oef
+						}
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$return_data['status']='OK';
+						$return_data['reason']='';
+					}
+				} else {
+					$erno_str='<div class="erno_message well text-danger"><ul>'.implode("\n", $erno).'</ul></div>';
+					$return_data['status']='NOTOK';
+					$return_data['reason']=$erno_str;
+				}
+				echo json_encode($return_data);
+				exit();
 			}
 		}
 		exit();

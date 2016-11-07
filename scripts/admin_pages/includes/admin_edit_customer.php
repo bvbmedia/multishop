@@ -64,7 +64,7 @@ if ($this->post && $this->post['email']) {
         $updateArray['street_name']=$this->post['street_name'];
 		$updateArray['address_number']=$this->post['address_number'];
 		$updateArray['address_ext']=$this->post['address_ext'];
-		$updateArray['address']=$updateArray['building'].' '.$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
+		$updateArray['address']=$updateArray['street_name'].' '.$updateArray['address_number'].$updateArray['address_ext'];
 		$updateArray['address']=preg_replace('/\s+/', ' ', $updateArray['address']);
 		$updateArray['zip']=$this->post['zip'];
 		$updateArray['city']=$this->post['city'];
@@ -170,7 +170,7 @@ if ($this->post && $this->post['email']) {
 					$updateTTAddressArray['street_name']=$updateArray['address'];
 					$updateTTAddressArray['address_number']=$updateArray['address_number'];
 					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
-					$updateTTAddressArray['address']=$updateTTAddressArray['building'].' '.$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
+					$updateTTAddressArray['address']=$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
 					$updateTTAddressArray['address']=preg_replace('/\s+/', ' ', $updateTTAddressArray['address']);
 				} else {
                     $updateTTAddressArray['building']=$updateArray['building'];
@@ -319,7 +319,7 @@ if ($this->post && $this->post['email']) {
                     $insertArray['street_name']=$updateArray['address'];
 					$insertArray['address_number']=$updateArray['address_number'];
 					$insertArray['address_ext']=$updateArray['address_ext'];
-					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
                     $insertArray['building']=$updateArray['building'];
@@ -416,6 +416,14 @@ if ($this->conf['admin_edit_customer_tmpl_path']) {
 $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
+$subparts['birthdate'] = $this->cObj->getSubpart($subparts['template'], '###BIRTHDATE_BLOCK###');
+// remove block
+$subpartsTemplateWrapperRemove=array();
+if ($this->ms['MODULES']['DISABLE_BIRTHDATE_IN_ADMIN_CUSTOMER_FORM']) {
+    $subpartsTemplateWrapperRemove['###BIRTHDATE_BLOCK###'] = '';
+}
+$subparts['template'] = $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
+
 
 // load enabled countries to array
 $str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
@@ -430,6 +438,15 @@ $regex_for_character="/[^0-9]$/";
 if (!$this->post && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
 	$user=mslib_fe::getUser($this->get['tx_multishop_pi1']['cid']);
 	$this->post=$user;
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerPreloadData'])) {
+        $params=array(
+            'user'=>$user
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerPreloadData'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 }
 $head='';
 $head.='
@@ -706,6 +723,7 @@ $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
 $subpartArray['###VALUE_IMAGE###']=$images_tab_block;
+$subpartArray['###CUSTOM_MARKER_ABOVE_PAYMENT_CONDITION_FORM_FIELD###']='';
 $subpartArray['###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###']='';
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
@@ -797,6 +815,7 @@ switch ($_REQUEST['action']) {
 			} else {
 				$subpartArray['###USERNAME_READONLY###']='';
 			}
+            $subpartArray['###EDIT_CUSTOMER_HEADER###']=htmlspecialchars($this->pi_getLL('admin_label_tabs_edit_customer'));
 			$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
 			$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 			if ($this->masterShop) {
@@ -983,9 +1002,17 @@ switch ($_REQUEST['action']) {
 				$user['lastlogin']='-';
 			}
 			$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
+            $markerArray['BILLING_BUILDING']='';
+            if ($customer_billing_address['building']) {
+                $markerArray['BILLING_BUILDING']=$customer_billing_address['building'].'<br/>';
+            }
 			$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
-			$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
-			$markerArray['GOOGLE_MAPS_URL_QUERY']='//maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
+            $markerArray['DELIVERY_BUILDING']='';
+            if ($customer_delivery_address['building']) {
+                $markerArray['DELIVERY_BUILDING']=$customer_delivery_address['building'].'<br/>';
+            }
+            $markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
+			$markerArray['GOOGLE_MAPS_URL_QUERY']='//maps.google.com/maps?f=q&amp;source=s_q&amp;&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 			$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
 
 			$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
@@ -1095,6 +1122,7 @@ switch ($_REQUEST['action']) {
 			$mr_checked='checked="checked"';
 			$mrs_checked='';
 		}
+        $subpartArray['###EDIT_CUSTOMER_HEADER###']=htmlspecialchars($this->pi_getLL('admin_new_customer'));
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username')).'<span class="text-danger">*</span>';
 		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
 			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
@@ -1259,7 +1287,13 @@ if (!count($js_extra['triggers'])) {
 	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 }
 if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1']['cid']>0) {
-	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer').' (ID: '.$this->get['tx_multishop_pi1']['cid'].')';
+    if (!empty($this->post['company'])) {
+        $subpartArray['###HEADING_TITLE###']=htmlspecialchars($this->post['company']).' (ID: '.$this->get['tx_multishop_pi1']['cid'].')';
+    } else if (!empty($this->post['name'])) {
+        $subpartArray['###HEADING_TITLE###']=htmlspecialchars($this->post['name']).' (ID: '.$this->get['tx_multishop_pi1']['cid'].')';
+    } else {
+        $subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer').' (ID: '.$this->get['tx_multishop_pi1']['cid'].')';
+    }
 	$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 } else {
 	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_new_customer');
@@ -1281,16 +1315,26 @@ if (is_array($user) && $user['uid']) {
 	$headingButton=array();
 	$headingButton['btn_class']='btn btn-primary';
 	$headingButton['fa_class']='fa fa-sign-in';
-	$headingButton['title']=$this->pi_getLL('login_as_user');
+	$headingButton['title']=$this->pi_getLL('login');
 	$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$user['uid']);
+	$headingButton['sort']=50;
 	$headerButtons[]=$headingButton;
 }
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-book';
+$headingButton['title']=$this->pi_getLL('admin_label_create_order');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order&tx_multishop_pi1[customer_id]='.$user['uid']);
+$headingButton['sort']=55;
+$headerButtons[]=$headingButton;
+
 $headingButton=array();
 $headingButton['btn_class']='btn btn-success';
 $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('update') : $this->pi_getLL('save');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSave\').click(); return false;"';
+$headingButton['sort']=60;
 $headerButtons[]=$headingButton;
 
 $headingButton=array();
@@ -1299,6 +1343,7 @@ $headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=($this->get['action']=='edit_customer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#btnSaveClose\').click(); return false;"';
+$headingButton['sort']=65;
 $headerButtons[]=$headingButton;
 
 // Set header buttons through interface class so other plugins can adjust it

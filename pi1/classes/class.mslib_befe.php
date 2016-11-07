@@ -1104,7 +1104,7 @@ class mslib_befe {
             return false;
         }
         if (is_numeric($products_id)) {
-            //$row=mslib_fe::getProduct($products_id, '', '', 1, 1);
+            $productRow=mslib_fe::getProduct($products_id, '', '', 1, 1);
             if (is_numeric($products_id)) {
                 if (is_numeric($categories_id)) {
                     //hook to let other plugins further manipulate the create table query
@@ -1122,7 +1122,7 @@ class mslib_befe {
                     // count if there are relations left
                     $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
                             'tx_multishop_products_to_categories', // FROM ...
-                            "products_id='" . $products_id . "'", // WHERE...
+                            "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
                             '', // GROUP BY...
                             '', // ORDER BY...
                             '' // LIMIT ...
@@ -1157,21 +1157,23 @@ class mslib_befe {
                         if ($i == 0) {
                             $i = '';
                         }
-                        $filename = $row['products_image' . $i];
-                        $orFilter = array();
-                        for ($i = 0; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
-                            $s = '';
-                            if ($i > 0) {
-                                $s = $i;
+                        $filename = $productRow['products_image' . $i];
+                        if ($filename) {
+                            $orFilter = array();
+                            for ($i = 0; $i < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+                                $s = '';
+                                if ($i > 0) {
+                                    $s = $i;
+                                }
+                                $orFilter[] = 'products_image' . $s . '=\'' . addslashes($filename) . '\'';
                             }
-                            $orFilter[] = 'products_image' . $s . '=\'' . addslashes($filename) . '\'';
-                        }
-                        $filter = array();
-                        $filter[] = '(' . implode(' OR ', $orFilter) . ')';
-                        $count = mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
-                        if ($count < 2) {
-                            // Only delete the file is we have found 1 product using it
-                            mslib_befe::deleteProductImage($filename);
+                            $filter = array();
+                            $filter[] = '(' . implode(' OR ', $orFilter) . ')';
+                            $count = mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
+                            if ($count < 2) {
+                                // Only delete the file is we have found 1 product using it
+                                mslib_befe::deleteProductImage($filename);
+                            }
                         }
                     }
                     $tables = array();
@@ -1313,6 +1315,9 @@ class mslib_befe {
                     $queryArray['where'][] = $where;
                 }
             }
+        }
+        if (is_array($select)) {
+            $select=implode(', ',$select);
         }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
                 $queryArray['from'], // FROM ...
@@ -3117,11 +3122,11 @@ class mslib_befe {
                 if ($delivery_full_customer_name) {
                     $delivery_address .= $delivery_full_customer_name . "<br />";
                 }
-                if ($order['delivery_address']) {
-                    $delivery_address .= $order['delivery_address'] . "<br />";
-                }
                 if ($order['delivery_building']) {
                     $delivery_address .= $order['delivery_building'] . "<br />";
+                }
+                if ($order['delivery_address']) {
+                    $delivery_address .= $order['delivery_address'] . "<br />";
                 }
                 if ($order['delivery_zip'] and $order['delivery_city']) {
                     $delivery_address .= $order['delivery_zip'] . " " . $order['delivery_city'];
@@ -3133,6 +3138,9 @@ class mslib_befe {
                 }
                 if ($full_customer_name) {
                     $billing_address .= $full_customer_name . "<br />";
+                }
+                if ($order['billing_building']) {
+                    $billing_address .= $order['billing_building'] . "<br />";
                 }
                 if ($order['billing_address']) {
                     $billing_address .= $order['billing_address'] . "<br />";
@@ -3240,7 +3248,11 @@ class mslib_befe {
                 $array1[] = '###ORDER_STATUS###';
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
-                $array2[] = strftime("%x", $order['expected_delivery_date']);
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '';
+                }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
                 $array1[] = '###BILLING_STREET_NAME###';
@@ -4538,7 +4550,7 @@ class mslib_befe {
             $subpartArray['###LABEL_DISCOUNT###'] = $this->pi_getLL('discount');
             $subpartArray['###TOTAL_DISCOUNT###'] = mslib_fe::amount2Cents($prefix . ($order['discount']), $customer_currency, $display_currency_symbol, 0);
             //
-            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = 'sssssssssss'.$this->pi_getLL('subtotal');
+            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = $this->pi_getLL('subtotal');
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
@@ -4900,25 +4912,40 @@ class mslib_befe {
         $array1 = array();
         $array2 = array();
         $array1[] = '###STREET_NAME###';
-        $array2[] = ucfirst($address_data['street_name']);
-        $array1[] = '###BUILDING###';
-        $array2[] = ucfirst($address_data['building']);
-        $array1[] = '###ADDRESS###';
-        $array2[] = ucfirst($address_data['address']);
+        $array2[] = $address_data['street_name'];
+        if (!empty($address_data['building'])) {
+            $array1[] = '###BUILDING###';
+            $array2[] = $address_data['building'];
+        } else {
+            if (strpos($address_format_setting, '###BUILDING###<br/>')!==false) {
+                $array1[] = '###BUILDING###<br/>';
+                $array2[] = '';
+            } else {
+                $array1[] = '###BUILDING###';
+                $array2[] = '';
+            }
+        }
+        if (strpos($address_format_setting, '###BUILDING###')===false && $address_data['building']) {
+            $array1[] = '###ADDRESS###';
+            $array2[] = $address_data['building'].'<br/>'.$address_data['address'];
+        } else {
+            $array1[] = '###ADDRESS###';
+            $array2[] = $address_data['address'];
+        }
         $array1[] = '###ZIP###';
         $array2[] = $address_data['zip'];
         $array1[] = '###CITY###';
-        $array2[] = ucfirst($address_data['city']);
+        $array2[] = $address_data['city'];
         $array1[] = '###COUNTRY###';
         $array2[] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address_data['country']);
         $array1[] = '###STATE###';
-        $array2[] = ucfirst($address_data['state']);
+        $array2[] = $address_data['state'];
         $array1[] = '###FULL_NAME###';
         $array2[] = $address_data['name'];
         $array1[] = '###FIRST_NAME###';
-        $array2[] = ucfirst($address_data['first_name']);
+        $array2[] = $address_data['first_name'];
         $array1[] = '###LAST_NAME###';
-        $array2[] = ucfirst($address_data['last_name']);
+        $array2[] = $address_data['last_name'];
         $array1[] = '###EMAIL###';
         $array2[] = $address_data['email'];
         $array1[] = '###TELEPHONE###';

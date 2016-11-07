@@ -31,6 +31,23 @@ if (count($cart['products'])<1) {
 		if (count($products)<1) {
 			$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 		} else {
+            if ($this->ms['MODULES']['VALIDATE_CHECKOUT_ON_DISABLED_PRODUCTS']>0) {
+                $no_products=array();
+                foreach ($products as $product) {
+                    $product_status = mslib_fe::checkoutValidateProductStatus($product['products_id']);
+                    if (!$product_status) {
+                        $no_products[]='<li>'.$product['products_name'].'</li>';
+                    }
+                }
+                if (count($no_products)) {
+                    $erno[] = '<div>' . $this->pi_getLL('the_following_products_are_no_longer_available') . ':
+                        <ul class="removed_products_list">
+                            '.implode("\n", $no_products).'                
+                        </ul>
+                        <span>'.sprintf($this->pi_getLL('please_goto_shoppingcart_to_remove_the_products'), '<a href="'.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart').'">'.$this->pi_getLL('admin_label_shoppingcart').'</a>').'</span>
+                    </div>';
+                }
+            }
 			if (is_array($erno) and count($erno)>0) {
 				$content.='<div class="alert alert-danger">';
 				$content.=$this->pi_getLL('the_following_errors_occurred').': <ul>';

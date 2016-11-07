@@ -404,6 +404,9 @@ if ($this->ms['MODULES']['CART_PAGE_UID']) {
 }
 $this->cart_page_uid='tx_multishop_cart'.$key;
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
+    $guest_cart_page_uid=$this->cart_page_uid;
+    $this->cart_page_uid.='_' . $GLOBALS["TSFE"]->fe_user->user['uid'];
+    //die('top_always');
 	// store the customer uid in cookies for later use
 	if (!isset($this->cookie['customer_id'])) {
 		$this->cookie['customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];
@@ -416,36 +419,11 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 	$mslib_cart->init($this);
 	$cart=$mslib_cart->getCart();
-	if (!is_array($cart['products'])) {
-		// maybe guest cart has products that we must migrate
-		$cart2=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-		//
-		if (is_array($cart2['products']) && count($cart2['products'])) {
-			$cart['products']=$cart2['products'];
-			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
-			//$GLOBALS['TSFE']->storeSessionData();
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-			$mslib_cart->init($this);
-			$mslib_cart->storeCart($cart);
-		}
-		if (isset($cart2['coupon_code']) && !empty($cart2['coupon_code'])) {
-			$cart['coupon_code'] = $cart2['coupon_code'];
-			$cart['discount'] = $cart2['discount'];
-			$cart['discount_type'] = $cart2['discount_type'];
-			$cart['discount_amount'] = $cart2['discount_amount'];
-			$cart['discount_percentage'] = $cart2['discount_percentage'];
-
-			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
-			//$GLOBALS['TSFE']->storeSessionData();
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-			$mslib_cart->init($this);
-			$mslib_cart->storeCart($cart);
-		}
-		if (is_array($cart2['summarize']) && count($cart2['summarize'])) {
-			$cart['summarize'] = $cart2['summarize'];
-			//
+    // maybe guest cart has products that we must migrate
+    $guest_cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $guest_cart_page_uid);
+    if ((!isset($cart['products'])) || (is_array($cart['products']) && !count($cart['products']))) {
+		if (is_array($guest_cart['products']) && count($guest_cart['products'])) {
+			$cart['products']=$guest_cart['products'];
 			//$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
 			//$GLOBALS['TSFE']->storeSessionData();
 			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
@@ -454,7 +432,33 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 			$mslib_cart->storeCart($cart);
 		}
 	}
-	$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
+    if (!isset($cart['coupon_code']) || empty($cart['coupon_code'])) {
+        if (isset($guest_cart['coupon_code']) && !empty($guest_cart['coupon_code'])) {
+            $cart['coupon_code'] = $guest_cart['coupon_code'];
+            $cart['discount'] = $guest_cart['discount'];
+            $cart['discount_type'] = $guest_cart['discount_type'];
+            $cart['discount_amount'] = $guest_cart['discount_amount'];
+            $cart['discount_percentage'] = $guest_cart['discount_percentage'];
+            //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+            //$GLOBALS['TSFE']->storeSessionData();
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $mslib_cart->storeCart($cart);
+        }
+    }
+    if (!isset($cart['summarize']) || (is_array($cart['summarize']) && !count($cart['summarize']))) {
+        if (is_array($guest_cart['summarize']) && count($guest_cart['summarize'])) {
+            $cart['summarize'] = $guest_cart['summarize'];
+            //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid . '_' . $GLOBALS["TSFE"]->fe_user->user['uid'], $cart);
+            //$GLOBALS['TSFE']->storeSessionData();
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $mslib_cart->storeCart($cart);
+        }
+    }
+    //$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
 }
 if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) {
 	// one time load for the attribute option names. When we have to add or update products to the flat table we already know the attribute option column names, so this way it requires less running queries

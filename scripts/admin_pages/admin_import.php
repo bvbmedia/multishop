@@ -16,7 +16,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
 				this.close();
 				msAdminBlockUi();
-				window.location.href=\'/\'+linkTarget;
+				window.location.replace(linkTarget);
 			});
 		});
 		$(document).on("click", ".hide_advanced_import_radio", function() {
@@ -2515,6 +2515,11 @@ if ($this->post['action']=='category-insert') {
 									}
 								}
 								// LANGUAGE OVERLAYS EOL
+							}
+							// delete any special
+							if (isset($item['products_old_price']) && isset($item['products_price']) && ($item['products_old_price'] < $item['products_price'] || $item['products_old_price']==$item['products_price'])) {
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 							if (isset($item['products_specials_price']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('specials_new_products_price', $importedProductsLockedFields))))) {
 								if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price']>0)) {

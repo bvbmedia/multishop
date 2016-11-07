@@ -309,7 +309,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (!$order['delivery_address'] or !$order['delivery_city']) {
 				$order['delivery_company']=$order['billing_company'];
 				$order['delivery_street_name']=$order['billing_street_name'];
-				$order['delivery_address']=$order['billing_address'];
+                $order['delivery_building']=$order['billing_building'];
+                $order['delivery_address']=$order['billing_address'];
 				$order['delivery_address_number']=$order['billing_address_number'];
 				$order['delivery_address_ext']=$order['billing_address_ext'];
 				$order['delivery_zip']=$order['billing_zip'];
@@ -323,15 +324,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($delivery_full_customer_name) {
 				$delivery_address.=$delivery_full_customer_name."<br />";
 			}
+            if ($order['delivery_building']) {
+                $delivery_address.=$order['delivery_building']."<br />";
+            }
 			if ($order['delivery_address']) {
 				$delivery_address.=$order['delivery_address']."<br />";
 			}
 			if ($order['delivery_zip'] and $order['delivery_city']) {
 				$delivery_address.=$order['delivery_zip']." ".$order['delivery_city'];
 			}
-			if ($order['delivery_country']) {
-				$delivery_address.='<br />'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
-			}
+            if ($order['delivery_country'] && mslib_befe::strtolower($order['delivery_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+                // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+                $delivery_address.='<br />'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
+            }
 //		if ($order['delivery_telephone']) 		$delivery_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['delivery_telephone']."<br />";
 //		if ($order['delivery_mobile']) 			$delivery_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['delivery_mobile']."<br />";
 			if ($order['billing_company']) {
@@ -340,15 +345,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if ($full_customer_name) {
 				$billing_address.=$full_customer_name."<br />";
 			}
+            if ($order['billing_building']) {
+                $billing_address.=$order['billing_building']."<br />";
+            }
 			if ($order['billing_address']) {
 				$billing_address.=$order['billing_address']."<br />";
 			}
 			if ($order['billing_zip'] and $order['billing_city']) {
 				$billing_address.=$order['billing_zip']." ".$order['billing_city'];
 			}
-			if ($order['billing_country']) {
-				$billing_address.='<br />'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
-			}
+            if ($order['billing_country'] && mslib_befe::strtolower($order['billing_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+                // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+                $billing_address.='<br />'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+            }
 			$loadFromPids=array();
 			if ($this->conf['masterShop']) {
 				$loadFromPids[]=$order['page_uid'];
@@ -590,7 +599,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$array1[]='###PAYMENT_METHOD###';
 				$array2[]=$order['payment_method_label'];
 				$array1[]='###EXPECTED_DELIVERY_DATE###';
-				$array2[]=strftime("%x", $order['expected_delivery_date']);
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '';
+                }
 				$array1[]='###CUSTOMER_COMMENTS###';
 				$array2[]=$order['customer_comments'];
 
@@ -789,7 +802,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (!strstr(mslib_befe::strtolower($product_db['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_db['products_image']), 'https://')) {
 					$product_db['products_image']=mslib_befe::getImagePath($product_db['products_image'], 'products', '50');
 				}
-				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+				if (!file_exists($product_db['products_image'])) {
+                    $item['ITEM_IMAGE']='<div class="no_image_50"></div>';
+                } else {
+                    $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+                }
 			}
 			// ITEM_NAME
 			$tmp_item_name=array();
@@ -810,7 +827,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$tmp_item_name['products_ean']='<br/>EAN: '.htmlspecialchars($product['ean_code']);
 			}
 			if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-				$tmp_item_name['products_sku']='<br/>SKU: '.htmlspecialchars($product['sku_code']);
+				$tmp_item_name['products_sku']='<br/>'.$this->pi_getLL('sku_number', 'SKU').': '.htmlspecialchars($product['sku_code']);
 			}
 			if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
 				$tmp_item_name['products_vendor_code']='<br/>'.htmlspecialchars($this->pi_getLL('label_order_details_vendor_code', 'Vendor code')).': '.htmlspecialchars($product['vendor_code']);
@@ -1305,6 +1322,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (!$address['street_name']) {
 				$address['street_name']=$address['address'];
 			}
+            $insertArray['billing_building']=$address['building'];
 			$insertArray['billing_street_name']=$address['street_name'];
 			$insertArray['billing_address_number']=$address['address_number'];
 			$insertArray['billing_address_ext']=$address['address_ext'];
@@ -1328,7 +1346,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 				$insertArray['delivery_mobile']=$insertArray['billing_mobile'];
 				$insertArray['delivery_gender']=$insertArray['billing_gender'];
-				$insertArray['delivery_street_name']=$insertArray['billing_street_name'];
+                $insertArray['delivery_building']=$insertArray['billing_building'];
+                $insertArray['delivery_street_name']=$insertArray['billing_street_name'];
 				$insertArray['delivery_address']=$insertArray['billing_address'];
 				$insertArray['delivery_address_number']=$insertArray['billing_address_number'];
 				$insertArray['delivery_address_ext']=$insertArray['billing_address_ext'];
@@ -1350,6 +1369,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (!$address['delivery_street_name']) {
 					$address['delivery_street_name']=$address['delivery_address'];
 				}
+                $insertArray['delivery_building']=$address['delivery_building'];
 				$insertArray['delivery_street_name']=$address['delivery_street_name'];
 				$insertArray['delivery_address_number']=$address['delivery_address_number'];
 				$insertArray['delivery_address_ext']=$address['delivery_address_ext'];

@@ -96,7 +96,7 @@ $array['order_total_vat']=$this->pi_getLL('feed_exporter_fields_label_order_tota
 $array['order_date']=$this->pi_getLL('feed_exporter_fields_label_order_date');
 $array['order_company_name']=$this->pi_getLL('feed_exporter_fields_label_order_company_name');
 $array['order_vat_id']=$this->pi_getLL('feed_exporter_fields_label_order_vat_id');
-$array['order_customer_currency']=$this->pi_getLL('feed_exporter_fields_label_order_vat_id');
+$array['order_customer_currency']=$this->pi_getLL('feed_exporter_fields_label_order_customer_currency');
 $array['order_customer_currency_rate']=$this->pi_getLL('feed_exporter_fields_label_order_customer_currency_rate');
 $array['order_customer_language_id']=$this->pi_getLL('feed_exporter_fields_label_order_customer_language_id');
 $array['order_track_and_trace_code']=$this->pi_getLL('feed_exporter_fields_label_order_track_and_trace_code');
@@ -105,6 +105,8 @@ $array['order_status_last_modified']=$this->pi_getLL('feed_exporter_fields_label
 $array['order_orders_last_modified']=$this->pi_getLL('feed_exporter_fields_label_order_orders_last_modified');
 $array['order_expected_delivery_date']=$this->pi_getLL('feed_exporter_fields_label_order_expected_delivery_date');
 $array['order_by_phone']=$this->pi_getLL('feed_exporter_fields_label_order_by_phone');
+$array['turnover_per_category_incl_vat']=$this->pi_getLL('feed_exporter_fields_label_turnover_per_category_incl_vat');
+$array['turnover_per_category_excl_vat']=$this->pi_getLL('feed_exporter_fields_label_turnover_per_category_excl_vat');
 
 
 /*

@@ -460,6 +460,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				$product=mslib_fe::getProduct($products_id);
 				if ($product['products_id']) {
+					$product['products_shortdescription_raw']=$product['products_shortdescription'];
+					$product['products_description_raw']=$product['products_description'];
 					if ($product['products_image']) {
 						$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
@@ -637,6 +639,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									case 'hidden_field':
 									case 'textarea':
 									case 'input':
+									case 'date':
+									case 'datetime':
+									case 'dateofbirth':
+									case 'datecustom':
 										$cart['products'][$shopping_cart_item]['attributes'][$key]=$row;
 										$cart['products'][$shopping_cart_item]['attributes'][$key]['options_id']=$key;
 										$cart['products'][$shopping_cart_item]['attributes'][$key]['products_options_values_name']=$value;
@@ -808,6 +814,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							if (preg_match("/^[0-9]+$/", $rel_products_id)) {
 								$product=mslib_fe::getProduct($rel_products_id);
 								if ($product['products_id']) {
+									$product['products_shortdescription_raw']=$product['products_shortdescription'];
+									$product['products_description_raw']=$product['products_description'];
 									if ($product['products_image']) {
 										$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
 										$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
@@ -1331,7 +1339,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['street_name']=$address['address'];
 				$insertArray['address_number']=$address['address_number'];
 				$insertArray['address_ext']=$address['address_ext'];
-				$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+				$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 				$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 			} else {
                 $insertArray['building']=$address['building'];
@@ -1374,6 +1382,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 			}
 			$insertArray['tx_multishop_quick_checkout']=1;
+            if ($address['gender'] == 'm' or $address['gender'] == '0') {
+                $insertArray['gender'] = '0';
+            } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
+                $insertArray['gender'] = '1';
+            }
 			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1395,7 +1408,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['street_name']=$address['address'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
-					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
                     $insertArray['building']=$address['building'];
@@ -1447,7 +1460,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['street_name']=$address['address'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
-						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
                         $insertArray['building']=$address['building'];
@@ -1486,7 +1499,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['street_name']=$address['delivery_address'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
-						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
                         $insertArray['building']=$address['delivery_building'];
@@ -1548,7 +1561,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['street_name']=$address['address'];
 					$insertArray['address_number']=$address['address_number'];
 					$insertArray['address_ext']=$address['address_ext'];
-					$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 				} else {
                     $insertArray['building']=$address['delivery_building'];
@@ -1598,7 +1611,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$insertArray['street_name']=$address['address'];
 						$insertArray['address_number']=$address['address_number'];
 						$insertArray['address_ext']=$address['address_ext'];
-						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
                         $insertArray['building']=$address['building'];
@@ -1637,7 +1650,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$insertArray['street_name']=$address['delivery_address'];
 						$insertArray['address_number']=$address['delivery_address_number'];
 						$insertArray['address_ext']=$address['delivery_address_ext'];
-						$insertArray['address']=$insertArray['building'].' '.$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+						$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
 						$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
 					} else {
                         $insertArray['building']=$address['building'];
@@ -1696,7 +1709,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['billing_street_name']=$address['address'];
 				$insertArray['billing_address_number']=$address['address_number'];
 				$insertArray['billing_address_ext']=$address['address_ext'];
-				$insertArray['billing_address']=$insertArray['billing_building'].' '.$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
+				$insertArray['billing_address']=$insertArray['billing_street_name'].' '.$insertArray['billing_address_number'].($insertArray['billing_address_ext'] ? '-'.$insertArray['billing_address_ext'] : '');
 				$insertArray['billing_address']=preg_replace('/\s+/', ' ', $insertArray['billing_address']);
 			} else {
                 $insertArray['billing_building']=$address['building'];
@@ -1761,7 +1774,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$insertArray['delivery_street_name']=$address['delivery_address'];
 					$insertArray['delivery_address_number']=$address['delivery_address_number'];
 					$insertArray['delivery_address_ext']=$address['delivery_address_ext'];
-					$insertArray['delivery_address']=$insertArray['delivery_building'].' '.$insertArray['delivery_street_name'].' '.$insertArray['delivery_address_number'].($insertArray['delivery_address_ext'] ? '-'.$insertArray['delivery_address_ext'] : '');
+					$insertArray['delivery_address']=$insertArray['delivery_street_name'].' '.$insertArray['delivery_address_number'].($insertArray['delivery_address_ext'] ? '-'.$insertArray['delivery_address_ext'] : '');
 					$insertArray['delivery_address']=preg_replace('/\s+/', ' ', $insertArray['delivery_address']);
 				} else {
                     $insertArray['delivery_building']=$address['delivery_building'];
@@ -1927,6 +1940,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$insertArray['products_tax']=($value['tax_rate']*100);
 							$insertArray['products_name']=$value['products_name'];
 							$insertArray['products_model']=$value['products_model'];
+
 							/*
 							$insertArray['products_description']=$value['products_shortdescription'];
 							if (is_array($value['attributes'])) {
@@ -1943,6 +1957,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$insertArray['ean_code']=$value['ean_code'];
 							$insertArray['sku_code']=$value['sku_code'];
 							$insertArray['vendor_code']=$value['vendor_code'];
+                            $insertArray['products_tax_id']=$value['tax_id'];
 							// micro download
 							if ($value['file_location'] || $value['file_remote_location']) {
 								$insertArray['file_label']=$value['file_label'];
@@ -2667,7 +2682,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$item['ITEM_IMAGE']='<img src="'.$product['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
 					}
 					// ITEM_NAME
-					$item['ITEM_NAME']=$product['products_name'];
+                    if ($this->ms['MODULES']['ADD_LINK_TO_PRODUCT_NAME_IN_CHECKOUT_REVIEW']>0) {
+                        $item['ITEM_NAME'] = '<a href="'.$product['link'].'">'.$product['products_name'].'</a>';
+                    } else {
+                        $item['ITEM_NAME'] = $product['products_name'];
+                    }
 
 					if ($product['products_model']) {
 						$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
@@ -2808,8 +2827,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$totalPrice=$product['total_price'];
 					}
-					$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice) . $subPrices;
-					$item['ITEM_PRICE_SINGLE']=mslib_fe::amount2Cents($product['final_price']); //.$subPrices;
+                    if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $product['final_price']=round($product['final_price']*(1+$product['tax_rate']), 2);
+                    }
+                    if ($subPrices) {
+                        $totalPrice = $product['final_price']*$product['qty'];
+                    }
+					$item['ITEM_TOTAL'] = mslib_fe::amount2Cents($totalPrice) . $subPrices;
+                    $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price']); //.$subPrices;
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
 						$params=array(
 							'item'=>&$item,

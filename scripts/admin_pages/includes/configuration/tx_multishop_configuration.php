@@ -2483,15 +2483,94 @@ $records[]=array(
     'use_function'=>''
 );
 $records[]=array(
-		'configuration_title'=>'Include attributes in product feed',
-		'configuration_key'=>'INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED',
-		'configuration_value'=>'1',
-		'description'=>'Optional field.',
-		'group_id'=>'11',
-		'use_function'=>'',
-		'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
-		'depend_on_configuration_key'=>'',
-		'use_function'=>''
+    'configuration_title'=>'Include attributes in product feed',
+    'configuration_key'=>'INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED',
+    'configuration_value'=>'1',
+    'description'=>'Optional field.',
+    'group_id'=>'11',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+/*
+$records[]=array(
+    'configuration_title'=>'Right of revocation link in checkout',
+    'configuration_key'=>'RIGHT_OF_REVOCATION_LINK_IN_CHECKOUT',
+    'configuration_value'=>'0',
+    'description'=>'Right of revocation link in checkout',
+    'group_id'=>'8',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+*/
+$records[]=array(
+    'configuration_title'=>'Disable birthdate in admin add/edit customer',
+    'configuration_key'=>'DISABLE_BIRTHDATE_IN_ADMIN_CUSTOMER_FORM',
+    'configuration_value'=>'0',
+    'description'=>'Disable birthdate in admin add/edit customer',
+    'group_id'=>'11',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Add link to product name in checkout review',
+    'configuration_key'=>'ADD_LINK_TO_PRODUCT_NAME_IN_CHECKOUT_REVIEW',
+    'configuration_value'=>'0',
+    'description'=>'Add link to product name in checkout review',
+    'group_id'=>'8',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Display capital price column in edit order product',
+    'configuration_key'=>'ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT',
+    'configuration_value'=>'0',
+    'description'=>'Display capital price column in edit order product',
+    'group_id'=>'9',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Default payment method code',
+    'configuration_key'=>'DEFAULT_PAYMENT_METHOD_CODE',
+    'configuration_value'=>'',
+    'description'=>'Defined in admin edit customer and admin edit order.',
+    'group_id'=>'11',
+    'use_function'=>'',
+    'set_function'=>'',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+    'configuration_title'=>'Validate checkout on disabled products',
+    'configuration_key'=>'VALIDATE_CHECKOUT_ON_DISABLED_PRODUCTS',
+    'configuration_value'=>'1',
+    'description'=>'Validate checkout on disabled products',
+    'group_id'=>'8',
+    'use_function'=>'',
+    'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key'=>'',
+    'use_function'=>''
+);
+$records[]=array(
+        'configuration_title'=>'Disable edit order customer details update validation',
+        'configuration_key'=>'DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION',
+        'configuration_value'=>'0',
+        'description'=>'Disable edit order customer details update validation',
+        'group_id'=>'9',
+        'use_function'=>'',
+        'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key'=>'',
+        'use_function'=>''
 );
 
 // custom hook that can be controlled by third-party plugin

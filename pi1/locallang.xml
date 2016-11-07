@@ -1351,6 +1351,36 @@
             <label index="female_salutation">Dear madam</label>
             <label index="female_salutation">Dear madam</label>
             <label index="building">Building</label>
+            <label index="full_month_1">january</label>
+            <label index="full_month_2">february</label>
+            <label index="full_month_3">march</label>
+            <label index="full_month_4">april</label>
+            <label index="full_month_5">may</label>
+            <label index="full_month_6">june</label>
+            <label index="full_month_7">july</label>
+            <label index="full_month_8">august</label>
+            <label index="full_month_9">september</label>
+            <label index="full_month_10">october</label>
+            <label index="full_month_11">november</label>
+            <label index="full_month_12">december</label>
+            <label index="right_of_revocation">Right of revocation</label>
+            <label index="submit_form">Submit form</label>
+            <label index="notes_on_the_conclusion_of_the_contract">Notes on the conclusion of the contract</label>
+            <label index="right_of_withdrawal_form">Withdrawal form</label>
+            <label index="impressum">impressum</label>
+            <label index="the_following_products_are_no_longer_available">The following products are no longer available</label>
+            <label index="please_goto_shoppingcart_to_remove_the_products">Please goto %s to remove the products</label>
+            <label index="unknown">unknown</label>
+            <label index="shopping_cart">shopping cart</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_incl_vat">Turnover per category (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_excl_vat">Turnover per category (excl. VAT)</label>
+            <label index="turnover_per_category_incl_vat">Turnover per category %s (incl. VAT)</label>
+            <label index="turnover_per_category_excl_vat">Turnover per category %s (excl. VAT)</label>
+            <label index="admin_label_option_type_date">Date</label>
+            <label index="admin_label_option_type_datetime">Date and time</label>
+            <label index="admin_label_option_type_dateofbirth">Date of birth</label>
+            <label index="admin_label_option_type_datecustom">Date custom</label>
+            <label index="sku_number">SKU</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2700,6 +2730,32 @@
             <label index="female_abbreviation">Mevr.</label>
             <label index="female_salutation">Geachte mevrouw</label>
             <label index="building">Gebouw</label>
+            <label index="full_month_1">januari</label>
+            <label index="full_month_2">februari</label>
+            <label index="full_month_3">maart</label>
+            <label index="full_month_4">april</label>
+            <label index="full_month_5">mei</label>
+            <label index="full_month_6">juni</label>
+            <label index="full_month_7">juli</label>
+            <label index="full_month_8">augustus</label>
+            <label index="full_month_9">september</label>
+            <label index="full_month_10">oktober</label>
+            <label index="full_month_11">november</label>
+            <label index="full_month_12">december</label>
+            <label index="right_of_revocation">Herroepingsrecht</label>
+            <label index="submit_form">Verwerken</label>
+            <label index="notes_on_the_conclusion_of_the_contract">Notes on the conclusion of the contract</label>
+            <label index="right_of_withdrawal_form">Recht op herroeping</label>
+            <label index="impressum">impressum</label>
+            <label index="the_following_products_are_no_longer_available">Onderstaande producten zijn helaas niet meer beschikbaar</label>
+            <label index="please_goto_shoppingcart_to_remove_the_products">Om het afrekenproces te kunnen voltooien, dienen deze producten uit de %s te worden verwijderd</label>
+            <label index="unknown">onbekend</label>
+            <label index="shopping_cart">winkelwagen</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_incl_vat">Omzet per categorie (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_turnover_per_category_excl_vat">Omzet per categorie (excl. VAT)</label>
+            <label index="turnover_per_category_incl_vat">Omzet per categorie %s (incl. VAT)</label>
+            <label index="turnover_per_category_excl_vat">Omzet per categorie %s (excl. VAT)</label>
+            <label index="sku_number">SKU</label>
         </languageKey>
     </data>
 </T3locallang>

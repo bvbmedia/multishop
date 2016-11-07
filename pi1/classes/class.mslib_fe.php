@@ -1225,7 +1225,14 @@ class mslib_fe {
 		if ($manual_link) {
 			// dont use cObj typolink method (which makes realurl/cooluri version of the link), but instead make manual link
 			if (is_numeric($this->get['L'])) {
-				$conf['additionalParams'].='&L='.$this->get['L'];
+				parse_str($conf['additionalParams'], $output);
+				if (!isset($output['L'])) {
+					$lastChar=substr($conf['additionalParams'],strlen($conf['additionalParams'])-1,1);
+					if ($lastChar!='&') {
+						$conf['additionalParams'].='&';
+					}
+					$conf['additionalParams'].='L='.$this->get['L'];
+				}
 			}
 			if (strstr($page_id, ',')) {
 				$array=explode(',', $page_id);
@@ -2551,6 +2558,26 @@ class mslib_fe {
 						</div>';
 							$load_default=0;
 							break;
+                        case 'date':
+                        case 'datetime':
+                            $output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+                            <label>'.$options['products_options_name'].':</label>
+                            <div class="attribute_item_wrapper">
+                            <input type="text" name="attributes['.$options['products_options_id'].']" class="'.($options['listtype']=='date' ? 'attributeDate' : 'attributeDateTime').'" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" '.($options['required'] ? 'required="required"' : '').' />
+                            </div>
+                            </div>';
+                            $load_default=0;
+                            break;
+                        case 'dateofbirth':
+                        case 'datecustom':
+                            $output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+                            <label>'.$options['products_options_name'].':</label>
+                            <div class="attribute_item_wrapper">
+                            <input type="text" name="attributes['.$options['products_options_id'].']" class="'.($options['listtype']=='dateofbirth' ? 'attributeDateOfBirth' : 'attributeDateCustom').'" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" '.($options['required'] ? 'required="required"' : '').' />
+                            </div>
+                            </div>';
+                            $load_default=0;
+                            break;
 						case 'input':
 							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
@@ -4190,7 +4217,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4201,7 +4228,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4212,7 +4239,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -4223,7 +4250,7 @@ class mslib_fe {
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
-										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')'.(!$row['status'] ? ' ('.$this->pi_getLL('disabled').')' : '').'</option>'."\n";
 									}
 								}
 								$content.='</select>';
@@ -9881,6 +9908,20 @@ class mslib_fe {
 	}
 	public function logPageView() {
 		$insertArray=array();
+		$continue=1;
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewInitPreProc'])) {
+			$params=array(
+					'insertArray'=>&$insertArray,
+					'continue' =>&$continue
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewInitPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if (!$continue) {
+			return;
+		}
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 		}
@@ -9895,6 +9936,16 @@ class mslib_fe {
 		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https://" : "http://").$this->HTTP_HOST.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
 		$insertArray['segment_type']='';
 		$insertArray['segment_id']='';
+		switch($this->get['tx_multishop_pi1']['page_section']) {
+			case 'products_detail':
+				$insertArray['segment_type']='products_detail';
+				$insertArray['segment_id']=(int) $this->get['products_id'];
+				break;
+			case 'products_listing':
+				$insertArray['segment_type']='products_listing';
+				$insertArray['segment_id']=(int) $this->get['categories_id'][count($this->get['categories_id'])-1];
+				break;
+		}
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPreProc'])) {
 			$params=array(
@@ -10094,6 +10145,13 @@ class mslib_fe {
 			return true;
 		}
 	}
+	public function checkoutValidateProductStatus($product_id) {
+        $product=mslib_fe::getProduct($product_id, '', '', 1, 1);
+        if (!$product || !$product['products_status']) {
+            return false;
+        }
+        return true;
+    }
 	public function updateCart() {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');

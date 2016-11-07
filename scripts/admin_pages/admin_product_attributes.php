@@ -13,6 +13,10 @@ $selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
 $selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
 $selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
 $selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
+$selects['date']=$this->pi_getLL('admin_label_option_type_date');
+$selects['datetime']=$this->pi_getLL('admin_label_option_type_datetime');
+$selects['dateofbirth']=$this->pi_getLL('admin_label_option_type_dateofbirth');
+$selects['datecustom']=$this->pi_getLL('admin_label_option_type_datecustom');
 // new options
 $options_group='';
 if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
