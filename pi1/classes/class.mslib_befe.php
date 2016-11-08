@@ -4550,7 +4550,7 @@ class mslib_befe {
             $subpartArray['###LABEL_DISCOUNT###'] = $this->pi_getLL('discount');
             $subpartArray['###TOTAL_DISCOUNT###'] = mslib_fe::amount2Cents($prefix . ($order['discount']), $customer_currency, $display_currency_symbol, 0);
             //
-            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = 'sssssssssss'.$this->pi_getLL('subtotal');
+            $subpartArray['###PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL###'] = $this->pi_getLL('subtotal');
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');

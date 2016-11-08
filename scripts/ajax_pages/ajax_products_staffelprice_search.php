@@ -78,7 +78,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			// if at this point $default_tax_id still 0 it mean there are mis-settings in tax interface (multishop backend)
 			if ($tax_id_data[$default_tax_id]['tax_id']>0) {
 				if ($tax_id_data[$default_tax_id]['rate']<0.1) {
-					$staffel_price['use_tax_id']=false;
+					//$staffel_price['use_tax_id']=false;
 				}
 				$product['tax_id']=$tax_id_data[$default_tax_id]['tax_id'];
 			}
@@ -87,8 +87,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	//
 	$staffel_price['tax_id']=$product['tax_id'];
 	if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-		$staffel_price['use_tax_id']=false;
-		$staffel_price['tax_id']='';
+		//$staffel_price['use_tax_id']=false;
+		//$staffel_price['tax_id']='';
 		$staffel_price['price_include_vat']=$staffel_price['price'];
 		$staffel_price['display_price']=number_format($staffel_price['price'], 2, '.', '');
 		$staffel_price['display_price_include_vat']=number_format($staffel_price['price'], 2, '.', '');

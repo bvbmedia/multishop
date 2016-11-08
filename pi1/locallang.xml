@@ -1380,6 +1380,7 @@
             <label index="admin_label_option_type_datetime">Date and time</label>
             <label index="admin_label_option_type_dateofbirth">Date of birth</label>
             <label index="admin_label_option_type_datecustom">Date custom</label>
+            <label index="sku_number">SKU</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2754,6 +2755,7 @@
             <label index="feed_exporter_fields_label_turnover_per_category_excl_vat">Omzet per categorie (excl. VAT)</label>
             <label index="turnover_per_category_incl_vat">Omzet per categorie %s (incl. VAT)</label>
             <label index="turnover_per_category_excl_vat">Omzet per categorie %s (excl. VAT)</label>
+            <label index="sku_number">SKU</label>
         </languageKey>
     </data>
 </T3locallang>

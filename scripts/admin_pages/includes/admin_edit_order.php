@@ -212,7 +212,7 @@ if (is_numeric($this->get['orders_id'])) {
 								//$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
 								$updateArray['products_model']=$product_data['products_model'];
                                 $updateArray['products_tax_id'] = 0;
-                                if (!empty($this->post['product_tax'])) {
+                                if ($product_data['tax_id']) {
                                     $updateArray['products_tax_id'] = $product_data['tax_id'];
                                 }
 								// hook for adding new items to details fieldset
@@ -332,7 +332,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
                                     $insertArray['products_model']=$product_data['products_model'];
                                     $insertArray['products_tax_id']=0;
-                                    if ($this->post['manual_product_tax']) {
+                                    if ($product_data['tax_id']) {
                                         $insertArray['products_tax_id'] = $product_data['tax_id'];
                                     }
 								}
@@ -3484,7 +3484,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         }
                                     }
                                 }
-                                if (!d.use_tax_id) {
+                                /*if (!d.use_tax_id) {
                                 	d.price_include_vat=0;
                                 	if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
@@ -3495,7 +3495,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         	$("#manual_product_tax").val("");
                                         }
                                     }
-                                }
+                                }*/
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
                                         $("#display_name_including_vat").val(d.display_price_include_vat);
