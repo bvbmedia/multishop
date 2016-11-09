@@ -629,6 +629,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
+				// Copy
+				$pageCopyToMerchant=$page;
 				if ($page[0]['content']) {
 					$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 				}
@@ -684,7 +686,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						//}
 					}
 					if ($copy_to_merchant) {
-						$mailSubject=$this->pi_getLL('copy_for_merchant') . ': '.$page[0]['name'];
+						$mailSubject='';
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
 							$params=array(
 									'this'=>&$this,
@@ -698,17 +700,29 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     'mail_template'=>$mail_template,
                                     'psp_mail_template'=>$psp_mail_template,
                                     'loadFromPids'=>$loadFromPids,
-									'mailSubject'=>&$mailSubject
+									'mailSubject'=>&$mailSubject,
+									'pageCopyToMerchant'=>&$pageCopyToMerchant,
+									'array1'=>&$array1,
+									'array2'=>&$array2,
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'] as $funcRef) {
 								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
+						if ($pageCopyToMerchant[0]['content']) {
+							$pageCopyToMerchant[0]['content']=str_replace($params['array1'], $params['array2'], $pageCopyToMerchant[0]['content']);
+						}
+						if ($pageCopyToMerchant[0]['name']) {
+							$pageCopyToMerchant[0]['name']=str_replace($params['array1'], $params['array2'], $pageCopyToMerchant[0]['name']);
+						}
+						if ($mailSubject=='') {
+							$mailSubject=$this->pi_getLL('copy_for_merchant') . ': '.$pageCopyToMerchant[0]['name'];
+						}
 						// now mail a copy to the merchant
 						$merchant=array();
 						$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 						$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-						mslib_fe::mailUser($merchant, $mailSubject, $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+						mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 						if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
 							$email=array();
 							if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {
@@ -721,7 +735,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									$merchant=array();
 									$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 									$merchant['email']=$item;
-									mslib_fe::mailUser($merchant, $this->pi_getLL('copy_for_merchant') . ': '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+									mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 								}
 							}
 						}
@@ -955,6 +969,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$subpartArray=array();
 		//ITEMS_HEADER_WRAPPER
 		$markerArray=array();
+		$markerArray['HEADING_PRODUCTS_ID']=ucfirst($this->pi_getLL('products_id'));
 		$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
 		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
 		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
