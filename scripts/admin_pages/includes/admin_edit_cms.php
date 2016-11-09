@@ -261,7 +261,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$markers['DELIVERY_TELEPHONE']=$this->pi_getLL('admin_label_cms_marker_telephone_delivery');
 	$markers['BILLING_MOBILE']=$this->pi_getLL('admin_label_cms_marker_mobile_billing');
 	$markers['DELIVERY_MOBILE']=$this->pi_getLL('admin_label_cms_marker_mobile_delivery');
-	$markers['FULL_NAME']=$this->pi_getLL('admin_label_cms_marker_full_name_billing');
+	//$markers['FULL_NAME']=$this->pi_getLL('admin_label_cms_marker_full_name_billing');
+	$markers['BILLING_FULL_NAME']=$this->pi_getLL('admin_label_cms_marker_full_name_billing');
+
 	$markers['DELIVERY_FULL_NAME']=$this->pi_getLL('admin_label_cms_marker_full_name_delivery');
 	$markers['CUSTOMER_EMAIL']=$this->pi_getLL('admin_label_cms_marker_customer_email');
 	$markers['ORDER_DATE_LONG']=$this->pi_getLL('admin_label_cms_marker_order_date_in_long_format');
