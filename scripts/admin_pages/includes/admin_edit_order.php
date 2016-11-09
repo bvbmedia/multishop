@@ -1729,15 +1729,17 @@ if (is_numeric($this->get['orders_id'])) {
 					$optionItems=array();
 					$dontOverrideDefaultOption=0;
 					foreach ($payment_methods as $code=>$item) {
-						if (!$item['status']) {
-							$item['name'].=' ('.$this->pi_getLL('hidden_in_checkout').')';
-						}
-						$optionItems[]='<option value="'.$item['id'].'"'.(($orders['payment_method'] && $code==$orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE']==$code) ? ' selected' : '').'>'.htmlspecialchars($item['name']).'</option>';
-						if ($code==$orders['payment_method']) {
-							$dontOverrideDefaultOption=1;
-						}
+                        if (is_numeric($item['id']) && $item['id']>0) {
+                            if (!$item['status']) {
+                                $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
+                            if ($code == $orders['payment_method']) {
+                                $dontOverrideDefaultOption = 1;
+                            }
+                        }
 					}
-					if (empty($orders['payment_method'])) {
+					if (empty($orders['payment_method']) || (!empty($orders['payment_method']) && !isset($payment_methods[$orders['payment_method']]))) {
 						$dontOverrideDefaultOption=1;
 					}
 					if ($dontOverrideDefaultOption) {
