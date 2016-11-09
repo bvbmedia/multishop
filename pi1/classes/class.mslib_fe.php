@@ -6991,6 +6991,9 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customer_groups' || $this->post['tx_multishop_pi1']['page_section']=='admin_customer_groups') {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
 			}
+            if ($this->get['tx_multishop_pi1']['page_section']=='edit_customer_group' || $this->post['tx_multishop_pi1']['page_section']=='edit_customer_group') {
+                $ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
+            }
 			if ($this->ms['MODULES']['CUSTOMERS_DATA_EXPORT_IMPORT']) {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['label']=$this->pi_getLL('import');
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_import');
