@@ -314,7 +314,7 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=($row['crdate']>0 ? strftime('%x', $row['crdate']) : '');
 						break;
 					case 'order_company_name':
-						$excelCols[]='comapny name -- '.$row['billing_company'];
+						$excelCols[]=$row['billing_company'];
 						break;
 					case 'order_vat_id':
 						$excelCols[]=$row['billing_vat_id'];
