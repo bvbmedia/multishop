@@ -276,6 +276,20 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			</div>
 		</div>
 		<div class="form-group">
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('duration_date_range')).'</label>
+			<div class="col-md-10">
+			<span class="input_label_wrapper form-inline">
+				<label for="start_duration">'.htmlspecialchars($this->pi_getLL('start_duration')).'</label>
+				<input name="start_duration" id="start_duration" type="text" class="form-control" value="'.$post_data['start_duration'].'" />
+			</span>
+			<span class="input_label_wrapper form-inline">
+				<label for="end_duration">'.htmlspecialchars($this->pi_getLL('end_duration')).'</label>
+				<input name="end_duration" id="end_duration" type="text" class="form-control" value="'.$post_data['end_duration'].'" />
+				
+			</span>
+			</div>
+		</div>
+		<div class="form-group">
 			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_status')).'</label>
 			<div class="col-md-10">
 			'.$order_status_sb.'
