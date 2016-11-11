@@ -384,6 +384,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 				}
 			}
+            //hook to let other plugins further manipulate the settings
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearchExtraFilterHook'])) {
+                $params=array(
+                    'extra_filter'=>&$extra_filter
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_search.php']['extendProductsSearchExtraFilterHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
 			if (!is_array($this->get['tx_multishop_pi1']['search_by']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_name', $this->get['tx_multishop_pi1']['search_by']))) {
 				// only search in products name / description if the search_by parameter is empty or products_name is specified
 				$array=explode(" ", $this->get['skeyword']);
