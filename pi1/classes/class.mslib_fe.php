@@ -3733,7 +3733,6 @@ class mslib_fe {
 							'', // ORDER BY...
 							'' // LIMIT ...
 						);
-                        var_dump($str);
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$array=array();
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
