@@ -1383,6 +1383,7 @@
             <label index="duration_date_range">Duration range</label>
             <label index="start_duration">Start duration</label>
             <label index="end_duration">Duration</label>
+            <label index="order_confirmation">Order confirmation</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2758,6 +2759,7 @@
             <label index="turnover_per_category_incl_vat">Omzet per categorie %s (incl. VAT)</label>
             <label index="turnover_per_category_excl_vat">Omzet per categorie %s (excl. VAT)</label>
             <label index="sku_number">SKU</label>
+            <label index="order_confirmation">Orderbevestiging</label>
         </languageKey>
     </data>
 </T3locallang>
