@@ -305,13 +305,15 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 						if (!$row['is_hidden']) {
 							$data[]=array(
 								'id'=>$row['products_id'],
-								'text'=>$row['products_name']
+								'text'=>$row['products_name'],
+                                'sku_code'=>$row['sku_code']
 							);
 						}
 					} else {
 						$data[]=array(
 							'id'=>$row['products_id'],
-							'text'=>$row['products_name']
+							'text'=>$row['products_name'],
+                            'sku_code'=>$row['sku_code']
 						);
 					}
 				}
