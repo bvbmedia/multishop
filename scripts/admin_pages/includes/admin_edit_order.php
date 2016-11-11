@@ -1122,7 +1122,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_billing_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="billing_details_container"'.($count_validate_erno && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
+			$tmpcontent.='<div class="address_details_container" id="billing_details_container"'.($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
@@ -1309,7 +1309,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_delivery_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="delivery_details_container"'.($count_validate_erno && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
+			$tmpcontent.='<div class="address_details_container" id="delivery_details_container"'.($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
 			if ($orders['delivery_company']) {
 				$tmpcontent.='<strong>'.$orders['delivery_company'].'</strong><br />';
 			}
