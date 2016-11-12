@@ -640,7 +640,7 @@ jQuery(document).ready(function($) {
 		},
 		debug: false
 	});
-	$("select").select2();
+	$("div#edit_customer").find("select").select2();
 });
 </script>';
 // now lets load the users
