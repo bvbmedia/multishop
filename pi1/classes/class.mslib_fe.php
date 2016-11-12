@@ -3221,6 +3221,29 @@ class mslib_fe {
 		return $array;
 	}
 	public function getCustomersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array()) {
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCustomersPageSet'])) {
+			$query_elements=array();
+			$query_elements['filter']=&$filter;
+			$query_elements['offset']=&$offset;
+			$query_elements['limit']=&$limit;
+			$query_elements['orderby']=&$orderby;
+			$query_elements['having']=&$having;
+			$query_elements['select']=&$select;
+			$query_elements['select_total_count']=&$select_total_count;
+			$query_elements['where']=&$where;
+			$query_elements['groupby']=&$groupby;
+			$query_elements['redirect_if_one_product']=&$redirect_if_one_product;
+			$query_elements['extra_from']=&$extra_from;
+			$query_elements['search_section']=&$search_section;
+			$query_elements['extra_join']=&$extra_join;
+			$params=array(
+					'query_elements'=>&$query_elements
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCustomersPageSet'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		if (!$limit) {
 			$limit=30;
 		}
@@ -3268,6 +3291,7 @@ class mslib_fe {
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+
 		$array['total_rows']=$row['total'];
 		// now do the query
 		$str=$select_clause.$from_clause.$where_clause.$having_clause.$orderby_clause.$limit_clause;
