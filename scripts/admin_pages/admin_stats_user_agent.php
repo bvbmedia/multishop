@@ -49,7 +49,7 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
-$limit_selectbox='<select name="limit" onchange="this.form.submit()" class="form-control">';
+$limit_selectbox='<select name="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
