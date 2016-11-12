@@ -268,8 +268,8 @@ if ($this->ADMIN_USER) {
 			'.($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] ? 'SHOW_PRICES_INCLUDING_VAT=true;' : 'SHOW_PRICES_INCLUDING_VAT=false;').'
 			jQuery(document).ready(function($) {
 			    '.($this->get['type']=='2003' ? '
-			    decimal_sep="'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'";
-                thousands_sep="'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'";
+			    decimal_sep="'.addslashes(htmlspecialchars($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])).'";
+                thousands_sep="'.addslashes(htmlspecialchars($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'])).'";
 			    $(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
 			    $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 			    ' : '').'
