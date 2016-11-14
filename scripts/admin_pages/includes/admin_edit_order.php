@@ -212,7 +212,7 @@ if (is_numeric($this->get['orders_id'])) {
 								//$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
 								$updateArray['products_model']=$product_data['products_model'];
                                 $updateArray['products_tax_id'] = 0;
-                                if (!empty($this->post['product_tax'])) {
+                                if ($product_data['tax_id']) {
                                     $updateArray['products_tax_id'] = $product_data['tax_id'];
                                 }
 								// hook for adding new items to details fieldset
@@ -332,7 +332,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
                                     $insertArray['products_model']=$product_data['products_model'];
                                     $insertArray['products_tax_id']=0;
-                                    if ($this->post['manual_product_tax']) {
+                                    if ($product_data['tax_id']) {
                                         $insertArray['products_tax_id'] = $product_data['tax_id'];
                                     }
 								}
@@ -1122,7 +1122,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_billing_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="billing_details_container"'.($count_validate_erno ? ' style="display:none"' : '').'>';
+			$tmpcontent.='<div class="address_details_container" id="billing_details_container"'.($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
@@ -1309,7 +1309,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=implode("\n", $edit_delivery_details);
 				$tmpcontent.='</div>';
 			}
-			$tmpcontent.='<div class="address_details_container" id="delivery_details_container"'.($count_validate_erno ? ' style="display:none"' : '').'>';
+			$tmpcontent.='<div class="address_details_container" id="delivery_details_container"'.($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '').'>';
 			if ($orders['delivery_company']) {
 				$tmpcontent.='<strong>'.$orders['delivery_company'].'</strong><br />';
 			}
@@ -1729,15 +1729,17 @@ if (is_numeric($this->get['orders_id'])) {
 					$optionItems=array();
 					$dontOverrideDefaultOption=0;
 					foreach ($payment_methods as $code=>$item) {
-						if (!$item['status']) {
-							$item['name'].=' ('.$this->pi_getLL('hidden_in_checkout').')';
-						}
-						$optionItems[]='<option value="'.$item['id'].'"'.(($orders['payment_method'] && $code==$orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE']==$code) ? ' selected' : '').'>'.htmlspecialchars($item['name']).'</option>';
-						if ($code==$orders['payment_method']) {
-							$dontOverrideDefaultOption=1;
-						}
+                        if (is_numeric($item['id']) && $item['id']>0) {
+                            if (!$item['status']) {
+                                $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
+                            if ($code == $orders['payment_method']) {
+                                $dontOverrideDefaultOption = 1;
+                            }
+                        }
 					}
-					if (empty($orders['payment_method'])) {
+					if (empty($orders['payment_method']) || (!empty($orders['payment_method']) && !isset($payment_methods[$orders['payment_method']]))) {
 						$dontOverrideDefaultOption=1;
 					}
 					if ($dontOverrideDefaultOption) {
@@ -2165,16 +2167,16 @@ if (is_numeric($this->get['orders_id'])) {
 								$row[2].='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
 							}
 							$row[2].=$order['products_name'];
+                            if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
+                                $row[2].='<br />'.$this->pi_getLL('sku_number').': '.$product['sku_code'];
+                            }
 							if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS']=='1' && !empty($order['products_model'])) {
 								$row[2].=' ('.$order['products_model'].')';
 							}
 							if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS']=='1' && !empty($product['ean_code'])) {
 								$row[2].='<br />EAN: '.$product['ean_code'];
 							}
-							if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS']=='1' && !empty($product['sku_code'])) {
-								$row[2].='<br />SKU: '.$product['sku_code'];
-							}
-							if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS']=='1' && !empty($product['vendor_code'])) {
+							if (!empty($product['vendor_code'])) {
 								$row[2].='<br />Vendor code: '.$product['vendor_code'];
 							}
 							if ($product['products_id']) {
@@ -3484,7 +3486,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         }
                                     }
                                 }
-                                if (!d.use_tax_id) {
+                                /*if (!d.use_tax_id) {
                                 	d.price_include_vat=0;
                                 	if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
@@ -3495,7 +3497,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         	$("#manual_product_tax").val("");
                                         }
                                     }
-                                }
+                                }*/
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
                                         $("#display_name_including_vat").val(d.display_price_include_vat);

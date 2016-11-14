@@ -312,6 +312,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             echo $this->msDebugInfo;
             die();
         }
+        if ($params['returnResultsSet']) {
+            return $pageset;
+        }
         //echo print_r($queryData);
         //die();
         if (count($pageset['dataset'])) {

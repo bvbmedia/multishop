@@ -4205,6 +4205,9 @@ class mslib_befe {
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
                 }
+                if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS'] == '1' && !empty($product['sku_code'])) {
+                    $product_name .= '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_sku')) . ': ' . htmlspecialchars($product['sku_code']);
+                }
                 if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS'] == '1' && !empty($product['products_model'])) {
                     $product_name .= '<br/>Model: ' . htmlspecialchars($product['products_model']);
                 }
@@ -4213,9 +4216,6 @@ class mslib_befe {
                 }
                 if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS'] == '1' && !empty($product['ean_code'])) {
                     $product_name .= '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_ean')) . ': ' . htmlspecialchars($product['ean_code']);
-                }
-                if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS'] == '1' && !empty($product['sku_code'])) {
-                    $product_name .= '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_sku')) . ': ' . htmlspecialchars($product['sku_code']);
                 }
                 if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS'] == '1' && !empty($product['vendor_code'])) {
                     $product_name .= '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_vendor_code')) . ': ' . htmlspecialchars($product['vendor_code']);

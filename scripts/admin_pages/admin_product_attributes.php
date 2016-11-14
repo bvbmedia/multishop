@@ -76,28 +76,33 @@ $content.='</div>';
 if ($this->post) {
     if (is_array($this->post['listtype']) and count($this->post['listtype'])) {
         foreach ($this->post['listtype'] as $products_options_id=>$settings_value) {
-            $updateArray=array();
-            $updateArray['language_id']=$language_id;
-            $updateArray['products_options_id']=$products_options_id;
-            $updateArray['listtype']=$settings_value;
-            $updateArray['required']=$this->post['required'][$products_options_id];
-            $updateArray['hide']=$this->post['hide_in_details_page'][$products_options_id];
-            $updateArray['hide_in_cart']=$this->post['hide_in_cart'][$products_options_id];
-            $str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
-                    'tx_multishop_products_options', // FROM ...
-                    'products_options_id=\''.$products_options_id.'\' and language_id=\''.$language_id.'\'', // WHERE...
-                    '', // GROUP BY...
-                    '', // ORDER BY...
-                    '' // LIMIT ...
-            );
-            $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-                $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$products_options_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
-                $res=$GLOBALS['TYPO3_DB']->sql_query($query);
-            } else {
-                $updateArray['products_options_name']='';
-                $query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
-                $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+            foreach ($this->languages as $key=>$language) {
+                if (!$key) {
+                    $default_settings_value =$settings_value;
+                 }
+                $updateArray = array();
+                $updateArray['language_id'] = $key;
+                $updateArray['products_options_id'] = $products_options_id;
+                $updateArray['listtype'] = $default_settings_value;
+                $updateArray['required'] = $this->post['required'][$products_options_id];
+                $updateArray['hide'] = $this->post['hide_in_details_page'][$products_options_id];
+                $updateArray['hide_in_cart'] = $this->post['hide_in_cart'][$products_options_id];
+                $str = $GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
+                        'tx_multishop_products_options', // FROM ...
+                        'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', // WHERE...
+                        '', // GROUP BY...
+                        '', // ORDER BY...
+                        '' // LIMIT ...
+                );
+                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                } else {
+                    $updateArray['products_options_name'] = '';
+                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
             if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
                 if (isset($this->post['options_groups'][$products_options_id])) {

@@ -3221,6 +3221,29 @@ class mslib_fe {
 		return $array;
 	}
 	public function getCustomersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array()) {
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCustomersPageSet'])) {
+			$query_elements=array();
+			$query_elements['filter']=&$filter;
+			$query_elements['offset']=&$offset;
+			$query_elements['limit']=&$limit;
+			$query_elements['orderby']=&$orderby;
+			$query_elements['having']=&$having;
+			$query_elements['select']=&$select;
+			$query_elements['select_total_count']=&$select_total_count;
+			$query_elements['where']=&$where;
+			$query_elements['groupby']=&$groupby;
+			$query_elements['redirect_if_one_product']=&$redirect_if_one_product;
+			$query_elements['extra_from']=&$extra_from;
+			$query_elements['search_section']=&$search_section;
+			$query_elements['extra_join']=&$extra_join;
+			$params=array(
+					'query_elements'=>&$query_elements
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCustomersPageSet'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		if (!$limit) {
 			$limit=30;
 		}
@@ -3268,6 +3291,7 @@ class mslib_fe {
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+
 		$array['total_rows']=$row['total'];
 		// now do the query
 		$str=$select_clause.$from_clause.$where_clause.$having_clause.$orderby_clause.$limit_clause;
@@ -3726,7 +3750,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
-						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, cgmm.negate', // SELECT ...
 							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_payment_methods s', // FROM ...
 							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id', // WHERE...
 							'', // GROUP BY...
@@ -3757,7 +3781,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
-						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, cgmm.negate', // SELECT ...
 							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
 							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 							'', // GROUP BY...
@@ -4022,7 +4046,7 @@ class mslib_fe {
 				case 'payment':
 					// first we load all options
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
-					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, cmm.negate', // SELECT ...
 						'tx_multishop_customers_method_mappings cmm, tx_multishop_payment_methods s', // FROM ...
 						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id', // WHERE...
 						'', // GROUP BY...
@@ -4051,7 +4075,7 @@ class mslib_fe {
 				case 'shipping':
 					// first we load all options
 					$allmethods=array();
-					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, cmm.negate', // SELECT ...
 						'tx_multishop_customers_method_mappings cmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
 						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 						'', // GROUP BY...
@@ -5341,6 +5365,20 @@ class mslib_fe {
 		}
 	}
 	public function getProductMappedMethods($pids=array(), $type='', $user_country='0') {
+        //hook to let other plugins further manipulate the settings
+        $collecting_active_method=false;
+        $active_methods_data=array();
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductMappedMethodsPreProc'])) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductMappedMethodsPreProc'] as $funcRef) {
+                $params=array(
+                    'pids'=>&$pids,
+                    'type'=>&$type,
+                    'user_country'=>&$user_country,
+                    'collecting_active_method'=>&$collecting_active_method
+                );
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
 		if (is_array($pids) and count($pids)) {
 			switch ($type) {
 				case 'payment':
@@ -5363,13 +5401,20 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
+                                    if ($collecting_active_method) {
+                                        $active_methods_data[$type][$row['code']]=$allmethods[$row['code']];
+                                    }
                                     $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
 									unset($allmethods[$row['code']]);
 									$count_b++;
-								}
+								} else {
+                                    if ($collecting_active_method) {
+                                        $active_methods_data[$type][$row['code']]=$allmethods[$row['code']];
+                                    }
+                                }
 							}
 						}
 					}
@@ -5397,13 +5442,20 @@ class mslib_fe {
 							if (!isset($allmethods[$row['code']])) {
 								if (!$row['negate']) {
 									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+                                    if ($collecting_active_method) {
+                                        $active_methods_data[$type][$row['code']]=$allmethods[$row['code']];
+                                    }
                                     $count_c++;
 								}
 							} else {
 								if ($row['negate']>0) {
 									unset($allmethods[$row['code']]);
 									$count_b++;
-								}
+								} else {
+                                    if ($collecting_active_method) {
+                                        $active_methods_data[$type][$row['code']]=$allmethods[$row['code']];
+                                    }
+                                }
 							}
 						}
 					}
@@ -5413,6 +5465,20 @@ class mslib_fe {
 					}
 					break;
 			}
+            //hook to let other plugins further manipulate the settings
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductMappedMethodsPostProc'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductMappedMethodsPostProc'] as $funcRef) {
+                    $params=array(
+                            'pids'=>&$pids,
+                            'type'=>&$type,
+                            'user_country'=>&$user_country,
+                            'allmethods'=>&$allmethods,
+                            'active_methods_data'=>&$active_methods_data,
+                            'collecting_active_method'=>&$collecting_active_method
+                    );
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
 			return $allmethods;
 		}
 	}
@@ -6949,6 +7015,9 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customer_groups' || $this->post['tx_multishop_pi1']['page_section']=='admin_customer_groups') {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
 			}
+            if ($this->get['tx_multishop_pi1']['page_section']=='edit_customer_group' || $this->post['tx_multishop_pi1']['page_section']=='edit_customer_group') {
+                $ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
+            }
 			if ($this->ms['MODULES']['CUSTOMERS_DATA_EXPORT_IMPORT']) {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['label']=$this->pi_getLL('import');
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_import');

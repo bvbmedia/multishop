@@ -43,6 +43,16 @@ if ($this->get['orders_export_hash']) {
 			$column='o.crdate';
 			$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 		}
+        if (!empty($post_data['start_duration'])) {
+            $start_duration=strtotime($post_data['start_duration']);
+            if (!empty($post_data['end_duration'])) {
+                $end_duration=strtotime($post_data['end_duration'], $start_duration);
+            } else {
+                $end_duration=time();
+            }
+            $column='o.crdate';
+            $filter[]=$column." BETWEEN '".$start_duration."' and '".$end_duration."'";
+        }
 		if ($post_data['order_status']!=='all') {
 			$filter[]="(o.status='".$post_data['order_status']."')";
 		}
@@ -314,7 +324,7 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=($row['crdate']>0 ? strftime('%x', $row['crdate']) : '');
 						break;
 					case 'order_company_name':
-						$excelCols[]='comapny name -- '.$row['billing_company'];
+						$excelCols[]=$row['billing_company'];
 						break;
 					case 'order_vat_id':
 						$excelCols[]=$row['billing_vat_id'];

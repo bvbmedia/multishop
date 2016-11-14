@@ -2725,7 +2725,7 @@ if ($this->post) {
 							}
 							jQuery(\'#sp_row_counter\').val(counter_data);
 							$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
-			                $(\'input.priceInputDisplay\').number(true, 2, "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'", "'.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'");
+			                $(\'input.priceInputDisplay\').number(true, 2, "'.addslashes(htmlspecialchars($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])).'", "'.addslashes(htmlspecialchars($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'])).'");
 						//}
 						event.preventDefault();
 					});

@@ -242,4 +242,82 @@ jQuery(document).ready(function ($) {
         }
     });
     // plus minus eol
+    if ($('select[name="limit"]').length>0) {
+        var current_val = $('select[name="limit"]').val();
+        if (!current_val) {
+            current_val = 15;
+        }
+        $('select[name="limit"]').replaceWith('<input type="hidden" name="limit" class="select2_rowslimit" value="' + current_val + '">');
+        var data = [
+            {id: 10, text: '10'},
+            {id: 15, text: '15'},
+            {id: 20, text: '20'},
+            {id: 25, text: '25'},
+            {id: 30, text: '30'},
+            {id: 40, text: '40'},
+            {id: 50, text: '50'},
+            {id: 100, text: '100'},
+            {id: 150, text: '150'},
+            {id: 200, text: '200'},
+            {id: 250, text: '250'},
+            {id: 300, text: '300'},
+            {id: 350, text: '350'},
+            {id: 400, text: '400'},
+            {id: 450, text: '450'},
+            {id: 500, text: '500'},
+            {id: 600, text: '600'},
+            {id: 700, text: '700'},
+            {id: 800, text: '800'},
+            {id: 900, text: '900'},
+            {id: 1000, text: '1000'},
+            {id: 1500, text: '1500'},
+            {id: 2000, text: '2000'},
+            {id: 2500, text: '2500'},
+            {id: 3000, text: '3000'},
+            {id: 3500, text: '3500'}
+        ];
+        $('.select2_rowslimit').select2({
+            width: "100px",
+            data: data,
+            createSearchChoice: function (term, data) {
+                if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                    return {id: term, text: term};
+                }
+            },
+            query: function (query) {
+                query.callback({results: data});
+            },
+            initSelection: function (element, callback) {
+                var preselect = $(element).val();
+                var preselect_index = 0;
+                $.each(data, function (i, val) {
+                    if (val.id == preselect) {
+                        preselect_index = i;
+                    }
+                });
+                callback(data[preselect_index]);
+            },
+            formatResult: function (data) {
+                if (data.text === undefined) {
+                    $.each(data, function (i, val) {
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function (data) {
+                if (data.text === undefined) {
+                    return data[0].text;
+                } else {
+                    return data.text;
+                }
+            },
+            escapeMarkup: function (m) {
+                return m;
+            }
+        });
+    }
 });
