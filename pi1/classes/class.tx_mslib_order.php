@@ -688,7 +688,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if ($copy_to_merchant) {
 						$mailSubject='';
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'])) {
-							$params=array(
+							$conf=array(
 									'this'=>&$this,
 									'page'=>&$page,
 									'content'=>&$content,
@@ -706,14 +706,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'array2'=>&$array2,
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderToMerchant'] as $funcRef) {
-								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
 							}
 						}
 						if ($pageCopyToMerchant[0]['content']) {
-							$pageCopyToMerchant[0]['content']=str_replace($params['array1'], $params['array2'], $pageCopyToMerchant[0]['content']);
+							$pageCopyToMerchant[0]['content']=str_replace($array1, $array2, $pageCopyToMerchant[0]['content']);
 						}
 						if ($pageCopyToMerchant[0]['name']) {
-							$pageCopyToMerchant[0]['name']=str_replace($params['array1'], $params['array2'], $pageCopyToMerchant[0]['name']);
+							$pageCopyToMerchant[0]['name']=str_replace($array1, $array2, $pageCopyToMerchant[0]['name']);
 						}
 						if ($mailSubject=='') {
 							$mailSubject=$this->pi_getLL('copy_for_merchant') . ': '.$pageCopyToMerchant[0]['name'];
