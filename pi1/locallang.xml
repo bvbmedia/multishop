@@ -1899,7 +1899,7 @@
             <label index="bottom">beneden</label>
             <label index="buy">Kopen</label>
             <label index="buy_now">Bestel Nu</label>
-            <label index="by">op</label>
+            <label index="by">door</label>
             <label index="cancel">Annuleren</label>
             <label index="capital_price">Inkoopprijs</label>
             <label index="captcha_code_is_invalid">Beveiligingscode is onjuist</label>
