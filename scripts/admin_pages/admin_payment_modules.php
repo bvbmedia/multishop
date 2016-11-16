@@ -223,17 +223,8 @@ if ($this->get['edit']) {
         $psp['vars']['default_order_status']['type'] = 'order_status';
     }
     // order status
-    if (!isset($psp['vars']['pending_status'])) {
-        $psp['vars']['pending_status']['type'] = 'order_status';
-    }
     if (!isset($psp['vars']['success_status'])) {
         $psp['vars']['success_status']['type'] = 'order_status';
-    }
-    if (!isset($psp['vars']['cancelled_status'])) {
-        $psp['vars']['cancelled_status']['type'] = 'order_status';
-    }
-    if (!isset($psp['vars']['denied_status'])) {
-        $psp['vars']['denied_status']['type'] = 'order_status';
     }
 	// psp mail templates
 	if (!isset($psp['vars']['order_confirmation'])) {
