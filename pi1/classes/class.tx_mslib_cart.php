@@ -1824,8 +1824,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['language_id']=$this->sys_language_uid;
 			// get default orders status
 			$status=mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
-			if (is_array($status) && isset($status['id']) && $status['id']>0) {
-				$insertArray['status']=$status['id'];
+            $default_order_status_id=0;
+            if (is_array($status) && isset($status['id']) && $status['id']>0) {
+                $default_order_status_id=$status['id'];
+            }
+            // set the order status based on payment method settings
+            $payment_method=mslib_fe::loadPaymentMethod($address['payment_method']);
+            $payment_method_vars=unserialize($payment_method['vars']);
+            $payment_method_vars['default_order_status']=(int)$payment_method_vars['default_order_status'];
+            if (isset($payment_method_vars['default_order_status']) && is_numeric($payment_method_vars['default_order_status']) && $payment_method_vars['default_order_status']>0) {
+                $default_order_status_id=$payment_method_vars['default_order_status'];
+            }
+			if ($default_order_status_id>0) {
+				$insertArray['status']=$default_order_status_id;
 			} else {
 				$insertArray['status']='';
 			}
@@ -1846,7 +1857,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['payment_condition']=$user['tx_multishop_payment_condition'];
 			}
 			//$insertArray['orders_tax_data']			=	serialize($orders_tax);
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
 				// hook
 				$params=array(
 					'ms'=>$this->ms,
@@ -1858,6 +1869,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				// hook oef
 			}
+
 			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);

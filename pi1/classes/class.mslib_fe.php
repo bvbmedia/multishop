@@ -4169,6 +4169,10 @@ class mslib_fe {
 					foreach ($value as $field_key=>$vars) {
 						$lang_key='';
 						switch ($field_key) {
+                            case 'default_order_status':
+                                //$lang_key='payment_accepted_page';
+                                $lang_key='default_order_status';
+                                break;
 							case 'success_status':
 								//$lang_key='payment_accepted_page';
 								$lang_key='order_payment_status_success';
