@@ -198,6 +198,55 @@ if (is_array($shipping_methods) and count($shipping_methods)) {
 }
 $shipping_method_input.='</select>'."\n";
 // shipping method eol
+$option_search=array(
+        "orders_id"=>$this->pi_getLL('admin_order_id'),
+        "invoice"=>$this->pi_getLL('admin_invoice_number'),
+        "customer_id"=>$this->pi_getLL('admin_customer_id'),
+        "billing_email"=>$this->pi_getLL('admin_customer_email'),
+        "delivery_name"=>$this->pi_getLL('admin_customer_name'),
+    //"crdate"=>$this->pi_getLL('admin_order_date'),
+        "billing_zip"=>$this->pi_getLL('admin_zip'),
+        "billing_city"=>$this->pi_getLL('admin_city'),
+        "billing_address"=>$this->pi_getLL('admin_address'),
+        "billing_company"=>$this->pi_getLL('admin_company'),
+        "shipping_method"=>$this->pi_getLL('admin_shipping_method')
+    //"payment_method"=>$this->pi_getLL('admin_payment_method')
+);
+asort($option_search);
+$type_search=$this->get['type_search'];
+if ($_REQUEST['skeyword']) {
+    //  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
+    $this->get['skeyword']=$_REQUEST['skeyword'];
+    $this->get['skeyword']=trim($this->get['skeyword']);
+    $this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['skeyword'], $GLOBALS['TSFE']->metaCharset);
+    $this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], true);
+    $this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
+}
+// orders search
+$option_item='<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>';
+foreach ($option_search as $key=>$val) {
+    $option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
+}
+$option_item.='</select>';
+
+$fold_unfold='';
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
+        (isset($this->get['country']) && !empty($this->get['country'])) ||
+        (isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+        (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
+        (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+        (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
+        (isset($this->get['orders_status_search']) && !empty($this->get['orders_status_search'])) ||
+        (isset($this->get['stats_year_sb']) && !empty($this->get['stats_year_sb'])) ||
+        (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
+        (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
+        (isset($this->get['invoice_date_from']) && !empty($this->get['invoice_date_from'])) ||
+        (isset($this->get['invoice_date_till']) && !empty($this->get['invoice_date_till'])) ||
+        (isset($this->get['invoice_type']) && !empty($this->get['invoice_type'])) ||
+        (isset($this->get['tx_multishop_pi1']['excluding_vat']) && !empty($this->get['tx_multishop_pi1']['excluding_vat']))) {
+    $fold_unfold=' in';
+}
+
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="pagination horizontal_list">
 	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_invoices&tx_multishop_pi1[stats_section]=turnoverPerYear').'">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
@@ -217,68 +266,96 @@ $content.='
 -->
 
 <div id="search-orders" class="well">
-	<input name="id" type="hidden" value="'.$this->get['id'].'" />
-	<!-- <div class="stat-years float_right">'.$year_select.'</div> -->
+	<input name="id" type="hidden" value="' . $this->get['id'] . '" />
+	<!-- <div class="stat-years float_right">' . $year_select . '</div> -->
 	<input name="type" type="hidden" value="2003" />
 	<input name="Search" type="hidden" value="1" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_invoices" />
 	<input name="tx_multishop_pi1[stats_section]" type="hidden" value="turnoverPerMonth" />
-	<div class="row formfield-container-wrapper">
-		<div class="col-md-4 formfield-wrapper">
-			<div class="form-group">
-			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
-			'.$customer_groups_input.'
-			</div>
-			<div class="form-group">
-				<label for="country">'.$this->pi_getLL('countries').'</label>
-				'.$billing_countries_sb.'
-			</div>
-			<label>'.$this->pi_getLL('date').'</label>
-			<div class="form-group form-inline">
-				<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-				<input type="text" class="form-control" name="order_date_from" id="order_date_from" value="'.$this->get['order_date_from'].'">
-				<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-				<input type="text" class="form-control" name="order_date_till" id="order_date_till" value="'.$this->get['order_date_till'].'">
-			</div>
-		</div>
-		<div class="col-md-4 formfield-wrapper">
-			<div class="form-group">
-			<label for="payment_status">'.$this->pi_getLL('order_payment_status').'</label>
-			'.$payment_status_select.'
-			</div>
-			<div class="form-group">
-			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
-			'.$orders_status_list.'
-			</div>
-			<label>'.$this->pi_getLL('year').'</label>
-			<div class="form-group form-inline">
-				'.$year_select.'
-			</div>
-		</div>
-		<div class="col-md-4 formfield-wrapper">
-			<div class="form-group">
-			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
-			'.$payment_method_input.'
-			</div>
-			<div class="form-group">
-			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
-			'.$shipping_method_input.'
-			</div>
-			<div class="form-group">
-				<div class="col-md-6">
-					<div class="checkbox checkbox-success checkbox-inline">
-						<input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"'.($this->get['tx_multishop_pi1']['excluding_vat']?' checked':'').'>
-						<label for="filter_by_excluding_vat">'.htmlspecialchars($this->pi_getLL('excluding_vat')).'</label>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row formfield-container-wrapper">
-		<div class="col-sm-12 formfield-wrapper">
-			<input type="submit" name="Search" class="btn btn-success pull-right" value="'.htmlspecialchars($this->pi_getLL('search')).'" />
-		</div>
-	</div>
+
+	<div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="form-inline form-collapse">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'" placeholder="'.ucfirst($this->pi_getLL('keyword')).'" />
+                    <i class="fa fa-search 2x form-control-inputsearch"></i>
+                    <span class="input-group-btn">
+                        <input type="submit" name="Search" id="advanceSearchSubmit" value="'.htmlspecialchars($this->pi_getLL('search')).'" class="btn btn-success" />
+                    </span>
+                </div>
+                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">'.$this->pi_getLL('advanced_search').'</a>
+            </div>
+        </div>
+        <div id="msAdminInterfaceSearch" class="panel-collapse collapse'.$fold_unfold.'">
+            <div class="panel-body">
+                <div id="search-orders" class="well no-mb">
+                    <input name="id" type="hidden" value="###SHOP_PID###" />
+                    <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
+                    <input name="type" type="hidden" value="2003" />
+                    <div class="row formfield-container-wrapper">
+                        <div class="col-md-4 formfield-wrapper">
+                            <div class="form-group">
+                                <label for="type_search">' . $this->pi_getLL('search_for') . '</label>
+                                ' . $option_item . '
+                            </div>
+                            <div class="form-group">
+                                <label for="groups">' . $this->pi_getLL('usergroup') . '</label>
+                                ' . $customer_groups_input . '
+                            </div>
+                            <div class="form-group">
+                                <label for="country">' . $this->pi_getLL('countries') . '</label>
+                                ' . $billing_countries_sb . '
+                            </div>
+                            <label>' . $this->pi_getLL('date') . '</label>
+                            <div class="form-group form-inline">
+                                <label for="order_date_from">' . $this->pi_getLL('from') . ':</label>
+                                <input type="text" class="form-control" name="order_date_from" id="order_date_from" value="' . $this->get['order_date_from'] . '">
+                                <label for="order_date_till" class="labelInbetween">' . $this->pi_getLL('to') . ':</label>
+                                <input type="text" class="form-control" name="order_date_till" id="order_date_till" value="' . $this->get['order_date_till'] . '">
+                            </div>
+                        </div>
+                        <div class="col-md-4 formfield-wrapper">
+                            <div class="form-group">
+                            <label for="payment_status">' . $this->pi_getLL('order_payment_status') . '</label>
+                            ' . $payment_status_select . '
+                            </div>
+                            <div class="form-group">
+                            <label for="orders_status_search" class="labelInbetween">' . $this->pi_getLL('order_status') . '</label>
+                            ' . $orders_status_list . '
+                            </div>
+                            <label>' . $this->pi_getLL('year') . '</label>
+                            <div class="form-group form-inline">
+                                ' . $year_select . '
+                            </div>
+                        </div>
+                        <div class="col-md-4 formfield-wrapper">
+                            <div class="form-group">
+                            <label for="payment_method">' . $this->pi_getLL('payment_method') . '</label>
+                            ' . $payment_method_input . '
+                            </div>
+                            <div class="form-group">
+                            <label for="shipping_method" class="labelInbetween">' . $this->pi_getLL('shipping_method') . '</label>
+                            ' . $shipping_method_input . '
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"' . ($this->get['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '') . '>
+                                        <label for="filter_by_excluding_vat">' . htmlspecialchars($this->pi_getLL('excluding_vat')) . '</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+	                </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	
+	
+	
+	
+	
 </div>
 
 </form>
@@ -298,6 +375,67 @@ $content.='
 $search_start_time='';
 $search_end_time='';
 $data_query=array();
+if ($this->get['skeyword']) {
+    switch ($type_search) {
+        case 'all':
+            $option_fields=$option_search;
+            unset($option_fields['all']);
+            unset($option_fields['invoice']);
+            unset($option_fields['crdate']);
+            unset($option_fields['delivery_name']);
+            //print_r($option_fields);
+            $items=array();
+            foreach ($option_fields as $fields=>$label) {
+                $items[]='o.'.$fields." LIKE '%".addslashes($this->get['skeyword'])."%'";
+            }
+            $items[]="o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
+            $items[]="i.invoice_id LIKE '%".addslashes($this->get['skeyword'])."%'";
+            $data_query['where'][]='('.implode(" or ", $items).')';
+            break;
+        case 'orders_id':
+            $data_query['where'][]=" o.orders_id='".addslashes($this->get['skeyword'])."'";
+            break;
+        case 'invoice':
+            $data_query['where'][]=" i.invoice_id LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        case 'billing_email':
+            $data_query['where'][]=" o.billing_email LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        case 'delivery_name':
+            $data_query['where'][]=" o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        case 'billing_zip':
+            $data_query['where'][]=" o.billing_zip LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        case 'billing_city':
+            $data_query['where'][]=" o.billing_city LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        /*case 'billing_country':
+            $filter[]=" o.billing_country LIKE '%".addslashes($this->post['skeyword'])."%'";
+            break;*/
+        case 'billing_address':
+            $data_query['where'][]=" o.billing_address LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        case 'billing_company':
+            $data_query['where'][]=" o.billing_company LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        /*case 'shipping_method':
+            $filter[]=" (o.shipping_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.shipping_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
+            break;
+        case 'payment_method':
+            $filter[]=" (o.payment_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.payment_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
+            break;*/
+        case 'customer_id':
+            $data_query['where'][]=" o.customer_id LIKE '%".addslashes($this->get['skeyword'])."%'";
+            break;
+        /*case 'crdate':
+            $start_time=date("Y-m-d", strtotime($this->get['skeyword']))." 00:00:00";
+            $till_time=date("Y-m-d", strtotime($this->get['skeyword']))." 23:59:59";
+            $filter[]=" crdate BETWEEN '".addslashes($start_time)."' and '".addslashes($till_time)."'";
+            $ors[]=" ($type_search >= $date_search) ";
+            break;*/
+    }
+}
 if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['order_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
