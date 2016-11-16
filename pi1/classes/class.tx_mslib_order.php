@@ -1431,6 +1431,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['customer_comments']='';
 			}
 			$insertArray['hash']=md5(uniqid('', true));
+			if (isset($address['foreign_source_name'])) {
+				$insertArray['foreign_source_name']=$address['foreign_source_name'];
+			}
+			if (isset($address['foreign_orders_id'])) {
+				$insertArray['foreign_orders_id']=$address['foreign_orders_id'];
+			}
 			$types=array();
 			$types[]='billing';
 			$types[]='delivery';
