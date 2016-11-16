@@ -5784,6 +5784,264 @@ class mslib_fe {
 			return false;
 		}
 	}
+    public function productFeedGeneratorGetShippingCosts($products, $countries_id, $shipping_method_id) {
+        if (!is_array($products) && count($products)) {
+            return false;
+        }
+        if (!is_numeric($countries_id)) {
+            return false;
+        }
+        if (!is_numeric($shipping_method_id)) {
+            return false;
+        }
+        $str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
+                'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
+                'sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
+                '', // GROUP BY...
+                '', // ORDER BY...
+                '' // LIMIT ...
+        );
+        $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry3)) {
+            $row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
+            $shipping_method=mslib_fe::getShippingMethod($shipping_method_id, 's.id', $countries_id);
+            //hook to let other plugins further manipulate the settings
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCosts'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCosts'] as $funcRef) {
+                    $params['row3']=&$row3;
+                    $params['shipping_method']=&$shipping_method;
+                    $params['countries_id']=&$countries_id;
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($row3['shipping_costs_type']=='weight') {
+                $total_weight=$products['products_weight'];
+                $steps=explode(",", $row3['price']);
+                $current_price='';
+                foreach ($steps as $step) {
+                    $cols=explode(":", $step);
+                    if (isset($cols[1])) {
+                        $current_price=$cols[1];
+                    }
+                    if ($total_weight<=$cols[0]) {
+                        $current_price=$cols[1];
+                        break;
+                    }
+                }
+                $shipping_cost=$current_price;
+                $shipping_cost_method_box=$current_price;
+            } elseif ($row3['shipping_costs_type']=='quantity') {
+                $total_quantity=1;
+                $steps=explode(",", $row3['price']);
+                $current_price='';
+                foreach ($steps as $step) {
+                    $cols=explode(":", $step);
+                    if (isset($cols[1])) {
+                        $current_price=$cols[1];
+                    }
+                    if ($total_quantity<=$cols[0]) {
+                        $current_price=$cols[1];
+                        break;
+                    }
+                }
+                $shipping_cost=$current_price;
+                $shipping_cost_method_box=$current_price;
+            } else {
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCostsCustomType'])) {
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCostsCustomType'] as $funcRef) {
+                        $params['products']=&$products;
+                        $params['row3']=&$row3;
+                        $params['countries_id']=&$countries_id;
+                        $params['shipping_method']=&$shipping_method;
+                        $params['shipping_method_id']= &$shipping_method_id;
+                        $params['shipping_cost']= &$shipping_cost;
+                        $params['shipping_cost_method_box']=&$shipping_cost_method_box;
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                } else {
+                    $shipping_cost=$row3['price'];
+                    $shipping_cost_method_box=$row3['price'];
+                }
+            }
+            //
+            // calculate total costs
+            $subtotal=$products['final_price'];
+            if (strstr($subtotal, ",")) {
+                $subtotal=str_replace(',', '.', $subtotal);
+            }
+            //
+            if (!empty($row3['override_shippingcosts'])) {
+                $old_shipping_costs=$shipping_cost;
+                $shipping_cost=$row3['override_shippingcosts'];
+                // custom code to change the shipping costs based on cart amount
+                if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                    $steps=explode(",", $shipping_cost);
+                    $count=0;
+                    if (is_array($steps) && count($steps)) {
+                        foreach ($steps as $step) {
+                            // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                            // example setting: 0:6.95,50:0
+                            $split=explode(":", $step);
+                            if (is_numeric($split[0])) {
+                                if ($subtotal>$split[0] and isset($split[1])) {
+                                    $shipping_cost=$split[1];
+                                    $shipping_cost_method_box=$split[1];
+                                    continue;
+                                } else {
+                                    $shipping_cost=$old_shipping_costs;
+                                    $shipping_cost_method_box=$old_shipping_costs;
+                                }
+                            }
+                            $count++;
+                        }
+                    }
+                }
+            }
+            // custom code to change the shipping costs based on cart amount
+            if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                $steps=explode(",", $shipping_cost);
+                $count=0;
+                foreach ($steps as $step) {
+                    // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                    // example setting: 0:6.95,50:0
+                    $split=explode(":", $step);
+                    if (is_numeric($split[0])) {
+                        if ($count==0) {
+                            if (isset($split[1])) {
+                                $shipping_cost=$split[1];
+                                $shipping_cost_method_box=$split[1];
+                            } else {
+                                $shipping_cost=$split[0];
+                                $shipping_cost_method_box=$split[0];
+                                continue;
+                            }
+                        }
+                        if ($subtotal>$split[0] and isset($split[1])) {
+                            $shipping_cost=$split[1];
+                            $shipping_cost_method_box=$split[0];
+                            continue;
+                        }
+                    }
+                    $count++;
+                }
+            }
+            // custom code to change the shipping costs based on cart amount
+            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $shipping_cost=round($shipping_cost, 2);
+                $shipping_cost_method_box=round($shipping_cost_method_box, 2);
+            }
+            // shipping costs only for shipping method box display
+            if ($shipping_cost_method_box) {
+                if ($shipping_method['tax_id'] && $shipping_cost_method_box) {
+                    $shipping_method_box_total_tax_rate=$shipping_method['tax_rate'];
+                    if ($shipping_method['country_tax_rate']) {
+                        $shipping_method_box_country_tax_rate=$shipping_method['country_tax_rate'];
+                        $shipping_method_box_country_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['country_tax_rate']));
+                    } else {
+                        $shipping_method_box_country_tax_rate=0;
+                        $shipping_method_box_country_tax=0;
+                    }
+                    if ($shipping_method['region_tax_rate']) {
+                        $shipping_method_box_region_tax_rate=$shipping_method['region_tax_rate'];
+                        $shipping_method_box_region_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['region_tax_rate']));
+                    } else {
+                        $shipping_method_box_region_tax_rate=0;
+                        $shipping_method_box_region_tax=0;
+                    }
+                    if ($shipping_method_box_region_tax && $shipping_method_box_country_tax) {
+                        $shipping_method_box_tax=$shipping_method_box_country_tax+$shipping_method_box_region_tax;
+                    } else {
+                        $shipping_method_box_tax=mslib_fe::taxDecimalCrop($shipping_cost_method_box*($shipping_method['tax_rate']));
+                    }
+                }
+            }
+            if ($shipping_cost) {
+                if ($shipping_method['tax_id'] && $shipping_cost) {
+                    $shipping_total_tax_rate=$shipping_method['tax_rate'];
+                    if ($shipping_method['country_tax_rate']) {
+                        $shipping_country_tax_rate=$shipping_method['country_tax_rate'];
+                        $shipping_country_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['country_tax_rate']));
+                    } else {
+                        $shipping_country_tax_rate=0;
+                        $shipping_country_tax=0;
+                    }
+                    if ($shipping_method['region_tax_rate']) {
+                        $shipping_region_tax_rate=$shipping_method['region_tax_rate'];
+                        $shipping_region_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['region_tax_rate']));
+                    } else {
+                        $shipping_region_tax_rate=0;
+                        $shipping_region_tax=0;
+                    }
+                    if ($shipping_region_tax && $shipping_country_tax) {
+                        $shipping_tax=$shipping_country_tax+$shipping_region_tax;
+                    } else {
+                        $shipping_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['tax_rate']));
+                    }
+                }
+            }
+            $handling_cost=0;
+            $handling_tax=0;
+            if (!empty($row3['handling_costs'])) {
+                $handling_cost=$row3['handling_costs'];
+                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $handling_cost=round($row3['handling_costs'], 2);
+                }
+                $percentage_handling_cost=false;
+                if (strpos($handling_cost, '%')!==false) {
+                    $handling_cost=str_replace('%', '', $handling_cost);
+                    $percentage_handling_cost=true;
+                }
+                if ($percentage_handling_cost) {
+                    $tmp_handling_cost=$handling_cost;
+                    if (($products['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+                        $products['final_price'] = $products['final_price'] * (1 + $products['tax_rate']);
+                    }
+                    $subtotal=$products['final_price'];
+                    if ($subtotal) {
+                        $handling_cost=($subtotal/100*$tmp_handling_cost);
+                        if ($total_include_vat && $shipping_method['tax_rate']) {
+                            $handling_cost=$handling_cost/(1+$shipping_method['tax_rate']);
+                        }
+                    }
+                }
+                //var_dump($shipping_method['tax_rate']);
+                //die();
+                if ($shipping_method['tax_id'] && $handling_cost) {
+                    $handling_total_tax_rate=$shipping_method['tax_rate'];
+                    if ($shipping_method['country_tax_rate']) {
+                        $handling_country_tax_rate=$shipping_method['country_tax_rate'];
+                        $handling_country_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['country_tax_rate']));
+                    } else {
+                        $handling_country_tax_rate=0;
+                        $handling_country_tax=0;
+                    }
+                    if ($shipping_method['region_tax_rate']) {
+                        $handling_region_tax_rate=$shipping_method['region_tax_rate'];
+                        $handling_region_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['region_tax_rate']));
+                    } else {
+                        $handling_region_tax_rate=0;
+                        $handling_region_tax=0;
+                    }
+                    if ($handling_region_tax && $handling_country_tax) {
+                        $handling_tax=$handling_country_tax+$handling_region_tax;
+                    } else {
+                        $handling_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['tax_rate']));
+                    }
+                }
+            }
+            $shipping_cost+=$handling_cost;
+            $shipping_tax+=$handling_tax;
+            $shipping_cost_method_box+=$handling_cost;
+            $shipping_method_box_tax+=$handling_tax;
+            $shipping_method['shipping_costs_method_box']=$shipping_cost_method_box;
+            $shipping_method['shipping_costs_method_box_including_vat']=$shipping_cost_method_box+$shipping_method_box_tax;
+            $shipping_method['shipping_costs']=$shipping_cost;
+            $shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
+            return $shipping_method;
+        } else {
+            return false;
+        }
+    }
 	public function getPaymentMethod($string, $key='p.id', $countries_id=0, $filter=false, $sys_language_uid='') {
 		if ($string) {
 			if (!is_numeric($sys_language_uid)) {
