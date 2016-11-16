@@ -4169,6 +4169,10 @@ class mslib_fe {
 					foreach ($value as $field_key=>$vars) {
 						$lang_key='';
 						switch ($field_key) {
+                            case 'default_order_status':
+                                //$lang_key='payment_accepted_page';
+                                $lang_key='default_order_status';
+                                break;
 							case 'success_status':
 								//$lang_key='payment_accepted_page';
 								$lang_key='order_payment_status_success';
@@ -8609,6 +8613,13 @@ class mslib_fe {
 			if (!$timestamp) {
 				$timestamp=time();
 			}
+            // set the order status based on payment method settings
+            $payment_method=mslib_fe::loadPaymentMethod($order['payment_method']);
+            $payment_method_vars=unserialize($payment_method['vars']);
+            $payment_method_vars['success_status']=(int)$payment_method_vars['success_status'];
+            if ($payment_method['provider']=='generic' && isset($payment_method_vars['success_status']) && is_numeric($payment_method_vars['success_status']) && $payment_method_vars['success_status']>0) {
+                $updateArray['status']=$payment_method_vars['success_status'];
+            }
 			$updateArray['orders_paid_timestamp']=$timestamp;
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
