@@ -4234,6 +4234,10 @@ class mslib_befe {
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
                 $markerArray['ITEM_ORDER_UNIT'] = $product['order_unit_name'];
+                $markerArray['ITEM_IMAGE']='';
+                if ($product['products_image']) {
+                    $markerArray['ITEM_IMAGE'] = '<img src="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'">';
+                }
                 if ($table_type=='invoice' && $prefix=='-') {
                     if (strpos($product['final_price'], '-')!==false) {
                         $product['final_price']=str_replace('-', '', $product['final_price']);
