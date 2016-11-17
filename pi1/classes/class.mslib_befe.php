@@ -3253,6 +3253,12 @@ class mslib_befe {
                 } else {
                     $array2[] = '';
                 }
+                $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '';
+                }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
                 $array1[] = '###BILLING_STREET_NAME###';
