@@ -4097,6 +4097,10 @@ class mslib_befe {
         $markerArray = array();
         $markerArray['LABEL_HEADER_QTY'] = ucfirst($this->pi_getLL('qty'));
         $markerArray['LABEL_HEADER_PRODUCT_NAME'] = $this->pi_getLL('products_name');
+        $markerArray['LABEL_HEADER_SKU']=$this->pi_getLL('sku_number', 'SKU');
+        $markerArray['LABEL_HEADER__QUANTITY']=$this->pi_getLL('qty');
+        $markerArray['LABEL_HEADER_TOTAL']=$this->pi_getLL('total');
+        $markerArray['LABEL_HEADER_PRICE']=$this->pi_getLL('price');
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'])) {
             $params_internal = array(
@@ -4157,11 +4161,11 @@ class mslib_befe {
             $subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###'] = '';
         }
         if (!$order['shipping_method_costs']) {
-            // If shipping method costs are zero, than remove the whole subpart
+            // If shipping method costs are zero, then remove the whole subpart
             $subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###'] = '';
         }
         if (!$order['payment_method_costs']) {
-            // If payment method costs are zero, than remove the whole subpart
+            // If payment method costs are zero, then remove the whole subpart
             $subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###'] = '';
         }
         $subparts['template'] = $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
@@ -4234,9 +4238,15 @@ class mslib_befe {
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
                 $markerArray['ITEM_ORDER_UNIT'] = $product['order_unit_name'];
-                $markerArray['ITEM_IMAGE']='';
-                if ($product['products_image']) {
-                    $markerArray['ITEM_IMAGE'] = '<img src="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'">';
+                // ITEM IMAGE
+                $image_path=mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50');
+                if (isset($product_tmp['products_image']) && !empty($product_tmp['products_image'])) {
+                    if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
+                        $product_tmp['products_image']=$image_path;
+                    }
+                    $markerArray['ITEM_IMAGE']='<img src="'.$product_tmp['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+                } else {
+                    $markerArray['ITEM_IMAGE']='<div class="no_image_50"></div>';
                 }
                 if ($table_type=='invoice' && $prefix=='-') {
                     if (strpos($product['final_price'], '-')!==false) {
@@ -4278,7 +4288,10 @@ class mslib_befe {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
                     }
                 }
-                $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
+                $append_attributes_label_to_product_name=false;
+                if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
+                    $append_attributes_label_to_product_name=true;
+                }
                 if (is_array($product['attributes']) && count($product['attributes'])) {
                     foreach ($product['attributes'] as $tmpkey => $options) {
                         if ($options['products_options_values']) {
@@ -4293,6 +4306,9 @@ class mslib_befe {
                             $attributeMarkerArray['ITEM_ATTRIBUTE_ROW_TYPE'] = $tr_type;
                             $attributeMarkerArray['ITEM_ATTRIBUTE'] = '';
                             if ($options['products_options'] && $options['products_options_values']) {
+                                if ($append_attributes_label_to_product_name) {
+                                    $markerArray['ITEM_PRODUCT_NAME'] .= ' <br />' . $options['products_options'] . ': ' . $options['products_options_values'];
+                                }
                                 $attributeMarkerArray['ITEM_ATTRIBUTE'] = htmlspecialchars($options['products_options']) . ': ' . htmlspecialchars($options['products_options_values']);
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_VAT'] = '';
@@ -4322,6 +4338,7 @@ class mslib_befe {
                         $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
+                $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
                 $subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'] = '';
                 // count the vat
                 if ($order['final_price'] and $order['products_tax']) {
@@ -4564,6 +4581,8 @@ class mslib_befe {
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
+        $subpartArray['###LABEL_GRAND_TOTAL_EXCLUDING_VAT###']=$this->pi_getLL('grand_total_excluding_vat') . ' ';
+        $subpartArray['###GRAND_TOTAL_EXCLUDING_VAT###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total_excluding_vat']), $customer_currency, $display_currency_symbol, 0);
         $subpartArray['###LABEL_GRAND_TOTAL###'] = $this->pi_getLL('total');
         $subpartArray['###GRAND_TOTAL###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
         $tmpcontent = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
