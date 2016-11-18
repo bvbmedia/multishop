@@ -4307,7 +4307,7 @@ class mslib_befe {
                             $attributeMarkerArray['ITEM_ATTRIBUTE'] = '';
                             if ($options['products_options'] && $options['products_options_values']) {
                                 if ($append_attributes_label_to_product_name) {
-                                    $markerArray['ITEM_PRODUCT_NAME'] .= ' <BR>' . $options['products_options'] . ': ' . $options['products_options_values'];
+                                    $markerArray['ITEM_PRODUCT_NAME'] .= ' <br />' . $options['products_options'] . ': ' . $options['products_options_values'];
                                 }
                                 $attributeMarkerArray['ITEM_ATTRIBUTE'] = htmlspecialchars($options['products_options']) . ': ' . htmlspecialchars($options['products_options_values']);
                             }
