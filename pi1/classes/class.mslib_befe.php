@@ -4245,7 +4245,7 @@ class mslib_befe {
                 $image_path=mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50');
                 if (isset($product_tmp['products_image']) && !empty($product_tmp['products_image'])) {
                     if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
-                        $product_tmp['products_image']=$image_path;
+                        $product_tmp['products_image']=$this->FULL_HTTP_URL.$image_path;
                     }
                     $markerArray['ITEM_IMAGE']='<img src="'.$product_tmp['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
                 } else {
