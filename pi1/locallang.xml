@@ -793,6 +793,7 @@
             <label index="format">format</label>
             <label index="from">From</label>
             <label index="full_date_format">%A %e %B, %Y %H:%M</label>
+            <label index="full_date_no_time_format">%A %e %B, %Y</label>
             <label index="full_name">full name</label>
             <label index="gender">gender</label>
             <label index="gender_is_required">Title is required</label>
@@ -2175,6 +2176,7 @@
             <label index="format">formaat</label>
             <label index="from">Van</label>
             <label index="full_date_format">%A %e %B, %Y %H:%M</label>
+            <label index="full_date_no_time_format">%A %e %B, %Y</label>
             <label index="full_name">volledige naam</label>
             <label index="gender">geslacht</label>
             <label index="gender_is_required">Titel nodig</label>

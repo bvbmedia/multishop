@@ -3253,6 +3253,12 @@ class mslib_befe {
                 } else {
                     $array2[] = '';
                 }
+                $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
+                if ($order['expected_delivery_date']>0) {
+                    $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                } else {
+                    $array2[] = '';
+                }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
                 $array1[] = '###BILLING_STREET_NAME###';
@@ -4242,6 +4248,10 @@ class mslib_befe {
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
                 $markerArray['ITEM_ORDER_UNIT'] = $product['order_unit_name'];
+                $markerArray['ITEM_IMAGE']='';
+                if ($product['products_image']) {
+                    $markerArray['ITEM_IMAGE'] = '<img src="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'">';
+                }
                 if ($table_type=='invoice' && $prefix=='-') {
                     if (strpos($product['final_price'], '-')!==false) {
                         $product['final_price']=str_replace('-', '', $product['final_price']);

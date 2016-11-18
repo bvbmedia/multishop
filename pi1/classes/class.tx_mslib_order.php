@@ -604,6 +604,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 } else {
                     $array2[] = '';
                 }
+				$array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
+				if ($order['expected_delivery_date']>0) {
+					$array2[] = strftime($this->pi_getLL('full_date_format'), $order['expected_delivery_date']);
+				} else {
+					$array2[] = '';
+				}
 				$array1[]='###CUSTOMER_COMMENTS###';
 				$array2[]=$order['customer_comments'];
 
