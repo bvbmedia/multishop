@@ -4211,9 +4211,6 @@ class mslib_befe {
                 $markerArray['ITEM_ROW_TYPE'] = $tr_type;
                 $markerArray['ITEM_PRODUCT_QTY'] = round($product['qty'], 2);
                 $product_tmp = mslib_fe::getProduct($product['products_id']);
-                if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
-                    $product_tmp['products_image']=$image_path;
-                }
                 $product_name = htmlspecialchars($product['products_name']);
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
@@ -4245,7 +4242,7 @@ class mslib_befe {
                 $image_path=mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50');
                 if (isset($product_tmp['products_image']) && !empty($product_tmp['products_image'])) {
                     if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
-                        $product_tmp['products_image']=$this->FULL_HTTP_URL.$image_path;
+                        $product_tmp['products_image']=$image_path;
                     }
                     $markerArray['ITEM_IMAGE']='<img src="'.$product_tmp['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
                 } else {
