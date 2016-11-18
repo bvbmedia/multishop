@@ -4581,7 +4581,7 @@ class mslib_befe {
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
-        $subpartArray['###LABEL_GRAND_TOTAL_EXCLUDING_VAT###']=$this->pi_getLL('grand_total_excluding_vat') . ': ';
+        $subpartArray['###LABEL_GRAND_TOTAL_EXCLUDING_VAT###']=$this->pi_getLL('grand_total_excluding_vat') . ' ';
         $subpartArray['###GRAND_TOTAL_EXCLUDING_VAT###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total_excluding_vat']), $customer_currency, $display_currency_symbol, 0);
         $subpartArray['###LABEL_GRAND_TOTAL###'] = $this->pi_getLL('total');
         $subpartArray['###GRAND_TOTAL###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
