@@ -4138,7 +4138,7 @@ if ($this->post) {
 		} else {
 			$feed_checkbox='';
 			$feed_stock_checkbox='';
-			$sql_feed='SELECT * from tx_multishop_product_feeds';
+			$sql_feed='SELECT * from tx_multishop_product_feeds where status=1';
 			$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
 			$feed_checkbox='';
 			$feed_stock_checkbox='';

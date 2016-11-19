@@ -2,12 +2,12 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $content='0%';
 // first check group discount
 if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	$discount_percentage=mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
 	if ($discount_percentage) {
-		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		$cart=$mslib_cart->getCart();
@@ -49,7 +49,6 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 					break;
 			}
 			//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 			$mslib_cart->init($this);
 			$cart=$mslib_cart->getCart();
@@ -62,7 +61,6 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 		}
 	} else {
 		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		$cart=$mslib_cart->getCart();
@@ -78,7 +76,6 @@ if (!empty($_POST['code']) && $_POST['code']!='undefined') {
 } else {
 	if ($content=='0%') {
 		//$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		$cart=$mslib_cart->getCart();
@@ -102,6 +99,17 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_discount.php']['getDiscountPostHook'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
+}
+// get the discount_percentage by recalculating the cart content
+if ($cart['discount']>0 && !$cart['discount_amount']) {
+    $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+    $mslib_cart->init($this);
+    $cart=$mslib_cart->getCart();
+    switch ($cart['discount_type']) {
+        case 'percentage':
+            $return_data['discount_percentage'] = mslib_fe::amount2Cents($cart['discount_amount']);
+            break;
+    }
 }
 // hook oef
 //

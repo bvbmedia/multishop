@@ -122,8 +122,14 @@ if ($erno or $show_shipping_payment_method) {
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_shipping_method').'</h2></div>
 		<ul id="multishopShippingMethod" class="row">';
 		$count=0;
+        $delivery_country=$cart['user']['country'];
+        if (isset($cart['user']['different_delivery_address']) && !empty($cart['user']['different_delivery_address']) && isset($cart['user']['delivery_country']) && !empty($cart['user']['delivery_country'])) {
+            $delivery_country=$cart['user']['delivery_country'];
+        }
+        $tmp_countries=mslib_fe::getCountryByName($delivery_country);
+        $countries_id=$tmp_countries['cn_iso_nr'];
 		foreach ($shipping_methods as $code=>$item) {
-			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $cart['user']['countries_id']);
+			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $countries_id);
 			// custom hook that can be controlled by third-party plugin
 			$shipping_method_description = '';
 			if (!empty($item['description'])) {
@@ -142,7 +148,7 @@ if ($erno or $show_shipping_payment_method) {
 			$count++;
 			// costs
 			$price_wrap='';
-			$priceArray=mslib_fe::getShippingCosts($cart['user']['countries_id'], $item['id']);
+			$priceArray=mslib_fe::getShippingCosts($countries_id, $item['id']);
 			if ($priceArray['shipping_costs_including_vat']>0 || $this->ms['MODULES']['ALWAYS_DISPLAY_SHIPPING_COSTS']>0) {
 				$data['shipping_cost']=$priceArray['shipping_costs_including_vat'];
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']).'</div>';
