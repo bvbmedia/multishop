@@ -133,6 +133,7 @@ if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 $array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
 $array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 $array['products_price_with_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
+$array['shipping_costs_per_product']=$this->pi_getLL('feed_exporter_fields_label_products_shipping_costs');
 // attributes
 if ($this->ms['MODULES']['INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED']) {
 	$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
@@ -308,6 +309,24 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 					<div class="col-md-10">
 					<input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" class="form-control" />
 					</div>
+			</div>';
+        // loading shipping methods
+        $shipping_methods=mslib_fe::loadShippingMethods();
+        $shipping_methods_options='<option value="">' . $this->pi_getLL('choose').'</option>';
+        if (count($shipping_methods)) {
+            if (count($shipping_methods)) {
+                foreach ($shipping_methods as $code => $item) {
+                    $shipping_methods_options.='<option value="'.$item['id'].'"'.(($post_data['shipping_costs_per_product']==$item['id']) ? ' selected="selected"' : '').'>' . $item['name'].'</option>';
+                }
+            }
+        }
+		$content.='<div class="form-group">
+                <label class="control-label col-md-2">'.$this->pi_getLL('shipping_method').'</label>
+                <div class="col-md-10">
+                <select name="shipping_costs_per_product" class="form-control">
+					'.$shipping_methods_options.'
+				</select>
+                </div>
 			</div>';
 		$feed_types=array();
 		// custom page hook that can be controlled by third-party plugin

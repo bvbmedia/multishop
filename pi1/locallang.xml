@@ -793,6 +793,7 @@
             <label index="format">format</label>
             <label index="from">From</label>
             <label index="full_date_format">%A %e %B, %Y %H:%M</label>
+            <label index="full_date_no_time_format">%A %e %B, %Y</label>
             <label index="full_name">full name</label>
             <label index="gender">gender</label>
             <label index="gender_is_required">Title is required</label>
@@ -1384,6 +1385,8 @@
             <label index="start_duration">Start duration</label>
             <label index="end_duration">Duration</label>
             <label index="order_confirmation">Order confirmation</label>
+            <label index="feed_exporter_fields_label_products_shipping_costs">Shipping costs</label>
+            <label index="default_order_status">Default order status</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2173,6 +2176,7 @@
             <label index="format">formaat</label>
             <label index="from">Van</label>
             <label index="full_date_format">%A %e %B, %Y %H:%M</label>
+            <label index="full_date_no_time_format">%A %e %B, %Y</label>
             <label index="full_name">volledige naam</label>
             <label index="gender">geslacht</label>
             <label index="gender_is_required">Titel nodig</label>
@@ -2760,6 +2764,8 @@
             <label index="turnover_per_category_excl_vat">Omzet per categorie %s (excl. VAT)</label>
             <label index="sku_number">SKU</label>
             <label index="order_confirmation">Orderbevestiging</label>
+            <label index="feed_exporter_fields_label_products_shipping_costs">Verzendkosten</label>
+            <label index="default_order_status">Standaard bestelstatus</label>
         </languageKey>
     </data>
 </T3locallang>

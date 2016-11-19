@@ -218,7 +218,14 @@ if ($this->get['edit']) {
 		$lngproduct[$tmprow['language_id']]=$tmprow;
 	}
 	$psp=$payment_methods[$row['provider']];
-
+    // default_order status
+    if (!isset($psp['vars']['default_order_status'])) {
+        $psp['vars']['default_order_status']['type'] = 'order_status';
+    }
+    // order status
+    if (!isset($psp['vars']['success_status'])) {
+        $psp['vars']['success_status']['type'] = 'order_status';
+    }
 	// psp mail templates
 	if (!isset($psp['vars']['order_confirmation'])) {
 		$psp['vars']['order_confirmation']['type']='psp_mail_template_email_order_confirmation';
@@ -433,6 +440,23 @@ if ($this->get['edit']) {
 			$content.='</div>';
 		}
 		$psp=$payment_methods[$this->get['payment_method_code']];
+        // default_order status
+        if (!isset($psp['vars']['default_order_status'])) {
+            $psp['vars']['default_order_status']['type'] = 'order_status';
+        }
+        // order status
+        if (!isset($psp['vars']['pending_status'])) {
+            $psp['vars']['pending_status']['type'] = 'order_status';
+        }
+        if (!isset($psp['vars']['success_status'])) {
+            $psp['vars']['success_status']['type'] = 'order_status';
+        }
+        if (!isset($psp['vars']['cancelled_status'])) {
+            $psp['vars']['cancelled_status']['type'] = 'order_status';
+        }
+        if (!isset($psp['vars']['denied_status'])) {
+            $psp['vars']['denied_status']['type'] = 'order_status';
+        }
 		// psp mail templates
 		if (!isset($psp['vars']['order_confirmation'])) {
 			$psp['vars']['order_confirmation']['type']='psp_mail_template_email_order_confirmation';

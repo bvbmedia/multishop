@@ -604,6 +604,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 } else {
                     $array2[] = '';
                 }
+				$array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
+				if ($order['expected_delivery_date']>0) {
+					$array2[] = strftime($this->pi_getLL('full_date_format'), $order['expected_delivery_date']);
+				} else {
+					$array2[] = '';
+				}
 				$array1[]='###CUSTOMER_COMMENTS###';
 				$array2[]=$order['customer_comments'];
 
@@ -1431,6 +1437,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['customer_comments']='';
 			}
 			$insertArray['hash']=md5(uniqid('', true));
+			if (isset($address['foreign_source_name'])) {
+				$insertArray['foreign_source_name']=$address['foreign_source_name'];
+			}
+			if (isset($address['foreign_orders_id'])) {
+				$insertArray['foreign_orders_id']=$address['foreign_orders_id'];
+			}
+			if (isset($address['http_referer'])) {
+				$insertArray['http_referer']=$address['http_referer'];
+			}
 			$types=array();
 			$types[]='billing';
 			$types[]='delivery';

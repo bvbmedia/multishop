@@ -257,7 +257,10 @@ plugin.multishop {
 	# cat=plugin.multishop - main; type=int+; label= TT address record ID of the store: The uid number of the tt_address record that contains the Store address details. This record is mandatory for correct calculation of VAT.
 	tt_address_record_id_store =
 
+	# cat=plugin.multishop - templates/file; type=string; label= AJAX products to basket File Path: Optionally specify the location of the template file that is being used for generating AJAX basket. Example: fileadmin/templates/multishop/order_details_table_ajaxProductsToBasket.tmpl.
 	order_details_table_ajaxProductsToBasket_tmpl_path =
+
+	# cat=plugin.multishop - templates/file; type=string; label= AJAX products GetMethodCosts File Path: Optionally specify the location of the template file that is being used for generating AJAX GetMethodCosts products table. Example: fileadmin/templates/multishop/order_details_table_GetMethodCosts.tmpl.
 	order_details_table_ajaxGetMethodCosts_tmpl_path =
 
 	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page: Change the root title in the crumbar. Example: Home.

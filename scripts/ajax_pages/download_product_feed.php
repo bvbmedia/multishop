@@ -935,6 +935,18 @@ if ($this->get['feed_hash']) {
 					case 'products_meta_description':
 						$tmpcontent.=$row['products_meta_description'];
 						break;
+                    case 'shipping_costs_per_product':
+                        $tmp_countries=mslib_fe::getCountryByName(strtolower($this->tta_shop_info['country']));
+                        $countries_id=$tmp_countries['cn_iso_nr'];
+                        $product_id=$row['products_id'];
+                        $shipping_method_id=$post_data['shipping_costs_per_product'];
+                        $priceArray=mslib_fe::productFeedGeneratorGetShippingCosts($row, $countries_id, $shipping_method_id);
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $tmpcontent.=$priceArray['shipping_costs_including_vat'];
+                        } else {
+                            $tmpcontent.=$priceArray['shipping_costs'];
+                        }
+                        break;
 					default:
 						if ($field) {
 							// COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES

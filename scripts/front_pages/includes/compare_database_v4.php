@@ -262,4 +262,18 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+$str="select foreign_source_name from tx_multishop_orders limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE  `tx_multishop_orders` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
+$str="select foreign_orders_id from tx_multishop_orders limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE  `tx_multishop_orders` ADD `foreign_orders_id` varchar(30) default '', ADD KEY `foreign_orders_id` (`foreign_orders_id`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>

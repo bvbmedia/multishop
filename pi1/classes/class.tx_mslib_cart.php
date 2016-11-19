@@ -1824,8 +1824,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['language_id']=$this->sys_language_uid;
 			// get default orders status
 			$status=mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
-			if (is_array($status) && isset($status['id']) && $status['id']>0) {
-				$insertArray['status']=$status['id'];
+            $default_order_status_id=0;
+            if (is_array($status) && isset($status['id']) && $status['id']>0) {
+                $default_order_status_id=$status['id'];
+            }
+            // set the order status based on payment method settings
+            $payment_method=mslib_fe::loadPaymentMethod($address['payment_method']);
+            $payment_method_vars=unserialize($payment_method['vars']);
+            $payment_method_vars['default_order_status']=(int)$payment_method_vars['default_order_status'];
+            if (isset($payment_method_vars['default_order_status']) && is_numeric($payment_method_vars['default_order_status']) && $payment_method_vars['default_order_status']>0) {
+                $default_order_status_id=$payment_method_vars['default_order_status'];
+            }
+			if ($default_order_status_id>0) {
+				$insertArray['status']=$default_order_status_id;
 			} else {
 				$insertArray['status']='';
 			}
@@ -1846,7 +1857,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['payment_condition']=$user['tx_multishop_payment_condition'];
 			}
 			//$insertArray['orders_tax_data']			=	serialize($orders_tax);
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
 				// hook
 				$params=array(
 					'ms'=>$this->ms,
@@ -1858,6 +1869,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				// hook oef
 			}
+
 			$insertArray=mslib_befe::rmNullValuedKeys($insertArray);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -3022,7 +3034,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$this->cart['summarize']['total_orders_tax_including_discount']=($this->cart['summarize']['total_orders_tax_including_discount']-$this->cart['discount_amount']);
 				$this->cart['summarize']['grand_total']=round($this->cart['summarize']['grand_total']-$row['discount'], 2);
 				$markerArray=array();
-				$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
+				$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount');
 				$markerArray['DISCOUNT']=mslib_fe::amount2Cents($this->cart['discount_amount']);
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 				// trick to reduce TAX costs
@@ -3036,7 +3048,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				// new subtotal
 				$markerArray = array();
-				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('new_subtotal_excl_vat') . ':';
+				$markerArray['PRODUCTS_NEWSUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('new_subtotal_excl_vat');
 				$new_subtotal_amount=($this->cart['summarize']['sub_total'] - $this->cart['discount_amount']) + $this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs'];
 				$markerArray['PRODUCTS_NEWTOTAL_PRICE'] =mslib_fe::amount2Cents($new_subtotal_amount);
 				$subpartArray['###NEWSUBTOTAL_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['NEWSUBTOTAL_WRAPPER'], $markerArray, '###|###');

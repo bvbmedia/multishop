@@ -518,6 +518,8 @@ CREATE TABLE `tx_multishop_orders` (
  `debit_order` tinyint(1) default '0',
  `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000',
  `memo_crdate` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
+ `foreign_orders_id` varchar(30) default '',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -570,7 +572,9 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `delivery_tr_iso_nr` (`delivery_tr_iso_nr`),
  KEY `delivery_tr_name_en` (`delivery_tr_name_en`),
  KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
- KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`)
+ KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`),
+ KEY `foreign_source_name` (`foreign_source_name`),
+ KEY `foreign_orders_id` (`foreign_orders_id`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (

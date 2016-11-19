@@ -20,7 +20,7 @@
 if (!defined('TYPO3_cliMode')) {
 	die('You cannot run this script directly!');
 }
-require_once(PATH_t3lib.'class.t3lib_cli.php');
+//require_once(PATH_t3lib.'class.t3lib_cli.php');
 include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_fe.php');
 include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 class tx_multishop extends t3lib_cli {
