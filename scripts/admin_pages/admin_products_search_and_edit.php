@@ -79,6 +79,17 @@ if ($this->post['submit']) {
 			}
 		}
 	}
+    foreach ($this->post['up']['capital_price'] as $pid=>$price) {
+        if (is_numeric($pid)) {
+            if (strstr($price, ",")) {
+                $price=str_replace(",", ".", $price);
+            }
+            $updateArray=array();
+            $updateArray['product_capital_price']=$price;
+            $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$pid.'\'', $updateArray);
+            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+        }
+    }
 	foreach ($this->post['up']['weight'] as $pid=>$weight) {
 		$data_update[$pid]['weight']=$weight;
 		$sql_upd="update tx_multishop_products set products_weight = '".$weight."' where products_id = ".$pid;
@@ -202,6 +213,7 @@ $fields['products_model']=$this->pi_getLL('products_model');
 $fields['products_description']=$this->pi_getLL('products_description');
 $fields['products_price']=$this->pi_getLL('admin_price');
 $fields['specials_price']=ucfirst($this->pi_getLL('admin_specials_price'));
+$fields['capital_price']=$this->pi_getLL('capital_price');
 $fields['products_id']=$this->pi_getLL('products_id');
 $fields['categories_name']=$this->pi_getLL('admin_category');
 $fields['products_quantity']=$this->pi_getLL('admin_stock');
@@ -245,6 +257,7 @@ $where=array();
 $select=array();
 if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 	$select[]='p.products_status';
+    $select[]='p.product_capital_price';
 	$select[]='p.products_weight';
 	$select[]='p.products_quantity';
 	$select[]='s.specials_new_products_price';
@@ -287,6 +300,13 @@ if (isset($this->get['keyword']) and strlen($this->get['keyword'])>0) {
 			}
 			$filter[]="(".$prefix."products_price like '".addslashes($this->get['keyword'])."%')";
 			break;
+        case 'capital_price':
+            $prefix='p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix='pf.';
+            }
+            $filter[]="(".$prefix."product_capital_price like '".addslashes($this->get['keyword'])."%')";
+            break;
 		case 'categories_name':
 			$prefix='cd.';
 			if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -371,6 +391,13 @@ switch ($this->get['tx_multishop_pi1']['order_by']) {
 		}
 		$order_by=$prefix.'specials_new_products_price';
 		break;
+    case 'capital_price':
+        $prefix='p.';
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix='pf.';
+        }
+        $order_by=$prefix.'product_capital_price';
+        break;
 	case 'products_name':
 	default:
 		$prefix='pd.';
@@ -517,6 +544,14 @@ if ($pageset['total_rows']>0) {
 	}
 	$subpartArray['###FOOTER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###HEADER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+    $key='capital_price';
+    if ($this->get['tx_multishop_pi1']['order_by']==$key) {
+        $final_order_link=$order_link;
+    } else {
+        $final_order_link='a';
+    }
+    $subpartArray['###FOOTER_SORTBY_CAPITAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+    $subpartArray['###HEADER_SORTBY_CAPITAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='products_quantity';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
@@ -540,6 +575,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_HEADER_CATEGORY###']=$this->pi_getLL('admin_category');
 	$subpartArray['###LABEL_HEADER_PRICE###']=$this->pi_getLL('admin_price');
 	$subpartArray['###LABEL_HEADER_SPECIAL_PRICE###']=$this->pi_getLL('admin_specials_price');
+    $subpartArray['###LABEL_HEADER_CAPITAL_PRICE###']=$this->pi_getLL('capital_price');
 	$subpartArray['###LABEL_HEADER_STOCK###']=$this->pi_getLL('admin_stock');
 	$subpartArray['###LABEL_HEADER_WEIGHT###']=$this->pi_getLL('admin_weight');
 	$subpartArray['###LABEL_HEADER_ACTION###']=$this->pi_getLL('admin_action');
@@ -550,6 +586,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_FOOTER_CATEGORY###']=$this->pi_getLL('admin_category');
 	$subpartArray['###LABEL_FOOTER_PRICE###']=$this->pi_getLL('admin_price');
 	$subpartArray['###LABEL_FOOTER_SPECIAL_PRICE###']=$this->pi_getLL('admin_specials_price');
+    $subpartArray['###LABEL_FOOTER_CAPITAL_PRICE###']=$this->pi_getLL('capital_price');
 	$subpartArray['###LABEL_FOOTER_STOCK###']=$this->pi_getLL('admin_stock');
 	$subpartArray['###LABEL_FOOTER_WEIGHT###']=$this->pi_getLL('admin_weight');
 	$subpartArray['###LABEL_FOOTER_ACTION###']=$this->pi_getLL('admin_action');
@@ -641,6 +678,9 @@ if ($pageset['total_rows']>0) {
 		$special_tax=mslib_fe::taxDecimalCrop(($rs['specials_new_products_price']*$product_tax_rate)/100);
 		$special_price_display=mslib_fe::taxDecimalCrop($rs['specials_new_products_price'], 2, false);
 		$special_price_display_incl=mslib_fe::taxDecimalCrop($rs['specials_new_products_price']+$special_tax, 2, false);
+        $capital_tax=mslib_fe::taxDecimalCrop(($rs['product_capital_price']*$product_tax_rate)/100);
+        $capital_price_display=mslib_fe::taxDecimalCrop($rs['product_capital_price'], 2, false);
+        $capital_price_display_incl=mslib_fe::taxDecimalCrop($rs['product_capital_price']+$capital_tax, 2, false);
 		$markerArray=array();
 		$markerArray['ROW_TYPE']=$switch;
 		$markerArray['CATEGORY_ID0']=$rs['categories_id'];
@@ -658,11 +698,15 @@ if ($pageset['total_rows']>0) {
 		$markerArray['CURRENCY1']=mslib_fe::currency();
 		$markerArray['CURRENCY2']=mslib_fe::currency();
 		$markerArray['CURRENCY3']=mslib_fe::currency();
+        $markerArray['CURRENCY4']=mslib_fe::currency();
+        $markerArray['CURRENCY5']=mslib_fe::currency();
 
 		$markerArray['SUFFIX_PRICE_EXCL_VAT']=$this->pi_getLL('excluding_vat');
 		$markerArray['SUFFIX_PRICE_INCL_VAT']=$this->pi_getLL('including_vat');
 		$markerArray['SUFFIX_SPECIAL_PRICE_EXCL_VAT']=$this->pi_getLL('excluding_vat');
 		$markerArray['SUFFIX_SPECIAL_PRICE_INCL_VAT']=$this->pi_getLL('including_vat');
+        $markerArray['SUFFIX_CAPITAL_PRICE_EXCL_VAT']=$this->pi_getLL('excluding_vat');
+        $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT']=$this->pi_getLL('including_vat');
 
 		$markerArray['VALUE_PRICE_EXCL_VAT']=htmlspecialchars($product_price_display);
 		$markerArray['VALUE_PRICE_INCL_VAT']=htmlspecialchars($product_price_display_incl);
@@ -670,6 +714,9 @@ if ($pageset['total_rows']>0) {
 		$markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT']=htmlspecialchars($special_price_display);
 		$markerArray['VALUE_SPECIAL_PRICE_INCL_VAT']=htmlspecialchars($special_price_display_incl);
 		$markerArray['VALUE_ORIGINAL_SPECIAL_PRICE']=$rs['specials_new_products_price'];
+        $markerArray['VALUE_CAPITAL_PRICE_EXCL_VAT']=htmlspecialchars($capital_price_display);
+        $markerArray['VALUE_CAPITAL_PRICE_INCL_VAT']=htmlspecialchars($capital_price_display_incl);
+        $markerArray['VALUE_ORIGINAL_CAPITAL_PRICE']=$rs['product_capital_price'];
 		$markerArray['VALUE_PRODUCT_QUANTITY']=$rs['products_quantity'];
 		$markerArray['VALUE_PRODUCT_WEIGHT']=$rs['products_weight'];
 		$markerArray['PID0']=$rs['products_id'];
@@ -681,6 +728,9 @@ if ($pageset['total_rows']>0) {
 		$markerArray['PID6']=$rs['products_id'];
 		$markerArray['PID7']=$rs['products_id'];
 		$markerArray['PID8']=$rs['products_id'];
+        $markerArray['PID9']=$rs['products_id'];
+        $markerArray['PID10']=$rs['products_id'];
+        $markerArray['PID11']=$rs['products_id'];
 		$markerArray['EDIT_PRODUCT_LINK0']=$link_edit_prod;
 		$markerArray['EDIT_PRODUCT_LINK1']=$link_edit_prod;
 		$markerArray['PRODUCT_DETAIL_LINK']=$product_detail_link;

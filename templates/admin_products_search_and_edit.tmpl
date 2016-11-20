@@ -74,8 +74,8 @@
 		<th class="cellCategory"><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
 		<th class="cellPrice"><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
 		<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
+		<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_HEADER_CAPITAL_PRICE###</a></th>
 		<th class="cellStock"><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
-		<th class="cellWeight"><a href="###HEADER_SORTBY_WEIGHT_LINK###">###LABEL_HEADER_WEIGHT###</a></th>
 		<th class="cellAction">###LABEL_HEADER_ACTION###</th>
     </tr>
 </thead>
@@ -114,8 +114,13 @@
 			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" class="priceInputReal" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
 		</td>
 
+		<td class="cellSpecialPrice">
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY4###</span><input type="text" id="display_name" name="display_name" class="form-control msCapitalPriceExcludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_EXCL_VAT###" rel="###PID9###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_EXCL_VAT###</span></div></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY5###</span><input type="text" name="display_name" id="display_name" class="form-control msCapitalPriceIncludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_INCL_VAT###" rel="###PID10###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_INCL_VAT###</span></div></div>
+			<div class="msAttributesField hidden"><input type="hidden" name="up[capital_price][###PID11###]" class="priceInputReal" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" style="text-align:right;" size="10px" /></div>
+		</td>
+
         <td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control width-auto" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" /></td>
-		<td class="cellWeight"><input type="text" name="up[weight][###PID8###]" class="form-control" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" /></td>
 		<td class="cellAction">
 				<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
 				<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
@@ -134,8 +139,8 @@
 		<th class="cellCategory"><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
 		<th class="cellPrice"><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
 		<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
+		<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_FOOTER_CAPITAL_PRICE###</a></th>
 		<th class="cellStock"><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
-		<th class="cellWeight"><a href="###FOOTER_SORTBY_WEIGHT_LINK###">###LABEL_FOOTER_WEIGHT###</a></th>
 		<th class="cellAction">###LABEL_FOOTER_ACTION###</th>
 	</tr>
 	</tfoot>
@@ -337,6 +342,16 @@ jQuery(document).ready(function($) {
 		}
 	});
 	$(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(false, this);
+		}
+	});
+	$(document).on("keyup", ".msCapitalPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			priceEditRealtimeCalc(true, this);
+		}
+	});
+	$(document).on("keyup", ".msCapitalPriceIncludingVat", function(e) {
 		if (e.keyCode!=9) {
 			priceEditRealtimeCalc(false, this);
 		}
