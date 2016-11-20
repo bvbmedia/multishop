@@ -1,479 +1,479 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
-if (isset($this->get['download']) && $this->get['download']=='feed' && is_numeric($this->get['feed_id'])) {
-	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-		'tx_multishop_product_feeds ', // FROM ...
-		'id= \''.$this->get['feed_id'].'\'', // WHERE...
-		'', // GROUP BY...
-		'', // ORDER BY...
-		'' // LIMIT ...
-	);
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
-	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-		$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$serial_value=array();
-		foreach ($data as $key_idx=>$key_val) {
-			if ($key_idx!='id' && $key_idx!='page_uid') {
-				$serial_value[$key_idx]=$key_val;
-			}
-		}
-		$serial_data='';
-		if (count($serial_value)>0) {
-			$serial_data=serialize($serial_value);
-		}
-		$filename='multishop_product_feed_record_'.date('YmdHis').'_'.$this->get['feed_id'].'.txt';
-		$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
-		file_put_contents($filepath, $serial_data);
-		header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
-		header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
-		readfile($filepath); //Read and stream the file
-		@unlink($filepath);
-		exit();
-	}
+if (isset($this->get['download']) && $this->get['download'] == 'feed' && is_numeric($this->get['feed_id'])) {
+    $sql = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+            'tx_multishop_product_feeds ', // FROM ...
+            'id= \'' . $this->get['feed_id'] . '\'', // WHERE...
+            '', // GROUP BY...
+            '', // ORDER BY...
+            '' // LIMIT ...
+    );
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
+    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+        $data = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+        $serial_value = array();
+        foreach ($data as $key_idx => $key_val) {
+            if ($key_idx != 'id' && $key_idx != 'page_uid') {
+                $serial_value[$key_idx] = $key_val;
+            }
+        }
+        $serial_data = '';
+        if (count($serial_value) > 0) {
+            $serial_data = serialize($serial_value);
+        }
+        $filename = 'multishop_product_feed_record_' . date('YmdHis') . '_' . $this->get['feed_id'] . '.txt';
+        $filepath = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/' . $filename;
+        file_put_contents($filepath, $serial_data);
+        header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+        header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+        readfile($filepath); //Read and stream the file
+        @unlink($filepath);
+        exit();
+    }
 }
-if (isset($this->get['upload']) && $this->get['upload']=='feed' && $_FILES) {
-	if (!$_FILES['feed_record_file']['error']) {
-		$filename=$_FILES['feed_record_file']['name'];
-		$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
-		if (move_uploaded_file($_FILES['feed_record_file']['tmp_name'], $target)) {
-			$task_content=file_get_contents($target);
-			$unserial_task_data=unserialize($task_content);
-			$insertArray=array();
-			$insertArray['page_uid']=$this->showCatalogFromPage;
-			foreach ($unserial_task_data as $col_name=>$col_val) {
-				if ($col_name=='code') {
-					$insertArray[$col_name]=md5(uniqid());
-				} else if ($col_name=='name' && isset($this->post['new_name']) && !empty($this->post['new_name'])) {
-					$insertArray[$col_name]=$this->post['new_name'];
-				} else if ($col_name=='crdate') {
-					$insertArray[$col_name]=time();
-				} else {
-					$insertArray[$col_name]=$col_val;
-				}
-			}
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			@unlink($target);
-		}
-	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds'));
-	exit();
+if (isset($this->get['upload']) && $this->get['upload'] == 'feed' && $_FILES) {
+    if (!$_FILES['feed_record_file']['error']) {
+        $filename = $_FILES['feed_record_file']['name'];
+        $target = $this->DOCUMENT_ROOT . '/uploads/tx_multishop' . $filename;
+        if (move_uploaded_file($_FILES['feed_record_file']['tmp_name'], $target)) {
+            $task_content = file_get_contents($target);
+            $unserial_task_data = unserialize($task_content);
+            $insertArray = array();
+            $insertArray['page_uid'] = $this->showCatalogFromPage;
+            foreach ($unserial_task_data as $col_name => $col_val) {
+                if ($col_name == 'code') {
+                    $insertArray[$col_name] = md5(uniqid());
+                } else if ($col_name == 'name' && isset($this->post['new_name']) && !empty($this->post['new_name'])) {
+                    $insertArray[$col_name] = $this->post['new_name'];
+                } else if ($col_name == 'crdate') {
+                    $insertArray[$col_name] = time();
+                } else {
+                    $insertArray[$col_name] = $col_val;
+                }
+            }
+            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $insertArray);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            @unlink($target);
+        }
+    }
+    header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds'));
+    exit();
 }
 // defining the types
-$array=array();
-$array['categories_name']=$this->pi_getLL('feed_exporter_fields_label_categories_name_product_category_level');
-$array['categories_content_top']=$this->pi_getLL('feed_exporter_fields_label_categories_content_top_product_category_level');
-$array['categories_content_bottom']=$this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_product_category_level');
-$array['categories_id']=$this->pi_getLL('feed_exporter_fields_label_categories_id');
-$array['categories_meta_title']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_title_product_category_level');
-$array['categories_meta_keywords']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_product_category_level');
-$array['categories_meta_description']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_description_product_category_level');
-for ($i=1; $i<6; $i++) {
-	$array['categories_meta_title_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_title_level_x'), $i);
-	$array['categories_meta_keywords_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_level_x'), $i);
-	$array['categories_meta_description_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_description_level_x'), $i);
-	$array['categories_image_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_image_level_x'), $i);
-	$array['categories_content_top_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_top_level_x'), $i);
-	$array['categories_content_bottom_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_level_x'), $i);
-	$array['categories_name_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_name_level_x'), $i);
+$array = array();
+$array['categories_name'] = $this->pi_getLL('feed_exporter_fields_label_categories_name_product_category_level');
+$array['categories_content_top'] = $this->pi_getLL('feed_exporter_fields_label_categories_content_top_product_category_level');
+$array['categories_content_bottom'] = $this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_product_category_level');
+$array['categories_id'] = $this->pi_getLL('feed_exporter_fields_label_categories_id');
+$array['categories_meta_title'] = $this->pi_getLL('feed_exporter_fields_label_categories_meta_title_product_category_level');
+$array['categories_meta_keywords'] = $this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_product_category_level');
+$array['categories_meta_description'] = $this->pi_getLL('feed_exporter_fields_label_categories_meta_description_product_category_level');
+for ($i = 1; $i < 6; $i++) {
+    $array['categories_meta_title_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_title_level_x'), $i);
+    $array['categories_meta_keywords_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_level_x'), $i);
+    $array['categories_meta_description_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_description_level_x'), $i);
+    $array['categories_image_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_image_level_x'), $i);
+    $array['categories_content_top_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_top_level_x'), $i);
+    $array['categories_content_bottom_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_level_x'), $i);
+    $array['categories_name_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_categories_name_level_x'), $i);
 }
-$array['products_id']=$this->pi_getLL('feed_exporter_fields_label_products_id');
-$array['products_url']=$this->pi_getLL('feed_exporter_fields_label_products_link');
-$array['products_external_url']=$this->pi_getLL('feed_exporter_fields_label_products_external_url');
-$array['products_name']=$this->pi_getLL('feed_exporter_fields_label_products_name');
-$array['products_model']=$this->pi_getLL('feed_exporter_fields_label_products_model');
-$array['products_shortdescription']=$this->pi_getLL('feed_exporter_fields_label_products_shortdescription');
-$array['products_description']=$this->pi_getLL('feed_exporter_fields_label_products_description');
-$array['products_description_encoded']=$this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
-$array['products_description_strip_tags']=$this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
-for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
-	if (!$x) {
-		$s='';
-	} else {
-		$s='_'.($x+1);
-	}
-	$suffix=' ('.($x+1).')';
-	$array['products_image_50'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50').$suffix;
-	$array['products_image_100'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100').$suffix;
-	$array['products_image_200'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200').$suffix;
-	$array['products_image_normal'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_enlarged').$suffix;
-	$array['products_image_original'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_original').$suffix;
-}
-$array['products_ean']=$this->pi_getLL('feed_exporter_fields_label_products_ean_code');
-$array['products_sku']=$this->pi_getLL('feed_exporter_fields_label_products_sku_code');
-$array['foreign_products_id']=$this->pi_getLL('feed_exporter_fields_label_foreign_products_id');
-$array['products_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_quantity');
-$array['products_old_price']=$this->pi_getLL('feed_exporter_fields_label_products_old_price_incl_vat');
-$array['products_old_price_excluding_vat']=$this->pi_getLL('feed_exporter_fields_label_products_old_price_excl_vat');
-$array['products_price']=$this->pi_getLL('feed_exporter_fields_label_products_price_incl_vat');
-$array['products_price_excluding_vat']=$this->pi_getLL('feed_exporter_fields_label_products_price_excl_vat');
-$array['product_capital_price']=$this->pi_getLL('feed_exporter_fields_label_products_capital_price');
-$array['products_weight']=$this->pi_getLL('feed_exporter_fields_label_products_weight');
-$array['products_status']=$this->pi_getLL('feed_exporter_fields_label_products_status');
-$array['minimum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_minimum_quantity');
-$array['maximum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_maximum_quantity');
-$array['products_multiplication']=$this->pi_getLL('feed_exporter_fields_label_products_multiplication', 'Multiplication');
-$array['order_unit_name']=$this->pi_getLL('feed_exporter_fields_label_products_order_unit_name');
-$array['products_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_products_vat_rate');
-$array['category_link']=$this->pi_getLL('feed_exporter_fields_label_category_link');
-$array['manufacturers_name']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_name');
-$array['manufacturers_id']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_id');
-$array['manufacturers_products_id']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_products_id');
-$array['delivery_time']=$this->pi_getLL('feed_exporter_fields_label_delivery_time');
-$array['products_condition']=$this->pi_getLL('feed_exporter_fields_label_products_condition');
-$array['category_crum_path']=$this->pi_getLL('feed_exporter_fields_label_category_crum_path');
-$array['products_meta_title']=$this->pi_getLL('feed_exporter_fields_label_products_meta_title');
-$array['products_meta_keywords']=$this->pi_getLL('feed_exporter_fields_label_products_meta_keywords');
-$array['products_meta_description']=$this->pi_getLL('feed_exporter_fields_label_products_meta_description');
-if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
-	$array['manufacturers_advice_price']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_advice_price');
-}
-$array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
-$array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
-$array['products_price_with_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
-// load shipping costs per zone
-$str="SELECT * from tx_multishop_zones order by name";
-$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-    $str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$row['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
-    $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-    $country_list=array();
-    $country_list_cn_iso_nr=array();
-    while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
-        $country_list[]=$row2['cn_iso_2'];
-        $country_list_cn_iso_nr[]=$row2['cn_iso_nr'];
+$array['products_id'] = $this->pi_getLL('feed_exporter_fields_label_products_id');
+$array['products_url'] = $this->pi_getLL('feed_exporter_fields_label_products_link');
+$array['products_external_url'] = $this->pi_getLL('feed_exporter_fields_label_products_external_url');
+$array['products_name'] = $this->pi_getLL('feed_exporter_fields_label_products_name');
+$array['products_model'] = $this->pi_getLL('feed_exporter_fields_label_products_model');
+$array['products_shortdescription'] = $this->pi_getLL('feed_exporter_fields_label_products_shortdescription');
+$array['products_description'] = $this->pi_getLL('feed_exporter_fields_label_products_description');
+$array['products_description_encoded'] = $this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
+$array['products_description_strip_tags'] = $this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
+for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+    if (!$x) {
+        $s = '';
+    } else {
+        $s = '_' . ($x + 1);
     }
-    if (count($country_list)>0) {
+    $suffix = ' (' . ($x + 1) . ')';
+    $array['products_image_50' . $s] = $this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50') . $suffix;
+    $array['products_image_100' . $s] = $this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100') . $suffix;
+    $array['products_image_200' . $s] = $this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200') . $suffix;
+    $array['products_image_normal' . $s] = $this->pi_getLL('feed_exporter_fields_label_products_image_enlarged') . $suffix;
+    $array['products_image_original' . $s] = $this->pi_getLL('feed_exporter_fields_label_products_image_original') . $suffix;
+}
+$array['products_ean'] = $this->pi_getLL('feed_exporter_fields_label_products_ean_code');
+$array['products_sku'] = $this->pi_getLL('feed_exporter_fields_label_products_sku_code');
+$array['foreign_products_id'] = $this->pi_getLL('feed_exporter_fields_label_foreign_products_id');
+$array['products_quantity'] = $this->pi_getLL('feed_exporter_fields_label_products_quantity');
+$array['products_old_price'] = $this->pi_getLL('feed_exporter_fields_label_products_old_price_incl_vat');
+$array['products_old_price_excluding_vat'] = $this->pi_getLL('feed_exporter_fields_label_products_old_price_excl_vat');
+$array['products_price'] = $this->pi_getLL('feed_exporter_fields_label_products_price_incl_vat');
+$array['products_price_excluding_vat'] = $this->pi_getLL('feed_exporter_fields_label_products_price_excl_vat');
+$array['product_capital_price'] = $this->pi_getLL('feed_exporter_fields_label_products_capital_price');
+$array['products_weight'] = $this->pi_getLL('feed_exporter_fields_label_products_weight');
+$array['products_status'] = $this->pi_getLL('feed_exporter_fields_label_products_status');
+$array['minimum_quantity'] = $this->pi_getLL('feed_exporter_fields_label_products_minimum_quantity');
+$array['maximum_quantity'] = $this->pi_getLL('feed_exporter_fields_label_products_maximum_quantity');
+$array['products_multiplication'] = $this->pi_getLL('feed_exporter_fields_label_products_multiplication', 'Multiplication');
+$array['order_unit_name'] = $this->pi_getLL('feed_exporter_fields_label_products_order_unit_name');
+$array['products_vat_rate'] = $this->pi_getLL('feed_exporter_fields_label_products_vat_rate');
+$array['category_link'] = $this->pi_getLL('feed_exporter_fields_label_category_link');
+$array['manufacturers_name'] = $this->pi_getLL('feed_exporter_fields_label_manufacturers_name');
+$array['manufacturers_id'] = $this->pi_getLL('feed_exporter_fields_label_manufacturers_id');
+$array['manufacturers_products_id'] = $this->pi_getLL('feed_exporter_fields_label_manufacturers_products_id');
+$array['delivery_time'] = $this->pi_getLL('feed_exporter_fields_label_delivery_time');
+$array['products_condition'] = $this->pi_getLL('feed_exporter_fields_label_products_condition');
+$array['category_crum_path'] = $this->pi_getLL('feed_exporter_fields_label_category_crum_path');
+$array['products_meta_title'] = $this->pi_getLL('feed_exporter_fields_label_products_meta_title');
+$array['products_meta_keywords'] = $this->pi_getLL('feed_exporter_fields_label_products_meta_keywords');
+$array['products_meta_description'] = $this->pi_getLL('feed_exporter_fields_label_products_meta_description');
+if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
+    $array['manufacturers_advice_price'] = $this->pi_getLL('feed_exporter_fields_label_manufacturers_advice_price');
+}
+$array['custom_field'] = $this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
+$array['products_price_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_currency');
+$array['products_price_with_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
+// load shipping costs per zone
+$str = "SELECT * from tx_multishop_zones order by name";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $str2 = "SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='" . $row['id'] . "' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+    $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+    $country_list = array();
+    $country_list_cn_iso_nr = array();
+    while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+        $country_list[] = $row2['cn_iso_2'];
+        $country_list_cn_iso_nr[] = $row2['cn_iso_nr'];
+    }
+    if (count($country_list) > 0) {
         $country_list_str = ' (' . implode(', ', $country_list) . ')';
         $array['shipping_costs_per_product_zone_' . $row['id'] . '_' . $country_list_cn_iso_nr[0]] = $this->pi_getLL('feed_exporter_fields_label_products_shipping_costs') . ' - Zone: ' . $row['name'] . $country_list_str;
     }
 }
 // attributes
 if ($this->ms['MODULES']['INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED']) {
-	$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$array['attribute_option_name_'.$row['products_options_id']]=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_without_price'), $row['products_options_name']);
-		$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
-		$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
-	}
+    $str = "SELECT * FROM `tx_multishop_products_options` where language_id='" . $GLOBALS['TSFE']->sys_language_uid . "' order by products_options_id asc";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $array['attribute_option_name_' . $row['products_options_id']] = sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_without_price'), $row['products_options_name']);
+        $array['attribute_option_name_' . $row['products_options_id'] . '_including_prices'] = sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
+        $array['attribute_option_name_' . $row['products_options_id'] . '_including_prices_including_vat'] = sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
+    }
 }
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
-	// loading payment methods
-	$payment_methods=mslib_fe::loadPaymentMethods();
-	// loading shipping methods
-	$shipping_methods=mslib_fe::loadShippingMethods();
-	if (count($payment_methods) or count($shipping_methods)) {
-		if (count($payment_methods)) {
-			foreach ($payment_methods as $code => $item) {
-				$array['product_payment_methods_' . $code] = 'Products payment methods: ' . $item['name'] . ' ('.$code.')';
-			}
-		}
-		if (count($shipping_methods)) {
-			foreach ($shipping_methods as $code => $item) {
-				$array['product_shipping_methods_' . $code] = 'Products shipping methods: ' . $item['name'] . ' ('.$code.')';
-			}
-		}
-	}
+    // loading payment methods
+    $payment_methods = mslib_fe::loadPaymentMethods();
+    // loading shipping methods
+    $shipping_methods = mslib_fe::loadShippingMethods();
+    if (count($payment_methods) or count($shipping_methods)) {
+        if (count($payment_methods)) {
+            foreach ($payment_methods as $code => $item) {
+                $array['product_payment_methods_' . $code] = 'Products payment methods: ' . $item['name'] . ' (' . $code . ')';
+            }
+        }
+        if (count($shipping_methods)) {
+            foreach ($shipping_methods as $code => $item) {
+                $array['product_shipping_methods_' . $code] = 'Products shipping methods: ' . $item['name'] . ' (' . $code . ')';
+            }
+        }
+    }
 }
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'])) {
-	$params=array(
-		'array'=>&$array
-	);
-	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'] as $funcRef) {
-		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-	}
+    $params = array(
+            'array' => &$array
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
 }
 uksort($array, "strnatcmp");
 //asort($array);
-if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
-	if ($this->post) {
-		$erno=array();
-		if (!$this->post['name']) {
-			$erno[]=$this->pi_getLL('feed_exporter_label_error_name_is_required');
-		} else {
-			if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
-				$erno[]=$this->pi_getLL('feed_exporter_label_error_no_fields_defined');
-			}
-		}
-		if (is_array($erno) and count($erno)>0) {
-			$content.='<div class="alert alert-danger">';
-			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach ($erno as $item) {
-				$content.='<li>'.$item.'</li>';
-			}
-			$content.='</ul>';
-			$content.='</div>';
-		} else {
-			// lets save it
-			$updateArray=array();
-			$updateArray['name']=$this->post['name'];
-			$updateArray['utm_source']=$this->post['utm_source'];
-			$updateArray['utm_medium']=$this->post['utm_medium'];
-			$updateArray['utm_term']=$this->post['utm_term'];
-			$updateArray['utm_content']=$this->post['utm_content'];
-			$updateArray['utm_campaign']=$this->post['utm_campaign'];
-			$updateArray['status']=$this->post['status'];
-			$updateArray['include_header']=$this->post['include_header'];
-			$updateArray['include_disabled']=$this->post['include_disabled'];
-			$updateArray['plain_text']=$this->post['plain_text'];
-			$updateArray['delimiter']=$this->post['delimiter'];
-			if (isset($this->post['feed_type']) && !empty($this->post['feed_type'])) {
-				$updateArray['feed_type']=$this->post['feed_type'];
-			} else {
-				$updateArray['feed_type']='';
-			}
-			$updateArray['fields']=serialize($this->post['fields']);
-			$updateArray['post_data']=serialize($this->post);
-			if (is_numeric($this->post['feed_id'])) {
-				// edit
-				// custom hook that can be controlled by third-party plugin
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'])) {
-					$params=array(
-						'feed_id'=>&$this->post['feed_id'],
-						'updateArray'=>&$updateArray
-					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'] as $funcRef) {
-						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-					}
-				}
-				// custom hook that can be controlled by third-party plugin eof
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\''.$this->post['feed_id'].'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			} else {
-				// insert
-				$updateArray['page_uid']=$this->showCatalogFromPage;
-				$updateArray['crdate']=time();
-				$updateArray['code']=md5(uniqid());
-				// custom hook that can be controlled by third-party plugin
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'])) {
-					$params=array(
-						'feed_id'=>&$this->post['feed_id'],
-						'updateArray'=>&$updateArray
-					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'] as $funcRef) {
-						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-					}
-				}
-				// custom hook that can be controlled by third-party plugin eof
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			}
-			$this->ms['show_main']=1;
-		}
-	} else {
-		if ($_REQUEST['section']=='edit' and is_numeric($this->get['feed_id'])) {
-			$str="SELECT * from tx_multishop_product_feeds where id='".$this->get['feed_id']."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$feeds=array();
-			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				foreach ($row as $key => $value) {
-					$this->post[$key]=$value;
-				}
-				$this->post['fields']=unserialize($row['fields']);
-				// now also unserialize for the custom field
-				$post_data=unserialize($row['post_data']);
-				foreach ($post_data['fields_headers'] as $fh_key => $field_header_title) {
-					$this->post['fields_headers'][]=$field_header_title;
-					$this->post['fields_values'][]=$post_data['fields_values'][$fh_key];
-				}
-				/*$this->post['fields_headers']=$post_data['fields_headers'];
-				$this->post['fields_values']=$post_data['fields_values'];*/
-			}
-		}
-	}
-	if (!$this->ms['show_main']) {
-		$content.='<div class="panel panel-default">
-		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
+if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
+    if ($this->post) {
+        $erno = array();
+        if (!$this->post['name']) {
+            $erno[] = $this->pi_getLL('feed_exporter_label_error_name_is_required');
+        } else {
+            if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
+                $erno[] = $this->pi_getLL('feed_exporter_label_error_no_fields_defined');
+            }
+        }
+        if (is_array($erno) and count($erno) > 0) {
+            $content .= '<div class="alert alert-danger">';
+            $content .= '<h3>' . $this->pi_getLL('the_following_errors_occurred') . '</h3><ul>';
+            foreach ($erno as $item) {
+                $content .= '<li>' . $item . '</li>';
+            }
+            $content .= '</ul>';
+            $content .= '</div>';
+        } else {
+            // lets save it
+            $updateArray = array();
+            $updateArray['name'] = $this->post['name'];
+            $updateArray['utm_source'] = $this->post['utm_source'];
+            $updateArray['utm_medium'] = $this->post['utm_medium'];
+            $updateArray['utm_term'] = $this->post['utm_term'];
+            $updateArray['utm_content'] = $this->post['utm_content'];
+            $updateArray['utm_campaign'] = $this->post['utm_campaign'];
+            $updateArray['status'] = $this->post['status'];
+            $updateArray['include_header'] = $this->post['include_header'];
+            $updateArray['include_disabled'] = $this->post['include_disabled'];
+            $updateArray['plain_text'] = $this->post['plain_text'];
+            $updateArray['delimiter'] = $this->post['delimiter'];
+            if (isset($this->post['feed_type']) && !empty($this->post['feed_type'])) {
+                $updateArray['feed_type'] = $this->post['feed_type'];
+            } else {
+                $updateArray['feed_type'] = '';
+            }
+            $updateArray['fields'] = serialize($this->post['fields']);
+            $updateArray['post_data'] = serialize($this->post);
+            if (is_numeric($this->post['feed_id'])) {
+                // edit
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'])) {
+                    $params = array(
+                            'feed_id' => &$this->post['feed_id'],
+                            'updateArray' => &$updateArray
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['updateProductFeedPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                // custom hook that can be controlled by third-party plugin eof
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\'' . $this->post['feed_id'] . '\'', $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            } else {
+                // insert
+                $updateArray['page_uid'] = $this->showCatalogFromPage;
+                $updateArray['crdate'] = time();
+                $updateArray['code'] = md5(uniqid());
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'])) {
+                    $params = array(
+                            'feed_id' => &$this->post['feed_id'],
+                            'updateArray' => &$updateArray
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['insertProductFeedPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                // custom hook that can be controlled by third-party plugin eof
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+            $this->ms['show_main'] = 1;
+        }
+    } else {
+        if ($_REQUEST['section'] == 'edit' and is_numeric($this->get['feed_id'])) {
+            $str = "SELECT * from tx_multishop_product_feeds where id='" . $this->get['feed_id'] . "'";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $feeds = array();
+            while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+                foreach ($row as $key => $value) {
+                    $this->post[$key] = $value;
+                }
+                $this->post['fields'] = unserialize($row['fields']);
+                // now also unserialize for the custom field
+                $post_data = unserialize($row['post_data']);
+                foreach ($post_data['fields_headers'] as $fh_key => $field_header_title) {
+                    $this->post['fields_headers'][] = $field_header_title;
+                    $this->post['fields_values'][] = $post_data['fields_values'][$fh_key];
+                }
+                /*$this->post['fields_headers']=$post_data['fields_headers'];
+                $this->post['fields_values']=$post_data['fields_values'];*/
+            }
+        }
+    }
+    if (!$this->ms['show_main']) {
+        $content .= '<div class="panel panel-default">
+		<div class="panel-heading"><h3>' . $this->pi_getLL('feed_exporter_label_product_feed_generator') . '</h3></div>
 		<div class="panel-body">
-		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form" class="form-horizontal">
+		<form method="post" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '" id="products_feed_form" class="form-horizontal">
 			<div class="form-group">
-					<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+					<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('name')) . '</label>
 					<div class="col-md-10">
-					<input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" class="form-control" />
+					<input type="text" name="name" value="' . htmlspecialchars($this->post['name']) . '" class="form-control" />
 					</div>
 			</div>
 			<div class="form-group">
 					<label class="control-label col-md-2">Google utm_source</label>
 					<div class="col-md-10">
-					<input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" class="form-control" />
+					<input type="text" name="utm_source" value="' . htmlspecialchars($this->post['utm_source']) . '" class="form-control" />
 					</div>
 			</div>
 			<div class="form-group">
 					<label class="control-label col-md-2">Google utm_medium</label>
 					<div class="col-md-10">
-					<input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" class="form-control" />
+					<input type="text" name="utm_medium" value="' . htmlspecialchars($this->post['utm_medium']) . '" class="form-control" />
 					</div>
 			</div>
 			<div class="form-group">
 					<label class="control-label col-md-2">Google utm_term</label>
 					<div class="col-md-10">
-					<input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" class="form-control" />
+					<input type="text" name="utm_term" value="' . htmlspecialchars($this->post['utm_term']) . '" class="form-control" />
 					</div>
 			</div>
 			<div class="form-group">
 					<label class="control-label col-md-2">Google utm_content</label>
 					<div class="col-md-10">
-					<input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" class="form-control" />
+					<input type="text" name="utm_content" value="' . htmlspecialchars($this->post['utm_content']) . '" class="form-control" />
 					</div>
 			</div>
 			<div class="form-group">
 					<label class="control-label col-md-2">Google utm_campaign</label>
 					<div class="col-md-10">
-					<input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" class="form-control" />
+					<input type="text" name="utm_campaign" value="' . htmlspecialchars($this->post['utm_campaign']) . '" class="form-control" />
 					</div>
 			</div>';
         // loading shipping methods
-        $shipping_methods=mslib_fe::loadShippingMethods();
-        $shipping_methods_options='<option value="">' . $this->pi_getLL('choose').'</option>';
+        $shipping_methods = mslib_fe::loadShippingMethods();
+        $shipping_methods_options = '<option value="">' . $this->pi_getLL('choose') . '</option>';
         if (count($shipping_methods)) {
             if (count($shipping_methods)) {
                 foreach ($shipping_methods as $code => $item) {
-                    $shipping_methods_options.='<option value="'.$item['id'].'"'.(($post_data['shipping_costs_per_product']==$item['id']) ? ' selected="selected"' : '').'>' . $item['name'].'</option>';
+                    $shipping_methods_options .= '<option value="' . $item['id'] . '"' . (($post_data['shipping_costs_per_product'] == $item['id']) ? ' selected="selected"' : '') . '>' . $item['name'] . '</option>';
                 }
             }
         }
-		$content.='<div class="form-group">
-                <label class="control-label col-md-2">'.$this->pi_getLL('shipping_method').'</label>
+        $content .= '<div class="form-group">
+                <label class="control-label col-md-2">' . $this->pi_getLL('shipping_method') . '</label>
                 <div class="col-md-10">
                 <select name="shipping_costs_per_product" class="form-control">
-					'.$shipping_methods_options.'
+					' . $shipping_methods_options . '
 				</select>
                 </div>
 			</div>';
-		$feed_types=array();
-		// custom page hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'])) {
-			$params=array(
-				'feed_types'=>&$feed_types
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-			}
-		}
-		// custom page hook that can be controlled by third-party plugin eof
-		if (count($feed_types)) {
-			$content.='
+        $feed_types = array();
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'])) {
+            $params = array(
+                    'feed_types' => &$feed_types
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom page hook that can be controlled by third-party plugin eof
+        if (count($feed_types)) {
+            $content .= '
 				<div class="form-group">
 						<label class="control-label col-md-2">Feed Type</label>
 						<div class="col-md-10">
 						<select name="feed_type" id="feed_type" class="form-control">
-						<option value="">'.htmlspecialchars('Custom').'</option>
+						<option value="">' . htmlspecialchars('Custom') . '</option>
 				';
-			natsort($feed_types);
-			foreach ($feed_types as $key=>$label) {
-				$content.='<option value="'.$key.'"'.(($this->post['feed_type']==$key) ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
-			}
-			$content.='
+            natsort($feed_types);
+            foreach ($feed_types as $key => $label) {
+                $content .= '<option value="' . $key . '"' . (($this->post['feed_type'] == $key) ? ' selected' : '') . '>' . htmlspecialchars($label) . '</option>' . "\n";
+            }
+            $content .= '
 				</select>
 				</div>
 				</div>
 				';
-		}
-		$content.='
+        }
+        $content .= '
 		<div class="form-group hide_pf">
-				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
+				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delimiter')) . '</label>
 				<div class="col-md-10">
 				<select name="delimiter" class="form-control">
-					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
-					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>pipe</option>
-					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
-					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
+					<option value="">' . htmlspecialchars($this->pi_getLL('choose')) . '</option>
+					<option value="dash"' . (($this->post['delimiter'] == 'dash') ? ' selected' : '') . '>pipe</option>
+					<option value="dotcomma"' . (($this->post['delimiter'] == 'dotcomma') ? ' selected' : '') . '>dotcomma</option>
+					<option value="tab"' . (($this->post['delimiter'] == 'tab') ? ' selected' : '') . '>tab</option>
 				</select>
 				</div>
 		</div>
 		<div class="form-group hide_pf">
-				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
+				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('include_header')) . '</label>
 				<div class="col-md-10">
 				<select name="include_header" class="form-control">
-					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
-					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+					<option value="">' . htmlspecialchars($this->pi_getLL('no')) . '</option>
+					<option value="1"' . (($this->post['include_header'] == '1') ? ' selected' : '') . '>' . htmlspecialchars($this->pi_getLL('yes')) . '</option>
 				</select>
 				</div>
 		</div>
 		<div class="form-group hide_pf">
-				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
+				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')) . '</label>
 				<div class="col-md-10">
 				<select name="include_disabled" class="form-control">
-					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
-					<option value="1"'.(($this->post['include_disabled']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+					<option value="">' . htmlspecialchars($this->pi_getLL('no')) . '</option>
+					<option value="1"' . (($this->post['include_disabled'] == '1') ? ' selected' : '') . '>' . htmlspecialchars($this->pi_getLL('yes')) . '</option>
 				</select>
 				</div>
 		</div>
 		<div class="form-group">
-				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
+				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('status')) . '</label>
 				<div class="col-md-10">
 				<label class="radio-inline">
-				<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
+				<input name="status" type="radio" value="0"' . ((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '') . ' /> ' . htmlspecialchars($this->pi_getLL('disabled')) . '
 				</label>
 				<label class="radio-inline">
-				<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+				<input name="status" type="radio" value="1"' . ((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '') . ' /> ' . htmlspecialchars($this->pi_getLL('enabled')) . '
 				</label>
 				</div>
 		</div>
 		';
-		// custom page hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'])) {
-			$params=array(
-				'content'=>&$content,
-				'post_data'=>&$post_data
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-			}
-		}
-		$content.='
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'])) {
+            $params = array(
+                    'content' => &$content,
+                    'post_data' => &$post_data
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedEditFormInputProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $content .= '
 		<div class="form-group hide_pf">
-			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')) . '</label>
 			<div class="col-md-10">
 			<select name="plain_text" class="form-control">
-				<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
-				<option value="1"'.(($this->post['plain_text']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+				<option value="">' . htmlspecialchars($this->pi_getLL('no')) . '</option>
+				<option value="1"' . (($this->post['plain_text'] == '1') ? ' selected' : '') . '>' . htmlspecialchars($this->pi_getLL('yes')) . '</option>
 			</select>
 			</div>
 		</div>
 		<hr class="hide_pf">
 		<div class="form-group hide_pf">
-				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('fields')) . '</label>
 				<div class="col-md-10">
-				<button id="add_field" name="add_field" type="button" class="btn btn-success"><i class="fa fa-plus"></i> '.htmlspecialchars($this->pi_getLL('add_field')).'</button>
+				<button id="add_field" name="add_field" type="button" class="btn btn-success"><i class="fa fa-plus"></i> ' . htmlspecialchars($this->pi_getLL('add_field')) . '</button>
 				</div>
 		</div>
 		<div id="product_feed_fields">';
-		$counter=0;
-		$field_header_counter=0;
-		if (is_array($this->post['fields']) and count($this->post['fields'])) {
-			foreach ($this->post['fields'] as $field) {
-				$counter++;
-				$content.='<div class="form-group"><label class="control-label control-label-select2 col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
-				foreach ($array as $key=>$option) {
-					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
-				}
-				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button>';
-				// custom field
-				if ($field=='custom_field') {
-					$content.='<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers['.$counter.']" type="text" class="form-control" value="'.$this->post['fields_headers'][$field_header_counter].'" /> <span class="value">Value</span> <input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$field_header_counter].'" class="form-control" /></div>';
-					$field_header_counter++;
-				}
-				$content.='
+        $counter = 0;
+        $field_header_counter = 0;
+        if (is_array($this->post['fields']) and count($this->post['fields'])) {
+            foreach ($this->post['fields'] as $field) {
+                $counter++;
+                $content .= '<div class="form-group"><label class="control-label control-label-select2 col-md-2">' . htmlspecialchars($this->pi_getLL('type')) . '</label><div class="col-md-10"><select name="fields[' . $counter . ']" rel="' . $counter . '" class="msAdminProductsFeedSelectField">';
+                foreach ($array as $key => $option) {
+                    $content .= '<option value="' . $key . '"' . ($field == $key ? ' selected' : '') . '>' . htmlspecialchars($option) . '</option>';
+                }
+                $content .= '</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> ' . htmlspecialchars($this->pi_getLL('delete')) . '</button>';
+                // custom field
+                if ($field == 'custom_field') {
+                    $content .= '<div class="form-field form-inline" style="padding-top:5px"><label></label><span class="key">Key</span> <input name="fields_headers[' . $counter . ']" type="text" class="form-control" value="' . $this->post['fields_headers'][$field_header_counter] . '" /> <span class="value">Value</span> <input name="fields_values[' . $counter . ']" type="text" value="' . $this->post['fields_values'][$field_header_counter] . '" class="form-control" /></div>';
+                    $field_header_counter++;
+                }
+                $content .= '
 				</div>
 				</div>';
-			}
-		}
-		$content.='
+            }
+        }
+        $content .= '
 		</div>
 		<hr>
 		<div class="cleafix">
 		<div class="pull-right">
-		<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('save')).'</button>
+		<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . htmlspecialchars($this->pi_getLL('save')) . '</button>
 		</div>
 		</div>
     	</div>
-		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
-		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
+		<input name="feed_id" type="hidden" value="' . $this->get['feed_id'] . '" />
+		<input name="section" type="hidden" value="' . $_REQUEST['section'] . '" />
 		</form>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
@@ -484,7 +484,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 					jQuery(this).sortable("refresh");
 				}
 			});
-			var counter=\''.$counter.'\';
+			var counter=\'' . $counter . '\';
 			$("#feed_type").change(function(){
 				var selected=$("#feed_type option:selected").val();
 				if (selected) {
@@ -497,10 +497,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
 				var item=\'<div class="form-group"><label class="control-label control-label-select2 col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
-		foreach ($array as $key=>$option) {
-			$content.='<option value="'.$key.'">'.addslashes(htmlspecialchars($option)).'</option>';
-		}
-		$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div></div>\';
+        foreach ($array as $key => $option) {
+            $content .= '<option value="' . $key . '">' . addslashes(htmlspecialchars($option)) . '</option>';
+        }
+        $content .= '</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> ' . htmlspecialchars($this->pi_getLL('delete')) . '</button></div></div>\';
 				$(\'#product_feed_fields\').append(item);
 				$(\'select.msAdminProductsFeedSelectField\').select2({
 					width:\'650px\'
@@ -522,101 +522,101 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 		});
 		</script></div></div>';
-	}
+    }
 } else {
-	$this->ms['show_main']=1;
+    $this->ms['show_main'] = 1;
 }
 if ($this->ms['show_main']) {
-	if (is_numeric($this->get['status']) and is_numeric($this->get['feed_id'])) {
-		$updateArray=array();
-		$updateArray['status']=$this->get['status'];
-		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\''.$this->get['feed_id'].'\'', $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-	}
-	if (is_numeric($this->get['delete']) and is_numeric($this->get['feed_id'])) {
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_product_feeds', 'id=\''.$this->get['feed_id'].'\'');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-	}
-	// show listing
-	$str="SELECT * from tx_multishop_product_feeds order by id desc";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$feeds=array();
-	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$feeds[]=$row;
-	}
-	if (is_array($feeds) and count($feeds)) {
-		$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
+    if (is_numeric($this->get['status']) and is_numeric($this->get['feed_id'])) {
+        $updateArray = array();
+        $updateArray['status'] = $this->get['status'];
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\'' . $this->get['feed_id'] . '\'', $updateArray);
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+    }
+    if (is_numeric($this->get['delete']) and is_numeric($this->get['feed_id'])) {
+        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_product_feeds', 'id=\'' . $this->get['feed_id'] . '\'');
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+    }
+    // show listing
+    $str = "SELECT * from tx_multishop_product_feeds order by id desc";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $feeds = array();
+    while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $feeds[] = $row;
+    }
+    if (is_array($feeds) and count($feeds)) {
+        $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . htmlspecialchars($this->pi_getLL('product_feeds')) . '</h3></div>
 		<div class="panel-body">
 		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
 		<thead>
 		<tr>
-			<th class="cellID">'.htmlspecialchars($this->pi_getLL('id')).'</th>
-			<th class="cellName">'.htmlspecialchars($this->pi_getLL('name')).'</th>
-			<th class="cellDate">'.htmlspecialchars($this->pi_getLL('created')).'</th>
-			<th class="cellStatus">'.htmlspecialchars($this->pi_getLL('status')).'</th>
-			<th class="cellDownload">'.htmlspecialchars($this->pi_getLL('download')).'</th>
-			<th class="cellAction">'.htmlspecialchars($this->pi_getLL('action')).'</th>
-			<th class="cellBackup">'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
+			<th class="cellID">' . htmlspecialchars($this->pi_getLL('id')) . '</th>
+			<th class="cellName">' . htmlspecialchars($this->pi_getLL('name')) . '</th>
+			<th class="cellDate">' . htmlspecialchars($this->pi_getLL('created')) . '</th>
+			<th class="cellStatus">' . htmlspecialchars($this->pi_getLL('status')) . '</th>
+			<th class="cellDownload">' . htmlspecialchars($this->pi_getLL('download')) . '</th>
+			<th class="cellAction">' . htmlspecialchars($this->pi_getLL('action')) . '</th>
+			<th class="cellBackup">' . htmlspecialchars($this->pi_getLL('download_feed_record')) . '</th>
 		</tr>
 		</thead>';
-		foreach ($feeds as $feed) {
-			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
-			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
-			// custom page hook that can be controlled by third-party plugin
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'])) {
-				$params=array(
-					'feed'=>&$feed
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'] as $funcRef) {
-					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-				}
-			}
-			// custom page hook that can be controlled by third-party plugin eof
-			$content.='
+        foreach ($feeds as $feed) {
+            $feed['feed_link'] = $this->FULL_HTTP_URL . 'index.php?id=' . $this->shop_pid . '&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash=' . $feed['code'];
+            $feed['feed_link_excel'] = $this->FULL_HTTP_URL . 'index.php?id=' . $this->shop_pid . '&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash=' . $feed['code'] . '&format=excel';
+            // custom page hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'])) {
+                $params = array(
+                        'feed' => &$feed
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // custom page hook that can be controlled by third-party plugin eof
+            $content .= '
 			<tr>
-				<td class="cellID"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
-				<td class="cellName"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
-				<td class="cellDate">'.date("Y-m-d", $feed['crdate']).'</td>
+				<td class="cellID"><a href="' . $feed['feed_link'] . '" target="_blank">' . htmlspecialchars($feed['id']) . '</a></td>
+				<td class="cellName"><a href="' . $feed['feed_link'] . '" target="_blank">' . htmlspecialchars($feed['name']) . '</a></td>
+				<td class="cellDate">' . date("Y-m-d", $feed['crdate']) . '</td>
 				<td class="cellStatus">
 				';
-			if (!$feed['status']) {
-				$content.='<span class="admin_status_red" alt="Disable"></span>';
-				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
-			} else {
-				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
-				$content.='<span class="admin_status_green" alt="Enable"></span>';
-			}
-			$content.='</td>
+            if (!$feed['status']) {
+                $content .= '<span class="admin_status_red" alt="Disable"></span>';
+                $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&status=1') . '"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
+            } else {
+                $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&status=0') . '"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
+                $content .= '<span class="admin_status_green" alt="Enable"></span>';
+            }
+            $content .= '</td>
 			<td class="cellDownload">
-				<a href="'.$feed['feed_link'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download feed</a>
-				<a href="'.$feed['feed_link_excel'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
+				<a href="' . $feed['feed_link'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download feed</a>
+				<a href="' . $feed['feed_link_excel'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
 			</td>
 			<td class="cellAction">
-				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
-				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>';
-			$content.='
+				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&section=edit') . '" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
+				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&delete=1') . '" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>';
+            $content .= '
 			</td>
 			<td class="cellBackup">
-				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success btn-sm">'.$this->pi_getLL('download_feed_record').'</a>
+				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id=' . $feed['id']) . '" class="btn btn-success btn-sm">' . $this->pi_getLL('download_feed_record') . '</a>
 			</td>
 			</tr>';
-		}
-		$content.='</table></div></div>';
-	} else {
-		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')).'</h3></div></div>';
-	}
-	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div>
+        }
+        $content .= '</table></div></div>';
+    } else {
+        $content .= '<h3>' . htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')) . '</h3></div></div>';
+    }
+    $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . $this->pi_getLL('import_feed_record') . '</h3></div>
 	<div class="panel-body">
 	<fieldset id="scheduled_import_jobs_form">
-		<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+		<form action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed') . '" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 			<div class="form-group">
-				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+				<label for="new_name" class="control-label col-md-2">' . $this->pi_getLL('name') . '</label>
 				<div class="col-md-10">
 				    <input name="new_name" type="text" value="" class="form-control" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="upload_feed_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+				<label for="upload_feed_file" class="control-label col-md-2">' . $this->pi_getLL('file') . '</label>
 				<div class="col-md-10">
 				    <div class="input-group">
 				    <input type="file" name="feed_record_file" class="form-control">
@@ -628,6 +628,6 @@ if ($this->ms['show_main']) {
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
+    $content .= '<hr><div class="clearfix"><div class="pull-right"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&section=add') . '" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> ' . htmlspecialchars($this->pi_getLL('add')) . '</a></div></div></div></div>';
 }
 ?>

@@ -70,16 +70,16 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         if (is_array($this->headerButtons) && count($this->headerButtons)) {
-            $sortedHeaderButtonsSorted=array();
-            $sortedHeaderButtons=array();
+            $sortedHeaderButtonsSorted = array();
+            $sortedHeaderButtons = array();
             foreach ($this->headerButtons as $item) {
                 if (isset($item['sort'])) {
-                    $sortedHeaderButtonsSorted[]=$item;
+                    $sortedHeaderButtonsSorted[] = $item;
                 } else {
-                    $sortedHeaderButtons[]=$item;
+                    $sortedHeaderButtons[] = $item;
                 }
             }
-            $this->headerButtons=array_merge($sortedHeaderButtons,$sortedHeaderButtonsSorted);
+            $this->headerButtons = array_merge($sortedHeaderButtons, $sortedHeaderButtonsSorted);
         }
     }
     public function renderHeaderButtons() {
@@ -106,7 +106,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($this->post) {
             if ($params['postErno']) {
                 if (count($params['postErno'])) {
-                    $returnMarkup='
+                    $returnMarkup = '
                     <div style="display:none" id="msAdminPostMessage">
                     <table class="table table-striped table-bordered">
                     <thead>
@@ -120,17 +120,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     foreach ($params['postErno'] as $item) {
                         switch ($item['status']) {
                             case 'error':
-                                $item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+                                $item['status'] = '<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
                                 break;
                             case 'info':
-                                $item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+                                $item['status'] = '<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
                                 break;
                         }
-                        $returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
+                        $returnMarkup .= '<tr><td class="text-center">' . $item['status'] . '</td><td>' . $item['message'] . '</td></tr>' . "\n";
                     }
-                    $returnMarkup.='</tbody></table></div>';
-                    $tableContent.=$returnMarkup;
-                    $GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+                    $returnMarkup .= '</tbody></table></div>';
+                    $tableContent .= $returnMarkup;
+                    $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
                     jQuery(document).ready(function ($) {
                         $.confirm({
                             title: \'\',
@@ -576,7 +576,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = mslib_fe::amount2Cents($summarize[$col], 0);
                             break;
                         case 'number_format_2_decimals':
-                            $row[$col] = round(number_format($summarize[$col], 2, ',', '.'),2);
+                            $row[$col] = round(number_format($summarize[$col], 2, ',', '.'), 2);
                             break;
                         default:
                             $row[$col] = $valArray['title'];
@@ -604,7 +604,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     // custom page hook that can be controlled by third-party plugin eof
                     $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
                     foreach ($actions as $key => $value) {
-                        $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value). '</option>';
+                        $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
                     }
                     $action_selectbox .= '</select>';
                     $tableContent .= $action_selectbox;
@@ -613,9 +613,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             if ($params['settings']['contentBelowTable']) {
                 $tableContent .= $params['settings']['contentBelowTable'];
             }
-            if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {;
-                $tableContent.='<div class="form-group">
-                    <input class="btn btn-success" type="submit" name="submit" value="'.htmlspecialchars($this->pi_getLL('submit_form')).'" />
+            if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {
+                ;
+                $tableContent .= '<div class="form-group">
+                    <input class="btn btn-success" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
                 </div>';
             }
             $tableContent .= '

@@ -35,12 +35,11 @@ exec($command);
 // Regenerate link of the shop so Cooluri works again
 $link = mslib_fe::typolink($this->shop_pid, '');
 // Regenerate link for admin panel
-$link = mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel');
+$link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_panel');
 // if frontend caching is enabled also clear those cache files eof
 require('admin_system_clear_multishop_cache.php');
-
-$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_sitemap_generator').'" target="_blank">Click here to run the sitemap generator to repair all deeplinks</a><br/>';
+$content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_sitemap_generator') . '" target="_blank">Click here to run the sitemap generator to repair all deeplinks</a><br/>';
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('dd_googlesitemap', 0)) {
-    $content.='<a href="'.mslib_fe::typolink($this->shop_pid, 'eID=dd_googlesitemap').'" target="_blank">Click here to run the TYPO3 sitemap generator to repair all deeplinks</a><br/>';
+    $content .= '<a href="' . mslib_fe::typolink($this->shop_pid, 'eID=dd_googlesitemap') . '" target="_blank">Click here to run the TYPO3 sitemap generator to repair all deeplinks</a><br/>';
 }
 ?>

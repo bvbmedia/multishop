@@ -896,6 +896,16 @@ class mslib_befe {
             return $flat_product['products_id'];
         }
     }
+    function rmNullValuedKeys($array) {
+        if (is_array($array)) {
+            foreach ($array as $key => $val) {
+                if (is_null($array[$key])) {
+                    $array[$key] = '';
+                }
+            }
+            return $array;
+        }
+    }
     public function disableProduct($products_id) {
         if (!is_numeric($products_id)) {
             return false;
@@ -1104,7 +1114,7 @@ class mslib_befe {
             return false;
         }
         if (is_numeric($products_id)) {
-            $productRow=mslib_fe::getProduct($products_id, '', '', 1, 1);
+            $productRow = mslib_fe::getProduct($products_id, '', '', 1, 1);
             if (is_numeric($products_id)) {
                 if (is_numeric($categories_id)) {
                     //hook to let other plugins further manipulate the create table query
@@ -1213,6 +1223,7 @@ class mslib_befe {
             }
         }
     }
+    // remove list, redundant functionality with getRecord method
     public function getCount($value = '', $table, $field = '', $additional_where = array()) {
         if ($table) {
             $queryArray = array();
@@ -1246,7 +1257,9 @@ class mslib_befe {
             return 0;
         }
     }
-    // remove list, redundant functionality with getRecord method
+    /*
+	Some PHP compilations doesnt have the exif_imagetype function. In that case we provide our own alternative
+	*/
     public function deleteProductImage($file_name) {
         if ($file_name) {
             if (is_array($this->ms['image_paths']['products']) && count($this->ms['image_paths']['products'])) {
@@ -1262,9 +1275,6 @@ class mslib_befe {
             }
         }
     }
-    /*
-	Some PHP compilations doesnt have the exif_imagetype function. In that case we provide our own alternative
-	*/
     public function deleteCategoryImage($file_name) {
         if (is_array($this->ms['image_paths']['categories']) && count($this->ms['image_paths']['categories'])) {
             foreach ($this->ms['image_paths']['categories'] as $key => $value) {
@@ -1275,6 +1285,7 @@ class mslib_befe {
             }
         }
     }
+    // method for logging changes to specific tables
     public function deleteManufacturerImage($file_name) {
         if (is_array($this->ms['image_paths']['manufacturers']) && count($this->ms['image_paths']['manufacturers'])) {
             foreach ($this->ms['image_paths']['manufacturers'] as $key => $value) {
@@ -1285,7 +1296,6 @@ class mslib_befe {
             }
         }
     }
-    // method for logging changes to specific tables
     public function deleteManufacturer($id) {
         if (is_numeric($id)) {
             $record = mslib_befe::getRecord($id, 'tx_multishop_manufacturers', 'manufacturers_id');
@@ -1303,6 +1313,7 @@ class mslib_befe {
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id=' . $id);
         }
     }
+    // function for saving the importer products images
     public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*') {
         $queryArray = array();
         $queryArray['from'] = $table;
@@ -1317,7 +1328,7 @@ class mslib_befe {
             }
         }
         if (is_array($select)) {
-            $select=implode(', ',$select);
+            $select = implode(', ', $select);
         }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
                 $queryArray['from'], // FROM ...
@@ -1335,7 +1346,7 @@ class mslib_befe {
             return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         }
     }
-    // function for saving the importer products images
+    // method for adding a product to the flat table for maximum speed
     public function deltree($path) {
         if (is_dir($path)) {
             if (version_compare(PHP_VERSION, '5.0.0') < 0) {
@@ -1364,7 +1375,7 @@ class mslib_befe {
             return @unlink($path);
         }
     }
-    // method for adding a product to the flat table for maximum speed
+    // method for scanning subfolders and retrieve their associated files
     public function doesExist($table, $field, $value, $more = '') {
         $query = "SELECT * FROM " . $table . " WHERE " . $field . "='" . addslashes($value) . "' " . $more;
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1372,7 +1383,6 @@ class mslib_befe {
             return $row;
         }
     }
-    // method for scanning subfolders and retrieve their associated files
     public function convertConfiguration($ms) {
         // bit lame code, but this is for subdirectory hosted typo3 installations. Compatible for front and back-end.
         /*
@@ -3248,13 +3258,13 @@ class mslib_befe {
                 $array1[] = '###ORDER_STATUS###';
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
-                if ($order['expected_delivery_date']>0) {
+                if ($order['expected_delivery_date'] > 0) {
                     $array2[] = strftime("%x", $order['expected_delivery_date']);
                 } else {
                     $array2[] = '';
                 }
                 $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
-                if ($order['expected_delivery_date']>0) {
+                if ($order['expected_delivery_date'] > 0) {
                     $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
                 } else {
                     $array2[] = '';
@@ -3387,6 +3397,69 @@ class mslib_befe {
             }
         }
     }
+    // get tree
+    function setSystemLanguage($sys_language_uid) {
+        if (is_numeric($sys_language_uid)) {
+            if (!is_array($this->defaultLanguageArray)) {
+                mslib_befe::setDefaultSystemLanguage();
+            }
+            $language_code = mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
+            if ($language_code != '') {
+                $language_code = strtolower($language_code);
+                $this->lang = $language_code;
+                $this->LLkey = $language_code;
+                /*
+                if ($language_code=='en') {
+                    // default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
+                    $this->LLkey='default';
+                }
+                */
+                $this->config['config']['language'] = $language_code;
+                $GLOBALS['TSFE']->config['config']['language'] = $language_code;
+                $GLOBALS['TSFE']->config['config']['sys_language_uid'] = $sys_language_uid;
+                $GLOBALS['TSFE']->sys_language_uid = $sys_language_uid;
+                $this->sys_language_uid = $sys_language_uid;
+                $GLOBALS['TSFE']->sys_language_content = $this->sys_language_uid;
+                $GLOBALS['TSFE']->config['config']['locale_all'] = $this->pi_getLL('locale_all');
+                setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
+            }
+        }
+    }
+    // convert the string of URL to <a href="URL">URL</a>
+    function setDefaultSystemLanguage() {
+        if ($this->LLkey) {
+            $this->defaultLanguageArray = array();
+            $this->defaultLanguageArray['lang'] = $this->lang;
+            $this->defaultLanguageArray['LLkey'] = $this->LLkey;
+            $this->defaultLanguageArray['config']['config']['language'] = $this->config['config']['language'];
+            $this->defaultLanguageArray['config']['config']['sys_language_uid'] = $this->sys_language_uid;
+            $this->defaultLanguageArray['config']['config']['locale_all'] = $GLOBALS['TSFE']->config['config']['locale_all'];
+        }
+    }
+    function getLanguageIso2ByLanguageUid($id) {
+        if (!is_numeric($id)) {
+            return false;
+        }
+        //$this->msDebug=1;
+        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
+        if ($record['lg_iso_2']) {
+            return $record['lg_iso_2'];
+        }
+    }
+    function resetSystemLanguage() {
+        // reset to default
+        if (is_array($this->defaultLanguageArray)) {
+            $this->lang = $this->defaultLanguageArray['lang'];
+            $this->LLkey = $this->defaultLanguageArray['LLkey'];
+            $this->config['config']['language'] = $this->defaultLanguageArray['config']['config']['language'];
+            $GLOBALS['TSFE']->config['config']['language'] = $this->defaultLanguageArray['config']['config']['language'];
+            $GLOBALS['TSFE']->config['config']['sys_language_uid'] = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
+            $GLOBALS['TSFE']->sys_language_uid = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
+            setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
+            $this->sys_language_uid = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
+            $GLOBALS['TSFE']->sys_language_content = $this->sys_language_uid;
+        }
+    }
     public function updateOrderProductStatus($orders_id, $order_product_id, $orders_status) {
         if (!is_numeric($orders_id)) {
             return false;
@@ -3399,7 +3472,6 @@ class mslib_befe {
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id=\'' . $orders_id . '\' and orders_products_id = \'' . $order_product_id . '\'', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     }
-    // get tree
     public function getHashedPassword($password) {
         $objPHPass = null;
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('t3sec_saltedpw')) {
@@ -3421,7 +3493,6 @@ class mslib_befe {
         }
         return $password;
     }
-    // convert the string of URL to <a href="URL">URL</a>
     public function generateRandomPassword($length = 10, $string = '', $type = 'pronounceable') {
         if (!$type and $string) {
             $type = 'pronounceable';
@@ -3703,6 +3774,7 @@ class mslib_befe {
         }
         return $output;
     }
+    // utf-8 support
     public function loginAsUser($uid, $section = '') {
         if (!is_numeric($uid)) {
             return false;
@@ -3755,42 +3827,7 @@ class mslib_befe {
             exit();
         }
     }
-    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select=array()) {
-        if (!count($select)) {
-            $select=array();
-            $select[]='*';
-        }
-        $queryArray = array();
-        $queryArray['from'] = $table;
-        if (isset($value) && isset($field) && $field != '') {
-            $queryArray['where'][] = addslashes($field) . '=\'' . addslashes($value) . '\'';
-        }
-        if (is_array($additional_where) && count($additional_where)) {
-            foreach ($additional_where as $where) {
-                if ($where) {
-                    $queryArray['where'][] = $where;
-                }
-            }
-        }
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
-                $queryArray['from'], // FROM ...
-                ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
-                $groupBy, // GROUP BY...
-                $orderBy, // ORDER BY...
-                $limit // LIMIT ...
-        );
-        if ($this->msDebug) {
-            return $query;
-        }
-        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-            $items = array();
-            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                $items[] = $row;
-            }
-            return $items;
-        }
-    }
+    // utf-8 support
     public function updateImportedProductsLockedFields($products_id, $table, $updateArray) {
         $lockedFields = array();
         $lockedFields['tx_multishop_products'][] = 'sku_code';
@@ -3834,10 +3871,10 @@ class mslib_befe {
                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                     if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
                         foreach ($lockedFields[$table] as $field_key) {
-                            $enableLock=0;
-                            $fieldsToLock=array();
+                            $enableLock = 0;
+                            $fieldsToLock = array();
                             if ($row[$field_key] != $updateArray[$field_key]) {
-                                $fieldsToLock[]=$field_key;
+                                $fieldsToLock[] = $field_key;
                             }
                             if (count($fieldsToLock)) {
                                 foreach ($fieldsToLock as $field_key) {
@@ -3862,6 +3899,7 @@ class mslib_befe {
             }
         }
     }
+    // utf-8 support
     public function ifExists($value = '', $table, $field = '', $additional_where = array()) {
         if ($table) {
             $filter = array();
@@ -3889,6 +3927,7 @@ class mslib_befe {
             }
         }
     }
+    // utf-8 support
     public function getImportedProductsLockedFields($products_id) {
         if (is_numeric($products_id)) {
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('field_key', // SELECT ...
@@ -3908,7 +3947,7 @@ class mslib_befe {
             }
         }
     }
-    // utf-8 support
+    // weight list for shipping costs page
     public function readPageAccess($id, $perms_clause) {
         if ((string)$id != '') {
             $id = intval($id);
@@ -3930,7 +3969,6 @@ class mslib_befe {
         }
         return false;
     }
-    // utf-8 support
     public function isValidDate($date) {
         if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $matches)) {
             if (checkdate($matches[2], $matches[3], $matches[1])) {
@@ -3939,7 +3977,6 @@ class mslib_befe {
         }
         return false;
     }
-    // utf-8 support
     public function isValidDateTime($dateTime) {
         if (preg_match('/^(\d{4})-(\d{2})-(\d{2}) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $dateTime, $matches)) {
             if (checkdate($matches[2], $matches[3], $matches[1])) {
@@ -3948,13 +3985,11 @@ class mslib_befe {
         }
         return false;
     }
-    // utf-8 support
     public function ucfirst($value) {
         $csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
         $charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
         return $csConvObj->convCaseFirst($charset, $value, 'toUpper');
     }
-    // weight list for shipping costs page
     public function strlen($value) {
         $csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
         $charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
@@ -4097,15 +4132,15 @@ class mslib_befe {
         $markerArray = array();
         $markerArray['LABEL_HEADER_QTY'] = ucfirst($this->pi_getLL('qty'));
         $markerArray['LABEL_HEADER_PRODUCT_NAME'] = $this->pi_getLL('products_name');
-        $markerArray['LABEL_HEADER_SKU']=$this->pi_getLL('sku_number', 'SKU');
-        $markerArray['LABEL_HEADER__QUANTITY']=$this->pi_getLL('qty');
-        $markerArray['LABEL_HEADER_TOTAL']=$this->pi_getLL('total');
-        $markerArray['LABEL_HEADER_PRICE']=$this->pi_getLL('price');
+        $markerArray['LABEL_HEADER_SKU'] = $this->pi_getLL('sku_number', 'SKU');
+        $markerArray['LABEL_HEADER__QUANTITY'] = $this->pi_getLL('qty');
+        $markerArray['LABEL_HEADER_TOTAL'] = $this->pi_getLL('total');
+        $markerArray['LABEL_HEADER_PRICE'] = $this->pi_getLL('price');
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'])) {
             $params_internal = array(
-                'markerArray' => &$markerArray,
-                'table_type' => $table_type
+                    'markerArray' => &$markerArray,
+                    'table_type' => $table_type
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4119,8 +4154,8 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
             $params_internal = array(
-                'markerArray' => &$markerArray,
-                'table_type' => $table_type
+                    'markerArray' => &$markerArray,
+                    'table_type' => $table_type
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4196,7 +4231,7 @@ class mslib_befe {
         $tr_type = 'even';
         $od_rows_count = 0;
         $product_counter = 1;
-        $real_prefix=$prefix;
+        $real_prefix = $prefix;
         if (is_array($order['products']) && count($order['products'])) {
             $contentItem = '';
             foreach ($order['products'] as $product) {
@@ -4239,20 +4274,20 @@ class mslib_befe {
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
                 $markerArray['ITEM_ORDER_UNIT'] = $product['order_unit_name'];
                 // ITEM IMAGE
-                $image_path=mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50');
+                $image_path = mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50');
                 if (isset($product_tmp['products_image']) && !empty($product_tmp['products_image'])) {
                     if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
-                        $product_tmp['products_image']=$image_path;
+                        $product_tmp['products_image'] = $image_path;
                     }
-                    $markerArray['ITEM_IMAGE']='<img src="'.$product_tmp['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+                    $markerArray['ITEM_IMAGE'] = '<img src="' . $product_tmp['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
                 } else {
-                    $markerArray['ITEM_IMAGE']='<div class="no_image_50"></div>';
+                    $markerArray['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 }
-                if ($table_type=='invoice' && $prefix=='-') {
-                    if (strpos($product['final_price'], '-')!==false) {
-                        $product['final_price']=str_replace('-', '', $product['final_price']);
+                if ($table_type == 'invoice' && $prefix == '-') {
+                    if (strpos($product['final_price'], '-') !== false) {
+                        $product['final_price'] = str_replace('-', '', $product['final_price']);
                     } else {
-                        $product['final_price']=$prefix.$product['final_price'];
+                        $product['final_price'] = $prefix . $product['final_price'];
                     }
                 }
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -4281,25 +4316,25 @@ class mslib_befe {
                     $params_internal = array(
                             'markerArray' => &$markerArray,
                             'table_type' => $table_type,
-                            'product'=>$product_tmp,
-                            'order_product'=>$product,
+                            'product' => $product_tmp,
+                            'order_product' => $product,
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
                     }
                 }
-                $append_attributes_label_to_product_name=false;
+                $append_attributes_label_to_product_name = false;
                 if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
-                    $append_attributes_label_to_product_name=true;
+                    $append_attributes_label_to_product_name = true;
                 }
                 if (is_array($product['attributes']) && count($product['attributes'])) {
                     foreach ($product['attributes'] as $tmpkey => $options) {
                         if ($options['products_options_values']) {
-                            if ($table_type=='invoice' && $prefix=='-') {
-                                if (strpos($options['options_values_price'], '-')!==false) {
-                                    $options['options_values_price']=str_replace('-', '', $options['options_values_price']);
+                            if ($table_type == 'invoice' && $prefix == '-') {
+                                if (strpos($options['options_values_price'], '-') !== false) {
+                                    $options['options_values_price'] = str_replace('-', '', $options['options_values_price']);
                                 } else {
-                                    $options['options_values_price']=$prefix.$options['options_values_price'];
+                                    $options['options_values_price'] = $prefix . $options['options_values_price'];
                                 }
                             }
                             $attributeMarkerArray = array();
@@ -4351,44 +4386,44 @@ class mslib_befe {
             $subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'] = '';
         }
         $subpartArray['###ITEM_WRAPPER###'] = $contentItem;
-        if ($table_type=='invoice' && $prefix=='-') {
-            if (strpos($order['shipping_method_costs'], '-')!==false) {
-                $prefix='';
-                $order['shipping_method_costs']=str_replace('-', '', $order['shipping_method_costs']);
-                $order['orders_tax_data']['shipping_tax']=str_replace('-', '', $order['orders_tax_data']['shipping_tax']);
+        if ($table_type == 'invoice' && $prefix == '-') {
+            if (strpos($order['shipping_method_costs'], '-') !== false) {
+                $prefix = '';
+                $order['shipping_method_costs'] = str_replace('-', '', $order['shipping_method_costs']);
+                $order['orders_tax_data']['shipping_tax'] = str_replace('-', '', $order['orders_tax_data']['shipping_tax']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
-            if (strpos($order['payment_method_costs'], '-')!==false) {
-                $prefix='';
-                $order['payment_method_costs']=str_replace('-', '', $order['payment_method_costs']);
-                $order['orders_tax_data']['payment_tax']=str_replace('-', '', $order['orders_tax_data']['payment_tax']);
+            if (strpos($order['payment_method_costs'], '-') !== false) {
+                $prefix = '';
+                $order['payment_method_costs'] = str_replace('-', '', $order['payment_method_costs']);
+                $order['orders_tax_data']['payment_tax'] = str_replace('-', '', $order['orders_tax_data']['payment_tax']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
-            if (strpos($order['orders_tax_data']['sub_total'], '-')!==false) {
-                $prefix='';
-                $order['orders_tax_data']['sub_total']=str_replace('-', '', $order['orders_tax_data']['sub_total']);
+            if (strpos($order['orders_tax_data']['sub_total'], '-') !== false) {
+                $prefix = '';
+                $order['orders_tax_data']['sub_total'] = str_replace('-', '', $order['orders_tax_data']['sub_total']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
-            if (strpos($order['subtotal_amount'], '-')!==false) {
-                $prefix='';
-                $order['subtotal_amount']=str_replace('-', '', $order['subtotal_amount']);
+            if (strpos($order['subtotal_amount'], '-') !== false) {
+                $prefix = '';
+                $order['subtotal_amount'] = str_replace('-', '', $order['subtotal_amount']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
-            if (strpos($order['discount'], '-')!==false) {
-                $prefix='';
-                $order['discount']=str_replace('-', '', $order['discount']);
+            if (strpos($order['discount'], '-') !== false) {
+                $prefix = '';
+                $order['discount'] = str_replace('-', '', $order['discount']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
-            if (strpos($order['orders_tax_data']['grand_total'], '-')!==false) {
-                $prefix='';
-                $order['orders_tax_data']['grand_total']=str_replace('-', '', $order['orders_tax_data']['grand_total']);
+            if (strpos($order['orders_tax_data']['grand_total'], '-') !== false) {
+                $prefix = '';
+                $order['orders_tax_data']['grand_total'] = str_replace('-', '', $order['orders_tax_data']['grand_total']);
             } else {
-                $prefix='-';
+                $prefix = '-';
             }
         }
         if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
@@ -4487,14 +4522,14 @@ class mslib_befe {
                                 if (empty($tax_sep_data['payment_tax'])) {
                                     $tax_sep_data['payment_tax'] = 0;
                                 }
-                                if ($table_type=='invoice' && $real_prefix=='-') {
-                                    if (strpos($tax_sep_data['products_total_tax'], '-')!==false) {
-                                        $prefix='';
-                                        $tax_sep_data['products_total_tax']=str_replace('-', '', $tax_sep_data['products_total_tax']);
-                                        $tax_sep_data['shipping_tax']=str_replace('-', '', $tax_sep_data['shipping_tax']);
-                                        $tax_sep_data['payment_tax']=str_replace('-', '', $tax_sep_data['payment_tax']);
+                                if ($table_type == 'invoice' && $real_prefix == '-') {
+                                    if (strpos($tax_sep_data['products_total_tax'], '-') !== false) {
+                                        $prefix = '';
+                                        $tax_sep_data['products_total_tax'] = str_replace('-', '', $tax_sep_data['products_total_tax']);
+                                        $tax_sep_data['shipping_tax'] = str_replace('-', '', $tax_sep_data['shipping_tax']);
+                                        $tax_sep_data['payment_tax'] = str_replace('-', '', $tax_sep_data['payment_tax']);
                                     } else {
-                                        $prefix='-';
+                                        $prefix = '-';
                                     }
                                 }
                                 $tax_sep_total = $prefix . ($tax_sep_data['products_total_tax'] + $tax_sep_data['shipping_tax'] + $tax_sep_data['payment_tax']);
@@ -4522,12 +4557,12 @@ class mslib_befe {
                     } else {
                         $markerArray['LABEL_VAT'] = $this->pi_getLL('vat');
                     }
-                    if ($table_type=='invoice' && $real_prefix=='-') {
-                        if (strpos($order['orders_tax_data']['total_orders_tax'], '-')!==false) {
-                            $prefix='';
-                            $order['orders_tax_data']['total_orders_tax']=str_replace('-', '', $order['orders_tax_data']['total_orders_tax']);
+                    if ($table_type == 'invoice' && $real_prefix == '-') {
+                        if (strpos($order['orders_tax_data']['total_orders_tax'], '-') !== false) {
+                            $prefix = '';
+                            $order['orders_tax_data']['total_orders_tax'] = str_replace('-', '', $order['orders_tax_data']['total_orders_tax']);
                         } else {
-                            $prefix='-';
+                            $prefix = '-';
                         }
                     }
                     $markerArray['TOTAL_VAT'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['total_orders_tax']), $customer_currency, $display_currency_symbol, 0);
@@ -4581,7 +4616,7 @@ class mslib_befe {
             $subpartArray['###PRODUCTS_NEWTOTAL_PRICE###'] = mslib_fe::amount2Cents($order['subtotal_amount'] - $order['discount'], $customer_currency, $display_currency_symbol, 0);
         }
         //$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
-        $subpartArray['###LABEL_GRAND_TOTAL_EXCLUDING_VAT###']=$this->pi_getLL('grand_total_excluding_vat') . ' ';
+        $subpartArray['###LABEL_GRAND_TOTAL_EXCLUDING_VAT###'] = $this->pi_getLL('grand_total_excluding_vat') . ' ';
         $subpartArray['###GRAND_TOTAL_EXCLUDING_VAT###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total_excluding_vat']), $customer_currency, $display_currency_symbol, 0);
         $subpartArray['###LABEL_GRAND_TOTAL###'] = $this->pi_getLL('total');
         $subpartArray['###GRAND_TOTAL###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
@@ -4693,6 +4728,15 @@ class mslib_befe {
             return mslib_befe::getSysLanguageUidByIso2($twoChars);
         }
     }
+    function getSysLanguageUidByIso2($iso2) {
+        if (!$iso2) {
+            return false;
+        }
+        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
+        if ($record['uid']) {
+            return $record['uid'];
+        }
+    }
     function getSysLanguageUidByFlagString($flag) {
         if ($flag) {
             $record = mslib_befe::getRecord($flag, 'sys_language', 'flag');
@@ -4729,7 +4773,7 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer='') {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '') {
         $content = '<div class="panel panel-' . $panelClass . '">';
         if ($heading) {
             $content .= '<div class="panel-heading"><h3 class="panel-title">' . $heading . '</h3></div>';
@@ -4742,16 +4786,6 @@ class mslib_befe {
         }
         $content .= '</div>';
         return $content;
-    }
-    function rmNullValuedKeys($array) {
-        if (is_array($array)) {
-            foreach ($array as $key => $val) {
-                if (is_null($array[$key])) {
-                    $array[$key] = '';
-                }
-            }
-            return $array;
-        }
     }
     function antiXSS($val, $mode = '') {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/htmlpurifier-4.7.0/HTMLPurifier.auto.php');
@@ -4793,25 +4827,6 @@ class mslib_befe {
             }
         }
     }
-    function getLanguageIso2ByLanguageUid($id) {
-        if (!is_numeric($id)) {
-            return false;
-        }
-        //$this->msDebug=1;
-        $record = mslib_befe::getRecord($id, 'sys_language syslang, static_languages statlang', 'syslang.uid', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'statlang.lg_iso_2');
-        if ($record['lg_iso_2']) {
-            return $record['lg_iso_2'];
-        }
-    }
-    function getSysLanguageUidByIso2($iso2) {
-        if (!$iso2) {
-            return false;
-        }
-        $record = mslib_befe::getRecord($iso2, 'sys_language syslang, static_languages statlang', 'statlang.lg_iso_2', array('syslang.hidden=0 and syslang.static_lang_isocode=statlang.uid'), 'syslang.uid');
-        if ($record['uid']) {
-            return $record['uid'];
-        }
-    }
     function getLocalLanguageNameByIso2($iso2) {
         if (!$iso2) {
             return false;
@@ -4819,57 +4834,6 @@ class mslib_befe {
         $record = mslib_befe::getRecord($iso2, 'static_languages statlang', 'statlang.lg_iso_2');
         if ($record['uid']) {
             return $record['lg_name_local'];
-        }
-    }
-    function setDefaultSystemLanguage() {
-        if ($this->LLkey) {
-            $this->defaultLanguageArray = array();
-            $this->defaultLanguageArray['lang'] = $this->lang;
-            $this->defaultLanguageArray['LLkey'] = $this->LLkey;
-            $this->defaultLanguageArray['config']['config']['language'] = $this->config['config']['language'];
-            $this->defaultLanguageArray['config']['config']['sys_language_uid'] = $this->sys_language_uid;
-            $this->defaultLanguageArray['config']['config']['locale_all'] = $GLOBALS['TSFE']->config['config']['locale_all'];
-        }
-    }
-    function setSystemLanguage($sys_language_uid) {
-        if (is_numeric($sys_language_uid)) {
-            if (!is_array($this->defaultLanguageArray)) {
-                mslib_befe::setDefaultSystemLanguage();
-            }
-            $language_code = mslib_befe::getLanguageIso2ByLanguageUid($sys_language_uid);
-            if ($language_code != '') {
-                $language_code = strtolower($language_code);
-                $this->lang = $language_code;
-                $this->LLkey = $language_code;
-                /*
-                if ($language_code=='en') {
-                    // default because otherwise some locallang.xml have a language node default and also en, very annoying if it uses en, since we want it to use the default which must be english
-                    $this->LLkey='default';
-                }
-                */
-                $this->config['config']['language'] = $language_code;
-                $GLOBALS['TSFE']->config['config']['language'] = $language_code;
-                $GLOBALS['TSFE']->config['config']['sys_language_uid'] = $sys_language_uid;
-                $GLOBALS['TSFE']->sys_language_uid = $sys_language_uid;
-                $this->sys_language_uid = $sys_language_uid;
-                $GLOBALS['TSFE']->sys_language_content = $this->sys_language_uid;
-                $GLOBALS['TSFE']->config['config']['locale_all'] = $this->pi_getLL('locale_all');
-                setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
-            }
-        }
-    }
-    function resetSystemLanguage() {
-        // reset to default
-        if (is_array($this->defaultLanguageArray)) {
-            $this->lang = $this->defaultLanguageArray['lang'];
-            $this->LLkey = $this->defaultLanguageArray['LLkey'];
-            $this->config['config']['language'] = $this->defaultLanguageArray['config']['config']['language'];
-            $GLOBALS['TSFE']->config['config']['language'] = $this->defaultLanguageArray['config']['config']['language'];
-            $GLOBALS['TSFE']->config['config']['sys_language_uid'] = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
-            $GLOBALS['TSFE']->sys_language_uid = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
-            setlocale(LC_TIME, $this->defaultLanguageArray['config']['config']['locale_all']);
-            $this->sys_language_uid = $this->defaultLanguageArray['config']['config']['sys_language_uid'];
-            $GLOBALS['TSFE']->sys_language_content = $this->sys_language_uid;
         }
     }
     public function getPaymentMethodLabelByCode($code, $sys_language_id = 0) {
@@ -4946,7 +4910,7 @@ class mslib_befe {
             $array1[] = '###BUILDING###';
             $array2[] = $address_data['building'];
         } else {
-            if (strpos($address_format_setting, '###BUILDING###<br/>')!==false) {
+            if (strpos($address_format_setting, '###BUILDING###<br/>') !== false) {
                 $array1[] = '###BUILDING###<br/>';
                 $array2[] = '';
             } else {
@@ -4954,9 +4918,9 @@ class mslib_befe {
                 $array2[] = '';
             }
         }
-        if (strpos($address_format_setting, '###BUILDING###')===false && $address_data['building']) {
+        if (strpos($address_format_setting, '###BUILDING###') === false && $address_data['building']) {
             $array1[] = '###ADDRESS###';
-            $array2[] = $address_data['building'].'<br/>'.$address_data['address'];
+            $array2[] = $address_data['building'] . '<br/>' . $address_data['address'];
         } else {
             $array1[] = '###ADDRESS###';
             $array2[] = $address_data['address'];
@@ -5041,76 +5005,112 @@ class mslib_befe {
      * @param $number integer > 0
      * @return int
      */
-    function strposX($haystack, $needle, $number){
-        if($number == '1'){
+    function strposX($haystack, $needle, $number) {
+        if ($number == '1') {
             return strpos($haystack, $needle);
-        }elseif($number > '1'){
+        } elseif ($number > '1') {
             return strpos($haystack, $needle, mslib_befe::strposX($haystack, $needle, $number - 1) + strlen($needle));
-        }else{
+        } else {
             return error_log('Error: Value for parameter $number is out of range');
         }
     }
     function setProductDefaultCrumpath($product_id) {
-        $p2c_records=mslib_befe::getRecords($product_id, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '', 'products_to_categories_id asc');
-        if (is_array($p2c_records) && count($p2c_records)>1) {
-            $set_default_path=true;
+        $p2c_records = mslib_befe::getRecords($product_id, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '', 'products_to_categories_id asc');
+        if (is_array($p2c_records) && count($p2c_records) > 1) {
+            $set_default_path = true;
             foreach ($p2c_records as $p2c_record) {
-                if ($p2c_record['default_path']>0) {
-                    $set_default_path=false;
+                if ($p2c_record['default_path'] > 0) {
+                    $set_default_path = false;
                     break;
                 }
             }
             if ($set_default_path) {
-                $updateArray=array();
-                $updateArray['default_path']=1;
-                $queryProduct=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$p2c_records[0]['products_to_categories_id'].'\' and categories_id=\''.$p2c_records[0]['categories_id'].'\' and products_id=\''.$p2c_records[0]['products_id'].'\'', $updateArray);
+                $updateArray = array();
+                $updateArray['default_path'] = 1;
+                $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\'' . $p2c_records[0]['products_to_categories_id'] . '\' and categories_id=\'' . $p2c_records[0]['categories_id'] . '\' and products_id=\'' . $p2c_records[0]['products_id'] . '\'', $updateArray);
                 $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             }
         }
     }
-    function formatNumbersToMysql($numbers) {
-        if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point']!='.') {
-            $thousand_array=array();
-            $decimal='00';
-            $thousands=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], $numbers);
-            foreach ($thousands as $thousand) {
-                if (strpos($thousand, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'])===false) {
-                    $thousand_array[]=$thousand;
-                } else {
-                    list($last_thousand, $decimal)=explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], $thousand);
-                    $thousand_array[]=$last_thousand;
+    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array()) {
+        if (!count($select)) {
+            $select = array();
+            $select[] = '*';
+        }
+        $queryArray = array();
+        $queryArray['from'] = $table;
+        if (isset($value) && isset($field) && $field != '') {
+            $queryArray['where'][] = addslashes($field) . '=\'' . addslashes($value) . '\'';
+        }
+        if (is_array($additional_where) && count($additional_where)) {
+            foreach ($additional_where as $where) {
+                if ($where) {
+                    $queryArray['where'][] = $where;
                 }
             }
-            $full_number=0;
+        }
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
+                $queryArray['from'], // FROM ...
+                ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
+                $groupBy, // GROUP BY...
+                $orderBy, // ORDER BY...
+                $limit // LIMIT ...
+        );
+        if ($this->msDebug) {
+            return $query;
+        }
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+            $items = array();
+            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                $items[] = $row;
+            }
+            return $items;
+        }
+    }
+    function formatNumbersToMysql($numbers) {
+        if ($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'] != '.') {
+            $thousand_array = array();
+            $decimal = '00';
+            $thousands = explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], $numbers);
+            foreach ($thousands as $thousand) {
+                if (strpos($thousand, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point']) === false) {
+                    $thousand_array[] = $thousand;
+                } else {
+                    list($last_thousand, $decimal) = explode($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], $thousand);
+                    $thousand_array[] = $last_thousand;
+                }
+            }
+            $full_number = 0;
             if (count($thousand_array)) {
-                $full_number=implode('', $thousand_array) . '.' . $decimal;
+                $full_number = implode('', $thousand_array) . '.' . $decimal;
             }
             return $full_number;
         } else {
-            $numbers=str_replace($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], '', $numbers);
+            $numbers = str_replace($this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'], '', $numbers);
             return $numbers;
         }
     }
     function getDefaultOrderStatus() {
-        $filter=array();
-        $filter[]='default_status=1';
-        $filter[]='(o.page_uid=\'0\' or o.page_uid=\''.$this->showCatalogFromPage.'\') and o.deleted=0 and o.id=od.orders_status_id and od.language_id=\'0\'';
-        $record=mslib_befe::getRecord('','tx_multishop_orders_status o, tx_multishop_orders_status_description od','',$filter);
+        $filter = array();
+        $filter[] = 'default_status=1';
+        $filter[] = '(o.page_uid=\'0\' or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id and od.language_id=\'0\'';
+        $record = mslib_befe::getRecord('', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', '', $filter);
         return $record;
     }
     function getOrderStatusHistoryByOrdersId($orders_id) {
         if (is_numeric($orders_id)) {
-            $query=$GLOBALS['TYPO3_DB']->SELECTquery('new_value', // SELECT ...
+            $query = $GLOBALS['TYPO3_DB']->SELECTquery('new_value', // SELECT ...
                     'tx_multishop_orders_status_history', // FROM ...
-                    'orders_id=\''.$orders_id.'\'', // WHERE.
+                    'orders_id=\'' . $orders_id . '\'', // WHERE.
                     '', // GROUP BY...
                     'orders_status_history_id desc', // ORDER BY...
                     '' // LIMIT ...
             );
-            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
-            $order_status_history_items=array();
-            while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
-                $order_status_history_items[]=$row['new_value'];
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            $order_status_history_items = array();
+            while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
+                $order_status_history_items[] = $row['new_value'];
             }
             return $order_status_history_items;
         }

@@ -27,27 +27,26 @@ if (!$product['products_id']) {
                     }
                     $where = substr($where, 0, (strlen($where) - 1));
                     $where .= '&';
-					//
-					header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
-					exit();
+                    //
+                    header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail'));
+                    exit();
                 }
                 // get all cats to generate multilevel fake url eof
             }
         }
     }
-	header('HTTP/1.0 404 Not Found');
-	$output_array['http_header'] = 'HTTP/1.0 404 Not Found';
-	// set custom 404 message
-	$page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
-	if ($page[0]['name']) {
-		$content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
-	} else {
-		$content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
-	}
-	if ($page[0]['content']) {
-		$content .= $page[0]['content'];
-	}
-
+    header('HTTP/1.0 404 Not Found');
+    $output_array['http_header'] = 'HTTP/1.0 404 Not Found';
+    // set custom 404 message
+    $page = mslib_fe::getCMScontent('product_not_found_message', $GLOBALS['TSFE']->sys_language_uid);
+    if ($page[0]['name']) {
+        $content = '<div class="main-title"><h1>' . $page[0]['name'] . '</h1></div>';
+    } else {
+        $content = '<div class="main-title"><h1>' . $this->pi_getLL('the_requested_product_does_not_exist') . '</h1></div>';
+    }
+    if ($page[0]['content']) {
+        $content .= $page[0]['content'];
+    }
 } else {
     if ($this->conf['imageWidth']) {
         $this->imageWidth = $this->conf['imageWidth'];
@@ -107,16 +106,15 @@ if (!$product['products_id']) {
                 $level++;
             }
             $where = substr($where, 0, (strlen($where) - 1));
-
         }
         // get all cats to generate multilevel fake url eof
     }
     $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
-    $productLink=$link;
-    $imgUrl='';
+    $productLink = $link;
+    $imgUrl = '';
     $output_array['meta']['facebook'] = '';
     if ($product['products_image']) {
-        $imgUrl=$this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', '300');
+        $imgUrl = $this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', '300');
         $output_array['meta']['facebook'] .= '<link rel="image_src" href="' . $imgUrl . '" />
 		<meta property="og:image" content="' . $imgUrl . '" />';
     }
@@ -195,7 +193,6 @@ if (!$product['products_id']) {
 	  	<div class="specials_price">' . mslib_fe::amount2Cents($final_price) . '</div>';
     }
     $output['products_price'] .= $sub_content . '</div>';
-
     // staffel price table
     $output['products_staffel_price_table'] = '';
     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
@@ -228,10 +225,10 @@ if (!$product['products_id']) {
     }
     // show selectbox by products multiplication or show default input
     if ($this->get['tx_multishop_pi1']['cart_item']) {
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-        $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
-        $cart=$mslib_cart->getCart();
+        $cart = $mslib_cart->getCart();
         //$cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         $qty = $cart['products'][$this->get['tx_multishop_pi1']['cart_item']]['qty'];
     }
@@ -357,8 +354,8 @@ if (!$product['products_id']) {
     $markerArray['###PAGINATION###'] = $output['pagination'];
     $markerArray['###STOCK###'] = $output['products_quantity'];
     $markerArray['###PRODUCTS_QUANTITY###'] = number_format(round($product['products_quantity'], 2), 0, '', '.');
-    if ($product['minimum_quantity']=='0') {
-        $product['minimum_quantity']=1;
+    if ($product['minimum_quantity'] == '0') {
+        $product['minimum_quantity'] = 1;
     }
     $markerArray['###PRODUCTS_MINIMUM_QUANTITY###'] = number_format(round($product['minimum_quantity'], 2), 0, '', '.');
     $markerArray['###PRODUCTS_MAXIMUM_QUANTITY###'] = number_format(round($product['maximum_quantity'], 2), 0, '', '.');
@@ -392,8 +389,8 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
     $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = '';
-    if ($price_excl_vat!='') {
-        $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat.' '.lcfirst($this->pi_getLL('excluding_vat'));
+    if ($price_excl_vat != '') {
+        $markerArray['###PRODUCTS_PRICE_EXCLUDING_VAT###'] = $price_excl_vat . ' ' . lcfirst($this->pi_getLL('excluding_vat'));
     }
     $markerArray['###PRODUCTS_STAFFEL_PRICE_TABLE###'] = $output['products_staffel_price_table'];
     $markerArray['###PRODUCTS_SKU###'] = $product['sku_code'];
@@ -405,11 +402,9 @@ if (!$product['products_id']) {
     $markerArray['###QUANTITY###'] = $output['quantity'];
     $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($product['old_price']);
     $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
-
     $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
     $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
     $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
-
     $markerArray['###BACK_BUTTON###'] = $output['back_button'];
     $markerArray['###ADD_TO_CART_BUTTON###'] = $output['add_to_cart_button'];
     $markerArray['###PRODUCTS_META_DESCRIPTION###'] = $product['products_meta_description'];
@@ -439,33 +434,32 @@ if (!$product['products_id']) {
         }
         // get all cats to generate multilevel fake url eof
     }
-    $markerArray['###CATEGORIES_URL###']=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-
-    $formats=array();
-    $formats[]='';
-    $formats[]='100';
-    $formats[]='200';
-    $formats[]='300';
+    $markerArray['###CATEGORIES_URL###'] = mslib_fe::typolink($this->conf['products_listing_page_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
+    $formats = array();
+    $formats[] = '';
+    $formats[] = '100';
+    $formats[] = '200';
+    $formats[] = '300';
     foreach ($formats as $format) {
         if ($format) {
-            $markerArray['###PRODUCTS_IMAGE_URL_'.$format.'###']='';
-            $markerArray['###FULL_PRODUCTS_IMAGE_URL_'.$format.'###']='';
+            $markerArray['###PRODUCTS_IMAGE_URL_' . $format . '###'] = '';
+            $markerArray['###FULL_PRODUCTS_IMAGE_URL_' . $format . '###'] = '';
         } else {
-            $markerArray['###PRODUCTS_IMAGE_URL###']='';
-            $markerArray['###FULL_PRODUCTS_IMAGE_URL###']='';
+            $markerArray['###PRODUCTS_IMAGE_URL###'] = '';
+            $markerArray['###FULL_PRODUCTS_IMAGE_URL###'] = '';
         }
         if ($product['products_image']) {
             if ($format) {
-                $markerArray['###PRODUCTS_IMAGE_URL_'.$format.'###']=mslib_befe::getImagePath($product['products_image'], 'products', $format);
-                $markerArray['###FULL_PRODUCTS_IMAGE_URL_'.$format.'###']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $format);
+                $markerArray['###PRODUCTS_IMAGE_URL_' . $format . '###'] = mslib_befe::getImagePath($product['products_image'], 'products', $format);
+                $markerArray['###FULL_PRODUCTS_IMAGE_URL_' . $format . '###'] = $this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', $format);
             } else {
-                $markerArray['###PRODUCTS_IMAGE_URL###']=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
-                $markerArray['###FULL_PRODUCTS_IMAGE_URL###']=$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+                $markerArray['###PRODUCTS_IMAGE_URL###'] = mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
+                $markerArray['###FULL_PRODUCTS_IMAGE_URL###'] = $this->FULL_HTTP_URL . mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
             }
         }
     }
     $markerArray['###CANONICAL_URL###'] = $productLink;
-    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] ='';
+    $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = '';
     if ($product['manufacturers_advice_price']) {
         if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
             $amount = $product['manufacturers_advice_price'] * (1 + $product['tax_rate']);

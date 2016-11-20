@@ -1,6 +1,6 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
+    die('Access denied.');
 }
 /***************************************************************
  *  Copyright notice
@@ -25,7 +25,6 @@ if (!defined('TYPO3_MODE')) {
  *   54:     function getExtensionSummary($params, &$pObj)
  * TOTAL FUNCTIONS: 1
  * (This index is automatically created/updated by the extension "extdeveval")
-
  */
 /**
  * Hook to display verbose information about pi1 plugin in Web>Page module
@@ -34,107 +33,107 @@ if (!defined('TYPO3_MODE')) {
  * @subpackage    tx_multishop
  */
 class tx_multishop {
-	/**
-	 * Function called from TV, used to generate preview of this plugin
-	 * @param  array $row :        tt_content table row
-	 * @param  string $table :      usually tt_content
-	 * @param  bool $alreadyRendered :  To let TV know we have successfully rendered a preview
-	 * @param object $reference tx_templavoila_module1
-	 * @return string  $content
-	 */
-	public function renderPreviewContent_preProcess($row, $table, &$alreadyRendered, &$reference) {
-		if ($row['CType']==='list' && $row['list_type']==='multishop_pi1') {
-			$content=$this->preview($row);
-			$alreadyRendered=true;
-			return $content;
-		}
-	}
-	/**
-	 * Render the preview
-	 * @param array $row tt_content row of the plugin
-	 * @return string rendered preview html
-	 */
-	protected function preview($row) {
-		$data=\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
-		$selectedMethod=$data['data']['sDEFAULT']['lDEF']['method']['vDEF'];
-		if ($selectedMethod) {
-			$content='Multishop: '.$data['data']['sDEFAULT']['lDEF']['method']['vDEF'].'<br />';
-			$methodToTabArray=array();
-			$methodToTabArray['categories']='s_listing';
-			$methodToTabArray['products']='s_products_listing';
-			$methodToTabArray['search']='s_search';
-			$methodToTabArray['specials']='s_specials';
-			//manufacturers
-			$methodToTabArray['misc']='s_misc';
+    /**
+     * Function called from TV, used to generate preview of this plugin
+     * @param  array $row :        tt_content table row
+     * @param  string $table :      usually tt_content
+     * @param  bool $alreadyRendered :  To let TV know we have successfully rendered a preview
+     * @param object $reference tx_templavoila_module1
+     * @return string  $content
+     */
+    public function renderPreviewContent_preProcess($row, $table, &$alreadyRendered, &$reference) {
+        if ($row['CType'] === 'list' && $row['list_type'] === 'multishop_pi1') {
+            $content = $this->preview($row);
+            $alreadyRendered = true;
+            return $content;
+        }
+    }
+    /**
+     * Render the preview
+     * @param array $row tt_content row of the plugin
+     * @return string rendered preview html
+     */
+    protected function preview($row) {
+        $data = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
+        $selectedMethod = $data['data']['sDEFAULT']['lDEF']['method']['vDEF'];
+        if ($selectedMethod) {
+            $content = 'Multishop: ' . $data['data']['sDEFAULT']['lDEF']['method']['vDEF'] . '<br />';
+            $methodToTabArray = array();
+            $methodToTabArray['categories'] = 's_listing';
+            $methodToTabArray['products'] = 's_products_listing';
+            $methodToTabArray['search'] = 's_search';
+            $methodToTabArray['specials'] = 's_specials';
+            //manufacturers
+            $methodToTabArray['misc'] = 's_misc';
 //			$methodToTabArray[]='s_advanced';
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'])) {
-				$params=array(
-					'selectedMethod'=>&$selectedMethod,
-					'row'=>&$row,
-					'methodToTabArray'=>&$methodToTabArray,
-					'content'=>&$content,
-					'data'=>&$data
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'] as $funcRef) {
-					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-				}
-			}
-			if ($methodToTabArray[$selectedMethod]) {
-				if (is_array($data['data'][$methodToTabArray[$selectedMethod]]['lDEF']) && count($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'])) {
-					foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key=>$valArray) {
-						if (isset($valArray['vDEF']) and $valArray['vDEF']!='') {
-							$subContent.=$key.': '.$valArray['vDEF'].'<br />';
-						}
-					}
-				}
-			}
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'])) {
-				$params=array(
-					'selectedMethod'=>&$selectedMethod,
-					'row'=>&$row,
-					'methodToTabArray'=>&$methodToTabArray,
-					'content'=>&$content,
-					'subContent'=>&$subContent,
-					'data'=>&$data
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'] as $funcRef) {
-					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-				}
-			}
-			if ($subContent) {
-				$content.='<br />'.$subContent;
-			}
-		}
-		return $content;
-	}
-	/**
-	 * Function called from page view, used to generate preview of this plugin
-	 * @param  array $params :  flexform params
-	 * @param  array $pObj :    parent object
-	 * @return string  $result:  the hghlighted text
-	 */
-	public function getExtensionSummary($params, &$pObj) {
-		if ($params['row']['CType']==='list' && $params['row']['list_type']==='multishop_pi1') {
-			$content=$this->preview($params['row']);
-			return $content;
-		}
-	}
-	/**
-	 * Flattens an array, or returns FALSE on fail.
-	 */
-	function array_flatten($array) {
-		if (!is_array($array)) {
-			return false;
-		}
-		$result=array();
-		foreach ($array as $key=>$value) {
-			if (is_array($value)) {
-				$result=array_merge($result, $this->array_flatten($value));
-			} else {
-				$result[$key]=$value;
-			}
-		}
-		return $result;
-	}
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'])) {
+                $params = array(
+                        'selectedMethod' => &$selectedMethod,
+                        'row' => &$row,
+                        'methodToTabArray' => &$methodToTabArray,
+                        'content' => &$content,
+                        'data' => &$data
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($methodToTabArray[$selectedMethod]) {
+                if (is_array($data['data'][$methodToTabArray[$selectedMethod]]['lDEF']) && count($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'])) {
+                    foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key => $valArray) {
+                        if (isset($valArray['vDEF']) and $valArray['vDEF'] != '') {
+                            $subContent .= $key . ': ' . $valArray['vDEF'] . '<br />';
+                        }
+                    }
+                }
+            }
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'])) {
+                $params = array(
+                        'selectedMethod' => &$selectedMethod,
+                        'row' => &$row,
+                        'methodToTabArray' => &$methodToTabArray,
+                        'content' => &$content,
+                        'subContent' => &$subContent,
+                        'data' => &$data
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($subContent) {
+                $content .= '<br />' . $subContent;
+            }
+        }
+        return $content;
+    }
+    /**
+     * Function called from page view, used to generate preview of this plugin
+     * @param  array $params :  flexform params
+     * @param  array $pObj :    parent object
+     * @return string  $result:  the hghlighted text
+     */
+    public function getExtensionSummary($params, &$pObj) {
+        if ($params['row']['CType'] === 'list' && $params['row']['list_type'] === 'multishop_pi1') {
+            $content = $this->preview($params['row']);
+            return $content;
+        }
+    }
+    /**
+     * Flattens an array, or returns FALSE on fail.
+     */
+    function array_flatten($array) {
+        if (!is_array($array)) {
+            return false;
+        }
+        $result = array();
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, $this->array_flatten($value));
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
 }
 ?>

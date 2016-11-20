@@ -1,27 +1,27 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
-$content.='
+$content .= '
 <form action="index.php" method="get" name="products_searchform" id="multishop_products_searchform">
-<input name="id" type="hidden" value="'.$this->conf['search_page_pid'].'" />
+<input name="id" type="hidden" value="' . $this->conf['search_page_pid'] . '" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="products_search" />
-<input name="L" type="hidden" value="'.$this->sys_language_uid.'" />
+<input name="L" type="hidden" value="' . $this->sys_language_uid . '" />
 <div class="form-fieldset">
-<select name="manufacturers_id" id="manufacturers_dropdown_menu"><option value="">'.htmlspecialchars($this->pi_getLL('manufacturers')).'</option>
+<select name="manufacturers_id" id="manufacturers_dropdown_menu"><option value="">' . htmlspecialchars($this->pi_getLL('manufacturers')) . '</option>
 ';
-$str="SELECT * from tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi where m.manufacturers_id=mi.manufacturers_id and m.status=1 order by m.sort_order,m.manufacturers_name";
-$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-$manufacturers=array();
-while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-	$manufacturers[]=$row;
+$str = "SELECT * from tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi where m.manufacturers_id=mi.manufacturers_id and m.status=1 order by m.sort_order,m.manufacturers_name";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+$manufacturers = array();
+while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+    $manufacturers[] = $row;
 }
-if (count($manufacturers)>0) {
-	foreach ($manufacturers as $manufacturer) {
-		$content.='<option value="'.$manufacturer['manufacturers_id'].'"'.($this->get['manufacturers_id']==$manufacturer['manufacturers_id'] ? ' selected' : '').'>'.htmlspecialchars($manufacturer['manufacturers_name']).'</option>'."\n";
-	}
+if (count($manufacturers) > 0) {
+    foreach ($manufacturers as $manufacturer) {
+        $content .= '<option value="' . $manufacturer['manufacturers_id'] . '"' . ($this->get['manufacturers_id'] == $manufacturer['manufacturers_id'] ? ' selected' : '') . '>' . htmlspecialchars($manufacturer['manufacturers_name']) . '</option>' . "\n";
+    }
 }
-$content.='</select>
+$content .= '</select>
 </div>
 </form>
 <script>
@@ -32,7 +32,7 @@ $content.='</select>
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php']['searchFormWithManufacturersDropdownCEPostHook'])) {
     $params = array(
-        'content' => &$content,
+            'content' => &$content,
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php']['searchFormWithManufacturersDropdownCEPostHook'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
