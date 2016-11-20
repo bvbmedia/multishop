@@ -211,7 +211,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 						<a role="button" data-toggle="collapse" href="#msEditShippingModulesInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
 					</h3>
 				</div>
-				<div id="msEditShippingModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+				<div id="msEditShippingModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.((($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
 					<div class="panel-body">
 						<div class="form-group">
 							<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
@@ -386,7 +386,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 						<a role="button" data-toggle="collapse" href="#msEditShippingModulesInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
 					</h3>
 				</div>
-				<div id="msEditShippingModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+				<div id="msEditShippingModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.((($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
 					<div class="panel-body">
 						<div class="form-group">
 							<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>

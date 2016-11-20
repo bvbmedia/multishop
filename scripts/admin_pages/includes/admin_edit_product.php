@@ -2553,8 +2553,12 @@ if ($this->post) {
 			}
 			$language_label.=''.$language['title'];
 			$markerArray=array();
-			$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse';
-			if ($language['uid']=='0') {
+			$markerArray['ARROW_COLLAPSE_CLASS']='';
+            if ($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) {
+                $markerArray['ARROW_COLLAPSE_CLASS']=' collapsed';
+            }
+            $markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse';
+			if ($language['uid']=='0' || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) {
 				// Show unfolded panel
 				$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse in';
 			}
@@ -2836,12 +2840,12 @@ if ($this->post) {
 				$language_label.=''.$language['title'];
 				$options_tab_virtual_product.='
                 <div class="panel panel-default toggle_advanced_option">
-                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'">
+                <div class="panel-heading panel-heading-toggle'.(($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'">
                     <h3 class="panel-title">
                         <a role="button" data-toggle="collapse" href="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language_label.'</a>
                     </h3>
                 </div>
-                <div id="msEditProductInputVirtualProductFilePanel_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div id="msEditProductInputVirtualProductFilePanel_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' in' : '').'">
                 <div class="panel-body">
 				<div class="form-group toggle_advanced_option" id="msEditProductInputVirtualProductFile_'.$language['uid'].'">
 					<label for="file_location" class="col-md-2 control-label">'.$this->pi_getLL('file').'</label>
@@ -3032,12 +3036,12 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$meta_tags_block.='
 			<div class="panel panel-default">
-			<div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputMetaPanel_'.$language['uid'].'">
+			<div class="panel-heading panel-heading-toggle'.(($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputMetaPanel_'.$language['uid'].'">
 			<h3 class="panel-title">
                 <a role="button" data-toggle="collapse" href="#msEditProductInputMetaPanel_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
 			</h3>
             </div>
-            <div id="msEditProductInputMetaPanel_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+            <div id="msEditProductInputMetaPanel_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS'] ? ' in' : '').'">
             <div class="panel-body">
 			<div class="form-group" id="msEditProductInputMetaTitle_'.$language['uid'].'">
 				<label for="products_meta_title" class="col-md-2 control-label">'.$this->pi_getLL('admin_label_input_meta_title').'</label>

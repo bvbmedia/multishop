@@ -790,12 +790,12 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$category_name_block.='
 			<div class="panel panel-default">
-                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputName_'.$language['uid'].'">
+                <div class="panel-heading panel-heading-toggle'.(($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputName_'.$language['uid'].'">
                     <h3 class="panel-title">
                         <a role="button" data-toggle="collapse" href="#msEditCategoryInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
                     </h3>
                 </div>
-                <div id="msEditCategoryInputName_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div id="msEditCategoryInputName_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS'] ? ' in' : '').'">
                 <div class="panel-body">
 			';
 			$category_name_block.='
@@ -855,12 +855,12 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$categories_content_block.='
 			<div class="panel panel-default toggle_advanced_option">
-                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputContent_'.$language['uid'].'">
+                <div class="panel-heading panel-heading-toggle'.(($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputContent_'.$language['uid'].'">
                     <h3 class="panel-title">
                         <a role="button" data-toggle="collapse" href="#msEditCategoryInputContent_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
                     </h3>
                 </div>
-                <div id="msEditCategoryInputContent_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div id="msEditCategoryInputContent_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS'] ? ' in' : '').'">
                 <div class="panel-body">
 			<div class="form-group" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
 						<label class="control-label col-md-2" for="content">'.$this->pi_getLL('content').' '.$this->pi_getLL('top').'</label>
@@ -880,12 +880,12 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$categories_meta_block.='
 			<div class="panel panel-default toggle_advanced_option">
-                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputMeta_'.$language['uid'].'">
+                <div class="panel-heading panel-heading-toggle'.(($language['uid']>0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputMeta_'.$language['uid'].'">
                     <h3 class="panel-title">
                         <a role="button" data-toggle="collapse" href="#msEditCategoryInputMeta_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
                     </h3>
                 </div>
-                <div id="msEditCategoryInputMeta_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div id="msEditCategoryInputMeta_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS'] ? ' in' : '').'">
                 <div class="panel-body">
 			<div class="form-group" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
 				<label class="control-label col-md-2" for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
