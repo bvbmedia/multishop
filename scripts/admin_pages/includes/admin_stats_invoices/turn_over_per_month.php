@@ -266,6 +266,7 @@ $content.='
 -->
 
 <div id="search-orders" class="well">
+    <input name="id" type="hidden" value="###SHOP_PID###" />
 	<input name="id" type="hidden" value="' . $this->get['id'] . '" />
 	<!-- <div class="stat-years float_right">' . $year_select . '</div> -->
 	<input name="type" type="hidden" value="2003" />
@@ -289,9 +290,6 @@ $content.='
         <div id="msAdminInterfaceSearch" class="panel-collapse collapse'.$fold_unfold.'">
             <div class="panel-body">
                 <div id="search-orders" class="well no-mb">
-                    <input name="id" type="hidden" value="###SHOP_PID###" />
-                    <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
-                    <input name="type" type="hidden" value="2003" />
                     <div class="row formfield-container-wrapper">
                         <div class="col-md-4 formfield-wrapper">
                             <div class="form-group">
@@ -351,11 +349,6 @@ $content.='
             </div>
         </div>
         </div>
-	
-	
-	
-	
-	
 </div>
 
 </form>

@@ -133,7 +133,19 @@ if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 $array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
 $array['products_price_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 $array['products_price_with_currency']=$this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
-$array['shipping_costs_per_product']=$this->pi_getLL('feed_exporter_fields_label_products_shipping_costs');
+// load shipping costs per zone
+$str="SELECT * from tx_multishop_zones order by name";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+    $str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$row['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+    $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+    $country_list=array();
+    while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+        $country_list[]=$row2['cn_iso_2'];
+    }
+    $country_list_str=(count($country_list)>0 ? ' (' . implode(', ', $country_list) . ')' : '');
+    $array['shipping_costs_per_product_zone_' . $row['id']]=$this->pi_getLL('feed_exporter_fields_label_products_shipping_costs') . ' - Zone: ' . $row['name'] . $country_list_str;
+}
 // attributes
 if ($this->ms['MODULES']['INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED']) {
 	$str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
