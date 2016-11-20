@@ -140,11 +140,15 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
     $str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$row['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
     $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
     $country_list=array();
+    $country_list_cn_iso_nr=array();
     while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
         $country_list[]=$row2['cn_iso_2'];
+        $country_list_cn_iso_nr[]=$row2['cn_iso_nr'];
     }
-    $country_list_str=(count($country_list)>0 ? ' (' . implode(', ', $country_list) . ')' : '');
-    $array['shipping_costs_per_product_zone_' . $row['id']]=$this->pi_getLL('feed_exporter_fields_label_products_shipping_costs') . ' - Zone: ' . $row['name'] . $country_list_str;
+    if (count($country_list)>0) {
+        $country_list_str = ' (' . implode(', ', $country_list) . ')';
+        $array['shipping_costs_per_product_zone_' . $row['id'] . '_' . $country_list_cn_iso_nr[0]] = $this->pi_getLL('feed_exporter_fields_label_products_shipping_costs') . ' - Zone: ' . $row['name'] . $country_list_str;
+    }
 }
 // attributes
 if ($this->ms['MODULES']['INCLUDE_ATTRIBUTES_IN_PRODUCT_FEED']) {

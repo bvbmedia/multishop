@@ -78,12 +78,21 @@ if ($this->get['feed_hash']) {
 							$tmpcontent.=$fields_headers[$counter];
 							break;
 						default:
-							// if key name is attribute option, print the option name. else print key name
-							if ($attributes[$field]) {
-								$tmpcontent.=$attributes[$field];
-							} else {
-								$tmpcontent.=$field;
-							}
+							if (strpos($field, 'shipping_costs_per_product_zone_')!==false) {
+                                $zone_cn_id=str_replace('shipping_costs_per_product_zone_', '', $field);
+                                list($zone_id, $cn_iso_nr)=explode('_', $zone_cn_id);
+                                $str2="SELECT * from tx_multishop_zones z where z.id='".$zone_id."'";
+                                $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+                                $row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
+                                $tmpcontent.='shipping_costs_per_product_zone_' . str_replace(' ', '_', $row2['name']);
+                            } else {
+                                // if key name is attribute option, print the option name. else print key name
+                                if ($attributes[$field]) {
+                                    $tmpcontent .= $attributes[$field];
+                                } else {
+                                    $tmpcontent .= $field;
+                                }
+                            }
 							break;
 					}
 				}
@@ -1008,11 +1017,11 @@ if ($this->get['feed_hash']) {
 										}
 									}
 								} else if (strpos($field, 'shipping_costs_per_product_zone_')!==false) {
-                                    $tmp_countries=mslib_fe::getCountryByName(strtolower($this->tta_shop_info['country']));
-                                    $countries_id=$tmp_countries['cn_iso_nr'];
+                                    $zone_cn_id=str_replace('shipping_costs_per_product_zone_', '', $field);
+                                    list($zone_id, $cn_iso_nr)=explode('_', $zone_cn_id);
                                     $product_id=$row['products_id'];
                                     $shipping_method_id=$post_data['shipping_costs_per_product'];
-                                    $priceArray=mslib_fe::productFeedGeneratorGetShippingCosts($row, $countries_id, $shipping_method_id);
+                                    $priceArray=mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
                                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                         $tmpcontent.=$priceArray['shipping_costs_including_vat'];
                                     } else {
