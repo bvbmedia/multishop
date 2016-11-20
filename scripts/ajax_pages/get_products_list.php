@@ -35,7 +35,7 @@ if ($this->ADMIN_USER) {
             }
         }
         if (!empty($this->get['q'])) {
-            $filter[] = '(pd.products_name like \'%' . $this->get['q'] . '%\')';
+            $filter[] = '(p.products_model like \'%' . $this->get['q'] . '%\' OR pd.products_name like \'%' . $this->get['q'] . '%\')';
         }
     } else {
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {

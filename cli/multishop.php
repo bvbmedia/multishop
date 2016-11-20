@@ -80,7 +80,7 @@ if (count($_SERVER['argv'])>1) {
 			$show_example=1;
 		}
 		if (preg_match("/^--/", $value)) {
-			preg_match("/^--(.*?)\=(.*?)$/", $value, $results);
+			preg_match("/^--(.*?)\\=(.*?)$/", $value, $results);
 			$commands_array[$results[1]]=$results[2];
 		}
 	}

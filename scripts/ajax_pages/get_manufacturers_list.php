@@ -1,17 +1,17 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
 if ($this->ADMIN_USER) {
-    $return_data=array();
-    $limit=100;
-    $filter=array();
-    if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id']) && $this->get['preselected_id']>0) {
-        $filter[]='manufacturers_id IN ('.$this->get['preselected_id'].')';
+    $return_data = array();
+    $limit = 100;
+    $filter = array();
+    if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id']) && $this->get['preselected_id'] > 0) {
+        $filter[] = 'manufacturers_id IN (' . $this->get['preselected_id'] . ')';
     }
     if (!empty($this->get['q'])) {
         $filter[] = '(manufacturers_name like \'%' . $this->get['q'] . '%\')';
-        $limit='';
+        $limit = '';
     }
     $counter = 0;
     if (!count($filter)) {

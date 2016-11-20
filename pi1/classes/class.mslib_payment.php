@@ -1,6 +1,6 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
 /***************************************************************
  *  Copyright notice
@@ -24,92 +24,92 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
-	static $installedPaymentMethods=array();
-	static $enabledPaymentMethods=array();
-	var $name='';
-	var $variables='';
-	public $ref='';
-	function init($ref) {
-		mslib_fe::init($ref);
-		$this->initLanguage($ref->LOCAL_LANG);
-		static $installedPaymentMethods;
-		// custom hook for loading the installed payment methods
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'])) {
-			$params=array('installedPaymentMethods'=>&$installedPaymentMethods);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
-			}
-		}
-		// custom hook for manipulating the installed payment methods
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'])) {
-			$params=array('installedPaymentMethods'=>&$installedPaymentMethods);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
-			}
-		}
-		$this->installedPaymentMethods=$params['installedPaymentMethods'];
-		// custom hook for loading the installed payment methods eof
-		// load enabled payment methods
-		$filter=array();
-		if (!$include_hidden_items) {
-			$filter[]='s.status=1';
-		}
-		$filter[]='d.language_id=\''.$this->sys_language_uid.'\'';
-		$filter[]='s.id=d.id';
-		$filter[]='(s.page_uid='.$this->shop_pid.' or s.page_uid=0)';
-		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-				'tx_multishop_payment_methods s, tx_multishop_payment_methods_description d', // FROM ...
-				implode(' AND ',$filter), // WHERE...
-				'', // GROUP BY...
-				's.sort_order', // ORDER BY...
-				'' // LIMIT ...
-		);
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-			$array=array();
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$array[$row['code']]=$row;
-			}
-			$this->enabledPaymentMethods=$array;
-		}
-		// load enabled payment methods eof
-	}
-	function initLanguage($ms_locallang) {
-		$this->pi_loadLL();
-		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
-		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		if ($this->altLLkey) {
-			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		}
-	}
-	function getInstalledPaymentMethods() {
-		return $this->installedPaymentMethods;
-	}
-	function getEnabledPaymentMethods() {
-		return $this->enabledPaymentMethods;
-	}
-	function setPaymentMethod($name) {
-		if (is_array($this->installedPaymentMethods) and $this->installedPaymentMethods[$name]) {
-			$this->name=$name;
-			return true;
-		}
-	}
-	function ajaxNotificationServer($ref) {
-		return $content;
-	}
-	function getVariables($vars) {
-		return $this->variables;
-	}
-	function setVariables($vars) {
-		$this->variables=$vars;
-	}
-	function displayPaymentButton($orders_id, $ref) {
-		return $content;
-	}
-	function paymentNotificationHandler() {
-	}
+    static $installedPaymentMethods = array();
+    static $enabledPaymentMethods = array();
+    var $name = '';
+    var $variables = '';
+    public $ref = '';
+    function init($ref) {
+        mslib_fe::init($ref);
+        $this->initLanguage($ref->LOCAL_LANG);
+        static $installedPaymentMethods;
+        // custom hook for loading the installed payment methods
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'])) {
+            $params = array('installedPaymentMethods' => &$installedPaymentMethods);
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+            }
+        }
+        // custom hook for manipulating the installed payment methods
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'])) {
+            $params = array('installedPaymentMethods' => &$installedPaymentMethods);
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_paymentPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+            }
+        }
+        $this->installedPaymentMethods = $params['installedPaymentMethods'];
+        // custom hook for loading the installed payment methods eof
+        // load enabled payment methods
+        $filter = array();
+        if (!$include_hidden_items) {
+            $filter[] = 's.status=1';
+        }
+        $filter[] = 'd.language_id=\'' . $this->sys_language_uid . '\'';
+        $filter[] = 's.id=d.id';
+        $filter[] = '(s.page_uid=' . $this->shop_pid . ' or s.page_uid=0)';
+        $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+                'tx_multishop_payment_methods s, tx_multishop_payment_methods_description d', // FROM ...
+                implode(' AND ', $filter), // WHERE...
+                '', // GROUP BY...
+                's.sort_order', // ORDER BY...
+                '' // LIMIT ...
+        );
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+            $array = array();
+            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                $array[$row['code']] = $row;
+            }
+            $this->enabledPaymentMethods = $array;
+        }
+        // load enabled payment methods eof
+    }
+    function initLanguage($ms_locallang) {
+        $this->pi_loadLL();
+        //array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+        $this->LOCAL_LANG = array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+        if ($this->altLLkey) {
+            $this->LOCAL_LANG = array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+        }
+    }
+    function getInstalledPaymentMethods() {
+        return $this->installedPaymentMethods;
+    }
+    function getEnabledPaymentMethods() {
+        return $this->enabledPaymentMethods;
+    }
+    function setPaymentMethod($name) {
+        if (is_array($this->installedPaymentMethods) and $this->installedPaymentMethods[$name]) {
+            $this->name = $name;
+            return true;
+        }
+    }
+    function ajaxNotificationServer($ref) {
+        return $content;
+    }
+    function getVariables($vars) {
+        return $this->variables;
+    }
+    function setVariables($vars) {
+        $this->variables = $vars;
+    }
+    function displayPaymentButton($orders_id, $ref) {
+        return $content;
+    }
+    function paymentNotificationHandler() {
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_payment.php"]) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_payment.php"]);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_payment.php"]);
 }
 ?>
