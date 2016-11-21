@@ -800,6 +800,17 @@ if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category
 if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product'] != 99999) {
     $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='" . addslashes($this->get['ordered_product']) . "')";
 }
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'])) {
+    $params = array(
+        'select'=>&$select,
+        'filter'=>&$filter,
+        'orderby'=>&$orderby,
+        'offset'=>&$offset
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 // Use new method to retrieve records
 $data = array();
 $data['select'] = $select;
