@@ -50,12 +50,11 @@ switch ($this->get['action']) {
                     $path = str_replace('/images/' . $objectFolderName . '/' . $key . '/', '/images/' . $objectFolderName . '/original/', $path_parts['dirname']);
                     if (!$filesToInsert[$path . '/' . $path_parts['basename']]) {
                         $filesToInsert[$path . '/' . $path_parts['basename']] = 1;
-
                         $insertArray = array(
                                 'type' => $objectType,
                                 'orphan' => 0,
-                                'path' => $file['path'],
-                                'file' => $file['file'],
+                                'path' => $path,
+                                'file' => $path_parts['basename'],
                                 'crdate' => time()
                         );
                         $str2 = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orphan_files', $insertArray);
