@@ -36,9 +36,12 @@ switch ($this->get['action']) {
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $content .= '<strong>Adding files for queue: ' . $objectFolderName . '</strong><br />';
             $filesToInsert = array();
+            $tel=0;
             foreach ($objectFolders as $key => $path) {
                 $content .= 'Scanning: ' . $key . ' folder.<br/>';
+                $GLOBALS['TYPO3_DB']->connectDB();
                 $files = mslib_befe::listdir($this->DOCUMENT_ROOT . $path);
+                $GLOBALS['TYPO3_DB']->connectDB();
                 sort($files, SORT_LOCALE_STRING);
                 // we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
                 $GLOBALS['TYPO3_DB']->connectDB();
@@ -46,14 +49,23 @@ switch ($this->get['action']) {
                     $path_parts = pathinfo($f);
                     $path = str_replace('/images/' . $objectFolderName . '/' . $key . '/', '/images/' . $objectFolderName . '/original/', $path_parts['dirname']);
                     if (!$filesToInsert[$path . '/' . $path_parts['basename']]) {
-                        $filesToInsert[$path . '/' . $path_parts['basename']] = array(
-                                'path' => $path,
-                                'file' => $path_parts['basename']
+                        $filesToInsert[$path . '/' . $path_parts['basename']] = 1;
+
+                        $insertArray = array(
+                                'type' => $objectType,
+                                'orphan' => 0,
+                                'path' => $file['path'],
+                                'file' => $file['file'],
+                                'crdate' => time()
                         );
+                        $str2 = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orphan_files', $insertArray);
+                        $res2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                        $tel++;
                     }
                 }
             }
             // we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
+            /*
             $GLOBALS['TYPO3_DB']->connectDB();
             $tel = 0;
             foreach ($filesToInsert as $file) {
@@ -68,6 +80,7 @@ switch ($this->get['action']) {
                 $str2 = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orphan_files', $insertArray);
                 $res2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             }
+            */
             if ($tel) {
                 $content .= 'We have added <strong>' . $tel . '</strong> files.';
             } else {
