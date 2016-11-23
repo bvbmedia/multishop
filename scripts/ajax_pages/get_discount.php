@@ -101,7 +101,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
     }
 }
 // get the discount_percentage by recalculating the cart content
-if ($cart['discount'] > 0 && !$cart['discount_amount']) {
+if ($cart['discount'] > 0) {
     $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
     $mslib_cart->init($this);
     $cart = $mslib_cart->getCart();
