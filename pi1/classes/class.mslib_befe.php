@@ -1597,9 +1597,9 @@ class mslib_befe {
                     $suffix_exec_param = ' &> /dev/null & ';
                 }
                 $commands = array();
-                $params = '';
+                $imParams = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $imParams .= '-strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -1626,7 +1626,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1653,7 +1653,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1671,10 +1671,24 @@ class mslib_befe {
                 } else {
                     return false;
                 }
+                //hook to let other plugins further manipulate the method
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImagePreProc'])) {
+                    $params = array(
+                            'original_path' => $original_path,
+                            'newOriginal_path' => $newOriginal_path,
+                            'filename' => &$filename,
+                            'module_path' => $module_path,
+                            'run_in_background' => $run_in_background,
+                            'imParams' => &$imParams
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImagePreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 /*
 				if (filesize($original_path)>16384) {
 					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
-					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}
 				*/
@@ -1695,7 +1709,7 @@ class mslib_befe {
                 // 300 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][300]['width'];
                 $maxheight = $this->ms['product_image_formats'][300]['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                 if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
                     $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
                     $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthEast ' . $module_path . 'templates/images/curves/rb.png "' . $target . '" "' . $target . '"';
