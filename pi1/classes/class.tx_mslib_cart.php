@@ -711,6 +711,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $discount = mslib_fe::getUserGroupDiscount($GLOBALS['TSFE']->fe_user->user['uid']);
                 if ($discount) {
                     $cart['coupon_discount'] = $discount;
+                    $cart['discount'] = $discount;
                     $cart['discount_type'] = 'percentage';
                     //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
                     //$GLOBALS['TSFE']->storeSessionData();

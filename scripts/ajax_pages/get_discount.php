@@ -110,6 +110,7 @@ if ($cart['discount'] > 0) {
             $return_data['discount_percentage'] = mslib_fe::amount2Cents($cart['discount_amount']);
             break;
     }
+    tx_mslib_cart::storeCart($cart);
 }
 // hook oef
 //

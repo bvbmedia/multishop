@@ -103,6 +103,9 @@ jQuery(document).ready(function ($) {
     $(document).on("keyup", ".msPriceExcludingVat", function (e) {
        if (e.keyCode!=9) {
            priceEditRealtimeCalc(true, this);
+           if ($(this).attr("id")=="specials_new_products_price_excl_vat") {
+                $("#specials_price_percentage").select2("val", "");
+           }
        }
     });
 
@@ -115,6 +118,9 @@ jQuery(document).ready(function ($) {
     $(document).on("keyup", ".msPriceIncludingVat", function (e) {
         if (e.keyCode!=9) {
             priceEditRealtimeCalc(false, this);
+            if ($(this).attr("id")=="specials_new_products_price_incl_vat") {
+                $("#specials_price_percentage").select2("val", "");
+            }
         }
     });
     $("#specials_sections").hide();
@@ -749,7 +755,13 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
             }
             $(target_cb).prop("checked", false);
         });
-        $("#specials_price_percentage").select2();
+        $("#specials_price_percentage").select2().on("select2-selecting", function(e) {
+            if (e.object.id=="") {
+                $("#specials_new_products_price_excl_vat").val("0.00");
+                $("#specials_new_products_price_incl_vat").val("0.00");
+                $("#specials_new_products_price").val("0.00");
+            }
+        });
     ###JS_ADVANCED_OPTION_TOGGLE###
     });
 </script>

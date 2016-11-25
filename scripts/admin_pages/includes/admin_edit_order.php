@@ -78,6 +78,36 @@ if (is_numeric($this->get['orders_id'])) {
                         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                         $mslib_order->init($this);
                         $mslib_order->repairOrder($this->get['orders_id']);
+                        // update order discount if any
+                        $order_tax_data_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data, discount_percentage, discount');
+                        if (isset($order_tax_data_rec) && !empty($order_tax_data_rec['orders_tax_data'])) {
+                            $order_tax_data = unserialize($order_tax_data_rec['orders_tax_data']);
+                            $hidden_subtotal = $order_tax_data['sub_total_excluding_vat'];
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $hidden_subtotal = $order_tax_data['sub_total'];
+                            }
+                            $discount_value=$order_tax_data_rec['discount'];
+                        }
+                        $updateArray=array();
+                        $updateArray['discount_percentage'] = 0;
+                        if (isset($order_tax_data_rec['discount_percentage']) && $order_tax_data_rec['discount_percentage'] > 0) {
+                            $updateArray['discount_percentage'] = $order_tax_data_rec['discount_percentage'];
+                            $discount_amount = number_format(($hidden_subtotal / 100) * $order_tax_data_rec['discount_percentage'], 2, ',', '');
+                            if ($discount_amount != $discount_value) {
+                                $discount_value = $discount_amount;
+                            }
+                        }
+                        if (isset($discount_value)) {
+                            $discount_value = mslib_befe::formatNumbersToMysql($discount_value);
+                            $updateArray['discount'] = $discount_value;
+                        }
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        // repair tax stuff
+                        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                        $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                        $mslib_order->init($this);
+                        $mslib_order->repairOrder($this->get['orders_id']);
                         // redirect
                         $redirect_after_delete = true;
                     }
@@ -599,19 +629,6 @@ if (is_numeric($this->get['orders_id'])) {
                         $updateArray['payment_method'] = '';
                         $updateArray['payment_method_label'] = '';
                     }
-                    $updateArray['discount_percentage'] = 0;
-                    if (isset($this->post['edit_discount_percentage']) && $this->post['edit_discount_percentage'] > 0) {
-                        $updateArray['discount_percentage'] = $this->post['edit_discount_percentage'];
-                        $hidden_subtotal = $this->post['hidden_subtotal'];
-                        $discount_amount = number_format(($hidden_subtotal / 100) * $this->post['edit_discount_percentage'], 2, ',', '');
-                        if ($discount_amount != $this->post['edit_discount_value']) {
-                            $this->post['edit_discount_value'] = $discount_amount;
-                        }
-                    }
-                    if (isset($this->post['edit_discount_value'])) {
-                        $this->post['edit_discount_value'] = mslib_befe::formatNumbersToMysql($this->post['edit_discount_value']);
-                        $updateArray['discount'] = $this->post['edit_discount_value'];
-                    }
                     if (isset($this->post['order_payment_condition'])) {
                         $updateArray['payment_condition'] = $this->post['order_payment_condition'];
                     }
@@ -696,6 +713,38 @@ if (is_numeric($this->get['orders_id'])) {
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
                         $orders['order_memo'] = $this->post['order_memo'];
                         // repair tax stuff
+                        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                        $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                        $mslib_order->init($this);
+                        $mslib_order->repairOrder($this->get['orders_id']);
+
+                        // update order discount if any
+                        $order_tax_data_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data');
+                        if (isset($order_tax_data_rec) && !empty($order_tax_data_rec['orders_tax_data'])) {
+                            $order_tax_data = unserialize($order_tax_data_rec['orders_tax_data']);
+                            $this->post['hidden_subtotal'] = $order_tax_data['sub_total_excluding_vat'];
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $this->post['hidden_subtotal'] = $order_tax_data['sub_total'];
+                            }
+                        }
+                        $updateArray=array();
+                        $updateArray['discount_percentage'] = 0;
+                        if (isset($this->post['edit_discount_percentage']) && $this->post['edit_discount_percentage'] > 0) {
+                            $updateArray['discount_percentage'] = $this->post['edit_discount_percentage'];
+                            $hidden_subtotal = $this->post['hidden_subtotal'];
+                            $discount_amount = number_format(($hidden_subtotal / 100) * $this->post['edit_discount_percentage'], 2, ',', '');
+                            if ($discount_amount != $this->post['edit_discount_value']) {
+                                $this->post['edit_discount_value'] = $discount_amount;
+                            }
+                        }
+                        if (isset($this->post['edit_discount_value'])) {
+                            $this->post['edit_discount_value'] = mslib_befe::formatNumbersToMysql($this->post['edit_discount_value']);
+                            $updateArray['discount'] = $this->post['edit_discount_value'];
+                        }
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                        // repair it again
                         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                         $mslib_order->init($this);
