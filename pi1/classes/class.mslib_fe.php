@@ -4967,7 +4967,6 @@ class mslib_fe {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
         $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
-        $mslib_cart->getCart();
         return $mslib_cart->countCartTotalPrice($subtract_discount, $include_vat, $country_id);
     }
     public function getProductShippingCostsOverview($countries_id, $products_id, $products_quantity = 1) {
