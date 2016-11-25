@@ -124,9 +124,6 @@ if (!$iso_customer['cn_iso_nr']) {
     $iso_customer = mslib_fe::getCountryByName($this->tta_shop_info['country']);
 }
 //
-$mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-$mslib_cart->init($this);
-$mslib_cart->getCart();
 if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE'] > 0) {
     if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT'] > 0) {
         $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] = 1;
