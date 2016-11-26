@@ -208,7 +208,7 @@ if (count($coupons_options) > 0) {
     $content .= '<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table">';
     $content .= '<thead><tr>
 				<th class="cellName">' . $this->pi_getLL('coupon_code') . '</th>
-				<th width="60" nowrap>' . $this->pi_getLL('discount') . '</th>
+				<th width="60" nowrap class="cellPrice">' . $this->pi_getLL('discount') . '</th>
 				<th class="cellDate">' . $this->pi_getLL('start_time') . '</th>
 				<th class="cellDate">' . $this->pi_getLL('end_time') . '</th>
 				<th width="150" nowrap>' . $this->pi_getLL('max_usage') . '</th>
@@ -229,7 +229,7 @@ if (count($coupons_options) > 0) {
 		<td class="cellName">
 		<strong><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&coupons_id=' . $option['id'] . '&edit=1') . '">' . $option['code'] . '</a></strong>
 		</td>
-		<td align="right">';
+		<td align="right" class="cellPrice">';
         switch ($option['discount_type']) {
             case 'percentage':
                 $content .= number_format($option['discount']) . '%';

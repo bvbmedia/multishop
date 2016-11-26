@@ -711,6 +711,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $discount = mslib_fe::getUserGroupDiscount($GLOBALS['TSFE']->fe_user->user['uid']);
                 if ($discount) {
                     $cart['coupon_discount'] = $discount;
+                    $cart['discount'] = $discount;
                     $cart['discount_type'] = 'percentage';
                     //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
                     //$GLOBALS['TSFE']->storeSessionData();
@@ -2427,7 +2428,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     // hook oef
                 }
                 $cart['products'] = array();
-                unset($cart['user']);
+                //unset($cart['user']);
                 unset($cart['discount_type']);
                 unset($cart['discount_amount']);
                 //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
@@ -2440,7 +2441,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 $cart2 = $GLOBALS['TSFE']->fe_user->getKey('ses', $plain_cart_key);
                 $cart2['products'] = array();
-                unset($cart2['user']);
+                //unset($cart2['user']);
                 unset($cart2['discount_type']);
                 unset($cart2['discount_amount']);
                 //TODO: plain cart key?

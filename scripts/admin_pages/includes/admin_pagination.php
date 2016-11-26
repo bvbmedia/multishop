@@ -76,7 +76,7 @@ if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows'])
     $tmp .= '<li class="pagenav_next disabled"><span><i class="fa fa-angle-right"></i></span></li>';
 }
 if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows']) {
-    $lastpage = floor(($pageset['total_rows'] / $this->ms['MODULES']['PAGESET_LIMIT'])) - 1;
+    $lastpage = floor(($pageset['total_rows'] / $this->ms['MODULES']['PAGESET_LIMIT']));
     $tmp .= '<li class="pagenav_last"><a class="pagination_button msBackendButton continueState arrowRight arrowPosLeft" href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'p=' . $lastpage . '&' . mslib_fe::tep_get_all_get_params(array(
                             'p',
                             'Submit',
