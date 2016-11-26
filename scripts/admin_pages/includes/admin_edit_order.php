@@ -1012,32 +1012,35 @@ if (is_numeric($this->get['orders_id'])) {
 						';
             //validate first
             $validate_erno = array();
-            if (!$orders['billing_email']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
-            }
-            if (!$orders['billing_street_name']) {
-                $validate_erno[] = '<li>' . 'No street name has been specified' . '</li>';
-            }
-            if (!$orders['billing_address_number']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
-            }
-            if (!$orders['billing_first_name']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
-            }
-            if (!$orders['billing_last_name']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
-            }
-            if (!$orders['billing_zip']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
-            }
-            if (!$orders['billing_city']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
-            }
-            if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['billing_company']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
-            }
-            if (!$orders['billing_country']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+            $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']=(int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
+            if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+                if (!$orders['billing_email']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+                }
+                if (!$orders['billing_street_name']) {
+                    $validate_erno[] = '<li>' . 'No street name has been specified' . '</li>';
+                }
+                if (!$orders['billing_address_number']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+                }
+                if (!$orders['billing_first_name']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+                }
+                if (!$orders['billing_last_name']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+                }
+                if (!$orders['billing_zip']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+                }
+                if (!$orders['billing_city']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+                }
+                if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['billing_company']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+                }
+                if (!$orders['billing_country']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+                }
             }
             $count_validate_erno = count($validate_erno);
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
@@ -1105,7 +1108,7 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>';
                 $edit_billing_details['billing_country'] = '<div class="form-group">
-						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('country')) . '*</label>
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('country')) . '</label>
 						<div class="col-md-7">
 							' . $billing_countries_sb . '
 						</div>
@@ -1205,32 +1208,34 @@ if (is_numeric($this->get['orders_id'])) {
 				';
             //validate first
             $validate_erno = array();
-            if (!$orders['delivery_email']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
-            }
-            if (!$orders['delivery_street_name']) {
-                $validate_erno[] = '<li>' . 'No street name has been specified' . '</li>';
-            }
-            if (!$orders['delivery_address_number']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
-            }
-            if (!$orders['delivery_first_name']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
-            }
-            if (!$orders['delivery_last_name']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
-            }
-            if (!$orders['delivery_zip']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
-            }
-            if (!$orders['delivery_city']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
-            }
-            if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['delivery_company']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
-            }
-            if (!$orders['delivery_country']) {
-                $validate_erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+            if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
+                if (!$orders['delivery_email']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
+                }
+                if (!$orders['delivery_street_name']) {
+                    $validate_erno[] = '<li>' . 'No street name has been specified' . '</li>';
+                }
+                if (!$orders['delivery_address_number']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_address_number_has_been_specified') . '</li>';
+                }
+                if (!$orders['delivery_first_name']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_first_name_has_been_specified') . '</li>';
+                }
+                if (!$orders['delivery_last_name']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_last_name_has_been_specified') . '</li>';
+                }
+                if (!$orders['delivery_zip']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_zip_has_been_specified') . '</li>';
+                }
+                if (!$orders['delivery_city']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('no_city_has_been_specified') . '</li>';
+                }
+                if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$orders['delivery_company']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('company_is_required') . '</li>';
+                }
+                if (!$orders['delivery_country']) {
+                    $validate_erno[] = '<li>' . $this->pi_getLL('country_is_required') . '</li>';
+                }
             }
             $count_validate_erno = count($validate_erno);
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
