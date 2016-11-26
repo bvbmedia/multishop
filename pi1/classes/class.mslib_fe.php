@@ -874,7 +874,7 @@ class mslib_fe {
                 $filter[] = 'c.categories_id = \'' . $c . '\'';
                 $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
                 $filter[] = 'c.categories_id = cd.categories_id';
-                $sql = $GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, c.search_engines_allow_indexing, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
+                $sql = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_image, c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, c.search_engines_allow_indexing, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
                         'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
                         implode(' and ', $filter), // WHERE...
                         '', // GROUP BY...
@@ -901,6 +901,7 @@ class mslib_fe {
                                 'name' => $data['categories_name'],
                                 'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
                                 'id' => $data['categories_id'],
+                                'categories_image' => $data['categories_image'],
                                 'custom_settings' => $data['custom_settings'],
                                 'meta_title' => $data['meta_title'],
                                 'meta_description' => $data['meta_description'],

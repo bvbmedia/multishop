@@ -3944,20 +3944,33 @@ class mslib_befe {
     // utf-8 support
     public function getImportedProductsLockedFields($products_id) {
         if (is_numeric($products_id)) {
-            $query = $GLOBALS['TYPO3_DB']->SELECTquery('field_key', // SELECT ...
-                    'tx_multishop_products_locked_fields', // FROM ...
-                    'products_id=' . $products_id, // WHERE...
-                    '', // GROUP BY...
-                    '', // ORDER BY...
-                    '' // LIMIT ...
-            );
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-                $array = array();
-                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                    $array[] = $row['field_key'];
+            $skip=0;
+            //hook to let other plugins further manipulate the settings
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['getImportedProductsLockedFieldsPreProc'])) {
+                $params = array(
+                        'products_id' => &$products_id,
+                        'skip' => &$skip
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['getImportedProductsLockedFieldsPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
-                return $array;
+            }
+            if (!$skip) {
+                $query = $GLOBALS['TYPO3_DB']->SELECTquery('field_key', // SELECT ...
+                        'tx_multishop_products_locked_fields', // FROM ...
+                        'products_id=' . $products_id, // WHERE...
+                        '', // GROUP BY...
+                        '', // ORDER BY...
+                        '' // LIMIT ...
+                );
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+                    $array = array();
+                    while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                        $array[] = $row['field_key'];
+                    }
+                    return $array;
+                }
             }
         }
     }
