@@ -279,6 +279,7 @@ if (count($cart['products']) < 1) {
 					$(\'#delivery_telephone\').attr(\'title\', \'' . $this->pi_getLL('telephone_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
 
 					jQuery(\'#delivery_address_category\').show();
+					jQuery(\'#checkout\').h5Validate();
 				} else {
 					// remove the h5validate attributes
 					$(\'#radio_delivery_gender_mr\').removeAttr(\'required\');
@@ -318,6 +319,7 @@ if (count($cart['products']) < 1) {
 					$(\'#delivery_telephone\').removeAttr(\'title\');
 
 					jQuery(\'#delivery_address_category\').hide();
+					jQuery(\'#checkout\').h5Validate();
 				}
 
 				jQuery("#checkboxdifferent_delivery_address").click(function(event) {
@@ -362,6 +364,7 @@ if (count($cart['products']) < 1) {
 						$(\'#delivery_telephone\').attr(\'title\', \'' . $this->pi_getLL('telephone_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
 
 						$(\'#delivery_address_category\').show();
+						jQuery(\'#checkout\').h5Validate();
 					} else {
 						// remove the h5validate attributes
 						$(\'#radio_delivery_gender_mr\').removeAttr(\'required\');
@@ -401,6 +404,7 @@ if (count($cart['products']) < 1) {
 						$(\'#delivery_telephone\').removeAttr(\'title\');
 
 						$(\'#delivery_address_category\').hide();
+						jQuery(\'#checkout\').h5Validate();
 					}
 				});
 			});
