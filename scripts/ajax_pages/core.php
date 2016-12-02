@@ -2023,6 +2023,7 @@ switch ($this->ms['page']) {
                 //
                 $name = '';
                 $erno = array();
+                $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']=(int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
                 if ($details_type == 'billing_details') {
                     if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
                         // validate essential info
