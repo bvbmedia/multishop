@@ -359,6 +359,8 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 
 #msEditProductInputUnit .input-group { width:100%; }
 #msEditProductInputUnit .input-group-addon:last-child { width:50px; }
+#msEditProductInputUnit .input-group.productMeasurementUnitGroup > .input-group-addon { width:110px; padding:2px 6px; }
+#msEditProductInputUnit .input-group.productMeasurementUnitGroup select { width:100%; height:24px; padding:0; }
 
 ul#tx_multishop_countries_checkboxes.list-inline { margin-bottom:0; }
 ul#tx_multishop_countries_checkboxes.list-inline li { width:20%; vertical-align:top; }
