@@ -48,6 +48,13 @@ var adminPanelSearch = function () {
                 return {results: data.products, more: more, context: data.page_marker.context};
             }
         }
+    }).on("select2-opening", function(){
+        $.ajax(MS_ADMIN_PANEL_AUTO_COMPLETE_URL, {
+            data: {
+                clear_session: true
+            },
+            dataType: "json"
+        });
     });
 }
 // auto complete eof

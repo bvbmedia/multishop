@@ -1019,10 +1019,11 @@ if ($this->get['feed_hash']) {
                                     $product_id = $row['products_id'];
                                     $shipping_method_id = $post_data['shipping_costs_per_product'];
                                     $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
+                                    $cn_iso_2=mslib_fe::getCountryName((int)$cn_iso_nr);
                                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                        $tmpcontent .= $priceArray['shipping_costs_including_vat'];
+                                        $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                     } else {
-                                        $tmpcontent .= $priceArray['shipping_costs'];
+                                        $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                     }
                                 } else if ($attributes[$field]) {
                                     // print it from flat table

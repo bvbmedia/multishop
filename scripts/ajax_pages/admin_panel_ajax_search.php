@@ -178,6 +178,14 @@ if ($this->ADMIN_USER) {
         $data_json = array();
         $move_next_section = false;
         $next_page = false;
+        $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+        if (isset($this->get['clear_session'])) {
+            $session['pagination_register']=array();
+            $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+            $GLOBALS['TSFE']->storeSessionData();
+            $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+        }
+        $pagination_register=&$session['pagination_register'];
         // cms search
         if ($modules[$section] && $section == 'admin_cms') {
             $filter = array();
@@ -226,6 +234,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('admin_cms', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -289,6 +298,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('admin_settings', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -350,6 +360,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('orders', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -404,6 +415,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('invoices', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -484,6 +496,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('customers', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -566,6 +579,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('categories', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -713,6 +727,7 @@ if ($this->ADMIN_USER) {
                 }
                 $next_page = true;
             } else {
+                $next_page = false;
                 $next_section = array_search('products', $section_register);
                 if (isset($section_register[$next_section + 1])) {
                     $move_next_section = true;
@@ -724,52 +739,87 @@ if ($this->ADMIN_USER) {
         $data_json = array();
         if (count($data['listing']['cms']) > 0) {
             $result_hash = md5(serialize($data['listing']['cms']));
-            $data_json[] = array(
-                    'text' => 'CMS',
-                    'children' => $data['listing']['cms']
-            );
+            if (!isset($session['pagination_register']['cms'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['cms'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'CMS',
+                        'children' => $data['listing']['cms']
+                );
+            }
         }
         if (count($data['listing']['admin_settings']) > 0) {
             $result_hash = md5(serialize($data['listing']['admin_settings']));
-            $data_json[] = array(
-                    'text' => 'Admin settings',
-                    'children' => $data['listing']['admin_settings']
-            );
+            if (!isset($session['pagination_register']['admin_settings'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['admin_settings'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'Admin settings',
+                        'children' => $data['listing']['admin_settings']
+                );
+            }
         }
         if (count($data['listing']['orders']) > 0) {
             $result_hash = md5(serialize($data['listing']['orders']));
-            $data_json[] = array(
-                    'text' => 'Orders',
-                    'children' => $data['listing']['orders']
-            );
+            if (!isset($session['pagination_register']['orders'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['orders'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'Orders',
+                        'children' => $data['listing']['orders']
+                );
+            }
         }
         if (count($data['listing']['invoices']) > 0) {
             $result_hash = md5(serialize($data['listing']['invoices']));
-            $data_json[] = array(
-                    'text' => 'Invoices',
-                    'children' => $data['listing']['invoices']
-            );
+            if (!isset($session['pagination_register']['invoices'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['invoices'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'Invoices',
+                        'children' => $data['listing']['invoices']
+                );
+            }
         }
         if (count($data['listing']['customers']) > 0) {
             $result_hash = md5(serialize($data['listing']['customers']));
-            $data_json[] = array(
-                    'text' => 'Customers',
-                    'children' => $data['listing']['customers']
-            );
+            if (!isset($session['pagination_register']['customers'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['customers'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'Customers',
+                        'children' => $data['listing']['customers']
+                );
+            }
         }
         if (count($data['listing']['categories']) > 0) {
             $result_hash = md5(serialize($data['listing']['categories']));
-            $data_json[] = array(
-                    'text' => 'Categories',
-                    'children' => $data['listing']['categories']
-            );
+            if (!isset($session['pagination_register']['categories'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['categories'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
+                        'text' => 'Categories',
+                        'children' => $data['listing']['categories']
+                );
+            }
         }
         if (count($data['listing']['products']) > 0) {
             $result_hash = md5(serialize($data['listing']['products']));
-            $data_json[] = array(
+            if (!isset($session['pagination_register']['products'][$this->get['q']][$result_hash])) {
+                $session['pagination_register']['products'][$this->get['q']][$result_hash] = true;
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $data_json[] = array(
                     'text' => 'Products',
                     'children' => $data['listing']['products']
-            );
+                );
+            }
         }
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'])) {
@@ -781,7 +831,8 @@ if ($this->ADMIN_USER) {
                     'section' => &$section,
                     'page' => &$p,
                     'offset' => &$offset,
-                    'result_hash' => &$result_hash
+                    'result_hash' => &$result_hash,
+                    'session'=>&$session
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -793,6 +844,15 @@ if ($this->ADMIN_USER) {
         $page_marker['context']['next_page'] = $p + 1;
         $page_marker['context']['next'] = $next_page;
         $page_marker['context']['hash'] = $result_hash;
+        if ((!$next_page && !$move_next_section) || !count($data_json)) {
+            $page_marker['context']['section'] = '';
+            $page_marker['context']['next_section'] = '';
+            $page_marker['context']['next_page'] = 0;
+            $page_marker['context']['next'] = false;
+            $page_marker['context']['hash'] = $result_hash;
+        }
+        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+        $GLOBALS['TSFE']->storeSessionData();
         // custom page hook that can be controlled by third-party plugin eof
         if ($result_hash && is_array($this->get['context']) && $this->get['context']['hash'] && $result_hash == $this->get['context']['hash']) {
             $page_marker['context']['next'] = false;
