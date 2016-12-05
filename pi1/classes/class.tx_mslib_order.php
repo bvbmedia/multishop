@@ -1437,6 +1437,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (isset($address['http_referer'])) {
                 $insertArray['http_referer'] = $address['http_referer'];
             }
+            if (isset($address['expected_delivery_date'])) {
+                $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
+            }
             $types = array();
             $types[] = 'billing';
             $types[] = 'delivery';
