@@ -253,6 +253,7 @@ multishop_ajax_server {
 		}
 	}
 	multishop_admin_page {
+		shortcutIcon < page.shortcutIcon
 		includeCSS {
 			bootstrapCss = EXT:multishop/templates/css/bootstrap/css/bootstrap.css
 			bootstrapCss {
