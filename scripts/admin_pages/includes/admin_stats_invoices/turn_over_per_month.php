@@ -264,7 +264,6 @@ $content .= '
 -->
 
 <div id="search-orders" class="well">
-    <input name="id" type="hidden" value="###SHOP_PID###" />
 	<input name="id" type="hidden" value="' . $this->get['id'] . '" />
 	<!-- <div class="stat-years float_right">' . $year_select . '</div> -->
 	<input name="type" type="hidden" value="2003" />
