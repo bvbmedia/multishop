@@ -3370,6 +3370,16 @@ class mslib_befe {
                             //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                             $page = mslib_fe::getCMScontent($key, $order['language_id']);
                             if ($page[0]) {
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'])) {
+                                    $params = array(
+                                        'array1' => &$array1,
+                                        'array2' => &$array2,
+                                        'page' => &$page
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                                 if ($page[0]['content']) {
                                     $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
                                 }
