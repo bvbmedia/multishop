@@ -4363,6 +4363,8 @@ class mslib_befe {
                 $append_attributes_label_to_product_name = false;
                 if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
                     $append_attributes_label_to_product_name = true;
+                } else {
+                    $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
                 }
                 if (is_array($product['attributes']) && count($product['attributes'])) {
                     foreach ($product['attributes'] as $tmpkey => $options) {
@@ -4410,7 +4412,9 @@ class mslib_befe {
                         $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
-                $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
+                if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
+                    $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
+                }
                 $subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'] = '';
                 // count the vat
                 if ($order['final_price'] and $order['products_tax']) {
