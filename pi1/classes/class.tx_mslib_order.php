@@ -644,6 +644,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //hook
                 $send_mail = 1;
                 $mail_attachment = array();
+                $add_invoice_attachment_on_templates=array();
+                $add_invoice_attachment_on_templates[]='email_order_paid_letter';
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
                     $params = array(
                             'this' => &$this,
@@ -655,7 +657,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'order_details' => $ORDER_DETAILS,
                             'copy_to_merchant' => $copy_to_merchant,
                             'mail_attachment' => &$mail_attachment,
-                            'loadFromPids' => $loadFromPids
+                            'loadFromPids' => $loadFromPids,
+                            'add_invoice_attachment_on_templates' => &$add_invoice_attachment_on_templates
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -663,7 +666,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 if ($send_mail) {
                     if ($user['email']) {
-                        if (strpos($mail_template, 'email_order_paid_letter') !== false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL'] > 0) {
+                        if (in_array($mail_template, $add_invoice_attachment_on_templates) && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL'] > 0) {
                             $filterInvoice = array();
                             $filterInvoice[] = 'orders_id=' . $order['orders_id'];
                             $invoices = mslib_befe::getRecords('', 'tx_multishop_invoices', '', $filterInvoice, '', 'id desc');
@@ -1321,7 +1324,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_numeric($address['language_id'])) {
                 $insertArray['language_id'] = $address['language_id'];
             }
-            $insertArray['status'] = 1;
+            $insertArray['status']='';
+            if (isset($address['status']) && $address['status'] > 0) {
+                // Set order status
+                $insertArray['status'] = $address['status'];
+            } else {
+                // get default orders status
+                $status = mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
+                if (is_array($status) && isset($status['id']) && $status['id'] > 0) {
+                    $insertArray['status'] = $status['id'];
+                }
+            }
             $insertArray['customer_comments'] = $this->post['customer_comments'];
             $insertArray['billing_company'] = $address['company'];
             $insertArray['billing_first_name'] = $address['first_name'];
@@ -1436,6 +1449,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             if (isset($address['http_referer'])) {
                 $insertArray['http_referer'] = $address['http_referer'];
+            }
+            if (isset($address['expected_delivery_date'])) {
+                $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
             }
             $types = array();
             $types[] = 'billing';

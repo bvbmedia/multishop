@@ -3370,6 +3370,16 @@ class mslib_befe {
                             //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                             $page = mslib_fe::getCMScontent($key, $order['language_id']);
                             if ($page[0]) {
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'])) {
+                                    $params = array(
+                                        'array1' => &$array1,
+                                        'array2' => &$array2,
+                                        'page' => &$page
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                                 if ($page[0]['content']) {
                                     $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
                                 }
@@ -4353,6 +4363,8 @@ class mslib_befe {
                 $append_attributes_label_to_product_name = false;
                 if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
                     $append_attributes_label_to_product_name = true;
+                } else {
+                    $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
                 }
                 if (is_array($product['attributes']) && count($product['attributes'])) {
                     foreach ($product['attributes'] as $tmpkey => $options) {
@@ -4400,7 +4412,9 @@ class mslib_befe {
                         $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
-                $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
+                if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
+                    $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
+                }
                 $subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'] = '';
                 // count the vat
                 if ($order['final_price'] and $order['products_tax']) {
