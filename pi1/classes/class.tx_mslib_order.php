@@ -1324,7 +1324,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_numeric($address['language_id'])) {
                 $insertArray['language_id'] = $address['language_id'];
             }
-            $insertArray['status'] = 1;
+            $insertArray['status']='';
+            if (isset($address['status']) && $address['status'] > 0) {
+                // Set order status
+                $insertArray['status'] = $address['status'];
+            } else {
+                // get default orders status
+                $status = mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
+                if (is_array($status) && isset($status['id']) && $status['id'] > 0) {
+                    $insertArray['status'] = $status['id'];
+                }
+            }
             $insertArray['customer_comments'] = $this->post['customer_comments'];
             $insertArray['billing_company'] = $address['company'];
             $insertArray['billing_first_name'] = $address['first_name'];
