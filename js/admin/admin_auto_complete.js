@@ -1,5 +1,5 @@
 var adminPanelSearch = function () {
-    jQuery("form#ms_admin_top_search > input#ms_admin_skeyword").select2({
+    var select2=jQuery("form#ms_admin_top_search > input#ms_admin_skeyword").select2({
         placeholder: MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL,
         minimumInputLength: 1,
         formatResult: function (data) {
@@ -13,8 +13,12 @@ var adminPanelSearch = function () {
                     result_html += '</div>';
                 } else {
                     var result_html = '<div class="ajax_items">';
-                    if (data.Link) {
-                        result_html += '<a href="' + data.Link + '"><span>' + data.Title + '</span></a>';
+                    if (data.HTMLRES!=undefined) {
+                        result_html += data.HTMLRES;
+                    } else {
+                        if (data.Link) {
+                            result_html += '<a href="' + data.Link + '"><span>' + data.Title + '</span></a>';
+                        }
                     }
                     result_html += '</div>';
                 }
@@ -24,6 +28,18 @@ var adminPanelSearch = function () {
             }
         },
         formatSelection: function (data) {
+            /*
+            //object.preventDefault();
+            console.log(object);
+            console.log(container);
+            jQuery(document).on('mouseup', '#contact_tel', function() {
+                alert('aaa');
+            });
+            //console.log(data);
+            //console.log(object);
+            //console.log(container);
+            //console.log(d);
+            */
             if (data.Link) {
                 location.href = data.Link;
             }
