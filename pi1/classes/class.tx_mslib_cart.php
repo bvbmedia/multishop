@@ -849,6 +849,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 }
                             }
                         }
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'])) {
+                            $params = array(
+                                'product' => &$product,
+                                'redirect_to_cart_page' => &$redirect_to_cart_page,
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                         if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                             $product['tax'] = 0;
                             $product['tax_rate'] = 0;
