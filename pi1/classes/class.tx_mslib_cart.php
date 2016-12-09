@@ -838,26 +838,27 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (is_array($this->cart['products'])) {
                     // redirect if products stock are negative or quantity ordered is greater than the stock itself
                     $redirect_to_cart_page = false;
-                    foreach ($this->cart['products'] as $key => &$product) {
+                    foreach ($this->cart['products'] as $key => $product) {
                         if ($this->get['tx_multishop_pi1']['page_section'] == 'checkout') {
-                            $product_db = mslib_fe::getProduct($product['products_id']);
+                            //$product_db = mslib_fe::getProduct($product['products_id']);
                             if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-                                if ($product_db['products_quantity'] < 1) {
+                                if ($product['products_quantity'] < 1) {
                                     $redirect_to_cart_page = true;
-                                } else if ($product['qty'] > $product_db['products_quantity']) {
+                                } else if ($product['qty'] > $product['products_quantity']) {
                                     $redirect_to_cart_page = true;
                                 }
                             }
                         }
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'])) {
                             $params = array(
-                                'product' => &$product,
+                                'product' => $product,
                                 'redirect_to_cart_page' => &$redirect_to_cart_page,
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                             }
                         }
+                        //var_dump($redirect_to_cart_page);
                         if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                             $product['tax'] = 0;
                             $product['tax_rate'] = 0;
@@ -965,10 +966,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->cart['summarize']['sub_total_including_vat'] += $product['total_price_including_vat'];
                     }
                     if ($redirect_to_cart_page) {
+                        $redirect_to_cart_page=false;
                         $link = mslib_fe::typolink($this->shoppingcart_page_pid, '&tx_multishop_pi1[page_section]=shopping_cart', 1);
                         if ($link) {
-                            header("Location: " . $this->FULL_HTTP_URL . $link);
-                            exit();
+                            //header("Location: " . $this->FULL_HTTP_URL . $link);
+                            //exit();
                         }
                     }
                 }
