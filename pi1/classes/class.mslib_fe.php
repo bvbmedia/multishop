@@ -8929,6 +8929,10 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            if (is_array($data['having']) && !count($data['where'])) {
+                $data['where']=array();
+                $data['where'][]='1=1';
+            }
             if ($data['group_by']) {
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
                         implode(',', $data['from']), // FROM ...
