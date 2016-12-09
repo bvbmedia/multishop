@@ -290,6 +290,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         } elseif ($params['query']['group_by']) {
             $queryData['group_by'][] = $params['query']['group_by'];
         }
+        if (is_array($params['query']['having'])) {
+            $queryData['having'] = $params['query']['having'];
+        } elseif ($params['query']['having']) {
+            $queryData['having'][] = $params['query']['having'];
+        }
         $queryData['order_by'] = $orderby;
         $queryData['limit'] = $that->ms['MODULES']['PAGESET_LIMIT'];
         if (is_numeric($that->get['p'])) {
