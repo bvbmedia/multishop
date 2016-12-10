@@ -2564,7 +2564,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->cart['user']['payment_method_costs'] = $payment_method['handling_costs'];
             } else {
                 // calculate total payment costs based by %
-                $subtotal = $this->cart['summarize']['grand_total_excluding_vat'] - ($this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs']);
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $subtotal = $this->cart['summarize']['sub_total_including_vat'] - ($this->cart['discount_amount']);
+                } else {
+                    $subtotal = $this->cart['summarize']['sub_total'] - ($this->cart['discount_amount']);
+                }
                 if ($subtotal) {
                     if (strstr($payment_method['handling_costs'], "%")) {
                         $percentage = str_replace("%", '', $payment_method['handling_costs']);
@@ -2590,6 +2594,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         }
         if ($payment_method['tax_id'] && $this->cart['user']['payment_method_costs']) {
             $this->cart['user']['payment_total_tax_rate'] = $payment_method['tax_rate'];
+            //if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                //$this->cart['user']['payment_method_costs']=$this->cart['user']['payment_method_costs']-($this->cart['user']['payment_method_costs']*$this->cart['user']['payment_total_tax_rate']);
+            //}
             if ($payment_method['country_tax_rate']) {
                 $this->cart['user']['payment_country_tax_rate'] = $payment_method['country_tax_rate'];
                 $this->cart['user']['payment_country_tax'] = mslib_fe::taxDecimalCrop($this->cart['user']['payment_method_costs'] * ($payment_method['country_tax_rate']));

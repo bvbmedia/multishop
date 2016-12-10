@@ -45,11 +45,20 @@ if ($payment_method['handling_costs']) {
         $payment_method_costs = $payment_method['handling_costs'];
     } else {
         // calculate total payment costs based by %
-        $subtotal = $cart['summarize']['grand_total_excluding_vat'] - ($cart['user']['shipping_method_costs'] + $cart['user']['payment_method_costs']);
+        //$subtotal = $cart['summarize']['grand_total_excluding_vat'] - ($cart['user']['payment_method_costs']+$cart['user']['shipping_method_costs']);
+        // calculate total payment costs based by %
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+           $subtotal = $cart['summarize']['sub_total_including_vat'] - ($cart['discount_amount']);
+        } else {
+            $subtotal = $cart['summarize']['sub_total'] - ($cart['discount_amount']);
+        }
         if ($subtotal) {
             if (strstr($payment_method['handling_costs'], "%")) {
                 $percentage = str_replace("%", '', $payment_method['handling_costs']);
                 $payment_method_costs = ($subtotal / 100 * $percentage);
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && $payment_method['tax_rate']) {
+                   $payment_method_costs = $payment_method_costs / (1 + $payment_method['tax_rate']);
+                }
             } else {
                 $payment_method_costs = $payment_method['handling_costs'];
             }
