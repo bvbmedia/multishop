@@ -4846,6 +4846,17 @@ class mslib_fe {
             $row3['tax_rate'] = ($tax_ruleset['total_tax_rate'] / 100);
             $row3['country_tax_rate'] = ($tax_ruleset['country_tax_rate'] / 100);
             $row3['region_tax_rate'] = ($tax_ruleset['state_tax_rate'] / 100);
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingMethodPostProc'])) {
+                $params = array(
+                    'row3' => &$row3,
+                    'countries_id' =>$countries_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingMethodPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // hook oef
             if ($filter) {
                 if ($row3['enable_on_default'] > 0) {
                     return $row3;
