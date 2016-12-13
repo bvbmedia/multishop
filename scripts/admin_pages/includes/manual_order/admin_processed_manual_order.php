@@ -113,7 +113,28 @@ if ($this->post['proceed_order']) {
         $insertArray['shipping_method_costs'] = $this->post['shipping_method_costs'];
         $insertArray['payment_method_costs'] = $this->post['payment_method_costs'];
         $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-        if (!$this->post['different_delivery_address']) {
+        $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
+        if ($delivery_address) {
+            $this->post['different_delivery_address']=true;
+            $insertArray['delivery_email'] = $delivery_address['email'];
+            $insertArray['delivery_company'] = $delivery_address['company'];
+            $insertArray['delivery_first_name'] = $delivery_address['first_name'];
+            $insertArray['delivery_middle_name'] = $delivery_address['middle_name'];
+            $insertArray['delivery_last_name'] = $delivery_address['last_name'];
+            $insertArray['delivery_telephone'] = $delivery_address['telephone'];
+            $insertArray['delivery_mobile'] = $delivery_address['mobile'];
+            $insertArray['delivery_gender'] = $delivery_address['gender'];
+            $insertArray['delivery_building'] = $delivery_address['building'];
+            $insertArray['delivery_street_name'] = $delivery_address['street_name'];
+            $insertArray['delivery_address_number'] = $delivery_address['address_number'];
+            $insertArray['delivery_address_ext'] = $delivery_address['address_ext'];
+            $insertArray['delivery_address'] = preg_replace('/ +/', ' ', $delivery_address['street_name'] . ' ' . $delivery_address['address_number'] . ' ' . $delivery_address['address_ext']);
+            $insertArray['delivery_zip'] = $delivery_address['zip'];
+            $insertArray['delivery_city'] = $delivery_address['city'];
+            $insertArray['delivery_country'] = $delivery_address['country'];
+            $insertArray['delivery_state'] = $delivery_address['state'];
+            $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
+        } else {
             $insertArray['delivery_email'] = $insertArray['billing_email'];
             $insertArray['delivery_company'] = $insertArray['billing_company'];
             $insertArray['delivery_first_name'] = $insertArray['billing_first_name'];
@@ -133,27 +154,6 @@ if ($this->post['proceed_order']) {
             $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
             $insertArray['delivery_region'] = $insertArray['billing_region'];
             $insertArray['delivery_name'] = $insertArray['billing_name'];
-        } else {
-            $insertArray['delivery_email'] = $this->post['delivery_email'];
-            $insertArray['delivery_company'] = $this->post['delivery_company'];
-            $insertArray['delivery_first_name'] = $this->post['delivery_first_name'];
-            $insertArray['delivery_middle_name'] = $this->post['delivery_middle_name'];
-            $insertArray['delivery_last_name'] = $this->post['delivery_last_name'];
-            $insertArray['delivery_telephone'] = $this->post['delivery_telephone'];
-            $insertArray['delivery_mobile'] = $this->post['delivery_mobile'];
-            $insertArray['delivery_gender'] = $this->post['delivery_gender'];
-            $insertArray['delivery_building'] = $this->post['delivery_building'];
-            $insertArray['delivery_street_name'] = $this->post['delivery_street_name'];
-            $insertArray['delivery_address_number'] = $this->post['delivery_address_number'];
-            $insertArray['delivery_address_ext'] = $this->post['delivery_address_ext'];
-            $insertArray['delivery_address'] = preg_replace('/ +/', ' ', $this->post['delivery_street_name'] . ' ' . $this->post['delivery_address_number'] . ' ' . $this->post['delivery_address_ext']);
-            $insertArray['delivery_zip'] = $this->post['delivery_zip'];
-            $insertArray['delivery_city'] = $this->post['delivery_city'];
-            $insertArray['delivery_country'] = $this->post['delivery_country'];
-            $insertArray['delivery_email'] = $this->post['delivery_email'];
-            $insertArray['delivery_telephone'] = $this->post['delivery_telephone'];
-            $insertArray['delivery_state'] = $this->post['delivery_state'];
-            $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name']);
         }
         $insertArray['payment_condition'] = $this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
         if (is_numeric($this->post['tx_multishop_payment_condition']) && $this->post['tx_multishop_payment_condition'] > 0) {

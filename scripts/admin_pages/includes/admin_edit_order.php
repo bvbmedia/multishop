@@ -2188,6 +2188,15 @@ if (is_numeric($this->get['orders_id'])) {
                         $row = array();
                         $where = '';
                         $product = mslib_fe::getProduct($order['products_id']);
+                        if (!empty($order['ean_code'])) {
+                            $product['ean_code']=$order['ean_code'];
+                        }
+                        if (!empty($order['sku_code'])) {
+                            $product['sku_code']=$order['sku_code'];
+                        }
+                        if (!empty($order['vendor_code'])) {
+                            $product['vendor_code']=$order['vendor_code'];
+                        }
                         if ($product['categories_id']) {
                             // get all cats to generate multilevel fake url
                             $level = 0;

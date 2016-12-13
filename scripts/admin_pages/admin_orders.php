@@ -547,7 +547,7 @@ $option_search = array(
         "orders_id" => $this->pi_getLL('admin_order_id'),
         "customer_id" => $this->pi_getLL('admin_customer_id'),
         "billing_email" => $this->pi_getLL('admin_customer_email'),
-        "delivery_name" => $this->pi_getLL('admin_customer_name'),
+        "name" => $this->pi_getLL('admin_customer_name'),
     //"crdate" =>				$this->pi_getLL('admin_order_date'),
         "billing_zip" => $this->pi_getLL('admin_zip'),
         "billing_city" => $this->pi_getLL('admin_city'),
@@ -632,7 +632,7 @@ if ($this->post['skeyword']) {
             $option_fields = $option_search;
             unset($option_fields['all']);
             unset($option_fields['crdate']);
-            unset($option_fields['delivery_name']);
+            unset($option_fields['name']);
             //print_r($option_fields);
             $items = array();
             foreach ($option_fields as $fields => $label) {
@@ -649,7 +649,7 @@ if ($this->post['skeyword']) {
                         break;
                 }
             }
-            $items[] = "delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            $items[] = "(billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
             $filter[] = '(' . implode(" or ", $items) . ')';
             break;
         case 'orders_id':
@@ -658,8 +658,8 @@ if ($this->post['skeyword']) {
         case 'billing_email':
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
-        case 'delivery_name':
-            $filter[] = " delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+        case 'name':
+            $filter[] = " (billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
             break;
         case 'billing_zip':
             $filter[] = " billing_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
