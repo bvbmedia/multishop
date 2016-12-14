@@ -675,6 +675,22 @@ class mslib_fe {
         if ($returnTotalCountOnly) {
             return $array['total_rows'];
         }
+        // append sql no limit for later use
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix = 'p.';
+            $prefix_p2c = 'p2c.';
+        } else {
+            $prefix = 'pf.';
+            $prefix_p2c = 'pf.';
+        }
+        $str_nolimit = $GLOBALS['TYPO3_DB']->SELECTquery($prefix.'products_id, '.$prefix_p2c.'categories_id', // SELECT ...
+                $from_clause, // FROM ...
+                $where_clause, // WHERE...
+                implode($groupby, ",") . $having_clause, // GROUP BY...
+                $orderby_clause, // ORDER BY...
+                '' // LIMIT ...
+        );
+        $array['sql_nolimit']=$str_nolimit;
         // now do the real query including the order by and the limit
         $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode($select, ","), // SELECT ...
                 $from_clause, // FROM ...
@@ -693,6 +709,8 @@ class mslib_fe {
             $this->msDebugInfo .= $str . "\n\n";
         }
         //error_log($str);
+        // now do the real query including the order by and the limit
+        // execution of real query
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($rows > 0) {

@@ -666,6 +666,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
         $params = array(
                 'content' => &$content,
                 'output_array' => &$output_array,
+                'products' => $products,
+                'pageset' => $pageset,
                 'notfound_content' => &$notfound_content,
                 'extendsearch_content' => &$extendsearch_content
         );
