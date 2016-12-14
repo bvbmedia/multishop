@@ -838,7 +838,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (is_array($this->cart['products'])) {
                     // redirect if products stock are negative or quantity ordered is greater than the stock itself
                     $redirect_to_cart_page = false;
-                    foreach ($this->cart['products'] as $key => $product) {
+                    foreach ($this->cart['products'] as $key => &$product) {
                         if ($this->get['tx_multishop_pi1']['page_section'] == 'checkout') {
                             //$product_db = mslib_fe::getProduct($product['products_id']);
                             if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
