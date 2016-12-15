@@ -115,71 +115,168 @@ if ($this->get['orders_export_hash']) {
         $excelRows = array();
         $excelHeaderCols = array();
         foreach ($fields as $counter => $field) {
-            if ($field != 'order_products' && $field != 'turnover_per_category_incl_vat' && $field != 'turnover_per_category_excl_vat') {
+            if ($field != 'order_products' && $field != 'turnover_per_category_incl_vat' && $field != 'turnover_per_category_excl_vat' && $field != 'turnover_per_main_category_incl_vat' && $field != 'turnover_per_main_category_excl_vat' && $field != 'bought_products_per_main_category') {
                 $excelHeaderCols[$field] = $field;
             } else {
-                if ($field == 'order_products') {
-                    $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
-                    for ($i = 0; $i < $max_cols_num; $i++) {
-                        $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
-                        $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
-                        $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
-                        $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
-                        $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
-                        $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
-                        $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
-                        $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
-                    }
-                } else if ($field == 'turnover_per_category_incl_vat') {
-                    $categories_data_incl_vat = array();
-                    foreach ($records as $record) {
-                        $order_tmp = mslib_fe::getOrder($record['orders_id']);
-                        foreach ($order_tmp['products'] as $product) {
-                            $category_name = mslib_fe::getCategoryName($product['categories_id']);
-                            if (!$category_name) {
-                                $category_name = $this->pi_getLL('unknown');
-                            }
-                            if ($product['categories_id'] > 0) {
-                                $categories_data_incl_vat[$category_name] = $product['categories_id'];
-                            } else {
-                                $categories_data_incl_vat[$category_name] = $this->pi_getLL('unknown');
+                switch ($field) {
+                    case 'order_products':
+                        $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
+                        for ($i = 0; $i < $max_cols_num; $i++) {
+                            $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
+                            $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
+                            $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
+                            $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
+                            $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
+                            $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
+                            $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
+                            $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
+                        }
+                        break;
+                    case 'turnover_per_category_incl_vat':
+                        $categories_data_incl_vat = array();
+                        foreach ($records as $record) {
+                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            foreach ($order_tmp['products'] as $product) {
+                                $category_name = mslib_fe::getCategoryName($product['categories_id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                if ($product['categories_id'] > 0) {
+                                    $categories_data_incl_vat[$category_name] = $product['categories_id'];
+                                } else {
+                                    $categories_data_incl_vat[$category_name] = $this->pi_getLL('unknown');
+                                }
                             }
                         }
-                    }
-                    if (is_array($categories_data_incl_vat) && count($categories_data_incl_vat)) {
-                        foreach ($categories_data_incl_vat as $category_id) {
-                            $category_name = mslib_fe::getCategoryName($category_id);
-                            if (!$category_name) {
-                                $category_name = $this->pi_getLL('unknown');
-                            }
-                            $excelHeaderCols['categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_category_incl_vat'), $category_name);
-                        }
-                    }
-                } else if ($field == 'turnover_per_category_excl_vat') {
-                    $categories_data_excl_vat = array();
-                    foreach ($records as $record) {
-                        $order_tmp = mslib_fe::getOrder($record['orders_id']);
-                        foreach ($order_tmp['products'] as $product) {
-                            $category_name = mslib_fe::getCategoryName($product['categories_id']);
-                            if (!$category_name) {
-                                $category_name = $this->pi_getLL('unknown');
-                            }
-                            if ($product['categories_id'] > 0) {
-                                $categories_data_excl_vat[$category_name] = $product['categories_id'];
-                            } else {
-                                $categories_data_excl_vat[$category_name] = $this->pi_getLL('unknown');
+                        if (is_array($categories_data_incl_vat) && count($categories_data_incl_vat)) {
+                            foreach ($categories_data_incl_vat as $category_id) {
+                                $category_name = mslib_fe::getCategoryName($category_id);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $excelHeaderCols['categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_category_incl_vat'), $category_name);
                             }
                         }
-                    }
-                    if (is_array($categories_data_excl_vat) && count($categories_data_excl_vat)) {
-                        foreach ($categories_data_excl_vat as $category_id) {
-                            $category_name = mslib_fe::getCategoryName($category_id);
-                            if (!$category_name) {
-                                $category_name = $this->pi_getLL('unknown');
+                        break;
+                    case 'turnover_per_category_excl_vat':
+                        $categories_data_excl_vat = array();
+                        foreach ($records as $record) {
+                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            foreach ($order_tmp['products'] as $product) {
+                                $category_name = mslib_fe::getCategoryName($product['categories_id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                if ($product['categories_id'] > 0) {
+                                    $categories_data_excl_vat[$category_name] = $product['categories_id'];
+                                } else {
+                                    $categories_data_excl_vat[$category_name] = $this->pi_getLL('unknown');
+                                }
                             }
-                            $excelHeaderCols['categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_category_excl_vat'), $category_name);
                         }
-                    }
+                        if (is_array($categories_data_excl_vat) && count($categories_data_excl_vat)) {
+                            foreach ($categories_data_excl_vat as $category_id) {
+                                $category_name = mslib_fe::getCategoryName($category_id);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $excelHeaderCols['categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_category_excl_vat'), $category_name);
+                            }
+                        }
+                        break;
+                    case 'turnover_per_main_category_incl_vat':
+                        $main_categories_data_incl_vat = array();
+                        foreach ($records as $record) {
+                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            foreach ($order_tmp['products'] as $product) {
+                                if ($product['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                if ($cats[0]['id'] > 0) {
+                                    $main_categories_data_incl_vat[$category_name] = $cats[0]['id'];
+                                } else {
+                                    $main_categories_data_incl_vat[$category_name] = $this->pi_getLL('unknown');
+                                }
+                            }
+                        }
+                        if (is_array($main_categories_data_incl_vat) && count($main_categories_data_incl_vat)) {
+                            foreach ($main_categories_data_incl_vat as $category_id) {
+                                $category_name = mslib_fe::getCategoryName($category_id);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $excelHeaderCols['main_categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_main_category_incl_vat'), $category_name);
+                            }
+                        }
+                        break;
+                    case 'turnover_per_main_category_excl_vat':
+                        $main_categories_data_excl_vat = array();
+                        foreach ($records as $record) {
+                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            foreach ($order_tmp['products'] as $product) {
+                                if ($product['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                if ($cats[0]['id'] > 0) {
+                                    $main_categories_data_excl_vat[$category_name] = $cats[0]['id'];
+                                } else {
+                                    $main_categories_data_excl_vat[$category_name] = $this->pi_getLL('unknown');
+                                }
+                            }
+                        }
+                        if (is_array($main_categories_data_excl_vat) && count($main_categories_data_excl_vat)) {
+                            foreach ($main_categories_data_excl_vat as $category_id) {
+                                $category_name = mslib_fe::getCategoryName($category_id);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $excelHeaderCols['main_categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_main_category_excl_vat'), $category_name);
+                            }
+                        }
+                        break;
+                    case 'bought_products_per_main_category':
+                        $main_categories_data_bought_products = array();
+                        foreach ($records as $record) {
+                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            foreach ($order_tmp['products'] as $product) {
+                                if ($product['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                if ($cats[0]['id'] > 0) {
+                                    $main_categories_data_bought_products[$category_name] = $cats[0]['id'];
+                                } else {
+                                    $main_categories_data_bought_products[$category_name] = $this->pi_getLL('unknown');
+                                }
+                            }
+                        }
+                        if (is_array($main_categories_data_bought_products) && count($main_categories_data_bought_products)) {
+                            foreach ($main_categories_data_bought_products as $category_id) {
+                                $category_name = mslib_fe::getCategoryName($category_id);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $excelHeaderCols['bought_products_main_categories_id_' . $category_name] = sprintf($this->pi_getLL('bought_products_per_main_category'), $category_name);
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -406,6 +503,94 @@ if ($this->get['orders_export_hash']) {
                                 $excelCols[] = number_format($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
                                 $excelCols[] = number_format(0, 2, ',', '.');
+                            }
+                        }
+                        break;
+                    case 'turnover_per_main_category_incl_vat':
+                        $order_products = $order_tmp['products'];
+                        $main_categories_data_amount_incl_vat = array();
+                        if (is_array($main_categories_data_incl_vat) && count($main_categories_data_incl_vat) > 0) {
+                            foreach ($order_products as $product_tmp) {
+                                if ($product_tmp['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
+                                // fetch attributes
+                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
+                                while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
+                                    $options_attributes_tax_data = unserialize($order_product_attributes['attributes_tax_data']);
+                                    $main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price']) + $options_attributes_tax_data['tax']) * $product_tmp['qty'];
+                                }
+                            }
+                        }
+                        foreach ($main_categories_data_incl_vat as $categories_index_main => $categories_id) {
+                            if (isset($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main])) {
+                                $excelCols[] = number_format($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                            } else {
+                                $excelCols[] = number_format(0, 2, ',', '.');
+                            }
+                        }
+                        break;
+                    case 'turnover_per_main_category_excl_vat':
+                        $order_products = $order_tmp['products'];
+                        $main_categories_data_amount_excl_vat = array();
+                        if (is_array($main_categories_data_excl_vat) && count($main_categories_data_excl_vat) > 0) {
+                            foreach ($order_products as $product_tmp) {
+                                if ($product_tmp['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += $product_tmp['final_price'] * $product_tmp['qty'];
+                                // fetch attributes
+                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
+                                while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
+                                    $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price'])) * $product_tmp['qty'];
+                                }
+                            }
+                        }
+                        foreach ($main_categories_data_excl_vat as $categories_index_main => $categories_id) {
+                            if (isset($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main])) {
+                                $excelCols[] = number_format($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                            } else {
+                                $excelCols[] = number_format(0, 2, ',', '.');
+                            }
+                        }
+                        break;
+                    case 'bought_products_per_main_category':
+                        $order_products = $order_tmp['products'];
+                        $main_categories_data_bought_products_amount = array();
+                        if (is_array($main_categories_data_bought_products) && count($main_categories_data_bought_products) > 0) {
+                            foreach ($order_products as $product_tmp) {
+                                if ($product_tmp['categories_id']) {
+                                    $cats = array();
+                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
+                                    $cats = array_reverse($cats);
+                                }
+                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                if (!$category_name) {
+                                    $category_name = $this->pi_getLL('unknown');
+                                }
+                                $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$category_name] += $product_tmp['qty'];
+                            }
+                        }
+                        foreach ($main_categories_data_bought_products as $categories_index_main => $categories_id) {
+                            if (isset($main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main])) {
+                                $excelCols[] = $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main];
+                            } else {
+                                $excelCols[] = '0';
                             }
                         }
                         break;

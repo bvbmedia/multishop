@@ -107,6 +107,9 @@ $array['order_expected_delivery_date'] = $this->pi_getLL('feed_exporter_fields_l
 $array['order_by_phone'] = $this->pi_getLL('feed_exporter_fields_label_order_by_phone');
 $array['turnover_per_category_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_category_incl_vat');
 $array['turnover_per_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_category_excl_vat');
+$array['turnover_per_main_category_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_incl_vat');
+$array['turnover_per_main_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_excl_vat');
+$array['bought_products_per_main_category'] = $this->pi_getLL('feed_exporter_fields_label_bought_products_per_main_category');
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';
