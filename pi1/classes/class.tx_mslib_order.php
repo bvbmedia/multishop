@@ -38,6 +38,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     function repairOrder($orders_id) {
         if (is_numeric($orders_id)) {
+            $this->conf['order_id']=(int)$orders_id;
             $tax_separation = array();
             $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);

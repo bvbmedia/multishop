@@ -322,6 +322,24 @@ if ($this->get['feed_hash']) {
                 //echo print_r($filter);
                 //die();
                 //$this->conf['debugEnabled']=1;
+                //hook to let other plugins further manipulate the settings
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedQueryPreProc'])) {
+                    $params = array(
+                            'post_data'=>&$post_data,
+                            'filter' => &$filter,
+                            'offset' => &$offset,
+                            'orderby' => &$orderby,
+                            'having' => &$having,
+                            'select' => &$select,
+                            'where' => &$where,
+                            'fields' => &$fields,
+                            'row' => &$row,
+                            'fetchExtraDataFromProducts' => &$fetchExtraDataFromProducts
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedQueryPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 $pageset = mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
                 $products = $pageset['products'];
                 if ($pageset['total_rows'] > 0) {
