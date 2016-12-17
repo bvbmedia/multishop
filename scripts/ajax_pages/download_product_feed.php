@@ -456,6 +456,25 @@ if ($this->get['feed_hash']) {
                                 if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
                                     $in_feed_exclude_list = true;
                                 }
+                                if ($post_data['include_only_related_product']) {
+                                    if (!$in_feed_exclude_list) {
+                                        $record_in_category=true;
+                                        $record_in_product=true;
+                                        $sql_check = "select id, negate from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['categories_id']) . "' and exclude_type='categories'";
+                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                            $record_in_category = false;
+                                        }
+                                        $sql_check = "select id from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['products_id']) . "' and exclude_type='products'";
+                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                            $record_in_product = false;
+                                        }
+                                        if (!$record_in_category && !$record_in_product) {
+                                            $in_feed_exclude_list = true;
+                                        }
+                                    }
+                                }
                                 if (!$in_feed_exclude_list) {
                                     if (!$in_feed_stock_exclude_list) {
                                         if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {

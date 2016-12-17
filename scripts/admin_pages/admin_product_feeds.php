@@ -404,15 +404,26 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				</div>
 		</div>
 		<div class="form-group">
-				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('status')) . '</label>
-				<div class="col-md-10">
-				<label class="radio-inline">
-				<input name="status" type="radio" value="0"' . ((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '') . ' /> ' . htmlspecialchars($this->pi_getLL('disabled')) . '
-				</label>
-				<label class="radio-inline">
-				<input name="status" type="radio" value="1"' . ((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '') . ' /> ' . htmlspecialchars($this->pi_getLL('enabled')) . '
-				</label>
-				</div>
+            <label class="control-label col-md-2">&nbsp;</label>
+            <div class="col-md-10">
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input name="include_only_related_product" type="checkbox" value="1"' . ((isset($post_data['include_only_related_product']) and $post_data['include_only_related_product']) ? ' checked' : '') . ' id="include_only_related_product" />
+                    <label for="include_only_related_product">' . htmlspecialchars($this->pi_getLL('include_only_related_product')) . '</label>
+                </div>
+            </div>
+		</div>
+		<div class="form-group">
+            <label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('status')) . '</label>
+            <div class="col-md-10">
+                <div class="radio radio-success radio-inline">
+                    <input name="status" type="radio" value="0"' . ((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '') . ' id="disabled_status" />
+                    <label for="disabled_status">' . htmlspecialchars($this->pi_getLL('disabled')) . '</label>
+                </div>
+                <div class="radio radio-success radio-inline">
+                    <input name="status" type="radio" value="1"' . ((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '') . ' id="enabled_status" />
+                    <label for="enabled_status"> ' . htmlspecialchars($this->pi_getLL('enabled')) . '</label>
+                </div>
+            </div>
 		</div>
 		';
         // custom page hook that can be controlled by third-party plugin
