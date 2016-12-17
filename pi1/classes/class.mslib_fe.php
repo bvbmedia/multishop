@@ -6514,14 +6514,19 @@ class mslib_fe {
                 $loadFromPids[] = $this->showCatalogFromPage;
             }
         }
+        $pages=array();
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'])) {
             $params = array(
-                    'loadFromPids' => &$loadFromPids
+                    'loadFromPids' => &$loadFromPids,
+                    'pages' => &$pages
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
+        }
+        if (is_array($pages) && count($pages)) {
+            return $pages;
         }
         if (is_array($loadFromPids) and count($loadFromPids)) {
             foreach ($loadFromPids as $loadFromPid) {
