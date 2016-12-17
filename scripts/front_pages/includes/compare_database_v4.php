@@ -290,4 +290,23 @@ foreach ($required_indexes as $required_index) {
         $messages[] = $str;
     }
 }
+$str = "select categories_name from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `categories_name` varchar(150) not null default ''";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    $order_records = mslib_befe::getRecords('', 'tx_multishop_orders_products');
+    if (is_array($order_records) && count($order_records)) {
+        foreach ($order_records as $order_record) {
+            $category_name=mslib_fe::getCategoryName($order_record['categories_id']);
+            if ($category_name) {
+                $updateArray = array();
+                $updateArray['categories_name']=$category_name;
+                $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=' . $order_record['orders_products_id'], $updateArray);
+                $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+            }
+        }
+    }
+}
 ?>

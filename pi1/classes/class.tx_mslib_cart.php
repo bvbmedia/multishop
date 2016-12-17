@@ -1951,6 +1951,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $insertArray['orders_id'] = $orders_id;
                             $insertArray['products_id'] = $value['products_id'];
                             $insertArray['categories_id'] = $value['categories_id'];
+                            $insertArray['categories_name'] = '';
+                            $category_name=mslib_fe::getCategoryName($value['categories_id']);
+                            if ($category_name) {
+                                $insertArray['categories_name'] = $category_name;
+                            }
                             // get all cats
                             $cats = mslib_fe::Crumbar($value['categories_id']);
                             $cats = array_reverse($cats);

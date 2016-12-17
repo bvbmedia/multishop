@@ -189,17 +189,12 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                if ($product['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
-                                if ($cats[0]['id'] > 0) {
-                                    $main_categories_data_incl_vat[$category_name] = $cats[0]['id'];
+                                if ($product['categories_id_0'] > 0) {
+                                    $main_categories_data_incl_vat[$category_name] = $product['categories_id_0'];
                                 } else {
                                     $main_categories_data_incl_vat[$category_name] = $this->pi_getLL('unknown');
                                 }
@@ -220,17 +215,12 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                if ($product['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
-                                if ($cats[0]['id'] > 0) {
-                                    $main_categories_data_excl_vat[$category_name] = $cats[0]['id'];
+                                if ($product['categories_id_0'] > 0) {
+                                    $main_categories_data_excl_vat[$category_name] = $product['categories_id_0'];
                                 } else {
                                     $main_categories_data_excl_vat[$category_name] = $this->pi_getLL('unknown');
                                 }
@@ -251,17 +241,12 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                if ($product['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
-                                if ($cats[0]['id'] > 0) {
-                                    $main_categories_data_bought_products[$category_name] = $cats[0]['id'];
+                                if ($product['categories_id_0'] > 0) {
+                                    $main_categories_data_bought_products[$category_name] = $product['categories_id_0'];
                                 } else {
                                     $main_categories_data_bought_products[$category_name] = $this->pi_getLL('unknown');
                                 }
@@ -511,12 +496,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_amount_incl_vat = array();
                         if (is_array($main_categories_data_incl_vat) && count($main_categories_data_incl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                if ($product_tmp['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -543,12 +523,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_amount_excl_vat = array();
                         if (is_array($main_categories_data_excl_vat) && count($main_categories_data_excl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                if ($product_tmp['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -574,12 +549,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_bought_products_amount = array();
                         if (is_array($main_categories_data_bought_products) && count($main_categories_data_bought_products) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                if ($product_tmp['categories_id']) {
-                                    $cats = array();
-                                    $cats = mslib_fe::Crumbar($product_tmp['categories_id']);
-                                    $cats = array_reverse($cats);
-                                }
-                                $category_name = mslib_fe::getCategoryName($cats[0]['id']);
+                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }

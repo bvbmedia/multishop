@@ -608,6 +608,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `order_unit_name` varchar(100) default '',
  `order_unit_code` varchar(15) default '',
  `categories_id` int(11) default '0',
+ `categories_name` varchar(150) default '',
  `manufacturers_id` int(11) default '0',
  `categories_id_0` int(5) default '0',
  `categories_name_0` varchar(150) default '',
