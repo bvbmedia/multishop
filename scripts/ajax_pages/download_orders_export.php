@@ -137,7 +137,7 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                $category_name = mslib_fe::getCategoryName($product['categories_id']);
+                                $category_name = $product['categories_name'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -149,11 +149,7 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         if (is_array($categories_data_incl_vat) && count($categories_data_incl_vat)) {
-                            foreach ($categories_data_incl_vat as $category_id) {
-                                $category_name = mslib_fe::getCategoryName($category_id);
-                                if (!$category_name) {
-                                    $category_name = $this->pi_getLL('unknown');
-                                }
+                            foreach ($categories_data_incl_vat as $category_name => $category_id) {
                                 $excelHeaderCols['categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_category_incl_vat'), $category_name);
                             }
                         }
@@ -163,7 +159,7 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                $category_name = mslib_fe::getCategoryName($product['categories_id']);
+                                $category_name = $product['categories_name'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -175,11 +171,7 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         if (is_array($categories_data_excl_vat) && count($categories_data_excl_vat)) {
-                            foreach ($categories_data_excl_vat as $category_id) {
-                                $category_name = mslib_fe::getCategoryName($category_id);
-                                if (!$category_name) {
-                                    $category_name = $this->pi_getLL('unknown');
-                                }
+                            foreach ($categories_data_excl_vat as $category_name => $category_id) {
                                 $excelHeaderCols['categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_category_excl_vat'), $category_name);
                             }
                         }
@@ -189,7 +181,7 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
+                                $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -201,11 +193,7 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         if (is_array($main_categories_data_incl_vat) && count($main_categories_data_incl_vat)) {
-                            foreach ($main_categories_data_incl_vat as $category_id) {
-                                $category_name = mslib_fe::getCategoryName($category_id);
-                                if (!$category_name) {
-                                    $category_name = $this->pi_getLL('unknown');
-                                }
+                            foreach ($main_categories_data_incl_vat as $category_name => $category_id) {
                                 $excelHeaderCols['main_categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_main_category_incl_vat'), $category_name);
                             }
                         }
@@ -215,7 +203,7 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
+                                $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -227,11 +215,7 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         if (is_array($main_categories_data_excl_vat) && count($main_categories_data_excl_vat)) {
-                            foreach ($main_categories_data_excl_vat as $category_id) {
-                                $category_name = mslib_fe::getCategoryName($category_id);
-                                if (!$category_name) {
-                                    $category_name = $this->pi_getLL('unknown');
-                                }
+                            foreach ($main_categories_data_excl_vat as $category_name => $category_id) {
                                 $excelHeaderCols['main_categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_main_category_excl_vat'), $category_name);
                             }
                         }
@@ -241,7 +225,7 @@ if ($this->get['orders_export_hash']) {
                         foreach ($records as $record) {
                             $order_tmp = mslib_fe::getOrder($record['orders_id']);
                             foreach ($order_tmp['products'] as $product) {
-                                $category_name = mslib_fe::getCategoryName($product['categories_id_0']);
+                                $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -253,11 +237,7 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         if (is_array($main_categories_data_bought_products) && count($main_categories_data_bought_products)) {
-                            foreach ($main_categories_data_bought_products as $category_id) {
-                                $category_name = mslib_fe::getCategoryName($category_id);
-                                if (!$category_name) {
-                                    $category_name = $this->pi_getLL('unknown');
-                                }
+                            foreach ($main_categories_data_bought_products as $category_name => $category_id) {
                                 $excelHeaderCols['bought_products_main_categories_id_' . $category_name] = sprintf($this->pi_getLL('bought_products_per_main_category'), $category_name);
                             }
                         }
@@ -443,7 +423,7 @@ if ($this->get['orders_export_hash']) {
                         $categories_data_amount_incl_vat = array();
                         if (is_array($categories_data_incl_vat) && count($categories_data_incl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id']);
+                                $category_name = $product_tmp['categories_name'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -470,7 +450,7 @@ if ($this->get['orders_export_hash']) {
                         $categories_data_amount_excl_vat = array();
                         if (is_array($categories_data_excl_vat) && count($categories_data_excl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id']);
+                                $category_name = $product_tmp['categories_name'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -496,7 +476,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_amount_incl_vat = array();
                         if (is_array($main_categories_data_incl_vat) && count($main_categories_data_incl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
+                                $category_name = $product_tmp['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -523,7 +503,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_amount_excl_vat = array();
                         if (is_array($main_categories_data_excl_vat) && count($main_categories_data_excl_vat) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
+                                $category_name = $product_tmp['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
@@ -549,7 +529,7 @@ if ($this->get['orders_export_hash']) {
                         $main_categories_data_bought_products_amount = array();
                         if (is_array($main_categories_data_bought_products) && count($main_categories_data_bought_products) > 0) {
                             foreach ($order_products as $product_tmp) {
-                                $category_name = mslib_fe::getCategoryName($product_tmp['categories_id_0']);
+                                $category_name = $product_tmp['categories_name_0'];
                                 if (!$category_name) {
                                     $category_name = $this->pi_getLL('unknown');
                                 }
