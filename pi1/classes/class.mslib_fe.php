@@ -10065,6 +10065,20 @@ class mslib_fe {
         }
     }
     public function getAddressInfo($type = 'shop', $customer_id = 0) {
+        $data=array();
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'])) {
+            $params = array(
+                    'data' => &$data,
+                    'type'=>&$type,
+                    'customer_id'=>&$customer_id,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if (is_array($data) && count($data)) {
+            return $data;
+        }
         if ($this->conf['cacheConfiguration']) {
             $CACHE_FRONT_END = 1;
         } else {
