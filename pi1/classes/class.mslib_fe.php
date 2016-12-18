@@ -4768,6 +4768,13 @@ class mslib_fe {
                         $count++;
                     }
                 }
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'])) {
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'] as $funcRef) {
+                        $params['row3'] = &$row3;
+                        $params['shipping_cost'] = &$shipping_cost;
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 // custom code to change the shipping costs based on cart amount
                 if ($shipping_cost) {
                     if ($shipping_method['tax_id'] && $shipping_cost) {
@@ -5692,6 +5699,14 @@ class mslib_fe {
 				}
 			}
 */
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'] as $funcRef) {
+                    $params['row3'] = &$row3;
+                    $params['shipping_cost'] = &$shipping_cost;
+                    $params['shipping_cost_method_box'] = &$shipping_cost_method_box;
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                 $shipping_cost = round($shipping_cost, 2);
                 $shipping_cost_method_box = round($shipping_cost_method_box, 2);
