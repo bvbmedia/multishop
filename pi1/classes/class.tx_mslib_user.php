@@ -826,7 +826,13 @@ class tx_mslib_user {
         $insertArray['middle_name'] = $this->middle_name;
         $insertArray['last_name'] = $this->last_name;
         $insertArray['email'] = $this->email;
-        $insertArray['address'] = $this->address;
+        $insertArray['street_name'] = $this->address;
+        $insertArray['address_number'] = $this->address_number;
+        $insertArray['address_ext'] = $this->address_ext;
+        $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'];
+        if ($insertArray['address_ext']) {
+            $insertArray['address'] .= '-' . $insertArray['address_ext'];
+        }
         $insertArray['address_number'] = $this->address_number;
         $insertArray['zip'] = $this->zip;
         $insertArray['phone'] = $this->telephone;
@@ -853,6 +859,7 @@ class tx_mslib_user {
         $insertArray['title'] = (($this->gender == 'm') ? 'Mr.' : 'Mrs.');
         $insertArray['region'] = $this->region;
         $insertArray['pid'] = $this->ref->conf['fe_customer_pid'];
+        $insertArray['page_uid'] = $this->ref->shop_pid;
         $insertArray['tstamp'] = time();
         $insertArray['tx_multishop_address_type'] = 'delivery';
         $insertArray['tx_multishop_default'] = ($is_default) ? 1 : 0;

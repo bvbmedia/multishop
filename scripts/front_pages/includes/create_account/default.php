@@ -145,6 +145,17 @@ if (mslib_fe::loggedin()) {
                     $res = $mslib_user->saveUserBillingAddress($customer_id);
                     if ($res) {
                         $send_email_confirmation = mslib_fe::sendCreateAccountConfirmationLetter($customer_id, $this->post['password']);
+                        // custom hook that can be controlled by third-party plugin
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePostHook'])) {
+                            $params = array(
+                                'send_email_confirmation' => &$send_email_confirmation,
+                                'mslib_user' => &$mslib_user,
+                                'customer_id' => $customer_id
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                         if ($send_email_confirmation) {
                             // mail a copy to the merchant
                             /*
