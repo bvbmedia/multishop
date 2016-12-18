@@ -4770,6 +4770,7 @@ class mslib_fe {
                 }
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'] as $funcRef) {
+                        $params=array();
                         $params['row3'] = &$row3;
                         $params['shipping_cost'] = &$shipping_cost;
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -5535,6 +5536,7 @@ class mslib_fe {
             //hook to let other plugins further manipulate the settings
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'] as $funcRef) {
+                    $params=array();
                     $params['row3'] =& $row3;
                     $params['shipping_method'] =& $shipping_method;
                     $params['countries_id'] =& $countries_id;
@@ -5576,6 +5578,7 @@ class mslib_fe {
             } else {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'] as $funcRef) {
+                        $params=array();
                         $params['row3'] =& $row3;
                         $params['countries_id'] =& $countries_id;
                         $params['shipping_method'] =& $shipping_method;
