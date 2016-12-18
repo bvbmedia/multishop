@@ -320,11 +320,16 @@ if ($this->get['feed_hash']) {
                     } else {
                         $tbl = 'p.';
                     }
+                    $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
+                    /*
                     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
-                        $where[]='('.$tbl . 'is_hidden=1 or (EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)))';
+                        //$where[]='('.$tbl . 'is_hidden=1 or (EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)))';
+                        $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
                     } else {
-                        $where[]='EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)';
+                        //$where[]='EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)';
+                        $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
                     }
+                    */
                 }
                 /*
                 if (!$this->ms['MODULES']['FLAT_DATABASE']) {
