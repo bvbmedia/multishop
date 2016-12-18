@@ -30,10 +30,10 @@ jQuery().ready(function($){
 ';
 if ($this->post) {
     if (!$this->post['s_date']) {
-        $this->post['s_date'] = date("Y-m-d");
+        $this->post['s_date']=date("Y-m-d");
     }
     if (!$this->post['e_date']) {
-        $this->post['e_date'] = (date('Y') + 10) . date("-m-d");
+        $this->post['e_date']=date((date('Y', strtotime($this->post['s_date'])) + 1) . "-m-d");
     }
     if (is_numeric($this->post['s_hours']) and is_numeric($this->post['s_minutes'])) {
         $this->post['s_date'] .= ' ' . $this->post['s_hours'] . ':' . $this->post['s_minutes'] . ':00';
@@ -45,6 +45,9 @@ if ($this->post) {
     $e_time = strtotime($this->post['e_date']);
     if ($this->post['discount_type'] == 'price' and strstr($this->post['discount'], ',')) {
         $this->post['discount'] = str_replace(",", ".", $this->post['discount']);
+    }
+    if (!$this->post['max_usage']) {
+        $this->post['max_usage']=9999;
     }
     $updateArray = array(
             'code' => $this->post['code'],
