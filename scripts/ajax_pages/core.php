@@ -984,10 +984,12 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        $data[]=array(
-			'id'=>'99999',
-			'text'=>$this->pi_getLL('all')
-		);
+        if (!isset($this->get['preselected_id'])) {
+            $data[] = array(
+                'id' => '99999',
+                'text' => $this->pi_getLL('all')
+            );
+        }
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -1007,8 +1009,8 @@ switch ($this->ms['page']) {
                 }
                 if (count($catpath)) {
                     $data[] = array(
-                            'id' => $row['categories_id'],
-                            'text' => implode(' > ', $catpath)
+                        'id' => $row['categories_id'],
+                        'text' => implode(' > ', $catpath)
                     );
                 }
             }
@@ -1042,17 +1044,19 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        $data[]=array(
-			'id'=>'99999',
-			'text'=>$this->pi_getLL('all')
-		);
+        if (!isset($this->get['preselected_id'])) {
+            $data[] = array(
+                'id' => '99999',
+                'text' => $this->pi_getLL('all')
+            );
+        }
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 if (!empty($row['products_name'])) {
                     $data[] = array(
-                            'id' => $row['products_id'],
-                            'text' => $row['products_name']
+                        'id' => $row['products_id'],
+                        'text' => $row['products_name']
                     );
                 }
             }
