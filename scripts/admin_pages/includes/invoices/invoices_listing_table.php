@@ -95,6 +95,7 @@ foreach ($invoices as $invoice) {
         $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
     }
     $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">&nbsp;</td>';
+    $footer_category_amount=0;
     if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
         $category_amount=0;
         $order_data=mslib_fe::getOrder($invoice['orders_id']);
@@ -107,7 +108,8 @@ foreach ($invoices as $invoice) {
                     $product_final_price = ($invoice['reversal_invoice'] ? '-' : '') . $product['final_price'];
                     $product_tax_data= ($invoice['reversal_invoice'] ? '-' : '') . $product['products_tax_data']['total_tax'];
                 }
-                $category_amount += ($product_final_price+$product_tax_data)*$product['qty'];
+                $category_amount += ($product_final_price)*$product['qty'];
+                $footer_category_amount+=($product_final_price)*$product['qty'];
             }
         }
         $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">'.mslib_fe::amount2Cents($category_amount).'</td>';
@@ -201,7 +203,7 @@ $subpartArray['###FOOTER_INVOICES_AMOUNT###'] = mslib_fe::amount2Cents($totalAmo
 $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '';
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
     $category_name=mslib_fe::getCategoryName($this->get['ordered_category']);
-    $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.sprintf($this->pi_getLL('turnover_category_x'), $category_name).'</th>';
+    $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.mslib_fe::amount2Cents($footer_category_amount, 0).'</th>';
 }
 $subpartArray['###FOOTER_INVOICES_DATE_LAST_SENT###'] = $this->pi_getLL('date_last_sent');
 $subpartArray['###FOOTER_INVOICES_PAID_STATUS###'] = $this->pi_getLL('admin_paid');
