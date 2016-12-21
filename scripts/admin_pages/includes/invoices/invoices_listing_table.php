@@ -108,8 +108,13 @@ foreach ($invoices as $invoice) {
                     $product_final_price = ($invoice['reversal_invoice'] ? '-' : '') . $product['final_price'];
                     $product_tax_data= ($invoice['reversal_invoice'] ? '-' : '') . $product['products_tax_data']['total_tax'];
                 }
-                $category_amount += ($product_final_price)*$product['qty'];
-                $footer_category_amount+=($product_final_price)*$product['qty'];
+                if (isset($this->get['tx_multishop_pi1']['excluding_vat']) && $this->get['tx_multishop_pi1']['excluding_vat']>0) {
+                    $category_amount += ($product_final_price) * $product['qty'];
+                    $footer_category_amount += ($product_final_price) * $product['qty'];
+                } else {
+                    $category_amount += ($product_final_price + $product_tax_data) * $product['qty'];
+                    $footer_category_amount += ($product_final_price + $product_tax_data) * $product['qty'];
+                }
             }
         }
         $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">'.mslib_fe::amount2Cents($category_amount).'</td>';
