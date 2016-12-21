@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $counter = 0;
 $totalAmount = 0;
 $invoiceItem = '';
+$footer_category_amount=0;
 foreach ($invoices as $invoice) {
     $grandTotalColumnName = 'grand_total';
     if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
@@ -95,7 +96,6 @@ foreach ($invoices as $invoice) {
         $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
     }
     $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">&nbsp;</td>';
-    $footer_category_amount=0;
     if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
         $category_amount=0;
         $order_data=mslib_fe::getOrder($invoice['orders_id']);
