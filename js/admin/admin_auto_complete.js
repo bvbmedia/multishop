@@ -89,6 +89,16 @@ var adminPanelSearch = function () {
             } else {
                 location.href=$(href_elem).attr('href');
             }
+        } else {
+            var href_elem=$(elem).parentsUntil('.ajaxItem').parent();
+            var link_item=$(href_elem).find('a.linkItem');
+            if ($(link_item).hasClass('linkItem')) {
+                if ($(link_item).attr('data-require-confirmation')!=undefined) {
+                    ifConfirm('', $(link_item).attr('data-require-confirmation') + ' ?', (function(){location.href=$(href_elem).attr('href')}), (function(){}));
+                } else {
+                    location.href=$(link_item).attr('href');
+                }
+            }
         }
     });
 }
