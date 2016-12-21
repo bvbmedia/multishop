@@ -984,10 +984,10 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        /*$data[]=array(
+        $data[]=array(
 			'id'=>'99999',
 			'text'=>$this->pi_getLL('all')
-		);*/
+		);
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -1042,10 +1042,10 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        /*$data[]=array(
+        $data[]=array(
 			'id'=>'99999',
 			'text'=>$this->pi_getLL('all')
-		);*/
+		);
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
