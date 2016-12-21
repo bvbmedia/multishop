@@ -804,6 +804,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         }
         $itemsWrapper = array();
         $c = true;
+        $orders_tax_data = $order['orders_tax_data'];
         foreach ($order['products'] as $product) {
             if ($product['products_id']) {
                 $product_db = mslib_fe::getProduct($product['products_id']);
@@ -1036,7 +1037,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL'] = $this->pi_getLL('total_price');
         $markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL'] = $this->pi_getLL('subtotal');
         // rounding is problem with including vat shops.
-        $markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray), 2, true));
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents($orders_tax_data['sub_total']);
+        } else {
+            $markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat']);
+        }
         //$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
         $markerArray['PRODUCTS_TOTAL_PRICE'] = mslib_fe::amount2Cents($subtotal);
         $subpartArray['###' . $key . '###'] = $this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
