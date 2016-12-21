@@ -94,6 +94,24 @@ foreach ($invoices as $invoice) {
     } else {
         $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
     }
+    $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">&nbsp;</td>';
+    if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
+        $category_amount=0;
+        $order_data=mslib_fe::getOrder($invoice['orders_id']);
+        foreach ($order_data['products'] as $product) {
+            if ($product['categories_id']==$this->get['ordered_category']) {
+                if (strpos($product['final_price'], '-') !== false && $invoice['reversal_invoice']) {
+                    $product_final_price = str_replace('-', '', $product['final_price']);
+                    $product_tax_data= str_replace('-', '', $product['products_tax_data']['total_tax']);
+                } else {
+                    $product_final_price = ($invoice['reversal_invoice'] ? '-' : '') . $product['final_price'];
+                    $product_tax_data= ($invoice['reversal_invoice'] ? '-' : '') . $product['products_tax_data']['total_tax'];
+                }
+                $category_amount += ($product_final_price+$product_tax_data)*$product['qty'];
+            }
+        }
+        $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">'.mslib_fe::amount2Cents($category_amount).'</td>';
+    }
     $markerArray['INVOICES_DATE_LAST_SENT'] = ($invoice['date_mail_last_sent'] > 0 ? strftime('%x', $invoice['date_mail_last_sent']) : '');
     $markerArray['INVOICES_PAID_STATUS'] = $paid_status;
     $markerArray['INVOICES_ACTION'] = $action_button;
@@ -159,6 +177,11 @@ $subpartArray['###HEADER_INVOICES_ORDER_DATE###'] = $this->pi_getLL('order_date'
 $subpartArray['###HEADER_INVOICES_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
 $subpartArray['###HEADER_INVOICES_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
 $subpartArray['###HEADER_INVOICES_AMOUNT###'] = $this->pi_getLL('amount');
+$subpartArray['###HEADER_CATEGORY_AMOUNT###'] = '';
+if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
+    $category_name=mslib_fe::getCategoryName($this->get['ordered_category']);
+    $subpartArray['###HEADER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.sprintf($this->pi_getLL('turnover_category_x'), $category_name).'</th>';
+}
 $subpartArray['###HEADER_INVOICES_DATE_LAST_SENT###'] = $this->pi_getLL('date_last_sent');
 $subpartArray['###HEADER_INVOICES_PAID_STATUS###'] = $this->pi_getLL('admin_paid');
 $subpartArray['###HEADER_INVOICES_ACTION###'] = $this->pi_getLL('action');
@@ -175,6 +198,11 @@ $subpartArray['###FOOTER_INVOICES_ORDER_DATE###'] = $this->pi_getLL('order_date'
 $subpartArray['###FOOTER_INVOICES_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
 $subpartArray['###FOOTER_INVOICES_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
 $subpartArray['###FOOTER_INVOICES_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);
+$subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '';
+if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
+    $category_name=mslib_fe::getCategoryName($this->get['ordered_category']);
+    $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.sprintf($this->pi_getLL('turnover_category_x'), $category_name).'</th>';
+}
 $subpartArray['###FOOTER_INVOICES_DATE_LAST_SENT###'] = $this->pi_getLL('date_last_sent');
 $subpartArray['###FOOTER_INVOICES_PAID_STATUS###'] = $this->pi_getLL('admin_paid');
 $subpartArray['###FOOTER_INVOICES_ACTION###'] = $this->pi_getLL('action');

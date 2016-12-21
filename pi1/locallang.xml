@@ -1394,6 +1394,7 @@
             <label index="feed_exporter_fields_label_bought_products_per_main_category">Bought products per main category</label>
             <label index="bought_products_per_main_category">Bought products per main category %s</label>
             <label index="include_only_related_product">Only include products that are enabled on this feed</label>
+            <label index="turnover_category_x">Turnover %s</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
