@@ -71,6 +71,7 @@ if (is_array($this->languages) && count($this->languages)) {
         $coltypes['products_shortdescription' . $suffix] = 'Products description (short description) (' . $langTitle['title'] . ')';
         $coltypes['products_meta_keywords' . $suffix] = 'Products meta keywords (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
         $coltypes['products_deeplink' . $suffix] = 'Products deeplink (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
+        $coltypes['file_remote_location' . $suffix] = 'Products - virtual product remote location (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
         for ($x = 1; $x <= $max_category_level; $x++) {
             $coltypes['categories_id' . $x . $suffix] = 'Categories id (level: ' . $x . ') (' . $langTitle['title'] . ')';
             $coltypes['categories_name' . $x . $suffix] = 'Categories name (level: ' . $x . ') (' . $langTitle['title'] . ')';
@@ -2429,6 +2430,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_shortdescription'])) {
                                 $updateArray['products_shortdescription'] = $item['products_shortdescription'];
                             }
+                            if (isset($item['file_remote_location'])) {
+                                $updateArray['file_remote_location'] = $item['file_remote_location'];
+                            }
                             if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
                                 for ($x = 1; $x <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $x++) {
                                     if (isset($item['products_description_tab_title_' . $x])) {
@@ -2813,6 +2817,7 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                             $updateArray['products_shortdescription'] = $item['products_shortdescription'];
+                            $updateArray['file_remote_location'] = $item['file_remote_location'];
                             $updateArray['products_url'] = $item['products_deeplink'];
                             $updateArray['delivery_time'] = $item['products_delivery_time'];
                             // custom hook that can be controlled by third-party plugin

@@ -276,12 +276,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
                 $this->post['fields'] = unserialize($row['fields']);
                 // now also unserialize for the custom field
                 $post_data = unserialize($row['post_data']);
-                foreach ($post_data['fields_headers'] as $fh_key => $field_header_title) {
-                    $this->post['fields_headers'][] = $field_header_title;
-                    $this->post['fields_values'][] = $post_data['fields_values'][$fh_key];
+                if (is_array($post_data['fields_headers']) && count($post_data['fields_headers'])) {
+                    foreach ($post_data['fields_headers'] as $fh_key => $field_header_title) {
+                        $this->post['fields_headers'][] = $field_header_title;
+                        $this->post['fields_values'][] = $post_data['fields_values'][$fh_key];
+                    }
                 }
-                /*$this->post['fields_headers']=$post_data['fields_headers'];
-                $this->post['fields_values']=$post_data['fields_values'];*/
             }
         }
     }
