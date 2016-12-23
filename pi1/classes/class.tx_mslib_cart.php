@@ -1892,6 +1892,28 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition'] > 0) {
                 $insertArray['payment_condition'] = $user['tx_multishop_payment_condition'];
             }
+            // geo data
+            $addresstypes = array();
+            $addresstypes[] = 'billing';
+            $addresstypes[] = 'delivery';
+            foreach ($addresstypes as $addresstype) {
+                $str2 = 'select st.* from static_countries sc, static_territories st where sc.cn_short_en=\'' . addslashes($insertArray[$addresstype . '_country']) . '\' and st.tr_iso_nr=sc.cn_parent_tr_iso_nr';
+                $query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                $rows2 = $GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+                if ($rows2) {
+                    $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+                    $insertArray[$addresstype . '_tr_iso_nr'] = $row2['tr_iso_nr'];
+                    $insertArray[$addresstype . '_tr_name_en'] = $row2['tr_name_en'];
+                    $str2 = 'select * from static_territories where tr_iso_nr=' . $row2['tr_parent_iso_nr'];
+                    $query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    $rows2 = $GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+                    if ($rows2) {
+                        $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+                        $insertArray[$addresstype . '_tr_parent_iso_nr'] = $row2['tr_iso_nr'];
+                        $insertArray[$addresstype . '_tr_parent_name_en'] = $row2['tr_name_en'];
+                    }
+                }
+            }
             //$insertArray['orders_tax_data']			=	serialize($orders_tax);
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
                 // hook
