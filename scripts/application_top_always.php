@@ -458,6 +458,11 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
             $mslib_cart->storeCart($cart);
         }
     }
+    if (is_array($guest_cart) && count($guest_cart)) {
+        $guest_cart = array();
+        $GLOBALS['TSFE']->fe_user->setKey('ses', $guest_cart_page_uid, $guest_cart);
+        $GLOBALS['TSFE']->storeSessionData();
+    }
     //$this->cart_page_uid.='_'.$GLOBALS["TSFE"]->fe_user->user['uid'];
 }
 if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) {

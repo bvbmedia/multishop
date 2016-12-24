@@ -64,11 +64,19 @@ if ($this->post['req'] == 'init') {
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
-                        $cats = mslib_fe::Crumbar($row['categories_id']);
-                        $cats = array_reverse($cats);
-                        $catpath = array();
-                        foreach ($cats as $cat) {
-                            $catpath[] = $cat['name'];
+                        $level = 0;
+                        $crum = mslib_fe::Crumbar($row['categories_id']);
+                        $crum = array_reverse($crum);
+                        $cats = array();
+                        $where = '';
+                        foreach ($crum as $item) {
+                            $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
+                            $cats[] = $item['name'];
+                            $level++;
+                        }
+                        if (!empty($where)) {
+                            $where = substr($where, 0, (strlen($where) - 1));
+                            $where .= '&';
                         }
                         $json_data['related_product'][$row['categories_id']]['categories_name'] = implode(' / ', $catpath);
                         $json_data['related_product'][$row['categories_id']]['products'] = array();
@@ -92,6 +100,11 @@ if ($this->post['req'] == 'init') {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')';
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 0;
                                 }
+                                $product_link='#';
+                                if (!empty($where)) {
+                                    $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                }
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['link']=$product_link;
                                 $pid_regs[] = $row2['products_id'];
                                 $product_counter++;
                             }
@@ -181,11 +194,19 @@ if ($this->post['req'] == 'init') {
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
+                        $level = 0;
                         $crum = mslib_fe::Crumbar($row['categories_id']);
                         $crum = array_reverse($crum);
                         $cats = array();
+                        $where = '';
                         foreach ($crum as $item) {
+                            $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
                             $cats[] = $item['name'];
+                            $level++;
+                        }
+                        if (!empty($where)) {
+                            $where = substr($where, 0, (strlen($where) - 1));
+                            $where .= '&';
                         }
                         $json_data['related_product'][$row['categories_id']]['categories_name'] = implode(" / ", $cats);
                         $json_data['related_product'][$row['categories_id']]['products'] = array();
@@ -203,6 +224,8 @@ if ($this->post['req'] == 'init') {
                                 } else {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 0;
                                 }
+                                $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['link']=$product_link;
                                 $pid_regs[] = $row2['products_id'];
                                 $product_counter++;
                             }

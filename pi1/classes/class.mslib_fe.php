@@ -4768,6 +4768,14 @@ class mslib_fe {
                         $count++;
                     }
                 }
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'])) {
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'] as $funcRef) {
+                        $params=array();
+                        $params['row3'] = &$row3;
+                        $params['shipping_cost'] = &$shipping_cost;
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 // custom code to change the shipping costs based on cart amount
                 if ($shipping_cost) {
                     if ($shipping_method['tax_id'] && $shipping_cost) {
@@ -5312,7 +5320,17 @@ class mslib_fe {
                 }
             }
         }
-        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+        $round_product_price=false;
+        if (is_numeric($this->get['products_id']) and ($this->get['tx_multishop_pi1']['action'] == 'add_to_cart' || $this->get['tx_multishop_pi1']['page_section'] == 'shopping_cart')) {
+            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                $round_product_price=true;
+            }
+        } else {
+            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $round_product_price=true;
+            }
+        }
+        if ($round_product_price) {
             // when shop is running excluding vat then change prices to 2 decimals to prevent bugs
             if ($product['final_price']) {
                 $product['final_price'] = round($product['final_price'], 2);
@@ -5528,6 +5546,7 @@ class mslib_fe {
             //hook to let other plugins further manipulate the settings
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'] as $funcRef) {
+                    $params=array();
                     $params['row3'] =& $row3;
                     $params['shipping_method'] =& $shipping_method;
                     $params['countries_id'] =& $countries_id;
@@ -5569,6 +5588,7 @@ class mslib_fe {
             } else {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'] as $funcRef) {
+                        $params=array();
                         $params['row3'] =& $row3;
                         $params['countries_id'] =& $countries_id;
                         $params['shipping_method'] =& $shipping_method;
@@ -5692,6 +5712,14 @@ class mslib_fe {
 				}
 			}
 */
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'] as $funcRef) {
+                    $params['row3'] = &$row3;
+                    $params['shipping_cost'] = &$shipping_cost;
+                    $params['shipping_cost_method_box'] = &$shipping_cost_method_box;
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                 $shipping_cost = round($shipping_cost, 2);
                 $shipping_cost_method_box = round($shipping_cost_method_box, 2);
@@ -6514,14 +6542,19 @@ class mslib_fe {
                 $loadFromPids[] = $this->showCatalogFromPage;
             }
         }
+        $pages=array();
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'])) {
             $params = array(
-                    'loadFromPids' => &$loadFromPids
+                    'loadFromPids' => &$loadFromPids,
+                    'pages' => &$pages
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
+        }
+        if (is_array($pages) && count($pages)) {
+            return $pages;
         }
         if (is_array($loadFromPids) and count($loadFromPids)) {
             foreach ($loadFromPids as $loadFromPid) {
@@ -10060,6 +10093,20 @@ class mslib_fe {
         }
     }
     public function getAddressInfo($type = 'shop', $customer_id = 0) {
+        $data=array();
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'])) {
+            $params = array(
+                    'data' => &$data,
+                    'type'=>&$type,
+                    'customer_id'=>&$customer_id,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if (is_array($data) && count($data)) {
+            return $data;
+        }
         if ($this->conf['cacheConfiguration']) {
             $CACHE_FRONT_END = 1;
         } else {

@@ -191,6 +191,11 @@ if (is_numeric($this->get['orders_id'])) {
                                 // build the categories record
                                 $product_data = mslib_fe::getProduct($this->post['products_id'], '', '', 1);
                                 $updateArray['categories_id'] = $product_data['categories_id'];
+                                $updateArray['categories_name'] = '';
+                                $category_name=mslib_fe::getCategoryName($product_data['categories_id']);
+                                if ($category_name) {
+                                    $updateArray['categories_name'] = $category_name;
+                                }
                                 // get all cats
                                 $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                 $cats = array_reverse($cats);
@@ -328,6 +333,11 @@ if (is_numeric($this->get['orders_id'])) {
                                 if (is_numeric($this->post['manual_products_id']) && $this->post['manual_products_id'] > 0) {
                                     $product_data = mslib_fe::getProduct($this->post['manual_products_id'], '', '', 1);
                                     $insertArray['categories_id'] = $product_data['categories_id'];
+                                    $insertArray['categories_name']='';
+                                    $category_name=mslib_fe::getCategoryName($product_data['categories_id']);
+                                    if ($category_name) {
+                                        $insertArray['categories_name'] = $category_name;
+                                    }
                                     // get all cats
                                     $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                     $cats = array_reverse($cats);

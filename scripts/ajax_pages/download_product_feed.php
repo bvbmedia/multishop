@@ -314,6 +314,23 @@ if ($this->get['feed_hash']) {
                 } else {
                     $includeDisabled = 0;
                 }
+                if ($post_data['include_only_related_product']) {
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $tbl = 'pf.';
+                    } else {
+                        $tbl = 'p.';
+                    }
+                    $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
+                    /*
+                    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
+                        //$where[]='('.$tbl . 'is_hidden=1 or (EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)))';
+                        $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
+                    } else {
+                        //$where[]='EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)';
+                        $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
+                    }
+                    */
+                }
                 /*
                 if (!$this->ms['MODULES']['FLAT_DATABASE']) {
                     $filter[]='NOT EXISTS (SELECT subp.products_id from tx_multishop_products subp, tx_multishop_catalog_to_feeds subctf, tx_multishop_products_to_categories subp2c where subp2c.categories_id=c.categories_id and subp2c.node_id=subctf.exclude_id and subctf.exclude_type=\'categories\' and subctf.feed_id=\''.$feed['id'].'\' and subctf.negate=1 order by subp2c.crumbar_identifier asc)';
@@ -340,7 +357,10 @@ if ($this->get['feed_hash']) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
+                //$this->msDebug=1;
                 $pageset = mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
+                //echo $this->msDebugInfo;
+                //die();
                 $products = $pageset['products'];
                 if ($pageset['total_rows'] > 0) {
                     foreach ($pageset['products'] as $row) {
@@ -455,6 +475,25 @@ if ($this->get['feed_hash']) {
                                 }
                                 if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
                                     $in_feed_exclude_list = true;
+                                }
+                                if ($post_data['include_only_related_product']) {
+                                    if (!$in_feed_exclude_list) {
+                                        $record_in_category=true;
+                                        $record_in_product=true;
+                                        $sql_check = "select id, negate from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['categories_id']) . "' and exclude_type='categories'";
+                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                            $record_in_category = false;
+                                        }
+                                        $sql_check = "select id from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['products_id']) . "' and exclude_type='products'";
+                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                            $record_in_product = false;
+                                        }
+                                        if (!$record_in_category && !$record_in_product) {
+                                            $in_feed_exclude_list = true;
+                                        }
+                                    }
                                 }
                                 if (!$in_feed_exclude_list) {
                                     if (!$in_feed_stock_exclude_list) {

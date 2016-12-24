@@ -107,6 +107,9 @@ $array['order_expected_delivery_date'] = $this->pi_getLL('feed_exporter_fields_l
 $array['order_by_phone'] = $this->pi_getLL('feed_exporter_fields_label_order_by_phone');
 $array['turnover_per_category_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_category_incl_vat');
 $array['turnover_per_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_category_excl_vat');
+$array['turnover_per_main_category_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_incl_vat');
+$array['turnover_per_main_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_excl_vat');
+$array['bought_products_per_main_category'] = $this->pi_getLL('feed_exporter_fields_label_bought_products_per_main_category');
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';
@@ -458,17 +461,20 @@ if ($this->ms['show_main']) {
         $orders[] = $row;
     }
     if (is_array($orders) and count($orders)) {
-        $content .= '<div class="main-heading"><h2>' . htmlspecialchars($this->pi_getLL('admin_export_orders')) . '</h2></div>
-		<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+        $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . htmlspecialchars($this->pi_getLL('admin_export_orders')) . '</h3></div>
+		<div class="panel-body">
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
+		<thead>
 		<tr>
-			<th width="25">' . htmlspecialchars($this->pi_getLL('id')) . '</th>
-			<th>' . htmlspecialchars($this->pi_getLL('name')) . '</th>
-			<th width="100" nowrap>' . htmlspecialchars($this->pi_getLL('created')) . '</th>
-			<th>' . htmlspecialchars($this->pi_getLL('status')) . '</th>
-			<th>' . htmlspecialchars($this->pi_getLL('download')) . '</th>
-			<th>' . htmlspecialchars($this->pi_getLL('action')) . '</th>
-			<th width="100">' . htmlspecialchars($this->pi_getLL('download_export_record')) . '</th>
+			<th class="cellID">' . htmlspecialchars($this->pi_getLL('id')) . '</th>
+			<th class="cellName">' . htmlspecialchars($this->pi_getLL('name')) . '</th>
+			<th class="cellDate" nowrap>' . htmlspecialchars($this->pi_getLL('created')) . '</th>
+			<th class="cellStatus">' . htmlspecialchars($this->pi_getLL('status')) . '</th>
+			<th class="cellDownload">' . htmlspecialchars($this->pi_getLL('download')) . '</th>
+			<th class="cellAction">' . htmlspecialchars($this->pi_getLL('action')) . '</th>
+			<th class="cellBackup">' . htmlspecialchars($this->pi_getLL('download_export_record')) . '</th>
 		</tr>
+		</thead>
 		';
         foreach ($orders as $order) {
             $order['plain_text_link'] = $this->FULL_HTTP_URL . 'index.php?id=' . $this->shop_pid . '&type=2002&tx_multishop_pi1[page_section]=download_orders_export&orders_export_hash=' . $order['code'];
@@ -485,10 +491,10 @@ if ($this->ms['show_main']) {
             // custom page hook that can be controlled by third-party plugin eof
             $content .= '
 			<tr>
-				<td align="right" width="25" nowrap><a href="' . $order['feed_link'] . '" target="_blank">' . htmlspecialchars($order['id']) . '</a></td>
-				<td><a href="' . $order['plain_text_link'] . '" target="_blank">' . htmlspecialchars($order['name']) . '</a></td>
-				<td width="100" align="center" nowrap>' . date("Y-m-d", $order['crdate']) . '</td>
-				<td width="50">
+				<td align="right" class="cellID" nowrap><a href="' . $order['feed_link'] . '" target="_blank">' . htmlspecialchars($order['id']) . '</a></td>
+				<td class="cellName"><a href="' . $order['plain_text_link'] . '" target="_blank">' . htmlspecialchars($order['name']) . '</a></td>
+				<td class="cellDate" align="center" nowrap>' . date("Y-m-d", $order['crdate']) . '</td>
+				<td class="cellStatus">
 				';
             if (!$order['status']) {
                 $content .= '<span class="admin_status_red" alt="Disable"></span>';
@@ -498,21 +504,26 @@ if ($this->ms['show_main']) {
                 $content .= '<span class="admin_status_green" alt="Enable"></span>';
             }
             $content .= '</td>
-			<td width="150">
-				<a href="' . $order['plain_text_link'] . '" target="_blank" class="admin_menu">Download</a><br/>
-				<a href="' . $order['orders_export_link_excel'] . '" class="admin_menu">' . $this->pi_getLL('admin_label_link_download_as_excel') . '</a>
+			<td class="cellDownload">
+				<a href="' . $order['plain_text_link'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download</a><br/>
+				<a href="' . $order['orders_export_link_excel'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> ' . $this->pi_getLL('admin_label_link_download_as_excel') . '</a>
 			</td>
-			<td width="50">
-				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&orders_export_id=' . $order['id'] . '&section=edit') . '" class="admin_menu_edit">edit</a>
-				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&orders_export_id=' . $order['id'] . '&delete=1') . '" onclick="return confirm(\'' . $this->pi_getLL('are_you_sure') . '?\')" class="admin_menu_remove" alt="Remove"></a>';
+			<td class="cellAction">
+                <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&orders_export_id=' . $order['id'] . '&section=edit') . '" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
+				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&orders_export_id=' . $order['id'] . '&delete=1') . '" onclick="return confirm(\'' . $this->pi_getLL('are_you_sure') . '?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>
+			';
             $content .= '
 			</td>
-			<td>
-				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&download=export_orders_task&orders_export_id=' . $order['id']) . '" class="btn btn-suc"><i>' . $this->pi_getLL('download_export_record') . '</i></a>
+			<td class="cellBackup">
+				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&download=export_orders_task&orders_export_id=' . $order['id']) . '" class="btn btn-success btn-sm"><i>' . $this->pi_getLL('download_export_record') . '</i></a>
 			</td>
 			</tr>';
         }
-        $content .= '</table>';
+        $content .= '</table>
+        </div>
+        </div>
+        ';
+
     } else {
         $content .= '<div class="alert alert-warning"><h3>' . htmlspecialchars($this->pi_getLL('currently_there_are_no_orders_export_created')) . '</h3></div>';
     }

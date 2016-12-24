@@ -1387,6 +1387,14 @@
             <label index="order_confirmation">Order confirmation</label>
             <label index="feed_exporter_fields_label_products_shipping_costs">Shipping costs</label>
             <label index="default_order_status">Default order status</label>
+            <label index="feed_exporter_fields_label_turnover_per_main_category_incl_vat">Turnover per main category (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_turnover_per_main_category_excl_vat">Turnover per main category (excl. VAT)</label>
+            <label index="turnover_per_main_category_incl_vat">Turnover per main category %s (incl. VAT)</label>
+            <label index="turnover_per_main_category_excl_vat">Turnover per main category %s (excl. VAT)</label>
+            <label index="feed_exporter_fields_label_bought_products_per_main_category">Bought products per main category</label>
+            <label index="bought_products_per_main_category">Bought products per main category %s</label>
+            <label index="include_only_related_product">Only include products that are enabled on this feed</label>
+            <label index="turnover_category_x">Turnover %s</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
