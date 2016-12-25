@@ -54,7 +54,8 @@ if ($this->post['req'] == 'init') {
 					SELECT pd.products_id,
 						   pd.products_name,
 						   p2c.categories_id,
-						   c.categories_name
+						   c.categories_name,
+						   p.products_status
 					FROM tx_multishop_products p,
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
@@ -78,7 +79,7 @@ if ($this->post['req'] == 'init') {
                             $where = substr($where, 0, (strlen($where) - 1));
                             $where .= '&';
                         }
-                        $json_data['related_product'][$row['categories_id']]['categories_name'] = implode(' / ', $catpath);
+                        $json_data['related_product'][$row['categories_id']]['categories_name'] = implode(' / ', $cats);
                         $json_data['related_product'][$row['categories_id']]['products'] = array();
                         $product_counter = 0;
                         while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
@@ -89,7 +90,7 @@ if ($this->post['req'] == 'init') {
                                     if ($row2['products_model']) {
                                         $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
                                     }
-                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')';
+                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 1;
                                 } else {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id'] = $row2['products_id'];
@@ -97,7 +98,7 @@ if ($this->post['req'] == 'init') {
                                     if ($row2['products_model']) {
                                         $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
                                     }
-                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')';
+                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' ('.$this->pi_getLL('disabled').')' : '');
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 0;
                                 }
                                 $product_link='#';
@@ -183,7 +184,7 @@ if ($this->post['req'] == 'init') {
                 if ($row['categories_name']) {
                     $productFilter = $filter;
                     $productFilter[] = '(B.categories_id = ' . $row['categories_id'] . ' and B.is_deepest=1 and A.products_id <> ' . $this->post['pid'] . ')';
-                    $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('A.products_id, A.products_name, B.categories_id,C.categories_name', // SELECT ...
+                    $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('A.products_id, A.products_name, B.categories_id,C.categories_name, p.products_status', // SELECT ...
                             'tx_multishop_products p, tx_multishop_products_description A INNER JOIN tx_multishop_products_to_categories B ON A.products_id = B.products_id INNER JOIN tx_multishop_categories_description C ON B.categories_id = C.categories_id', // FROM ...
                             implode(" AND ", $productFilter), // WHERE...
                             'p.products_id', // GROUP BY...
@@ -218,7 +219,7 @@ if ($this->post['req'] == 'init') {
                                 if ($row2['products_model']) {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
                                 }
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')';
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' ('.$this->pi_getLL('disabled').')' : '');;
                                 if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 1;
                                 } else {
