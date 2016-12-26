@@ -608,6 +608,7 @@ $subpartArray['###VALUE_ORDER_CUSTOMER###'] = $this->get['order_customer'];
 $subpartArray['###LABEL_TERRITORIES###'] = $this->pi_getLL('territory');
 $subpartArray['###VALUE_ORDER_TERRITORY###'] = $this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
+$subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
 $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 // paid status
@@ -651,6 +652,10 @@ $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) .
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script>
 	jQuery(document).ready(function($) {
+	    $(document).on("click", "#reset-advanced-search", function(e){
+			location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_invoices').'";
+			
+		});
 		' . ($this->get['tx_multishop_pi1']['action'] != 'mail_selected_invoices_to_merchants' ? '$("#msadmin_invoices_mailto").hide();' : '') . '
 		$(document).on("click", ".update_to_paid", function(e){
 			e.preventDefault();
