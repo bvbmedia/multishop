@@ -170,7 +170,11 @@ foreach ($tmporders as $order) {
         }
     }
     // custom page hook that can be controlled by third-party plugin eof
-    $totalAmount+=$order[$grandTotalColumnName];
+    if (strpos($order[$grandTotalColumnName], '-')!==false) {
+        $totalAmount -= str_replace('-', '', $order[$grandTotalColumnName]);
+    } else {
+        $totalAmount += $order[$grandTotalColumnName];
+    }
     $orderItem .= $this->cObj->substituteMarkerArray($subparts['orders_listing'], $markerArray, '###|###');
 }
 $actions = array();
