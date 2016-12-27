@@ -95,7 +95,7 @@ foreach ($invoices as $invoice) {
     } else {
         $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
     }
-    $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">&nbsp;</td>';
+    $markerArray['CATEGORY_AMOUNT']='';
     if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
         $category_amount=0;
         $order_data=mslib_fe::getOrder($invoice['orders_id']);
@@ -125,6 +125,7 @@ foreach ($invoices as $invoice) {
     $markerArray['CUSTOM_MARKER_0_BODY'] = '';
     $markerArray['CUSTOM_MARKER_1_BODY'] = '';
     // custom page hook that can be controlled by third-party plugin
+
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplIteratorPreProc'])) {
         $params = array(
                 'markerArray' => &$markerArray,

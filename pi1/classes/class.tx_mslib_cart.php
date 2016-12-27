@@ -247,7 +247,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     // custom hook that can be controlled by third-party plugin eof
                     // add product to the cart (through form on products_detail page)
                     $product['description'] = '';
-                    if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                        $product['country_tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['country_tax_rate']);
+                        $product['region_tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['region_tax_rate']);
+                        if ($product['country_tax'] && $product['region_tax']) {
+                            $product['tax'] = $product['country_tax'] + $product['region_tax'];
+                        } else {
+                            $product['tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['tax_rate']);
+                        }
+                    } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         //$product['country_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['country_tax_rate']), 2, false);
                         //$product['region_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['region_tax_rate']), 2, false);
                         $product['country_tax'] = round(($product['final_price'] * $product['country_tax_rate']), 2);
@@ -258,14 +266,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $product_tax = ($product['final_price'] * $product['tax_rate']);
                             //$product['tax']=mslib_fe::taxDecimalCrop($product_tax, 2, false);
                             $product['tax'] = round($product_tax, 2);
-                        }
-                    } else {
-                        $product['country_tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['country_tax_rate']);
-                        $product['region_tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['region_tax_rate']);
-                        if ($product['country_tax'] && $product['region_tax']) {
-                            $product['tax'] = $product['country_tax'] + $product['region_tax'];
-                        } else {
-                            $product['tax'] = mslib_fe::taxDecimalCrop($product['final_price'] * $product['tax_rate']);
                         }
                     }
                     $cart['products'][$shopping_cart_item] = $product;
@@ -353,7 +353,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                     }
                                                 }
                                                 // hook
-                                                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                                    $row['country_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate']);
+                                                    $row['region_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate']);
+                                                    if ($row['country_tax'] && $row['region_tax']) {
+                                                        $row['tax'] = $row['country_tax'] + $row['region_tax'];
+                                                    } else {
+                                                        $row['tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']));
+                                                    }
+                                                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                                     //$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2, false);
                                                     //$row['region_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2, false);
                                                     $row['country_tax'] = round(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate'], 2);
@@ -363,14 +371,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                     } else {
                                                         //$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2, false);
                                                         $row['tax'] = round(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']), 2);
-                                                    }
-                                                } else {
-                                                    $row['country_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate']);
-                                                    $row['region_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate']);
-                                                    if ($row['country_tax'] && $row['region_tax']) {
-                                                        $row['tax'] = $row['country_tax'] + $row['region_tax'];
-                                                    } else {
-                                                        $row['tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']));
                                                     }
                                                 }
 //											$attributes_tax += $row['tax'] * $product['qty'];
@@ -867,11 +867,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             if (!$tax_rate['total_tax_rate']) {
                                 $tax_rate['total_tax_rate'] = 0;
                             }
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                $product['tax'] = mslib_fe::taxDecimalCrop($product['final_price'] / 100 * $tax_rate['total_tax_rate']);
+                            } elseif (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 //$product['tax']=mslib_fe::taxDecimalCrop($product['final_price']*($tax_rate['total_tax_rate']/100), 2, false);
                                 $product['tax'] = round($product['final_price'] * ($tax_rate['total_tax_rate'] / 100), 2);
-                            } else {
-                                $product['tax'] = mslib_fe::taxDecimalCrop($product['final_price'] / 100 * $tax_rate['total_tax_rate']);
                             }
                             $product['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
                         }
@@ -902,11 +902,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         if (is_array($attribute_values) && count($attribute_values)) {
                                             foreach ($attribute_values as $attribute_item) {
                                                 $total_attributes_price += ($attribute_item['price_prefix'] . $attribute_item['options_values_price']);
-                                                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                                    $attributes['tax'] = mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate']);
+                                                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                                     //$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
                                                     $attributes['tax'] = round(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate'], 2);
-                                                } else {
-                                                    $attributes['tax'] = mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate']);
                                                 }
                                                 $total_attributes_tax += $attribute_item['price_prefix'] . $attribute_item['tax'];
                                             }
@@ -937,11 +937,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $array = array($attribute_values);
                                     foreach ($array as $attribute_item) {
                                         $total_attributes_price += ($attribute_item['price_prefix'] . $attribute_item['options_values_price']);
-                                        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                            $attributes['tax'] = mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate']);
+                                        } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                             //$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
                                             $attributes['tax'] = round(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate'], 2);
-                                        } else {
-                                            $attributes['tax'] = mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['tax_rate']);
                                         }
                                         $total_attributes_tax += $attribute_item['price_prefix'] . $attribute_item['tax'];
                                     }
@@ -954,12 +954,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$total_attributes_tax+=$attributes['price_prefix'].$attributes['tax'];
 							}*/
                         }
-                        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                            $product['final_price_including_vat'] = $product['final_price'] + $product['tax'];
-                            $product['total_price_including_vat'] = (($product['final_price'] + $product['tax']) + ($total_attributes_price + $total_attributes_tax)) * $product['qty'];
-                        } else {
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                             $product['final_price_including_vat'] = mslib_fe::taxDecimalCrop(($product['final_price'] * (1 + $product['tax_rate'])));
                             $product['total_price_including_vat'] = mslib_fe::taxDecimalCrop((($product['final_price'] + $total_attributes_price) * $product['qty']) * (1 + $product['tax_rate']));
+                        } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $product['final_price_including_vat'] = $product['final_price'] + $product['tax'];
+                            $product['total_price_including_vat'] = (($product['final_price'] + $product['tax']) + ($total_attributes_price + $total_attributes_tax)) * $product['qty'];
                         }
                         $product['total_price'] = (($product['final_price'] + $total_attributes_price) * $product['qty']);
                         $this->cart['summarize']['sub_total'] += $product['total_price'];
@@ -994,27 +994,27 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 $payment_tax_rate = ($tax_rate['total_tax_rate'] / 100);
                 if ($shipping_tax_rate > 0) {
-                    if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                        $shipping_tax = $this->cart['user']['shipping_method_costs'] * $shipping_tax_rate;
+                    } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         //$shipping_tax=mslib_fe::taxDecimalCrop($this->cart['user']['shipping_method_costs']*$shipping_tax_rate, 2, false);
                         $shipping_tax = round($this->cart['user']['shipping_method_costs'] * $shipping_tax_rate, 2);
-                    } else {
-                        $shipping_tax = $this->cart['user']['shipping_method_costs'] * $shipping_tax_rate;
                     }
                 }
                 if ($payment_tax_rate > 0) {
-                    if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                        $payment_tax = $this->cart['user']['payment_method_costs'] * $payment_tax_rate;
+                    } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         //$payment_tax=mslib_fe::taxDecimalCrop($this->cart['user']['payment_method_costs']*$payment_tax_rate, 2, false);
                         $payment_tax = round($this->cart['user']['payment_method_costs'] * $payment_tax_rate, 2);
-                    } else {
-                        $payment_tax = $this->cart['user']['payment_method_costs'] * $payment_tax_rate;
                     }
                 }
-                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $this->cart['user']['shipping_method_costs_including_vat'] = $this->cart['user']['shipping_method_costs'] + $shipping_tax;
-                    $this->cart['user']['payment_method_costs_including_vat'] = $this->cart['user']['payment_method_costs'] + $payment_tax;
-                } else {
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                     $this->cart['user']['shipping_method_costs_including_vat'] = round($this->cart['user']['shipping_method_costs'] + ($this->cart['user']['shipping_method_costs'] * $shipping_tax_rate), 2);
                     $this->cart['user']['payment_method_costs_including_vat'] = round($this->cart['user']['payment_method_costs'] + ($this->cart['user']['payment_method_costs'] * $payment_tax_rate), 2);
+                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $this->cart['user']['shipping_method_costs_including_vat'] = $this->cart['user']['shipping_method_costs'] + $shipping_tax;
+                    $this->cart['user']['payment_method_costs_including_vat'] = $this->cart['user']['payment_method_costs'] + $payment_tax;
                 }
                 // discount
                 if (!$this->cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and $this->cart['user']['email']) {
@@ -1029,24 +1029,24 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                     }
                 }
-                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $subtotal = $this->cart['summarize']['sub_total'];
-                } else {
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                     $subtotal = $this->cart['summarize']['sub_total_including_vat'];
+                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $subtotal = $this->cart['summarize']['sub_total'];
                 }
                 $subtotal_tax = $this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total'];
                 if ($this->cart['discount']) {
                     switch ($this->cart['discount_type']) {
                         case 'percentage':
                             $discount_percentage = $this->cart['discount'];
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                $discount_price = round((($this->cart['summarize']['sub_total']) / 100 * $discount_percentage), 2);
-                                $subtotal = (($this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
-                            } else {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $discount_price = round((($this->cart['summarize']['sub_total_including_vat']) / 100 * $discount_percentage), 2);
                                 $subtotal = (($this->cart['summarize']['sub_total_including_vat']) / 100 * (100 - $discount_percentage));
+                            } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $discount_price = round((($this->cart['summarize']['sub_total']) / 100 * $discount_percentage), 2);
+                                $subtotal = (($this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
                             }
-                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $subtotal_tax = round((1 - ($discount_price / $this->cart['summarize']['sub_total_including_vat'])) * ($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']), 2);
                             } else {
                                 $subtotal_tax = (($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
@@ -1056,14 +1056,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             break;
                         case 'price':
                             $discount_price = $this->cart['discount'];
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                $discount_percentage = ($this->cart['discount'] / ($this->cart['summarize']['sub_total']) * 100);
-                                $subtotal = (($this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
-                            } else {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $discount_percentage = ($this->cart['discount'] / ($this->cart['summarize']['sub_total_including_vat']) * 100);
                                 $subtotal = (($this->cart['summarize']['sub_total_including_vat']) / 100 * (100 - $discount_percentage));
+                            } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $discount_percentage = ($this->cart['discount'] / ($this->cart['summarize']['sub_total']) * 100);
+                                $subtotal = (($this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
                             }
-                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $subtotal_tax = round((1 - ($discount_price / $this->cart['summarize']['sub_total_including_vat'])) * ($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']), 2);
                             } else {
                                 $subtotal_tax = (($this->cart['summarize']['sub_total_including_vat'] - $this->cart['summarize']['sub_total']) / 100 * (100 - $discount_percentage));
@@ -1101,12 +1101,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				echo $shipping_tax;
 
 				die();*/
-                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $this->cart['summarize']['grand_total_excluding_vat'] = $subtotal + $this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs'];
-                    $this->cart['summarize']['grand_total'] = ($subtotal + $subtotal_tax) + ($this->cart['user']['shipping_method_costs_including_vat'] + $this->cart['user']['payment_method_costs_including_vat']);
-                } else {
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                     $this->cart['summarize']['grand_total_excluding_vat'] = ($subtotal - $subtotal_tax) + $this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs'];
                     $this->cart['summarize']['grand_total'] = ($subtotal) + ($this->cart['user']['shipping_method_costs_including_vat'] + $this->cart['user']['payment_method_costs_including_vat']);
+                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $this->cart['summarize']['grand_total_excluding_vat'] = $subtotal + $this->cart['user']['shipping_method_costs'] + $this->cart['user']['payment_method_costs'];
+                    $this->cart['summarize']['grand_total'] = ($subtotal + $subtotal_tax) + ($this->cart['user']['shipping_method_costs_including_vat'] + $this->cart['user']['payment_method_costs_including_vat']);
                 }
                 // to make sure the floatings numbers are not infinite
                 $this->cart['summarize']['grand_total'] = number_format($this->cart['summarize']['grand_total'], 14, '.', '');
@@ -1892,6 +1892,28 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition'] > 0) {
                 $insertArray['payment_condition'] = $user['tx_multishop_payment_condition'];
             }
+            // geo data
+            $addresstypes = array();
+            $addresstypes[] = 'billing';
+            $addresstypes[] = 'delivery';
+            foreach ($addresstypes as $addresstype) {
+                $str2 = 'select st.* from static_countries sc, static_territories st where sc.cn_short_en=\'' . addslashes($insertArray[$addresstype . '_country']) . '\' and st.tr_iso_nr=sc.cn_parent_tr_iso_nr';
+                $query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                $rows2 = $GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+                if ($rows2) {
+                    $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+                    $insertArray[$addresstype . '_tr_iso_nr'] = $row2['tr_iso_nr'];
+                    $insertArray[$addresstype . '_tr_name_en'] = $row2['tr_name_en'];
+                    $str2 = 'select * from static_territories where tr_iso_nr=' . $row2['tr_parent_iso_nr'];
+                    $query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    $rows2 = $GLOBALS['TYPO3_DB']->sql_num_rows($query2);
+                    if ($rows2) {
+                        $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
+                        $insertArray[$addresstype . '_tr_parent_iso_nr'] = $row2['tr_iso_nr'];
+                        $insertArray[$addresstype . '_tr_parent_name_en'] = $row2['tr_name_en'];
+                    }
+                }
+            }
             //$insertArray['orders_tax_data']			=	serialize($orders_tax);
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
                 // hook
@@ -2032,7 +2054,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $product_tax['total_tax'] = (string)$value['tax'];
                             $product_tax['total_attributes_tax'] = (string)$value['total_attributes_tax'];
                             // -----------------------------------------------------------------------------------------
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 //$product_tax['total_tax']=mslib_fe::taxDecimalCrop($product_tax['total_tax'], 2, false);
                                 //$product_tax['total_attributes_tax']=mslib_fe::taxDecimalCrop($product_tax['total_attributes_tax'], 2, false);
                                 $product_tax['total_tax'] = round($product_tax['total_tax'], 2);
@@ -2050,16 +2072,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             // bugfixes bas
                             $sub_total_excluding_vat['final_price'] = $sub_total['final_price'] + ($value['final_price'] * $value['qty']);
                             $sub_total['final_price'] = $sub_total['final_price'] + ($value['final_price'] * $value['qty']);
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                $sub_total['total_tax'] = $sub_total['total_tax'] + round($product_tax['total_tax'] * $value['qty'], 2);
-                                $sub_total['attributes_tax'] = $sub_total['attributes_tax'] + round($product_tax['total_attributes_tax'] * $value['qty'], 2);
-                                $total_order_tax['total_tax'] = $total_order_tax['total_tax'] + round($product_tax['total_tax'] * $value['qty'], 2);
-                                $total_order_tax['total_attributes_tax'] = $total_order_tax['total_attributes_tax'] + round($product_tax['total_attributes_tax'] * $value['qty'], 2);
-                            } else {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $sub_total['total_tax'] = $sub_total['total_tax'] + ($product_tax['total_tax'] * $value['qty']);
                                 $sub_total['attributes_tax'] = $sub_total['attributes_tax'] + ($product_tax['total_attributes_tax'] * $value['qty']);
                                 $total_order_tax['total_tax'] = $total_order_tax['total_tax'] + ($product_tax['total_tax'] * $value['qty']);
                                 $total_order_tax['total_attributes_tax'] = $total_order_tax['total_attributes_tax'] + ($product_tax['total_attributes_tax'] * $value['qty']);
+                            } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $sub_total['total_tax'] = $sub_total['total_tax'] + round($product_tax['total_tax'] * $value['qty'], 2);
+                                $sub_total['attributes_tax'] = $sub_total['attributes_tax'] + round($product_tax['total_attributes_tax'] * $value['qty'], 2);
+                                $total_order_tax['total_tax'] = $total_order_tax['total_tax'] + round($product_tax['total_tax'] * $value['qty'], 2);
+                                $total_order_tax['total_attributes_tax'] = $total_order_tax['total_attributes_tax'] + round($product_tax['total_attributes_tax'] * $value['qty'], 2);
                             }
                             $insertArray['products_tax_data'] = serialize($product_tax);
                             // separation of tax
@@ -2322,10 +2344,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateArray = array();
                 $orders_tax['sub_total_excluding_vat'] = (string)array_sum($sub_total_excluding_vat);
                 $orders_tax['sub_total'] = (string)array_sum($sub_total);
-                if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $orders_tax['total_orders_tax'] = (string)round(array_sum($total_order_tax), 2);
-                } else {
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                     $orders_tax['total_orders_tax'] = (string)array_sum($total_order_tax);
+                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $orders_tax['total_orders_tax'] = (string)round(array_sum($total_order_tax), 2);
                 }
                 $orders_tax['total_orders_tax_including_discount'] = $orders_tax['total_orders_tax'];
                 $grand_total['sub_total'] = array_sum($sub_total);
@@ -2347,32 +2369,32 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if ($cart['discount_type']) {
                     switch ($cart['discount_type']) {
                         case 'percentage':
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                $discount_amount = ($orders_tax['sub_total_excluding_vat'] / 100 * $cart['discount']);
-                            } else {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $discount_amount = ($orders_tax['sub_total'] / 100 * $cart['discount']);
+                            } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $discount_amount = ($orders_tax['sub_total_excluding_vat'] / 100 * $cart['discount']);
                             }
                             $discount_percentage = $cart['discount'];
                             break;
                         case 'price':
                             $discount_amount = $cart['discount'];
-                            if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                $discount_percentage = ($discount_amount / $orders_tax['sub_total_excluding_vat'] * 100);
-                            } else {
+                            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                                 $discount_percentage = ($discount_amount / $orders_tax['sub_total'] * 100);
+                            } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                $discount_percentage = ($discount_amount / $orders_tax['sub_total_excluding_vat'] * 100);
                             }
                             break;
                     }
                     if ($discount_amount) {
-                        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                            $grand_total['sub_total_excluding_vat'] = ($grand_total['sub_total_excluding_vat'] - $discount_amount);
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                            $grand_total['sub_total'] = ($grand_total['sub_total'] - $discount_amount);
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 $orders_tax['total_orders_tax_including_discount'] = round((1 - ($discount_amount / $orders_tax['sub_total'])) * $orders_tax['total_orders_tax_including_discount'], 2);
                             } else {
                                 $orders_tax['total_orders_tax_including_discount'] = ($orders_tax['total_orders_tax_including_discount'] / 100 * (100 - $discount_percentage));
                             }
-                        } else {
-                            $grand_total['sub_total'] = ($grand_total['sub_total'] - $discount_amount);
+                        } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $grand_total['sub_total_excluding_vat'] = ($grand_total['sub_total_excluding_vat'] - $discount_amount);
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 $orders_tax['total_orders_tax_including_discount'] = round((1 - ($discount_amount / $orders_tax['sub_total'])) * $orders_tax['total_orders_tax_including_discount'], 2);
                             } else {
@@ -2691,14 +2713,22 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $template = $this->cObj->fileResource($this->conf['order_details_table_' . $sectionTemplateType . '_tmpl_path']);
                     } else {
                         $disable_product_status_col = true;
-                        $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site.tmpl');
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site.tmpl');
+                        } else {
+                            $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site_excluding_vat.tmpl');
+                        }
                     }
                 } else {
                     if ($this->conf['order_details_table_site_tmpl_path']) {
                         $template = $this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
                     } else {
                         $disable_product_status_col = true;
-                        $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site.tmpl');
+                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site.tmpl');
+                        } else {
+                            $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_site_excluding_vat.tmpl');
+                        }
                     }
                 }
                 break;

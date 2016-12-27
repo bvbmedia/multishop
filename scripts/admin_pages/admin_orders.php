@@ -978,6 +978,7 @@ $subpartArray['###RESULTS_LIMIT_SELECTBOX###'] = $limit_selectbox;
 $subpartArray['###RESULTS###'] = $order_results;
 $subpartArray['###NORESULTS###'] = $no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders');
+$subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);
@@ -1004,6 +1005,9 @@ $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], arra
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+    $(document).on("click", "#reset-advanced-search", function(e){
+        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders').'";    
+    });
 	$(".order_select2").select2();
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",
