@@ -738,10 +738,10 @@ if (isset($this->post['shipping_method']) && $this->post['shipping_method'] != '
 if (isset($this->post['usergroup']) && $this->post['usergroup'] > 0) {
     $filter[] = ' o.customer_id IN (SELECT uid from fe_users where ' . $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->post['usergroup'], 'fe_users') . ')';
 }
-if ($this->cookie['payment_status'] == 'paid_only') {
+if ($this->post['payment_status'] == 'paid_only') {
     $filter[] = "(o.paid='1')";
 } else {
-    if ($this->cookie['payment_status'] == 'unpaid_only') {
+    if ($this->post['payment_status'] == 'unpaid_only') {
         $filter[] = "(o.paid='0')";
     }
 }
@@ -837,16 +837,8 @@ if ($pageset['total_rows'] > 0) {
 }
 $payment_status_select = '<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">' . $this->pi_getLL('select_orders_payment_status') . '</option>';
-if ($this->cookie['payment_status'] == 'paid_only') {
-    $payment_status_select .= '<option value="paid_only" selected="selected">' . $this->pi_getLL('show_paid_orders_only') . '</option>';
-} else {
-    $payment_status_select .= '<option value="paid_only">' . $this->pi_getLL('show_paid_orders_only') . '</option>';
-}
-if ($this->cookie['payment_status'] == 'unpaid_only') {
-    $payment_status_select .= '<option value="unpaid_only" selected="selected">' . $this->pi_getLL('show_unpaid_orders_only') . '</option>';
-} else {
-    $payment_status_select .= '<option value="unpaid_only">' . $this->pi_getLL('show_unpaid_orders_only') . '</option>';
-}
+$payment_status_select .= '<option value="paid_only"'.($this->post['payment_status'] == 'paid_only' ? ' selected="selected"' : '').'>' . $this->pi_getLL('show_paid_orders_only') . '</option>';
+$payment_status_select .= '<option value="unpaid_only"'.($this->post['payment_status'] == 'unpaid_only' ? ' selected="selected"' : '').'>' . $this->pi_getLL('show_unpaid_orders_only') . '</option>';
 $payment_status_select .= '</select>';
 $groups = mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input = '';
