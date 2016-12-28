@@ -509,7 +509,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = $status_html;
                             break;
                         case 'booleanToggle':
-                            $status_html = '';
+                            $status_html = '<span class="booleanToggle">';
                             if (!$row[$col]) {
                                 $status_html .= '<span class="admin_status_red" alt="' . $this->pi_getLL('disable') . '"></span>';
                                 if ($valArray['hrefEnable']) {
@@ -527,6 +527,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 }
                                 $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
                             }
+                            $status_html .= '</span>';
                             $row[$col] = $status_html;
                             break;
                     }
