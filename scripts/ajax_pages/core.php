@@ -2138,6 +2138,9 @@ switch ($this->ms['page']) {
                 $keys[] = 'telephone';
                 $keys[] = 'mobile';
                 $keys[] = 'fax';
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $keys[] = 'department';
+                }
                 $return_data = array();
                 $updateArray = array();
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'])) {
