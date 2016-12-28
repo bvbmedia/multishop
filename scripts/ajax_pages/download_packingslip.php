@@ -268,6 +268,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_PACKINGSLIP_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
             $markerArray['###PACKINGSLIP_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
+        $markerArray['###STORE_URL###']=$this->FULL_HTTP_URL;
         // MARKERS EOL
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_packingslip.php']['downloadPackingslipTemplateMarkerPreProc'])) {
