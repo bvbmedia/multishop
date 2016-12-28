@@ -98,6 +98,11 @@ if ($this->post && $this->post['email']) {
         if ($this->post['page_uid'] and $this->masterShop) {
             $updateArray['page_uid'] = $this->post['page_uid'];
         }
+        if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+            if (isset($this->post['department'])) {
+                $updateArray['department'] = $this->post['department'];
+            }
+        }
         if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
             $customer_id = $this->post['tx_multishop_pi1']['cid'];
             // update mode
@@ -200,6 +205,11 @@ if ($this->post && $this->post['email']) {
                 $updateTTAddressArray['tx_multishop_address_type'] = 'billing';
                 $updateTTAddressArray['tx_multishop_default'] = 1;
                 $updateTTAddressArray['tx_multishop_customer_id'] = $customer_id;
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    if (isset($this->post['department'])) {
+                        $updateTTAddressArray['department'] = $this->post['department'];
+                    }
+                }
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 if (!$this->post['different_delivery_address']) {
@@ -253,6 +263,11 @@ if ($this->post && $this->post['email']) {
                     $updateTTAddressArray['tx_multishop_address_type'] = 'delivery';
                     $updateTTAddressArray['tx_multishop_default'] = 0;
                     $updateTTAddressArray['tx_multishop_customer_id'] = $customer_id;
+                    if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                        if (isset($this->post['delivery_department'])) {
+                            $updateTTAddressArray['department'] = $this->post['delivery_department'];
+                        }
+                    }
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -338,6 +353,11 @@ if ($this->post && $this->post['email']) {
                     $updateArray['tx_multishop_coc_id'] = '';
                 }
             }
+            if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                if (isset($this->post['department'])) {
+                    $updateArray['department'] = $this->post['department'];
+                }
+            }
 //			$updateArray['tx_multishop_newsletter']			=	$address['tx_multishop_newsletter'];
             $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
             // custom hook that can be controlled by third-party plugin
@@ -403,6 +423,11 @@ if ($this->post && $this->post['email']) {
                 $insertArray['tx_multishop_address_type'] = 'billing';
                 $insertArray['tx_multishop_default'] = 1;
                 $insertArray['tx_multishop_customer_id'] = $customer_id;
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    if (isset($this->post['department'])) {
+                        $insertArray['department'] = $this->post['department'];
+                    }
+                }
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 if (!$this->post['different_delivery_address']) {
@@ -457,6 +482,11 @@ if ($this->post && $this->post['email']) {
                     $insertArray['tx_multishop_address_type'] = 'delivery';
                     $insertArray['tx_multishop_default'] = 0;
                     $insertArray['tx_multishop_customer_id'] = $customer_id;
+                    if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                        if (isset($this->post['delivery_department'])) {
+                            $insertArray['department'] = $this->post['delivery_department'];
+                        }
+                    }
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -1022,7 +1052,18 @@ switch ($_REQUEST['action']) {
                 $company_validation = ' required="required" data-h5-errorid="invalid-company" title="' . $this->pi_getLL('company_is_required') . '"';
             }
             $subpartArray['###COMPANY_VALIDATION###'] = $company_validation;
+            $subpartArray['###COMPANY_COL_SIZE###'] = 12;
+            $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
             $subpartArray['###VALUE_COMPANY###'] = htmlspecialchars($this->post['company']);
+            // department input
+            $subpartArray['###DEPARMENT_INPUT_FIELD###']='';
+            if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                $subpartArray['###COMPANY_COL_SIZE###'] = 6;
+                $subpartArray['###DEPARMENT_INPUT_FIELD###'] = '<div class="col-md-6">
+                    <label for="department" id="account-department">'.$this->pi_getLL('department').'</label>
+                    <input type="text" name="department" class="form-control department" id="department" value="'.htmlspecialchars($this->post['department']).'" />
+                </div>';
+            }
             //
             $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
             $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
@@ -1059,6 +1100,16 @@ switch ($_REQUEST['action']) {
                 $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
                 //
                 $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
+                $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
+                // department input
+                $subpartArray['###DELIVERY_DEPARMENT_INPUT_FIELD###']='';
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
+                    $subpartArray['###DELIVERY_DEPARMENT_INPUT_FIELD###'] = '<div class="col-md-6">
+                    <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
+                    <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="'.htmlspecialchars($delivery_address['department']).'" />
+                </div>';
+                }
                 //
                 $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
                 $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);

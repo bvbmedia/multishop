@@ -1396,6 +1396,7 @@
             <label index="include_only_related_product">Only include products that are enabled on this feed</label>
             <label index="turnover_category_x">Turnover %s</label>
             <label index="reset_advanced_search_filter">Reset advanced search filter</label>
+            <label index="department">Department</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
