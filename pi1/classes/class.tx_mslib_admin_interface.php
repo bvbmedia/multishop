@@ -161,7 +161,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $that->get['display_all_records'] = '';
         }
         if ($that->cookie['limit']) {
-            if (!isset($that->get['limit'])) {
+            if (!isset($that->get['limit']) || $that->get['limit']!=$that->cookie['limit']) {
                 if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
                     $that->get['limit'] = $params['settings']['limit'];
                 } else {
