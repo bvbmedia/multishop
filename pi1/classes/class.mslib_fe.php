@@ -8572,7 +8572,9 @@ class mslib_fe {
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $id, $updateArray);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         // update orders to paid
-                        $updateArray = array('paid' => 1);
+                        $updateArray=array();
+                        $updateArray['orders_paid_timestamp'] = time();
+                        $updateArray['paid'] = 1;
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $row['orders_id'], $updateArray);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         return 1;
