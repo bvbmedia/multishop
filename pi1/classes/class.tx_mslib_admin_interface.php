@@ -163,7 +163,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($that->cookie['limit']) {
             $that->get['limit'] = $that->cookie['limit'];
         } else {
-            $that->get['limit'] = 15;
+            $that->get['limit'] = 50;
         }
         $that->ms['MODULES']['PAGESET_LIMIT'] = $that->get['limit'];
         if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
