@@ -3113,7 +3113,7 @@ if ($this->post) {
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
             $new_product_attributes_block_columns_js['attribute_save_col'] = 'new_attributes_html+=\'<td class="product_attribute_action">\';
-			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="' . addslashes(htmlspecialchars($this->pi_getLL('admin_label_save_attribute'))) . '" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="' . addslashes(htmlspecialchars($this->pi_getLL('cancel'))) . '" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="' . addslashes(htmlspecialchars($this->pi_getLL('cancel'))) . '" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button> <button type="button" value="' . addslashes(htmlspecialchars($this->pi_getLL('admin_label_save_attribute'))) . '" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
