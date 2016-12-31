@@ -340,7 +340,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $array1[] = '###GENDER_SALUTATION###';
         $array2[] = mslib_fe::genderSalutation($order['billing_gender']);
         $markerArray['###PAID_STATUS_LABEL###'] = $this->pi_getLL('order_payment_status');
-        if ($order['paid']) {
+        if ($invoice['paid']) {
             $array1[] = '###PAID_STATUS###';
             $array2[] = $this->pi_getLL('paid');
             $markerArray['###PAID_STATUS###'] = $this->pi_getLL('paid');
@@ -351,7 +351,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // Payment date
         $markerArray['###PAID_DATE_LABEL###'] = $this->pi_getLL('payment_date');
-        if ($order['paid']) {
+        if ($invoice['paid']) {
             $array1[] = '###PAID_DATE###';
             $array2[] = strftime("%x", $order['orders_paid_timestamp']);
             $markerArray['###PAID_DATE###'] = strftime("%x", $order['orders_paid_timestamp']);
