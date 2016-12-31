@@ -386,7 +386,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
                                     $insertArray['products_description'] = $this->post['manual_order_products_description'];
                                 }
-                                // disocunt update
+                                // discount update
                                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                                     $insertArray['discount_amount'] = 0;
                                     $insertArray['discount_percentage'] = 0;
@@ -3581,7 +3581,7 @@ if (is_numeric($this->get['orders_id'])) {
                         } else {
                             $("#edit_order_product_id").html(e.object.id);
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order') . '",{pid: e.object.id, oid:' . $this->get['orders_id'] . ', qty: 1}, function(d){
-                                if (d.tax_id) {
+                                if (d.tax_id!="" && d.tax_id!=undefined) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
                                         	$("#product_tax").val(d.tax_id);
@@ -3593,6 +3593,16 @@ if (is_numeric($this->get['orders_id'])) {
                                         	$("#manual_product_tax").val(d.tax_id);
                                         } else {
                                             d.price_include_vat=0;
+                                        }
+                                    }
+                                } else {
+                                    if ($("#product_tax").length>0) {
+                                        if ($("#product_tax").children().length>0) {
+                                        	$("#product_tax").val("");
+                                        }
+                                    } else {
+                                        if ($("#manual_product_tax").length>0) {
+                                        	$("#manual_product_tax").val("");
                                         }
                                     }
                                 }
