@@ -386,7 +386,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
                                     $insertArray['products_description'] = $this->post['manual_order_products_description'];
                                 }
-                                // disocunt update
+                                // discount update
                                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                                     $insertArray['discount_amount'] = 0;
                                     $insertArray['discount_percentage'] = 0;
