@@ -3581,7 +3581,7 @@ if (is_numeric($this->get['orders_id'])) {
                         } else {
                             $("#edit_order_product_id").html(e.object.id);
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order') . '",{pid: e.object.id, oid:' . $this->get['orders_id'] . ', qty: 1}, function(d){
-                                if (d.tax_id) {
+                                if (d.tax_id!="" && d.tax_id!=undefined) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
                                         	$("#product_tax").val(d.tax_id);
