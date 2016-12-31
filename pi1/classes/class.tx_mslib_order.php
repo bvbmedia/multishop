@@ -1256,7 +1256,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($orders['total_amount'] > 0 && $orders['total_amount'] < 0.01) {
                 $orders['total_amount'] = 0;
             }
-            //round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);
+            //hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['getOrderPostProc'])) {
+                $params = array(
+                        'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['getOrderPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             return $orders;
         }
         return false;
