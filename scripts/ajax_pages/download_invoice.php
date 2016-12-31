@@ -191,6 +191,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $params = array(
                     'cmsKeys' => &$cmsKeys,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'markerArray' => &$markerArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'] as $funcRef) {
@@ -221,6 +222,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $params = array(
                     'cmsKeys' => &$cmsKeys,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'markerArray' => &$markerArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'] as $funcRef) {
@@ -389,6 +391,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
                     'array1' => &$array1,
                     'array2' => &$array2,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'mail_template' => $mail_template,
                     'markerArray' => &$markerArray
             );
