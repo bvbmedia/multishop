@@ -10552,6 +10552,16 @@ class mslib_fe {
                 $salutation = $this->pi_getLL('gender_salutation_unknown');
                 break;
         }
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'])) {
+            $params = array(
+                    'salutation' => &$salutation,
+                    'gender' => &$gender
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         return $salutation;
     }
     public function checkoutValidateProductStatus($product_id) {
