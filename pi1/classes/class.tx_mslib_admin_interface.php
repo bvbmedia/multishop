@@ -160,6 +160,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         } else {
             $that->get['display_all_records'] = '';
         }
+        if (is_numeric($that->get['tx_multishop_pi1']['limit'])) {
+            $that->get['limit'] = $that->get['tx_multishop_pi1']['limit'];
+        }
         if ($that->cookie['limit']) {
             if (!isset($that->get['limit']) || $that->get['limit']!=$that->cookie['limit']) {
                 if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
@@ -171,7 +174,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $that->get['limit'] = $that->cookie['limit'];
             }
         } else {
-            $that->get['limit'] = 50;
+            if (!is_numeric($that->get['limit'])) {
+                $that->get['limit'] = 50;
+            }
             if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
                 $that->get['limit'] = $params['settings']['limit'];
             }
