@@ -248,7 +248,7 @@ jQuery(document).ready(function ($) {
             if (!current_val) {
                 current_val = 15;
             }
-            $('select[name="limit"]').replaceWith('<input type="hidden" name="' + element_name + '" class="select2_rowslimit" value="' + current_val + '">');
+            $('select[name="' + element_name + '"]').replaceWith('<input type="hidden" name="' + element_name + '" class="select2_rowslimit" value="' + current_val + '">');
             var data = [
                 {id: 10, text: '10'},
                 {id: 15, text: '15'},
