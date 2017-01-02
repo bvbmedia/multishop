@@ -277,6 +277,15 @@ jQuery(document).ready(function ($) {
                 {id: 3000, text: '3000'},
                 {id: 3500, text: '3500'}
             ];
+            var notfound=true;
+            $.each(data, function(i, limit_list){
+                if (limit_list.id==current_val) {
+                    notfound=false;
+                }
+            });
+            if (notfound) {
+                data.push({id: current_val, text: current_val});
+            }
             $('.select2_rowslimit').select2({
                 width: "100px",
                 data: data,
