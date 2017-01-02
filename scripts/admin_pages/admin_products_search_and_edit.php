@@ -241,6 +241,9 @@ $limits[] = '150';
 $limits[] = '300';
 $limits[] = '500';
 $limits[] = '750';
+if (!in_array($this->get['tx_multishop_pi1']['limit'], $limits)) {
+    $limits[]=$this->get['tx_multishop_pi1']['limit'];
+}
 foreach ($limits as $limit) {
     $search_limit .= '<option value="' . $limit . '"' . ($limit == $this->get['tx_multishop_pi1']['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }
