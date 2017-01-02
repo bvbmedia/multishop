@@ -125,6 +125,9 @@ $limits[] = '350';
 $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
+if (!in_array($this->get['limit'], $limits)) {
+    $limits[]=$this->get['limit'];
+}
 foreach ($limits as $limit) {
     $limit_search_result_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected="selected"' : '') . '>' . $limit . '</option>';
 }
