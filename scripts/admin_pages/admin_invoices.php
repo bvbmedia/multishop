@@ -479,6 +479,31 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
         $column = 'i.crdate';
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->post['invoice_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->post['invoice_date_from']);
+        list($fd, $fm, $fy) = explode('/', $from_date);
+        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        if ($this->cookie['filter_by_paid_date']) {
+            $filter[] = ' i.reversal_invoice=0';
+            $column = 'o.orders_paid_timestamp';
+        } else {
+            $column = 'i.crdate';
+        }
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->post['invoice_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->post['invoice_date_till']);
+        list($td, $tm, $ty) = explode('/', $till_date);
+        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        if ($this->cookie['filter_by_paid_date']) {
+            $filter[] = ' i.reversal_invoice=0';
+            $column = 'o.orders_paid_timestamp';
+        } else {
+            $column = 'i.crdate';
+        }
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
     $filter[] = ' i.customer_id IN (SELECT uid from fe_users where ' . $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users') . ')';

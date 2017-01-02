@@ -714,6 +714,29 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         $column = 'o.crdate';
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->post['order_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->post['order_date_from']);
+        list($fd, $fm, $fy) = explode('/', $from_date);
+        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        if ($this->post['search_by_status_last_modified']) {
+            $column = 'o.status_last_modified';
+        } else {
+            $column = 'o.crdate';
+        }
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->post['order_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->post['order_date_till']);
+        list($td, $tm, $ty) = explode('/', $till_date);
+        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        if ($this->post['search_by_status_last_modified']) {
+            $column = 'o.status_last_modified';
+        } else {
+            $column = 'o.crdate';
+        }
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
 }
 if ($this->post['search_by_telephone_orders']) {
     $filter[] = "o.by_phone=1";
