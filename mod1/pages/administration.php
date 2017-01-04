@@ -1321,69 +1321,73 @@ switch ($_REQUEST['action']) {
         // backup database
         if ($_GET['action'] == 'backup' and is_numeric($_GET['page_uid'])) {
             $tables = array();
-            if (in_array('customers', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tt_address';
-                $tables[] = 'fe_users';
-            }
-            if (in_array('cms', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tx_multishop_cms';
-                $tables[] = 'tx_multishop_cms_description';
-            }
-            if (in_array('configuration', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tx_multishop_configuration';
-                $tables[] = 'tx_multishop_configuration_values';
-            }
-            if (in_array('catalog', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tx_multishop_categories';
-                $tables[] = 'tx_multishop_categories_description';
-                // manufacturers
-                $tables[] = 'tx_multishop_manufacturers';
-                $tables[] = 'tx_multishop_manufacturers_cms';
-                $tables[] = 'tx_multishop_manufacturers_info';
-                // products
-                $tables[] = 'tx_multishop_modules';
-                $tables[] = 'tx_multishop_product_wishlist';
-                $tables[] = 'tx_multishop_products';
-                $tables[] = 'tx_multishop_products_attributes';
-                $tables[] = 'tx_multishop_products_attributes_download';
-                $tables[] = 'tx_multishop_products_attributes_extra';
-                $tables[] = 'tx_multishop_products_description';
-                $tables[] = 'tx_multishop_products_faq';
-                $tables[] = 'tx_multishop_products_options';
-                $tables[] = 'tx_multishop_products_options_values';
-                $tables[] = 'tx_multishop_products_options_values_extra';
-                $tables[] = 'tx_multishop_products_options_values_to_products_options';
-                $tables[] = 'tx_multishop_products_to_categories';
-                $tables[] = 'tx_multishop_products_to_extra_options';
-                $tables[] = 'tx_multishop_products_to_relative_products';
-                $tables[] = 'tx_multishop_reviews';
-                $tables[] = 'tx_multishop_reviews_description';
-                $tables[] = 'tx_multishop_specials';
-                $tables[] = 'tx_multishop_tax_rates';
-            }
-            if (in_array('orders', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tx_multishop_orders';
-                $tables[] = 'tx_multishop_orders_products';
-                $tables[] = 'tx_multishop_orders_products_attributes';
-                $tables[] = 'tx_multishop_orders_status';
-                $tables[] = 'tx_multishop_orders_status_history';
-            }
-            if (in_array('methods', $_GET['tx_multishop_pi']['selected_tables'])) {
-                $tables[] = 'tx_multishop_payment_methods';
-                $tables[] = 'tx_multishop_payment_methods_description';
-                $tables[] = 'tx_multishop_payment_shipping_mappings';
-                $tables[] = 'tx_multishop_shipping_countries';
-                $tables[] = 'tx_multishop_countries_to_zones';
-                $tables[] = 'tx_multishop_shipping_methods';
-                $tables[] = 'tx_multishop_shipping_methods_description';
-                $tables[] = 'tx_multishop_shipping_methods_costs';
-                //tx_multishop_payment_transactions
-                $tables[] = 'tx_multishop_shipping_options';
-                $tables[] = 'tx_multishop_zones';
+            if (is_array($_GET['tx_multishop_pi']['selected_tables'])) {
+                if (in_array('customers', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tt_address';
+                    $tables[] = 'fe_users';
+                }
+                if (in_array('cms', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tx_multishop_cms';
+                    $tables[] = 'tx_multishop_cms_description';
+                }
+                if (in_array('configuration', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tx_multishop_configuration';
+                    $tables[] = 'tx_multishop_configuration_values';
+                }
+                if (in_array('catalog', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tx_multishop_categories';
+                    $tables[] = 'tx_multishop_categories_description';
+                    // manufacturers
+                    $tables[] = 'tx_multishop_manufacturers';
+                    $tables[] = 'tx_multishop_manufacturers_cms';
+                    $tables[] = 'tx_multishop_manufacturers_info';
+                    // products
+                    $tables[] = 'tx_multishop_modules';
+                    $tables[] = 'tx_multishop_product_wishlist';
+                    $tables[] = 'tx_multishop_products';
+                    $tables[] = 'tx_multishop_products_attributes';
+                    $tables[] = 'tx_multishop_products_attributes_download';
+                    $tables[] = 'tx_multishop_products_attributes_extra';
+                    $tables[] = 'tx_multishop_products_description';
+                    $tables[] = 'tx_multishop_products_faq';
+                    $tables[] = 'tx_multishop_products_options';
+                    $tables[] = 'tx_multishop_products_options_values';
+                    $tables[] = 'tx_multishop_products_options_values_extra';
+                    $tables[] = 'tx_multishop_products_options_values_to_products_options';
+                    $tables[] = 'tx_multishop_products_to_categories';
+                    $tables[] = 'tx_multishop_products_to_extra_options';
+                    $tables[] = 'tx_multishop_products_to_relative_products';
+                    $tables[] = 'tx_multishop_reviews';
+                    $tables[] = 'tx_multishop_reviews_description';
+                    $tables[] = 'tx_multishop_specials';
+                    $tables[] = 'tx_multishop_tax_rates';
+                }
+                if (in_array('orders', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tx_multishop_orders';
+                    $tables[] = 'tx_multishop_orders_products';
+                    $tables[] = 'tx_multishop_orders_products_attributes';
+                    $tables[] = 'tx_multishop_orders_status';
+                    $tables[] = 'tx_multishop_orders_status_history';
+                }
+                if (in_array('methods', $_GET['tx_multishop_pi']['selected_tables'])) {
+                    $tables[] = 'tx_multishop_payment_methods';
+                    $tables[] = 'tx_multishop_payment_methods_description';
+                    $tables[] = 'tx_multishop_payment_shipping_mappings';
+                    $tables[] = 'tx_multishop_shipping_countries';
+                    $tables[] = 'tx_multishop_countries_to_zones';
+                    $tables[] = 'tx_multishop_shipping_methods';
+                    $tables[] = 'tx_multishop_shipping_methods_description';
+                    $tables[] = 'tx_multishop_shipping_methods_costs';
+                    //tx_multishop_payment_transactions
+                    $tables[] = 'tx_multishop_shipping_options';
+                    $tables[] = 'tx_multishop_zones';
+                }
             }
             $data = array();
-            foreach ($tables as $table) {
-                $data[$table] = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, '', '');
+            if (is_array($tables)) {
+                foreach ($tables as $table) {
+                    $data[$table] = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, '', '');
+                }
             }
             $output = serialize($data);
             $backup_folder = date("Y-m-d_G-i-s") . '-' . md5(uniqid());
@@ -1391,36 +1395,39 @@ switch ($_REQUEST['action']) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images');
             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/categories');
             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/products');
-            if (in_array('images', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
-                // copy the category images to the backup folder
-                foreach ($data['tx_multishop_categories'] as $record) {
-                    if ($record['categories_image']) {
-                        $folder = mslib_befe::getImagePrefixFolder($record['categories_image']);
-                        $source_file = $this->DOCUMENT_ROOT . $this->ms['image_paths']['categories']['original'] . '/' . $folder . '/' . $record['categories_image'];
-                        if (file_exists($source_file)) {
-                            copy($source_file, PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/categories/' . $record['categories_image']);
-                        }
-                    }
-                }
-                // copy the category images to the backup folder eof
-                // copy the products images to the backup folder
-                foreach ($data['tx_multishop_products'] as $record) {
-                    for ($i = 0; $i < 5; $i++) {
-                        if ($i == 0) {
-                            $cur = '';
-                        } else {
-                            $cur = $i;
-                        }
-                        if ($record['products_image' . $cur]) {
-                            $folder = mslib_befe::getImagePrefixFolder($record['products_image' . $cur]);
-                            $source_file = $this->DOCUMENT_ROOT . $this->ms['image_paths']['products']['original'] . '/' . $folder . '/' . $record['products_image' . $cur];
+            if (is_array($_GET['tx_multishop_pi']['selected_tables'])) {
+
+                if (in_array('images', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
+                    // copy the category images to the backup folder
+                    foreach ($data['tx_multishop_categories'] as $record) {
+                        if ($record['categories_image']) {
+                            $folder = mslib_befe::getImagePrefixFolder($record['categories_image']);
+                            $source_file = $this->DOCUMENT_ROOT . $this->ms['image_paths']['categories']['original'] . '/' . $folder . '/' . $record['categories_image'];
                             if (file_exists($source_file)) {
-                                copy($source_file, PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/products/' . $record['products_image' . $cur]);
+                                copy($source_file, PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/categories/' . $record['categories_image']);
                             }
                         }
                     }
+                    // copy the category images to the backup folder eof
+                    // copy the products images to the backup folder
+                    foreach ($data['tx_multishop_products'] as $record) {
+                        for ($i = 0; $i < 5; $i++) {
+                            if ($i == 0) {
+                                $cur = '';
+                            } else {
+                                $cur = $i;
+                            }
+                            if ($record['products_image' . $cur]) {
+                                $folder = mslib_befe::getImagePrefixFolder($record['products_image' . $cur]);
+                                $source_file = $this->DOCUMENT_ROOT . $this->ms['image_paths']['products']['original'] . '/' . $folder . '/' . $record['products_image' . $cur];
+                                if (file_exists($source_file)) {
+                                    copy($source_file, PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/products/' . $record['products_image' . $cur]);
+                                }
+                            }
+                        }
+                    }
+                    // copy the products images to the backup folder eof
                 }
-                // copy the products images to the backup folder eof
             }
             if (!file_put_contents(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/data.sql', $output)) {
                 die(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/data.sql is not writable.');
