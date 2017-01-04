@@ -2,6 +2,8 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
+// Add little delay so the session wont conflict with the main script (bypass issue with TYPO3 7.6.15)
+sleep(1);
 $randomnr = rand(100000, 900000);
 $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
 $session['captcha_code'] = md5($randomnr);

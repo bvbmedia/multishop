@@ -462,9 +462,11 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
             }
         }
         $fl = array();
-        foreach ($list as $file) {
-            $parts = preg_split('/' . preg_quote($sc) . '+/', $file);
-            $fl[] = trim($parts[$pos]);
+        if (is_array($list) && count($list)) {
+            foreach ($list as $file) {
+                $parts = preg_split('/' . preg_quote($sc) . '+/', $file);
+                $fl[] = trim($parts[$pos]);
+            }
         }
         return $fl;
     }
@@ -527,9 +529,11 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
                     $entries = array();
                 } // just in case scandir fail...
             }
-            foreach ($entries as $entry) {
-                if ($entry != '.' && $entry != '..') {
-                    $this->deltree($path . '/' . $entry);
+            if (is_array($entries) && count($entries)) {
+                foreach ($entries as $entry) {
+                    if ($entry != '.' && $entry != '..') {
+                        $this->deltree($path . '/' . $entry);
+                    }
                 }
             }
             return rmdir($path);
@@ -555,8 +559,10 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/multish
 $SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_module1');
 $SOBE->init();
 // Include files?
-foreach ($SOBE->include_once as $INC_FILE) {
-    include_once($INC_FILE);
+if (is_array($SOBE->include_once) && count($SOBE->include_once)) {
+    foreach ($SOBE->include_once as $INC_FILE) {
+        include_once($INC_FILE);
+    }
 }
 $SOBE->main();
 $SOBE->printContent();
