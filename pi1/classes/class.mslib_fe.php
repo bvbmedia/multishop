@@ -301,13 +301,15 @@ class mslib_fe {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'])) {
             $params = array(
-                    'filter' => &$filter,
-                    'offset' => &$offset,
-                    'limit' => &$limit,
-                    'orderby' => &$orderby,
-                    'having' => &$having,
-                    'select' => &$select,
-                    'where' => &$where,
+                'filter' => &$filter,
+                'offset' => &$offset,
+                'limit' => &$limit,
+                'orderby' => &$orderby,
+                'having' => &$having,
+                'select' => &$select,
+                'where' => &$where,
+                'type' => &$type,
+                'product' => &$product
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
