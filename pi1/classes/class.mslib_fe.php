@@ -297,6 +297,7 @@ class mslib_fe {
             $filter[] = $having[0];
             unset($having);
         }
+        $continue=true;
         $offset = 0;
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'])) {
@@ -309,28 +310,31 @@ class mslib_fe {
                 'select' => &$select,
                 'where' => &$where,
                 'type' => &$type,
-                'product' => &$product
+                'product' => &$product,
+                'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
         // custom hook that can be controlled by third-party plugin eof
-        $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
-        $products = $pageset['products'];
-        if ($pageset['total_rows'] > 0) {
-            $content = '';
-            if ($pageset['total_rows']) {
-                if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
-                    $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] = 'default';
-                }
-                if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "..")) {
-                    die('error in PRODUCTS_RELATIVES_TYPE value');
-                } else {
-                    if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "/")) {
-                        require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+        if ($continue) {
+            $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
+            $products = $pageset['products'];
+            if ($pageset['total_rows'] > 0) {
+                $content = '';
+                if ($pageset['total_rows']) {
+                    if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
+                        $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] = 'default';
+                    }
+                    if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "..")) {
+                        die('error in PRODUCTS_RELATIVES_TYPE value');
                     } else {
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_relatives/' . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "/")) {
+                            require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        } else {
+                            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_relatives/' . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        }
                     }
                 }
             }
