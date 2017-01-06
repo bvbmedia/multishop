@@ -3416,7 +3416,7 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group">
                 <label class="control-label col-md-10">' . (!$orders_tax_data['total_orders_tax'] ? $this->pi_getLL('total_excl_vat') : $this->pi_getLL('total')) . '</label>
                 <div class="col-md-2">
-                <p class="form-control-static order_total_value grand_total">' . mslib_fe::amount2Cents(round($orders_tax_data['grand_total'], 14), 0) . '</p>
+                <p class="form-control-static order_total_value grand_total">' . mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0) . '</p>
                 </div>
             </div>';
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
