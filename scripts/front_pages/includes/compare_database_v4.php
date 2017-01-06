@@ -347,7 +347,12 @@ while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $indexes[] = $rs['Key_name'];
 }
 if (!in_array('combined1', $indexes)) {
-    $str = "ALTER TABLE  `" . $table_name . "` ADD KEY `combined1` (`products_id`,`options_id`,`options_values_id`)";
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `combined1` (`products_id`,`options_id`,`options_values_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+if (!in_array('combined2', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `combined2` (`options_id`,`options_values_id`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
