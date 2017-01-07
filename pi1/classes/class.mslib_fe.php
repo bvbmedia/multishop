@@ -9323,7 +9323,7 @@ class mslib_fe {
             return false;
         } else {
             $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
+            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
             $pageTitle=$shop[0]['title'];
             if ($shop[0]['nav_title']) {
                 $pageTitle = $shop[0]['nav_title'];
