@@ -871,6 +871,9 @@ class Cache_Lite
     */
     function _hash($data, $controlType)
     {
+        if (!$data) {
+            $data='msCacheLitEmptyStuff';
+        }
         switch ($controlType) {
         case 'md5':
             return md5($data);
