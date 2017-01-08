@@ -4547,6 +4547,11 @@ class mslib_befe {
         $vat_wrapper_keys[] = 'TOTAL_VAT_ROW_INCLUDE_VAT';
         $vat_wrapper_keys[] = 'TOTAL_VAT_ROW_EXCLUDE_VAT_NO_SHIPPING_PAYMENT_TAX';
         $vat_wrapper_keys[] = 'TOTAL_VAT_ROW_EXCLUDE_VAT_HAVE_SHIPPING_PAYMENT_TAX';
+        if ($_SERVER['REMOTE_ADDR']=='36.68.224.99') {
+            echo "<pre>";
+            print_r($order);
+            die();
+        }
         foreach ($vat_wrapper_keys as $vat_wrapper_key) {
             if (!empty($subparts[$vat_wrapper_key])) {
                 $vatItem = '';
