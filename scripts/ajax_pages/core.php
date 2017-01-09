@@ -516,6 +516,7 @@ switch ($this->ms['page']) {
         }
         $return_data = array();
         $tmp_return_data = array();
+        $tmp_return_data_sort=array();
         switch ($this->get['tx_multishop_pi1']['get_category_tree']) {
             case 'getValues':
                 $tmp_preselecteds = array();
@@ -557,9 +558,21 @@ switch ($this->ms['page']) {
                             } else {
                                 $tmp_return_data[$preselected_id] = implode(' > ', $catpath);
                             }
+                            $tmp_return_data_sort[$preselected_id]=implode(' > ', $catpath);;
+                        }
+                    }
+                    if (is_array($tmp_return_data_sort) && count($tmp_return_data_sort)) {
+                        natsort($tmp_return_data_sort);
+                        $tmp_return_data_list=array();
+                        $tmp_return_data_list=$tmp_return_data;
+                        // return data
+                        $tmp_return_data=array();
+                        foreach ($tmp_return_data_sort as $tmp_preselected_id => $tmp_path) {
+                            $tmp_return_data[$tmp_preselected_id]=$tmp_return_data_list[$tmp_preselected_id];
                         }
                     }
                 }
+
                 if (!count($tmp_preselecteds) || (count($tmp_preselecteds) === 1 && !$tmp_preselecteds[0]) || !count($tmp_return_data)) {
                     $return_data[] = array(
                             'id' => 0,
