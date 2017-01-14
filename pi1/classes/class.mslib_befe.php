@@ -5156,6 +5156,19 @@ class mslib_befe {
             return $order_status_history_items;
         }
     }
+    public function getProductsCategoriesCollection($categories_id) {
+        if (is_numeric($categories_id)) {
+            $subcats_array=array();
+            $filterTmp = array();
+            $filterTmp[] = 'node_id=' . $categories_id;
+            $subcats_array = mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', $filterTmp, 'node_id');
+            if (is_array($subcats_array) && count($subcats_array)) {
+                return $subcats_array;
+            }
+            return false;
+        }
+        return false;
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
