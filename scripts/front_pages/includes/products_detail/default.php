@@ -608,7 +608,7 @@ if (!$product['products_id']) {
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
 			    ' . implode("\n", $js_detail_page_triggers) . '
-                $(document).on(\'click\', \'#multishop_add_to_cart\', function (e) {
+			    $(\'form#add_to_shopping_cart_form\').submit(function(e){
                     if ($(\'.attribute-value-radio\').length>0 || $(\'.attribute-value-checkbox\').length>0) {
                         var attribute_radio_data=[];
                         var attribute_checkbox_data=[];
@@ -655,7 +655,7 @@ if (!$product['products_id']) {
                         if (submit_form) {
                             return true;
                         }
-                        e.preventDefault();
+                        return false;
                     }
                 });
 			});

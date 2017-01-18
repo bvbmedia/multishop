@@ -4409,6 +4409,18 @@ class mslib_befe {
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
                         }
+                        //hook to let other plugins further manipulate the replacers
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
+                            $params_internal = array(
+                                'attributeMarkerArray' => &$attributeMarkerArray,
+                                'table_type' => $table_type,
+                                'product' => $product,
+                                'options' => $options,
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                            }
+                        }
                         $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
@@ -5155,6 +5167,19 @@ class mslib_befe {
             }
             return $order_status_history_items;
         }
+    }
+    public function getProductsCategoriesCollection($categories_id) {
+        if (is_numeric($categories_id)) {
+            $subcats_array=array();
+            $filterTmp = array();
+            $filterTmp[] = 'node_id=' . $categories_id;
+            $subcats_array = mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', $filterTmp, 'node_id');
+            if (is_array($subcats_array) && count($subcats_array)) {
+                return $subcats_array;
+            }
+            return false;
+        }
+        return false;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
