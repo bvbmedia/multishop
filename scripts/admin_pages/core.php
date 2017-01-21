@@ -146,6 +146,11 @@ switch ($this->ms['page']) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_payment_modules.php');
         }
         break;
+    case 'admin_psp_transactions_overview':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_psp_transactions_overview.php');
+        }
+        break;
     case 'admin_taxes':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_taxes.php');
