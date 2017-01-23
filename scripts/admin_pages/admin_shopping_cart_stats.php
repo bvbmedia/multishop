@@ -123,8 +123,11 @@ foreach ($dates as $key => $value) {
     $cart_contents=array();
     while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         if (!in_array($rows['session_id'], $counter_session)) {
-            $counter_session[] = $rows['session_id'];
-            $cart_contents[]=$rows;
+            $cart = unserialize($row['contents']);
+            if (count($cart['products']) > 0) {
+                $counter_session[] = $rows['session_id'];
+                $cart_contents[] = $rows;
+            }
         }
     }
     $content .= '<td class="text-right">' . number_format(count($counter_session)) . '</td>';
@@ -133,7 +136,7 @@ foreach ($dates as $key => $value) {
     // GET THE PRODUCTS THAT ARE INSIDE THE CART
     //$str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
     //$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $session_ids = array();
+    //$session_ids = array();
     foreach ($cart_contents as $row) {
         //if (!in_array($row['session_id'], $session_ids)) {
             $cart = unserialize($row['contents']);
