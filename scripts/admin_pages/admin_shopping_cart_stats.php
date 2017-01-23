@@ -124,7 +124,7 @@ foreach ($dates as $key => $value) {
     $content .= '<td>';
     //$pageset['total_rows'] = $rows;
     // GET THE PRODUCTS THAT ARE INSIDE THE CART
-    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc group by c.session_id";
+    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' group by c.session_id order by c.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $session_ids = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {
