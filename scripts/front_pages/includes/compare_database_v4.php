@@ -356,4 +356,16 @@ if (!in_array('combined2', $indexes)) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+// cms table
+$str = "describe `tx_multishop_cart_contents`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'contents') {
+        if ($row['Type'] == 'text') {
+            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` LONGTEXT DEFAULT NULL;";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
 ?>
