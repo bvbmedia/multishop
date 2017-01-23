@@ -123,7 +123,7 @@ foreach ($dates as $key => $value) {
     $cart_contents=array();
     while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         if (!in_array($rows['session_id'], $counter_session)) {
-            $cart = unserialize($row['contents']);
+            $cart = unserialize($rows['contents']);
             if (count($cart['products']) > 0) {
                 $counter_session[] = $rows['session_id'];
                 $cart_contents[] = $rows;
