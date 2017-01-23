@@ -117,14 +117,14 @@ foreach ($dates as $key => $value) {
     $system_date = date("Y-m-d", $value);
     $start_time = strtotime($system_date . " 00:00:00");
     $end_time = strtotime($system_date . " 23:59:59");
-    $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "'";
+    $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' group by c.session_id";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
     $content .= '<td class="text-right">' . number_format($rows) . '</td>';
     $content .= '<td>';
     //$pageset['total_rows'] = $rows;
     // GET THE PRODUCTS THAT ARE INSIDE THE CART
-    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
+    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc group by c.session_id";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $session_ids = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {
