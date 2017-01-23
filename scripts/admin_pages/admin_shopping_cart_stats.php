@@ -117,10 +117,15 @@ foreach ($dates as $key => $value) {
     $system_date = date("Y-m-d", $value);
     $start_time = strtotime($system_date . " 00:00:00");
     $end_time = strtotime($system_date . " 23:59:59");
-    $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' group by c.session_id";
+    $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "'";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
-    $content .= '<td class="text-right">' . number_format($rows) . '</td>';
+    $counter_session=array();
+    while ($rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+        if (!in_array($row['session_id'], $counter_session)) {
+            $counter_session[] = $row['session_id'];
+        }
+    }
+    $content .= '<td class="text-right">' . number_format(count($counter_session)) . '</td>';
     $content .= '<td>';
     //$pageset['total_rows'] = $rows;
     // GET THE PRODUCTS THAT ARE INSIDE THE CART
