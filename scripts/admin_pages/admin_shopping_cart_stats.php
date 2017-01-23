@@ -211,7 +211,7 @@ foreach ($dates as $key => $value) {
                 }
             }
         }
-        $session_ids[] = $row['session_id'];
+        //$session_ids[] = $row['session_id'];
     }
     $content .= '
 	</td>';
