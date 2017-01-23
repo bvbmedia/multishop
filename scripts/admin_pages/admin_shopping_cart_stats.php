@@ -120,7 +120,7 @@ foreach ($dates as $key => $value) {
     $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $counter_session=array();
-    while ($rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+    while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         if (!in_array($rows['session_id'], $counter_session)) {
             $counter_session[] = $rows['session_id'];
         }
