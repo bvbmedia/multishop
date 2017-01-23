@@ -121,8 +121,8 @@ foreach ($dates as $key => $value) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $counter_session=array();
     while ($rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-        if (!in_array($row['session_id'], $counter_session)) {
-            $counter_session[] = $row['session_id'];
+        if (!in_array($rows['session_id'], $counter_session)) {
+            $counter_session[] = $rows['session_id'];
         }
     }
     $content .= '<td class="text-right">' . number_format(count($counter_session)) . '</td>';
