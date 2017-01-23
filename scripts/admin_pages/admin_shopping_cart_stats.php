@@ -133,7 +133,7 @@ foreach ($dates as $key => $value) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $session_ids = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {
-        if (!in_array($row['session_id'], $session_ids)) {
+        //if (!in_array($row['session_id'], $session_ids)) {
             $cart = unserialize($row['contents']);
             if (count($cart['products']) > 0) {
                 $products = array();
@@ -144,6 +144,7 @@ foreach ($dates as $key => $value) {
                     // print customer settings
                     $content .= '<table id="product_import_table" class="table table-striped table-bordered ' . (!$row['is_checkout'] ? 'is_not_checkout' : '') . '">';
                     $tr_rows = array();
+                    $tr_rows[] = '<th class="text-right" width="100">Session ID</th><td>' . $row['session_id'] . '</td>';
                     $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('date') . '</th><td>' . strftime("%a. %x %X", $row['crdate']) . '</td>';
                     if ($row['ip_address']) {
                         $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('ip_address') . '</th><td>' . $row['ip_address'] . '</td>';
@@ -215,7 +216,7 @@ foreach ($dates as $key => $value) {
                     $content .= '</table>';
                 }
             }
-        }
+        //}
         $session_ids[] = $row['session_id'];
     }
     $content .= '
