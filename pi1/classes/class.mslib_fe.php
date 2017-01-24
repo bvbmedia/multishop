@@ -6163,7 +6163,7 @@ class mslib_fe {
         }
         if (is_numeric($parent_id)) {
             $query_array = array();
-            $query_array['select'][] = 'c.status,c.categories_id,cd.categories_name,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url';
+            $query_array['select'][] = 'c.categories_id,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description';
             $query_array['from'][] = 'tx_multishop_categories c';
             $query_array['from'][] = 'tx_multishop_categories_description cd';
             $query_array['where'][] = 'c.page_uid=\'' . $page_uid . '\'';
