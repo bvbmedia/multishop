@@ -341,7 +341,7 @@ if (!$qry) {
 // add combined index for maximum speed
 $indexes = array();
 $table_name = 'tx_multishop_products_attributes';
-$str = "show indexes from `" . $table_name . "` ";
+$str = "show indexes from `" . $table_name . "`";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $indexes[] = $rs['Key_name'];
@@ -355,5 +355,17 @@ if (!in_array('combined2', $indexes)) {
     $str = "ALTER TABLE `" . $table_name . "` ADD KEY `combined2` (`options_id`,`options_values_id`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
+}
+// cms table
+$str = "describe `tx_multishop_cart_contents`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'contents') {
+        if ($row['Type'] == 'text') {
+            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` LONGTEXT DEFAULT NULL;";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
 }
 ?>

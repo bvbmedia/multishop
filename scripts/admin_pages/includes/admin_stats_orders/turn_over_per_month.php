@@ -46,7 +46,7 @@ if ($this->get['Search']) {
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
-$sql_year = "select crdate from tx_multishop_orders where deleted=0'.((!$this->masterShop) ? ' and page_uid=\''.$this->shop_pid.'\'' : '').' order by orders_id asc limit 1";
+$sql_year = "select crdate from tx_multishop_orders where deleted=0".((!$this->masterShop) ? ' and page_uid=\''.$this->shop_pid.'\'' : '')." order by orders_id asc limit 1";
 $qry_year = $GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if ($row_year['crdate'] > 0) {

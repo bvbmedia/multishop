@@ -7657,6 +7657,10 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label'] = $this->pi_getLL('admin_payment_methods');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['class'] = 'fa fa-credit-card';
+            // PSP transactions overview
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['label'] = $this->pi_getLL('admin_psp_transactions_overview');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_psp_transactions_overview');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['class'] = 'fa fa-history';
             /*
 			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
