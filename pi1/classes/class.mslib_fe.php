@@ -7638,6 +7638,7 @@ class mslib_fe {
             }
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label'] = $this->pi_getLL('admin_shipping');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description'] = $this->pi_getLL('admin_shipping') . '.';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class'] = 'fa fa-truck';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['label'] = $this->pi_getLL('admin_countries');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_countries');
@@ -7653,6 +7654,7 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class'] = 'fa fa-money';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['label'] = $this->pi_getLL('admin_payment');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['description'] = $this->pi_getLL('admin_payment') . '.';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['link']=mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['class'] = 'fa fa-credit-card';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label'] = $this->pi_getLL('admin_payment_methods');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
