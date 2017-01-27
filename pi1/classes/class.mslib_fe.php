@@ -321,7 +321,7 @@ class mslib_fe {
         if ($continue) {
             $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
             $products = $pageset['products'];
-            if ($pageset['total_rows'] > 0) {
+            if ($pageset['total_rows'] > 0 && is_array($products) && count($products)) {
                 $content = '';
                 if ($pageset['total_rows']) {
                     if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
