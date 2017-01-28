@@ -321,7 +321,7 @@ class mslib_fe {
         if ($continue) {
             $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
             $products = $pageset['products'];
-            if ($pageset['total_rows'] > 0) {
+            if ($pageset['total_rows'] > 0 && is_array($products) && count($products)) {
                 $content = '';
                 if ($pageset['total_rows']) {
                     if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
@@ -6163,7 +6163,7 @@ class mslib_fe {
         }
         if (is_numeric($parent_id)) {
             $query_array = array();
-            $query_array['select'][] = 'c.categories_id,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description';
+            $query_array['select'][] = 'c.categories_id,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description,cd.categories_title';
             $query_array['from'][] = 'tx_multishop_categories c';
             $query_array['from'][] = 'tx_multishop_categories_description cd';
             $query_array['where'][] = 'c.page_uid=\'' . $page_uid . '\'';
@@ -6523,7 +6523,7 @@ class mslib_fe {
             foreach ($loadFromPids as $loadFromPid) {
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery('c.id,cd.name,cd.content,c.hash,c.type', // SELECT ...
                         'tx_multishop_cms c, tx_multishop_cms_description cd', // FROM ...
-                        'c.page_uid=\'' . $loadFromPid . '\' and c.id=cd.id and cd.language_id=\'' . $language_id . '\' and c.type=\'' . addslashes($type) . '\' and c.status = 1', // WHERE...
+                        '(c.page_uid=0 or c.page_uid=\'' . $loadFromPid . '\') and c.id=cd.id and cd.language_id=\'' . $language_id . '\' and c.type=\'' . addslashes($type) . '\' and c.status = 1', // WHERE...
                         '', // GROUP BY...
                         'c.sort_order', // ORDER BY...
                         '' // LIMIT ...
