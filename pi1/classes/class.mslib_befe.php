@@ -4863,6 +4863,16 @@ class mslib_befe {
                     $purifier = new HTMLPurifier($config);
                     return $purifier->purify($val);
                     break;
+                case 'html_no_img':
+                    $config->set('HTML.Allowed', 'table,tr,th,td,tbody,thead,tfood,h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],h7[style],style,font[style],iframe[style|frameborder|allowfullscreen|width|height|src],a[href],div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+                    $config->set("HTML.Nofollow", TRUE);
+                    $config->set('HTML.TargetBlank', TRUE);
+                    $config->set('HTML.SafeIframe', true);
+                    $config->set('URI.SafeIframeRegexp', '%^(//|http://|https://)(www.youtube.com/embed/|player.vimeo.com/video/)%');
+                    $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
+                    $purifier = new HTMLPurifier($config);
+                    return $purifier->purify($val);
+                    break;
                 case 'strip_tags':
                     $config->set('HTML.Allowed', ''); // Allow Nothing
                     $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
