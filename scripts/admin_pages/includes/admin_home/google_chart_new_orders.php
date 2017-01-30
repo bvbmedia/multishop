@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 $key = 'google_chart_orders';
-$compiledWidget['key'] = 'google_chart';
+$compiledWidget['key'] = 'google_chart_orders';
 $compiledWidget['defaultCol'] = 2;
 $compiledWidget['title'] = $this->pi_getLL('admin_label_orders');
 $dates = array();
