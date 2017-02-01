@@ -7389,27 +7389,6 @@ class mslib_fe {
                     $ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices_export']['active'] = 1;
                 }
             }
-            // get dashboards
-            $dashboards=mslib_befe::getRecords('1', 'tx_multishop_dashboard', 'status', array('deleted=0'));
-            if (is_array($dashboards) && count($dashboards)) {
-                $ms_menu['header']['ms_admin_dashboards']['label'] = $this->pi_getLL('admin_dashboards_overview');
-                $ms_menu['header']['ms_admin_dashboards']['description'] = '';
-                $ms_menu['header']['ms_admin_dashboards']['class'] = 'fa fa-columns';
-                if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_dashboards' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_dashboards') {
-                    $ms_menu['header']['ms_admin_dashboards']['active'] = 1;
-                }
-                foreach ($dashboards as $dashboard) {
-                    $ms_menu['header']['ms_admin_dashboards']['subs']['admin_dashboard_' . $dashboard['id']]['label'] = htmlspecialchars($dashboard['header_title']);
-                    $ms_menu['header']['ms_admin_dashboards']['subs']['admin_dashboard_' . $dashboard['id']]['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_dashboards&tx_multishop_pi1[dashboard_id]=' . $dashboard['id']);
-                    $ms_menu['header']['ms_admin_dashboards']['subs']['admin_dashboard_' . $dashboard['id']]['class'] = 'fa fa-columns';
-                    if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_dashboards' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_dashboards') {
-                        if ((isset($this->get['tx_multishop_pi1']['dashboard_id']) && $this->get['tx_multishop_pi1']['dashboard_id']==$dashboard['id']) ||
-                            (isset($this->post['tx_multishop_pi1']['dashboard_id']) && $this->post['tx_multishop_pi1']['dashboard_id']==$dashboard['id'])) {
-                            $ms_menu['header']['ms_admin_dashboards']['subs']['admin_dashboard_' . $dashboard['id']]['active'] = 1;
-                        }
-                    }
-                }
-            }
         } // END IF $this->ORDERSADMIN_USER
         // new header TOP
         $key = 'header';
@@ -7916,20 +7895,6 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label'] = $this->pi_getLL('admin_multishop_settings');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class'] = 'fa fa-cog';
-        }
-        if ($this->ROOTADMIN_USER) {
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['label'] = $this->pi_getLL('admin_dashboards');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_dashboards_overview');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['class'] = 'fa fa-columns';
-
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_overview']['label'] = $this->pi_getLL('admin_dashboards_overview');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_overview']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_dashboards_overview');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_overview']['class'] = 'fa fa-columns';
-
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_widget']['label'] = $this->pi_getLL('admin_dashboards_widget');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_widget']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_dashboards_widget');
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_dashboards']['subs']['admin_dashboards_widget']['class'] = 'fa fa-columns';
-
         }
         // hook
         /*

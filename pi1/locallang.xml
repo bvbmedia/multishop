@@ -1399,16 +1399,6 @@
             <label index="department">Department</label>
             <label index="admin_psp_transactions_overview">Transactions overview</label>
             <label index="transaction_id">Transactions ID</label>
-            <label index="admin_dashboards">Manage dashboards</label>
-            <label index="admin_dashboards_overview">Dashboards</label>
-            <label index="admin_dashboards_widget">Widgets</label>
-            <label index="admin_label_dashboard">Dashboards</label>
-            <label index="admin_label_widget_key">Widget key</label>
-            <label index="admin_label_colpos">Colpos</label>
-            <label index="admin_label_sort_order">Sort order</label>
-            <label index="admin_label_dashboard_layout">Layout</label>
-            <label index="admin_label_add_widget">Add widget</label>
-            <label index="admin_label_change_layout">Change layout</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

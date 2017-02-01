@@ -692,35 +692,12 @@ switch ($this->ms['page']) {
         }
         break;
     */
-    case 'admin_dashboards':
-        if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_dashboards.php');
-        }
-        break;
-    case 'admin_dashboards_overview':
-        if ($this->ADMIN_USER) {
-            if (isset($this->get['tx_multishop_pi1']['action']) && $this->get['tx_multishop_pi1']['action']=='edit') {
-                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_dashboards/admin_dashboards_edit.php');
-            } else {
-                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_dashboards/admin_dashboards_overview.php');
-            }
-        }
-        break;
-    case 'admin_dashboards_widget':
-        if ($this->ADMIN_USER) {
-            if (isset($this->get['tx_multishop_pi1']['action']) && $this->get['tx_multishop_pi1']['action']=='edit') {
-                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_dashboards/admin_dashboards_widget_edit.php');
-            } else {
-                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_dashboards/admin_dashboards_widget.php');
-            }
-        }
-        break;
     case 'custom_page':
         if ($this->ADMIN_USER) {
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'])) {
                 $params = array(
-                        'content' => &$content
+                    'content' => &$content
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
