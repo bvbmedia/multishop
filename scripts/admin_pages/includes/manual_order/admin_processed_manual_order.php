@@ -21,11 +21,6 @@ if ($this->post['proceed_order']) {
             $customer_id = $row['uid'];
         }
     }
-
-    echo "<pre>";
-    print_r($this->post);
-    print_r($user);
-
     if (!$customer_id) {
         $insertArray = array();
         $insertArray['page_uid'] = $this->shop_pid;
