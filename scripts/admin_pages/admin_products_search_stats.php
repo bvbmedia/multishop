@@ -7,32 +7,70 @@ if ($this->get['Search'] and ($this->get['negative_keywords_only'] != $this->coo
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
+// get the first year log
+$str_gy = "SELECT crdate FROM tx_multishop_products_search_log WHERE crdate > 0 order by crdate asc limit 1";
+$qry_gy = $GLOBALS['TYPO3_DB']->sql_query($str_gy);
+$row_gy = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_gy);
+$lowest_year = date('Y');
+if ($row_gy['crdate']>0) {
+    $lowest_year = date('Y', $row_gy['crdate']);
+}
+$year_options=array();
+for ($y=date('Y'); $y>=$lowest_year; $y--) {
+    if (isset($this->get['year']) && is_numeric($this->get['year']) && $this->get['year']==$y) {
+        $year_options[] = '<option value="' . $y . '" selected="selected">' . $y . '</option>';
+    } else {
+        $year_options[] = '<option value="' . $y . '">' . $y . '</option>';
+    }
+}
 $content .= '<div class="panel-body">
 <form method="get" action="index.php" id="search_log_form" class="float_right">
 <input name="id" type="hidden" value="' . $this->shop_pid . '" />
 <input name="Search" type="hidden" value="1" />
 <input name="type" type="hidden" value="2003" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="' . $this->ms['page'] . '" />
-<div class="checkbox checkbox-success checkbox-inline"><input id="negative_keywords_only" name="negative_keywords_only" type="checkbox" value="1" ' . ($this->cookie['negative_keywords_only'] ? 'checked' : '') . ' /><label for="negative_keywords_only">' . $this->pi_getLL('display_negative_keywords_only') . '</label></div>
+
+<div id="search-orders" class="well no-mb">
+    <div class="row formfield-container-wrapper">
+        <div class="col-sm-4 formfield-wrapper">
+            <div class="form-group">
+                <label class="control-label" for="year">'.$this->pi_getLL('year').'</label>
+                <select class="form-control" name="year" id="year">
+                    '.implode("\n", $year_options).'
+                </select>    
+            </div>
+            <div class="form-group">
+                <div class="checkbox checkbox-success checkbox-inline"><input id="negative_keywords_only" name="negative_keywords_only" type="checkbox" value="1" ' . ($this->cookie['negative_keywords_only'] ? 'checked' : '') . ' /><label for="negative_keywords_only">' . $this->pi_getLL('display_negative_keywords_only') . '</label></div>
+            </div>
+        </div>
+    </div>
+</div>
 </form>
 <br>
 ';
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript" language="JavaScript">
 	jQuery(document).ready(function($) {
-		$("#checkbox_negative_keywords_only").click(function(e) {
+		$(document).on("change", "#negative_keywords_only", function(e) {
 			$("#search_log_form").submit();
-		 });
+		});
+		$(document).on("change", "#year", function(e) {
+			$("#search_log_form").submit();
+		});
 
 		$(".is_not_checkout").css("opacity", "0.5");
 	});
 </script>
 ';
+$current_year=date('Y');
+if (isset($this->get['year']) && is_numeric($this->get['year'])) {
+    $current_year=$this->get['year'];
+}
 $dates = array();
 $content .= '<h2>' . htmlspecialchars($this->pi_getLL('month')) . '</h2>';
 for ($i = 1; $i < 13; $i++) {
-    $time = strtotime(date("Y-" . $i . "-01") . " 00:00:00");
-    $dates[strftime("%B %Y", $time)] = date("Y-m", $time);
+    $time = strtotime(date($current_year . "-" . $i . "-01") . " 00:00:00");
+    $dates[strftime("%B %Y", $time)] = date($current_year . "-m", $time);
 }
 $content .= '<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
 $content .= '<tr class="odd">';

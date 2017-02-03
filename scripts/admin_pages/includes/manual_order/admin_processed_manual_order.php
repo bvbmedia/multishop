@@ -21,6 +21,11 @@ if ($this->post['proceed_order']) {
             $customer_id = $row['uid'];
         }
     }
+
+    echo "<pre>";
+    print_r($this->post);
+    print_r($user);
+
     if (!$customer_id) {
         $insertArray = array();
         $insertArray['page_uid'] = $this->shop_pid;
@@ -198,7 +203,10 @@ if ($this->post['proceed_order']) {
             }
             // hook eof
         }
+
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
+        var_dump($query);
+        die();
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         // now add the order eof
         $orders_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
