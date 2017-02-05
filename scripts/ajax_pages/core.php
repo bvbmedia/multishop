@@ -586,7 +586,7 @@ switch ($this->ms['page']) {
                 if (is_numeric($this->categoriesStartingPoint)) {
                     $categoriesStartingPoint = $this->categoriesStartingPoint;
                 }
-                if (isset($this->get['q']) && !empty($this->get['q'])) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, $page_uid, $include_disabled_cats);
@@ -637,7 +637,7 @@ switch ($this->ms['page']) {
                 if (isset($this->get['skip_ids']) && !empty($this->get['skip_ids'])) {
                     $skip_ids = explode(',', $this->get['skip_ids']);
                 }
-                if (isset($this->get['q']) && !empty($this->get['q'])) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, '', $include_disabled_cats);
@@ -723,11 +723,22 @@ switch ($this->ms['page']) {
                 break;
         }
         //natsort($tmp_return_data);
+        $categories_results_limit=0; // 0 = unlimited
+        if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
+            $categories_results_limit=15;
+        }
+        $category_counter=0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {
             $return_data[] = array(
                     'id' => $tree_id,
                     'text' => $tree_path
             );
+            $category_counter++;
+            if ($categories_results_limit>0) {
+                if ($category_counter >= $categories_results_limit) {
+                    break;
+                }
+            }
         }
         $json_data = mslib_befe::array2json($return_data);
         echo $json_data;
