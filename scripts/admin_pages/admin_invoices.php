@@ -367,8 +367,10 @@ $shipping_method_input .= '</select>' . "\n";
 $order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country = array();
 foreach ($order_countries as $order_country) {
-    $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-    $order_billing_country[] = '<option value="' . mslib_befe::strtolower($order_country['billing_country']) . '" ' . ((mslib_befe::strtolower($this->get['country']) == strtolower($order_country['billing_country'])) ? 'selected' : '') . '>' . $cn_localized_name . '</option>';
+    if (!empty($order_country['billing_country'])) {
+        $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
+        $order_billing_country[] = '<option value="' . mslib_befe::strtolower($order_country['billing_country']) . '" ' . ((mslib_befe::strtolower($this->get['country']) == strtolower($order_country['billing_country'])) ? 'selected' : '') . '>' . $cn_localized_name . '</option>';
+    }
 }
 ksort($order_billing_country);
 $billing_countries_sb = '<select class="invoice_select2" name="country" id="country""><option value="">' . $this->pi_getLL('all_countries') . '</option>' . implode("\n", $order_billing_country) . '</select>';
@@ -387,6 +389,9 @@ $limits[] = '450';
 $limits[] = '600';
 $limits[] = '1500';
 $limits[] = '3000';
+if (!in_array($this->get['limit'], $limits)) {
+    $limits[]=$this->get['limit'];
+}
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }
@@ -474,6 +479,31 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
         $column = 'i.crdate';
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->post['invoice_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->post['invoice_date_from']);
+        list($fd, $fm, $fy) = explode('/', $from_date);
+        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        if ($this->cookie['filter_by_paid_date']) {
+            $filter[] = ' i.reversal_invoice=0';
+            $column = 'o.orders_paid_timestamp';
+        } else {
+            $column = 'i.crdate';
+        }
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->post['invoice_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->post['invoice_date_till']);
+        list($td, $tm, $ty) = explode('/', $till_date);
+        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        if ($this->cookie['filter_by_paid_date']) {
+            $filter[] = ' i.reversal_invoice=0';
+            $column = 'o.orders_paid_timestamp';
+        } else {
+            $column = 'i.crdate';
+        }
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
     $filter[] = ' i.customer_id IN (SELECT uid from fe_users where ' . $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users') . ')';
@@ -606,6 +636,7 @@ $subpartArray['###VALUE_ORDER_CUSTOMER###'] = $this->get['order_customer'];
 $subpartArray['###LABEL_TERRITORIES###'] = $this->pi_getLL('territory');
 $subpartArray['###VALUE_ORDER_TERRITORY###'] = $this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
+$subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
 $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 // paid status
@@ -649,6 +680,10 @@ $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) .
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script>
 	jQuery(document).ready(function($) {
+	    $(document).on("click", "#reset-advanced-search", function(e){
+			location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_invoices').'";
+			
+		});
 		' . ($this->get['tx_multishop_pi1']['action'] != 'mail_selected_invoices_to_merchants' ? '$("#msadmin_invoices_mailto").hide();' : '') . '
 		$(document).on("click", ".update_to_paid", function(e){
 			e.preventDefault();

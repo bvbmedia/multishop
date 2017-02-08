@@ -75,6 +75,16 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['searchKeywordsToplist'] = 1;
                 $this->enabledWidgets['ordersLatest'] = 1;
                 break;
+            default:
+                if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {
+                    $widgetsData = mslib_befe::getRecords($this->dashboardArray['section'], 'tx_multishop_dashboard_portlets', 'dashboard_id', array('status=1 AND deleted=0'));
+                    if (is_array($widgetsData) && count($widgetsData)) {
+                        foreach ($widgetsData as $widgetData) {
+                            $this->enabledWidgets[$widgetData['widget_key']] = 1;
+                        }
+                    }
+                }
+                break;
         }
         $this->compiledWidgets = array();
         //hook to let other plugins further manipulate the settings
@@ -171,6 +181,35 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					//var old_position=ui.item.parent().attr(\'id\');
 				},
 				stop: function(event, ui)  {
+				    var widget_counter=0;
+				    var widgets_list=[];
+				    $(".widgetRow > div.column").each(function(rowIndex, rowElem) {
+                        $(rowElem).find(".portlet").each(function(colIndex, colElem) {
+                            if ($(colElem).attr(\'id\')!=undefined) {
+                                widgets_list[widget_counter]=\'tx_multishop_pi1[widgets_sort][\' + rowIndex + \'][\' + colIndex + \']=\' + $(colElem).attr(\'id\');
+                                widget_counter++;
+                            }
+                        });
+				    });
+				    if (widgets_list.length) {
+				        jQuery.ajax({
+                            type: \'POST\',
+                            url: \''.mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_dashboards&tx_multishop_pi1[action]=save_widget_sort').'\',
+                            cache :false,
+                            dataType: \'json\',
+                            data: widgets_list.join(\'&\'),
+                            success:
+                                function(d) {
+                                    if (d.status==\'OK\') {
+                                        location.reload();
+                                    }
+                                },
+                            error:
+                                function() {
+            
+                                }
+                        });
+				    }
 					// after dropping replace the old one
 					//alert(ui.item.attr("title"))
 					//new_position=ui.item;
@@ -178,7 +217,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					//return false;
 				},
 				update: function(event, ui) {
-					var cooked = {};
+				    
+				    
+					/*var cooked = {};
 					var cookie_value = "";
 					$(".widgetRow").each(function(index, domEle) {
 						cooked[index] = {};
@@ -208,12 +249,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						cookie_value = JSON.stringify(cooked);
 					});
 
-					$.cookie(\'widget_position\', cookie_value, { expires: 7, path: \'/\'});
+					$.cookie(\'widget_position\', cookie_value, { expires: 7, path: \'/\'});*/
 
 					// refresh google charts, so they fit again nicely in the new target box
-					drawChartgoogle_chart_orders();
-					drawChartgoogle_chart_customers();
-					drawChartgoogle_chart_carts();
+					//drawChartgoogle_chart_orders();
+					//drawChartgoogle_chart_customers();
+					//drawChartgoogle_chart_carts();
 				}
 			});
 
@@ -230,13 +271,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$(this).toggleClass("ui-icon-minusthick").toggleClass("ui-icon-plusthick");
 				$(this).parents(".portlet:first").find(".portlet-content").toggle();
 			});
-			//makesortable();
+			makesortable();
 		});
 		</script>
 		';
         $col = 0;
         $intCounter = 0;
-        $headerData = '
+        /*$headerData = '
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			$("#addWidgetButton").click(function(e) {
@@ -249,9 +290,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_array($layouts)) {
             foreach ($layouts as $layout => $cols) {
                 $headerData .= '
-						case "' . $layout . '": var cols=\'' . $cols . '\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
-						break;
-						';
+                    case "' . $layout . '": var cols=\'' . $cols . '\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
+                    break;
+                    ';
             }
         }
         $headerData .= '
@@ -266,10 +307,10 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		});
 		</script>
 		';
-        $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
+        $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;*/
         $headerData = '';
         $pageLayout = array();
-        if (isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
+        if (!is_numeric($this->dashboardArray['section']) && isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
             $cookie_json_decode = json_decode($_COOKIE['widget_position']);
             if (is_array($cookie_json_decode)) {
                 foreach ($cookie_json_decode as $row_index => $rows) {
@@ -323,6 +364,65 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             )
                     );
                     break;
+                default:
+                    if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {
+                        $dashboard=mslib_befe::getRecord($this->dashboardArray['section'], 'tx_multishop_dashboard', 'id', array('status=1 AND deleted=0'));
+                        if (is_array($dashboard) && $dashboard['id']) {
+                            $pageLayout=array();
+                            $layoutClass=array();
+                            if ($dashboard['dashboard_layout']) {
+                                $layoutClass['class'] = $dashboard['dashboard_layout'];
+                                $dashboard_widgets=mslib_befe::getRecords($dashboard['id'], 'tx_multishop_dashboard_portlets', 'dashboard_id', array('status=1 AND deleted=0'), '', 'colpos asc, sort_order asc');
+                                $count_widget=count($dashboard_widgets);
+                                if (is_array($dashboard_widgets) && $count_widget) {
+                                    $cols_num=0;
+                                    switch ($dashboard['dashboard_layout']) {
+                                        case 'layout1big1small':
+                                        case 'layout1small1big':
+                                        case 'layout2cols':
+                                            $cols_num=2;
+                                            break;
+                                        case 'layout1col':
+                                            $cols_num=1;
+                                            break;
+                                        case 'layout3cols':
+                                            $cols_num=3;
+                                            break;
+                                        case 'layout4cols':
+                                            $cols_num=4;
+                                            break;
+                                    }
+                                    $widget_percol=ceil($count_widget/$cols_num);
+                                    $col_number=0;
+                                    $col_counter=0;
+                                    foreach ($dashboard_widgets as $dashboard_widget) {
+                                        $colpos = $dashboard_widget['colpos'];
+                                        if ($colpos>0) {
+                                            $colpos -= 1;
+                                        }
+                                        if ($cols_num==1) {
+                                            $colpos = 0;
+                                        }
+                                        $layoutClass['cols'][$colpos][] = $dashboard_widget['widget_key'];
+                                        /*$col_counter++;
+                                        if (($col_counter%$widget_percol)==0) {
+                                            $col_number++;
+                                        }*/
+                                    }
+                                    if ($cols_num>1) {
+                                        for ($c=0; $c<$cols_num; $c++) {
+                                            if (!isset($layoutClass['cols'][$c])) {
+                                                $layoutClass['cols'][$c][]='emptyWidget';
+                                            }
+                                        }
+                                    }
+                                }
+                                $pageLayout[]=$layoutClass;
+                            }
+                        }
+                    }
+                    break;
+
             }
         }
         //hook to let other plugins further manipulate the settings
@@ -349,18 +449,21 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         } else {
                             $idName = 'widget' . $intCounter;
                         }
-                        if ($this->compiledWidgets[$widget_key]['content']) {
+                        if (isset($this->compiledWidgets[$widget_key]['content'])) {
                             $widget = $this->compiledWidgets[$widget_key];
-                            $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">';
-                            $content .= '
-					<div class="portlet-header">
-						<h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
-					</div>
-					<div class="portlet-content">
-						' . $widget['content'] . '
-					</div>
-					';
-                            $content .= '</div>';
+                            $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">
+                                <div class="portlet-header">
+                                    <h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
+                                </div>
+                                <div class="portlet-content">
+                                    ' . $widget['content'] . '
+                                </div>
+					        </div>
+					        ';
+                        } else {
+                            if ($widget_key=='emptyWidget') {
+                                $content .= '<div>&nbsp;</div>';
+                            }
                         }
                     }
                     $content .= '</div>';

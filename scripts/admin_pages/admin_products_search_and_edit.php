@@ -241,6 +241,9 @@ $limits[] = '150';
 $limits[] = '300';
 $limits[] = '500';
 $limits[] = '750';
+if (!in_array($this->get['tx_multishop_pi1']['limit'], $limits)) {
+    $limits[]=$this->get['tx_multishop_pi1']['limit'];
+}
 foreach ($limits as $limit) {
     $search_limit .= '<option value="' . $limit . '"' . ($limit == $this->get['tx_multishop_pi1']['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }
@@ -845,6 +848,7 @@ $subpartArray['###LABEL_SEARCH_LIMIT###'] = $this->pi_getLL('limit_number_of_rec
 $subpartArray['###SEARCH_LIMIT###'] = $search_limit;
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
 $subpartArray['###LABEL_SEARCH###'] = $this->pi_getLL('search');
+$subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
 //
 $subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=update_products_status');
 $subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL0###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[includeDisabledCats]=1');
@@ -890,6 +894,11 @@ $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons()
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shadowBox($content) . '</div>';
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
+jQuery(document).ready(function(){
+    $(document).on("click", "#reset-advanced-search", function(e){
+        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=').'";    
+    });    
+});
 var product_tax_rate_js=[];
 ' . implode("\n", $product_tax_rate_js) . '
 </script>

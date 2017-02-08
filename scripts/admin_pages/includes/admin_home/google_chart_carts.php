@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 $key = 'google_chart_carts';
-$compiledWidget['key'] = 'google_chart';
+$compiledWidget['key'] = 'google_chart_carts';
 $compiledWidget['defaultCol'] = 2;
 $compiledWidget['title'] = $this->pi_getLL('admin_label_shoppingcart');
 $dates = array();

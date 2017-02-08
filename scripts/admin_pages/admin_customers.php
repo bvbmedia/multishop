@@ -206,6 +206,9 @@ $limits[] = '350';
 $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
+if (!in_array($this->get['limit'], $limits)) {
+    $limits[]=$this->get['limit'];
+}
 foreach ($limits as $limit) {
     $formTopSearch .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected="selected"' : '') . '>' . $limit . '</option>';
 }
@@ -279,13 +282,18 @@ $formTopSearch .= '
 			</div>
 		</div>
 	</div>
-	<div class="row formfield-container-wrapper">
-		<div class="col-sm-12 formfield-wrapper">
-			<div class="pull-right">
-			<input type="submit" name="Search" class="btn btn-success" value="' . $this->pi_getLL('search') . '" />
-			</div>
-		</div>
-	</div>
+	
+	<div class="panel-footer clearfix">
+        <div class="row formfield-container-wrapper">
+            <div class="col-sm-12 formfield-wrapper">
+                <div class="pull-right">
+                <input type="submit" name="Search" class="btn btn-success" value="' . $this->pi_getLL('search') . '" />
+                <button type="button" id="reset-advanced-search" class="btn btn-warning">' . $this->pi_getLL('reset_advanced_search_filter') . '</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
         </div>
     </form>
     </div></div></div>
@@ -473,6 +481,9 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+    $(document).on("click", "#reset-advanced-search", function(e){
+        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers').'";    
+    });
 	jQuery(".tab_content").hide();
 	jQuery("ul.tabs li:first").addClass("active").show();
 	jQuery(".tab_content:first").show();

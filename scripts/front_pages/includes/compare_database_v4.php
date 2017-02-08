@@ -309,4 +309,108 @@ if (!$qry) {
         }
     }
 }
+$str = "select department from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `fe_users` ADD `department` varchar(127) not null default '', ADD KEY `department` (`department`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select billing_department from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `billing_department` varchar(127) not null default '', ADD KEY `billing_department` (`billing_department`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select delivery_department from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `delivery_department` varchar(127) not null default '', ADD KEY `delivery_department` (`delivery_department`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select department from tt_address limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tt_address` ADD `department` varchar(127) not null default '', ADD KEY `department` (`department`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+// add combined index for maximum speed
+$indexes = array();
+$table_name = 'tx_multishop_products_attributes';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+if (!in_array('combined1', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `combined1` (`products_id`,`options_id`,`options_values_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+if (!in_array('combined2', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `combined2` (`options_id`,`options_values_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+// cms table
+$str = "describe `tx_multishop_cart_contents`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'contents') {
+        if ($row['Type'] == 'text') {
+            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` LONGTEXT DEFAULT NULL;";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+$str = "select product_link from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `product_link` varchar(255) default '', ADD KEY `product_link` (`product_link`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select page_uid from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `page_uid` int(11) default '0', ADD KEY `page_uid` (`page_uid`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    $products=mslib_befe::getRecords('', 'tx_multishop_orders_products', '', array(), '', '', '', array('orders_products_id', 'products_id'));
+    if (is_array($products) && count($products)) {
+        foreach ($products as $product) {
+            $product_info=mslib_befe::getRecord($product['products_id'], 'tx_multishop_products p, tx_multishop_products_to_categories p2c', 'p.products_id', array('p2c.is_deepest=1 and p.products_id=p2c.products_id'), 'p.page_uid, p2c.categories_id');
+            if (is_array($product_info) && count($product_info)) {
+                if ($product_info['categories_id']) {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($product_info['categories_id']);
+                    $cats = array_reverse($cats);
+                    $where = '';
+                    if (count($cats) > 0) {
+                        foreach ($cats as $cat) {
+                            $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                            $level++;
+                        }
+                        $where = substr($where, 0, (strlen($where) - 1));
+                        $where .= '&';
+                    }
+                    // get all cats to generate multilevel fake url eof
+                }
+                $product_detail_link = mslib_fe::typolink($product_info['page_uid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                // update orders_products table
+                $updateArray = array();
+                $updateArray['page_uid'] = $product_info['page_uid'];
+                $updateArray['product_link'] = $product_detail_link;
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $product['orders_products_id'] . '\'', $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+        }
+    }
+}
 ?>

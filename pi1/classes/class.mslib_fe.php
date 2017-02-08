@@ -297,38 +297,44 @@ class mslib_fe {
             $filter[] = $having[0];
             unset($having);
         }
+        $continue=true;
         $offset = 0;
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'])) {
             $params = array(
-                    'filter' => &$filter,
-                    'offset' => &$offset,
-                    'limit' => &$limit,
-                    'orderby' => &$orderby,
-                    'having' => &$having,
-                    'select' => &$select,
-                    'where' => &$where,
+                'filter' => &$filter,
+                'offset' => &$offset,
+                'limit' => &$limit,
+                'orderby' => &$orderby,
+                'having' => &$having,
+                'select' => &$select,
+                'where' => &$where,
+                'type' => &$type,
+                'product' => &$product,
+                'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
         // custom hook that can be controlled by third-party plugin eof
-        $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
-        $products = $pageset['products'];
-        if ($pageset['total_rows'] > 0) {
-            $content = '';
-            if ($pageset['total_rows']) {
-                if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
-                    $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] = 'default';
-                }
-                if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "..")) {
-                    die('error in PRODUCTS_RELATIVES_TYPE value');
-                } else {
-                    if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "/")) {
-                        require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+        if ($continue) {
+            $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
+            $products = $pageset['products'];
+            if ($pageset['total_rows'] > 0 && is_array($products) && count($products)) {
+                $content = '';
+                if ($pageset['total_rows']) {
+                    if (!$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE']) {
+                        $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] = 'default';
+                    }
+                    if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "..")) {
+                        die('error in PRODUCTS_RELATIVES_TYPE value');
                     } else {
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_relatives/' . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "/")) {
+                            require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        } else {
+                            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_relatives/' . $this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'] . '.php');
+                        }
                     }
                 }
             }
@@ -862,7 +868,7 @@ class mslib_fe {
             $page_uid = $this->showCatalogFromPage;
         }
         if (is_numeric($c)) {
-            if ($this->ms['MODULES']['CACHE_FRONT_END']) {
+            if ($this->ms['MODULES']['CACHE_FRONT_END'] || $this->ms['MODULES']['FORCE_CACHE_FRONT_END']) {
                 if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
                     $this->ms['MODULES']['CACHE_TIME_OUT_CRUM'] = $this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
                 }
@@ -879,12 +885,12 @@ class mslib_fe {
                 $options = array(
                         'caching' => true,
                         'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-                        'lifeTime' => $this->cacheLifeTime
+                        'lifeTime' => $this->ms['MODULES']['CACHE_TIME_OUT_CRUM']
                 );
                 $Cache_Lite = new Cache_Lite($options);
-                $string = $this->cObj->data['uid'] . '_crum_' . $c . '_' . $languages_id . '_' . md5(serialize($output));
+                $string = $this->cObj->data['uid'] . '_crum_' . $c . '_' . $languages_id;
             }
-            if ($this->ROOTADMIN_USER || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content = $Cache_Lite->get($string))) {
+            if (($this->ROOTADMIN_USER && !$this->ms['MODULES']['FORCE_CACHE_FRONT_END']) || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$output = $Cache_Lite->get($string))) {
                 $filter = array();
                 if ($page_uid) {
                     $filter[] = 'c.page_uid=\'' . $page_uid . '\'';
@@ -938,11 +944,14 @@ class mslib_fe {
                     }
                     $GLOBALS['TYPO3_DB']->sql_free_result($qry);
                 }
-                if (!$this->ROOTADMIN_USER && $CACHE_FRONT_END) {
-                    $Cache_Lite->save(serialize($output));
+                if ($CACHE_FRONT_END) {
+                    $copy=serialize($output);
+                    $Cache_Lite->save($copy, $string);
                 }
             } else {
-                $output = unserialize($content);
+                if ($output) {
+                    $output = unserialize($output);
+                }
             }
         }
         return $output;
@@ -2395,7 +2404,7 @@ class mslib_fe {
     }
     public function globalCrumbarTree($c, $languages_id = '', $output = array()) {
         if (is_numeric($c)) {
-            if ($this->ms['MODULES']['CACHE_FRONT_END']) {
+            if ($this->ms['MODULES']['CACHE_FRONT_END'] || $this->ms['MODULES']['FORCE_CACHE_FRONT_END']) {
                 if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
                     $this->ms['MODULES']['CACHE_TIME_OUT_CRUM'] = $this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
                 }
@@ -2415,9 +2424,9 @@ class mslib_fe {
                         'lifeTime' => $this->cacheLifeTime
                 );
                 $Cache_Lite = new Cache_Lite($options);
-                $string = $this->cObj->data['uid'] . '_crum_' . $c . '_' . $languages_id . '_' . md5(serialize($output));
+                $string = $this->cObj->data['uid'] . '_globalCrumbarTree_' . $c . '_' . $languages_id;
             }
-            if ($this->ROOTADMIN_USER || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content = $Cache_Lite->get($string))) {
+            if (($this->ROOTADMIN_USER && !$this->ms['MODULES']['FORCE_CACHE_FRONT_END']) || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$output = $Cache_Lite->get($string))) {
                 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
                         'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
                         'c.categories_id = \'' . $c . '\' and cd.language_id=\'' . $this->sys_language_uid . '\' and c.categories_id = cd.categories_id', // WHERE...
@@ -2451,10 +2460,12 @@ class mslib_fe {
                     $GLOBALS['TYPO3_DB']->sql_free_result($qry);
                 }
                 if ($CACHE_FRONT_END) {
-                    $Cache_Lite->save(serialize($output));
+                    $copy=serialize($output);
+                    $Cache_Lite->save($copy, $string);
+                    //$Cache_Lite->save(serialize($output), $string);
                 }
             } else {
-                $output = unserialize($content);
+                $output = unserialize($output);
             }
         }
         return $output;
@@ -4380,7 +4391,7 @@ class mslib_fe {
         }
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.parent_id', // SELECT ...
                 'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-                'c.parent_id = \'' . $parent_id . '\' and c.page_uid=\'' . $page_uid . '\' and c.categories_id = cd.categories_id', // WHERE...
+                'c.parent_id = \'' . $parent_id . '\' and c.page_uid=\'' . $page_uid . '\' and cd.language_id=\'' . $this->sys_language_uid . '\' and c.categories_id = cd.categories_id', // WHERE...
                 '', // GROUP BY...
                 'c.sort_order, cd.categories_name', // ORDER BY...
                 '' // LIMIT ...
@@ -4499,54 +4510,6 @@ class mslib_fe {
             }
         }
         return $category_tree_array;
-    }
-    public function get_subcategories_as_ul($parent_id = '0', &$content = '') {
-        if (!is_numeric($parent_id)) {
-            return false;
-        }
-        $str = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.parent_id', // SELECT ...
-                'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-                'c.status=1 and c.parent_id = \'' . $parent_id . '\' and c.page_uid=\'' . $this->showCatalogFromPage . '\' and cd.language_id=\'' . $this->sys_language_uid . '\' and c.categories_id = cd.categories_id', // WHERE...
-                '', // GROUP BY...
-                'c.sort_order, cd.categories_name', // ORDER BY...
-                '' // LIMIT ...
-        );
-        $categories_query = $GLOBALS['TYPO3_DB']->sql_query($str);
-        $count = $GLOBALS['TYPO3_DB']->sql_num_rows($categories_query);
-        if ($count) {
-            $content .= '<ul>';
-            while ($categories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
-                if ($categories['categories_name']) {
-                    $content .= '<li>';
-                    if (mslib_fe::hasProducts($categories['categories_id'])) {
-                        // get all cats to generate multilevel fake url
-                        $level = 0;
-                        $cats = mslib_fe::Crumbar($categories['categories_id']);
-                        $cats = array_reverse($cats);
-                        $where = '';
-                        if (count($cats) > 0) {
-                            foreach ($cats as $item) {
-                                $where .= 'categories_id[' . $level . ']=' . $item['id'] . '&';
-                                $level++;
-                            }
-                            $where = substr($where, 0, (strlen($where) - 1));
-                            $where .= '&';
-                        }
-                        $where .= 'categories_id[' . $level . ']=' . $categories['categories_id'];
-                        $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-                        // get all cats to generate multilevel fake url eof
-                        $name = '<a href="' . $link . '" class="ajax_link">' . $categories['categories_name'] . '</a>';
-                    } else {
-                        $name = '<span>' . $categories['categories_name'] . '</span>';
-                    }
-                    $content .= $name;
-                    mslib_fe::get_subcategories_as_ul($categories['categories_id'], $content);
-                    $content .= '</li>';
-                }
-            }
-            $content .= '</ul>';
-        }
-        return $content;
     }
     public function hasProducts($categories_ids, $include_disabled_products = 1) {
         if (is_numeric($categories_ids)) {
@@ -6200,7 +6163,7 @@ class mslib_fe {
         }
         if (is_numeric($parent_id)) {
             $query_array = array();
-            $query_array['select'][] = '*';
+            $query_array['select'][] = 'c.categories_id,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description';
             $query_array['from'][] = 'tx_multishop_categories c';
             $query_array['from'][] = 'tx_multishop_categories_description cd';
             $query_array['where'][] = 'c.page_uid=\'' . $page_uid . '\'';
@@ -6560,7 +6523,7 @@ class mslib_fe {
             foreach ($loadFromPids as $loadFromPid) {
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery('c.id,cd.name,cd.content,c.hash,c.type', // SELECT ...
                         'tx_multishop_cms c, tx_multishop_cms_description cd', // FROM ...
-                        'c.page_uid=\'' . $loadFromPid . '\' and c.id=cd.id and cd.language_id=\'' . $language_id . '\' and c.type=\'' . addslashes($type) . '\' and c.status = 1', // WHERE...
+                        '(c.page_uid=0 or c.page_uid=\'' . $loadFromPid . '\') and c.id=cd.id and cd.language_id=\'' . $language_id . '\' and c.type=\'' . addslashes($type) . '\' and c.status = 1', // WHERE...
                         '', // GROUP BY...
                         'c.sort_order', // ORDER BY...
                         '' // LIMIT ...
@@ -7675,6 +7638,7 @@ class mslib_fe {
             }
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label'] = $this->pi_getLL('admin_shipping');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description'] = $this->pi_getLL('admin_shipping') . '.';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class'] = 'fa fa-truck';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['label'] = $this->pi_getLL('admin_countries');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_countries');
@@ -7690,10 +7654,15 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class'] = 'fa fa-money';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['label'] = $this->pi_getLL('admin_payment');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['description'] = $this->pi_getLL('admin_payment') . '.';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['link']=mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['class'] = 'fa fa-credit-card';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label'] = $this->pi_getLL('admin_payment_methods');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['class'] = 'fa fa-credit-card';
+            // PSP transactions overview
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['label'] = $this->pi_getLL('admin_psp_transactions_overview');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_psp_transactions_overview');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_psp_transactions_overview']['class'] = 'fa fa-history';
             /*
 			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
@@ -8099,14 +8068,14 @@ class mslib_fe {
         }
         if (is_numeric($categories_id)) {
             $filter = array();
-            $filter[] = 'c.categories_id=cd.categories_id';
             $filter[] = 'c.categories_id=\'' . $categories_id . '\'';
             if (is_array($page_uid)) {
                 $filter[] = 'c.page_uid in (' . implode(',', $page_uid) . ')';
             } else {
                 $filter[] = 'c.page_uid=\'' . $page_uid . '\'';
             }
-            //language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
+            $filter[] = 'cd.language_id='.$this->sys_language_uid;
+            $filter[] = 'c.categories_id=cd.categories_id';
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name', // SELECT ...
                     'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
                     implode(' and ', $filter), // WHERE...
@@ -8570,6 +8539,12 @@ class mslib_fe {
                         // update old invoice to paid so its gone from the unpaid list
                         $updateArray = array('paid' => 1);
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $id, $updateArray);
+                        $GLOBALS['TYPO3_DB']->sql_query($query);
+                        // update orders to paid
+                        $updateArray=array();
+                        $updateArray['orders_paid_timestamp'] = time();
+                        $updateArray['paid'] = 1;
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $row['orders_id'], $updateArray);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         return 1;
                     }
@@ -9311,8 +9286,12 @@ class mslib_fe {
             return false;
         } else {
             $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
-            return $shop[0]['title'];
+            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
+            $pageTitle=$shop[0]['title'];
+            if ($shop[0]['nav_title']) {
+                $pageTitle = $shop[0]['nav_title'];
+            }
+            return $pageTitle;
         }
     }
     public function getOrdersIdByTransactionId($transaction_id, $psp = '') {
@@ -9382,41 +9361,6 @@ class mslib_fe {
                 return $array['transaction_id'];
             }
         }
-    }
-    public function categories_ultrasearch_as_ul($parent_id = '0', &$content = '') {
-        $content .= '<ul id="cat_' . $parent_id . '">';
-        $categories_query = $GLOBALS['TYPO3_DB']->sql_query("select c.categories_id, cd.categories_name, c.parent_id from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id = cd.categories_id and c.parent_id = '" . $parent_id . "' and c.page_uid='" . $this->showCatalogFromPage . "' order by c.sort_order, cd.categories_name");
-        while ($categories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
-            if ($categories['categories_name']) {
-                $content .= '<li><input type="checkbox" name="category_products" class="category_products" value="' . $categories['categories_id'] . '"> ';
-                if (mslib_fe::hasProducts($categories['categories_id'])) {
-                    // get all cats to generate multilevel fake url
-                    $level = 0;
-                    $cats = mslib_fe::Crumbar($categories['categories_id']);
-                    $cats = array_reverse($cats);
-                    $where = '';
-                    if (count($cats) > 0) {
-                        foreach ($cats as $item) {
-                            $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
-                            $level++;
-                        }
-                        $where = substr($where, 0, (strlen($where) - 1));
-                        $where .= '&';
-                    }
-                    $where .= 'categories_id[' . $level . ']=' . $categories['categories_id'];
-                    $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-                    // get all cats to generate multilevel fake url eof
-                    $name = '<a href="' . $link . '" class="ajax_link">' . $categories['categories_name'] . '</a>';
-                } else {
-                    $name = '<span>' . $categories['categories_name'] . '</span>';
-                }
-                $content .= $name;
-                categories_ultrasearch_as_ul($categories['categories_id'], $content);
-                $content .= '</li>';
-            }
-        }
-        $content .= '</ul>';
-        return $content;
     }
     // duplicate method with mslib_fe::getProductAttributes
     public function getProductOptions($products_id) {
@@ -10551,6 +10495,16 @@ class mslib_fe {
                 // couple/unknown
                 $salutation = $this->pi_getLL('gender_salutation_unknown');
                 break;
+        }
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'])) {
+            $params = array(
+                    'salutation' => &$salutation,
+                    'gender' => &$gender
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
         }
         return $salutation;
     }

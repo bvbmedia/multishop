@@ -22,6 +22,10 @@ if (!$skipMultishopUpdates) {
     require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/compare_database_v3.php');
     // V4 COMPARE DATABASE
     require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/compare_database_v4.php');
+
+    // ALWAYS COMPARE DATABASE
+    require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/compare_database_always.php');
+
     /*
     // V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
     $str="select tx_multishop_customer_id from fe_users limit 1";

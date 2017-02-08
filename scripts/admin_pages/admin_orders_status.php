@@ -30,6 +30,11 @@ if ($this->post) {
     switch ($this->post['tx_multishop_pi1']['action']) {
         case 'update_status':
             if (intval($this->post['tx_multishop_pi1']['orders_status_id'])) {
+                $updateArray = array();
+                $updateArray['page_uid'] = $this->post['related_shop_pid'];
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'].'\'', $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
                 foreach ($this->post['tx_multishop_pi1']['order_status_name'] as $key => $value) {
                     $updateArray = array();
                     $updateArray['name'] = $value;
@@ -43,7 +48,7 @@ if ($this->post) {
             if (count($this->post['tx_multishop_pi1']['order_status_name'])) {
                 if ($this->post['tx_multishop_pi1']['order_status_name'][0]) {
                     $insertArray = array();
-                    $insertArray['page_uid'] = $this->showCatalogFromPage;
+                    $insertArray['page_uid'] = $this->post['related_shop_pid'];
                     $insertArray['deleted'] = 0;
                     $insertArray['crdate'] = time();
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status', $insertArray);
@@ -65,6 +70,7 @@ if ($this->post) {
             break;
     }
 }
+$active_shop = mslib_fe::getActiveShop();
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $str = "SELECT o.id, o.default_status, od.name, od.language_id from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->shop_pid . "') and o.deleted=0 and o.id=od.orders_status_id and od.orders_status_id = " . $this->get['tx_multishop_pi1']['orders_status_id'] . " order by o.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -108,7 +114,42 @@ foreach ($this->languages as $key => $language) {
 		</div>
 		';
 }
-$content .= $tmpcontent . '
+$content .= $tmpcontent;
+if (count($active_shop) > 1) {
+    if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
+        $str_status = "SELECT o.page_uid from tx_multishop_orders_status o where o.id = " . $this->get['tx_multishop_pi1']['orders_status_id'];
+        $qry_status = $GLOBALS['TYPO3_DB']->sql_query($str_status);
+        $row_status = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_status);
+        $content .= '<div class="form-group">
+			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_order_status_to_shop', 'Relate this order status to') . '</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.($row_status['page_uid']=='0' ? ' checked="checked"' : '').' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
+        foreach ($active_shop as $pageinfo) {
+            $pageTitle = $pageinfo['title'];
+            if ($pageinfo['nav_title']) {
+                $pageTitle = $pageinfo['nav_title'];
+            }
+            $content .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '"'.($row_status['page_uid']==$pageinfo['uid'] ? ' checked="checked"' : '').' /><label>' . $pageTitle . '</label></div>';
+        }
+        $content .= '</div></div>';
+    } else {
+        $content .= '<div class="form-group">
+			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_order_status_to_shop', 'Relate this order status to') . '</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked" /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
+        foreach ($active_shop as $pageinfo) {
+            $pageTitle = $pageinfo['title'];
+            if ($pageinfo['nav_title']) {
+                $pageTitle = $pageinfo['nav_title'];
+            }
+            $content .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '" /><label>' . $pageTitle . '</label></div>';
+        }
+        $content .= '</div></div>';
+    }
+} else {
+    $content .= '<input type="hidden" name="related_shop_pid" value="' . $this->showCatalogFromPage . '">';
+}
+$content .='
 	<div class="form-group">
 		<div class="col-md-10 col-md-offset-2">
 		<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> ' . $this->pi_getLL('save') . '</button>
@@ -121,7 +162,7 @@ if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $content .= '<input type="hidden" name="tx_multishop_pi1[action]" value="update_status" />';
 }
 $content .= '</form>';
-$str = "SELECT o.id, o.default_status, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.id desc";
+$str = "SELECT o.id, o.page_uid, o.default_status, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.id desc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $zones = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -130,8 +171,11 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 if (count($statusses)) {
     $content .= '<table class="table table-striped table-bordered msadmin_border">
 		<thead><th class="cellID">' . $this->pi_getLL('id') . '</th>
-		<th class="cellName">' . $this->pi_getLL('name') . '</th>
-		<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
+        <th class="cellName">' . $this->pi_getLL('name') . '</th>';
+        if (count($active_shop)>1) {
+            $content.='<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
+        }
+		$content.='<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
 		<th class="cellAction">' . $this->pi_getLL('action') . '</th></thead><tbody>';
     foreach ($statusses as $status) {
         if (!$tr_type or $tr_type == 'even') {
@@ -144,7 +188,17 @@ if (count($statusses)) {
 			' . $status['id'] . '
 		</td>
 		';
-        $content .= '<td class="cellName">' . $status['name'] . '</td>
+        $content .= '<td class="cellName">' . $status['name'] . '</td>';
+        if (count($active_shop)>1) {
+            $content .= '<td class="cellStatus">';
+            if ($status['page_uid'] > 0) {
+                $content .= '<strong>' . mslib_fe::getShopNameByPageUid($status['page_uid']) . '</strong>';
+            } else {
+                $content .= '<strong>All</strong>';
+            }
+            $content .= '</td>';
+        }
+        $content.='
 		<td class="cellStatus">';
         if (!$status['default_status']) {
             $content .= '';

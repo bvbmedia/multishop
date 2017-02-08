@@ -29,6 +29,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
     // current cat
     if ($parent_id > 0) {
         $str = "SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.categories_id='" . addslashes($parent_id) . "' and cd.language_id='" . $this->sys_language_uid . "' and c.page_uid='" . $this->showCatalogFromPage . "' and c.categories_id=cd.categories_id";
+        // todo: for max speed, remove *
+        // $str = "SELECT c.categories_id, c.parent_id, cd.categories_name from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.categories_id='" . addslashes($parent_id) . "' and cd.language_id='" . $this->sys_language_uid . "' and c.page_uid='" . $this->showCatalogFromPage . "' and c.categories_id=cd.categories_id";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $current = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
     } else {

@@ -191,6 +191,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $params = array(
                     'cmsKeys' => &$cmsKeys,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'markerArray' => &$markerArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'] as $funcRef) {
@@ -221,6 +222,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $params = array(
                     'cmsKeys' => &$cmsKeys,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'markerArray' => &$markerArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'] as $funcRef) {
@@ -338,7 +340,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $array1[] = '###GENDER_SALUTATION###';
         $array2[] = mslib_fe::genderSalutation($order['billing_gender']);
         $markerArray['###PAID_STATUS_LABEL###'] = $this->pi_getLL('order_payment_status');
-        if ($order['paid']) {
+        if ($invoice['paid']) {
             $array1[] = '###PAID_STATUS###';
             $array2[] = $this->pi_getLL('paid');
             $markerArray['###PAID_STATUS###'] = $this->pi_getLL('paid');
@@ -349,10 +351,15 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // Payment date
         $markerArray['###PAID_DATE_LABEL###'] = $this->pi_getLL('payment_date');
-        if ($order['paid']) {
+        if ($invoice['paid']) {
             $array1[] = '###PAID_DATE###';
-            $array2[] = strftime("%x", $order['orders_paid_timestamp']);
-            $markerArray['###PAID_DATE###'] = strftime("%x", $order['orders_paid_timestamp']);
+            $value='';
+            if ($order['orders_paid_timestamp']) {
+                $value = strftime("%x", $order['orders_paid_timestamp']);
+            } else {
+                $value = '';
+            }
+            $markerArray['###PAID_DATE###'] = $value;
         } else {
             $array1[] = '###PAID_DATE###';
             $array2[] = $this->pi_getLL('unpaid');
@@ -389,6 +396,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
                     'array1' => &$array1,
                     'array2' => &$array2,
                     'order' => &$order,
+                    'invoice' => &$invoice,
                     'mail_template' => $mail_template,
                     'markerArray' => &$markerArray
             );
@@ -402,6 +410,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
             $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
         }
+        $markerArray['###STORE_URL###']=$this->FULL_HTTP_URL;
         // MARKERS EOL
         $tmpcontent = $this->cObj->substituteMarkerArray($template, $markerArray);
         if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['debug']) {

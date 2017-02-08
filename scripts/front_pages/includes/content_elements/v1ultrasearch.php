@@ -101,25 +101,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
         $string = md5($this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'] . print_r($this->get, 1) . print_r($this->post, 1));
     }
     if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content = $Cache_Lite->get($string))) {
-        /*
-        // Get category from DB
-        $str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$this->sys_language_uid."' and c.categories_id=cd.categories_id order by c.sort_order";
-        $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-        while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))
-        {
-            $categories[]=$row;
-        }
-        if (is_array($categories) and count($categories) >0)
-        {
-        */
-        //begin form ajax ultrasearch
-        $content = '<form method="post" action="" id="ajax_ultrasearch">';
-        /*<label id="label_category">Category</label>
-        <div id="check_category">';
-        $content .= mslib_fe::categories_ultrasearch_as_ul(0);
-
-$content .='</div> ';*/
-        //query for attribut options
+        //query for attribute options
         $fields = array();
         if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS'] or $this->ms['MODULES']['ULTRASEARCH_FIELDS'] == 'all') {
             $fields[] = 'all';

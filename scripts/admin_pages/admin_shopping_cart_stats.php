@@ -117,18 +117,28 @@ foreach ($dates as $key => $value) {
     $system_date = date("Y-m-d", $value);
     $start_time = strtotime($system_date . " 00:00:00");
     $end_time = strtotime($system_date . " 23:59:59");
-    $str = "SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' group by c.session_id ";
+    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
-    $content .= '<td class="text-right">' . number_format($rows) . '</td>';
+    $counter_session=array();
+    $cart_contents=array();
+    while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+        if (!in_array($rows['session_id'], $counter_session)) {
+            $cart = unserialize($rows['contents']);
+            if (count($cart['products']) > 0) {
+                $counter_session[] = $rows['session_id'];
+                $cart_contents[] = $rows;
+            }
+        }
+    }
+    $content .= '<td class="text-right">' . number_format(count($counter_session)) . '</td>';
     $content .= '<td>';
     //$pageset['total_rows'] = $rows;
     // GET THE PRODUCTS THAT ARE INSIDE THE CART
-    $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
-    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $session_ids = array();
-    while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {
-        if (!in_array($row['session_id'], $session_ids)) {
+    //$str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
+    //$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    //$session_ids = array();
+    foreach ($cart_contents as $row) {
+        //if (!in_array($row['session_id'], $session_ids)) {
             $cart = unserialize($row['contents']);
             if (count($cart['products']) > 0) {
                 $products = array();
@@ -139,6 +149,7 @@ foreach ($dates as $key => $value) {
                     // print customer settings
                     $content .= '<table id="product_import_table" class="table table-striped table-bordered ' . (!$row['is_checkout'] ? 'is_not_checkout' : '') . '">';
                     $tr_rows = array();
+                    //$tr_rows[] = '<th class="text-right" width="100">Session ID</th><td>' . $row['session_id'] . '</td>';
                     $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('date') . '</th><td>' . strftime("%a. %x %X", $row['crdate']) . '</td>';
                     if ($row['ip_address']) {
                         $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('ip_address') . '</th><td>' . $row['ip_address'] . '</td>';
@@ -210,8 +221,8 @@ foreach ($dates as $key => $value) {
                     $content .= '</table>';
                 }
             }
-        }
-        $session_ids[] = $row['session_id'];
+        //}
+        //$session_ids[] = $row['session_id'];
     }
     $content .= '
 	</td>';

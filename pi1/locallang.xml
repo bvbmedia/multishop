@@ -480,7 +480,7 @@
             <label index="admin_tax_rule_groups">Tax rule groups</label>
             <label index="admin_taxes">Taxes</label>
             <label index="admin_till">till</label>
-            <label index="admin_till2">t/m</label>
+            <label index="admin_till2">to</label>
             <label index="admin_update_images">Update images</label>
             <label index="admin_update_prices">Update prices</label>
             <label index="admin_update_product_prices_by_percentage">Mass change your product prices by global percentage</label>
@@ -1395,6 +1395,10 @@
             <label index="bought_products_per_main_category">Bought products per main category %s</label>
             <label index="include_only_related_product">Only include products that are enabled on this feed</label>
             <label index="turnover_category_x">Turnover %s</label>
+            <label index="reset_advanced_search_filter">Reset advanced search filter</label>
+            <label index="department">Department</label>
+            <label index="admin_psp_transactions_overview">Transactions overview</label>
+            <label index="transaction_id">Transactions ID</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

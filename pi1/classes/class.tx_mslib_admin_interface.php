@@ -160,10 +160,28 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         } else {
             $that->get['display_all_records'] = '';
         }
+        if (is_numeric($that->get['tx_multishop_pi1']['limit'])) {
+            $that->get['limit'] = $that->get['tx_multishop_pi1']['limit'];
+        }
         if ($that->cookie['limit']) {
+            /*
+            if (!isset($that->get['limit']) || $that->get['limit']!=$that->cookie['limit']) {
+                if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
+                    $that->get['limit'] = $params['settings']['limit'];
+                } else {
+                    $that->get['limit'] = 15;
+                }
+            } else {
+            */
             $that->get['limit'] = $that->cookie['limit'];
+            //}
         } else {
-            $that->get['limit'] = 50;
+            if (!is_numeric($that->get['limit'])) {
+                $that->get['limit'] = 50;
+            }
+            if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
+                $that->get['limit'] = $params['settings']['limit'];
+            }
         }
         $that->ms['MODULES']['PAGESET_LIMIT'] = $that->get['limit'];
         if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
@@ -509,7 +527,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = $status_html;
                             break;
                         case 'booleanToggle':
-                            $status_html = '';
+                            $status_html = '<span class="booleanToggle">';
                             if (!$row[$col]) {
                                 $status_html .= '<span class="admin_status_red" alt="' . $this->pi_getLL('disable') . '"></span>';
                                 if ($valArray['hrefEnable']) {
@@ -527,6 +545,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 }
                                 $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
                             }
+                            $status_html .= '</span>';
                             $row[$col] = $status_html;
                             break;
                     }
@@ -581,7 +600,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = mslib_fe::amount2Cents($summarize[$col], 0);
                             break;
                         case 'number_format_2_decimals':
-                            $row[$col] = round(number_format($summarize[$col], 2, ',', '.'), 2);
+                            $row[$col] = round(number_format($summarize[$col], 2, '.', ''), 2);
                             break;
                         default:
                             $row[$col] = $valArray['title'];

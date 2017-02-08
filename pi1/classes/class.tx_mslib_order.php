@@ -212,9 +212,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total_excluding_vat'] += ($final_price + $tmp_attributes_price) * $row_prod['qty'];
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total'] += ($final_price + $tmp_attributes_price) + ($tax + $attributes_tax) * $row_prod['qty'];
                 }
-                $order_tax_data['total_orders_tax_including_discount'] = $order_tax_data['total_orders_tax'];
-                $order_tax_data['sub_total'] = (string)$sub_total;
-                $order_tax_data['sub_total_excluding_vat'] = (string)$sub_total_excluding_vat;
+                $order_tax_data['total_orders_tax_including_discount'] = number_format($order_tax_data['total_orders_tax'], 14, '.', '');
+                $order_tax_data['sub_total'] = (string)number_format($sub_total, 14, '.', '');
+                $order_tax_data['sub_total_excluding_vat'] = (string)number_format($sub_total_excluding_vat, 14, '.', '');
                 // discount
                 //echo "<pre>";
                 //echo $sub_total."<br/>";
@@ -250,13 +250,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //echo $discount_price."<br/>";
                 //echo $sub_total_tax."<br/>";
                 //die();
-                $order_tax_data['total_orders_tax'] = (string)$sub_total_tax + $shipping_tax + $payment_tax;
+                $order_tax_data['total_orders_tax'] = (string)number_format($sub_total_tax + $shipping_tax + $payment_tax, 14, '.', '');
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)(($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax);
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
                 } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)(($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax);
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
                 }
-                $order_tax_data['grand_total_excluding_vat'] = (string)($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']);
+                $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
                 //
                 $order_tax_data['tax_separation'] = $tax_separation;
                 //print_r($order_tax_data);
@@ -1256,7 +1256,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($orders['total_amount'] > 0 && $orders['total_amount'] < 0.01) {
                 $orders['total_amount'] = 0;
             }
-            //round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);
+            //hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['getOrderPostProc'])) {
+                $params = array(
+                        'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['getOrderPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             return $orders;
         }
         return false;

@@ -68,6 +68,9 @@ $limits[] = '350';
 $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
+if (!in_array($this->get['limit'], $limits)) {
+    $limits[]=$this->get['limit'];
+}
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }

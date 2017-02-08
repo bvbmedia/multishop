@@ -4,7 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 // GOOGLE CHART NEW CUSTOMERS
 $key = 'google_chart_customers';
-$compiledWidget['key'] = 'google_chart';
+$compiledWidget['key'] = 'google_chart_customers';
 $compiledWidget['defaultCol'] = 2;
 $compiledWidget['title'] = $this->pi_getLL('admin_label_users');
 $dates = array();

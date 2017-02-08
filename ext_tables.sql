@@ -33,6 +33,7 @@ CREATE TABLE `fe_users` (
  `tx_multishop_quick_checkout` tinyint(1) default '0',
  `tx_multishop_customer_id` int(11) default '0',
  `tx_multishop_language` varchar(127) default '',
+ `department` varchar(127) default '',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
@@ -66,12 +67,13 @@ CREATE TABLE `fe_users` (
  KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`),
  KEY `tx_multishop_language` (`tx_multishop_language`),
  KEY `building` (`building`),
- KEY `region` (`region`)
+ KEY `region` (`region`),
+ KEY `department` (`department`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
  `id` int(11) NOT NULL auto_increment ,
- `contents` text,
+ `contents` longtext,
  `customer_id` int(11) default '0',
  `is_checkout` tinyint(1) default '0',
  `crdate` int(11) default '0',
@@ -436,6 +438,7 @@ CREATE TABLE `tx_multishop_orders` (
  `billing_tr_name_en` varchar(150) default '',
  `billing_tr_parent_iso_nr` int(11) default '0',
  `billing_tr_parent_name_en` varchar(150) default '',
+ `billing_department` varchar(127) default '',
  `delivery_first_name` varchar(150) default '',
  `delivery_middle_name` varchar(150) default '',
  `delivery_last_name` varchar(150) default '',
@@ -458,6 +461,7 @@ CREATE TABLE `tx_multishop_orders` (
  `delivery_tr_name_en` varchar(150) default '',
  `delivery_tr_parent_iso_nr` int(11) default '0',
  `delivery_tr_parent_name_en` varchar(150) default '',
+ `delivery_department` varchar(127) default '',
  `status` int(3) default '1',
  `crdate` int(11) default '0',
  `ordercreated` tinyint(1) default '0',
@@ -573,6 +577,8 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `delivery_tr_name_en` (`delivery_tr_name_en`),
  KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
  KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`),
+ KEY `billing_department` (`billing_department`),
+ KEY `delivery_department` (`delivery_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_orders_id` (`foreign_orders_id`)
 ) COMMENT='Ordersysteem';
@@ -629,6 +635,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  `customer_comments` text,
  `product_capital_price` decimal(24,14) default '0.00000000000000',
  `products_tax_id` int(11) default '0',
+ `page_uid` int(11) default '0',
+ `product_link` varchar(255) default '',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -643,7 +651,9 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `vendor_code` (`vendor_code`),
  KEY `sort_order` (`sort_order`),
  KEY `products_tax_id` (`products_tax_id`),
- KEY `product_capital_price` (`product_capital_price`)
+ KEY `product_capital_price` (`product_capital_price`),
+ KEY `page_uid` (`page_uid`),
+ KEY `product_link` (`product_link`)
 ) COMMENT='Orderregels';
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
@@ -1520,6 +1530,7 @@ CREATE TABLE tt_address (
  tx_multishop_vat_number varchar(9) default '',
  tx_multishop_coc_id varchar(127) default '',
  tx_multishop_paypal_account varchar(127) default '',
+ department varchar(127) default '',
  PRIMARY KEY (uid),
  KEY parent (pid),
  KEY pid (pid,email),
@@ -1533,6 +1544,7 @@ CREATE TABLE tt_address (
  KEY `tx_multishop_vat_number` (`tx_multishop_vat_number`),
  KEY `tx_multishop_coc_id` (`tx_multishop_coc_id`),
  KEY `tx_multishop_paypal_account` (`tx_multishop_paypal_account`),
+ KEY `department` (`department`)
 );
 
 CREATE TABLE `tx_multishop_products_locked_fields` (

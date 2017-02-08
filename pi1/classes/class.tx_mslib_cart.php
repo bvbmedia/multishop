@@ -2101,6 +2101,26 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 // hook oef
                             }
                             // TYPO3 6.2 LTS NULL FIX
+                            $insertArray['page_uid']=$value['page_uid'];
+                            $insertArray['product_link']='';
+                            if ($value['categories_id']) {
+                                // get all cats to generate multilevel fake url
+                                $level = 0;
+                                $cats = mslib_fe::Crumbar($value['categories_id']);
+                                $cats = array_reverse($cats);
+                                $where = '';
+                                if (count($cats) > 0) {
+                                    foreach ($cats as $cat) {
+                                        $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                                        $level++;
+                                    }
+                                    $where = substr($where, 0, (strlen($where) - 1));
+                                    $where .= '&';
+                                }
+                                // get all cats to generate multilevel fake url eof
+                                $product_detail_link = mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                $insertArray['product_link']=$product_detail_link;
+                            }
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);

@@ -386,7 +386,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
                                     $insertArray['products_description'] = $this->post['manual_order_products_description'];
                                 }
-                                // disocunt update
+                                // discount update
                                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                                     $insertArray['discount_amount'] = 0;
                                     $insertArray['discount_percentage'] = 0;
@@ -1062,6 +1062,14 @@ if (is_numeric($this->get['orders_id'])) {
 							<input class="form-control" name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="' . $orders['billing_company'] . '" />
 						</div>
 					</div>';
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $edit_billing_details['billing_department'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('department')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[billing_department]" type="text" id="edit_billing_department" value="' . $orders['billing_department'] . '" />
+						</div>
+					</div>';
+                }
                 $edit_billing_details['billing_first_name'] = '<div class="form-group">
 						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('first_name')) . '</label>
 						<div class="col-md-7">
@@ -1185,6 +1193,9 @@ if (is_numeric($this->get['orders_id'])) {
             if ($orders['billing_company']) {
                 $tmpcontent .= '<strong>' . $orders['billing_company'] . '</strong><br />';
             }
+            if ($orders['billing_department']) {
+                $tmpcontent .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+            }
             $tmpcontent .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
@@ -1257,6 +1268,14 @@ if (is_numeric($this->get['orders_id'])) {
                 		<input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="' . $orders['delivery_company'] . '" />
                 	</div>
                 </div>';
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $edit_delivery_details['delivery_department'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('department')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[delivery_department]" type="text" id="edit_delivery_department" value="' . $orders['delivery_department'] . '" />
+						</div>
+					</div>';
+                }
                 $edit_delivery_details['delivery_first_name'] = '<div class="form-group">
                 	<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('first_name')) . '</label>
                 	<div class="col-md-7">
@@ -1374,6 +1393,9 @@ if (is_numeric($this->get['orders_id'])) {
             if ($orders['delivery_company']) {
                 $tmpcontent .= '<strong>' . $orders['delivery_company'] . '</strong><br />';
             }
+            if ($orders['delivery_department']) {
+                $tmpcontent .= '<strong>' . $orders['delivery_department'] . '</strong><br />';
+            }
             $address_data = array();
             $address_data = $orders;
             $address_data['building'] = $orders['delivery_building'];
@@ -1490,6 +1512,11 @@ if (is_numeric($this->get['orders_id'])) {
 
                 $("#edit_delivery_company").val("");
                 $("#edit_delivery_company").val($("#edit_billing_company").val());
+                
+                '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                $("#edit_delivery_department").val("");
+                $("#edit_delivery_department").val($("#edit_billing_department").val());
+                ' : '').'
 
                 $("#edit_delivery_first_name").val("");
                 $("#edit_delivery_first_name").val($("#edit_billing_first_name").val());
@@ -1548,6 +1575,15 @@ if (is_numeric($this->get['orders_id'])) {
                             name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
                     }
+                    
+                    '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                    if ($(this).attr("id") == "edit_billing_department") {
+                        if ($(this).val() != "") {
+                            name += "<strong>" + $(this).val() + "</strong><br/>";
+                        }
+                    }
+                    ' : '').'
+                    
                     if ($(this).attr("id") == "edit_billing_first_name") {
                         name += $(this).val();
                     }
@@ -1629,6 +1665,15 @@ if (is_numeric($this->get['orders_id'])) {
                             name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
                     }
+                    
+                    '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                    if ($(this).attr("id") == "edit_delivery_department") {
+                        if ($(this).val() != "") {
+                            name += "<strong>" + $(this).val() + "</strong><br/>";
+                        }
+                    }
+                    ' : '').'
+                    
                     if ($(this).attr("id") == "edit_delivery_first_name") {
                         name += $(this).val();
                     }
@@ -3536,7 +3581,7 @@ if (is_numeric($this->get['orders_id'])) {
                         } else {
                             $("#edit_order_product_id").html(e.object.id);
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order') . '",{pid: e.object.id, oid:' . $this->get['orders_id'] . ', qty: 1}, function(d){
-                                if (d.tax_id) {
+                                if (d.tax_id!="" && d.tax_id!=undefined) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
                                         	$("#product_tax").val(d.tax_id);
@@ -3548,6 +3593,16 @@ if (is_numeric($this->get['orders_id'])) {
                                         	$("#manual_product_tax").val(d.tax_id);
                                         } else {
                                             d.price_include_vat=0;
+                                        }
+                                    }
+                                } else {
+                                    if ($("#product_tax").length>0) {
+                                        if ($("#product_tax").children().length>0) {
+                                        	$("#product_tax").val("");
+                                        }
+                                    } else {
+                                        if ($("#manual_product_tax").length>0) {
+                                        	$("#manual_product_tax").val("");
                                         }
                                     }
                                 }

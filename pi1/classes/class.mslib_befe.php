@@ -2034,7 +2034,7 @@ class mslib_befe {
     public function tep_get_categories_select($categories_id = '0', $aid = '', $level = 0, $selectedid = '') {
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name, c.categories_id, c.parent_id', // SELECT ...
                 'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-                'c.parent_id=\'' . $categories_id . '\' and c.status=1 and c.categories_id=cd.categories_id and c.page_uid=\'' . $this->shop_pid . '\'', // WHERE...
+                'c.parent_id=\'' . $categories_id . '\' and c.status=1 and c.page_uid=\'' . $this->shop_pid . '\' and c.categories_id=cd.categories_id', // WHERE...
                 '', // GROUP BY...
                 'c.sort_order, cd.categories_name', // ORDER BY...
                 '' // LIMIT ...
@@ -2075,7 +2075,7 @@ class mslib_befe {
         $output = array();
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name, c.categories_id, c.parent_id', // SELECT ...
                 'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-                'c.parent_id=\'' . $categories_id . '\' and c.status=1 and c.categories_id=cd.categories_id and c.page_uid=\'' . $page_uid . '\'', // WHERE...
+                'c.parent_id=\'' . $categories_id . '\' and c.status=1 and c.page_uid=\'' . $page_uid . '\' and c.categories_id=cd.categories_id', // WHERE...
                 '', // GROUP BY...
                 'c.sort_order, cd.categories_name', // ORDER BY...
                 '' // LIMIT ...
@@ -4409,6 +4409,18 @@ class mslib_befe {
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
                         }
+                        //hook to let other plugins further manipulate the replacers
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
+                            $params_internal = array(
+                                'attributeMarkerArray' => &$attributeMarkerArray,
+                                'table_type' => $table_type,
+                                'product' => $product,
+                                'options' => $options,
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                            }
+                        }
                         $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
@@ -4851,6 +4863,16 @@ class mslib_befe {
                     $purifier = new HTMLPurifier($config);
                     return $purifier->purify($val);
                     break;
+                case 'html_no_img':
+                    $config->set('HTML.Allowed', 'table,tr,th,td,tbody,thead,tfood,h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],h7[style],style,font[style],iframe[style|frameborder|allowfullscreen|width|height|src],a[href],div,span,p,i,a,b,br,hr,u,strike,strong,em,ul,ol,li,del,ins,strike'); // Allow basic HTML
+                    $config->set("HTML.Nofollow", TRUE);
+                    $config->set('HTML.TargetBlank', TRUE);
+                    $config->set('HTML.SafeIframe', true);
+                    $config->set('URI.SafeIframeRegexp', '%^(//|http://|https://)(www.youtube.com/embed/|player.vimeo.com/video/)%');
+                    $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
+                    $purifier = new HTMLPurifier($config);
+                    return $purifier->purify($val);
+                    break;
                 case 'strip_tags':
                     $config->set('HTML.Allowed', ''); // Allow Nothing
                     $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
@@ -5155,6 +5177,19 @@ class mslib_befe {
             }
             return $order_status_history_items;
         }
+    }
+    public function getProductsCategoriesCollection($categories_id) {
+        if (is_numeric($categories_id)) {
+            $subcats_array=array();
+            $filterTmp = array();
+            $filterTmp[] = 'node_id=' . $categories_id;
+            $subcats_array = mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', $filterTmp, 'node_id');
+            if (is_array($subcats_array) && count($subcats_array)) {
+                return $subcats_array;
+            }
+            return false;
+        }
+        return false;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

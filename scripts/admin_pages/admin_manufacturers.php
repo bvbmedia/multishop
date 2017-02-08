@@ -106,7 +106,7 @@ foreach ($chars as $char) {
     $searchCharNav .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[searchByChar]=' . $char . '&tx_multishop_pi1[page_section]=admin_manufacturers') . '" class="btn btn-default">' . mslib_befe::strtoupper($char) . '</a>';
 }
 $searchCharNav .= '</div></div>';
-$limit_search_result_selectbox = '<div class="form-inline"><div class="form-group"><label>' . $this->pi_getLL('limit_number_of_records_to') . ':</label>';
+$limit_search_result_selectbox = '<div class="form-inline pull-right"><div class="form-group"><label>' . $this->pi_getLL('limit_number_of_records_to') . ':</label>';
 $limit_search_result_selectbox .= '<select name="limit" class="form-control">';
 $limits = array();
 $limits[] = '10';
@@ -125,6 +125,9 @@ $limits[] = '350';
 $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
+if (!in_array($this->get['limit'], $limits)) {
+    $limits[]=$this->get['limit'];
+}
 foreach ($limits as $limit) {
     $limit_search_result_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected="selected"' : '') . '>' . $limit . '</option>';
 }

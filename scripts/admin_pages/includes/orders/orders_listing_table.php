@@ -11,6 +11,7 @@ $counter = 0;
 $tr_type = 'even';
 $cb_ctr = 0;
 $orderItem = '';
+$totalAmount=0;
 foreach ($tmporders as $order) {
     $grandTotalColumnName = 'grand_total';
     if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
@@ -169,6 +170,11 @@ foreach ($tmporders as $order) {
         }
     }
     // custom page hook that can be controlled by third-party plugin eof
+    if (strpos($order[$grandTotalColumnName], '-')!==false) {
+        $totalAmount -= str_replace('-', '', $order[$grandTotalColumnName]);
+    } else {
+        $totalAmount += $order[$grandTotalColumnName];
+    }
     $orderItem .= $this->cObj->substituteMarkerArray($subparts['orders_listing'], $markerArray, '###|###');
 }
 $actions = array();
@@ -274,7 +280,7 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 $subpartArray['###HEADER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_AMOUNT###'] = $this->pi_getLL('amount');
 $subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
-$subpartArray['###LABEL_FOOTER_AMOUNT###'] = $this->pi_getLL('amount');
+$subpartArray['###LABEL_FOOTER_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);;
 $key = 'shipping_method_label';
 if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
     $final_order_link = $order_link;

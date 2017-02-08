@@ -146,6 +146,11 @@ switch ($this->ms['page']) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_payment_modules.php');
         }
         break;
+    case 'admin_psp_transactions_overview':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_psp_transactions_overview.php');
+        }
+        break;
     case 'admin_taxes':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_taxes.php');
@@ -692,7 +697,7 @@ switch ($this->ms['page']) {
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'])) {
                 $params = array(
-                        'content' => &$content
+                    'content' => &$content
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

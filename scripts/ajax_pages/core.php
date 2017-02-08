@@ -516,6 +516,7 @@ switch ($this->ms['page']) {
         }
         $return_data = array();
         $tmp_return_data = array();
+        $tmp_return_data_sort=array();
         switch ($this->get['tx_multishop_pi1']['get_category_tree']) {
             case 'getValues':
                 $tmp_preselecteds = array();
@@ -557,9 +558,21 @@ switch ($this->ms['page']) {
                             } else {
                                 $tmp_return_data[$preselected_id] = implode(' > ', $catpath);
                             }
+                            $tmp_return_data_sort[$preselected_id]=implode(' > ', $catpath);;
+                        }
+                    }
+                    if (is_array($tmp_return_data_sort) && count($tmp_return_data_sort)) {
+                        natsort($tmp_return_data_sort);
+                        $tmp_return_data_list=array();
+                        $tmp_return_data_list=$tmp_return_data;
+                        // return data
+                        $tmp_return_data=array();
+                        foreach ($tmp_return_data_sort as $tmp_preselected_id => $tmp_path) {
+                            $tmp_return_data[$tmp_preselected_id]=$tmp_return_data_list[$tmp_preselected_id];
                         }
                     }
                 }
+
                 if (!count($tmp_preselecteds) || (count($tmp_preselecteds) === 1 && !$tmp_preselecteds[0]) || !count($tmp_return_data)) {
                     $return_data[] = array(
                             'id' => 0,
@@ -573,7 +586,7 @@ switch ($this->ms['page']) {
                 if (is_numeric($this->categoriesStartingPoint)) {
                     $categoriesStartingPoint = $this->categoriesStartingPoint;
                 }
-                if (isset($this->get['q']) && !empty($this->get['q'])) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, $page_uid, $include_disabled_cats);
@@ -624,7 +637,7 @@ switch ($this->ms['page']) {
                 if (isset($this->get['skip_ids']) && !empty($this->get['skip_ids'])) {
                     $skip_ids = explode(',', $this->get['skip_ids']);
                 }
-                if (isset($this->get['q']) && !empty($this->get['q'])) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, '', $include_disabled_cats);
@@ -710,11 +723,22 @@ switch ($this->ms['page']) {
                 break;
         }
         //natsort($tmp_return_data);
+        $categories_results_limit=0; // 0 = unlimited
+        if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
+            $categories_results_limit=15;
+        }
+        $category_counter=0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {
             $return_data[] = array(
                     'id' => $tree_id,
                     'text' => $tree_path
             );
+            $category_counter++;
+            if ($categories_results_limit>0) {
+                if ($category_counter >= $categories_results_limit) {
+                    break;
+                }
+            }
         }
         $json_data = mslib_befe::array2json($return_data);
         echo $json_data;
@@ -2138,6 +2162,9 @@ switch ($this->ms['page']) {
                 $keys[] = 'telephone';
                 $keys[] = 'mobile';
                 $keys[] = 'fax';
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $keys[] = 'department';
+                }
                 $return_data = array();
                 $updateArray = array();
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'])) {
