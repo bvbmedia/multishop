@@ -325,19 +325,7 @@
         }
         else
         {
-
-
-            console.log(val);
-
-
             var num = $.number( val, data.decimals, data.dec_point, data.thousands_sep );
-
-            // Make sure empties are set with correct signs.
-//			if(val.indexOf('-') === 0 && +num === 0)
-//			{
-//				num = '-'+num;
-//			}
-
             return $.isFunction(origHookSet) ? origHookSet(el, num) : el.value = num;
         }
     };
