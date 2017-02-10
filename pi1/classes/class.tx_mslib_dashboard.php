@@ -171,7 +171,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			var old_position;
 			$(".column").sortable({
 				connectWith: ".column",
-				cancel: \'.state-disabled\',
+				cancel: \'.state-disabled,select\',
 				revert: true,
 				scroll: true,
 				tolerance: "pointer",
@@ -257,7 +257,6 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					//drawChartgoogle_chart_carts();
 				}
 			});
-
 			$(".column").disableSelection();
 		};
 		jQuery(document).ready(function($) {
@@ -272,6 +271,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$(this).parents(".portlet:first").find(".portlet-content").toggle();
 			});
 			makesortable();
+			'.((isset($this->get['tx_multishop_pi1']['widget']) && !empty($this->get['tx_multishop_pi1']['widget'])) ? '
+			$(\'html, body\').animate({
+                scrollTop: $("#'.$this->get['tx_multishop_pi1']['widget'].'").offset().top
+            }, 2000);
+			
+			' : '').'
 		});
 		</script>
 		';
