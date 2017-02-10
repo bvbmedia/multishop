@@ -275,7 +275,6 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$(\'html, body\').animate({
                 scrollTop: $("#'.$this->get['tx_multishop_pi1']['widget'].'").offset().top
             }, 2000);
-			
 			' : '').'
 		});
 		</script>
