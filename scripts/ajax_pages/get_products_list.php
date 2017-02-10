@@ -96,21 +96,25 @@ if ($this->ADMIN_USER) {
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
             $counter = 0;
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                $catsname = array();
-                if ($row['categories_id'] > 0) {
-                    // get all cats to generate multilevel fake url
-                    $level = 0;
-                    $cats = mslib_fe::Crumbar($row['categories_id']);
-                    $cats = array_reverse($cats);
-                    $where = '';
-                    if (count($cats) > 0) {
-                        foreach ($cats as $cat) {
-                            $catsname[] = $cat['name'];
+                if (!$catid) {
+                    $catsname = array();
+                    if ($row['categories_id'] > 0) {
+                        // get all cats to generate multilevel fake url
+                        $level = 0;
+                        $cats = mslib_fe::Crumbar($row['categories_id']);
+                        $cats = array_reverse($cats);
+                        $where = '';
+                        if (count($cats) > 0) {
+                            foreach ($cats as $cat) {
+                                $catsname[] = $cat['name'];
+                            }
                         }
+                        // get all cats to generate multilevel fake url eof
                     }
-                    // get all cats to generate multilevel fake url eof
+                    $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']);
+                } else {
+                    $return_data[$counter]['text'] = htmlentities($row['products_name']);
                 }
-                $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']);
                 $return_data[$counter]['id'] = $row['products_id'];
                 $counter++;
             }
@@ -120,21 +124,25 @@ if ($this->ADMIN_USER) {
         $counter = 0;
         foreach ($products['products'] as $product) {
             if ($product['products_name'] && !empty($product['products_name'])) {
-                $catsname = array();
-                if ($product['categories_id']) {
-                    // get all cats to generate multilevel fake url
-                    $level = 0;
-                    $cats = mslib_fe::Crumbar($product['categories_id']);
-                    $cats = array_reverse($cats);
-                    $where = '';
-                    if (count($cats) > 0) {
-                        foreach ($cats as $cat) {
-                            $catsname[] = $cat['name'];
+                if (!$catid) {
+                    $catsname = array();
+                    if ($product['categories_id']) {
+                        // get all cats to generate multilevel fake url
+                        $level = 0;
+                        $cats = mslib_fe::Crumbar($product['categories_id']);
+                        $cats = array_reverse($cats);
+                        $where = '';
+                        if (count($cats) > 0) {
+                            foreach ($cats as $cat) {
+                                $catsname[] = $cat['name'];
+                            }
                         }
+                        // get all cats to generate multilevel fake url eof
                     }
-                    // get all cats to generate multilevel fake url eof
+                    $return_data[$counter]['text'] = htmlspecialchars(implode(" > ", $catsname) . ' > ' . $product['products_name']);
+                } else {
+                    $return_data[$counter]['text'] = htmlspecialchars($product['products_name']);
                 }
-                $return_data[$counter]['text'] = htmlspecialchars(implode(" > ", $catsname) . ' > ' . $product['products_name']);
                 $return_data[$counter]['id'] = $product['products_id'];
                 $counter++;
             }
