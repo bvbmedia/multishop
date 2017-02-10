@@ -63,6 +63,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['searchKeywordsToplist'] = 1;
                 $this->enabledWidgets['ordersLatest'] = 1;
                 $this->enabledWidgets['turnoverPerMonth'] = 1;
+                $this->enabledWidgets['turnoverGraphCurrentWeek'] = 1;
                 // ORDERS TOTAL TABLES EOF
                 break;
             case 'admin_edit_customer':
@@ -140,6 +141,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 break;
             case 'turnoverPerProduct':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_product.php');
+                break;
+            case 'turnoverGraphCurrentWeek':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverGraphCurrentWeek.php');
                 break;
             default:
                 //hook to let other plugins further manipulate the settings
@@ -365,6 +369,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                             'ordersPerMonth',
                                             'customersPerMonth'
                                     )
+                            )
+                    );
+                    $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverGraphCurrentWeek')
                             )
                     );
                     break;
