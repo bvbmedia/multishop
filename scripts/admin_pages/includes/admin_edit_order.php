@@ -3509,7 +3509,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         },
                         ' : '') . '
-                        minimumInputLength: 2,
+                        minimumInputLength: 1,
                         query: function(query) {
                             /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});
