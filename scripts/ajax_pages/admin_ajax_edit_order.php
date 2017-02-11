@@ -254,7 +254,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (strpos($this->get['q'], '||catid=') !== false) {
                 $tmp_value = explode('||catid=', $this->get['q']);
-                $this->get['q'] = $tmp_value[0];
+                $this->get['q'] = trim($tmp_value[0]);
                 $categories_id = $tmp_value[1];
             }
             if (!is_numeric($this->get['q'])) {
@@ -262,7 +262,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             } else {
                 $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\')';
             }
-            $limit = '';
+            if (!empty($this->get['q'])) {
+                $limit = '';
+            }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
             $where[] = 'p.products_id = \'' . addslashes($this->get['preselected_id']) . '\'';
         }
@@ -294,8 +296,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 //hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsIteratorPreProc'])) {
-                    $params = array(
-                            'row' => &$row
+                    $params = array (
+                        'row' => &$row
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsIteratorPreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

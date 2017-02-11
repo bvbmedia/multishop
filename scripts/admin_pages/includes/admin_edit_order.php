@@ -3496,6 +3496,7 @@ if (is_numeric($this->get['orders_id'])) {
                 var select2_pn = function(selector_str, placeholder, dropdowncss, ajax_url) {
                     $(selector_str).select2({
                         placeholder: placeholder,
+                        
                         ' . (($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT'] == '0') ? '
                         createSearchChoice:function(term, data) {
                             if ($(data).filter(function() {
@@ -3508,7 +3509,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         },
                         ' : '') . '
-                        minimumInputLength: 0,
+                        minimumInputLength: 2,
                         query: function(query) {
                             /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});
