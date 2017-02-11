@@ -63,7 +63,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['searchKeywordsToplist'] = 1;
                 $this->enabledWidgets['ordersLatest'] = 1;
                 $this->enabledWidgets['turnoverPerMonth'] = 1;
-                $this->enabledWidgets['turnoverGraphCurrentWeek'] = 1;
+                //$this->enabledWidgets['turnoverGraphCurrentWeek'] = 1;
+                $this->enabledWidgets['turnoverThisWeekLastWeek'] = 1;
+                $this->enabledWidgets['profitThisMonthLastMonth'] = 1;
                 // ORDERS TOTAL TABLES EOF
                 break;
             case 'admin_edit_customer':
@@ -142,8 +144,16 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             case 'turnoverPerProduct':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_product.php');
                 break;
+            /*
             case 'turnoverGraphCurrentWeek':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverGraphCurrentWeek.php');
+                break;
+            */
+            case 'turnoverThisWeekLastWeek':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverThisWeekLastWeek.php');
+                break;
+            case 'profitThisMonthLastMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/profitThisMonthLastMonth.php');
                 break;
             default:
                 //hook to let other plugins further manipulate the settings
@@ -353,7 +363,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     1 => array(
                                             'google_chart_orders',
                                             'google_chart_customers',
-                                            'google_chart_carts'
+                                            'google_chart_carts',
+                                            'turnoverThisWeekLastWeek',
+                                            'profitThisMonthLastMonth'
                                     )
                             )
                     );
@@ -371,12 +383,24 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     )
                             )
                     );
-                    $pageLayout[] = array(
+                    /*$pageLayout[] = array(
                             'class' => 'layout1col',
                             'cols' => array(
                                     0 => array('turnoverGraphCurrentWeek')
                             )
+                    );*/
+                    /*$pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverThisWeekLastWeek')
+                            )
                     );
+                    $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('profitThisMonthLastMonth')
+                            )
+                    );*/
                     break;
                 default:
                     if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {

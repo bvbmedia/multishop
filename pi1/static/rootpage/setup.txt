@@ -641,6 +641,56 @@ multishop_ajax_server {
 	}
 [end]
 
+[globalVar = _GET|tx_multishop_pi1|page_section=admin_home]
+	multishop_admin_page {
+		includeJS {
+			jqPlot = EXT:multishop/res/jqplot/jquery.jqplot.js
+			jqPlot.compress = 1
+			# excanvas
+			jqPlotExCanvas = EXT:multishop/res/jqplot/excanvas.js
+			jqPlotExCanvas.compress = 1
+			# barRenderer
+			jqPlotbarRenderer = EXT:multishop/res/jqplot/plugins/jqplot.barRenderer.js
+			jqPlotbarRenderer.compress = 1
+			# pieRenderer
+			jqPlotpieRenderer = EXT:multishop/res/jqplot/plugins/jqplot.pieRenderer.js
+			jqPlotpieRenderer.compress = 1
+			# categoryAxisRenderer
+			jqPlotcategoryAxisRenderer = EXT:multishop/res/jqplot/plugins/jqplot.categoryAxisRenderer.js
+			jqPlotcategoryAxisRenderer.compress = 1
+			# pointLabels
+			jqPlotpointLabels = EXT:multishop/res/jqplot/plugins/jqplot.pointLabels.js
+			jqPlotpointLabels.compress = 1
+			# logAxisRenderer
+			jqPlotlogAxisRenderer = EXT:multishop/res/jqplot/plugins/jqplot.logAxisRenderer.js
+			jqPlotlogAxisRenderer.compress = 1
+			# canvasTextRenderer
+			jqPlotcanvasTextRenderer = EXT:multishop/res/jqplot/plugins/jqplot.canvasTextRenderer.js
+			jqPlotcanvasTextRenderer.compress = 1
+			# canvasAxisLabelRenderer
+			jqPlotcanvasAxisLabelRenderer = EXT:multishop/res/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js
+			jqPlotcanvasAxisLabelRenderer.compress = 1
+			# canvasAxisTickRenderer
+			jqPlotcanvasAxisTickRenderer = EXT:multishop/res/jqplot/plugins/jqplot.canvasAxisTickRenderer.js
+			jqPlotcanvasAxisTickRenderer.compress = 1
+			# dateAxisRenderer
+			jqPlotdateAxisRenderer = EXT:multishop/res/jqplot/plugins/jqplot.dateAxisRenderer.js
+			jqPlotdateAxisRenderer.compress = 1
+			# highlighter
+			jqPlothighlighter = EXT:multishop/res/jqplot/plugins/jqplot.highlighter.js
+			jqPlothighlighter.compress = 1
+		}
+		includeCSS {
+			jqPlotCSS = EXT:multishop/res/jqplot/jquery.jqplot.css
+			jqPlotCSS {
+				media =
+				import = 0
+				compress = 1
+			}
+		}
+	}
+[end]
+
 # DEFINE THE ADMIN PAGE
 multishop_admin_page = PAGE
 multishop_admin_page {
