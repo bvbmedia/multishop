@@ -179,11 +179,22 @@ if ($this->ADMIN_USER) {
         $move_next_section = false;
         $next_page = false;
         $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+        if (strlen($this->get['q']) > 0) {
+            $active_q = $this->get['q'];
+        }
         if (isset($this->get['clear_session'])) {
             $session['pagination_register']=array();
             $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
             $GLOBALS['TSFE']->storeSessionData();
             $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+        } else {
+            $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+            if (isset($session['previous_q']) && !empty($session['previous_q']) && strlen($session['previous_q'])>0) {
+                $session['pagination_register']=array();
+                $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
+                $GLOBALS['TSFE']->storeSessionData();
+                $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+            }
         }
         $pagination_register=&$session['pagination_register'];
         // cms search
@@ -851,6 +862,9 @@ if ($this->ADMIN_USER) {
             $page_marker['context']['next'] = false;
             $page_marker['context']['hash'] = $result_hash;
         }
+        if ($this->get['q']) {
+            $session['previous_q'] = $active_q;
+        }
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
         $GLOBALS['TSFE']->storeSessionData();
         // custom page hook that can be controlled by third-party plugin eof
@@ -859,9 +873,11 @@ if ($this->ADMIN_USER) {
             $data_json = array();
         }
         $content = array(
-                "products" => $data_json,
-                "total_rows" => $results_counter,
-                "page_marker" => $page_marker
+            "products" => $data_json,
+            "total_rows" => $results_counter,
+            "page_marker" => $page_marker,
+            "active_q" => $active_q,
+            "prev_q" => $prev_q
         );
         $content = json_encode($content, ENT_NOQUOTES);
         // now build up the listing eof

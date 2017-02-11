@@ -60,7 +60,7 @@ var adminPanelSearch = function () {
             url: MS_ADMIN_PANEL_AUTO_COMPLETE_URL,
             dataType: 'json',
             quietMillis: 100,
-            context: 'sss',
+            context: '',
             data: function (term, page, context) {
                 return { q: term, context: context };
             },
