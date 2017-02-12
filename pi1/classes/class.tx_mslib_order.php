@@ -713,6 +713,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                             }
                         }
+
                         if ($pageCopyToMerchant[0]['content']) {
                             $pageCopyToMerchant[0]['content'] = str_replace($array1, $array2, $pageCopyToMerchant[0]['content']);
                         }
