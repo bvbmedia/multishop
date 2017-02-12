@@ -125,6 +125,16 @@ if (is_array($current_week_turnover) && count($current_week_turnover)) {
 
 $compiledWidget['content']= '
 <script type="text/javascript">
+function chartTurnoverThisWeekLastWeekFormatTick(format, value) {
+    jQuery.jqplot.sprintf.thousandsSeparator = \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\';
+    jQuery.jqplot.sprintf.decimalMark = \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\';
+
+    var formattedValue = $.jqplot.sprintf(format, value);
+    formattedValue = formattedValue.replace($.jqplot.sprintf.decimalMark, Language.DecimalMark)
+        .replace($.jqplot.sprintf.thousandsSeparator, Language.ThousandsSeparator);
+
+    return formattedValue;
+}
 $(document).ready(function () {
     $.jqplot._noToImageButton = true;
     var prevWeek = ['.implode(', ', $jqplot_array['last_week_turnover']).'];
@@ -194,7 +204,10 @@ $(document).ready(function () {
                     minorTicks: 1
                 },
                 tickOptions: {
-                    formatString: "&euro;%\'.d",
+                    tickOptions: { formatString: "&euro;%\'d" },
+                    formatter: function(format, value){
+                        return chartTurnoverThisWeekLastWeekFormatTick(format, value);
+                    },
                     showMark: false
                 }
             }
