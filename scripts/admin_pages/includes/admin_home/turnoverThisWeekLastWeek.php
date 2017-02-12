@@ -126,14 +126,8 @@ if (is_array($current_week_turnover) && count($current_week_turnover)) {
 $compiledWidget['content']= '
 <script type="text/javascript">
 function chartTurnoverThisWeekLastWeekFormatTick(format, value) {
-    jQuery.jqplot.sprintf.thousandsSeparator = \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\';
-    jQuery.jqplot.sprintf.decimalMark = \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\';
-
-    var formattedValue = $.jqplot.sprintf(format, value);
-    formattedValue = formattedValue.replace($.jqplot.sprintf.decimalMark, Language.DecimalMark)
-        .replace($.jqplot.sprintf.thousandsSeparator, Language.ThousandsSeparator);
-
-    return formattedValue;
+    var value = \'&euro;\' + jQuery.number(value, 2, \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\', \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\')
+    return value;
 }
 $(document).ready(function () {
     $.jqplot._noToImageButton = true;
