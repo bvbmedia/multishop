@@ -134,6 +134,10 @@ if (is_array($last_month_turnover) && count($last_month_turnover)) {
 }
 $compiledWidget['content']= '
 <script type="text/javascript">
+function chartProfitThisMonthLastMonthFormatTick(format, value) {
+    var value = \'&euro;\' + jQuery.number(value, 2, \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'].'\', \''.$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_thousands_point'].'\')
+    return value;
+}
 $(document).ready(function () {
     $.jqplot._noToImageButton = true;
     var prevMonth = ['.implode(', ', $jqplot_array['last_month_turnover']).'];
@@ -203,7 +207,10 @@ $(document).ready(function () {
                     minorTicks: 1
                 },
                 tickOptions: {
-                    formatString: "&euro;%\'d",
+                    tickOptions: { formatString: "&euro;%\'d" },
+                    formatter: function(format, value){
+                        return chartProfitThisMonthLastMonthFormatTick(format, value);
+                    },
                     showMark: false
                 }
             }
