@@ -5,14 +5,15 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key'] = 'profitThisMonthLastMonth';
 $compiledWidget['defaultCol'] = 1;
 $compiledWidget['title'] = $this->pi_getLL('profitThisMonthLastMonth', 'Bi-Monthly profit');
+$current_datetime=date('Y-m-d 00:00:00');
 $current_month_turnover=array();
 $current_month_date_tag=array();
 // current month date range definition
 $current_month_number=date('m');
 $current_month_year=date('Y');
 $current_month_date=array();
-$current_month_date['start'] = date($current_month_year . '-'.$current_month_number.'-01');
-$current_month_date['end'] = date($current_month_year.'-'.$current_month_number.'-' . date('t', strtotime($current_month_date['start'])));
+$current_month_date['start'] = date('Y-m-d', strtotime($current_datetime . ' -1 month'));
+$current_month_date['end'] = date('Y-m-d', strtotime($current_datetime));
 // current month turnover
 $start_time = $current_month_date['start'];
 $end_time = $current_month_date['end'];
@@ -32,7 +33,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $current_month_date_tag[date('j', $row['crdate'])]=$row['crdate'];
         $profit=($row['final_price']-$row['product_capital_price']);
-        if ($profit>0) {
+        if ($profit>=0) {
             $current_month_turnover[date('Ymd', $row['crdate'])] += $profit;
         }
     }
@@ -62,8 +63,11 @@ if (date('n')=='1') {
     $last_month_year=date('Y')-1;
 }
 $last_month_date=array();
-$last_month_date['start'] = date($last_month_year . '-'.$last_month_number.'-01');
-$last_month_date['end'] = date($last_month_year . '-'.$last_month_number.'-' . date('t', strtotime($last_month_date['start'])));
+$last_month_date['start'] = date('Y-m-d', strtotime($current_month_date['start'] . ' -1 month'));
+$last_month_date['end'] = date('Y-m-d', strtotime($last_month_date['start'] . ' +30 days '));
+
+//$last_month_date['start'] = date($last_month_year . '-'.$last_month_number.'-01');
+//$last_month_date['end'] = date($last_month_year . '-'.$last_month_number.'-' . date('d', strtotime($last_month_date['start'] . ' +' . count($current_month_period) . ' days')));
 // last month turnover
 $start_time = $last_month_date['start'];
 $end_time = $last_month_date['end'];
@@ -83,7 +87,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         if ($row['crdate']>0) {
             $profit=($row['final_price']-$row['product_capital_price']);
-            if ($profit>0) {
+            if ($profit>=0) {
                 $last_month_turnover[date('Ymd', $row['crdate'])] += $profit;
             }
         }
@@ -97,7 +101,6 @@ while( $current <= $last ) {
     $last_month_period[] = date('Ymd', $current);
     $current = strtotime('+1 day', $current);
 }
-
 foreach ($last_month_period as $last_month_date_range) {
     $strtotime=strtotime($last_month_date_range);
     //if ($strtotime>0) {
@@ -190,7 +193,7 @@ $(document).ready(function () {
                 },
                 min: "'.$current_month_date['start'].'",
                 max: "'.$current_month_date['end'].'",
-                tickInterval: "1 day",
+                tickInterval: "2 days",
                 drawMajorGridlines: false
             },
             yaxis: {
@@ -200,7 +203,7 @@ $(document).ready(function () {
                     minorTicks: 1
                 },
                 tickOptions: {
-                    formatString: "$%\'d",
+                    formatString: "&euro;%\'.2f",
                     showMark: false
                 }
             }

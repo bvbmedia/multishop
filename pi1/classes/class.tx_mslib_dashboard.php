@@ -66,6 +66,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //$this->enabledWidgets['turnoverGraphCurrentWeek'] = 1;
                 $this->enabledWidgets['turnoverThisWeekLastWeek'] = 1;
                 $this->enabledWidgets['profitThisMonthLastMonth'] = 1;
+                $this->enabledWidgets['turnoverMainCategoryThisMonthLastMonth'] = 1;
                 // ORDERS TOTAL TABLES EOF
                 break;
             case 'admin_edit_customer':
@@ -154,6 +155,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 break;
             case 'profitThisMonthLastMonth':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/profitThisMonthLastMonth.php');
+                break;
+            case 'turnoverMainCategoryThisMonthLastMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverMainCategoryThisMonthLastMonth.php');
                 break;
             default:
                 //hook to let other plugins further manipulate the settings
@@ -365,7 +369,8 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                             'google_chart_customers',
                                             'google_chart_carts',
                                             'turnoverThisWeekLastWeek',
-                                            'profitThisMonthLastMonth'
+                                            'profitThisMonthLastMonth',
+                                            'turnoverMainCategoryThisMonthLastMonth'
                                     )
                             )
                     );
@@ -384,6 +389,12 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             )
                     );
                     /*$pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverMainCategoryThisMonthLastMonth')
+                            )
+                    );
+                    $pageLayout[] = array(
                             'class' => 'layout1col',
                             'cols' => array(
                                     0 => array('turnoverGraphCurrentWeek')

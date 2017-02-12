@@ -5,17 +5,12 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key'] = 'turnoverThisWeekLastWeek';
 $compiledWidget['defaultCol'] = 1;
 $compiledWidget['title'] = $this->pi_getLL('turnoverThisWeekLastWeek', 'Bi-Weekly turnover');
+$current_datetime=date('Y-m-d 00:00:00');
 // current week date range definition
 $current_week_turnover=array();
 $current_week_date_tag=array();
-$current_week_number=date('W');
-$current_week_year=date('Y');
-$current_week_date=array();
-$currentWeekDT = new DateTime();
-$currentWeekDT->setISODate($current_week_year, $current_week_number);
-$current_week_date['start'] = $currentWeekDT->format('Y-m-d');
-$currentWeekDT->modify('+6 days');
-$current_week_date['end'] = $currentWeekDT->format('Y-m-d');
+$current_week_date['start'] = date('Y-m-d', strtotime($current_datetime . ' -6 days'));
+$current_week_date['end'] = date('Y-m-d', strtotime($current_datetime));
 // current week turnover
 $start_time = $current_week_date['start'];
 $end_time = $current_week_date['end'];
@@ -64,14 +59,8 @@ ksort($current_week_turnover);
 // last week date range definition
 $last_week_date_tag=array();
 $last_week_turnover=array();
-$last_week_number=date('W')-1;
-$last_week_year=date('Y');
-$last_week_date=array();
-$lastWeekDT = new DateTime();
-$lastWeekDT->setISODate($last_week_year, $last_week_number);
-$last_week_date['start'] = $lastWeekDT->format('Y-m-d');
-$lastWeekDT->modify('+6 days');
-$last_week_date['end'] = $lastWeekDT->format('Y-m-d');
+$last_week_date['start'] = date('Y-m-d', strtotime($current_week_date['start'] . ' -7 days'));
+$last_week_date['end'] = date('Y-m-d', strtotime($last_week_date['start'] . ' +6 days '));
 // last week turnover
 $start_time = $last_week_date['start'];
 $end_time = $last_week_date['end'];
@@ -205,7 +194,7 @@ $(document).ready(function () {
                     minorTicks: 1
                 },
                 tickOptions: {
-                    formatString: "$%\'d",
+                    formatString: "&euro;%\'.2f",
                     showMark: false
                 }
             }

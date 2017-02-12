@@ -218,7 +218,7 @@ table.jqplot-cursor-tooltip {
     font-size: 0.75em;
     z-index: 2;
 }
-      
+
 td.jqplot-cursor-legend-swatch {
     vertical-align: middle;
     text-align: center;
@@ -257,3 +257,5 @@ div.jqplot-noData-container {
     text-align: center;
     background-color: rgba(96%, 96%, 96%, 0.3);
 }
+
+.jqplot-table-legend { width: auto; }
