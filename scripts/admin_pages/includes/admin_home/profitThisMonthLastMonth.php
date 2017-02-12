@@ -203,7 +203,7 @@ $(document).ready(function () {
                     minorTicks: 1
                 },
                 tickOptions: {
-                    formatString: "&euro;%\'.2f",
+                    formatString: "&euro;%\'d",
                     showMark: false
                 }
             }
