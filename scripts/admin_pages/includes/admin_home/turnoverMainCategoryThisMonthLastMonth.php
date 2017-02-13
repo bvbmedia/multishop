@@ -147,7 +147,7 @@ $(document).ready(function(){
   var data = [
    '.implode(',', $jqplot_array['current_month_turnover']).'
   ];
-  var plot1 = jQuery.jqplot (\'turnoverMainCategoryThisMonthLastMonth\', [data], 
+  var plot1 = jQuery.jqplot (\'chartturnoverMainCategoryThisMonthLastMonth\', [data], 
     { 
       seriesDefaults: {
         // Make this a pie chart.
@@ -161,11 +161,11 @@ $(document).ready(function(){
       legend: { show:false, location: \'e\' }
     }
   );
-  $(\'#turnoverMainCategoryThisMonthLastMonth\').bind(\'jqplotDataHighlight\', function (ev, seriesIndex, pointIndex, data) { 
-        document.getElementById(\'turnoverMainCategoryThisMonthLastMonth\').title = data;
+  $(\'#chartturnoverMainCategoryThisMonthLastMonth\').bind(\'jqplotDataHighlight\', function (ev, seriesIndex, pointIndex, data) { 
+        document.getElementById(\'chartturnoverMainCategoryThisMonthLastMonth\').title = data;
         //alert(\'series: \'+seriesIndex+\', point: \'+pointIndex+\', data: \'+data);
   });
 });
 </script>
-<div id="turnoverMainCategoryThisMonthLastMonth" style="width:300px; height:300px"></div>';
+<div id="chartturnoverMainCategoryThisMonthLastMonth"></div>';
 ?>
