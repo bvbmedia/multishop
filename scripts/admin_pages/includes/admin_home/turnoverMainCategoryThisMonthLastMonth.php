@@ -149,6 +149,12 @@ $(document).ready(function(){
   ];
   var plot1 = jQuery.jqplot (\'chartturnoverMainCategoryThisMonthLastMonth\', [data], 
     { 
+      grid: {
+            drawBorder: false, 
+            drawGridlines: false,
+            background: \'#ffffff\',
+            shadow:false
+      },
       seriesDefaults: {
         // Make this a pie chart.
         renderer: jQuery.jqplot.PieRenderer, 
