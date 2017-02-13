@@ -257,6 +257,12 @@ if (!$qry) {
     $str = "ALTER TABLE `tx_multishop_orders_products` ADD `product_capital_price` decimal(24,14) default '0.00000000000000', ADD KEY `product_capital_price` (`product_capital_price`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
+
+    $sql_upd="UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
+    $res_upd=$GLOBALS['TYPO3_DB']->sql_query($sql_upd);
+} else {
+    $sql_upd="UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
+    $res_upd=$GLOBALS['TYPO3_DB']->sql_query($sql_upd);
 }
 $str = "select foreign_source_name from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
