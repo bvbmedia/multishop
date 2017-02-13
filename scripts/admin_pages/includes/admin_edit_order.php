@@ -1057,6 +1057,19 @@ if (is_numeric($this->get['orders_id'])) {
                 $edit_billing_details = array();
                 $tmpcontent .= '<div class="edit_billing_details_container" id="edit_billing_details_container"' . ($count_validate_erno ? '' : ' style="display:none"') . '>';
                 $edit_billing_details['billing_company'] = '<div class="form-group">
+                        <label class="control-label col-md-5">' . ucfirst($this->pi_getLL('title')) . '</label>
+                        <div class="col-sm-7">
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[billing_gender]" value="m" class="InputGroup account-gender-radio" id="edit_billing_gender_male"'.($orders['billing_gender'] == 'm' ? ' checked="checked"' : '').' required="required">
+                                <label class="account-male" for="edit_billing_gender_male">'.$this->pi_getLL('mr').'</label>
+                            </div>
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[billing_gender]" value="f" class="InputGroup account-gender-radio" id="edit_billing_gender_female"'.($orders['billing_gender'] == 'f' ? ' checked="checked"' : '').'>
+                                <label class="account-female" for="edit_billing_gender_female">'.$this->pi_getLL('mrs').'</label>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="form-group">
 						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('company')) . '</label>
 						<div class="col-md-7">
 							<input class="form-control" name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="' . $orders['billing_company'] . '" />
@@ -1646,7 +1659,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 $("#billing_details_container").empty();
                 $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
-                updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
+                updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
                 e.preventDefault();
