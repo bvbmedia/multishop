@@ -2594,6 +2594,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Show departmnent input field in admin edit customer',
+        'configuration_key' => 'SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER',
+        'configuration_value' => '0',
+        'description' => 'Show departmnent input field in admin edit customer',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Edit order select2 product minimum character',
+        'configuration_key' => 'EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER',
+        'configuration_value' => '0',
+        'description' => 'Minimum character to type before select2 give results for admin edit order product',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

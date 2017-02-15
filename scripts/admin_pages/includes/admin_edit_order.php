@@ -3522,7 +3522,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         },
                         ' : '') . '
-                        minimumInputLength: 1,
+                        minimumInputLength: '.(!isset($this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']) ? 0 : $this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']).',
                         query: function(query) {
                             /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});
