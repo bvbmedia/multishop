@@ -408,7 +408,7 @@ if (!$qry) {
                     }
                     // get all cats to generate multilevel fake url eof
                 }
-                $product_detail_link = mslib_fe::typolink($product_info['page_uid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                $product_detail_link = $this->FULL_HTTP_URL.mslib_fe::typolink($product_info['page_uid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                 // update orders_products table
                 $updateArray = array();
                 $updateArray['page_uid'] = $product_info['page_uid'];
