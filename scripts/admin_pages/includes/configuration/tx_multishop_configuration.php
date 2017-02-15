@@ -2616,6 +2616,17 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Display gender input in edit order customer details form',
+        'configuration_key' => 'DISPLAY_GENDER_INPUT_IN_EDIT_ORDER_CUSTOMER_DETAILS',
+        'configuration_value' => '0',
+        'description' => 'Display gender input in edit order customer details form',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(
