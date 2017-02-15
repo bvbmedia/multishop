@@ -256,13 +256,15 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $tmp_value = explode('||catid=', $this->get['q']);
                 $this->get['q'] = trim($tmp_value[0]);
                 $categories_id = $tmp_value[1];
-            }
-            if (!is_numeric($this->get['q'])) {
-                $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\')';
             } else {
-                $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\')';
+                $this->get['q'] = trim($this->get['q']);
             }
-            if (!empty($this->get['q'])) {
+            if (!empty($this->get['q']) && strlen($this->get['q'])>0) {
+                if (!is_numeric($this->get['q'])) {
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\')';
+                } else {
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\')';
+                }
                 $limit = '';
             }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
