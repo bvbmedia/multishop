@@ -140,7 +140,7 @@ if ($this->post['proceed_order']) {
             $insertArray['delivery_country'] = $delivery_address['country'];
             $insertArray['delivery_state'] = $delivery_address['state'];
             $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
-        } else {
+        } else if (!$this->post['different_delivery_address']) {
             $insertArray['delivery_email'] = $insertArray['billing_email'];
             $insertArray['delivery_company'] = $insertArray['billing_company'];
             $insertArray['delivery_first_name'] = $insertArray['billing_first_name'];
