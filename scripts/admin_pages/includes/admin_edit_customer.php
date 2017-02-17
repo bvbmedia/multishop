@@ -1090,6 +1090,15 @@ switch ($_REQUEST['action']) {
             $subpartArray['###LABEL_BIRTHDATE###'] = ucfirst($this->pi_getLL('birthday'));
             $subpartArray['###VALUE_VISIBLE_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
             $subpartArray['###VALUE_HIDDEN_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
+            $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
+            $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###']='';
+            if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
+                $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
+                    <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
+                    <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="" />
+                </div>';
+            }
             // delivery address
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
@@ -1101,11 +1110,8 @@ switch ($_REQUEST['action']) {
                 $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
                 //
                 $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
-                $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
                 // department input
-                $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###']='';
                 if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
-                    $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
                     $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
                     <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
                     <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="'.htmlspecialchars($delivery_address['department']).'" />
