@@ -86,6 +86,18 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
                 if ($cats[$i]['id'] != $this->categoriesStartingPoint) {
                     $teller++;
                     $link = '';
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPreHook'])) {
+                        $params=array(
+                            'markerArray'=>&$markerArray,
+                            'product'=>&$product,
+                            'output'=>&$output,
+                            'cats'=>&$cats,
+                            'iterator_count'=>$i,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPreHook'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     if (($cats[$i]['id'] != $categories_id) or $this->get['products_id']) {
                         $cats2 = array();
                         $cats2 = mslib_fe::Crumbar($cats[$i]['id']);
