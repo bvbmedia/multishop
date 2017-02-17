@@ -557,7 +557,8 @@ $option_search = array(
     //"payment_method"=>$this->pi_getLL('admin_payment_method'),
         "order_products" => $this->pi_getLL('admin_ordered_product'),
     /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
-        "billing_telephone" => $this->pi_getLL('telephone')
+        "billing_telephone" => $this->pi_getLL('telephone'),
+        "http_referer" => $this->pi_getLL('http_referer')
 );
 asort($option_search);
 $type_search = $this->post['type_search'];
@@ -698,6 +699,9 @@ if ($this->post['skeyword']) {
             break;*/
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'http_referer':
+            $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
     }
 }
