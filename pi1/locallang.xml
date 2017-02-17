@@ -1400,6 +1400,7 @@
             <label index="admin_psp_transactions_overview">Transactions overview</label>
             <label index="transaction_id">Transactions ID</label>
             <label index="admin_label_cms_marker_store_email">Store e-mail</label>
+            <label index="http_referer">HTTP Referer</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
