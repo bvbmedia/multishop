@@ -1561,7 +1561,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_middle_name").val("");
                 $("#edit_delivery_middle_name").val($("#edit_billing_middle_name").val());
 
-                 $("#edit_delivery_last_name").val("");
+                $("#edit_delivery_last_name").val("");
                 $("#edit_delivery_last_name").val($("#edit_billing_last_name").val());
 
                 $("#edit_delivery_street_name").val("");
