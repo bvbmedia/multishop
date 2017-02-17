@@ -1399,6 +1399,7 @@
             <label index="department">Department</label>
             <label index="admin_psp_transactions_overview">Transactions overview</label>
             <label index="transaction_id">Transactions ID</label>
+            <label index="admin_label_cms_marker_store_email">Store e-mail</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2778,6 +2779,7 @@
             <label index="order_confirmation">Orderbevestiging</label>
             <label index="feed_exporter_fields_label_products_shipping_costs">Verzendkosten</label>
             <label index="default_order_status">Standaard bestelstatus</label>
+            <label index="admin_label_cms_marker_store_email">E-mail winkel</label>
         </languageKey>
     </data>
 </T3locallang>
