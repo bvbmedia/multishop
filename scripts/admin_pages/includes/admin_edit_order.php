@@ -1539,6 +1539,13 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#copy_from_billing_details").click(function(e) {
                 e.preventDefault();
+                
+                $(".account-delivery-gender-radio").prop("checked", false);
+                if ($(".account-gender-radio:checked").val()=="m") {
+                    $("#edit_delivery_gender_male").prop("checked", true);
+                } else if ($(".account-gender-radio:checked").val()=="f") {
+                    $("#edit_delivery_gender_female").prop("checked", true);
+                }
 
                 $("#edit_delivery_company").val("");
                 $("#edit_delivery_company").val($("#edit_billing_company").val());
