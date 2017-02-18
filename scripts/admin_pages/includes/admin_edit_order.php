@@ -471,7 +471,7 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                         $redirect_after_delete = true;
                     }
-                    $delivery_country = mslib_fe::getCountryByName($this->post['delivery_country']);
+                    $delivery_country = mslib_fe::getCountryByName($this->post['tx_multishop_pi1']['delivery_country']);
                     $updateArray = array();
                     if ($this->post['shipping_method']) {
                         $shipping_method = mslib_fe::getShippingMethod($this->post['shipping_method']);
@@ -487,7 +487,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['country_tax_rate'] = 0;
                             $shipping_method['region_tax_rate'] = 0;
                         }
-                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
+                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0) {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -495,7 +495,12 @@ if (is_numeric($this->get['orders_id'])) {
                                 $price = ($price / $tax_rate_for_shipping) * 100;
                             }
                         } else {
-                            $price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                            $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                            if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
+                                $price=$tmp_price['shipping_costs'];
+                            } else {
+                                $price=$tmp_price;
+                            }
                         }
                         if ($price > 0) {
                             if (strstr($price, "%")) {

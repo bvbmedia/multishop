@@ -4945,14 +4945,29 @@ class mslib_fe {
     }
     public function countCartWeight() {
         //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $products = $cart['products'];
+        $order=array();
+        $fetch_weight_record=false;
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
+            $order=mslib_fe::getOrder($this->get['orders_id']);
+            $products=$order['products'];
+            $fetch_weight_record=true;
+        } else {
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $cart = $mslib_cart->getCart();
+            $products = $cart['products'];
+        }
         $weight = 0;
         foreach ($products as $products_id => $value) {
             if (is_numeric($value['products_id'])) {
+                // get the product weight record when in edit order only
+                if (!$value['products_weight'] && $fetch_weight_record) {
+                    $tmp_product=mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
+                    if ($tmp_product['products_weight']) {
+                        $value['products_weight']=$tmp_product['products_weight'];
+                    }
+                }
                 $weight = ($weight + ($value['qty'] * $value['products_weight']));
             }
         }
