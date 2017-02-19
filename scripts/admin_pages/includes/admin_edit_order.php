@@ -597,7 +597,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $payment_method['country_tax_rate'] = 0;
                             $payment_method['region_tax_rate'] = 0;
                         }
-                        if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
+                        if ($this->post['tx_multishop_pi1']['payment_method_costs']>0) {
                             $this->post['tx_multishop_pi1']['payment_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['payment_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['payment_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
