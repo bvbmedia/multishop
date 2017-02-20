@@ -487,19 +487,19 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['country_tax_rate'] = 0;
                             $shipping_method['region_tax_rate'] = 0;
                         }
-                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0) {
+                        $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                        if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
+                            $price=$tmp_price['shipping_costs'];
+                        } else {
+                            $price=$tmp_price;
+                        }
+                        $order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
+                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 $tax_rate_for_shipping = ((1 + $shipping_method['tax_rate']) * 100);
                                 $price = ($price / $tax_rate_for_shipping) * 100;
-                            }
-                        } else {
-                            $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
-                            if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
-                                $price=$tmp_price['shipping_costs'];
-                            } else {
-                                $price=$tmp_price;
                             }
                         }
                         if ($price > 0) {
@@ -597,6 +597,8 @@ if (is_numeric($this->get['orders_id'])) {
                             $payment_method['country_tax_rate'] = 0;
                             $payment_method['region_tax_rate'] = 0;
                         }
+                        //$order_payment_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'payment_method');
+                        //if ($this->post['tx_multishop_pi1']['payment_method_costs']>0 && $payment_method['code']==$order_payment_method['payment_method']) {
                         if ($this->post['tx_multishop_pi1']['payment_method_costs']>0) {
                             $this->post['tx_multishop_pi1']['payment_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['payment_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['payment_method_costs'];
