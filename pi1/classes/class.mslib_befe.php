@@ -3069,6 +3069,7 @@ class mslib_befe {
         if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
             return array();
         }
+        $currentDir=getcwd();
         $path = dirname($file);
         chdir($path);
         // Unzip without overwriting existing files
@@ -3083,6 +3084,7 @@ class mslib_befe {
             //return array();
         }
         $result = mslib_befe::getFileResult($list, 'unzip');
+        chdir($currentDir);
         return $result;
     }
     public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0) {
