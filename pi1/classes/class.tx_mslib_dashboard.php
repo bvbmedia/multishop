@@ -190,7 +190,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$(".column").sortable({
 				connectWith: ".column",
 				handle: ".portlet-header",
-				cancel: \'.state-disabled,select\',
+				cancel: \'.state-disabled,select,.portlet-content\',
 				revert: true,
 				scroll: true,
 				tolerance: "pointer",
@@ -276,7 +276,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					//drawChartgoogle_chart_carts();
 				}
 			});
-			$(".column").disableSelection();
+			//$(".column").disableSelection();
 		};
 		jQuery(document).ready(function($) {
 			$(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
