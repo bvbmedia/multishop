@@ -189,6 +189,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			var old_position;
 			$(".column").sortable({
 				connectWith: ".column",
+				handle: ".portlet-header",
 				cancel: \'.state-disabled,select\',
 				revert: true,
 				scroll: true,
