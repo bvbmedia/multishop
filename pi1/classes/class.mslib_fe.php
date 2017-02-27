@@ -6547,6 +6547,14 @@ class mslib_fe {
                 $pages = array();
                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
                     while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentIteratorPreProc'])) {
+                            $params = array(
+                                'row' => &$row
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentIteratorPreProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                         $pages[] = $row;
                     }
                     return $pages;
