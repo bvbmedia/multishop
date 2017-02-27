@@ -198,7 +198,7 @@ $content .= '<div class="form-group">
 </form>
 ';
 // list the existing coupon codes
-$str = "SELECT * from tx_multishop_coupons where (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "') order by discount";
+$str = "SELECT * from tx_multishop_coupons where (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "') order by discount desc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $coupons_options = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
