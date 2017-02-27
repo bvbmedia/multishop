@@ -1091,7 +1091,7 @@
             <label index="table">Table</label>
             <label index="target_column">Target column</label>
             <label index="telephone">Telephone</label>
-            <label index="telephone_is_required">Telephone number is required</label>
+            <label index="telephone_is_required">Telephone is a required field and must be 10 digits long</label>
             <label index="template">Template</label>
             <label index="the_following_errors_occurred">The following error(s) occurred</label>
             <label index="the_format_of_the_date_is_not_valid">The format of the date is not valid.</label>
@@ -2490,7 +2490,7 @@
             <label index="table">Tabel</label>
             <label index="target_column">Doel kolom</label>
             <label index="telephone">Telefoonnummer</label>
-            <label index="telephone_is_required">Telefoonnummer is verplicht</label>
+            <label index="telephone_is_required">Telefoon is verplicht en moet 10 cijfers bevatten</label>
             <label index="template">Sjabloon</label>
             <label index="the_following_errors_occurred">De volgende fout(en) zijn geconstateerd</label>
             <label index="the_format_of_the_date_is_not_valid">De ingegeven datum is niet geldig</label>
