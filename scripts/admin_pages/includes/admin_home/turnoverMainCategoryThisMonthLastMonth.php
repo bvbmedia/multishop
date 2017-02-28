@@ -12,8 +12,8 @@ $current_month_date_tag=array();
 $current_month_number=date('m');
 $current_month_year=date('Y');
 $current_month_date=array();
-$current_month_date['start'] = date('Y-m-d', strtotime($current_datetime . ' -1 month'));
-$current_month_date['end'] = date('Y-m-d', strtotime($current_datetime));
+$current_month_date['start'] = date('Y-m-d 00:00:00', strtotime($current_datetime . ' -1 month'));
+$current_month_date['end'] = date('Y-m-d 23:59:59', strtotime($current_datetime));
 // current month turnover
 $start_time = $current_month_date['start'];
 $end_time = $current_month_date['end'];
