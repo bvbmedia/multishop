@@ -54,7 +54,7 @@ if (count($products) < 0) {
         //if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
         $birthday_validation = '
 			$("#birthday_visitor").datepicker({
-				dateFormat: "' . $this->pi_getLL('locale_date_format', 'm/d/Y') . '",
+				dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'm/d/Y') . '",
 				altField: "#birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
@@ -63,7 +63,7 @@ if (count($products) < 0) {
 				yearRange: "-100:+0"
 			});
 			$("#delivery_birthday_visitor").datepicker({
-				dateFormat: "' . $this->pi_getLL('locale_date_format', 'm/d/Y') . '",
+				dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'm/d/Y') . '",
 				altField: "#delivery_birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
