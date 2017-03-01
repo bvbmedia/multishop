@@ -22,6 +22,16 @@ if ($this->post['proceed_order']) {
         }
     }
     if (!$customer_id) {
+        $username='';
+        if (!empty($this->post['tx_multishop_pi1']['telephone'])) {
+            $username =$this->post['tx_multishop_pi1']['telephone'];
+        }
+        if (!empty($this->post['email'])) {
+            $username =$this->post['email'];
+        }
+        if (!$username) {
+            $username=$unique_id;
+        }
         $insertArray = array();
         $insertArray['page_uid'] = $this->shop_pid;
         $insertArray['company'] = $this->post['company'];
@@ -32,7 +42,7 @@ if ($this->post['proceed_order']) {
         $insertArray['last_name'] = $this->post['last_name'];
         $insertArray['username'] = $unique_id;
         $insertArray['email'] = $this->post['email'];
-        $insertArray['username'] = $this->post['tx_multishop_pi1']['telephone'];
+        $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
         $insertArray['street_name'] = $this->post['street_name'];
         $insertArray['address_number'] = $this->post['address_number'];
