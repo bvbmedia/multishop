@@ -226,17 +226,19 @@ if (is_array($this->tta_shop_info) && $this->tta_shop_info['tt_uid'] == $this->c
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . $this->pi_getLL('vat_id2') . '</label>
+                            <label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . $this->pi_getLL('vat_id') . '</label>
                             <input type="text" name="store_details[tx_multishop_vat_id]" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . $rs_store_details['tx_multishop_vat_id'] . '">
                         </div>
                         <div class="col-md-4">
-                            <label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . $this->pi_getLL('vat_number') . '</label>
-                            <input type="text" name="store_details[tx_multishop_vat_number]" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . $rs_store_details['tx_multishop_vat_number'] . '">
+                            <label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . $this->pi_getLL('coc_id') . '</label>
+                            <input type="text" name="store_details[tx_multishop_coc_id]" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . $rs_store_details['tx_multishop_coc_id'] . '">
                         </div>
+                        <!-- 
                         <div class="col-md-4">
                             <label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . $this->pi_getLL('coc_id') . '</label>
                             <input type="text" name="store_details[tx_multishop_coc_id]" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="' . $rs_store_details['tx_multishop_coc_id'] . '">
                         </div>
+                        -->
                     </div>
                 </div>
                 <div class="form-group">

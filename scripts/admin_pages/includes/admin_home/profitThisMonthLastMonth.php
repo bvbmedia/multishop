@@ -12,8 +12,8 @@ $current_month_date_tag=array();
 $current_month_number=date('m');
 $current_month_year=date('Y');
 $current_month_date=array();
-$current_month_date['start'] = date('Y-m-d', strtotime($current_datetime . ' -1 month'));
-$current_month_date['end'] = date('Y-m-d', strtotime($current_datetime));
+$current_month_date['start'] = date('Y-m-d 00:00:00', strtotime($current_datetime . ' -1 month'));
+$current_month_date['end'] = date('Y-m-d 23:59:59', strtotime($current_datetime));
 // current month turnover
 $start_time = $current_month_date['start'];
 $end_time = $current_month_date['end'];
@@ -63,8 +63,8 @@ if (date('n')=='1') {
     $last_month_year=date('Y')-1;
 }
 $last_month_date=array();
-$last_month_date['start'] = date('Y-m-d', strtotime($current_month_date['start'] . ' -1 month'));
-$last_month_date['end'] = date('Y-m-d', strtotime($last_month_date['start'] . ' +30 days '));
+$last_month_date['start'] = date('Y-m-d 00:00:00', strtotime($current_month_date['start'] . ' -1 month'));
+$last_month_date['end'] = date('Y-m-d 23:59:59', strtotime($last_month_date['start'] . ' +30 days '));
 
 //$last_month_date['start'] = date($last_month_year . '-'.$last_month_number.'-01');
 //$last_month_date['end'] = date($last_month_year . '-'.$last_month_number.'-' . date('d', strtotime($last_month_date['start'] . ' +' . count($current_month_period) . ' days')));
