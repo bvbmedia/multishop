@@ -2627,6 +2627,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Disable input autofill in customer create/edit account',
+        'configuration_key' => 'DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT',
+        'configuration_value' => '0',
+        'description' => 'Disable input autofill in customer create/edit account',
+        'group_id' => '3',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Disable input autofill in checkout',
+        'configuration_key' => 'DISABLE_INPUT_AUTOFILL_IN_CHECKOUT',
+        'configuration_value' => '0',
+        'description' => 'Disable input autofill in checkout',
+        'group_id' => '8',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

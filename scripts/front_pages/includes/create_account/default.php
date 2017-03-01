@@ -214,20 +214,26 @@ if (mslib_fe::loggedin()) {
                 $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/create_account.tmpl');
             }
             //
+            $markerArray = array();
+            $markerArray['###DISABLE_AUTOFILL###'] = '';
+            $disable_autofill='';
+            if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT']>0) {
+                $markerArray['###DISABLE_AUTOFILL###'] = ' autocomplete="off"';
+                $disable_autofill=' autocomplete="off"';
+            }
+            //
             $vat_input_block = '';
             if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
                 $vat_input_block = ' <div class="account-field col-sm-6" id="input-tx_multishop_vat_id">
 				<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
-				<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/></div>';
+				<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id"'.$disable_autofill.' value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/></div>';
             }
             $coc_input_block = '';
             if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
                 $coc_input_block = ' <div class="account-field col-sm-6" id="input-tx_multishop_coc_id">
 				<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id', 'KvK ID')) . '</label>
-				<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="' . htmlspecialchars($this->post['tx_multishop_coc_id']) . '"/></div>';
+				<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id"'.$disable_autofill.' value="' . htmlspecialchars($this->post['tx_multishop_coc_id']) . '"/></div>';
             }
-            //
-            $markerArray = array();
             //
             $birthday_block = '';
             if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
@@ -238,7 +244,7 @@ if (mslib_fe::loggedin()) {
                     $birthday = date("Y-m-d", $user['date_of_birth']);
                 }
                 $birthday_block = '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '*</label>
-				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" value="" >
+				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"'.$disable_autofill.' value="" >
 				<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="" >';
             }
             //
@@ -417,7 +423,7 @@ if (mslib_fe::loggedin()) {
             if ($this->ms['MODULES']['CREATE_ACCOUNT_REGULAR_USERNAME']) {
                 $create_account_username_block = '<div class="account-field col-sm-12" id="user-username">
 					<label class="account-username" for="username">' . ucfirst($this->pi_getLL('username')) . '<span class="text-danger">*</span></label>
-					<input type="text" name="username" class="username" id="username" value="' . $this->post['username'] . '" required="required" />
+					<input type="text" name="username" class="username" id="username"'.$disable_autofill.' value="' . $this->post['username'] . '" required="required" />
 					<span class="error-space"></span>
 				</div>';
             }
