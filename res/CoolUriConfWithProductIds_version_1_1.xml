@@ -374,9 +374,6 @@
         <part>
             <parameter>tx_multishop_spider_pi1[page_section]</parameter>
         </part>
-        <part>
-            <parameter>skeyword</parameter>
-        </part>
         <!-- TX_NEWS -->
         <part>
             <parameter>tx_news_pi1[news]</parameter>
