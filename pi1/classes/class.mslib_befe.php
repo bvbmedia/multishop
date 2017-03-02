@@ -5193,6 +5193,25 @@ class mslib_befe {
         }
         return false;
     }
+    public function arrayToTable($rows) {
+        if (is_array($rows) && count($rows)) {
+            $content.='<table class="table table-striped table-bordered">';
+            $content.='<thead><tr>';
+            foreach ($rows[0] as $colName => $colVal) {
+                $content.='<th>'.htmlspecialchars($colName).'</th>';
+            }
+            $content.='</tr></thead><tbody>';
+            foreach ($rows as $row) {
+                $content.='<tr>';
+                foreach ($row as $col => $val) {
+                    $content.='<td>'.htmlspecialchars($val).'</td>';
+                }
+                $content.='</tr>';
+            }
+            $content.='</tbody></table>';
+            return $content;
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
