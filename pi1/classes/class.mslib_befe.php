@@ -5193,9 +5193,9 @@ class mslib_befe {
         }
         return false;
     }
-    public function arrayToTable($rows) {
+    public function arrayToTable($rows,$idName='') {
         if (is_array($rows) && count($rows)) {
-            $content.='<table class="table table-striped table-bordered">';
+            $content.='<table'.($idName?' id="'.$idName.'"':'').' class="table table-striped table-bordered tablesorter">';
             $content.='<thead><tr>';
             foreach ($rows[0] as $colName => $colVal) {
                 $content.='<th>'.htmlspecialchars($colName).'</th>';
