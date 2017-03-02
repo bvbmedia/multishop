@@ -5193,7 +5193,7 @@ class mslib_befe {
         }
         return false;
     }
-    public function arrayToTable($rows,$idName='') {
+    public function arrayToTable($rows,$idName='',$settings=array()) {
         if (is_array($rows) && count($rows)) {
             $content.='<table'.($idName?' id="'.$idName.'"':'').' class="table table-striped table-bordered tablesorter">';
             $content.='<thead><tr>';
@@ -5201,14 +5201,50 @@ class mslib_befe {
                 $content.='<th>'.htmlspecialchars($colName).'</th>';
             }
             $content.='</tr></thead><tbody>';
+            $rowCounter=0;
             foreach ($rows as $row) {
                 $content.='<tr>';
+                $cellCounter=0;
                 foreach ($row as $col => $val) {
-                    $content.='<td>'.htmlspecialchars($val).'</td>';
+                    $class='';
+                    if ($settings['sum'] && $cellCounter) {
+                        $class='sum';
+                    }
+                    $content.='<td'.($class?' class="'.$class.'"':'').'>'.htmlspecialchars($val).'</td>';
+                    $cellCounter++;
                 }
                 $content.='</tr>';
+                $rowCounter++;
             }
-            $content.='</tbody></table>';
+            $content.='</tbody>';
+            if ($settings['sum']) {
+                $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_'.$idName]='<script data-ignore="true">
+                jQuery(document).ready(function($) {
+                        $(\'#'.$idName.'\').tablesorter();
+                        $(\'#'.$idName.'\').sumtr({
+                            formatValue : function(val) { return Math.round(val); },
+                        });
+                    });
+                </script>
+                ';
+                $content.='
+                <tfoot>
+                <tr class="summary">
+                    <td>Total:</td>
+                ';
+                $rowCounter=0;
+                foreach ($rows[0] as $colName => $colVal) {
+                    if ($rowCounter) {
+                        $content.='<td></td>';
+                    }
+                    $rowCounter++;
+                }
+                $content.='
+                <tr>
+                </tfoot>
+                ';
+            }
+            $content.='</table>';
             return $content;
         }
     }
