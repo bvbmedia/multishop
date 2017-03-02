@@ -5235,7 +5235,7 @@ class mslib_befe {
                 $rowCounter=0;
                 foreach ($rows[0] as $colName => $colVal) {
                     if ($rowCounter) {
-                        $content.='<td></td>';
+                        $content.='<td class="grandTotal"></td>';
                     }
                     $rowCounter++;
                 }
