@@ -5222,7 +5222,7 @@ class mslib_befe {
                 jQuery(document).ready(function($) {
                         $(\'#'.$idName.'\').tablesorter();
                         $(\'#'.$idName.'\').sumtr({
-                            formatValue : function(val) { return Math.round(val); },
+                            formatValue : function(val) { return Math.round(val*100)/100; },
                         });
                     });
                 </script>
