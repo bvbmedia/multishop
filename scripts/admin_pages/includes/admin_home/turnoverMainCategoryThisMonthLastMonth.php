@@ -155,6 +155,9 @@ $(document).ready(function(){
             background: \'#ffffff\',
             shadow:false
       },
+      gridPadding: {top:0, bottom:0, left:0, right:0},
+      height: 225,
+      width: 225,
       seriesDefaults: {
         // Make this a pie chart.
         renderer: jQuery.jqplot.PieRenderer, 
