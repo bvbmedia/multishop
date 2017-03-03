@@ -5206,18 +5206,21 @@ class mslib_befe {
                 $content.='<tr>';
                 $cellCounter=0;
                 foreach ($row as $col => $val) {
-                    $class='';
-                    if ($settings['sum'] && $cellCounter) {
-                        $class='sum';
+                    $classes=array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[]=$settings['cellClasses'][$cellCounter];
                     }
-                    $content.='<td'.($class?' class="'.$class.'"':'').'>'.htmlspecialchars($val).'</td>';
+                    if ($settings['sumTr'] && $cellCounter) {
+                        $classes[]='sum';
+                    }
+                    $content.='<td'.(count($classes)?' class="'.implode(' ',$classes).'"':'').'>'.htmlspecialchars($val).'</td>';
                     $cellCounter++;
                 }
                 $content.='</tr>';
                 $rowCounter++;
             }
             $content.='</tbody>';
-            if ($settings['sum']) {
+            if ($settings['sumTr']) {
                 $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_'.$idName]='<script data-ignore="true">
                 jQuery(document).ready(function($) {
                         $(\'#'.$idName.'\').tablesorter();
