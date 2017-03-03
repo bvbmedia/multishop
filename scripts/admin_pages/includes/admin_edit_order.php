@@ -490,6 +490,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $price = 0;
                         if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER']=='1') {
                             $price = 0;
+                            $this->post['shipping_costs_manual']=1;
                         } else {
                             $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
                             if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
