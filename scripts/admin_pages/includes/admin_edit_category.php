@@ -881,22 +881,63 @@ if ($this->post) {
 			<div class="form-group" id="msEditCategoryInputMetaTitle_' . $language['uid'] . '">
 				<label class="control-label col-md-2" for="meta_title">' . $this->pi_getLL('admin_label_input_meta_title') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_title']) . '">
+                    <div class="input-group width-fw">
+                        <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="'.$language['uid'].'" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_title']) . '" maxlength="60">
+                        <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
+                    </div>
 				</div>
 			</div>
 			<div class="form-group" id="msEditCategoryInputMetaKeywords_' . $language['uid'] . '">
 				<label class="control-label col-md-2" for="meta_keywords">' . $this->pi_getLL('admin_label_input_meta_keywords') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="meta_keywords[' . $language['uid'] . ']" id="meta_keywords[' . $language['uid'] . ']" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_keywords']) . '">
+				    <input type="text" class="form-control text" name="meta_keywords[' . $language['uid'] . ']" id="meta_keywords[' . $language['uid'] . ']" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_keywords']) . '">
 				</div>
 			</div>
 			<div class="form-group" id="msEditCategoryInputMetaDesc_' . $language['uid'] . '">
 				<label class="control-label col-md-2" for="meta_description">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '">
+				    <div class="input-group width-fw">
+				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="'.$language['uid'].'" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
+				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
+                    </div>
 				</div>
 			</div>';
             $categories_meta_block .= '</div></div></div>';
+        }
+        if (!empty($categories_content_block)) {
+            $GLOBALS['TSFE']->additionalHeaderData[] = '
+            <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $(".meta-title").each(function(idx, obj) {
+                    var lang_id=$(obj).attr("data-lang-id");
+                    var counter_id="#meta_title_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(60-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(".meta-desc").each(function(idx, obj) {
+                    var lang_id=$(obj).attr("data-lang-id");
+                    var counter_id="#meta_desc_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(168-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(document).on("keydown keyup", ".meta-title", function() {
+                    var lang_id=$(this).attr("data-lang-id");
+                    var counter_id="#meta_title_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(60-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(document).on("keydown keyup", ".meta-desc", function() {
+                    var lang_id=$(this).attr("data-lang-id");
+                    var counter_id="#meta_desc_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(168-current_counter);
+                    $(counter_id).html(char_left);
+                });
+            });
+            </script>';
         }
         // INPUT_CATEGORY_TREE
         $tmpcontent = '';

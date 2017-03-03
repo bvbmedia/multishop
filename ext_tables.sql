@@ -524,6 +524,7 @@ CREATE TABLE `tx_multishop_orders` (
  `memo_crdate` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
  `foreign_orders_id` varchar(30) default '',
+ `is_shipping_costs_manual` tinyint(1) default '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -580,7 +581,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `billing_department` (`billing_department`),
  KEY `delivery_department` (`delivery_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
- KEY `foreign_orders_id` (`foreign_orders_id`)
+ KEY `foreign_orders_id` (`foreign_orders_id`),
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
