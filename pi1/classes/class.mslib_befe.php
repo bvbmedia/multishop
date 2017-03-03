@@ -5262,15 +5262,17 @@ class mslib_befe {
         }
     }
     function returnGridColumns($gridCols,$columns=3) {
-        $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
-        $content.='<div class="row">';
-        foreach ($array as $col => $colArray) {
-            $content.='<div class="col-md-'.(12/$columns).'">';
-            $content.=implode('',$colArray);
+        if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
+            $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
+            $content.='<div class="row">';
+            foreach ($array as $col => $colArray) {
+                $content.='<div class="col-md-'.(12/$columns).'">';
+                $content.=implode('',$colArray);
+                $content.='</div>';
+            }
             $content.='</div>';
+            return $content;
         }
-        $content.='</div>';
-        return $content;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
