@@ -3069,6 +3069,7 @@ class mslib_befe {
         if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
             return array();
         }
+        $currentDir=getcwd();
         $path = dirname($file);
         chdir($path);
         // Unzip without overwriting existing files
@@ -3083,6 +3084,7 @@ class mslib_befe {
             //return array();
         }
         $result = mslib_befe::getFileResult($list, 'unzip');
+        chdir($currentDir);
         return $result;
     }
     public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0) {
@@ -5190,6 +5192,61 @@ class mslib_befe {
             return false;
         }
         return false;
+    }
+    public function arrayToTable($rows,$idName='',$settings=array()) {
+        if (is_array($rows) && count($rows)) {
+            $content.='<table'.($idName?' id="'.$idName.'"':'').' class="table table-striped table-bordered tablesorter">';
+            $content.='<thead><tr>';
+            foreach ($rows[0] as $colName => $colVal) {
+                $content.='<th>'.htmlspecialchars($colName).'</th>';
+            }
+            $content.='</tr></thead><tbody>';
+            $rowCounter=0;
+            foreach ($rows as $row) {
+                $content.='<tr>';
+                $cellCounter=0;
+                foreach ($row as $col => $val) {
+                    $class='';
+                    if ($settings['sum'] && $cellCounter) {
+                        $class='sum';
+                    }
+                    $content.='<td'.($class?' class="'.$class.'"':'').'>'.htmlspecialchars($val).'</td>';
+                    $cellCounter++;
+                }
+                $content.='</tr>';
+                $rowCounter++;
+            }
+            $content.='</tbody>';
+            if ($settings['sum']) {
+                $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_'.$idName]='<script data-ignore="true">
+                jQuery(document).ready(function($) {
+                        $(\'#'.$idName.'\').tablesorter();
+                        $(\'#'.$idName.'\').sumtr({
+                            formatValue : function(val) { return Math.round(val*100)/100; },
+                        });
+                    });
+                </script>
+                ';
+                $content.='
+                <tfoot>
+                <tr class="summary">
+                    <td>Total:</td>
+                ';
+                $rowCounter=0;
+                foreach ($rows[0] as $colName => $colVal) {
+                    if ($rowCounter) {
+                        $content.='<td class="grandTotal"></td>';
+                    }
+                    $rowCounter++;
+                }
+                $content.='
+                <tr>
+                </tfoot>
+                ';
+            }
+            $content.='</table>';
+            return $content;
+        }
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

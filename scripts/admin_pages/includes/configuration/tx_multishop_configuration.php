@@ -2594,6 +2594,61 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Show departmnent input field in admin edit customer',
+        'configuration_key' => 'SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER',
+        'configuration_value' => '0',
+        'description' => 'Show departmnent input field in admin edit customer',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Edit order select2 product minimum character',
+        'configuration_key' => 'EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER',
+        'configuration_value' => '0',
+        'description' => 'Minimum character to type before select2 give results for admin edit order product',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Display gender input in edit order customer details form',
+        'configuration_key' => 'DISPLAY_GENDER_INPUT_IN_EDIT_ORDER_CUSTOMER_DETAILS',
+        'configuration_value' => '0',
+        'description' => 'Display gender input in edit order customer details form',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Disable input autofill in customer create/edit account',
+        'configuration_key' => 'DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT',
+        'configuration_value' => '0',
+        'description' => 'Disable input autofill in customer create/edit account',
+        'group_id' => '3',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Disable input autofill in checkout',
+        'configuration_key' => 'DISABLE_INPUT_AUTOFILL_IN_CHECKOUT',
+        'configuration_value' => '0',
+        'description' => 'Disable input autofill in checkout',
+        'group_id' => '8',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

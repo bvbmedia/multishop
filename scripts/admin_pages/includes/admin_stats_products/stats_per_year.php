@@ -6,6 +6,13 @@ $search_start_time = '';
 $search_end_time = '';
 $filter = array();
 $data_query = array();
+if ($this->get['stats_year_sb'] > 0) {
+    if ($this->get['stats_year_sb'] != $this->cookie['stats_year_sb']) {
+        $this->cookie['stats_year_sb'] = $this->get['stats_year_sb'];
+    }
+} else {
+    $this->cookie['stats_year_sb'] = date("Y");
+}
 if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
     list($from_date, $from_time) = explode(" ", $this->get['order_date_from']);
     list($fd, $fm, $fy) = explode('/', $from_date);
@@ -14,6 +21,12 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
     $search_start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
     $search_end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
     $data_query['where'][] = "o.crdate BETWEEN '" . $search_start_time . "' and '" . $search_end_time . "'";
+} else {
+    if ($this->cookie['stats_year_sb'] && $this->cookie['stats_year_sb']!=date('Y')) {
+        $data_query['where'][] = 'o.crdate BETWEEN ' . strtotime(date($this->cookie['stats_year_sb'].'-01-01 00:00:00')) . ' and ' . strtotime(date($this->cookie['stats_year_sb'].'-12-31 23:59:59'));
+    } else {
+        $data_query['where'][] = 'o.crdate BETWEEN ' . strtotime(date('Y-01-01 00:00:00')) . ' and ' . time();
+    }
 }
 if ($this->get['orders_status_search'] > 0) {
     $data_query['where'][] = "(o.status='" . $this->get['orders_status_search'] . "')";
@@ -53,7 +66,6 @@ $filter = array();
 if (is_array($data_query['where']) && count($data_query['where'])) {
     $filter[] = '(' . implode(' AND ', $data_query['where']) . ')';
 }
-$filter[] = 'o.crdate BETWEEN ' . strtotime(date('Y-01-01 00:00:00')) . ' and ' . time();
 $filter[] = 'o.orders_id=op.orders_id';
 $str = $GLOBALS['TYPO3_DB']->SELECTquery('sum(op.qty) as total, op.products_name, op.products_id, op.categories_id', // SELECT ...
         'tx_multishop_orders o, tx_multishop_orders_products op', // FROM ...

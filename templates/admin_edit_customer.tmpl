@@ -221,16 +221,16 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="account-firstname" for="first_name">###LABEL_FIRSTNAME###</label>
-                                                    <input type="text" name="first_name" class="form-control first-name" id="first_name" value="###VALUE_FIRSTNAME###">
+                                                    <input type="text" name="first_name" class="form-control first-name" id="first_name" autocomplete="off" value="###VALUE_FIRSTNAME###">
                                                     <div id="invalid-first_name" class="error-space" style="display:none"></div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-middlename" for="middle_name">###LABEL_MIDDLENAME###</label>
-                                                    <input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="###VALUE_MIDDLENAME###">
+                                                    <input type="text" name="middle_name" id="middle_name" class="form-control middle_name" autocomplete="off" value="###VALUE_MIDDLENAME###">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-lastname" for="last_name">###LABEL_LASTNAME###</label>
-                                                    <input type="text" name="last_name" id="last_name" class="form-control last-name" value="###VALUE_LASTNAME###">
+                                                    <input type="text" name="last_name" id="last_name" class="form-control last-name" autocomplete="off" value="###VALUE_LASTNAME###">
                                                     <div id="invalid-last_name" class="error-space" style="display:none"></div>
                                                 </div>
                                             </div>
@@ -239,10 +239,10 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-###COMPANY_COL_SIZE###">
                                                     <label for="company" id="account-company">###LABEL_COMPANY###</label>
-                                                    <input type="text" name="company" class="form-control company" id="company" value="###VALUE_COMPANY###" />
+                                                    <input type="text" name="company" class="form-control company" id="company" autocomplete="off" value="###VALUE_COMPANY###" />
                                                     <div id="invalid-company" class="error-space" style="display:none"></div>
                                                 </div>
-                                                ###DEPARMENT_INPUT_FIELD###
+                                                ###DEPARTMENT_INPUT_FIELD###
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -259,17 +259,17 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="account-address" for="address">###LABEL_STREET_ADDRESS###</label>
-                                                    <input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###">
+                                                    <input type="text" name="street_name" id="address" class="form-control address" autocomplete="off" value="###VALUE_STREET_ADDRESS###">
                                                     <div id="invalid-address" class="error-space" style="display:none"></div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###</label>
-                                                    <input type="text" name="address_number" id="address_number" class="form-control address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
+                                                    <input type="text" name="address_number" id="address_number" class="form-control address-number" autocomplete="off" value="###VALUE_STREET_ADDRESS_NUMBER###">
                                                     <div id="invalid-address-number" class="error-space" style="display:none"></div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
-                                                    <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="###VALUE_ADDRESS_EXTENTION###">
+                                                    <input type="text" name="address_ext" id="address_ext" class="form-control address_ext" autocomplete="off" value="###VALUE_ADDRESS_EXTENTION###">
                                                 </div>
                                             </div>
                                         </div>
@@ -277,7 +277,7 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <label class="account-building" for="building">###LABEL_BUILDING###</label>
-                                                    <input type="text" name="building" id="building" class="form-control building" value="###VALUE_BUILDING###">
+                                                    <input type="text" name="building" id="building" class="form-control building" autocomplete="off" value="###VALUE_BUILDING###">
                                                 </div>
                                             </div>
                                         </div>
@@ -285,12 +285,12 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
-                                                    <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###">
+                                                    <input type="text" name="zip" id="zip" class="form-control zip" autocomplete="off" value="###VALUE_POSTCODE###">
                                                     <div id="invalid-zip" class="error-space" style="display:none"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="account-city" for="city">###LABEL_CITY###</label>
-                                                    <input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
+                                                    <input type="text" name="city" id="city" class="form-control city" autocomplete="off" value="###VALUE_CITY###">
                                                     <div id="invalid-city" class="error-space" style="display:none"></div>
                                                 </div>
 
@@ -308,13 +308,13 @@ jQuery(document).ready(function ($) {
                                                 <!-- ###BIRTHDATE_BLOCK### begin -->
                                                 <div class="col-md-6">
                                                     <label for="birthday" id="account-birthday">###LABEL_BIRTHDATE###</label>
-                                                    <input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" value="###VALUE_VISIBLE_BIRTHDATE###">
+                                                    <input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" autocomplete="off" value="###VALUE_VISIBLE_BIRTHDATE###">
                                                     <input type="hidden" name="birthday" class="birthday" id="birthday" value="###VALUE_HIDDEN_BIRTHDATE###">
                                                 </div>
                                                 <!-- ###BIRTHDATE_BLOCK### end -->
                                                 <div class="col-md-6">
                                                     <label for="email" id="account-email">###LABEL_EMAIL###<span class="text-danger">*</span></label>
-                                                    <input type="email" name="email" id="email" class="form-control email h5-email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
+                                                    <input type="email" name="email" id="email" class="form-control email h5-email" autocomplete="off" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
                                                     <div id="invalid-email" class="error-space" style="display:none"></div>
                                                 </div>
 
@@ -324,12 +324,12 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
-                                                    <input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###">
+                                                    <input type="text" name="telephone" id="telephone" class="form-control telephone" autocomplete="off" value="###VALUE_TELEPHONE###">
                                                     <div id="invalid-telephone" class="error-space" style="display:none"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="mobile" id="account-mobile">###LABEL_MOBILE###</label>
-                                                    <input type="text" name="mobile" id="mobile" class="form-control mobile" value="###VALUE_MOBILE###">
+                                                    <input type="text" name="mobile" id="mobile" class="form-control mobile" autocomplete="off" value="###VALUE_MOBILE###">
                                                 </div>
                                             </div>
                                         </div>
@@ -366,15 +366,15 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_firstname" for="delivery_first_name">###LABEL_DELIVERY_FIRSTNAME###</label>
-                                                    <input type="text" name="delivery_first_name" class="form-control first-name" id="delivery_first_name" value="###VALUE_DELIVERY_FIRSTNAME###">
+                                                    <input type="text" name="delivery_first_name" class="form-control first-name" id="delivery_first_name" autocomplete="off" value="###VALUE_DELIVERY_FIRSTNAME###">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_middlename" for="delivery_middle_name">###LABEL_DELIVERY_MIDDLENAME###</label>
-                                                    <input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control middle_name" value="###VALUE_DELIVERY_MIDDLENAME###">
+                                                    <input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control middle_name" autocomplete="off" value="###VALUE_DELIVERY_MIDDLENAME###">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_lastname" for="delivery_last_name">###LABEL_DELIVERY_LASTNAME###</label>
-                                                    <input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control last-name" value="###VALUE_DELIVERY_LASTNAME###">
+                                                    <input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control last-name" autocomplete="off" value="###VALUE_DELIVERY_LASTNAME###">
                                                 </div>
                                             </div>
                                         </div>
@@ -382,24 +382,24 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-###DELIVERY_COMPANY_COL_SIZE###">
                                                     <label for="delivery_company" id="account-delivery_company">###LABEL_DELIVERY_COMPANY###</label>
-                                                    <input type="text" name="delivery_company" class="form-control company" id="delivery_company" value="###VALUE_DELIVERY_COMPANY###" />
+                                                    <input type="text" name="delivery_company" class="form-control company" id="delivery_company" autocomplete="off" value="###VALUE_DELIVERY_COMPANY###" />
                                                 </div>
-                                                ###DELIVERY_DEPARMENT_INPUT_FIELD###
+                                                ###DELIVERY_DEPARTMENT_INPUT_FIELD###
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_address" for="delivery_address">###LABEL_DELIVERY_STREET_ADDRESS###</label>
-                                                    <input type="text" name="delivery_street_name" id="delivery_address" class="form-control address" value="###VALUE_DELIVERY_STREET_ADDRESS###">
+                                                    <input type="text" name="delivery_street_name" id="delivery_address" class="form-control address" autocomplete="off" value="###VALUE_DELIVERY_STREET_ADDRESS###">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_addressnumber" for="delivery_address_number">###LABEL_DELIVERY_STREET_ADDRESS_NUMBER###</label>
-                                                    <input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control address-number" value="###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###">
+                                                    <input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control address-number" autocomplete="off" value="###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label class="account-delivery_address_ext" for="delivery_address_ext">###LABEL_DELIVERY_ADDRESS_EXTENTION###</label>
-                                                    <input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control address_ext" value="###VALUE_DELIVERY_ADDRESS_EXTENTION###">
+                                                    <input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control address_ext" autocomplete="off" value="###VALUE_DELIVERY_ADDRESS_EXTENTION###">
                                                 </div>
                                             </div>
                                         </div>
@@ -407,7 +407,7 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <label class="account-delivery_building" for="delivery_building">###LABEL_DELIVERY_BUILDING###</label>
-                                                    <input type="text" name="delivery_building" id="delivery_building" class="form-control building" value="###VALUE_DELIVERY_BUILDING###">
+                                                    <input type="text" name="delivery_building" id="delivery_building" class="form-control building" autocomplete="off" value="###VALUE_DELIVERY_BUILDING###">
                                                 </div>
                                             </div>
                                         </div>
@@ -415,11 +415,11 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label class="account-delivery_zip" for="delivery_zip">###LABEL_DELIVERY_POSTCODE###</label>
-                                                    <input type="text" name="delivery_zip" id="delivery_zip" class="form-control zip" value="###VALUE_DELIVERY_POSTCODE###">
+                                                    <input type="text" name="delivery_zip" id="delivery_zip" class="form-control zip" autocomplete="off" value="###VALUE_DELIVERY_POSTCODE###">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="account-delivery_city" for="delivery_city">###LABEL_DELIVERY_CITY###</label>
-                                                    <input type="text" name="delivery_city" id="delivery_city" class="form-control city" value="###VALUE_DELIVERY_CITY###">
+                                                    <input type="text" name="delivery_city" id="delivery_city" class="form-control city" autocomplete="off" value="###VALUE_DELIVERY_CITY###">
                                                 </div>
 
                                             </div>
@@ -435,7 +435,7 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="delivery_email" id="account-delivery_email">###LABEL_DELIVERY_EMAIL###</label>
-                                                    <input type="delivery_email" name="delivery_email" id="delivery_email" class="form-control email" value="###VALUE_DELIVERY_EMAIL###">
+                                                    <input type="delivery_email" name="delivery_email" id="delivery_email" class="form-control email" autocomplete="off" value="###VALUE_DELIVERY_EMAIL###">
                                                 </div>
                                             </div>
                                         </div>
@@ -443,11 +443,11 @@ jQuery(document).ready(function ($) {
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="telephone" id="account-delivery_telephone">###LABEL_DELIVERY_TELEPHONE###</label>
-                                                    <input type="text" name="delivery_telephone" id="delivery_telephone" class="form-control telephone" value="###VALUE_DELIVERY_TELEPHONE###">
+                                                    <input type="text" name="delivery_telephone" id="delivery_telephone" class="form-control telephone" autocomplete="off" value="###VALUE_DELIVERY_TELEPHONE###">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="mobile" id="account-delivery_mobile">###LABEL_DELIVERY_MOBILE###</label>
-                                                    <input type="text" name="delivery_mobile" id="delivery_mobile" class="form-control mobile" value="###VALUE_DELIVERY_MOBILE###">
+                                                    <input type="text" name="delivery_mobile" id="delivery_mobile" class="form-control mobile" autocomplete="off" value="###VALUE_DELIVERY_MOBILE###">
                                                 </div>
                                             </div>
                                         </div>
@@ -459,11 +459,11 @@ jQuery(document).ready(function ($) {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="www" id="account-www">###LABEL_WEBSITE###</label>
-                                            <input type="text" name="www" id="www" class="form-control www" value="###VALUE_WEBSITE###">
+                                            <input type="text" name="www" id="www" class="form-control www" autocomplete="off" value="###VALUE_WEBSITE###">
                                         </div>
                                         <div class="col-md-6" id="msAdminFeUserDiscountWrapper">
                                             <label for="tx_multishop_discount" id="account-tx_multishop_discount">###LABEL_DISCOUNT###</label>
-                                            <input type="text" name="tx_multishop_discount" class="form-control tx_multishop_discount" id="tx_multishop_discount" value="###VALUE_DISCOUNT###" />
+                                            <input type="text" name="tx_multishop_discount" class="form-control tx_multishop_discount" id="tx_multishop_discount" autocomplete="off" value="###VALUE_DISCOUNT###" />
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +483,7 @@ jQuery(document).ready(function ($) {
                                 ###CUSTOM_MARKER_ABOVE_PAYMENT_CONDITION_FORM_FIELD###
                                 <div class="form-group">
                                     <label for="tx_multishop_payment_condition" id="account-tx_multishop_payment_condition">###LABEL_PAYMENT_CONDITION###</label>
-                                    <input type="text" name="tx_multishop_payment_condition" class="form-control tx_multishop_payment_condition" id="tx_multishop_payment_condition" value="###VALUE_PAYMENT_CONDITION###" />
+                                    <input type="text" name="tx_multishop_payment_condition" class="form-control tx_multishop_payment_condition" id="tx_multishop_payment_condition" autocomplete="off" value="###VALUE_PAYMENT_CONDITION###" />
                                 </div>
                                 ###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###
                                 ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###

@@ -95,7 +95,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array = $Cache_Lite->ge
     }
     if (isset($product['search_engines_allow_indexing'])) {
         if (!$product['search_engines_allow_indexing']) {
-            $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+            $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, follow" />';
         } else {
             if ($product['categories_id']) {
                 $no_index = false;
@@ -114,7 +114,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array = $Cache_Lite->ge
                     }
                 }
                 if ($no_index) {
-                    $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+                    $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, follow" />';
                 }
             }
         }

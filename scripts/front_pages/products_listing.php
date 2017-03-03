@@ -70,7 +70,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
         }
         if (isset($current['search_engines_allow_indexing'])) {
             if (!$current['search_engines_allow_indexing']) {
-                $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+                $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, follow" />';
             } else {
                 $no_index = false;
                 $level = 0;
@@ -88,7 +88,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                     }
                 }
                 if ($no_index) {
-                    $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, nofollow" />';
+                    $output_array['meta']['noindex'] = '<meta name="robots" content="noindex, follow" />';
                 }
             }
         }

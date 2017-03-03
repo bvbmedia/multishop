@@ -54,7 +54,7 @@ if (count($products) < 0) {
         //if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
         $birthday_validation = '
 			$("#birthday_visitor").datepicker({
-				dateFormat: "' . $this->pi_getLL('locale_date_format', 'm/d/Y') . '",
+				dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'm/d/Y') . '",
 				altField: "#birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
@@ -63,7 +63,7 @@ if (count($products) < 0) {
 				yearRange: "-100:+0"
 			});
 			$("#delivery_birthday_visitor").datepicker({
-				dateFormat: "' . $this->pi_getLL('locale_date_format', 'm/d/Y') . '",
+				dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'm/d/Y') . '",
 				altField: "#delivery_birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
@@ -115,12 +115,12 @@ if (count($products) < 0) {
 			<div class="row">
 			<div class="col-md-6">
 				<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '</label>
-				<input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" value="' . htmlspecialchars($user['birthday']) . '" >
+				<input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" autocomplete="off" value="' . htmlspecialchars($user['birthday']) . '" >
 				<input type="hidden" name="birthday" class="birthday" id="birthday" value="' . htmlspecialchars($user['birthday']) . '" >
 			</div>
 			<div class="col-md-6">
 				<label for="company" id="account-company">' . ucfirst($this->pi_getLL('company')) . '</label>
-				<input type="text" name="company" class="form-control company" id="company" value="' . htmlspecialchars($user['company']) . '"/>
+				<input type="text" name="company" class="form-control company" id="company" autocomplete="off" value="' . htmlspecialchars($user['company']) . '"/>
 				' . ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '') . '
 			</div>
 			</div>
@@ -129,11 +129,11 @@ if (count($products) < 0) {
 			<div class="row">
 				<div class="col-md-6">
 					<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
-					<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '" />
+					<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" autocomplete="off" value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '" />
 				</div>
 				<div class="col-md-6">
 					<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id', 'KvK ID')) . '</label>
-					<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '" />
+					<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" autocomplete="off" value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '" />
 				</div>
 			</div>
 		</div>
@@ -141,15 +141,15 @@ if (count($products) < 0) {
 			<div class="row">
 			<div class="col-md-4">
 				<label class="account-firstname" for="first_name">' . ucfirst($this->pi_getLL('first_name')) . '</label>
-				<input type="text" name="first_name" class="form-control first-name" id="first_name" value="' . htmlspecialchars($user['first_name']) . '">
+				<input type="text" name="first_name" class="form-control first-name" id="first_name" autocomplete="off" value="' . htmlspecialchars($user['first_name']) . '">
 			</div>
 			<div class="col-md-4">
 				<label class="account-middlename" for="middle_name">' . ucfirst($this->pi_getLL('middle_name')) . '</label>
-				<input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="' . htmlspecialchars($user['middle_name']) . '">
+				<input type="text" name="middle_name" id="middle_name" class="form-control middle_name" autocomplete="off" value="' . htmlspecialchars($user['middle_name']) . '">
 			</div>
 			<div class="col-md-4">
 				<label class="account-lastname" for="last_name">' . ucfirst($this->pi_getLL('last_name')) . '</label>
-				<input type="text" name="last_name" id="last_name" class="form-control last-name" value="' . htmlspecialchars($user['last_name']) . '">
+				<input type="text" name="last_name" id="last_name" class="form-control last-name" autocomplete="off" value="' . htmlspecialchars($user['last_name']) . '">
 			</div>
 			</div>
 		</div>
@@ -157,15 +157,15 @@ if (count($products) < 0) {
 			<div class="row">
 				<div class="col-md-4">
 					<label class="account-address" for="address">' . ucfirst($this->pi_getLL('street_address')) . '</label>
-					<input type="text" name="street_name" id="address" class="form-control address" value="' . htmlspecialchars($user['street_name']) . '">
+					<input type="text" name="street_name" id="address" class="form-control address" autocomplete="off" value="' . htmlspecialchars($user['street_name']) . '">
 				</div>
 				<div class="col-md-4">
 					<label class="account-addressnumber" for="address_number">' . ucfirst($this->pi_getLL('street_address_number')) . '</label>
-					<input type="text" name="address_number" id="address_number" class="form-control address-number" value="' . htmlspecialchars($user['address_number']) . '">
+					<input type="text" name="address_number" id="address_number" class="form-control address-number" autocomplete="off" value="' . htmlspecialchars($user['address_number']) . '">
 				</div>
 				<div class="col-md-4">
 					<label class="account-address_address_ext" for="address_ext">' . ucfirst($this->pi_getLL('address_extension')) . '</label>
-					<input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="' . htmlspecialchars($user['address_ext']) . '" >
+					<input type="text" name="address_ext" id="address_ext" class="form-control address_ext" autocomplete="off" value="' . htmlspecialchars($user['address_ext']) . '" >
         		</div>
 			</div>
         </div>
@@ -173,11 +173,11 @@ if (count($products) < 0) {
 			<div class="row">
 			<div class="col-md-6">
 				<label class="account-zip" for="zip">' . ucfirst($this->pi_getLL('zip')) . '</label>
-				<input type="text" name="zip" id="zip" class="form-control zip" value="' . htmlspecialchars($user['zip']) . '">
+				<input type="text" name="zip" id="zip" class="form-control zip" autocomplete="off" value="' . htmlspecialchars($user['zip']) . '">
 			</div>
 			<div class="col-md-6">
 				<label class="account-city" for="city">' . ucfirst($this->pi_getLL('city')) . '</label>
-				<input type="text" name="city" id="city" class="form-control city" value="' . htmlspecialchars($user['city']) . '">
+				<input type="text" name="city" id="city" class="form-control city" autocomplete="off" value="' . htmlspecialchars($user['city']) . '">
 			</div>
 			</div>
 		</div>
@@ -201,7 +201,7 @@ if (count($products) < 0) {
             $tmpcontent_con_delivery = implode("\n", $delivery_countries_option);
             if ($tmpcontent_con) {
                 $content .= '<label for="country" id="account-country">' . ucfirst($this->pi_getLL('country')) . '<span class="text-danger">*</span></label>
-				<select name="country" id="country" class="form-control country" required="required" data-h5-errorid="invalid-country" title="' . $this->pi_getLL('country_is_required') . '">
+				<select name="country" autocomplete="off" id="country" class="form-control country" required="required" data-h5-errorid="invalid-country" title="' . $this->pi_getLL('country_is_required') . '">
 				<option value="">' . ucfirst($this->pi_getLL('choose_country')) . '</option>
 				' . $tmpcontent_con . '
 				</select>
@@ -224,18 +224,18 @@ if (count($products) < 0) {
         $content .= '</div>
 		<div class="form-group">
 			<label for="email" id="account-email">' . ucfirst($this->pi_getLL('e-mail_address')) . '</label>
-			<input type="text" name="email" id="email" class="form-control email" value="' . htmlspecialchars($user['email']) . '" required="required" data-h5-errorid="invalid-email" title="' . $this->pi_getLL('email_is_required') . '">
+			<input type="text" name="email" id="email" class="form-control email" autocomplete="off" value="' . htmlspecialchars($user['email']) . '" required="required" data-h5-errorid="invalid-email" title="' . $this->pi_getLL('email_is_required') . '">
 			<div id="invalid-email" class="error-space" style="display:none"></div>
 		</div>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">
 					<label for="telephone" id="account-telephone">' . ucfirst($this->pi_getLL('telephone')) . '</label>
-					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="' . htmlspecialchars($user['telephone']) . '">
+					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" autocomplete="off" value="' . htmlspecialchars($user['telephone']) . '">
 				</div>
 				<div class="col-md-6">
 					<label for="mobile" id="account-mobile">' . ucfirst($this->pi_getLL('mobile')) . '</label>
-					<input type="text" name="mobile" id="mobile" class="form-control mobile" value="' . htmlspecialchars($user['mobile']) . '">
+					<input type="text" name="mobile" id="mobile" class="form-control mobile" autocomplete="off" value="' . htmlspecialchars($user['mobile']) . '">
 					<div id="invalid-mobile" class="error-space" style="display:none"></div>
 				</div>
 			</div>
@@ -363,21 +363,21 @@ if (count($products) < 0) {
 		 </div>
 			<div class="form-group">
 				<label for="delivery_company">' . ucfirst($this->pi_getLL('company')) . ':</label>
-				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" value="' . htmlspecialchars($user['delivery_company']) . '">
+				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" autocomplete="off" value="' . htmlspecialchars($user['delivery_company']) . '">
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-4">
 						<label class="account-firstname" for="delivery_first_name">' . ucfirst($this->pi_getLL('first_name')) . '</label>
-						<input type="text" name="delivery_first_name" class="form-control delivery_first-name left-this" id="delivery_first_name" value="' . htmlspecialchars($user['delivery_first_name']) . '" >
+						<input type="text" name="delivery_first_name" class="form-control delivery_first-name left-this" id="delivery_first_name" autocomplete="off" value="' . htmlspecialchars($user['delivery_first_name']) . '" >
 					</div>
 					<div class="col-md-4">
 						<label class="account-middlename" for="delivery_middle_name">' . ucfirst($this->pi_getLL('middle_name')) . '</label>
-						<input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control delivery_middle_name left-this" value="' . htmlspecialchars($user['delivery_middle_name']) . '">
+						<input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control delivery_middle_name left-this" autocomplete="off" value="' . htmlspecialchars($user['delivery_middle_name']) . '">
 					</div>
 					<div class="col-md-4">
 						<label class="account-lastname" for="delivery_last_name">' . ucfirst($this->pi_getLL('last_name')) . '</label>
-						<input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control delivery_last-name left-this" value="' . htmlspecialchars($user['delivery_last_name']) . '" >
+						<input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control delivery_last-name left-this" autocomplete="off" value="' . htmlspecialchars($user['delivery_last_name']) . '" >
 					</div>
 				</div>
 		    </div>
@@ -385,15 +385,15 @@ if (count($products) < 0) {
 				<div class="row">
 					<div class="col-md-4">
 						<label for="delivery_address">' . ucfirst($this->pi_getLL('street_address')) . ':</label>
-						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" value="' . htmlspecialchars($user['delivery_street_name']) . '">
+						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" autocomplete="off" value="' . htmlspecialchars($user['delivery_street_name']) . '">
 					</div>
 					<div class="col-md-4">
 						<label class="delivery_account-addressnumber" for="delivery_address_number">' . ucfirst($this->pi_getLL('street_address_number')) . '</label>
-						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" value="' . htmlspecialchars($user['delivery_address_number']) . '" >
+						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" autocomplete="off" value="' . htmlspecialchars($user['delivery_address_number']) . '" >
 					</div>
 					<div class="col-md-4">
 						<label class="account-address_delivery_address_ext" for="delivery_address_ext">' . ucfirst($this->pi_getLL('address_extension')) . '</label>
-						<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control delivery_address_ext" value="' . htmlspecialchars($user['delivery_address_ext']) . '" >
+						<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control delivery_address_ext" autocomplete="off" value="' . htmlspecialchars($user['delivery_address_ext']) . '" >
 					</div>
 				</div>
 			</div>
@@ -402,11 +402,11 @@ if (count($products) < 0) {
 				<div class="row">
 					<div class="col-md-6">
 						<label for="delivery_zip">' . ucfirst($this->pi_getLL('zip')) . ':</label>
-						<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" value="' . htmlspecialchars($user['delivery_zip']) . '">
+						<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" autocomplete="off" value="' . htmlspecialchars($user['delivery_zip']) . '">
 					</div>
 					<div class="col-md-6">
 						<label class="account-city" for="delivery_city">' . ucfirst($this->pi_getLL('city')) . '</label>
-						<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" value="' . htmlspecialchars($user['delivery_city']) . '" >
+						<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" autocomplete="off" value="' . htmlspecialchars($user['delivery_city']) . '" >
 					</div>
 				</div>
 			</div>
@@ -414,7 +414,7 @@ if (count($products) < 0) {
         if ($tmpcontent_con) {
             $tmpcontent .= '<div class="form-group">
 				<label for="delivery_country" id="account-country">' . ucfirst($this->pi_getLL('country')) . '<span class="text-danger">*</span></label>
-				<select name="delivery_country" id="delivery_country" class="form-control delivery_country">
+				<select name="delivery_country" autocomplete="off" id="delivery_country" class="form-control delivery_country">
 					<option value="">' . ucfirst($this->pi_getLL('choose_country')) . '</option>
 					' . $tmpcontent_con_delivery . '
 				</select>
@@ -424,17 +424,17 @@ if (count($products) < 0) {
         $tmpcontent .= '
 			<div class="form-group">
 				<label for="delivery_email" id="account-email">' . ucfirst($this->pi_getLL('e-mail_address')) . '</label>
-				<input type="text" name="delivery_email" id="delivery_email" class="form-control delivery_email" value="' . htmlspecialchars($user['delivery_email']) . '"/>
+				<input type="text" name="delivery_email" id="delivery_email" class="form-control delivery_email" autocomplete="off" value="' . htmlspecialchars($user['delivery_email']) . '"/>
 			</div>
 			<div class="form-group">
 				<div class="row">
 				<div class="col-md-6">
 				<label for="delivery_telephone">' . ucfirst($this->pi_getLL('telephone')) . '<span class="text-danger">*</span>:</label>
-				<input type="text" name="delivery_telephone" id="delivery_telephone" class="form-control delivery_telephone" value="' . htmlspecialchars($user['delivery_telephone']) . '"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
+				<input type="text" name="delivery_telephone" id="delivery_telephone" class="form-control delivery_telephone" autocomplete="off" value="' . htmlspecialchars($user['delivery_telephone']) . '"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
 				</div>
 				<div class="col-md-6">
 				<label for="delivery_mobile" class="account_mobile">' . ucfirst($this->pi_getLL('mobile')) . ':</label>
-				<input type="text" name="delivery_mobile" id="delivery_mobile" class="form-control delivery_mobile" value="' . htmlspecialchars($user['delivery_mobile']) . '">
+				<input type="text" name="delivery_mobile" id="delivery_mobile" class="form-control delivery_mobile" autocomplete="off" value="' . htmlspecialchars($user['delivery_mobile']) . '">
 				</div>
 				</div>
 			</div><hr>';

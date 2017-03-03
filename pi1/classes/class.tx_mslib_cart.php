@@ -1139,13 +1139,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         return $this->cart;
     }
     function countCartQuantity() {
-        //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $products = $cart['products'];
-        $weight = 0;
+        $order=array();
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
+            $order=mslib_fe::getOrder($this->get['orders_id']);
+            $products=$order['products'];
+        } else {
+            //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $cart = $mslib_cart->getCart();
+            $products = $cart['products'];
+        }
+        $quantity = 0;
         foreach ($products as $products_id => $value) {
             if (is_numeric($value['products_id'])) {
                 $quantity = ($quantity + $value['qty']);
@@ -1155,67 +1161,119 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     function countCartTotalPrice($subtract_discount = 1, $include_vat = 0, $country_id = 0) {
         $order = array();
-        //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $address = $cart['user'];
-        if (is_array($cart['products']) && count($cart['products'])) {
-            foreach ($cart['products'] as $shopping_cart_item => $value) {
-                $tmp_product_tax = 0;
-                if ($country_id > 0) {
-                    $tax_rate = mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
-                    $value['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
-                }
-                if (is_numeric($value['products_id'])) {
-                    $product_amount = $value['final_price'];
-                    $tmp_product_tax = round($value['final_price'] * $value['tax_rate'], 2);
-                    if (is_array($value['attributes'])) {
-                        foreach ($value['attributes'] as $attribute_key => $attribute_values) {
-                            if ($attribute_values['price_prefix'] == '+') {
-                                $product_amount = ($product_amount + $attribute_values['options_values_price']);
-                            } else {
-                                $product_amount = ($product_amount - $attribute_values['options_values_price']);
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
+            $order=mslib_fe::getOrder($this->get['orders_id']);
+            $products=$order['products'];
+            if (is_array($products) && count($products)) {
+                foreach ($products as $pid => $value) {
+                    $tmp_product_tax = 0;
+                    $value['tax_rate'] = ($value['products_tax'] / 100);
+                    if (is_numeric($value['products_id'])) {
+                        $product_amount = $value['final_price'];
+                        $tmp_product_tax = round($value['final_price'] * $value['tax_rate'], 2);
+                        if (is_array($value['attributes'])) {
+                            foreach ($value['attributes'] as $attribute_key => $attribute_values) {
+                                if ($attribute_values['price_prefix'] == '+') {
+                                    $product_amount = ($product_amount + $attribute_values['options_values_price']);
+                                } else {
+                                    $product_amount = ($product_amount - $attribute_values['options_values_price']);
+                                }
+                                $tmp_product_tax += round($value['options_values_price'] * $value['tax_rate'], 2);
                             }
-                            $tmp_product_tax += round($value['options_values_price'] * $value['tax_rate'], 2);
                         }
-                    }
-                    $subtotal_price = ($value['qty'] * $product_amount);
-                    if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                        if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                            $subtotal_price = $subtotal_price + ($tmp_product_tax * $value['qty']);
+                        $subtotal_price = ($value['qty'] * $product_amount);
+                        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                $subtotal_price = $subtotal_price + ($tmp_product_tax * $value['qty']);
+                            }
+                        } else {
+                            if ($value['tax_rate'] && $include_vat) {
+                                $subtotal_price = ($subtotal_price * ($value['tax_rate'])) + $subtotal_price;
+                            }
                         }
-                    } else {
-                        if ($value['tax_rate'] && $include_vat) {
-                            $subtotal_price = ($subtotal_price * ($value['tax_rate'])) + $subtotal_price;
-                        }
-                    }
-                    $total_price = ($total_price + $subtotal_price);
-                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
-                        $params = array(
-                                'shopping_cart_item' => $shopping_cart_item,
-                                'cart_item' => &$value,
-                                'total_price' => &$total_price
-                        );
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'] as $funcRef) {
-                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        $total_price = ($total_price + $subtotal_price);
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
+                            $params = array(
+                                    'shopping_cart_item' => $pid,
+                                    'cart_item' => &$value,
+                                    'total_price' => &$total_price,
+                                    'mode' => 'edit_order'
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
                         }
                     }
                 }
             }
-        }
-        $return_total_price = $total_price;
-        if ($subtract_discount and $cart['discount']) {
-            switch ($cart['discount_type']) {
-                case 'percentage':
-                    $discount_price = (($total_price) / 100 * $cart['discount']);
-                    break;
-                case 'price':
-                    $discount_price = $cart['discount'];
-                    break;
+            $return_total_price = $total_price;
+            if ($subtract_discount and $order['discount']) {
+                $discount_price = $order['discount'];
+                $return_total_price = $total_price - $discount_price;
             }
-            $return_total_price = $total_price - $discount_price;
+        } else {
+            //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $cart = $mslib_cart->getCart();
+            if (is_array($cart['products']) && count($cart['products'])) {
+                foreach ($cart['products'] as $shopping_cart_item => $value) {
+                    $tmp_product_tax = 0;
+                    if ($country_id > 0) {
+                        $tax_rate = mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
+                        $value['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
+                    }
+                    if (is_numeric($value['products_id'])) {
+                        $product_amount = $value['final_price'];
+                        $tmp_product_tax = round($value['final_price'] * $value['tax_rate'], 2);
+                        if (is_array($value['attributes'])) {
+                            foreach ($value['attributes'] as $attribute_key => $attribute_values) {
+                                if ($attribute_values['price_prefix'] == '+') {
+                                    $product_amount = ($product_amount + $attribute_values['options_values_price']);
+                                } else {
+                                    $product_amount = ($product_amount - $attribute_values['options_values_price']);
+                                }
+                                $tmp_product_tax += round($value['options_values_price'] * $value['tax_rate'], 2);
+                            }
+                        }
+                        $subtotal_price = ($value['qty'] * $product_amount);
+                        if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                            if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                $subtotal_price = $subtotal_price + ($tmp_product_tax * $value['qty']);
+                            }
+                        } else {
+                            if ($value['tax_rate'] && $include_vat) {
+                                $subtotal_price = ($subtotal_price * ($value['tax_rate'])) + $subtotal_price;
+                            }
+                        }
+                        $total_price = ($total_price + $subtotal_price);
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'])) {
+                            $params = array(
+                                    'shopping_cart_item' => $shopping_cart_item,
+                                    'cart_item' => &$value,
+                                    'total_price' => &$total_price,
+                                    'mode' => 'front_checkout'
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartTotalPricePostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
+                    }
+                }
+            }
+            $return_total_price = $total_price;
+            if ($subtract_discount and $cart['discount']) {
+                switch ($cart['discount_type']) {
+                    case 'percentage':
+                        $discount_price = (($total_price) / 100 * $cart['discount']);
+                        break;
+                    case 'price':
+                        $discount_price = $cart['discount'];
+                        break;
+                }
+                $return_total_price = $total_price - $discount_price;
+            }
         }
         // to make sure the floatings numbers are not infinite
         $return_total_price = number_format($return_total_price, 14, '.', '');
@@ -1224,32 +1282,57 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function countCartTotalTax($country_id = 0) {
         $total_product_tax = 0;
         $products_tax = array();
-        //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $address = $cart['user'];
-        if (is_array($cart['products']) && count($cart['products'])) {
-            foreach ($cart['products'] as $shopping_cart_item => $value) {
-                if ($country_id > 0) {
-                    $tax_rate = mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
-                    $value['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
-                }
-                if (is_numeric($value['products_id'])) {
-                    $product_amount = $value['final_price'];
-                    $subtotal_price = ($value['qty'] * $product_amount);
-                    if ($value['tax_rate']) {
-                        $total_product_tax += ($subtotal_price * ($value['tax_rate']));
-                    }
-                    // attributes
-                    if (is_array($value['attributes'])) {
-                        foreach ($value['attributes'] as $attribute_key => $attribute_value) {
-                            $total_product_tax += ($attribute_value['options_values_price'] * $value['qty']) * $value['tax_rate'];
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
+            $order=mslib_fe::getOrder($this->get['orders_id']);
+            $products=$order['products'];
+            if (is_array($products) && count($products)) {
+                foreach ($products as $pid => $value) {
+                    $value['tax_rate'] = ($value['products_tax'] / 100);
+                    if (is_numeric($value['products_id'])) {
+                        $product_amount = $value['final_price'];
+                        $subtotal_price = ($value['qty'] * $product_amount);
+                        if ($value['tax_rate']) {
+                            $total_product_tax += ($subtotal_price * ($value['tax_rate']));
                         }
+                        // attributes
+                        if (is_array($value['attributes'])) {
+                            foreach ($value['attributes'] as $attribute_key => $attribute_value) {
+                                $total_product_tax += ($attribute_value['options_values_price'] * $value['qty']) * $value['tax_rate'];
+                            }
+                        }
+                        // attributes eof
+                        $products_tax['products_tax']['products_tax_rate_' . $value['products_id']] = $value['tax_rate'];
                     }
-                    // attributes eof
-                    $products_tax['products_tax']['products_tax_rate_' . $value['products_id']] = $value['tax_rate'];
+                }
+            }
+        } else {
+            //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+            $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+            $mslib_cart->init($this);
+            $cart = $mslib_cart->getCart();
+            $address = $cart['user'];
+            if (is_array($cart['products']) && count($cart['products'])) {
+                foreach ($cart['products'] as $shopping_cart_item => $value) {
+                    if ($country_id > 0) {
+                        $tax_rate = mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
+                        $value['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
+                    }
+                    if (is_numeric($value['products_id'])) {
+                        $product_amount = $value['final_price'];
+                        $subtotal_price = ($value['qty'] * $product_amount);
+                        if ($value['tax_rate']) {
+                            $total_product_tax += ($subtotal_price * ($value['tax_rate']));
+                        }
+                        // attributes
+                        if (is_array($value['attributes'])) {
+                            foreach ($value['attributes'] as $attribute_key => $attribute_value) {
+                                $total_product_tax += ($attribute_value['options_values_price'] * $value['qty']) * $value['tax_rate'];
+                            }
+                        }
+                        // attributes eof
+                        $products_tax['products_tax']['products_tax_rate_' . $value['products_id']] = $value['tax_rate'];
+                    }
                 }
             }
         }
@@ -2100,7 +2183,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 }
                                 // hook oef
                             }
-                            // TYPO3 6.2 LTS NULL FIX
                             $insertArray['page_uid']=$value['page_uid'];
                             $insertArray['product_link']='';
                             if ($value['categories_id']) {
@@ -2118,9 +2200,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $where .= '&';
                                 }
                                 // get all cats to generate multilevel fake url eof
-                                $product_detail_link = mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                $product_detail_link = $this->FULL_HTTP_URL.mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                 $insertArray['product_link']=$product_detail_link;
                             }
+                            // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);

@@ -304,6 +304,7 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     $markers['ORDER_DATE_LONG'] = $this->pi_getLL('admin_label_cms_marker_order_date_in_long_format');
     $markers['CURRENT_DATE_LONG'] = $this->pi_getLL('admin_label_cms_marker_current_date_in_long_format');
     $markers['STORE_NAME'] = $this->pi_getLL('admin_label_cms_marker_store_name');
+    $markers['STORE_EMAIL'] = $this->pi_getLL('admin_label_cms_marker_store_email');
     $markers['TOTAL_AMOUNT'] = $this->pi_getLL('admin_label_cms_marker_order_total_amount');
     $markers['PROPOSAL_NUMBER'] = $this->pi_getLL('admin_label_cms_marker_proposal_number');
     $markers['ORDER_NUMBER'] = $this->pi_getLL('admin_label_cms_marker_order_number');

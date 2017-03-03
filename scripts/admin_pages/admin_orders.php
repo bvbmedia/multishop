@@ -557,7 +557,8 @@ $option_search = array(
     //"payment_method"=>$this->pi_getLL('admin_payment_method'),
         "order_products" => $this->pi_getLL('admin_ordered_product'),
     /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
-        "billing_telephone" => $this->pi_getLL('telephone')
+        "billing_telephone" => $this->pi_getLL('telephone'),
+        "http_referer" => $this->pi_getLL('http_referer')
 );
 asort($option_search);
 $type_search = $this->post['type_search'];
@@ -699,6 +700,9 @@ if ($this->post['skeyword']) {
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'http_referer':
+            $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
     }
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
@@ -821,7 +825,7 @@ if (isset($this->post['country']) && !empty($this->post['country'])) {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
-    $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.categories_id='" . addslashes($this->get['ordered_category']) . "')";
+    $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id='" . addslashes($this->get['ordered_category']) . "' or op.categories_id_0='" . addslashes($this->get['ordered_category']) . "'))";
 }
 if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product'] != 99999) {
     $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='" . addslashes($this->get['ordered_product']) . "')";

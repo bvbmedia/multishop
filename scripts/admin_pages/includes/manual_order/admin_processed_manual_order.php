@@ -22,6 +22,16 @@ if ($this->post['proceed_order']) {
         }
     }
     if (!$customer_id) {
+        $username='';
+        if (!empty($this->post['tx_multishop_pi1']['telephone'])) {
+            $username =$this->post['tx_multishop_pi1']['telephone'];
+        }
+        if (!empty($this->post['email'])) {
+            $username =$this->post['email'];
+        }
+        if (!$username) {
+            $username=$unique_id;
+        }
         $insertArray = array();
         $insertArray['page_uid'] = $this->shop_pid;
         $insertArray['company'] = $this->post['company'];
@@ -32,7 +42,7 @@ if ($this->post['proceed_order']) {
         $insertArray['last_name'] = $this->post['last_name'];
         $insertArray['username'] = $unique_id;
         $insertArray['email'] = $this->post['email'];
-        $insertArray['username'] = $this->post['tx_multishop_pi1']['telephone'];
+        $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
         $insertArray['street_name'] = $this->post['street_name'];
         $insertArray['address_number'] = $this->post['address_number'];
@@ -57,6 +67,12 @@ if ($this->post['proceed_order']) {
     }
     //add to orders
     if ($customer_id) {
+        $billing_gender='';
+        if (!$this->post['gender'] || $this->post['gender']=='0') {
+            $billing_gender='m';
+        } else if ($this->post['gender']=='1') {
+            $billing_gender='f';
+        }
         // now add the order
         $insertArray = array();
         $insertArray['customer_id'] = $customer_id;
@@ -68,7 +84,7 @@ if ($this->post['proceed_order']) {
         $insertArray['billing_last_name'] = $this->post['last_name'];
         $insertArray['billing_name'] = preg_replace('/ +/', ' ', $this->post['first_name'] . ' ' . $this->post['middle_name'] . ' ' . $this->post['last_name']);
         $insertArray['billing_email'] = $this->post['email'];
-        $insertArray['billing_gender'] = $this->post['gender'];
+        $insertArray['billing_gender'] = $billing_gender;
         $insertArray['billing_birthday'] = $this->post['birthday'];
         $insertArray['billing_building'] = $this->post['building'];
         $insertArray['billing_street_name'] = $this->post['street_name'];
@@ -134,7 +150,7 @@ if ($this->post['proceed_order']) {
             $insertArray['delivery_country'] = $delivery_address['country'];
             $insertArray['delivery_state'] = $delivery_address['state'];
             $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
-        } else {
+        } else if (!$this->post['different_delivery_address']) {
             $insertArray['delivery_email'] = $insertArray['billing_email'];
             $insertArray['delivery_company'] = $insertArray['billing_company'];
             $insertArray['delivery_first_name'] = $insertArray['billing_first_name'];
@@ -198,10 +214,7 @@ if ($this->post['proceed_order']) {
             }
             // hook eof
         }
-
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
-        var_dump($query);
-        die();
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         // now add the order eof
         $orders_id = $GLOBALS['TYPO3_DB']->sql_insert_id();

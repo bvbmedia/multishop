@@ -63,6 +63,10 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['searchKeywordsToplist'] = 1;
                 $this->enabledWidgets['ordersLatest'] = 1;
                 $this->enabledWidgets['turnoverPerMonth'] = 1;
+                //$this->enabledWidgets['turnoverGraphCurrentWeek'] = 1;
+                $this->enabledWidgets['turnoverThisWeekLastWeek'] = 1;
+                $this->enabledWidgets['profitThisMonthLastMonth'] = 1;
+                $this->enabledWidgets['turnoverMainCategoryThisMonthLastMonth'] = 1;
                 // ORDERS TOTAL TABLES EOF
                 break;
             case 'admin_edit_customer':
@@ -141,6 +145,20 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             case 'turnoverPerProduct':
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turn_over_per_product.php');
                 break;
+            /*
+            case 'turnoverGraphCurrentWeek':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverGraphCurrentWeek.php');
+                break;
+            */
+            case 'turnoverThisWeekLastWeek':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverThisWeekLastWeek.php');
+                break;
+            case 'profitThisMonthLastMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/profitThisMonthLastMonth.php');
+                break;
+            case 'turnoverMainCategoryThisMonthLastMonth':
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_home/turnoverMainCategoryThisMonthLastMonth.php');
+                break;
             default:
                 //hook to let other plugins further manipulate the settings
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_dashboard.php']['compileWidgetDefault'])) {
@@ -171,7 +189,8 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			var old_position;
 			$(".column").sortable({
 				connectWith: ".column",
-				cancel: \'.state-disabled\',
+				handle: ".portlet-header",
+				cancel: \'.state-disabled,select,.portlet-content\',
 				revert: true,
 				scroll: true,
 				tolerance: "pointer",
@@ -257,8 +276,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					//drawChartgoogle_chart_carts();
 				}
 			});
-
-			$(".column").disableSelection();
+			//$(".column").disableSelection();
 		};
 		jQuery(document).ready(function($) {
 			$(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
@@ -272,6 +290,11 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$(this).parents(".portlet:first").find(".portlet-content").toggle();
 			});
 			makesortable();
+			'.((isset($this->get['tx_multishop_pi1']['widget']) && !empty($this->get['tx_multishop_pi1']['widget'])) ? '
+			$(\'html, body\').animate({
+                scrollTop: $("#'.$this->get['tx_multishop_pi1']['widget'].'").offset().top
+            }, 2000);
+			' : '').'
 		});
 		</script>
 		';
@@ -345,7 +368,10 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     1 => array(
                                             'google_chart_orders',
                                             'google_chart_customers',
-                                            'google_chart_carts'
+                                            'google_chart_carts',
+                                            'turnoverThisWeekLastWeek',
+                                            'profitThisMonthLastMonth',
+                                            'turnoverMainCategoryThisMonthLastMonth'
                                     )
                             )
                     );
@@ -363,6 +389,30 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     )
                             )
                     );
+                    /*$pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverMainCategoryThisMonthLastMonth')
+                            )
+                    );
+                    $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverGraphCurrentWeek')
+                            )
+                    );*/
+                    /*$pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('turnoverThisWeekLastWeek')
+                            )
+                    );
+                    $pageLayout[] = array(
+                            'class' => 'layout1col',
+                            'cols' => array(
+                                    0 => array('profitThisMonthLastMonth')
+                            )
+                    );*/
                     break;
                 default:
                     if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {

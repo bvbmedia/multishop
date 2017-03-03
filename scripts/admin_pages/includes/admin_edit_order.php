@@ -471,7 +471,7 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                         $redirect_after_delete = true;
                     }
-                    $delivery_country = mslib_fe::getCountryByName($this->post['delivery_country']);
+                    $delivery_country = mslib_fe::getCountryByName($this->post['tx_multishop_pi1']['delivery_country']);
                     $updateArray = array();
                     if ($this->post['shipping_method']) {
                         $shipping_method = mslib_fe::getShippingMethod($this->post['shipping_method']);
@@ -487,15 +487,20 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['country_tax_rate'] = 0;
                             $shipping_method['region_tax_rate'] = 0;
                         }
-                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
+                        $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                        if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
+                            $price=$tmp_price['shipping_costs'];
+                        } else {
+                            $price=$tmp_price;
+                        }
+                        $order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
+                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 $tax_rate_for_shipping = ((1 + $shipping_method['tax_rate']) * 100);
                                 $price = ($price / $tax_rate_for_shipping) * 100;
                             }
-                        } else {
-                            $price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
                         }
                         if ($price > 0) {
                             if (strstr($price, "%")) {
@@ -592,7 +597,9 @@ if (is_numeric($this->get['orders_id'])) {
                             $payment_method['country_tax_rate'] = 0;
                             $payment_method['region_tax_rate'] = 0;
                         }
-                        if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
+                        //$order_payment_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'payment_method');
+                        //if ($this->post['tx_multishop_pi1']['payment_method_costs']>0 && $payment_method['code']==$order_payment_method['payment_method']) {
+                        if ($this->post['tx_multishop_pi1']['payment_method_costs']>0) {
                             $this->post['tx_multishop_pi1']['payment_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['payment_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['payment_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1056,6 +1063,21 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $edit_billing_details = array();
                 $tmpcontent .= '<div class="edit_billing_details_container" id="edit_billing_details_container"' . ($count_validate_erno ? '' : ' style="display:none"') . '>';
+                if ($this->ms['MODULES']['DISPLAY_GENDER_INPUT_IN_EDIT_ORDER_CUSTOMER_DETAILS']) {
+                    $edit_billing_details['billing_gender'] = '<div class="form-group">
+                        <label class="control-label col-md-5">' . ucfirst($this->pi_getLL('title')) . '</label>
+                        <div class="col-sm-7">
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[billing_gender]" value="m" class="InputGroup account-gender-radio" id="edit_billing_gender_male"' . ($orders['billing_gender'] == 'm' ? ' checked="checked"' : '') . ' required="required">
+                                <label class="account-male" for="edit_billing_gender_male">' . $this->pi_getLL('mr') . '</label>
+                            </div>
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[billing_gender]" value="f" class="InputGroup account-gender-radio" id="edit_billing_gender_female"' . ($orders['billing_gender'] == 'f' ? ' checked="checked"' : '') . '>
+                                <label class="account-female" for="edit_billing_gender_female">' . $this->pi_getLL('mrs') . '</label>
+                            </div>                           
+                        </div>
+                    </div>';
+                }
                 $edit_billing_details['billing_company'] = '<div class="form-group">
 						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('company')) . '</label>
 						<div class="col-md-7">
@@ -1262,6 +1284,21 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $edit_delivery_details = array();
                 $tmpcontent .= '<div class="edit_delivery_details_container" id="edit_delivery_details_container"' . ($count_validate_erno ? '' : ' style="display:none"') . '>';
+                if ($this->ms['MODULES']['DISPLAY_GENDER_INPUT_IN_EDIT_ORDER_CUSTOMER_DETAILS']) {
+                    $edit_delivery_details['delivery_gender'] = '<div class="form-group">
+                        <label class="control-label col-md-5">' . ucfirst($this->pi_getLL('title')) . '</label>
+                        <div class="col-sm-7">
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[delivery_gender]" value="m" class="InputGroup account-delivery-gender-radio" id="edit_delivery_gender_male"' . ($orders['delivery_gender'] == 'm' ? ' checked="checked"' : '') . ' required="required">
+                                <label class="account-male" for="edit_delivery_gender_male">' . $this->pi_getLL('mr') . '</label>
+                            </div>
+                            <div class="radio radio-success radio-inline">
+                                <input type="radio" name="tx_multishop_pi1[delivery_gender]" value="f" class="InputGroup account-delivery-gender-radio" id="edit_delivery_gender_female"' . ($orders['delivery_gender'] == 'f' ? ' checked="checked"' : '') . '>
+                                <label class="account-female" for="edit_delivery_gender_female">' . $this->pi_getLL('mrs') . '</label>
+                            </div>                           
+                        </div>
+                    </div>';
+                }
                 $edit_delivery_details['delivery_company'] = '<div class="form-group">
                 	<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('company')) . '</label>
                 	<div class="col-md-7">
@@ -1509,6 +1546,13 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#copy_from_billing_details").click(function(e) {
                 e.preventDefault();
+                
+                $(".account-delivery-gender-radio").prop("checked", false);
+                if ($(".account-gender-radio:checked").val()=="m") {
+                    $("#edit_delivery_gender_male").prop("checked", true);
+                } else if ($(".account-gender-radio:checked").val()=="f") {
+                    $("#edit_delivery_gender_female").prop("checked", true);
+                }
 
                 $("#edit_delivery_company").val("");
                 $("#edit_delivery_company").val($("#edit_billing_company").val());
@@ -1524,7 +1568,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_middle_name").val("");
                 $("#edit_delivery_middle_name").val($("#edit_billing_middle_name").val());
 
-                 $("#edit_delivery_last_name").val("");
+                $("#edit_delivery_last_name").val("");
                 $("#edit_delivery_last_name").val($("#edit_billing_last_name").val());
 
                 $("#edit_delivery_street_name").val("");
@@ -1646,7 +1690,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 $("#billing_details_container").empty();
                 $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
-                updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
+                updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio:checked").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
                 e.preventDefault();
@@ -1727,7 +1771,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 $("#delivery_details_container").empty();
                 $("#delivery_details_container").html(name + building + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
-                updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
+                updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize() + "&tx_multishop_pi1[delivery_gender]=" + $(".account-delivery-gender-radio:checked").val());
             });
         });
         </script>';
@@ -3496,6 +3540,7 @@ if (is_numeric($this->get['orders_id'])) {
                 var select2_pn = function(selector_str, placeholder, dropdowncss, ajax_url) {
                     $(selector_str).select2({
                         placeholder: placeholder,
+                        
                         ' . (($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT'] == '0') ? '
                         createSearchChoice:function(term, data) {
                             if ($(data).filter(function() {
@@ -3508,7 +3553,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         },
                         ' : '') . '
-                        minimumInputLength: 0,
+                        minimumInputLength: '.(!isset($this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']) ? 0 : $this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']).',
                         query: function(query) {
                             /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});
