@@ -4886,6 +4886,16 @@ class mslib_befe {
                     $config->set("HTML.Nofollow", TRUE);
                     $config->set('HTML.TargetBlank', TRUE);
                     $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
+                    //hook to let other plugins further manipulate the settings
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'])) {
+                        $params = array(
+                                'mode' => &$mode,
+                                'config'=>&$config
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     $purifier = new HTMLPurifier($config);
                     return $purifier->purify($val);
                     break;
