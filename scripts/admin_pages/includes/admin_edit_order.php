@@ -487,14 +487,19 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['country_tax_rate'] = 0;
                             $shipping_method['region_tax_rate'] = 0;
                         }
-                        $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
-                        if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
-                            $price=$tmp_price['shipping_costs'];
+                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] > 0) {
+                            $price = 0;
                         } else {
-                            $price=$tmp_price;
+                            $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                            if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
+                                $price = $tmp_price['shipping_costs'];
+                            } else {
+                                $price = $tmp_price;
+                            }
                         }
-                        $order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
-                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
+                        //$order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
+                        //if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
+                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0) {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
