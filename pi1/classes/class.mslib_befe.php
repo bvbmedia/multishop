@@ -5261,7 +5261,7 @@ class mslib_befe {
             return $content;
         }
     }
-    function returnGridColumns($gridCols,$columns=3) {
+    function bootstrapGrids($gridCols,$columns=3) {
         if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
             $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
             $content.='<div class="row">';
@@ -5271,6 +5271,38 @@ class mslib_befe {
                 $content.='</div>';
             }
             $content.='</div>';
+            return $content;
+        }
+    }
+    function bootstrapTabs($tabsArray) {
+        if (is_array($tabsArray) && count($tabsArray)) {
+            $content.='<ul class="tabs nav nav-tabs">';
+            foreach ($tabsArray as $col => $tabArray) {
+                $content.='<li role="presentation"><a href="#'.$tabArray['key'].'"><span>'.htmlspecialchars($tabArray['title']).'</span></a></li>';
+            }
+            $content.='</ul>';
+            $content.='<div class="tab_container">';
+            foreach ($tabsArray as $col => $tabArray) {
+                $content.='<div id="'.$tabArray['key'].'" class="tab_content">'.$tabArray['content'].'</div>';
+            }
+            $content.='</div>';
+            $GLOBALS['TSFE']->additionalHeaderData['multishop_tabs'] ='
+            <script type="text/javascript" data-ignore="1">
+                jQuery(document).ready(function($) {
+                    jQuery(".tab_content").hide();
+                    jQuery("ul.tabs li:first").addClass("active").show();
+                    jQuery(".tab_content:first").show();
+                    jQuery("ul.tabs li").click(function() {
+                        jQuery("ul.tabs li").removeClass("active");
+                        jQuery(this).addClass("active");
+                        jQuery(".tab_content").hide();
+                        var activeTab = jQuery(this).find("a").attr("href");
+                        jQuery(activeTab).show();
+                        return false;
+                    });
+                });
+            </script>
+            ';
             return $content;
         }
     }
