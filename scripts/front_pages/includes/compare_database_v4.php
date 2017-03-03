@@ -456,7 +456,7 @@ if (!$qry) {
 $str = "select is_shipping_costs_manual from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-    $str = "ALTER TABLE  `tx_multishop_orders` ADD `is_shipping_costs_manual` tinyint(1) default '', ADD KEY `is_shipping_costs_manual` (`is_shipping_costs_manual`)";
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `is_shipping_costs_manual` tinyint(1) default ''";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 }
 ?>
