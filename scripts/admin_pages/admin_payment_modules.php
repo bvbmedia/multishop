@@ -85,7 +85,8 @@ if ($this->post) {
             $insertArray['page_uid'] = $this->post['related_shop_pid'];
             $insertArray['provider'] = $this->post['payment_method_code'];
             $insertArray['vars'] = serialize($this->post);
-            $updateArray['enable_on_default'] = $this->post['enable_on_default'];
+            $insertArray['hash'] = md5(uniqid('', true));
+            $insertArray['enable_on_default'] = $this->post['enable_on_default'];
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($res) {

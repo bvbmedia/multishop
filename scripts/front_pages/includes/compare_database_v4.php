@@ -419,4 +419,39 @@ if (!$qry) {
         }
     }
 }
+$str = "select hash from tx_multishop_payment_methods limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_payment_methods` ADD `hash` varchar(127) default '', ADD KEY `hash` (`hash`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    $payments=mslib_befe::getRecords('', 'tx_multishop_payment_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
+    if (is_array($payments) && count($payments)) {
+        foreach ($payments as $payment) {
+            // update orders_products table
+            $updateArray = array();
+            $updateArray['hash'] = md5(uniqid('', true));
+            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\'' . $payment['id'] . '\'', $updateArray);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        }
+    }
+}
+$str = "select hash from tx_multishop_shipping_methods limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_shipping_methods` ADD `hash` varchar(127) default '', ADD KEY `hash` (`hash`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    $shippings=mslib_befe::getRecords('', 'tx_multishop_shipping_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
+    if (is_array($shippings) && count($shippings)) {
+        foreach ($shippings as $shipping) {
+            // update orders_products table
+            $updateArray = array();
+            $updateArray['hash'] = md5(uniqid('', true));
+            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\'' . $shipping['id'] . '\'', $updateArray);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+        }
+    }
+}
 ?>
