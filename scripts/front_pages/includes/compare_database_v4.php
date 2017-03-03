@@ -450,8 +450,13 @@ if (!$qry) {
             $updateArray['hash'] = md5(uniqid('', true));
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\'' . $shipping['id'] . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
         }
     }
+}
+$str = "select is_shipping_costs_manual from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `is_shipping_costs_manual` tinyint(1) default '', ADD KEY `is_shipping_costs_manual` (`is_shipping_costs_manual`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 }
 ?>

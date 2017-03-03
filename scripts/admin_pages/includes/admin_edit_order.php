@@ -558,8 +558,8 @@ if (is_numeric($this->get['orders_id'])) {
                         } else {
                             $updateArray['shipping_method_costs'] = 0;
                         }
-                        /*$updateArray['is_shipping_costs_manual'] = 0;
-                        if (!$this->post['tx_multishop_pi1']['shipping_method_costs']>0) {
+                        $updateArray['is_shipping_costs_manual'] = 0;
+                        if (!$this->post['tx_multishop_pi1']['shipping_method_costs'] || $this->post['tx_multishop_pi1']['shipping_method_costs']=='0.00') {
                             if ($this->post['shipping_costs_manual']=='1') {
                                 $updateArray['is_shipping_costs_manual'] = 0;
                             }
@@ -567,7 +567,7 @@ if (is_numeric($this->get['orders_id'])) {
                             if ($this->post['shipping_costs_manual']=='1') {
                                 $updateArray['is_shipping_costs_manual'] = 1;
                             }
-                        }*/
+                        }
                         if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
                             $shipping_tax['shipping_total_tax_rate'] = $shipping_method['tax_rate'];
                             if ($shipping_method['country_tax_rate']) {
@@ -3349,7 +3349,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
 						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right priceInputDisplay" value="' . number_format($orders['shipping_method_costs'] + $orders_tax_data['shipping_tax'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '') . '" class="align_right" />
 						<input type="hidden" id="hidden_shipping_tax" value="' . $orders_tax_data['shipping_tax'] . '">
-						<input type="hidden" name="shipping_costs_manual" id="shipping_costs_manual" value="0">
+						<input type="hidden" name="shipping_costs_manual" id="shipping_costs_manual" value="'.$orders['is_shipping_costs_manual'].'">
 					</div>';
                     $payment_costs = '<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
