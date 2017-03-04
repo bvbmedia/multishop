@@ -254,6 +254,7 @@ if ($this->ADMIN_USER) {
     $adminPanelPostVars[] = 'tx_multishop_pi1[type]=' . $this->get['type'];
     $adminPanelPostVars[] = 'tx_multishop_pi1[page_section]=' . $this->get['tx_multishop_pi1']['page_section'];
     $adminPanelPostVars[] = 'tx_multishop_pi1[dashboard_id]=' . $this->get['tx_multishop_pi1']['dashboard_id'];
+    $adminPanelPostVars[] = 'tx_multishop_pi1[type]=' . $this->get['type'];
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['adminAdminPanelPreProc'])) {
         $params = array();
         $params['adminPanelPostVars'] =& $adminPanelPostVars;
