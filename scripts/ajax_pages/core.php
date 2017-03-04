@@ -1629,7 +1629,7 @@ switch ($this->ms['page']) {
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
                     $result = array(
-                            'filelink' => $fileLocation
+                            'url' => $fileLocation
                     );
                     echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                     exit();
