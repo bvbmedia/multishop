@@ -2238,6 +2238,10 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            // Sometims the dispatcher is using name instead of username
+            if (!$user['username'] && $user['name']) {
+                $user['username']=$user['name'];
+            }
             $mail->AddAddress($user['email'], $user['username']);
             if (!$options['skipSending']) {
                 //hook to let other plugins further manipulate the query
