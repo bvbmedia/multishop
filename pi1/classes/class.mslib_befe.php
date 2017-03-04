@@ -4886,6 +4886,16 @@ class mslib_befe {
                     $config->set("HTML.Nofollow", TRUE);
                     $config->set('HTML.TargetBlank', TRUE);
                     $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
+                    //hook to let other plugins further manipulate the settings
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'])) {
+                        $params = array(
+                                'mode' => &$mode,
+                                'config'=>&$config
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     $purifier = new HTMLPurifier($config);
                     return $purifier->purify($val);
                     break;
@@ -5248,6 +5258,51 @@ class mslib_befe {
                 ';
             }
             $content.='</table>';
+            return $content;
+        }
+    }
+    function bootstrapGrids($gridCols,$columns=3) {
+        if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
+            $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
+            $content.='<div class="row">';
+            foreach ($array as $col => $colArray) {
+                $content.='<div class="col-md-'.(12/$columns).'">';
+                $content.=implode('',$colArray);
+                $content.='</div>';
+            }
+            $content.='</div>';
+            return $content;
+        }
+    }
+    function bootstrapTabs($tabsArray) {
+        if (is_array($tabsArray) && count($tabsArray)) {
+            $content.='<ul class="tabs nav nav-tabs">';
+            foreach ($tabsArray as $col => $tabArray) {
+                $content.='<li role="presentation"><a href="#'.$tabArray['key'].'"><span>'.htmlspecialchars($tabArray['title']).'</span></a></li>';
+            }
+            $content.='</ul>';
+            $content.='<div class="tab_container">';
+            foreach ($tabsArray as $col => $tabArray) {
+                $content.='<div id="'.$tabArray['key'].'" class="tab_content">'.$tabArray['content'].'</div>';
+            }
+            $content.='</div>';
+            $GLOBALS['TSFE']->additionalHeaderData['multishop_tabs'] ='
+            <script type="text/javascript" data-ignore="1">
+                jQuery(document).ready(function($) {
+                    jQuery(".tab_content").hide();
+                    jQuery("ul.tabs li:first").addClass("active").show();
+                    jQuery(".tab_content:first").show();
+                    jQuery("ul.tabs li").click(function() {
+                        jQuery("ul.tabs li").removeClass("active");
+                        jQuery(this).addClass("active");
+                        jQuery(".tab_content").hide();
+                        var activeTab = jQuery(this).find("a").attr("href");
+                        jQuery(activeTab).show();
+                        return false;
+                    });
+                });
+            </script>
+            ';
             return $content;
         }
     }
