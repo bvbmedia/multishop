@@ -20,7 +20,10 @@
 	$('#order_date_till').datetimepicker({
     	dateFormat: 'dd/mm/yy',
         showSecond: true,
-		timeFormat: 'hh:mm:ss'
+		timeFormat: 'hh:mm:ss',
+		hour: '23',
+        minute: '59',
+        second: '59'
     });
         $(document).on("change", "#checkAllCMS", function () {
             if ($(this).prop("checked") == true) {
