@@ -2145,7 +2145,11 @@ class mslib_fe {
             }
             if (is_array($options['add_custom_header'])) {
                 foreach ($options['add_custom_header'] as $custom_header) {
-                    $mail->AddCustomHeader($custom_header);
+                    if (is_array($custom_header)) {
+                        $mail->AddCustomHeader($custom_header[0],$custom_header[1]);
+                    } elseif ($custom_header) {
+                        $mail->AddCustomHeader($custom_header);
+                    }
                 }
             }
             // $mail->IsSendmail(); // telling the class to use SendMail transport
