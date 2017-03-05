@@ -28,6 +28,8 @@ $(function() {
                         $(\'#btnSaveClose\').click();
                     } else if ($(\'#Submit\').length>0) {
                         $(\'#Submit\').click();
+                    } else if ($(\'button[type="submit"]\').length>0) {
+                        $(\'button[type="submit"]\').click();
                     } else {
                         $(\'input[type="submit"]\').click();
                     }
