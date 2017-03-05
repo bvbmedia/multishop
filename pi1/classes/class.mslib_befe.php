@@ -4828,13 +4828,29 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '') {
-        $content = '<div class="panel panel-' . $panelClass . '">';
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId='', $enableCollapse=0, $collapsed='0') {
+        if ($enableCollapse) {
+            if ($collapsed) {
+                $panelHeadingClasses[] = 'collapsed';
+            }
+            $heading='<a role="button" data-toggle="collapse" href="#'.$panelId.'Body"><i class="fa fa-file-text-o"></i> '.$heading.'</a>';
+            $panelHeadingParams.='data-toggle="collapse" data-target="#'.$panelId.'Body';
+        }
+        $content = '<div'.($panelId? ' id="'.$panelId.'"':'').' class="panel panel-' . $panelClass . '">';
         if ($heading) {
-            $content .= '<div class="panel-heading"><h3 class="panel-title">' . $heading . '</h3></div>';
+            $content .= '<div class="panel-heading'.($panelHeadingClass?' '.$panelHeadingClass:'').'"'.($panelHeadingParams?' '.$panelHeadingParams:'').'><h3 class="panel-title">' . $heading . '</h3></div>';
         }
         if ($body) {
+            if ($enableCollapse) {
+                if (!$collapsed) {
+                    $collapseState='in';
+                }
+                $content.='<div id="'.$panelId.'Body" class="panel-collapse collapse '.$collapseState.'" aria-expanded="true">';
+            }
             $content .= '<div class="panel-body">' . $body . '</div>';
+            if ($enableCollapse) {
+                $content.='</div>';
+            }
         }
         if ($footer) {
             $content .= '<div class="panel-footer">' . $footer . '</div>';
