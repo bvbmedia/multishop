@@ -5276,33 +5276,29 @@ class mslib_befe {
     }
     function bootstrapTabs($tabsArray) {
         if (is_array($tabsArray) && count($tabsArray)) {
-            $content.='<ul class="tabs nav nav-tabs">';
+            $content.='<ul class="tabs nav nav-tabs" role="tablist">';
+            $counter=0;
             foreach ($tabsArray as $col => $tabArray) {
-                $content.='<li role="presentation"><a href="#'.$tabArray['key'].'"><span>'.htmlspecialchars($tabArray['title']).'</span></a></li>';
+                $classes=array();
+                if (!$counter) {
+                    $classes[]='active';
+                }
+                $content.='<li role="presentation"'.(is_array($classes) && count($classes)?' class="'.implode(' ',$classes).'"':'').'><a href="#'.$tabArray['key'].'" aria-controls="1" role="tab" data-toggle="tab"><span>'.htmlspecialchars($tabArray['title']).'</span></a></li>';
+                $counter++;
             }
             $content.='</ul>';
-            $content.='<div class="tab_container">';
+            $content.='<div class="tab-content">';
+            $counter=0;
             foreach ($tabsArray as $col => $tabArray) {
-                $content.='<div id="'.$tabArray['key'].'" class="tab_content">'.$tabArray['content'].'</div>';
+                $classes=array();
+                $classes[]='tab-pane';
+                if (!$counter) {
+                    $classes[]='active';
+                }
+                $content.='<div role="tabpanel"'.(is_array($classes) && count($classes)?' class="'.implode(' ',$classes).'"':'').' id="'.$tabArray['key'].'">'.$tabArray['content'].'</div>';
+                $counter++;
             }
             $content.='</div>';
-            $GLOBALS['TSFE']->additionalHeaderData['multishop_tabs'] ='
-            <script type="text/javascript" data-ignore="1">
-                jQuery(document).ready(function($) {
-                    jQuery(".tab_content").hide();
-                    jQuery("ul.tabs li:first").addClass("active").show();
-                    jQuery(".tab_content:first").show();
-                    jQuery("ul.tabs li").click(function() {
-                        jQuery("ul.tabs li").removeClass("active");
-                        jQuery(this).addClass("active");
-                        jQuery(".tab_content").hide();
-                        var activeTab = jQuery(this).find("a").attr("href");
-                        jQuery(activeTab).show();
-                        return false;
-                    });
-                });
-            </script>
-            ';
             return $content;
         }
     }
