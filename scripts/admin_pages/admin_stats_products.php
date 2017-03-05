@@ -242,7 +242,10 @@ jQuery(document).ready(function ($) {
 	$(\'#order_date_till\').datetimepicker({
 		dateFormat: \'dd/mm/yy\',
 		showSecond: true,
-		timeFormat: \'HH:mm:ss\'
+		timeFormat: \'HH:mm:ss\',
+		hour: 23,
+        minute: 59,
+        second: 59
 	});
 	$(".order_select2").select2();
 	$(".invoice_select2").select2();

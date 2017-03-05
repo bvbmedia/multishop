@@ -238,7 +238,10 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
         altField: "#endtime",
         altFieldTimeOnly: false,
         altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss"
+        altTimeFormat: "HH:mm:ss",
+        hour: 23,
+        minute: 59,
+        second: 59
     });
     $("#specials_price_start_visitor").datetimepicker({
         dateFormat: "###DATE_FORMAT###",
@@ -264,7 +267,10 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
         timeFormat: 'HH:mm:ss',
         altFieldTimeOnly: false,
         altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss"
+        altTimeFormat: "HH:mm:ss",
+        hour: 23,
+        minute: 59,
+        second: 59
     });
     // related product ajax server
     var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
