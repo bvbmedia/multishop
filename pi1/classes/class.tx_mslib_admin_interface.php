@@ -385,7 +385,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
                 $tableContent .= '<th' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $valArray['title'] . '</th>';
             }
-            $tableContent .= '</thead></tr><tbody>';
+            if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable']) {
+                $tableContent .= '</thead></tr><tbody class="sortable_content">';
+            } else {
+                $tableContent .= '</thead></tr><tbody>';
+            }
             $summarize = array();
             $recordCounter = 0;
             foreach ($pageset['dataset'] as $rowKey => $row) {
@@ -395,7 +399,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 } else {
                     $tr_type = 'even';
                 }
-                $tableContent .= '<tr class="' . $tr_type . '">';
+                $row_sortable_id = '';
+                if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
+                    $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
+                }
+                $tableContent .= '<tr class="' . $tr_type . '"'.$row_sortable_id.'>';
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
                     $headerData = '';
                     $headerData .= '
