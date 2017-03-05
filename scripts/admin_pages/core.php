@@ -18,7 +18,23 @@ $(function() {
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
 		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
 		minHeight:\'400\',
-		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'source\',[\'fullscreen\']]
+		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'source\',[\'fullscreen\']],
+		callbacks: {
+            keydown: function(e) {
+                if (e.ctrlKey && e.keyCode === 13) {
+                    if ($(\'#btnSave\').length>0) {
+                        $(\'#btnSave\').click();
+                    } else if ($(\'#btnSaveClose\').length>0) {
+                        $(\'#btnSaveClose\').click();
+                    } else if ($(\'#Submit\').length>0) {
+                        $(\'#Submit\').click();
+                    } else {
+                        $(\'input[type="submit"]\').click();
+                    }
+                    return false;
+                }
+            }
+        }
 	});
 });
 </script>
