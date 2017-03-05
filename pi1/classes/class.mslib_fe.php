@@ -2243,6 +2243,16 @@ class mslib_fe {
                 $user['username']=$user['name'];
             }
             $mail->AddAddress($user['email'], $user['username']);
+            if (is_array($options['add_cc']) && count($options['add_cc'])) {
+                foreach ($options['add_cc'] as $recipient) {
+                    $mail->AddCC($recipient['email'], $recipient['name']);
+                }
+            }
+            if (is_array($options['add_bcc']) && count($options['add_bcc'])) {
+                foreach ($options['add_bcc'] as $recipient) {
+                    $mail->AddBCC($recipient['email'], $recipient['name']);
+                }
+            }
             if (!$options['skipSending']) {
                 //hook to let other plugins further manipulate the query
                 $return_status = $mail->Send();
