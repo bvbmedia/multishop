@@ -337,4 +337,20 @@ jQuery(document).ready(function ($) {
     if ($('select[name="tx_multishop_pi1[limit]"]').length>0) {
         replacePageLimitSelectBox('tx_multishop_pi1[limit]');
     }
+    $('textarea').live('keydown', function(e) {
+        if (e.ctrlKey && e.keyCode === 13) {
+            e.preventDefault();
+            if ($('#btnSave').length>0) {
+                $('#btnSave').click();
+            } else if ($('#btnSaveClose').length>0) {
+                $('#btnSaveClose').click();
+            } else if ($('#Submit').length>0) {
+                $('#Submit').click();
+            } else if ($('button[type="submit"]').length>0) {
+                $('button[type="submit"]').click();
+            } else {
+                $('input[type="submit"]').click();
+            }
+        }
+    });
 });
