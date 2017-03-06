@@ -297,14 +297,19 @@ jQuery(document).ready(function($) {
                         if (e.ctrlKey && e.keyCode === 13) {
                             if ($(\'#btnSave\').length>0) {
                                 $(\'#btnSave\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                             } else if ($(\'#btnSaveClose\').length>0) {
                                 $(\'#btnSaveClose\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                             } else if ($(\'#Submit\').length>0) {
                                 $(\'#Submit\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                             } else if ($(\'button[type="submit"]\').length>0) {
                                 $(\'button[type="submit"]\').click();
+                                $(\'button[type="submit"]\').prop(\'disabled\', \'disabled\');
                             } else {
                                 $(\'input[type="submit"]\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                             }
                             return false;
                         }
