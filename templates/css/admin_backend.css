@@ -183,7 +183,7 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .panel-info > .panel-heading h3 a:focus,
 .panel-success > .panel-heading h3 a,
 .panel-success > .panel-heading h3 a:hover,
-.panel-success > .panel-heading h3 a:focus { text-decoration:none; }
+.panel-success > .panel-heading h3 a:focus { text-decoration:none; border-bottom:none; }
 
 #pricelist_search_form .panel-default > .panel-heading { display:block; }
 
