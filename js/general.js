@@ -144,6 +144,12 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
+    $(document).on('click', 'input[type="submit"]', function(){
+        $(this).addClass('disabled');
+    });
+    $(document).on('click', 'button[type="submit"]', function(){
+        $(this).addClass('disabled');
+    });
     $('[data-toggle="tooltip"]').tooltip({html:true});
     $('.msBtnConfirm').click(function (e) {
         e.preventDefault();
