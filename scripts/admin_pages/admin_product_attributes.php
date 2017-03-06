@@ -311,6 +311,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				attributesEditDialog(dialog_title, dialog_body, "edit_options");
 				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
 				jQuery(\'.redactor_options\').redactor({
+				    toolbarFixedTopOffset: 38,
 					focus: false,
 					linkSize: 250,
 					minHeight:\'100\',
@@ -345,6 +346,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				attributesEditDialog(dialog_title, dialog_body, "edit_options_values");
 				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
 				jQuery(\'.redactor_values\').redactor({
+				    toolbarFixedTopOffset: 38,
 					focus: false,
 					linkSize: 250,
 					minHeight:\'100\',
