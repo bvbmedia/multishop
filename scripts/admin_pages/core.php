@@ -12,7 +12,8 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
-	    toolbarFixedTopOffset: 38,
+	    imagePosition: true,
+	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
 		focus: false,
 		linkSize: 250,

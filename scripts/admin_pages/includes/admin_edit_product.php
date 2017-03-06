@@ -284,6 +284,8 @@ jQuery(document).ready(function($) {
 			$(target_ul_id).append(tabs_content_li);
 
 			$(\'.mceEditor\').redactor({
+			    imagePosition: true,
+	            imageResizable: true,
 			    toolbarFixedTopOffset: 38,
 				focus: false,
 				linkSize: 250,
