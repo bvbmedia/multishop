@@ -531,6 +531,8 @@ select.form-control { padding-left:8px; padding-right:8px; }
 	.modal-dialog.modal-lg { width:95%; }
 }
 
+.div-separator { height:1px; background:#e4e7e8; margin-top:20px; margin-bottom:20px; }
+
 .nav.nav-tabs { margin-bottom:20px; }
 .tab-pane { overflow:hidden; }
 .tab-content > form > .tab-pane { display:none; }
