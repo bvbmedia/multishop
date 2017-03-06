@@ -149,6 +149,7 @@
 .mt-20 { margin-top:20px; }
 .width-auto { width:auto; }
 .width-fw { width:100%; }
+.padding-10 { padding:10px; }
 
 .cellCheckbox { vertical-align:middle; }
 .cellCheckbox .checkbox.checkbox-inline { padding-left:17px; }

@@ -520,6 +520,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 foreach ($valArray['hiddenFields'] as $hiddenFieldKey => $hiddenFieldVal) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $hiddenFieldVal = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $hiddenFieldVal);
+                                        $hiddenFieldVal = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $hiddenFieldVal);
                                     }
                                     $content .= '<input name="' . $hiddenFieldKey . '" type="hidden" value="' . $hiddenFieldVal . '" />';
                                 }
@@ -530,6 +531,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'content':
                             foreach ($row as $tmpCol => $tmpVal) {
                                 $valArray['content'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['content']);
+                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['content']);
                             }
                             $row[$col] = $valArray['content'];
                             break;
@@ -570,6 +572,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 if ($valArray['hrefEnable']) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefEnable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefEnable']);
+                                        $valArray['hrefEnable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefEnable']);
                                     }
                                     $status_html .= '<a href="' . $valArray['hrefEnable'] . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
                                 }
@@ -577,6 +580,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 if ($valArray['hrefDisable']) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefDisable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefDisable']);
+                                        $valArray['hrefDisable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefDisable']);
                                     }
                                     $status_html .= '<a href="' . $valArray['hrefDisable'] . '"><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
                                 }
@@ -590,6 +594,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     if ($valArray['href']) {
                         foreach ($row as $tmpCol => $tmpVal) {
                             $valArray['href'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['href']);
+                            $valArray['href'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['href']);
                         }
                         $adjustedValue = '<a ' . ($valArray['hrefNoFollow'] ? ' rel="nofollow"' : '') . ' href="' . $valArray['href'] . '"' . ($valArray['href_target'] ? ' target="' . $valArray['href_target'] . '""' : '') . '>' . $adjustedValue . '</a>';
                     }
