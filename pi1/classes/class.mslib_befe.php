@@ -4834,7 +4834,7 @@ class mslib_befe {
                 $panelHeadingClasses[] = 'collapsed';
             }
             $heading='<a role="button" data-toggle="collapse" href="#'.$panelId.'Body"><i class="fa fa-file-text-o"></i> '.$heading.'</a>';
-            $panelHeadingParams.='data-toggle="collapse" data-target="#'.$panelId.'Body';
+            $panelHeadingParams.='data-toggle="collapse" data-target="#'.$panelId.'Body" aria-expanded="true"';
         }
         $content = '<div'.($panelId? ' id="'.$panelId.'"':'').' class="panel panel-' . $panelClass . '">';
         if ($heading) {
