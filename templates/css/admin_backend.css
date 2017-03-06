@@ -533,6 +533,15 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .div-separator { height:1px; background:#e4e7e8; margin-top:20px; margin-bottom:20px; }
 
+.form-horizontal .form-vertical { margin-left:-10px; margin-right:-10px; }
+.form-horizontal .form-vertical .form-group { padding-left:10px; padding-right:10px; }
+.form-horizontal .form-vertical .form-group .checkbox,
+.form-horizontal .form-vertical .form-group .radio { padding-left:16px; }
+.checkbox label::before { top:1px; }
+.checkbox label::after { top:2px; }
+.radio label::before { top:2px; }
+.radio label::after { top:5px; }
+
 .nav.nav-tabs { margin-bottom:20px; }
 .tab-pane { overflow:hidden; }
 .tab-content > form > .tab-pane { display:none; }
