@@ -541,6 +541,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .checkbox label::after { top:2px; }
 .radio label::before { top:2px; }
 .radio label::after { top:5px; }
+.well-sm .radio { padding-top:0; }
 
 .nav.nav-tabs { margin-bottom:20px; }
 .tab-pane { overflow:hidden; }
