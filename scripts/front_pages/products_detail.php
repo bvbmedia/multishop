@@ -60,6 +60,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array = $Cache_Lite->ge
                 $product_path = mslib_befe::getRecord($this->get['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
                 if (is_array($product_path) && count($product_path)) {
                     $primary_cat = $product_path['node_id'];
+                    $default_primary_cat = $product_path['node_id'];
                 }
             }
         } else {
@@ -84,6 +85,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array = $Cache_Lite->ge
         // get all cats to generate multilevel fake url eof
         $canonical_link = $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $this->get['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
         $output_array['meta']['canonical_url'] = '<link rel="canonical" href="' . $canonical_link . '" />';
+        if (is_array($default_primary_cat) && $default_primary_cat['categories_id'] != $this->get['categories_id']) {
+            $output_array['meta']['canonical_url'] .='<meta name="robots" content="noindex, follow" />';
+        }
         $output_array['canonical_url'] = $canonical_link;
     }
     if (strstr($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'], "/")) {
