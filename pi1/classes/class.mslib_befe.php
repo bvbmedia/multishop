@@ -5236,9 +5236,6 @@ class mslib_befe {
                     if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                         $classes[]=$settings['cellClasses'][$cellCounter];
                     }
-                    if ($settings['sumTr'] && $cellCounter) {
-                        $classes[]='sum';
-                    }
                     $content.='<td'.(count($classes)?' class="'.implode(' ',$classes).'"':'').'>'.htmlspecialchars($val).'</td>';
                     $cellCounter++;
                 }
@@ -5252,7 +5249,7 @@ class mslib_befe {
                         $(\'#'.$idName.'\').tablesorter();
                         $(\'#'.$idName.'\').sumtr({
                             readValue : function(e) {
-                                return parseFloat(e.html().toString().replace(/[^\d.-]/g, \'\')); return !isNaN(r) ? r : 0;
+                                return Math.round(e.html().toString().replace(/[^\d.-]/g, \'\') * 100) / 100; return !isNaN(r) ? r : 0;
                             },
                             formatValue : function(val) { return Math.round(val*100)/100; }
                         });
@@ -5262,12 +5259,12 @@ class mslib_befe {
                 $content.='
                 <tfoot>
                 <tr class="summary">
-                    <td>Total:</td>
+                    <td class="text-right">Total:</td>
                 ';
                 $rowCounter=0;
                 foreach ($rows[0] as $colName => $colVal) {
                     if ($rowCounter) {
-                        $content.='<td class="grandTotal"></td>';
+                        $content.='<td class="text-right grandTotal"></td>';
                     }
                     $rowCounter++;
                 }
