@@ -122,7 +122,8 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > ul > li > span > span { display:block; line-height:16px; color:rgba(255,255,255,.8); }
 
 #ms_admin_minimaxi_wrapper { display:none; }
-#tx_multishop_admin_header.affix { position:static !important; }
+#tx_multishop_admin_header.affix,
+#tx_multishop_admin_header.affix-top { position:static !important; }
 #tx_multishop_admin_header.affix-bottom { position:static !important; }
 
 #tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; z-index:8888890 ; }
