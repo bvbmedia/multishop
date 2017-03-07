@@ -541,6 +541,8 @@ multishop_ajax_server {
 		# Redactor Plugins
 		includeJS.msRedactorTable=EXT:multishop/js/redactor/plugins/table.js
 		includeJS.msRedactorTable.compress = 1
+		includeJS.msRedactorAlignment=EXT:multishop/js/redactor/plugins/alignment.js
+		includeJS.msRedactorAlignment.compress = 1
 		includeJS.msRedactorFontColor=EXT:multishop/js/redactor/plugins/fontcolor.js
 		includeJS.msRedactorFontColor.compress = 1
 		includeJS.msRedactorFontSize=EXT:multishop/js/redactor/plugins/fontsize.js

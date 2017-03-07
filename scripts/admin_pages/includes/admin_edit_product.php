@@ -294,7 +294,7 @@ jQuery(document).ready(function($) {
 				fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
 				imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
 				minHeight:\'400\',
-				plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\'],
+				plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\'],
 				callbacks: {
                     keydown: function(e) {
                         if (e.ctrlKey && e.keyCode === 13) {

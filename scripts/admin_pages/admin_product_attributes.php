@@ -317,7 +317,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 					focus: false,
 					linkSize: 250,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
+					plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 				});
 				' : '') . '
 			}
@@ -354,7 +354,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 					focus: false,
 					linkSize: 250,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
+					plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 				});
 				' : '') . '
 			}
