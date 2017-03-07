@@ -5251,7 +5251,10 @@ class mslib_befe {
                 jQuery(document).ready(function($) {
                         $(\'#'.$idName.'\').tablesorter();
                         $(\'#'.$idName.'\').sumtr({
-                            formatValue : function(val) { return Math.round(val*100)/100; },
+                            readValue : function(e) {
+                                return parseFloat(e.html().toString().replace(/[^\d.-]/g, \'\')); return !isNaN(r) ? r : 0;
+                            },
+                            formatValue : function(val) { return Math.round(val*100)/100; }
                         });
                     });
                 </script>
