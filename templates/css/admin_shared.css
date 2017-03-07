@@ -245,3 +245,7 @@ th.cellContentWithoutSpace { word-break:normal; }
 
 /* #s2id_commission_customer_id.select2-container-active { width:600px !important; }
 .select2-results .select2-result-label { line-height:15px; } */
+
+.info-light { color:#7BADC5 !important; }
+.success-light { color:#82B282 !important; }
+.default-light { color:#7F7E7E !important; }
