@@ -5282,7 +5282,7 @@ class mslib_befe {
             $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
             $content.='<div class="row">';
             foreach ($array as $col => $colArray) {
-                $content.='<div class="col-md-'.(12/$columns).'">';
+                $content.='<div class="col-md-'.ceil((12/$columns)).'">';
                 $content.=implode('',$colArray);
                 $content.='</div>';
             }
