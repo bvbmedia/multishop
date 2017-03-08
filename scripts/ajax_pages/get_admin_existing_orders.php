@@ -12,10 +12,23 @@ if ($this->ADMIN_USER) {
     if (is_numeric($this->get['preselected_id'])) {
         $filter[] = 'orders_id=' . $this->get['preselected_id'];
     }
+    $customer_id=0;
     if (isset($this->get['q']) && !empty($this->get['q'])) {
         $limit = '';
+        if (strpos($this->get['q'], '||customer_id=') !== false) {
+            $tmp_value = explode('||customer_id=', $this->get['q']);
+            $this->get['q'] = trim($tmp_value[0]);
+            if (is_numeric($tmp_value[1]) && $tmp_value[1]>0) {
+                $customer_id = $tmp_value[1];
+            }
+        } else {
+            $this->get['q'] = trim($this->get['q']);
+        }
         $this->get['q'] = addslashes($this->get['q']);
         $filter[] = 'orders_id like \'' . $this->get['q'] . '%\'';
+    }
+    if (is_numeric($customer_id) && $customer_id > 0) {
+        $filter[] = 'customer_id=' . $customer_id;
     }
     if (!$this->masterShop) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
