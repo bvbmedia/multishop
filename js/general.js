@@ -115,10 +115,11 @@ function isMobile() {
 }
 function ifConfirm(textTitle, textBody, yesFn, noFn) {
     return $.confirm({
+        keyboardEnabled: true,
         title: textTitle,
         content: textBody,
-        confirm: yesFn,
-        cancel: noFn
+        cancel: noFn,
+        confirm: yesFn
     });
 }
 function msDialog(textTitle, textBody, width, opacity) {
