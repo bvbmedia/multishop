@@ -396,9 +396,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             foreach ($params['tableColumns'] as $col => $valArray) {
                 $tdClass = array();
-                if (is_array($columnSorterData) && $countColumnSorterData) {
-                    $tdClass[] = 'header';
-                }
+                //if (is_array($columnSorterData) && $countColumnSorterData) {
+                    //$tdClass[] = 'header';
+                //}
                 if ($valArray['align']) {
                     $tdClass[] = 'text-' . $valArray['align'];
                 }
