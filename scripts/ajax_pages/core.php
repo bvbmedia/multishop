@@ -1147,6 +1147,12 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'getExistingCustomersInfo':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_customers_info.php');
+        }
+        exit();
+        break;
     case 'getExistingOrders':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_orders.php');

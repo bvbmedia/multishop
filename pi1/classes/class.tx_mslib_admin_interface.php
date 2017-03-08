@@ -351,20 +351,25 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             if (!$params['settings']['disableForm']) {
                 $tableContent .= '<form method="post" action="' . $params['postForm']['actionUrl'] . '" enctype="multipart/form-data">';
             }
-            $colCounter=0;
-            foreach ($params['tableColumns'] as $col => $valArray) {
-                if (isset($valArray['enableSorter'])) {
-                    if ($valArray['enableSorter']) {
-                        $columnSorterData[$colCounter] = true;
-                        $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
-                        if ($valArray['href']) {
-                            $columnSorterDataSettings[$colCounter]['href'] = true;
+            $columnSorterData=array();
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
+                $colCounter = 0;
+                foreach ($params['tableColumns'] as $col => $valArray) {
+                    if (isset($valArray['enableSorter'])) {
+                        if ($valArray['enableSorter']) {
+                            $columnSorterData[$colCounter] = true;
+                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
+                            if ($valArray['href']) {
+                                $columnSorterDataSettings[$colCounter]['href'] = true;
+                            }
+                        } else {
+                            $columnSorterData[$colCounter] = false;
                         }
                     } else {
-                        $columnSorterData[$colCounter]=false;
+                        $columnSorterData[$colCounter] = false;
                     }
+                    $colCounter++;
                 }
-                $colCounter++;
             }
             $countColumnSorterData=count($columnSorterData);
             $tableContent .= '<div class="table-responsive">';
@@ -396,9 +401,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             foreach ($params['tableColumns'] as $col => $valArray) {
                 $tdClass = array();
-                if (is_array($columnSorterData) && $countColumnSorterData) {
-                    $tdClass[] = 'header';
-                }
+                //if (is_array($columnSorterData) && $countColumnSorterData) {
+                    //$tdClass[] = 'header';
+                //}
                 if ($valArray['align']) {
                     $tdClass[] = 'text-' . $valArray['align'];
                 }
