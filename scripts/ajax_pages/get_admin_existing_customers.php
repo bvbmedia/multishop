@@ -135,6 +135,15 @@ if ($this->ADMIN_USER) {
     if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0 && count($customers) === 1) {
         $tmp_return_data = $return_data[0];
         $return_data = $tmp_return_data;
+    } else {
+        if (!isset($this->get['preselected_id']) && empty($this->get['q'])) {
+            $array_select_none = array(
+                    'id' => '',
+                    'text' => $this->pi_getLL('choose')
+            );
+            array_unshift($return_data, $array_select_none);
+        }
+
     }
     echo json_encode($return_data, ENT_NOQUOTES);
 }
