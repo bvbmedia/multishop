@@ -64,7 +64,7 @@ if ($this->ADMIN_USER) {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
                     'id' => '',
-                    'text' => $this->pi_getLL('choose')
+                    'text' => $this->pi_getLL('select_order')
             );
             array_unshift($return_data, $array_select_none);
         }
