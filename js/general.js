@@ -145,6 +145,9 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
+    $(document).on('click', '.btn-disable-after-click', function(){
+        $(this).addClass('disabled');
+    });
     $(document).on('click', 'input[type="submit"]', function(){
         $(this).addClass('disabled');
     });

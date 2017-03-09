@@ -1159,6 +1159,12 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'getExistingInvoice':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_invoices.php');
+        }
+        exit();
+        break;
     case 'getProductsList':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_products_list.php');

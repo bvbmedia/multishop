@@ -4,13 +4,13 @@ if (!defined('TYPO3_MODE')) {
 }
 if ($this->ADMIN_USER) {
     $return_data = array();
-    $orders = array();
+    $invoices = array();
 
-    $orderby = 'orders_id';
+    $orderby = 'invoice_id';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {
-        $filter[] = 'orders_id=' . $this->get['preselected_id'];
+        $filter[] = 'invoice_id=' . $this->get['preselected_id'];
     }
     $customer_id=0;
     if (isset($this->get['q']) && !empty($this->get['q'])) {
@@ -25,7 +25,7 @@ if ($this->ADMIN_USER) {
             $this->get['q'] = trim($this->get['q']);
         }
         $this->get['q'] = addslashes($this->get['q']);
-        $filter[] = 'orders_id like \'' . $this->get['q'] . '%\'';
+        $filter[] = 'invoice_id like \'' . $this->get['q'] . '%\'';
     }
     if (is_numeric($customer_id) && $customer_id > 0) {
         $filter[] = 'customer_id=' . $customer_id;
@@ -33,9 +33,9 @@ if ($this->ADMIN_USER) {
     if (!$this->masterShop) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
     }
-    $filter[] = 'deleted=0';
+    //$filter[] = 'status=1';
     $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-            'tx_multishop_orders', // FROM ...
+            'tx_multishop_invoices', // FROM ...
             implode(' and ', $filter), // WHERE...
             '', // GROUP BY...
             $orderby, // ORDER BY...
@@ -45,26 +45,26 @@ if ($this->ADMIN_USER) {
     $tel = 0;
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-            $orders[] = $row;
+            $invoices[] = $row;
         }
     }
-    foreach ($orders as $order) {
-        if ($order['orders_id']) {
-            $itemTitle = $order['orders_id'];
+    foreach ($invoices as $invoice) {
+        if ($invoice['invoice_id']) {
+            $itemTitle = $invoice['invoice_id'];
             $return_data[] = array(
-                    'id' => $order['orders_id'],
+                    'id' => $invoice['invoice_id'],
                     'text' => $itemTitle
             );
         }
     }
-    if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0 && count($orders) === 1) {
+    if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0 && count($invoices) === 1) {
         $tmp_return_data = $return_data[0];
         $return_data = $tmp_return_data;
     } else {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
                     'id' => '',
-                    'text' => $this->pi_getLL('select_order')
+                    'text' => $this->pi_getLL('select_invoice')
             );
             array_unshift($return_data, $array_select_none);
         }
