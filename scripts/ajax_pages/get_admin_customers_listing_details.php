@@ -24,38 +24,40 @@ if ($this->ADMIN_USER) {
             $actionLink = 'http://maps.google.com/maps?daddr=' . implode('+', $address);
             $actionButtons['travel_guide'] = '<a href="' . $actionLink . '" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> ' . $this->pi_getLL('travel_guide') . '</a>';
             $jsonData['html'] = '';
+            $htmlArray=array();
             if ($customer['company']) {
-                $jsonData['html'] .= '<h1>' . $customer['company'] . '</h1>';
+                $htmlArray['company'] = '<h1>' . $customer['company'] . '</h1>';
             }
             if ($customer['name']) {
-                $jsonData['html'] .= '<h1>' . $customer['name'] . '</h1>';
+                $htmlArray['name'] = '<h1>' . $customer['name'] . '</h1>';
             }
-            $jsonData['html'] .= $customer['address'] . '<br />
-			' . $customer['zip'] . ' ' . $customer['city'] . ' <br />
-			' . mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $customer['country']) . '<br /><br />
-			';
+            $htmlArray['address'] = $customer['address'] . '<br />';
+            $htmlArray['zip_city'] = $customer['zip'] . ' ' . $customer['city'] . ' <br />';
+            $htmlArray['country'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $customer['country']) . '<br /><br />';
             if ($customer['email']) {
-                $jsonData['html'] .= $this->pi_getLL('email') . ': <a href="mailto:' . $customer['email'] . '">' . $customer['email'] . '</a><br />';
+                $htmlArray['email'] = $this->pi_getLL('email') . ': <a href="mailto:' . $customer['email'] . '">' . $customer['email'] . '</a><br />';
             }
             if ($customer['telephone']) {
-                $jsonData['html'] .= $this->pi_getLL('telephone') . ': ' . $customer['telephone'] . '<br />';
+                $htmlArray['telephone'] = $this->pi_getLL('telephone') . ': ' . $customer['telephone'] . '<br />';
             }
             if ($customer['mobile']) {
-                $jsonData['html'] .= $this->pi_getLL('mobile') . ': ' . $customer['mobile'] . '<br />';
+                $htmlArray['mobile'] = $this->pi_getLL('mobile') . ': ' . $customer['mobile'] . '<br />';
             }
             if ($customer['fax']) {
-                $jsonData['html'] .= $this->pi_getLL('fax') . ': ' . $customer['fax'] . '<br />';
+                $htmlArray['fax'] = $this->pi_getLL('fax') . ': ' . $customer['fax'] . '<br />';
             }
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'])) {
                 $params = array(
                         'actionButtons' => &$actionButtons,
-                        'customer' => &$customer
+                        'customer' => &$customer,
+                        'htmlArray'=>&$htmlArray
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            $jsonData['html'].=implode('',$htmlArray);
             // custom page hook that can be controlled by third-party plugin eol
             if (count($actionButtons)) {
                 $jsonData['html'] .= '<div class="btn-group">';

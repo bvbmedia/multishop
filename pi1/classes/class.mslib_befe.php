@@ -1314,7 +1314,7 @@ class mslib_befe {
         }
     }
     // function for saving the importer products images
-    public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*') {
+    public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*', $groupBy='', $orderBy='',$limit='') {
         $queryArray = array();
         $queryArray['from'] = $table;
         if (isset($value) && isset($field) && $field != '') {
@@ -1333,9 +1333,9 @@ class mslib_befe {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
                 $queryArray['from'], // FROM ...
                 ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '' // LIMIT ...
+                (isset($groupBy)?$groupBy:''), // GROUP BY...
+                (isset($orderBy)?$orderBy:''), // ORDER BY...
+                $limit // LIMIT ...
         );
         if ($this->msDebug) {
             return $query;
@@ -4828,7 +4828,7 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId='', $enableCollapse=0, $collapsed='0') {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId='', $enableCollapse=0, $collapsed='0',$headingButtons=array()) {
         if ($enableCollapse) {
             if ($collapsed) {
                 $panelHeadingClasses[] = 'collapsed';
@@ -4838,7 +4838,16 @@ class mslib_befe {
         }
         $content = '<div'.($panelId? ' id="'.$panelId.'"':'').' class="panel panel-' . $panelClass . '">';
         if ($heading) {
-            $content .= '<div class="panel-heading'.($panelHeadingClass?' '.$panelHeadingClass:'').'"'.($panelHeadingParams?' '.$panelHeadingParams:'').'><h3 class="panel-title">' . $heading . '</h3></div>';
+            $content .= '<div class="panel-heading'.($panelHeadingClass?' '.$panelHeadingClass:'').'"'.($panelHeadingParams?' '.$panelHeadingParams:'').'>';
+            $content .= '<h3 class="panel-title">' . $heading . '</h3>';
+            if (is_array($headingButtons) && count($headingButtons)) {
+                $content.='<div class="form-inline">';
+                foreach ($headingButtons as $headingButton) {
+                    $content .= '<a href="' . $headingButton['href'] . '" class="' . $headingButton['btn_class'] . '"' . ($headingButton['attributes'] ? ' ' . $headingButton['attributes'] : '') . '><i class="' . $headingButton['fa_class'] . '"></i> ' . htmlspecialchars($headingButton['title']) . '</a> ';
+                }
+                $content.='</div>';
+            }
+            $content .= '</div>';
         }
         if ($body) {
             if ($enableCollapse) {
