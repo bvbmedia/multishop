@@ -284,13 +284,40 @@ jQuery(document).ready(function($) {
 			$(target_ul_id).append(tabs_content_li);
 
 			$(\'.mceEditor\').redactor({
+			    imagePosition: true,
+	            imageResizable: true,
+			    toolbarFixedTopOffset: 38,
 				focus: false,
+				linkSize: 250,
 				clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl') . '\',
 				imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload') . '\',
 				fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
 				imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
 				minHeight:\'400\',
-				plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
+				plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\'],
+				callbacks: {
+                    keydown: function(e) {
+                        if (e.ctrlKey && e.keyCode === 13) {
+                            if ($(\'#btnSave\').length>0) {
+                                $(\'#btnSave\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                            } else if ($(\'#btnSaveClose\').length>0) {
+                                $(\'#btnSaveClose\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                            } else if ($(\'#Submit\').length>0) {
+                                $(\'#Submit\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                            } else if ($(\'button[type="submit"]\').length>0) {
+                                $(\'button[type="submit"]\').click();
+                                $(\'button[type="submit"]\').prop(\'disabled\', \'disabled\');
+                            } else {
+                                $(\'input[type="submit"]\').click();
+                                $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                            }
+                            return false;
+                        }
+                    }
+                }	
 			});
 
 		}
@@ -3034,7 +3061,10 @@ if ($this->post) {
 			<div class="form-group" id="msEditProductInputMetaTitle_' . $language['uid'] . '">
 				<label for="products_meta_title" class="col-md-2 control-label">' . $this->pi_getLL('admin_label_input_meta_title') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="products_meta_title[' . $language['uid'] . ']" id="products_meta_title[' . $language['uid'] . ']" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_title']) . '">
+				    <div class="input-group width-fw">
+				        <input type="text" class="form-control text meta-title" name="products_meta_title[' . $language['uid'] . ']" id="products_meta_title[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_title']) . '" maxlength="60">
+				        <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
+				    </div>    
 				</div>
 			</div>
 			<div class="form-group" id="msEditProductInputMetaKeywords_' . $language['uid'] . '">
@@ -3046,13 +3076,51 @@ if ($this->post) {
 			<div class="form-group" id="msEditProductInputMetaDesc_' . $language['uid'] . '">
 				<label for="products_meta_description" class="col-md-2 control-label">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '">
+                    <div class="input-group width-fw">
+                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '">
+                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
+                    </div>    
 				</div>
 			</div>
 			</div>
             </div>
 			</div>
 			';
+        }
+        if (!empty($meta_tags_block)) {
+            $GLOBALS['TSFE']->additionalHeaderData[] = '
+            <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $(".meta-title").each(function(idx, obj) {
+                    var lang_id=$(obj).attr("data-lang-id");
+                    var counter_id="#meta_title_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(60-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(".meta-desc").each(function(idx, obj) {
+                    var lang_id=$(obj).attr("data-lang-id");
+                    var counter_id="#meta_desc_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(168-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(document).on("keydown keyup", ".meta-title", function() {
+                    var lang_id=$(this).attr("data-lang-id");
+                    var counter_id="#meta_title_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(60-current_counter);
+                    $(counter_id).html(char_left);
+                });
+                $(document).on("keydown keyup", ".meta-desc", function() {
+                    var lang_id=$(this).attr("data-lang-id");
+                    var counter_id="#meta_desc_char_count" + lang_id;
+                    var current_counter=$(this).val().length;
+                    var char_left=parseInt(168-current_counter);
+                    $(counter_id).html(char_left);
+                });
+            });
+            </script>';
         }
         /*
 		 * attributes tab

@@ -524,6 +524,7 @@ CREATE TABLE `tx_multishop_orders` (
  `memo_crdate` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
  `foreign_orders_id` varchar(30) default '',
+ `is_shipping_costs_manual` tinyint(1) default '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -580,7 +581,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `billing_department` (`billing_department`),
  KEY `delivery_department` (`delivery_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
- KEY `foreign_orders_id` (`foreign_orders_id`)
+ KEY `foreign_orders_id` (`foreign_orders_id`),
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
@@ -792,6 +793,7 @@ CREATE TABLE `tx_multishop_payment_methods` (
  `enable_on_default` tinyint(1) default '1',
  `cart_minimum_amount` decimal(24,14) default '0.00000000000000',
  `cart_maximum_amount` decimal(24,14) default '0.00000000000000',
+ `hash` varchar(127) default '',
  PRIMARY KEY (`id`),
  KEY `code` (`code`),
  KEY `isp` (`provider`),
@@ -799,7 +801,8 @@ CREATE TABLE `tx_multishop_payment_methods` (
  KEY `status` (`status`),
  KEY `sort_order` (`sort_order`),
  KEY `page_uid` (`page_uid`,`zone_id`),
- KEY `enable_on_default` (`enable_on_default`)
+ KEY `enable_on_default` (`enable_on_default`),
+ KEY `hash` (`hash`)
 );
 
 CREATE TABLE `tx_multishop_payment_methods_description` (
@@ -1297,6 +1300,7 @@ CREATE TABLE `tx_multishop_shipping_methods` (
  `enable_on_default` tinyint(1) default '1',
  `cart_minimum_amount` decimal(24,14) default '0.00000000000000',
  `cart_maximum_amount` decimal(24,14) default '0.00000000000000',
+ `hash` varchar(127) default '',
  PRIMARY KEY (`id`),
  KEY `code` (`code`),
  KEY `date` (`date`),
@@ -1304,7 +1308,8 @@ CREATE TABLE `tx_multishop_shipping_methods` (
  KEY `provider` (`provider`),
  KEY `sort_order` (`sort_order`),
  KEY `page_uid` (`page_uid`,`zone_id`),
- KEY `enable_on_default` (`enable_on_default`)
+ KEY `enable_on_default` (`enable_on_default`),
+ KEY `hash` (`hash`)
 );
 
 CREATE TABLE `tx_multishop_shipping_methods_costs` (

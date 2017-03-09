@@ -12,13 +12,40 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
+	    imagePosition: true,
+	    imageResizable: true,
+	    toolbarFixedTopOffset: 38,
 		focus: false,
+		linkSize: 250,
 		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl') . '\',
 		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload') . '\',
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
 		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
 		minHeight:\'400\',
-		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',[\'fullscreen\']]
+		plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'source\',[\'fullscreen\']],
+		callbacks: {
+            keydown: function(e) {
+                if (e.ctrlKey && e.keyCode === 13) {
+                    if ($(\'#btnSave\').length>0) {
+                        $(\'#btnSave\').click();
+                        $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                    } else if ($(\'#btnSaveClose\').length>0) {
+                        $(\'#btnSaveClose\').click();
+                        $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                    } else if ($(\'#Submit\').length>0) {
+                        $(\'#Submit\').click();
+                        $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                    } else if ($(\'button[type="submit"]\').length>0) {
+                        $(\'button[type="submit"]\').click();
+                        $(\'button[type="submit"]\').prop(\'disabled\', \'disabled\');
+                    } else {
+                        $(\'input[type="submit"]\').click();
+                        $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
+                    }
+                    return false;
+                }
+            }
+        }
 	});
 });
 </script>

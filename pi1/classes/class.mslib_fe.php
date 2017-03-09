@@ -2145,7 +2145,11 @@ class mslib_fe {
             }
             if (is_array($options['add_custom_header'])) {
                 foreach ($options['add_custom_header'] as $custom_header) {
-                    $mail->AddCustomHeader($custom_header);
+                    if (is_array($custom_header)) {
+                        $mail->AddCustomHeader($custom_header[0],$custom_header[1]);
+                    } elseif ($custom_header) {
+                        $mail->AddCustomHeader($custom_header);
+                    }
                 }
             }
             // $mail->IsSendmail(); // telling the class to use SendMail transport
@@ -2238,7 +2242,21 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            // Sometims the dispatcher is using name instead of username
+            if (!$user['username'] && $user['name']) {
+                $user['username']=$user['name'];
+            }
             $mail->AddAddress($user['email'], $user['username']);
+            if (is_array($options['add_cc']) && count($options['add_cc'])) {
+                foreach ($options['add_cc'] as $recipient) {
+                    $mail->AddCC($recipient['email'], $recipient['name']);
+                }
+            }
+            if (is_array($options['add_bcc']) && count($options['add_bcc'])) {
+                foreach ($options['add_bcc'] as $recipient) {
+                    $mail->AddBCC($recipient['email'], $recipient['name']);
+                }
+            }
             if (!$options['skipSending']) {
                 //hook to let other plugins further manipulate the query
                 $return_status = $mail->Send();

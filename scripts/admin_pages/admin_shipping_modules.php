@@ -103,10 +103,11 @@ if ($this->post) {
             $insertArray['page_uid'] = $this->post['related_shop_pid'];
             $insertArray['provider'] = $_REQUEST['shipping_method_code'];
             $insertArray['vars'] = serialize($this->post);
+            $insertArray['hash'] = md5(uniqid('', true));
             $insertArray['handling_costs'] = $this->post['handling_costs'];
             $insertArray['cart_minimum_amount'] = $this->post['cart_minimum_amount'];
             $insertArray['cart_maximum_amount'] = $this->post['cart_maximum_amount'];
-            $updateArray['enable_on_default'] = $this->post['enable_on_default'];
+            $insertArray['enable_on_default'] = $this->post['enable_on_default'];
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($res) {

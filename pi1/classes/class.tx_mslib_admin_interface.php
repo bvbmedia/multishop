@@ -344,14 +344,41 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
         //echo print_r($queryData);
         //die();
+        $columnSorterData=array();
+        $columnSorterSettings=array();
         if (count($pageset['dataset'])) {
             $tr_type = 'even';
             if (!$params['settings']['disableForm']) {
                 $tableContent .= '<form method="post" action="' . $params['postForm']['actionUrl'] . '" enctype="multipart/form-data">';
             }
+            $columnSorterData=array();
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
+                $colCounter = 0;
+                foreach ($params['tableColumns'] as $col => $valArray) {
+                    if (isset($valArray['enableSorter'])) {
+                        if ($valArray['enableSorter']) {
+                            $columnSorterData[$colCounter] = true;
+                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
+                            if ($valArray['href']) {
+                                $columnSorterDataSettings[$colCounter]['href'] = true;
+                            }
+                        } else {
+                            $columnSorterData[$colCounter] = false;
+                        }
+                    } else {
+                        $columnSorterData[$colCounter] = false;
+                    }
+                    $colCounter++;
+                }
+            }
+            $countColumnSorterData=count($columnSorterData);
             $tableContent .= '<div class="table-responsive">';
-            $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
-            $tableContent .= '<tr><thead>';
+            if (is_array($columnSorterData) && $countColumnSorterData) {
+                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface">';
+            } else {
+                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+            }
+            $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
                 $headerData = '';
                 $headerData .= '
@@ -374,6 +401,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             foreach ($params['tableColumns'] as $col => $valArray) {
                 $tdClass = array();
+                //if (is_array($columnSorterData) && $countColumnSorterData) {
+                    //$tdClass[] = 'header';
+                //}
                 if ($valArray['align']) {
                     $tdClass[] = 'text-' . $valArray['align'];
                 }
@@ -385,7 +415,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
                 $tableContent .= '<th' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $valArray['title'] . '</th>';
             }
-            $tableContent .= '</thead></tr><tbody>';
+            if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable']) {
+                $tableContent .= '</tr></thead><tbody class="sortable_content">';
+            } else {
+                $tableContent .= '</tr></thead><tbody>';
+            }
             $summarize = array();
             $recordCounter = 0;
             foreach ($pageset['dataset'] as $rowKey => $row) {
@@ -395,7 +429,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 } else {
                     $tr_type = 'even';
                 }
-                $tableContent .= '<tr class="' . $tr_type . '">';
+                $row_sortable_id = '';
+                if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
+                    $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
+                }
+                $tableContent .= '<tr class="' . $tr_type . '"'.$row_sortable_id.'>';
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
                     $headerData = '';
                     $headerData .= '
@@ -487,6 +525,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 foreach ($valArray['hiddenFields'] as $hiddenFieldKey => $hiddenFieldVal) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $hiddenFieldVal = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $hiddenFieldVal);
+                                        $hiddenFieldVal = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $hiddenFieldVal);
                                     }
                                     $content .= '<input name="' . $hiddenFieldKey . '" type="hidden" value="' . $hiddenFieldVal . '" />';
                                 }
@@ -497,6 +536,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'content':
                             foreach ($row as $tmpCol => $tmpVal) {
                                 $valArray['content'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['content']);
+                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['content']);
                             }
                             $row[$col] = $valArray['content'];
                             break;
@@ -537,6 +577,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 if ($valArray['hrefEnable']) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefEnable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefEnable']);
+                                        $valArray['hrefEnable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefEnable']);
                                     }
                                     $status_html .= '<a href="' . $valArray['hrefEnable'] . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
                                 }
@@ -544,6 +585,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 if ($valArray['hrefDisable']) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefDisable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefDisable']);
+                                        $valArray['hrefDisable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefDisable']);
                                     }
                                     $status_html .= '<a href="' . $valArray['hrefDisable'] . '"><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
                                 }
@@ -557,6 +599,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     if ($valArray['href']) {
                         foreach ($row as $tmpCol => $tmpVal) {
                             $valArray['href'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['href']);
+                            $valArray['href'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['href']);
                         }
                         $adjustedValue = '<a ' . ($valArray['hrefNoFollow'] ? ' rel="nofollow"' : '') . ' href="' . $valArray['href'] . '"' . ($valArray['href_target'] ? ' target="' . $valArray['href_target'] . '""' : '') . '>' . $adjustedValue . '</a>';
                     }
@@ -726,6 +769,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</form>
 			';
             //hook to let other plugins further manipulate the method
+
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceSearchFormPostProc'])) {
                 $interfaceKey =& $this->interfaceKey;
                 $params_searchform = array(
@@ -767,6 +811,24 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
         $content .= '</div>';
         $content .= '</div>';
+        if (is_array($columnSorterData) && $countColumnSorterData) {
+            $sort_js=array();
+            // only for non-sortable column
+            foreach ($columnSorterData as $col_idx => $col_value) {
+                if (!$col_value) {
+                    $sort_js[] = $col_idx . ':{ sorter: false}';
+                }
+            }
+            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_css'] = '<link rel="stylesheet" type="text/css" href="typo3conf/ext/multishop/templates/global/css/tablesorter.css" media="all" />';
+            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
+			jQuery(document).ready(function ($) {
+				$(\'#msAdminTableInterface\').tablesorter({
+				    headers: { '.implode(", ", $sort_js).' }
+				});
+			});
+			</script>
+			';
+        }
         if ($params['settings']['returnOnlyWhenRecordsFound'] && !$pageset['total_rows']) {
             //return;
         } else {

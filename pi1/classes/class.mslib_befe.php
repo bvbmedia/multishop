@@ -1314,7 +1314,7 @@ class mslib_befe {
         }
     }
     // function for saving the importer products images
-    public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*') {
+    public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*', $groupBy='', $orderBy='',$limit='') {
         $queryArray = array();
         $queryArray['from'] = $table;
         if (isset($value) && isset($field) && $field != '') {
@@ -1333,9 +1333,9 @@ class mslib_befe {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery($select, // SELECT ...
                 $queryArray['from'], // FROM ...
                 ((is_array($queryArray['where']) && count($queryArray['where'])) ? implode(' AND ', $queryArray['where']) : ''), // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '' // LIMIT ...
+                (isset($groupBy)?$groupBy:''), // GROUP BY...
+                (isset($orderBy)?$orderBy:''), // ORDER BY...
+                $limit // LIMIT ...
         );
         if ($this->msDebug) {
             return $query;
@@ -4828,13 +4828,38 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '') {
-        $content = '<div class="panel panel-' . $panelClass . '">';
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId='', $enableCollapse=0, $collapsed='0',$headingButtons=array()) {
+        if ($enableCollapse) {
+            if ($collapsed) {
+                $panelHeadingClasses[] = 'collapsed';
+            }
+            $heading='<a role="button" data-toggle="collapse" href="#'.$panelId.'Body"><i class="fa fa-file-text-o"></i> '.$heading.'</a>';
+            $panelHeadingParams.='data-toggle="collapse" data-target="#'.$panelId.'Body" aria-expanded="true"';
+        }
+        $content = '<div'.($panelId? ' id="'.$panelId.'"':'').' class="panel panel-' . $panelClass . '">';
         if ($heading) {
-            $content .= '<div class="panel-heading"><h3 class="panel-title">' . $heading . '</h3></div>';
+            $content .= '<div class="panel-heading'.($panelHeadingClass?' '.$panelHeadingClass:'').'"'.($panelHeadingParams?' '.$panelHeadingParams:'').'>';
+            $content .= '<h3 class="panel-title">' . $heading . '</h3>';
+            if (is_array($headingButtons) && count($headingButtons)) {
+                $content.='<div class="form-inline">';
+                foreach ($headingButtons as $headingButton) {
+                    $content .= '<a href="' . $headingButton['href'] . '" class="' . $headingButton['btn_class'] . '"' . ($headingButton['attributes'] ? ' ' . $headingButton['attributes'] : '') . '><i class="' . $headingButton['fa_class'] . '"></i> ' . htmlspecialchars($headingButton['title']) . '</a> ';
+                }
+                $content.='</div>';
+            }
+            $content .= '</div>';
         }
         if ($body) {
+            if ($enableCollapse) {
+                if (!$collapsed) {
+                    $collapseState='in';
+                }
+                $content.='<div id="'.$panelId.'Body" class="panel-collapse collapse '.$collapseState.'" aria-expanded="true">';
+            }
             $content .= '<div class="panel-body">' . $body . '</div>';
+            if ($enableCollapse) {
+                $content.='</div>';
+            }
         }
         if ($footer) {
             $content .= '<div class="panel-footer">' . $footer . '</div>';
@@ -4886,6 +4911,16 @@ class mslib_befe {
                     $config->set("HTML.Nofollow", TRUE);
                     $config->set('HTML.TargetBlank', TRUE);
                     $config->set('Cache.SerializerPath', $this->DOCUMENT_ROOT . 'uploads/tx_multishop');
+                    //hook to let other plugins further manipulate the settings
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'])) {
+                        $params = array(
+                                'mode' => &$mode,
+                                'config'=>&$config
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['antiXSSPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     $purifier = new HTMLPurifier($config);
                     return $purifier->purify($val);
                     break;
@@ -5206,23 +5241,26 @@ class mslib_befe {
                 $content.='<tr>';
                 $cellCounter=0;
                 foreach ($row as $col => $val) {
-                    $class='';
-                    if ($settings['sum'] && $cellCounter) {
-                        $class='sum';
+                    $classes=array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[]=$settings['cellClasses'][$cellCounter];
                     }
-                    $content.='<td'.($class?' class="'.$class.'"':'').'>'.htmlspecialchars($val).'</td>';
+                    $content.='<td'.(count($classes)?' class="'.implode(' ',$classes).'"':'').'>'.htmlspecialchars($val).'</td>';
                     $cellCounter++;
                 }
                 $content.='</tr>';
                 $rowCounter++;
             }
             $content.='</tbody>';
-            if ($settings['sum']) {
+            if ($settings['sumTr']) {
                 $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_'.$idName]='<script data-ignore="true">
                 jQuery(document).ready(function($) {
                         $(\'#'.$idName.'\').tablesorter();
                         $(\'#'.$idName.'\').sumtr({
-                            formatValue : function(val) { return Math.round(val*100)/100; },
+                            readValue : function(e) {
+                                return Math.round(e.html().toString().replace(/[^\d.-]/g, \'\') * 100) / 100; return !isNaN(r) ? r : 0;
+                            },
+                            formatValue : function(val) { return Math.round(val*100)/100; }
                         });
                     });
                 </script>
@@ -5230,12 +5268,12 @@ class mslib_befe {
                 $content.='
                 <tfoot>
                 <tr class="summary">
-                    <td>Total:</td>
+                    <td class="text-right">Total:</td>
                 ';
                 $rowCounter=0;
                 foreach ($rows[0] as $colName => $colVal) {
                     if ($rowCounter) {
-                        $content.='<td class="grandTotal"></td>';
+                        $content.='<td class="text-right grandTotal"></td>';
                     }
                     $rowCounter++;
                 }
@@ -5245,6 +5283,47 @@ class mslib_befe {
                 ';
             }
             $content.='</table>';
+            return $content;
+        }
+    }
+    function bootstrapGrids($gridCols,$columns=3) {
+        if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
+            $array=array_chunk($gridCols, ceil(count($gridCols) / $columns));
+            $content.='<div class="row">';
+            foreach ($array as $col => $colArray) {
+                $content.='<div class="col-md-'.ceil((12/$columns)).'">';
+                $content.=implode('',$colArray);
+                $content.='</div>';
+            }
+            $content.='</div>';
+            return $content;
+        }
+    }
+    function bootstrapTabs($tabsArray) {
+        if (is_array($tabsArray) && count($tabsArray)) {
+            $content.='<ul class="tabs nav nav-tabs" role="tablist">';
+            $counter=0;
+            foreach ($tabsArray as $col => $tabArray) {
+                $classes=array();
+                if (!$counter) {
+                    $classes[]='active';
+                }
+                $content.='<li role="presentation"'.(is_array($classes) && count($classes)?' class="'.implode(' ',$classes).'"':'').'><a href="#'.$tabArray['key'].'" aria-controls="1" role="tab" data-toggle="tab"><span>'.htmlspecialchars($tabArray['title']).'</span></a></li>';
+                $counter++;
+            }
+            $content.='</ul>';
+            $content.='<div class="tab-content">';
+            $counter=0;
+            foreach ($tabsArray as $col => $tabArray) {
+                $classes=array();
+                $classes[]='tab-pane';
+                if (!$counter) {
+                    $classes[]='active';
+                }
+                $content.='<div role="tabpanel"'.(is_array($classes) && count($classes)?' class="'.implode(' ',$classes).'"':'').' id="'.$tabArray['key'].'">'.$tabArray['content'].'</div>';
+                $counter++;
+            }
+            $content.='</div>';
             return $content;
         }
     }

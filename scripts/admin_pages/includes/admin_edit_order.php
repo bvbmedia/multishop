@@ -487,14 +487,25 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['country_tax_rate'] = 0;
                             $shipping_method['region_tax_rate'] = 0;
                         }
-                        $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
-                        if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
-                            $price=$tmp_price['shipping_costs'];
+                        $price = 0;
+                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER']=='1') {
+                            $price = 0;
+                            $this->post['shipping_costs_manual']=1;
                         } else {
-                            $price=$tmp_price;
+                            $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+                            if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
+                                $shipping_costs_price = $tmp_price['shipping_costs'];
+                            } else {
+                                $shipping_costs_price = $tmp_price;
+                            }
+                            // if shipping_costs_price truly integer/float then it mean the shipping costs are free based on calculation
+                            if ($shipping_costs_price === 0 || $shipping_costs_price > 0) {
+                                $price = $shipping_costs_price;
+                            }
                         }
-                        $order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
-                        if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
+                        //$order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
+                        //if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
+                        if (!empty($this->post['tx_multishop_pi1']['shipping_method_costs']) && $this->post['shipping_costs_manual']=='1') {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -546,6 +557,16 @@ if (is_numeric($this->get['orders_id'])) {
                             $updateArray['shipping_method_costs'] = $price;
                         } else {
                             $updateArray['shipping_method_costs'] = 0;
+                        }
+                        $updateArray['is_shipping_costs_manual'] = 0;
+                        if (!$this->post['tx_multishop_pi1']['shipping_method_costs'] || $this->post['tx_multishop_pi1']['shipping_method_costs']=='0.00') {
+                            if ($this->post['shipping_costs_manual']=='1') {
+                                $updateArray['is_shipping_costs_manual'] = 0;
+                            }
+                        } else {
+                            if ($this->post['shipping_costs_manual']=='1') {
+                                $updateArray['is_shipping_costs_manual'] = 1;
+                            }
                         }
                         if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
                             $shipping_tax['shipping_total_tax_rate'] = $shipping_method['tax_rate'];
@@ -3328,6 +3349,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
 						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right priceInputDisplay" value="' . number_format($orders['shipping_method_costs'] + $orders_tax_data['shipping_tax'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '') . '" class="align_right" />
 						<input type="hidden" id="hidden_shipping_tax" value="' . $orders_tax_data['shipping_tax'] . '">
+						<input type="hidden" name="shipping_costs_manual" id="shipping_costs_manual" value="'.$orders['is_shipping_costs_manual'].'">
 					</div>';
                     $payment_costs = '<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
@@ -4190,6 +4212,9 @@ if (is_numeric($this->get['orders_id'])) {
         $GLOBALS['TSFE']->additionalHeaderData[] = '
         <script type="text/javascript">
             jQuery(document).ready(function($) {
+                $(document).on("keydown keyup", "#shipping_method_costs", function(){
+                    $("#shipping_costs_manual").val("1"); 
+                });
                 $("#expected_delivery_date_local").datepicker({
                     dateFormat: "dd-mm-yy",
                     minDate: 0,

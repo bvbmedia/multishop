@@ -1147,6 +1147,24 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'getExistingCustomersInfo':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_customers_info.php');
+        }
+        exit();
+        break;
+    case 'getExistingOrders':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_orders.php');
+        }
+        exit();
+        break;
+    case 'getExistingInvoice':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_existing_invoices.php');
+        }
+        exit();
+        break;
     case 'getProductsList':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_products_list.php');
@@ -1523,6 +1541,7 @@ switch ($this->ms['page']) {
     case 'admin_upload_redactor':
         if ($this->ADMIN_USER) {
             $continueUpload = 0;
+            $filename='';
             switch ($this->get['tx_multishop_pi1']['redactorType']) {
                 case 'imageGetJson':
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
@@ -1605,6 +1624,7 @@ switch ($this->ms['page']) {
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
                     move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
+                    $filename=$_FILES["file"]["name"];
                     $path_parts = pathinfo($_FILES["file"]["name"]);
                     $ext = $path_parts['extension'];
                     if ($ext) {
@@ -1629,7 +1649,8 @@ switch ($this->ms['page']) {
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
                     $result = array(
-                            'filelink' => $fileLocation
+                            'url' => $fileLocation,
+                            'name' => $filename
                     );
                     echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                     exit();

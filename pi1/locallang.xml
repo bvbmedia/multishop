@@ -1403,6 +1403,9 @@
             <label index="http_referer">HTTP Referer</label>
             <label index="week">Week</label>
             <label index="weeks">Weeks</label>
+            <label index="select_customer">Select customer</label>
+            <label index="select_order">Select order</label>
+            <label index="select_invoice">Selecteer invoice</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2785,6 +2788,9 @@
             <label index="admin_label_cms_marker_store_email">E-mail winkel</label>
             <label index="week">Week</label>
             <label index="weeks">Weken</label>
+            <label index="select_customer">Selecteer klant</label>
+            <label index="select_order">Selecteer bestelling</label>
+            <label index="select_invoice">Selecteer factuur</label>
         </languageKey>
     </data>
 </T3locallang>

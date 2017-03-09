@@ -216,6 +216,7 @@ if (count($coupons_options) > 0) {
 				<th class="cellDate">' . $this->pi_getLL('end_time') . '</th>
 				<th width="150" nowrap>' . $this->pi_getLL('max_usage') . '</th>
 				<th width="120" nowrap>' . $this->pi_getLL('times_used') . '</th>
+				<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>
 				<th class="cellStatus">' . $this->pi_getLL('status') . '</th>
 				<th class="cellAction">' . $this->pi_getLL('action') . '</th>
 			</tr></thead><tbody>';
@@ -247,6 +248,7 @@ if (count($coupons_options) > 0) {
 		<td class="cellDate">' . strftime("%x %X", $option['enddate']) . '</td>
 		<td align="center">' . $option['max_usage'] . '</td>
 		<td align="center">' . $option['times_used'] . '</td>
+		<td class="cellStatus"><strong>' . ($option['page_uid']>0 ? mslib_fe::getShopNameByPageUid($option['page_uid']) : $this->pi_getLL('all')) . '</strong></td>
 		<td class="cellStatus">';
         if (!$option['status']) {
             $content .= '<span class="admin_status_red" alt="' . $this->pi_getLL('disable') . '"></span>';
