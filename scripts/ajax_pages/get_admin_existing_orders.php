@@ -61,7 +61,7 @@ if ($this->ADMIN_USER) {
         $tmp_return_data = $return_data[0];
         $return_data = $tmp_return_data;
     } else {
-        if (!isset($this->get['preselected_id']) && empty($this->get['q'])) {
+        if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
                     'id' => '',
                     'text' => $this->pi_getLL('choose')
