@@ -2221,6 +2221,7 @@ class mslib_fe {
                     }
                 }
             }
+            $mail->isHTML(true);
             $mail->Subject = $subject;
             if (!$options['withoutImageEmbedding']) {
                 self::MsgHTMLwithEmbedImages($mail, $body);
