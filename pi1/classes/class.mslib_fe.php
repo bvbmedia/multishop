@@ -2220,13 +2220,12 @@ class mslib_fe {
                 }
             }
             $mail->Subject = $subject;
-            //$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
             if (!$options['withoutImageEmbedding']) {
                 self::MsgHTMLwithEmbedImages($mail, $body);
             } else {
                 $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
             }
-            // Text version
+            // Plain version
             if (isset($options['alt_body'])) {
                 $mail->AltBody=$options['alt_body'];
             } else {
