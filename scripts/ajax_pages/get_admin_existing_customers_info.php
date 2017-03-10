@@ -6,6 +6,20 @@ if ($this->ADMIN_USER) {
     $return_data = array();
     $select = array();
     switch ($this->get['section']) {
+        case 'subscriptions':
+            $filter = array();
+            if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] >0) {
+                $filter[] = 'f.uid=' . $this->get['cid'];
+            }
+            if (isset($this->get['subscriptions_id']) && is_numeric($this->get['subscriptions_id']) && $this->get['subscriptions_id'] >0) {
+                $filter[] = 's.subscriptions_id=' . $this->get['subscriptions_id'];
+            }
+            $filter[] = 'f.deleted=0';
+            $filter[] = 'f.uid=s.customer_id';
+            $from=array();
+            $from[]='fe_users f, tx_multishop_subscriptions s';
+            $select[]='s.customer_id';
+            break;
         case 'invoices':
             $filter = array();
             if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] >0) {
