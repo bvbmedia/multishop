@@ -2229,7 +2229,7 @@ class mslib_fe {
             if (isset($options['alt_body'])) {
                 $mail->AltBody = $options['alt_body'];
             } else {
-                $mail->AltBody = mslib_befe::antiXSS($body, 'strip_tags');
+                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
