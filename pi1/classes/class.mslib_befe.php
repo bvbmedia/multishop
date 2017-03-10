@@ -5327,6 +5327,11 @@ class mslib_befe {
             return $content;
         }
     }
+    function br2nl($html) {
+        if ($html) {
+            return preg_replace('/<br\s?\/?>/i', "\r\n", $html);
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
