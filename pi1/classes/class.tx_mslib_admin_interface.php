@@ -354,26 +354,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $columnSorterData=array();
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
                 $colCounter = 0;
-                foreach ($params['tableColumns'] as $col => $valArray) {
-                    if (isset($valArray['enableSorter'])) {
-                        if ($valArray['enableSorter']) {
-                            $columnSorterData[$colCounter] = true;
-                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
-                            if ($valArray['href']) {
-                                $columnSorterDataSettings[$colCounter]['href'] = true;
-                            }
-                        } else {
-                            $columnSorterData[$colCounter] = false;
-                        }
-                    } else {
-                        $columnSorterData[$colCounter] = false;
-                    }
-                    $colCounter++;
-                }
             }
-            $countColumnSorterData=count($columnSorterData);
             $tableContent .= '<div class="table-responsive">';
-            if (is_array($columnSorterData) && $countColumnSorterData) {
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
                 $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface">';
             } else {
                 $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
@@ -398,7 +381,30 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					<label for="check_all_1"></label>
 					</div>
 				</th>';
+                if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
+                    $columnSorterData[$colCounter] = false;
+                    $colCounter++;
+                }
             }
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
+                foreach ($params['tableColumns'] as $col => $valArray) {
+                    if (isset($valArray['enableSorter'])) {
+                        if ($valArray['enableSorter']) {
+                            $columnSorterData[$colCounter] = true;
+                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
+                            if ($valArray['href']) {
+                                $columnSorterDataSettings[$colCounter]['href'] = true;
+                            }
+                        } else {
+                            $columnSorterData[$colCounter] = false;
+                        }
+                    } else {
+                        $columnSorterData[$colCounter] = false;
+                    }
+                    $colCounter++;
+                }
+            }
+            $countColumnSorterData=count($columnSorterData);
             foreach ($params['tableColumns'] as $col => $valArray) {
                 $tdClass = array();
                 //if (is_array($columnSorterData) && $countColumnSorterData) {
