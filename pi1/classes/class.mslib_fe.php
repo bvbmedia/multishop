@@ -2207,7 +2207,7 @@ class mslib_fe {
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
             if (isset($options['sender'])) {
-                $mail->Sender($options['sender']);
+                $mail->Sender=$options['sender'];
             }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
@@ -2230,8 +2230,6 @@ class mslib_fe {
             // Plain version
             if (isset($options['alt_body'])) {
                 $mail->AltBody = $options['alt_body'];
-                echo $mail->AltBody;
-                die();
             } else {
                 $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
