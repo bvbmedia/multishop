@@ -2223,6 +2223,12 @@ class mslib_fe {
             } else {
                 $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
             }
+            // Text version
+            if ($options['alt_body']) {
+                $mail->AltBody=$options['alt_body'];
+            } else {
+                $mail->AltBody=mslib_befe::antiXSS($body, 'strip_tags');
+            }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
             }
