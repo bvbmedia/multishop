@@ -34,7 +34,7 @@ if ($this->ADMIN_USER) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
     }
     //$filter[] = 'status=1';
-    $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+    $query = $GLOBALS['TYPO3_DB']->SELECTquery('invoice_id, ordered_by', // SELECT ...
             'tx_multishop_invoices', // FROM ...
             implode(' and ', $filter), // WHERE...
             '', // GROUP BY...
@@ -50,7 +50,10 @@ if ($this->ADMIN_USER) {
     }
     foreach ($invoices as $invoice) {
         if ($invoice['invoice_id']) {
-            $itemTitle = $invoice['invoice_id'];
+            if (!$customer_id) {
+                $company = $invoice['ordered_by'];
+            }
+            $itemTitle = (isset($company) ? $company . ' - ID: ' : '') . $invoice['invoice_id'];
             $return_data[] = array(
                     'id' => $invoice['invoice_id'],
                     'text' => $itemTitle
