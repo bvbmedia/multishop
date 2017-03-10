@@ -41,7 +41,6 @@ if ($this->ADMIN_USER) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
                 $filter[] = 'p.projects_id=' . $this->get['projects_id'];
-
                 $filter[] = 'f.deleted=0';
                 $filter[] = 'f.uid=p.customer_id';
                 $from = array();
@@ -55,7 +54,6 @@ if ($this->ADMIN_USER) {
                 if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
-
                 $filter[] = 'o.orders_id=' . $this->get['orders_id'];
                 $filter[] = 'f.deleted=0';
                 $filter[] = 'f.uid=o.customer_id';
