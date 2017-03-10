@@ -2224,7 +2224,7 @@ class mslib_fe {
                 $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
             }
             // Text version
-            if ($options['alt_body']) {
+            if (isset($options['alt_body'])) {
                 $mail->AltBody=$options['alt_body'];
             } else {
                 $mail->AltBody=mslib_befe::antiXSS($body, 'strip_tags');
