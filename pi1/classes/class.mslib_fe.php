@@ -2120,7 +2120,9 @@ class mslib_fe {
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
         if ($user['email']) {
-            $mail = new PHPMailer();
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/PHPMailer/PHPMailerAutoload.php');
+            $mail = new PHPMailer;
+            //$mail = new PHPMailer();
             $mail->CharSet = 'UTF-8';
             $mail->Encoding = 'base64';
             $mail->XMailer = ' ';
@@ -2228,6 +2230,8 @@ class mslib_fe {
             // Plain version
             if (isset($options['alt_body'])) {
                 $mail->AltBody = $options['alt_body'];
+                echo $mail->AltBody;
+                die();
             } else {
                 $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
