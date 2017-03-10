@@ -27,7 +27,9 @@ if ($this->ADMIN_USER) {
         $this->get['q'] = addslashes($this->get['q']);
         $filter[] = 'invoice_id like \'' . $this->get['q'] . '%\'';
     }
-    if (is_numeric($customer_id) && $customer_id > 0) {
+    $customer_id=0;
+    if (isset($this->get['customer_id']) && $this->get['customer_id']>0) {
+        $customer_id=$this->get['customer_id'];
         $filter[] = 'customer_id=' . $customer_id;
     }
     if (!$this->masterShop) {
