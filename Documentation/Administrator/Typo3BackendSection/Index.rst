@@ -17,6 +17,7 @@ Installation requirements
 To run Multishop properly on your TYPO3 web site make sure that:
 
 - Your web server is running PHP 5.4.3 (5.6.30 or later is recommended)
+- PHP 7 is unfortunately not yet supported. We have plans to make Multishop compatible with PHP 7 in the summer of 2017.
 - You use MySQL or MariaDB as database server (MySQL 5.5.0, MariaDB 10.0.24 or later is recommended)
 - The PHP memory limit is higher than 256MB. For optimal functionality higher is recommended.
 - PHP is compiled with mbstrings
