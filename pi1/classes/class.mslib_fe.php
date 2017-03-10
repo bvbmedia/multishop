@@ -2204,6 +2204,9 @@ class mslib_fe {
                 }
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
+            if (isset($options['sender'])) {
+                $mail->Sender($options['sender']);
+            }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
             if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
