@@ -5,20 +5,19 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     $invoices = array();
-
     $orderby = 'invoice_id';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {
         $filter[] = 'invoice_id=' . $this->get['preselected_id'];
     }
-    $customer_id=0;
+    $customer_id = 0;
     if (isset($this->get['q']) && !empty($this->get['q'])) {
         $limit = '';
         if (strpos($this->get['q'], '||customer_id=') !== false) {
             $tmp_value = explode('||customer_id=', $this->get['q']);
             $this->get['q'] = trim($tmp_value[0]);
-            if (is_numeric($tmp_value[1]) && $tmp_value[1]>0) {
+            if (is_numeric($tmp_value[1]) && $tmp_value[1] > 0) {
                 $customer_id = $tmp_value[1];
             }
         } else {
@@ -27,9 +26,9 @@ if ($this->ADMIN_USER) {
         $this->get['q'] = addslashes($this->get['q']);
         $filter[] = 'invoice_id like \'' . $this->get['q'] . '%\'';
     }
-    $customer_id=0;
-    if (isset($this->get['customer_id']) && $this->get['customer_id']>0) {
-        $customer_id=$this->get['customer_id'];
+    $customer_id = 0;
+    if (isset($this->get['customer_id']) && $this->get['customer_id'] > 0) {
+        $customer_id = $this->get['customer_id'];
         $filter[] = 'customer_id=' . $customer_id;
     }
     if (!$this->masterShop) {

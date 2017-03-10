@@ -143,7 +143,6 @@ if ($this->ADMIN_USER) {
             );
             array_unshift($return_data, $array_select_none);
         }
-
     }
     echo json_encode($return_data, ENT_NOQUOTES);
 }

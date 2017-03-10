@@ -11,7 +11,7 @@ $counter = 0;
 $tr_type = 'even';
 $cb_ctr = 0;
 $orderItem = '';
-$totalAmount=0;
+$totalAmount = 0;
 foreach ($tmporders as $order) {
     $grandTotalColumnName = 'grand_total';
     if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
@@ -170,7 +170,7 @@ foreach ($tmporders as $order) {
         }
     }
     // custom page hook that can be controlled by third-party plugin eof
-    if (strpos($order[$grandTotalColumnName], '-')!==false) {
+    if (strpos($order[$grandTotalColumnName], '-') !== false) {
         $totalAmount -= str_replace('-', '', $order[$grandTotalColumnName]);
     } else {
         $totalAmount += $order[$grandTotalColumnName];

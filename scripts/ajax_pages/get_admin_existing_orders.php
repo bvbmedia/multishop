@@ -5,23 +5,22 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     $orders = array();
-
     $orderby = 'orders_id';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {
         $filter[] = 'orders_id=' . $this->get['preselected_id'];
     }
-    $customer_id=0;
+    $customer_id = 0;
     if (isset($this->get['q']) && !empty($this->get['q'])) {
         $limit = '';
         $this->get['q'] = trim($this->get['q']);
         $this->get['q'] = addslashes($this->get['q']);
         $filter[] = 'orders_id like \'' . $this->get['q'] . '%\'';
     }
-    $customer_id=0;
-    if (isset($this->get['customer_id']) && $this->get['customer_id']>0) {
-        $customer_id=$this->get['customer_id'];
+    $customer_id = 0;
+    if (isset($this->get['customer_id']) && $this->get['customer_id'] > 0) {
+        $customer_id = $this->get['customer_id'];
         $filter[] = 'customer_id=' . $customer_id;
     }
     if (!$this->masterShop) {
@@ -64,8 +63,8 @@ if ($this->ADMIN_USER) {
     } else {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
-                'id' => '',
-                'text' => $this->pi_getLL('select_order')
+                    'id' => '',
+                    'text' => $this->pi_getLL('select_order')
             );
             array_unshift($return_data, $array_select_none);
         }

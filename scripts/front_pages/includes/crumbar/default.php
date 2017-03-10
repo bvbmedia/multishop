@@ -87,12 +87,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
                     $teller++;
                     $link = '';
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPreHook'])) {
-                        $params=array(
-                            'markerArray'=>&$markerArray,
-                            'product'=>&$product,
-                            'output'=>&$output,
-                            'cats'=>&$cats,
-                            'iterator_count'=>$i,
+                        $params = array(
+                                'markerArray' => &$markerArray,
+                                'product' => &$product,
+                                'output' => &$output,
+                                'cats' => &$cats,
+                                'iterator_count' => $i,
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/crumbar/default.php']['crumbarCategoriesIteratorPreHook'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

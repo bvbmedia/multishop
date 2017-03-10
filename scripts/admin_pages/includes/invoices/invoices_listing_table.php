@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $counter = 0;
 $totalAmount = 0;
 $invoiceItem = '';
-$footer_category_amount=0;
+$footer_category_amount = 0;
 foreach ($invoices as $invoice) {
     $grandTotalColumnName = 'grand_total';
     if (isset($this->get['tx_multishop_pi1']['excluding_vat'])) {
@@ -95,20 +95,20 @@ foreach ($invoices as $invoice) {
     } else {
         $markerArray['INVOICES_AMOUNT'] = mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '') . $invoice[$grandTotalColumnName], 0);
     }
-    $markerArray['CATEGORY_AMOUNT']='';
+    $markerArray['CATEGORY_AMOUNT'] = '';
     if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
-        $category_amount=0;
-        $order_data=mslib_fe::getOrder($invoice['orders_id']);
+        $category_amount = 0;
+        $order_data = mslib_fe::getOrder($invoice['orders_id']);
         foreach ($order_data['products'] as $product) {
-            if ($product['categories_id']==$this->get['ordered_category']) {
+            if ($product['categories_id'] == $this->get['ordered_category']) {
                 if (strpos($product['final_price'], '-') !== false && $invoice['reversal_invoice']) {
                     $product_final_price = str_replace('-', '', $product['final_price']);
-                    $product_tax_data= str_replace('-', '', $product['products_tax_data']['total_tax']);
+                    $product_tax_data = str_replace('-', '', $product['products_tax_data']['total_tax']);
                 } else {
                     $product_final_price = ($invoice['reversal_invoice'] ? '-' : '') . $product['final_price'];
-                    $product_tax_data= ($invoice['reversal_invoice'] ? '-' : '') . $product['products_tax_data']['total_tax'];
+                    $product_tax_data = ($invoice['reversal_invoice'] ? '-' : '') . $product['products_tax_data']['total_tax'];
                 }
-                if (isset($this->get['tx_multishop_pi1']['excluding_vat']) && $this->get['tx_multishop_pi1']['excluding_vat']>0) {
+                if (isset($this->get['tx_multishop_pi1']['excluding_vat']) && $this->get['tx_multishop_pi1']['excluding_vat'] > 0) {
                     $category_amount += ($product_final_price) * $product['qty'];
                     $footer_category_amount += ($product_final_price) * $product['qty'];
                 } else {
@@ -117,7 +117,7 @@ foreach ($invoices as $invoice) {
                 }
             }
         }
-        $markerArray['CATEGORY_AMOUNT']='<td class="cellNoWrap cellPrice">'.mslib_fe::amount2Cents($category_amount).'</td>';
+        $markerArray['CATEGORY_AMOUNT'] = '<td class="cellNoWrap cellPrice">' . mslib_fe::amount2Cents($category_amount) . '</td>';
     }
     $markerArray['INVOICES_DATE_LAST_SENT'] = ($invoice['date_mail_last_sent'] > 0 ? strftime('%x', $invoice['date_mail_last_sent']) : '');
     $markerArray['INVOICES_PAID_STATUS'] = $paid_status;
@@ -125,7 +125,6 @@ foreach ($invoices as $invoice) {
     $markerArray['CUSTOM_MARKER_0_BODY'] = '';
     $markerArray['CUSTOM_MARKER_1_BODY'] = '';
     // custom page hook that can be controlled by third-party plugin
-
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplIteratorPreProc'])) {
         $params = array(
                 'markerArray' => &$markerArray,
@@ -187,8 +186,8 @@ $subpartArray['###HEADER_INVOICES_PAYMENT_CONDITION###'] = $this->pi_getLL('paym
 $subpartArray['###HEADER_INVOICES_AMOUNT###'] = $this->pi_getLL('amount');
 $subpartArray['###HEADER_CATEGORY_AMOUNT###'] = '';
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
-    $category_name=mslib_fe::getCategoryName($this->get['ordered_category']);
-    $subpartArray['###HEADER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.sprintf($this->pi_getLL('turnover_category_x'), $category_name).'</th>';
+    $category_name = mslib_fe::getCategoryName($this->get['ordered_category']);
+    $subpartArray['###HEADER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">' . sprintf($this->pi_getLL('turnover_category_x'), $category_name) . '</th>';
 }
 $subpartArray['###HEADER_INVOICES_DATE_LAST_SENT###'] = $this->pi_getLL('date_last_sent');
 $subpartArray['###HEADER_INVOICES_PAID_STATUS###'] = $this->pi_getLL('admin_paid');
@@ -208,8 +207,8 @@ $subpartArray['###FOOTER_INVOICES_PAYMENT_CONDITION###'] = $this->pi_getLL('paym
 $subpartArray['###FOOTER_INVOICES_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);
 $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '';
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
-    $category_name=mslib_fe::getCategoryName($this->get['ordered_category']);
-    $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">'.mslib_fe::amount2Cents($footer_category_amount, 0).'</th>';
+    $category_name = mslib_fe::getCategoryName($this->get['ordered_category']);
+    $subpartArray['###FOOTER_CATEGORY_AMOUNT###'] = '<th class="cellPrice">' . mslib_fe::amount2Cents($footer_category_amount, 0) . '</th>';
 }
 $subpartArray['###FOOTER_INVOICES_DATE_LAST_SENT###'] = $this->pi_getLL('date_last_sent');
 $subpartArray['###FOOTER_INVOICES_PAID_STATUS###'] = $this->pi_getLL('admin_paid');

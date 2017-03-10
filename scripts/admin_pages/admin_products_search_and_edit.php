@@ -242,7 +242,7 @@ $limits[] = '300';
 $limits[] = '500';
 $limits[] = '750';
 if (!in_array($this->get['tx_multishop_pi1']['limit'], $limits)) {
-    $limits[]=$this->get['tx_multishop_pi1']['limit'];
+    $limits[] = $this->get['tx_multishop_pi1']['limit'];
 }
 foreach ($limits as $limit) {
     $search_limit .= '<option value="' . $limit . '"' . ($limit == $this->get['tx_multishop_pi1']['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
@@ -896,7 +896,7 @@ $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shado
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function(){
     $(document).on("click", "#reset-advanced-search", function(e){
-        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=').'";    
+        location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=') . '";
     });    
 });
 var product_tax_rate_js=[];

@@ -24,7 +24,7 @@ if ($this->ADMIN_USER) {
             $actionLink = 'http://maps.google.com/maps?daddr=' . implode('+', $address);
             $actionButtons['travel_guide'] = '<a href="' . $actionLink . '" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> ' . $this->pi_getLL('travel_guide') . '</a>';
             $jsonData['html'] = '';
-            $htmlArray=array();
+            $htmlArray = array();
             if ($customer['company']) {
                 $htmlArray['company'] = '<h1>' . $customer['company'] . '</h1>';
             }
@@ -51,13 +51,13 @@ if ($this->ADMIN_USER) {
                 $params = array(
                         'actionButtons' => &$actionButtons,
                         'customer' => &$customer,
-                        'htmlArray'=>&$htmlArray
+                        'htmlArray' => &$htmlArray
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            $jsonData['html'].=implode('',$htmlArray);
+            $jsonData['html'] .= implode('', $htmlArray);
             // custom page hook that can be controlled by third-party plugin eol
             if (count($actionButtons)) {
                 $jsonData['html'] .= '<div class="btn-group">';

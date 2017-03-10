@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key'] = 'turnoverGraphCurrentWeek';
 $compiledWidget['defaultCol'] = 1;
 $compiledWidget['title'] = $this->pi_getLL('turnoverGraphCurrentWeek', 'jQPlot Sample');
-$compiledWidget['content']= '
+$compiledWidget['content'] = '
 <script type="text/javascript">
 $(document).ready(function(){
     var s1 = [2, 6, 7, 10];

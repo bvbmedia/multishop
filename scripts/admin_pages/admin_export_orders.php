@@ -523,7 +523,6 @@ if ($this->ms['show_main']) {
         </div>
         </div>
         ';
-
     } else {
         $content .= '<div class="alert alert-warning"><h3>' . htmlspecialchars($this->pi_getLL('currently_there_are_no_orders_export_created')) . '</h3></div>';
     }

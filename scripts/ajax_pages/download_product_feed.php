@@ -320,7 +320,7 @@ if ($this->get['feed_hash']) {
                     } else {
                         $tbl = 'p.';
                     }
-                    $where[]='('.$tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
+                    $where[] = '(' . $tbl . 'products_id IN (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\'' . $feed['id'] . '\' and ctf.exclude_type=\'products\' and ctf.negate=0))';
                     /*
                     if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
                         //$where[]='('.$tbl . 'is_hidden=1 or (EXISTS (SELECT ctf.exclude_id from tx_multishop_catalog_to_feeds ctf where ctf.feed_id=\''.$feed['id'].'\' and ctf.exclude_id='.$tbl . 'products_id and ctf.exclude_type=\'products\' and ctf.negate=0)))';
@@ -342,7 +342,7 @@ if ($this->get['feed_hash']) {
                 //hook to let other plugins further manipulate the settings
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedQueryPreProc'])) {
                     $params = array(
-                            'post_data'=>&$post_data,
+                            'post_data' => &$post_data,
                             'filter' => &$filter,
                             'offset' => &$offset,
                             'orderby' => &$orderby,
@@ -478,8 +478,8 @@ if ($this->get['feed_hash']) {
                                 }
                                 if ($post_data['include_only_related_product']) {
                                     if (!$in_feed_exclude_list) {
-                                        $record_in_category=true;
-                                        $record_in_product=true;
+                                        $record_in_category = true;
+                                        $record_in_product = true;
                                         $sql_check = "select id, negate from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['categories_id']) . "' and exclude_type='categories'";
                                         $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
                                         if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
@@ -1076,7 +1076,7 @@ if ($this->get['feed_hash']) {
                                     $product_id = $row['products_id'];
                                     $shipping_method_id = $post_data['shipping_costs_per_product'];
                                     $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
-                                    $cn_iso_2=mslib_fe::getCountryName((int)$cn_iso_nr);
+                                    $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
                                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                         $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                     } else {

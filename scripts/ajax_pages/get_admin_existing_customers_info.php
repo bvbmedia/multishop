@@ -8,7 +8,7 @@ if ($this->ADMIN_USER) {
     switch ($this->get['section']) {
         case 'subscriptions':
             $filter = array();
-            if (isset($this->get['subscriptions_id']) && is_numeric($this->get['subscriptions_id']) && $this->get['subscriptions_id'] >0) {
+            if (isset($this->get['subscriptions_id']) && is_numeric($this->get['subscriptions_id']) && $this->get['subscriptions_id'] > 0) {
                 if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
@@ -22,7 +22,7 @@ if ($this->ADMIN_USER) {
             break;
         case 'invoices':
             $filter = array();
-            if (isset($this->get['invoices_id']) && is_numeric($this->get['invoices_id']) && $this->get['invoices_id'] >0) {
+            if (isset($this->get['invoices_id']) && is_numeric($this->get['invoices_id']) && $this->get['invoices_id'] > 0) {
                 if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
@@ -36,7 +36,7 @@ if ($this->ADMIN_USER) {
             break;
         case 'projects':
             $filter = array();
-            if (isset($this->get['projects_id']) && is_numeric($this->get['projects_id']) && $this->get['projects_id'] >0) {
+            if (isset($this->get['projects_id']) && is_numeric($this->get['projects_id']) && $this->get['projects_id'] > 0) {
                 if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
@@ -50,7 +50,7 @@ if ($this->ADMIN_USER) {
             break;
         case 'orders':
             $filter = array();
-            if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] >0) {
+            if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] > 0) {
                 if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                     $filter[] = 'f.uid=' . $this->get['cid'];
                 }
@@ -63,15 +63,14 @@ if ($this->ADMIN_USER) {
             }
             break;
         default:
-            if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] >0) {
+            if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
                 $filter = array();
                 $filter[] = 'f.uid=' . $this->get['cid'];
                 $filter[] = 'f.deleted=0';
-                $from=array();
-                $from[]='fe_users f';
+                $from = array();
+                $from[] = 'fe_users f';
             }
             break;
-
     }
     $select[] = 'f.address';
     $select[] = 'f.address_ext';

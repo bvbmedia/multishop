@@ -259,7 +259,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             } else {
                 $this->get['q'] = trim($this->get['q']);
             }
-            if (!empty($this->get['q']) && strlen($this->get['q'])>0) {
+            if (!empty($this->get['q']) && strlen($this->get['q']) > 0) {
                 if (!is_numeric($this->get['q'])) {
                     $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\')';
                 } else {
@@ -298,8 +298,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 //hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsIteratorPreProc'])) {
-                    $params = array (
-                        'row' => &$row
+                    $params = array(
+                            'row' => &$row
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsIteratorPreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

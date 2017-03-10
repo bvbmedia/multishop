@@ -30,10 +30,10 @@ jQuery().ready(function($){
 ';
 if ($this->post) {
     if (!$this->post['s_date']) {
-        $this->post['s_date']=date("Y-m-d");
+        $this->post['s_date'] = date("Y-m-d");
     }
     if (!$this->post['e_date']) {
-        $this->post['e_date']=date((date('Y', strtotime($this->post['s_date'])) + 1) . "-m-d");
+        $this->post['e_date'] = date((date('Y', strtotime($this->post['s_date'])) + 1) . "-m-d");
     }
     if (is_numeric($this->post['s_hours']) and is_numeric($this->post['s_minutes'])) {
         $this->post['s_date'] .= ' ' . $this->post['s_hours'] . ':' . $this->post['s_minutes'] . ':00';
@@ -47,7 +47,7 @@ if ($this->post) {
         $this->post['discount'] = str_replace(",", ".", $this->post['discount']);
     }
     if (!$this->post['max_usage']) {
-        $this->post['max_usage']=9999;
+        $this->post['max_usage'] = 9999;
     }
     $updateArray = array(
             'code' => $this->post['code'],
@@ -248,7 +248,7 @@ if (count($coupons_options) > 0) {
 		<td class="cellDate">' . strftime("%x %X", $option['enddate']) . '</td>
 		<td align="center">' . $option['max_usage'] . '</td>
 		<td align="center">' . $option['times_used'] . '</td>
-		<td class="cellStatus"><strong>' . ($option['page_uid']>0 ? mslib_fe::getShopNameByPageUid($option['page_uid']) : $this->pi_getLL('all')) . '</strong></td>
+		<td class="cellStatus"><strong>' . ($option['page_uid'] > 0 ? mslib_fe::getShopNameByPageUid($option['page_uid']) : $this->pi_getLL('all')) . '</strong></td>
 		<td class="cellStatus">';
         if (!$option['status']) {
             $content .= '<span class="admin_status_red" alt="' . $this->pi_getLL('disable') . '"></span>';

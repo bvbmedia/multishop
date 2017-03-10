@@ -38,7 +38,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     function repairOrder($orders_id) {
         if (is_numeric($orders_id)) {
-            $this->conf['order_id']=(int)$orders_id;
+            $this->conf['order_id'] = (int)$orders_id;
             $tax_separation = array();
             $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
@@ -645,8 +645,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //hook
                 $send_mail = 1;
                 $mail_attachment = array();
-                $add_invoice_attachment_on_templates=array();
-                $add_invoice_attachment_on_templates[]='email_order_paid_letter';
+                $add_invoice_attachment_on_templates = array();
+                $add_invoice_attachment_on_templates[] = 'email_order_paid_letter';
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
                     $params = array(
                             'this' => &$this,
@@ -713,7 +713,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                             }
                         }
-
                         if ($pageCopyToMerchant[0]['content']) {
                             $pageCopyToMerchant[0]['content'] = str_replace($array1, $array2, $pageCopyToMerchant[0]['content']);
                         }
@@ -858,7 +857,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     /*if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                         $tmp_tax = round(($options['options_values_price'] * ($product['products_tax'] / 100)), 2);
                         $attribute_price = +$options['options_values_price'] + $tmp_tax;
-                    } else */if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                    } else */
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                         $attribute_price = round(($options['options_values_price'] * ($product['products_tax'] / 100)), 4) + $options['options_values_price'];
                     } else {
                         $attribute_price = $options['options_values_price'];
@@ -906,7 +906,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $tmp_tax = round(($product['final_price'] * ($product['products_tax'] / 100)), 2);
                 $final_price = ($product['qty'] * ($product['final_price'] + $tmp_tax));
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price'] + $tmp_tax);
-            } else */if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+            } else */
+            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                 $final_price = ($product['qty'] * $product['final_price']);
                 $final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(round(($product['final_price'] * ($product['products_tax'] / 100)), 4) + $product['final_price']);
@@ -1339,7 +1340,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_numeric($address['language_id'])) {
                 $insertArray['language_id'] = $address['language_id'];
             }
-            $insertArray['status']='';
+            $insertArray['status'] = '';
             if (isset($address['status']) && $address['status'] > 0) {
                 // Set order status
                 $insertArray['status'] = $address['status'];
