@@ -260,8 +260,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
             }
             if (is_array($keywordOr) && count($keywordOr)) {
-                $queryData['where'][] = "(" . implode(" OR ", $keywordOr) . ")";
+                $queryData['keywordSearchWhere'] = "(" . implode(" OR ", $keywordOr) . ")";
             }
+        }
+        if ($queryData['keywordSearchWhere'] && is_array($params['query']['whereMatch'])) {
+            $orFilter=array();
+            $orFilter[]=$queryData['keywordSearchWhere'];
+            $orFilter[]='('.implode(' OR ',$params['query']['whereMatch']).')';
+            $queryData['where'][]='('.implode(' OR ',$orFilter).')';
+        } elseif ($queryData['keywordSearchWhere']) {
+            $queryData['where'][]=$queryData['keywordSearchWhere'];
+        } elseif (is_array($params['query']['whereMatch'])) {
+            $queryData['where'][]='('.implode(' OR ',$params['query']['whereMatch']).')';
         }
         if ($params['query']['where']) {
             if (is_array($params['query']['where'])) {
