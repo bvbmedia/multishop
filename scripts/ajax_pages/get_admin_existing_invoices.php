@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     $invoices = array();
-    $orderby = 'invoice_id desc';
+    $orderby = 'paid asc, invoice_id desc';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {
