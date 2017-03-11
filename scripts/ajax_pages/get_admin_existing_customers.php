@@ -128,7 +128,9 @@ if ($this->ADMIN_USER) {
             $htmlTitle = implode(' | ', $htmlTitle_array);
             $return_data[] = array(
                     'id' => $customer['uid'],
-                    'text' => $htmlTitle
+                    'text' => $htmlTitle,
+                    'company' => $itemArray['company']['value'],
+                    'name' => $itemArray['name']['value']
             );
         }
     }
