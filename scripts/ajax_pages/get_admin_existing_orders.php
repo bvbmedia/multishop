@@ -63,7 +63,7 @@ if ($this->ADMIN_USER) {
                 'topic_id' => $order['orders_id'],
                 'company' => $company,
                 'customer_id' => $order['customer_id'],
-                'paid_status' => ($order['paid'] > 0 ? $this->pi_getLL('has_been_paid') : $this->pi_getLL('has_not_been_paid'))
+                'paid_status' => (!$order['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
             );
         }
     }

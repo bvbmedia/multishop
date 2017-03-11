@@ -59,7 +59,7 @@ if ($this->ADMIN_USER) {
                 'topic_id' => $invoice['invoice_id'],
                 'company' => $company,
                 'customer_id' => $invoice['customer_id'],
-                'paid_status' => ($invoice['paid'] > 0 ? $this->pi_getLL('has_been_paid') : $this->pi_getLL('has_not_been_paid'))
+                'paid_status' => (!$invoice['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
             );
         }
     }
