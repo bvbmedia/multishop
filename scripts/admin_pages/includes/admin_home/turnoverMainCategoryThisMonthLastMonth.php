@@ -5,13 +5,13 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key'] = 'turnoverMainCategoryThisMonthLastMonth';
 $compiledWidget['defaultCol'] = 1;
 $compiledWidget['title'] = $this->pi_getLL('turnoverMainCategoryThisMonthLastMonth', 'Monthly turnover per-main category');
-$current_datetime=date('Y-m-d 00:00:00');
-$current_month_turnover=array();
-$current_month_date_tag=array();
+$current_datetime = date('Y-m-d 00:00:00');
+$current_month_turnover = array();
+$current_month_date_tag = array();
 // current month date range definition
-$current_month_number=date('m');
-$current_month_year=date('Y');
-$current_month_date=array();
+$current_month_number = date('m');
+$current_month_year = date('Y');
+$current_month_date = array();
 $current_month_date['start'] = date('Y-m-d 00:00:00', strtotime($current_datetime . ' -1 month'));
 $current_month_date['end'] = date('Y-m-d 23:59:59', strtotime($current_datetime));
 // current month turnover
@@ -29,18 +29,18 @@ $str = $GLOBALS['TYPO3_DB']->SELECTquery('o.crdate, o.orders_id, op.categories_n
         '' // LIMIT ...
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-$grand_total=0;
+$grand_total = 0;
 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         //$current_month_date_tag[date('j', $row['crdate'])]=$row['crdate'];
-        if ($row['final_price']>=0) {
+        if ($row['final_price'] >= 0) {
             $grand_total += $row['final_price'];
             $current_month_turnover[$row['categories_name_0']] += $row['final_price'];
         }
     }
 }
 foreach ($current_month_turnover as $maincat => $maincat_total) {
-    $maincat_percentage=($maincat_total/$grand_total) * 100;
+    $maincat_percentage = ($maincat_total / $grand_total) * 100;
     $current_month_turnover[$maincat] = $maincat_percentage;
 }
 // current month dates range list to fill up blank date
@@ -128,10 +128,10 @@ foreach ($last_month_period as $last_month_date_range) {
 ksort($last_month_turnover);
 */
 // jqplot definition
-$jqplot_array=array();
+$jqplot_array = array();
 if (is_array($current_month_turnover) && count($current_month_turnover)) {
     foreach ($current_month_turnover as $current_maincat => $current_turnover_value) {
-        $jqplot_array['current_month_turnover'][] = '[\''.addslashes(htmlspecialchars($current_maincat)).'\', '.round($current_turnover_value, 2).']';
+        $jqplot_array['current_month_turnover'][] = '[\'' . addslashes(htmlspecialchars($current_maincat)) . '\', ' . round($current_turnover_value, 2) . ']';
     }
 }
 /*
@@ -141,11 +141,11 @@ if (is_array($last_month_turnover) && count($last_month_turnover)) {
     }
 }
 */
-$compiledWidget['content']= '
+$compiledWidget['content'] = '
 <script type="text/javascript">
 $(document).ready(function(){
   var data = [
-   '.implode(',', $jqplot_array['current_month_turnover']).'
+   ' . implode(',', $jqplot_array['current_month_turnover']) . '
   ];
   var plot1 = jQuery.jqplot (\'chartturnoverMainCategoryThisMonthLastMonth\', [data], 
     { 

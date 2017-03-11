@@ -61,7 +61,7 @@ $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
 if (!in_array($this->get['limit'], $limits)) {
-    $limits[]=$this->get['limit'];
+    $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
     $formTopSearch .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected="selected"' : '') . '>' . $limit . '</option>';

@@ -65,7 +65,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
             }
         }
-        // error_log("bastest");
         // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCart'])) {
             $params = array();
@@ -851,8 +850,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'])) {
                             $params = array(
-                                'product' => $product,
-                                'redirect_to_cart_page' => &$redirect_to_cart_page,
+                                    'product' => $product,
+                                    'redirect_to_cart_page' => &$redirect_to_cart_page,
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartProductIteratorPreProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -966,7 +965,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->cart['summarize']['sub_total_including_vat'] += $product['total_price_including_vat'];
                     }
                     if ($redirect_to_cart_page) {
-                        $redirect_to_cart_page=false;
+                        $redirect_to_cart_page = false;
                         $link = mslib_fe::typolink($this->shoppingcart_page_pid, '&tx_multishop_pi1[page_section]=shopping_cart', 1);
                         if ($link) {
                             //header("Location: " . $this->FULL_HTTP_URL . $link);
@@ -1139,10 +1138,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         return $this->cart;
     }
     function countCartQuantity() {
-        $order=array();
-        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
-            $order=mslib_fe::getOrder($this->get['orders_id']);
-            $products=$order['products'];
+        $order = array();
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] > 0) {
+            $order = mslib_fe::getOrder($this->get['orders_id']);
+            $products = $order['products'];
         } else {
             //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
@@ -1161,9 +1160,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     function countCartTotalPrice($subtract_discount = 1, $include_vat = 0, $country_id = 0) {
         $order = array();
-        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
-            $order=mslib_fe::getOrder($this->get['orders_id']);
-            $products=$order['products'];
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] > 0) {
+            $order = mslib_fe::getOrder($this->get['orders_id']);
+            $products = $order['products'];
             if (is_array($products) && count($products)) {
                 foreach ($products as $pid => $value) {
                     $tmp_product_tax = 0;
@@ -1282,9 +1281,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function countCartTotalTax($country_id = 0) {
         $total_product_tax = 0;
         $products_tax = array();
-        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
-            $order=mslib_fe::getOrder($this->get['orders_id']);
-            $products=$order['products'];
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] > 0) {
+            $order = mslib_fe::getOrder($this->get['orders_id']);
+            $products = $order['products'];
             if (is_array($products) && count($products)) {
                 foreach ($products as $pid => $value) {
                     $value['tax_rate'] = ($value['products_tax'] / 100);
@@ -2057,7 +2056,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $insertArray['products_id'] = $value['products_id'];
                             $insertArray['categories_id'] = $value['categories_id'];
                             $insertArray['categories_name'] = '';
-                            $category_name=mslib_fe::getCategoryName($value['categories_id']);
+                            $category_name = mslib_fe::getCategoryName($value['categories_id']);
                             if ($category_name) {
                                 $insertArray['categories_name'] = $category_name;
                             }
@@ -2183,8 +2182,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 }
                                 // hook oef
                             }
-                            $insertArray['page_uid']=$value['page_uid'];
-                            $insertArray['product_link']='';
+                            $insertArray['page_uid'] = $value['page_uid'];
+                            $insertArray['product_link'] = '';
                             if ($value['categories_id']) {
                                 // get all cats to generate multilevel fake url
                                 $level = 0;
@@ -2200,8 +2199,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $where .= '&';
                                 }
                                 // get all cats to generate multilevel fake url eof
-                                $product_detail_link = $this->FULL_HTTP_URL.mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
-                                $insertArray['product_link']=$product_detail_link;
+                                $product_detail_link = $this->FULL_HTTP_URL . mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                $insertArray['product_link'] = $product_detail_link;
                             }
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
@@ -2725,7 +2724,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if ($payment_method['tax_id'] && $this->cart['user']['payment_method_costs']) {
             $this->cart['user']['payment_total_tax_rate'] = $payment_method['tax_rate'];
             //if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                //$this->cart['user']['payment_method_costs']=$this->cart['user']['payment_method_costs']-($this->cart['user']['payment_method_costs']*$this->cart['user']['payment_total_tax_rate']);
+            //$this->cart['user']['payment_method_costs']=$this->cart['user']['payment_method_costs']-($this->cart['user']['payment_method_costs']*$this->cart['user']['payment_total_tax_rate']);
             //}
             if ($payment_method['country_tax_rate']) {
                 $this->cart['user']['payment_country_tax_rate'] = $payment_method['country_tax_rate'];

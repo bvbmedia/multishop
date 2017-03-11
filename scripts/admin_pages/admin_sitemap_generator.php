@@ -4,7 +4,6 @@ if (!defined('TYPO3_MODE')) {
 }
 set_time_limit(7200);
 ignore_user_abort(true);
-
 $sitemap_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.txt';
 $sitemap_file_web_path = 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.txt';
 $sitemap_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.xml';
@@ -24,7 +23,6 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // hook eof
 $content = '';
 $log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp.txt';
-
 $max_pages = 2;
 $prefix_domain = $this->FULL_HTTP_URL;
 @unlink($log_file);

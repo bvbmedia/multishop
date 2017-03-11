@@ -344,36 +344,19 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
         //echo print_r($queryData);
         //die();
-        $columnSorterData=array();
-        $columnSorterSettings=array();
+        $columnSorterData = array();
+        $columnSorterSettings = array();
         if (count($pageset['dataset'])) {
             $tr_type = 'even';
             if (!$params['settings']['disableForm']) {
                 $tableContent .= '<form method="post" action="' . $params['postForm']['actionUrl'] . '" enctype="multipart/form-data">';
             }
-            $columnSorterData=array();
-            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable']>0) {
+            $columnSorterData = array();
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
                 $colCounter = 0;
-                foreach ($params['tableColumns'] as $col => $valArray) {
-                    if (isset($valArray['enableSorter'])) {
-                        if ($valArray['enableSorter']) {
-                            $columnSorterData[$colCounter] = true;
-                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
-                            if ($valArray['href']) {
-                                $columnSorterDataSettings[$colCounter]['href'] = true;
-                            }
-                        } else {
-                            $columnSorterData[$colCounter] = false;
-                        }
-                    } else {
-                        $columnSorterData[$colCounter] = false;
-                    }
-                    $colCounter++;
-                }
             }
-            $countColumnSorterData=count($columnSorterData);
             $tableContent .= '<div class="table-responsive">';
-            if (is_array($columnSorterData) && $countColumnSorterData) {
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
                 $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface">';
             } else {
                 $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
@@ -398,11 +381,34 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					<label for="check_all_1"></label>
 					</div>
 				</th>';
+                if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
+                    $columnSorterData[$colCounter] = false;
+                    $colCounter++;
+                }
             }
+            if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
+                foreach ($params['tableColumns'] as $col => $valArray) {
+                    if (isset($valArray['enableSorter'])) {
+                        if ($valArray['enableSorter']) {
+                            $columnSorterData[$colCounter] = true;
+                            $columnSorterDataSettings[$colCounter][$valArray['valueType']] = true;
+                            if ($valArray['href']) {
+                                $columnSorterDataSettings[$colCounter]['href'] = true;
+                            }
+                        } else {
+                            $columnSorterData[$colCounter] = false;
+                        }
+                    } else {
+                        $columnSorterData[$colCounter] = false;
+                    }
+                    $colCounter++;
+                }
+            }
+            $countColumnSorterData = count($columnSorterData);
             foreach ($params['tableColumns'] as $col => $valArray) {
                 $tdClass = array();
                 //if (is_array($columnSorterData) && $countColumnSorterData) {
-                    //$tdClass[] = 'header';
+                //$tdClass[] = 'header';
                 //}
                 if ($valArray['align']) {
                     $tdClass[] = 'text-' . $valArray['align'];
@@ -433,7 +439,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
                     $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
                 }
-                $tableContent .= '<tr class="' . $tr_type . '"'.$row_sortable_id.'>';
+                $tableContent .= '<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
                     $headerData = '';
                     $headerData .= '
@@ -685,7 +691,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $tableContent .= $params['settings']['contentBelowTable'];
             }
             if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {
-                ;
                 $tableContent .= '<div class="form-group">
                     <input class="btn btn-success" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
                 </div>';
@@ -769,7 +774,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</form>
 			';
             //hook to let other plugins further manipulate the method
-
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceSearchFormPostProc'])) {
                 $interfaceKey =& $this->interfaceKey;
                 $params_searchform = array(
@@ -812,7 +816,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         $content .= '</div>';
         $content .= '</div>';
         if (is_array($columnSorterData) && $countColumnSorterData) {
-            $sort_js=array();
+            $sort_js = array();
             // only for non-sortable column
             foreach ($columnSorterData as $col_idx => $col_value) {
                 if (!$col_value) {
@@ -823,7 +827,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
 				$(\'#msAdminTableInterface\').tablesorter({
-				    headers: { '.implode(", ", $sort_js).' }
+				    headers: { ' . implode(", ", $sort_js) . ' }
 				});
 			});
 			</script>

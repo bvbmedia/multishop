@@ -183,20 +183,20 @@ if ($this->ADMIN_USER) {
             $active_q = $this->get['q'];
         }
         if (isset($this->get['clear_session'])) {
-            $session['pagination_register']=array();
+            $session['pagination_register'] = array();
             $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
             $GLOBALS['TSFE']->storeSessionData();
             $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
         } else {
             $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
-            if (isset($session['previous_q']) && !empty($session['previous_q']) && strlen($session['previous_q'])>0) {
-                $session['pagination_register']=array();
+            if (isset($session['previous_q']) && !empty($session['previous_q']) && strlen($session['previous_q']) > 0) {
+                $session['pagination_register'] = array();
                 $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
                 $GLOBALS['TSFE']->storeSessionData();
                 $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
             }
         }
-        $pagination_register=&$session['pagination_register'];
+        $pagination_register =& $session['pagination_register'];
         // cms search
         if ($modules[$section] && $section == 'admin_cms') {
             $filter = array();
@@ -827,8 +827,8 @@ if ($this->ADMIN_USER) {
                 $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_session', $session);
                 $GLOBALS['TSFE']->storeSessionData();
                 $data_json[] = array(
-                    'text' => 'Products',
-                    'children' => $data['listing']['products']
+                        'text' => 'Products',
+                        'children' => $data['listing']['products']
                 );
             }
         }
@@ -843,7 +843,7 @@ if ($this->ADMIN_USER) {
                     'page' => &$p,
                     'offset' => &$offset,
                     'result_hash' => &$result_hash,
-                    'session'=>&$session
+                    'session' => &$session
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -873,11 +873,11 @@ if ($this->ADMIN_USER) {
             $data_json = array();
         }
         $content = array(
-            "products" => $data_json,
-            "total_rows" => $results_counter,
-            "page_marker" => $page_marker,
-            "active_q" => $active_q,
-            "prev_q" => $prev_q
+                "products" => $data_json,
+                "total_rows" => $results_counter,
+                "page_marker" => $page_marker,
+                "active_q" => $active_q,
+                "prev_q" => $prev_q
         );
         $content = json_encode($content, ENT_NOQUOTES);
         // now build up the listing eof

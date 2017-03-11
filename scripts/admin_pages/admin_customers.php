@@ -207,7 +207,7 @@ $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
 if (!in_array($this->get['limit'], $limits)) {
-    $limits[]=$this->get['limit'];
+    $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
     $formTopSearch .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected="selected"' : '') . '>' . $limit . '</option>';
@@ -482,7 +482,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
-        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers').'";    
+        location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers') . '";
     });
 	jQuery(".tab_content").hide();
 	jQuery("ul.tabs li:first").addClass("active").show();

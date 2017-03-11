@@ -80,7 +80,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->enabledWidgets['ordersLatest'] = 1;
                 break;
             default:
-                if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {
+                if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section'] > 0) {
                     $widgetsData = mslib_befe::getRecords($this->dashboardArray['section'], 'tx_multishop_dashboard_portlets', 'dashboard_id', array('status=1 AND deleted=0'));
                     if (is_array($widgetsData) && count($widgetsData)) {
                         foreach ($widgetsData as $widgetData) {
@@ -213,7 +213,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				    if (widgets_list.length) {
 				        jQuery.ajax({
                             type: \'POST\',
-                            url: \''.mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_dashboards&tx_multishop_pi1[action]=save_widget_sort').'\',
+                            url: \'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_dashboards&tx_multishop_pi1[action]=save_widget_sort') . '\',
                             cache :false,
                             dataType: \'json\',
                             data: widgets_list.join(\'&\'),
@@ -290,11 +290,11 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$(this).parents(".portlet:first").find(".portlet-content").toggle();
 			});
 			makesortable();
-			'.((isset($this->get['tx_multishop_pi1']['widget']) && !empty($this->get['tx_multishop_pi1']['widget'])) ? '
+			' . ((isset($this->get['tx_multishop_pi1']['widget']) && !empty($this->get['tx_multishop_pi1']['widget'])) ? '
 			$(\'html, body\').animate({
-                scrollTop: $("#'.$this->get['tx_multishop_pi1']['widget'].'").offset().top
+                scrollTop: $("#' . $this->get['tx_multishop_pi1']['widget'] . '").offset().top
             }, 2000);
-			' : '').'
+			' : '') . '
 		});
 		</script>
 		';
@@ -415,42 +415,42 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     );*/
                     break;
                 default:
-                    if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section']>0) {
-                        $dashboard=mslib_befe::getRecord($this->dashboardArray['section'], 'tx_multishop_dashboard', 'id', array('status=1 AND deleted=0'));
+                    if (is_numeric($this->dashboardArray['section']) && $this->dashboardArray['section'] > 0) {
+                        $dashboard = mslib_befe::getRecord($this->dashboardArray['section'], 'tx_multishop_dashboard', 'id', array('status=1 AND deleted=0'));
                         if (is_array($dashboard) && $dashboard['id']) {
-                            $pageLayout=array();
-                            $layoutClass=array();
+                            $pageLayout = array();
+                            $layoutClass = array();
                             if ($dashboard['dashboard_layout']) {
                                 $layoutClass['class'] = $dashboard['dashboard_layout'];
-                                $dashboard_widgets=mslib_befe::getRecords($dashboard['id'], 'tx_multishop_dashboard_portlets', 'dashboard_id', array('status=1 AND deleted=0'), '', 'colpos asc, sort_order asc');
-                                $count_widget=count($dashboard_widgets);
+                                $dashboard_widgets = mslib_befe::getRecords($dashboard['id'], 'tx_multishop_dashboard_portlets', 'dashboard_id', array('status=1 AND deleted=0'), '', 'colpos asc, sort_order asc');
+                                $count_widget = count($dashboard_widgets);
                                 if (is_array($dashboard_widgets) && $count_widget) {
-                                    $cols_num=0;
+                                    $cols_num = 0;
                                     switch ($dashboard['dashboard_layout']) {
                                         case 'layout1big1small':
                                         case 'layout1small1big':
                                         case 'layout2cols':
-                                            $cols_num=2;
+                                            $cols_num = 2;
                                             break;
                                         case 'layout1col':
-                                            $cols_num=1;
+                                            $cols_num = 1;
                                             break;
                                         case 'layout3cols':
-                                            $cols_num=3;
+                                            $cols_num = 3;
                                             break;
                                         case 'layout4cols':
-                                            $cols_num=4;
+                                            $cols_num = 4;
                                             break;
                                     }
-                                    $widget_percol=ceil($count_widget/$cols_num);
-                                    $col_number=0;
-                                    $col_counter=0;
+                                    $widget_percol = ceil($count_widget / $cols_num);
+                                    $col_number = 0;
+                                    $col_counter = 0;
                                     foreach ($dashboard_widgets as $dashboard_widget) {
                                         $colpos = $dashboard_widget['colpos'];
-                                        if ($colpos>0) {
+                                        if ($colpos > 0) {
                                             $colpos -= 1;
                                         }
-                                        if ($cols_num==1) {
+                                        if ($cols_num == 1) {
                                             $colpos = 0;
                                         }
                                         $layoutClass['cols'][$colpos][] = $dashboard_widget['widget_key'];
@@ -459,20 +459,19 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                             $col_number++;
                                         }*/
                                     }
-                                    if ($cols_num>1) {
-                                        for ($c=0; $c<$cols_num; $c++) {
+                                    if ($cols_num > 1) {
+                                        for ($c = 0; $c < $cols_num; $c++) {
                                             if (!isset($layoutClass['cols'][$c])) {
-                                                $layoutClass['cols'][$c][]='emptyWidget';
+                                                $layoutClass['cols'][$c][] = 'emptyWidget';
                                             }
                                         }
                                     }
                                 }
-                                $pageLayout[]=$layoutClass;
+                                $pageLayout[] = $layoutClass;
                             }
                         }
                     }
                     break;
-
             }
         }
         //hook to let other plugins further manipulate the settings
@@ -511,7 +510,7 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					        </div>
 					        ';
                         } else {
-                            if ($widget_key=='emptyWidget') {
+                            if ($widget_key == 'emptyWidget') {
                                 $content .= '<div>&nbsp;</div>';
                             }
                         }

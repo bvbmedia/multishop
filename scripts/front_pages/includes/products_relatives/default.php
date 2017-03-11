@@ -180,7 +180,7 @@ if (is_array($rel_products) && count($rel_products)) {
         $markerArray['ITEM_HEADER_QUANTITY'] = htmlspecialchars(ucfirst($this->pi_getLL('qty')));
         $markerArray['ITEM_HEADER_BUY_NOW'] = htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
         $markerArray['ITEM_HEADER_STOCK'] = htmlspecialchars(ucfirst($this->pi_getLL('stock')));
-        $admin_icons='';
+        $admin_icons = '';
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $admin_icons = '<div class="admin_menu">
                 <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&cid=' . $rel_rs['categories_id'] . '&pid=' . $rel_rs['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a>

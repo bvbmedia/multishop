@@ -684,7 +684,7 @@ if (is_array($erno) and count($erno) > 0) {
 }
 // load countries
 $countries_input = '';
-$delivery_countries_input='';
+$delivery_countries_input = '';
 if (count($enabled_countries) == 1) {
     $countries_input = '<input name="country" type="hidden" value="' . mslib_befe::strtolower($enabled_countries[0]['cn_short_en']) . '" />';
     $delivery_countries_input = '<input name="delivery_country" type="hidden" value="' . mslib_befe::strtolower($enabled_countries[0]['cn_short_en']) . '" />';
@@ -877,7 +877,6 @@ $subpartArray['###CUSTOMER_FORM_HEADING###'] = $this->pi_getLL('admin_label_tabs
 $subpartArray['###MASTER_SHOP###'] = '';
 $subpartArray['###LABEL_BILLING_ADDRESS###'] = $this->pi_getLL('admin_label_billing_address');
 $subpartArray['###LABEL_DELIVERY_ADDRESS###'] = $this->pi_getLL('admin_label_delivery_address');
-
 $subpartArray['###CUSTOM_MARKER_ABOVE_USERNAME_FIELD###'] = '';
 $subpartArray['###CUSTOM_MARKER_BELOW_USERNAME_FIELD###'] = '';
 if ($_GET['action'] == 'add_customer') {
@@ -988,11 +987,10 @@ $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = '';
 $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = '';
 $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = '';
 $subpartArray['###VALUE_DELIVERY_CITY###'] = '';
-
 $subpartArray['###VALUE_DELIVERY_EMAIL###'] = '';
 $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = '';
 $subpartArray['###VALUE_DELIVERY_MOBILE###'] = '';
-$subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] ='';
+$subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = '';
 $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = '';
 // delivery address default value EOL
 switch ($_REQUEST['action']) {
@@ -1056,13 +1054,13 @@ switch ($_REQUEST['action']) {
             $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
             $subpartArray['###VALUE_COMPANY###'] = htmlspecialchars($this->post['company']);
             // department input
-            $subpartArray['###DEPARTMENT_INPUT_FIELD###']='';
+            $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '';
             $subpartArray['###COMPANY_COL_SIZE###'] = 12;
             if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
                 $subpartArray['###COMPANY_COL_SIZE###'] = 6;
                 $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                    <label for="department" id="account-department">'.$this->pi_getLL('department').'</label>
-                    <input type="text" name="department" class="form-control department" id="department" value="'.htmlspecialchars($this->post['department']).'" />
+                    <label for="department" id="account-department">' . $this->pi_getLL('department') . '</label>
+                    <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
                 </div>';
             }
             //
@@ -1091,11 +1089,11 @@ switch ($_REQUEST['action']) {
             $subpartArray['###VALUE_VISIBLE_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
             $subpartArray['###VALUE_HIDDEN_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
             $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
-            $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###']='';
+            $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '';
             if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
                 $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
                 $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                    <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
+                    <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
                     <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="" />
                 </div>';
             }
@@ -1113,8 +1111,8 @@ switch ($_REQUEST['action']) {
                 // department input
                 if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
                     $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                    <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
-                    <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="'.htmlspecialchars($delivery_address['department']).'" />
+                    <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
+                    <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
                 </div>';
                 }
                 //
@@ -1398,23 +1396,23 @@ switch ($_REQUEST['action']) {
         $subpartArray['###COMPANY_VALIDATION###'] = $company_validation;
         $subpartArray['###VALUE_COMPANY###'] = htmlspecialchars($this->post['company']);
         // department input
-        $subpartArray['###DEPARTMENT_INPUT_FIELD###']='';
+        $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '';
         $subpartArray['###COMPANY_COL_SIZE###'] = 12;
         if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
             $subpartArray['###COMPANY_COL_SIZE###'] = 6;
             $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                <label for="department" id="account-department">'.$this->pi_getLL('department').'</label>
-                <input type="text" name="department" class="form-control department" id="department" value="'.htmlspecialchars($this->post['department']).'" />
+                <label for="department" id="account-department">' . $this->pi_getLL('department') . '</label>
+                <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
             </div>';
         }
         // department input
-        $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###']='';
+        $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '';
         $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
         if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
             $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
             $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                <label for="delivery_department" id="account-delivery_department">'.$this->pi_getLL('department').'</label>
-                <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="'.htmlspecialchars($this->post['delivery_department']).'" />
+                <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
+                <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($this->post['delivery_department']) . '" />
             </div>';
         }
         //

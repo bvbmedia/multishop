@@ -7,13 +7,21 @@
     <data type="array">
         <languageKey index="default" type="array">
             <label index="mlang_tabs_tab">Multishop</label>
-            <label index="mlang_labels_tabdescr">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which supports front-end editing and multiple webshops within the same pagetree.</label>
-            <label index="mlang_labels_tablabel">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which supports front-end editing and multiple webshops within the same pagetree.</label>
+            <label index="mlang_labels_tabdescr">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which
+                supports front-end editing and multiple webshops within the same pagetree.
+            </label>
+            <label index="mlang_labels_tablabel">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which
+                supports front-end editing and multiple webshops within the same pagetree.
+            </label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="mlang_tabs_tab">Multishop</label>
-            <label index="mlang_labels_tabdescr">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which supports front-end editing and multiple webshops within the same pagetree.</label>
-            <label index="mlang_labels_tablabel">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which supports front-end editing and multiple webshops within the same pagetree.</label>
+            <label index="mlang_labels_tabdescr">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which
+                supports front-end editing and multiple webshops within the same pagetree.
+            </label>
+            <label index="mlang_labels_tablabel">TYPO3 Multishop is an E-Commerce plugin for the TYPO3 CMS which
+                supports front-end editing and multiple webshops within the same pagetree.
+            </label>
         </languageKey>
     </data>
 </T3locallang>

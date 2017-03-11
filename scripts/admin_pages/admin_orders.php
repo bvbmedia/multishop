@@ -616,7 +616,7 @@ $limits[] = '400';
 $limits[] = '450';
 $limits[] = '500';
 if (!in_array($this->get['limit'], $limits)) {
-    $limits[]=$this->get['limit'];
+    $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
@@ -832,10 +832,10 @@ if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']
 }
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'])) {
     $params = array(
-        'select'=>&$select,
-        'filter'=>&$filter,
-        'orderby'=>&$orderby,
-        'offset'=>&$offset
+            'select' => &$select,
+            'filter' => &$filter,
+            'orderby' => &$orderby,
+            'offset' => &$offset
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -867,8 +867,8 @@ if ($pageset['total_rows'] > 0) {
 }
 $payment_status_select = '<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">' . $this->pi_getLL('select_orders_payment_status') . '</option>';
-$payment_status_select .= '<option value="paid_only"'.($this->post['payment_status'] == 'paid_only' ? ' selected="selected"' : '').'>' . $this->pi_getLL('show_paid_orders_only') . '</option>';
-$payment_status_select .= '<option value="unpaid_only"'.($this->post['payment_status'] == 'unpaid_only' ? ' selected="selected"' : '').'>' . $this->pi_getLL('show_unpaid_orders_only') . '</option>';
+$payment_status_select .= '<option value="paid_only"' . ($this->post['payment_status'] == 'paid_only' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_paid_orders_only') . '</option>';
+$payment_status_select .= '<option value="unpaid_only"' . ($this->post['payment_status'] == 'unpaid_only' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_unpaid_orders_only') . '</option>';
 $payment_status_select .= '</select>';
 $groups = mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input = '';
@@ -1028,7 +1028,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
-        location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders').'";    
+        location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '";
     });
 	$(".order_select2").select2();
 	$(".ordered_product").select2({

@@ -79,16 +79,16 @@ if (is_numeric($this->get['orders_id'])) {
                         $mslib_order->init($this);
                         $mslib_order->repairOrder($this->get['orders_id']);
                         // update order discount if any
-                        $order_tax_data_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data, discount_percentage, discount');
+                        $order_tax_data_rec = mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data, discount_percentage, discount');
                         if (isset($order_tax_data_rec) && !empty($order_tax_data_rec['orders_tax_data'])) {
                             $order_tax_data = unserialize($order_tax_data_rec['orders_tax_data']);
                             $hidden_subtotal = $order_tax_data['sub_total_excluding_vat'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 $hidden_subtotal = $order_tax_data['sub_total'];
                             }
-                            $discount_value=$order_tax_data_rec['discount'];
+                            $discount_value = $order_tax_data_rec['discount'];
                         }
-                        $updateArray=array();
+                        $updateArray = array();
                         $updateArray['discount_percentage'] = 0;
                         if (isset($order_tax_data_rec['discount_percentage']) && $order_tax_data_rec['discount_percentage'] > 0) {
                             $updateArray['discount_percentage'] = $order_tax_data_rec['discount_percentage'];
@@ -192,7 +192,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 $product_data = mslib_fe::getProduct($this->post['products_id'], '', '', 1);
                                 $updateArray['categories_id'] = $product_data['categories_id'];
                                 $updateArray['categories_name'] = '';
-                                $category_name=mslib_fe::getCategoryName($product_data['categories_id']);
+                                $category_name = mslib_fe::getCategoryName($product_data['categories_id']);
                                 if ($category_name) {
                                     $updateArray['categories_name'] = $category_name;
                                 }
@@ -333,8 +333,8 @@ if (is_numeric($this->get['orders_id'])) {
                                 if (is_numeric($this->post['manual_products_id']) && $this->post['manual_products_id'] > 0) {
                                     $product_data = mslib_fe::getProduct($this->post['manual_products_id'], '', '', 1);
                                     $insertArray['categories_id'] = $product_data['categories_id'];
-                                    $insertArray['categories_name']='';
-                                    $category_name=mslib_fe::getCategoryName($product_data['categories_id']);
+                                    $insertArray['categories_name'] = '';
+                                    $category_name = mslib_fe::getCategoryName($product_data['categories_id']);
                                     if ($category_name) {
                                         $insertArray['categories_name'] = $category_name;
                                     }
@@ -488,9 +488,9 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['region_tax_rate'] = 0;
                         }
                         $price = 0;
-                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER']=='1') {
+                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] == '1') {
                             $price = 0;
-                            $this->post['shipping_costs_manual']=1;
+                            $this->post['shipping_costs_manual'] = 1;
                         } else {
                             $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
                             if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
@@ -505,7 +505,7 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                         //$order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
                         //if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
-                        if (!empty($this->post['tx_multishop_pi1']['shipping_method_costs']) && $this->post['shipping_costs_manual']=='1') {
+                        if (!empty($this->post['tx_multishop_pi1']['shipping_method_costs']) && $this->post['shipping_costs_manual'] == '1') {
                             $this->post['tx_multishop_pi1']['shipping_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['shipping_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['shipping_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -559,12 +559,12 @@ if (is_numeric($this->get['orders_id'])) {
                             $updateArray['shipping_method_costs'] = 0;
                         }
                         $updateArray['is_shipping_costs_manual'] = 0;
-                        if (!$this->post['tx_multishop_pi1']['shipping_method_costs'] || $this->post['tx_multishop_pi1']['shipping_method_costs']=='0.00') {
-                            if ($this->post['shipping_costs_manual']=='1') {
+                        if (!$this->post['tx_multishop_pi1']['shipping_method_costs'] || $this->post['tx_multishop_pi1']['shipping_method_costs'] == '0.00') {
+                            if ($this->post['shipping_costs_manual'] == '1') {
                                 $updateArray['is_shipping_costs_manual'] = 0;
                             }
                         } else {
-                            if ($this->post['shipping_costs_manual']=='1') {
+                            if ($this->post['shipping_costs_manual'] == '1') {
                                 $updateArray['is_shipping_costs_manual'] = 1;
                             }
                         }
@@ -620,7 +620,7 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                         //$order_payment_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'payment_method');
                         //if ($this->post['tx_multishop_pi1']['payment_method_costs']>0 && $payment_method['code']==$order_payment_method['payment_method']) {
-                        if ($this->post['tx_multishop_pi1']['payment_method_costs']>0) {
+                        if ($this->post['tx_multishop_pi1']['payment_method_costs'] > 0) {
                             $this->post['tx_multishop_pi1']['payment_method_costs'] = mslib_befe::formatNumbersToMysql($this->post['tx_multishop_pi1']['payment_method_costs']);
                             $price = $this->post['tx_multishop_pi1']['payment_method_costs'];
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -755,9 +755,8 @@ if (is_numeric($this->get['orders_id'])) {
                         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                         $mslib_order->init($this);
                         $mslib_order->repairOrder($this->get['orders_id']);
-
                         // update order discount if any
-                        $order_tax_data_rec=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data');
+                        $order_tax_data_rec = mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'orders_tax_data');
                         if (isset($order_tax_data_rec) && !empty($order_tax_data_rec['orders_tax_data'])) {
                             $order_tax_data = unserialize($order_tax_data_rec['orders_tax_data']);
                             $this->post['hidden_subtotal'] = $order_tax_data['sub_total_excluding_vat'];
@@ -765,7 +764,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 $this->post['hidden_subtotal'] = $order_tax_data['sub_total'];
                             }
                         }
-                        $updateArray=array();
+                        $updateArray = array();
                         $updateArray['discount_percentage'] = 0;
                         if (isset($this->post['edit_discount_percentage']) && $this->post['edit_discount_percentage'] > 0) {
                             $updateArray['discount_percentage'] = $this->post['edit_discount_percentage'];
@@ -781,7 +780,6 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                         // repair it again
                         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
@@ -1050,7 +1048,7 @@ if (is_numeric($this->get['orders_id'])) {
 						';
             //validate first
             $validate_erno = array();
-            $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']=(int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
+            $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'] = (int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
             if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
                 if (!$orders['billing_email']) {
                     $validate_erno[] = '<li>' . $this->pi_getLL('no_email_address_has_been_specified') . '</li>';
@@ -1578,10 +1576,10 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_company").val("");
                 $("#edit_delivery_company").val($("#edit_billing_company").val());
                 
-                '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
                 $("#edit_delivery_department").val("");
                 $("#edit_delivery_department").val($("#edit_billing_department").val());
-                ' : '').'
+                ' : '') . '
 
                 $("#edit_delivery_first_name").val("");
                 $("#edit_delivery_first_name").val($("#edit_billing_first_name").val());
@@ -1641,13 +1639,13 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                     }
                     
-                    '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                    ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
                     if ($(this).attr("id") == "edit_billing_department") {
                         if ($(this).val() != "") {
                             name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
                     }
-                    ' : '').'
+                    ' : '') . '
                     
                     if ($(this).attr("id") == "edit_billing_first_name") {
                         name += $(this).val();
@@ -1731,13 +1729,13 @@ if (is_numeric($this->get['orders_id'])) {
                         }
                     }
                     
-                    '.($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
+                    ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
                     if ($(this).attr("id") == "edit_delivery_department") {
                         if ($(this).val() != "") {
                             name += "<strong>" + $(this).val() + "</strong><br/>";
                         }
                     }
-                    ' : '').'
+                    ' : '') . '
                     
                     if ($(this).attr("id") == "edit_delivery_first_name") {
                         name += $(this).val();
@@ -2309,13 +2307,13 @@ if (is_numeric($this->get['orders_id'])) {
                         $where = '';
                         $product = mslib_fe::getProduct($order['products_id']);
                         if (!empty($order['ean_code'])) {
-                            $product['ean_code']=$order['ean_code'];
+                            $product['ean_code'] = $order['ean_code'];
                         }
                         if (!empty($order['sku_code'])) {
-                            $product['sku_code']=$order['sku_code'];
+                            $product['sku_code'] = $order['sku_code'];
                         }
                         if (!empty($order['vendor_code'])) {
-                            $product['vendor_code']=$order['vendor_code'];
+                            $product['vendor_code'] = $order['vendor_code'];
                         }
                         if ($product['categories_id']) {
                             // get all cats to generate multilevel fake url
@@ -3349,7 +3347,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
 						<input name="tx_multishop_pi1[shipping_method_costs]" id="shipping_method_costs" type="text" class="form-control text-right priceInputDisplay" value="' . number_format($orders['shipping_method_costs'] + $orders_tax_data['shipping_tax'], 4, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '') . '" class="align_right" />
 						<input type="hidden" id="hidden_shipping_tax" value="' . $orders_tax_data['shipping_tax'] . '">
-						<input type="hidden" name="shipping_costs_manual" id="shipping_costs_manual" value="'.$orders['is_shipping_costs_manual'].'">
+						<input type="hidden" name="shipping_costs_manual" id="shipping_costs_manual" value="' . $orders['is_shipping_costs_manual'] . '">
 					</div>';
                     $payment_costs = '<div class="input-group pull-right" style="width:140px;">
 						<span class="input-group-addon">' . mslib_fe::currency() . '</span>
@@ -3575,7 +3573,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         },
                         ' : '') . '
-                        minimumInputLength: '.(!isset($this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']) ? 0 : $this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']).',
+                        minimumInputLength: ' . (!isset($this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']) ? 0 : $this->ms['MODULES']['EDIT_ORDER_SELECT2_PRODUCT_MINIMUM_CHARACTER']) . ',
                         query: function(query) {
                             /*if (productsSearch[query.term] !== undefined) {
                                 query.callback({results: productsSearch[query.term]});

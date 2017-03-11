@@ -467,23 +467,23 @@ if ($this->post) {
     //
     $markerArray = array();
     $markerArray['###DISABLE_AUTOFILL###'] = '';
-    $disable_autofill='';
-    if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT']>0) {
+    $disable_autofill = '';
+    if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT'] > 0) {
         $markerArray['###DISABLE_AUTOFILL###'] = ' autocomplete="off"';
-        $disable_autofill=' autocomplete="off"';
+        $disable_autofill = ' autocomplete="off"';
     }
     $vat_input_block = '';
     if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
         $vat_input_block = ' <div class="account-field col-sm-6" id="input-tx_multishop_vat_id">
 			<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
-			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id"'.$disable_autofill.' value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '"/>
+			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id"' . $disable_autofill . ' value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '"/>
 		</div>';
     }
     $coc_input_block = '';
     if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
         $coc_input_block = ' <div class="account-field col-sm-6" id="input-tx_multishop_coc_id">
 			<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id', 'KvK ID')) . '</label>
-			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id"'.$disable_autofill.' value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '"/>
+			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id"' . $disable_autofill . ' value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '"/>
 		</div>';
     }
     //
@@ -509,7 +509,7 @@ if ($this->post) {
             $birthday = date("Y-m-d", $user['date_of_birth']);
         }
         $birthday_block = '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '*</label>
-		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"'.$disable_autofill.' value="' . htmlspecialchars($birthdayVisual) . '" >
+		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"' . $disable_autofill . ' value="' . htmlspecialchars($birthdayVisual) . '" >
 		<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="' . htmlspecialchars($birthday) . '" >';
     }
     //
