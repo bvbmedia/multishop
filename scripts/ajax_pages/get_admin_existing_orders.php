@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     $orders = array();
-    $orderby = 'orders_id';
+    $orderby = 'orders_id desc';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {
@@ -27,7 +27,7 @@ if ($this->ADMIN_USER) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
     }
     $filter[] = 'deleted=0';
-    $query = $GLOBALS['TYPO3_DB']->SELECTquery('orders_id, billing_company, billing_name', // SELECT ...
+    $query = $GLOBALS['TYPO3_DB']->SELECTquery('orders_id, billing_company, billing_name, customer_id', // SELECT ...
             'tx_multishop_orders', // FROM ...
             implode(' and ', $filter), // WHERE...
             '', // GROUP BY...
@@ -43,17 +43,26 @@ if ($this->ADMIN_USER) {
     }
     foreach ($orders as $order) {
         if ($order['orders_id']) {
-            if (!$customer_id) {
+            if (!$customer_id || is_null($customer_id)) {
                 if ($order['billing_company']) {
                     $company = $order['billing_company'];
                 } else {
                     $company = $order['billing_name'];
                 }
+                $itemTitle = (isset($company) ? $company . ' - ID: ' : '') . $order['orders_id'];
+            } else {
+                $itemTitle = $order['orders_id'];
+                if (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id'])) {
+                    $itemTitle = ($this->pi_getLL('admin_order_id') . ': ') . $order['orders_id'];
+                }
             }
-            $itemTitle = (isset($company) ? $company . ' - ID: ' : '') . $order['orders_id'];
             $return_data[] = array(
-                    'id' => $order['orders_id'],
-                    'text' => $itemTitle
+                'id' => $order['orders_id'],
+                'text' => $itemTitle,
+                'topic_prefix' => $this->pi_getLL('admin_order_id'),
+                'topic_id' => $order['orders_id'],
+                'company' => $company,
+                'customer_id' => $order['customer_id']
             );
         }
     }
@@ -63,7 +72,7 @@ if ($this->ADMIN_USER) {
     } else {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
-                    'id' => '',
+                    'id' => 0,
                     'text' => $this->pi_getLL('select_order')
             );
             array_unshift($return_data, $array_select_none);
