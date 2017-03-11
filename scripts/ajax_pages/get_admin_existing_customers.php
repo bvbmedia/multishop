@@ -125,7 +125,7 @@ if ($this->ADMIN_USER) {
                 }
             }
             ksort($htmlTitle_array);
-            $htmlTitle = '<strong>' . implode(' | ', $htmlTitle_array) . '</strong>';
+            $htmlTitle = implode(' | ', $htmlTitle_array);
             $return_data[] = array(
                     'id' => $customer['uid'],
                     'text' => $htmlTitle
