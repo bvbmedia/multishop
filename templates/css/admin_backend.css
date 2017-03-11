@@ -775,3 +775,5 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 .msMailQueueMailBody pre { width:558px; }
 
 #chartreceivablesPieChart.jqplot-target { color:#fff;}
+
+.panel-shadow { box-shadow:0 2px 10px rgba(0,0,0,.2); }
