@@ -780,3 +780,8 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 #chartreceivablesPieChart.jqplot-target { color:#fff;}
 
 .panel-shadow { box-shadow:0 2px 10px rgba(0,0,0,.2); }
+.label .amountWrapper > .amount { width:auto; }
+.label.label-xs { font-weight:600; font-size:12px; line-height:1.5; }
+.label.label-sm { font-weight:600; font-size:12px; line-height:1.5; }
+.label.label-md { font-weight:600; font-size:14px; line-height:1.42857143; }
+.label.label-lg { font-weight:600; font-size:18px; line-height:1.3333333; }
