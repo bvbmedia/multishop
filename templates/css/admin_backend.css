@@ -773,3 +773,5 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 .tablesorter .grandTotal { text-align: right; }
 
 .msMailQueueMailBody pre { width:558px; }
+
+#chartreceivablesPieChart.jqplot-target { color:#fff; }
