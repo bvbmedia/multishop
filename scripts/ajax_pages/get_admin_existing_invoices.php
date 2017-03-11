@@ -27,7 +27,7 @@ if ($this->ADMIN_USER) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
     }
     //$filter[] = 'status=1';
-    $query = $GLOBALS['TYPO3_DB']->SELECTquery('invoice_id, ordered_by, customer_id', // SELECT ...
+    $query = $GLOBALS['TYPO3_DB']->SELECTquery('invoice_id, ordered_by, customer_id, paid', // SELECT ...
             'tx_multishop_invoices', // FROM ...
             implode(' and ', $filter), // WHERE...
             '', // GROUP BY...
@@ -41,7 +41,7 @@ if ($this->ADMIN_USER) {
             $invoices[] = $row;
         }
     }
-    foreach ($invoices as $invoice) {
+    foreach ($invoices as $invoice_idx => $invoice) {
         if ($invoice['invoice_id']) {
             if (!$customer_id || is_null($customer_id)) {
                 $company = $invoice['ordered_by'];
@@ -52,13 +52,14 @@ if ($this->ADMIN_USER) {
                     $itemTitle = ($this->pi_getLL('invoice_number') . ': ') . $invoice['invoice_id'];
                 }
             }
-            $return_data[] = array(
+            $return_data[$invoice_idx] = array(
                 'id' => $invoice['invoice_id'],
                 'text' => $itemTitle,
                 'topic_prefix' => $this->pi_getLL('invoice_number'),
                 'topic_id' => $invoice['invoice_id'],
                 'company' => $company,
-                'customer_id' => $invoice['customer_id']
+                'customer_id' => $invoice['customer_id'],
+                'paid_status' => ($invoice['paid'] > 0 ? $this->pi_getLL('has_been_paid') : $this->pi_getLL('has_not_been_paid'))
             );
         }
     }

@@ -27,7 +27,7 @@ if ($this->ADMIN_USER) {
         $filter[] = 'page_uid=\'' . $this->shop_pid . '\'';
     }
     $filter[] = 'deleted=0';
-    $query = $GLOBALS['TYPO3_DB']->SELECTquery('orders_id, billing_company, billing_name, customer_id', // SELECT ...
+    $query = $GLOBALS['TYPO3_DB']->SELECTquery('orders_id, billing_company, billing_name, customer_id, paid', // SELECT ...
             'tx_multishop_orders', // FROM ...
             implode(' and ', $filter), // WHERE...
             '', // GROUP BY...
@@ -62,7 +62,8 @@ if ($this->ADMIN_USER) {
                 'topic_prefix' => $this->pi_getLL('admin_order_id'),
                 'topic_id' => $order['orders_id'],
                 'company' => $company,
-                'customer_id' => $order['customer_id']
+                'customer_id' => $order['customer_id'],
+                'paid_status' => ($order['paid'] > 0 ? $this->pi_getLL('has_been_paid') : $this->pi_getLL('has_not_been_paid'))
             );
         }
     }
