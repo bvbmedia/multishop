@@ -28,8 +28,6 @@ $str = $GLOBALS['TYPO3_DB']->SELECTquery('o.crdate, o.orders_id, op.categories_n
         'op.categories_name_0 asc', // ORDER BY...
         '' // LIMIT ...
 );
-var_dump($str);
-die();
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $grand_total = 0;
 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
