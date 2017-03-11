@@ -692,7 +692,8 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .select2-container .select2-choice > .select2-chosen { line-height:20px; padding-top:7px; }
 .select2-container .select2-choice > .select2-chosen > h3 { font-size:14px; line-height:20px; margin-bottom:1px; }
 .select2-container .select2-choice > .select2-chosen > .label { display:inline-block; vertical-align:top; margin-top:2px; padding-bottom:.4em; }
-.select2-results .select2-result-label > .label { display:inline-block; vertical-align:top; margin-top:3px; }
+.select2-results .select2-result-label { padding-bottom:3px; }
+.select2-results .select2-result-label > .label { display:inline-block; vertical-align:top; margin-top:2px; padding-bottom:.4em; }
 #edit_customer .select2-container,
 .select2-container.pspSelect2,
 #s2id_new_customers_price_name.select2-container.input_new_customers_price,
