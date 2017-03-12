@@ -490,6 +490,7 @@ if ($this->ADMIN_USER) {
                     $name[] = $customer['uid'];
                     $prod = array();
                     $prod['is_children'] = true;
+                    $prod['customer_id'] = $customer['uid'];
                     $prod['Name'] = substr(implode(' - ', $name), 0, 50);
                     $prod['id'] = md5($customer['name']);
                     $prod['text'] = $customer['name'];
@@ -503,6 +504,28 @@ if ($this->ADMIN_USER) {
                     $prod['Product'] = false;
                     $prod['SmallListing'] = true;
                     $prod['EditIcons'] = '';
+                    $extra_buttons=array();
+                    // hook to rewrite the whole methods
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchCustomersIteratorPostProc'])) {
+                        $params_internal = array(
+                                'customer' => &$customer,
+                                'prod' => &$prod,
+                                'extra_buttons' => &$extra_buttons
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchCustomersIteratorPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                        }
+                    }
+                    if (is_array($extra_buttons) && count($extra_buttons)) {
+                        $prod['HTMLRES']='<div class="row">
+                            <div class="ajax_items_info col-md-8">
+                                <a href="'.$prod['Link'].'" class="contact_name linkItem"><span>'.$prod['Title'].'</span></a>
+                            </div>
+                            <div class="ajax_items_info col-md-4" style="text-align:right">
+                                '.implode(' | ', $extra_buttons).'
+                            </div>
+                        </div>';
+                    }
                     $data['listing']['customers'][] = $prod;
                 }
                 $next_page = true;
