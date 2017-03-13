@@ -340,8 +340,6 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
             }
         });
     } else {
-        console.log(json);
-
         var total_tabs = 0;
         jQuery.each(json, function (_tablevel0_key, _tablevel0) {
             if (_tablevel0_key != '') {
