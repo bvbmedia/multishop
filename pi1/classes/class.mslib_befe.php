@@ -5233,22 +5233,24 @@ class mslib_befe {
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
             $content .= '<thead><tr>';
             foreach ($rows[0] as $colName => $colVal) {
-                $content .= '<th>' . htmlspecialchars($colName) . '</th>';
+                $content .= '<th>' . htmlspecialchars($colVal) . '</th>';
             }
             $content .= '</tr></thead><tbody>';
             $rowCounter = 0;
             foreach ($rows as $row) {
-                $content .= '<tr>';
-                $cellCounter = 0;
-                foreach ($row as $col => $val) {
-                    $classes = array();
-                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
-                        $classes[] = $settings['cellClasses'][$cellCounter];
+                if ($rowCounter) {
+                    $content .= '<tr>';
+                    $cellCounter = 0;
+                    foreach ($row as $col => $val) {
+                        $classes = array();
+                        if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                            $classes[] = $settings['cellClasses'][$cellCounter];
+                        }
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . htmlspecialchars($val) . '</td>';
+                        $cellCounter++;
                     }
-                    $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . htmlspecialchars($val) . '</td>';
-                    $cellCounter++;
+                    $content .= '</tr>';
                 }
-                $content .= '</tr>';
                 $rowCounter++;
             }
             $content .= '</tbody>';
