@@ -369,7 +369,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     //newheader_tree += '<ul id="tx_multishop_admin_newheader">';
                     newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
                     if (tablevel1.link != null) {
-                        newheader_tree += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a>';
+                        newheader_tree += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' id="subsA' + tablevel1_key + '" class="a_dropdown admin_panel_menu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + tablevel1.label + '</a>';
                     } else {
                         newheader_tree += tablevel1.label;
                     }
@@ -394,7 +394,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                             newheader_tree += '<li class="ms_admin_divider"></li>';
                             return true;
                         }
-                        newheader_tree += '<li class="ms_admin_has_subs ' + active_class + '"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '" class="a_dropdown admin_panel_menu">';
+                        newheader_tree += '<li class="' + active_class + '"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '" class="admin_panel_menu">';
                         if (tablevel2.class) {
                             newheader_tree += '<i class="' + tablevel2.class + '"></i>';
                         }
