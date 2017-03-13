@@ -1063,6 +1063,19 @@ switch ($_REQUEST['action']) {
                     <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
                 </div>';
             }
+
+            $md5_list=array();
+            $md5_list[]=$this->post['gender'];
+            $md5_list[]=$this->post['first_name'];
+            $md5_list[]=$this->post['middle_name'];
+            $md5_list[]=$this->post['last_name'];
+            $md5_list[]=$this->post['street_name'];
+            $md5_list[]=$this->post['address_number'];
+            $md5_list[]=$this->post['address_ext'];
+            $md5_list[]=$this->post['zip'];
+            $md5_list[]=$this->post['city'];
+            $md5_list[]=$this->post['email'];
+            $billing_address_md5=md5(implode("", $md5_list));
             //
             $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
             $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
@@ -1100,33 +1113,47 @@ switch ($_REQUEST['action']) {
             // delivery address
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
-                $subpartArray['###DIFFERENT_DELIVERY_ADDRESS_CHECKED###'] = ' checked="checked"';
-                $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
-                $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');
-                $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = htmlspecialchars($delivery_address['first_name']);
-                $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = htmlspecialchars($delivery_address['middle_name']);
-                $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
-                //
-                $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
-                // department input
-                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
-                    $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                    <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
-                    <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
-                </div>';
+                $md5_list=array();
+                $md5_list[]=$delivery_address['gender'];
+                $md5_list[]=$delivery_address['first_name'];
+                $md5_list[]=$delivery_address['middle_name'];
+                $md5_list[]=$delivery_address['last_name'];
+                $md5_list[]=$delivery_address['street_name'];
+                $md5_list[]=$delivery_address['address_number'];
+                $md5_list[]=$delivery_address['address_ext'];
+                $md5_list[]=$delivery_address['zip'];
+                $md5_list[]=$delivery_address['city'];
+                $md5_list[]=$delivery_address['email'];
+                $delivery_address_md5=md5(implode("", $md5_list));
+                if ($billing_address_md5!=$delivery_address_md5) {
+                    $subpartArray['###DIFFERENT_DELIVERY_ADDRESS_CHECKED###'] = ' checked="checked"';
+                    $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
+                    $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');
+                    $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = htmlspecialchars($delivery_address['first_name']);
+                    $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = htmlspecialchars($delivery_address['middle_name']);
+                    $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
+                    //
+                    $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
+                    // department input
+                    if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                        $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
+                            <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
+                            <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
+                        </div>';
+                    }
+                    //
+                    $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
+                    $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);
+                    $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($delivery_address['address_number']);
+                    $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = htmlspecialchars($delivery_address['address_ext']);
+                    $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = htmlspecialchars($delivery_address['zip']);
+                    $subpartArray['###VALUE_DELIVERY_CITY###'] = htmlspecialchars($delivery_address['city']);
+                    $subpartArray['###VALUE_DELIVERY_EMAIL###'] = htmlspecialchars($delivery_address['email']);
+                    $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = htmlspecialchars($delivery_address['telephone']);
+                    $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
+                    $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
+                    $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
                 }
-                //
-                $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
-                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);
-                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($delivery_address['address_number']);
-                $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = htmlspecialchars($delivery_address['address_ext']);
-                $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = htmlspecialchars($delivery_address['zip']);
-                $subpartArray['###VALUE_DELIVERY_CITY###'] = htmlspecialchars($delivery_address['city']);
-                $subpartArray['###VALUE_DELIVERY_EMAIL###'] = htmlspecialchars($delivery_address['email']);
-                $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = htmlspecialchars($delivery_address['telephone']);
-                $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
-                $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
-                $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
             }
             $subpartArray['###LABEL_DISCOUNT###'] = ucfirst($this->pi_getLL('discount'));
             $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');

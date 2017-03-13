@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     $orders = array();
-    $orderby = 'orders_id desc';
+    $orderby = 'paid asc, orders_id desc';
     $limit = 50;
     $filter = array();
     if (is_numeric($this->get['preselected_id'])) {

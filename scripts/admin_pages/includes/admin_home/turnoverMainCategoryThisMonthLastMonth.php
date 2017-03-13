@@ -12,8 +12,8 @@ $current_month_date_tag = array();
 $current_month_number = date('m');
 $current_month_year = date('Y');
 $current_month_date = array();
-$current_month_date['start'] = date('Y-m-d 00:00:00', strtotime($current_datetime . ' -1 month'));
-$current_month_date['end'] = date('Y-m-d 23:59:59', strtotime($current_datetime));
+$current_month_date['start'] = date('Y-m-1 00:00:00', strtotime($current_datetime));
+$current_month_date['end'] = date('Y-m-t 23:59:59', strtotime($current_datetime));
 // current month turnover
 $start_time = $current_month_date['start'];
 $end_time = $current_month_date['end'];
@@ -141,40 +141,44 @@ if (is_array($last_month_turnover) && count($last_month_turnover)) {
     }
 }
 */
-$compiledWidget['content'] = '
-<script type="text/javascript">
-$(document).ready(function(){
-  var data = [
-   ' . implode(',', $jqplot_array['current_month_turnover']) . '
-  ];
-  var plot1 = jQuery.jqplot (\'chartturnoverMainCategoryThisMonthLastMonth\', [data], 
-    { 
-      grid: {
-            drawBorder: false, 
-            drawGridlines: false,
-            background: \'#ffffff\',
-            shadow:false
-      },
-      gridPadding: {top:0, bottom:0, left:0, right:0},
-      height: 225,
-      width: 225,
-      seriesDefaults: {
-        // Make this a pie chart.
-        renderer: jQuery.jqplot.PieRenderer, 
-        rendererOptions: {
-          // Put data labels on the pie slices.
-          // By default, labels show the percentage of the slice.
-          showDataLabels: true
-        },
-      }, 
-      legend: { show:false, location: \'e\' }
-    }
-  );
-  $(\'#chartturnoverMainCategoryThisMonthLastMonth\').bind(\'jqplotDataHighlight\', function (ev, seriesIndex, pointIndex, data) { 
-        document.getElementById(\'chartturnoverMainCategoryThisMonthLastMonth\').title = data;
-        //alert(\'series: \'+seriesIndex+\', point: \'+pointIndex+\', data: \'+data);
-  });
-});
-</script>
-<div id="chartturnoverMainCategoryThisMonthLastMonth"></div>';
+if (is_array($jqplot_array['current_month_turnover']) && count($jqplot_array['current_month_turnover'])) {
+    $compiledWidget['content'] = '
+    <script type="text/javascript">
+    $(document).ready(function(){
+      var data = [
+       ' . implode(',', $jqplot_array['current_month_turnover']) . '
+      ];
+      var plot1 = jQuery.jqplot (\'chartturnoverMainCategoryThisMonthLastMonth\', [data], 
+        { 
+          grid: {
+                drawBorder: false, 
+                drawGridlines: false,
+                background: \'#ffffff\',
+                shadow:false
+          },
+          gridPadding: {top:0, bottom:0, left:0, right:0},
+          height: 225,
+          width: 225,
+          seriesDefaults: {
+            // Make this a pie chart.
+            renderer: jQuery.jqplot.PieRenderer, 
+            rendererOptions: {
+              // Put data labels on the pie slices.
+              // By default, labels show the percentage of the slice.
+              showDataLabels: true
+            },
+          }, 
+          legend: { show:false, location: \'e\' }
+        }
+      );
+      $(\'#chartturnoverMainCategoryThisMonthLastMonth\').bind(\'jqplotDataHighlight\', function (ev, seriesIndex, pointIndex, data) { 
+            document.getElementById(\'chartturnoverMainCategoryThisMonthLastMonth\').title = data;
+            //alert(\'series: \'+seriesIndex+\', point: \'+pointIndex+\', data: \'+data);
+      });
+    });
+    </script>
+    <div id="chartturnoverMainCategoryThisMonthLastMonth"></div>';
+} else {
+    $compiledWidget['content'] = 'No record';
+}
 ?>

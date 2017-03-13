@@ -347,21 +347,69 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
             }
         });
         var tab_counter = 0;
+        var newheader_tree='';
         jQuery.each(json, function (tablevel1_key, tablevel1) {
             tab_counter++;
             if (tablevel1.label == null && tablevel1.description) {
                 admin_content += tablevel1.description;
-
             } else {
+                var active_class='';
+                if (tablevel1.active!=undefined && tablevel1.active==1) {
+                    active_class=' active';
+                }
                 if (tablevel1.subs == null) {
-                    if (tablevel1.link != null) {
-                        admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a>';
+                    if (tablevel1.link != null && tablevel1.link != "") {
+                        newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '"><a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a></li>';
                     } else {
-                        admin_content += tablevel1.label;
+                        newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '">' + tablevel1.label + '</li>';
                     }
+                } else {
+                    var has_sub_class='';
+                    has_sub_class=' dropdown ms_admin_has_subs mainmenu_parents';
+                    //newheader_tree += '<ul id="tx_multishop_admin_newheader">';
+                    newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
+                    if (tablevel1.link != null) {
+                        newheader_tree += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' id="subsA' + tablevel1_key + '" class="a_dropdown admin_panel_menu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + tablevel1.label + '</a>';
+                    } else {
+                        newheader_tree += tablevel1.label;
+                    }
+                    // subs
+                    newheader_tree += '<ul class="dropdown-menu">';
+                    jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
+                        counter_tablevel2++;
+                        var active_class='';
+                        if (tablevel2.active!=undefined && tablevel2.active==1) {
+                            active_class='active';
+                        }
+                        if (type == 'header' && (counter_tablevel2 == total_tablevel2)) {
+                            tablevel2_params = 'dropdown_bottom';
+
+                        } else if (type == 'footer' && (counter_tablevel2 == 1)) {
+                            tablevel2_params = 'dropdown_top';
+
+                        } else {
+                            tablevel2_params = '';
+                        }
+                        if (tablevel2.divider) {
+                            newheader_tree += '<li class="ms_admin_divider"></li>';
+                            return true;
+                        }
+                        newheader_tree += '<li class="' + active_class + '"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '" class="admin_panel_menu">';
+                        if (tablevel2.class) {
+                            newheader_tree += '<i class="' + tablevel2.class + '"></i>';
+                        }
+                        newheader_tree += tablevel2.label + '</a>';
+                    });
+                    newheader_tree += '</ul>';
+
+                    newheader_tree += '</li>';
+                    //newheader_tree += '</ul>';
                 }
             }
         });
+        if (newheader_tree!='') {
+            admin_content += '<div class="newheader_dropdown_wrapper"><ul id="tx_multishop_admin_newheader">' + newheader_tree + '</ul></div>';
+        }
     }
     return admin_content;
 }
