@@ -1651,15 +1651,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 // ADD TT_ADDRESS RECORD EOF
-                //hook to let other plugins further manipulate the create table query
-                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'])) {
-                    $params = array(
-                            'customer_id' => &$customer_id
-                    );
-                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'] as $funcRef) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                    }
-                }
             }
         } else {
             // insert tt_address for existing customer if no record found
@@ -1801,6 +1792,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+        }
+        //hook to let other plugins further manipulate the create table query
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'])) {
+            $params = array(
+                    'customer_id' => &$customer_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
         if ($customer_id) {
