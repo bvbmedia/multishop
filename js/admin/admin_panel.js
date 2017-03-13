@@ -366,7 +366,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     if (tablevel1.active!=undefined && tablevel1.active==1) {
                         active_class=' active';
                     }
-                    newheader_tree += '<ul id="tx_multishop_admin_newheader">';
+                    //newheader_tree += '<ul id="tx_multishop_admin_newheader">';
                     newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
                     if (tablevel1.link != null) {
                         newheader_tree += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a>';
@@ -403,12 +403,12 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     newheader_tree += '</ul>';
 
                     newheader_tree += '</li>';
-                    newheader_tree += '</ul>';
+                    //newheader_tree += '</ul>';
                 }
             }
         });
         if (newheader_tree!='') {
-            admin_content += '<div class="newheader_dropdown_wrapper">' + newheader_tree + '</div>';
+            admin_content += '<div class="newheader_dropdown_wrapper"><ul id="tx_multishop_admin_newheader">' + newheader_tree + '</ul></div>';
         }
     }
     return admin_content;
