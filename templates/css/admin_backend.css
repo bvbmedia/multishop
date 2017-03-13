@@ -857,3 +857,5 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 @media (min-width:768px) {
 	#msts-edit-ticket-form .panel { margin-bottom:0; }
 }
+
+.img-border { border:1px solid #ccc; text-align:center;border-radius:4px; }
