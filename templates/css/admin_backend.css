@@ -869,7 +869,7 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 .label.label-md { display:inline-block; font-weight:600; font-size:14px; line-height:1.42857143; vertical-align:middle; }
 .label.label-lg { display:inline-block; font-weight:600; font-size:18px; line-height:1.3333333; vertical-align:middle; }
 
-#msts-edit-ticket-form .panel { min-height:300px; }
+#msts-edit-ticket-form .panel { min-height:354px; }
 @media (min-width:768px) {
 	#msts-edit-ticket-form .panel { margin-bottom:0; }
 }
