@@ -340,6 +340,8 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
             }
         });
     } else {
+        console.log(json);
+
         var total_tabs = 0;
         jQuery.each(json, function (_tablevel0_key, _tablevel0) {
             if (_tablevel0_key != '') {
@@ -353,19 +355,19 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
             if (tablevel1.label == null && tablevel1.description) {
                 admin_content += tablevel1.description;
             } else {
+                var active_class='';
+                if (tablevel1.active!=undefined && tablevel1.active==1) {
+                    active_class=' active';
+                }
                 if (tablevel1.subs == null) {
-                    if (tablevel1.link != null) {
-                        admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a>';
+                    if (tablevel1.link != null && tablevel1.link != "") {
+                        newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '"><a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a></li>';
                     } else {
-                        admin_content += tablevel1.label;
+                        newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '">' + tablevel1.label + '</li>';
                     }
                 } else {
                     var has_sub_class='';
                     has_sub_class=' dropdown ms_admin_has_subs mainmenu_parents';
-                    var active_class='';
-                    if (tablevel1.active!=undefined && tablevel1.active==1) {
-                        active_class=' active';
-                    }
                     //newheader_tree += '<ul id="tx_multishop_admin_newheader">';
                     newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
                     if (tablevel1.link != null) {
