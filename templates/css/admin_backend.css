@@ -577,9 +577,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 .horizontal_list.pagination,
 #msadmin_tools_nav.pagination { margin-top:0; }
 
-.btn { transition:background .25s, color .25s; }
 .btn.delete_field { margin-left:10px; }
-.btn .fa-stack .fa-circle { color:rgba(255,255,255,.2); }
 
 .table { background:#fff; }
 .table .label { display:inline-block; line-height:17px; }
