@@ -858,7 +858,7 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 
 .msMailQueueMailBody pre { width:558px; }
 
-#msadmin_wrapper .jqplot-target { font-weight:normal; font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#333; }
+#msadmin_wrapper .jqplot-target { font-weight:normal; font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#222; }
 #msadmin_wrapper #chartreceivablesPieChart.jqplot-target { font-weight:bold; font-size:12px; color:#fff; }
 #msadmin_wrapper table.jqplot-table-legend,
 #msadmin_wrapper table.jqplot-cursor-legend { font-size:11px; }
