@@ -861,7 +861,9 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 #msadmin_wrapper .jqplot-target { font-weight:normal; font-size:12px; font-family:Arial, Helvetica, sans-serif; color:#222; }
 #msadmin_wrapper #chartreceivablesPieChart.jqplot-target { font-weight:bold; font-size:12px; color:#fff; }
 #msadmin_wrapper table.jqplot-table-legend,
-#msadmin_wrapper table.jqplot-cursor-legend { font-size:11px; }
+#msadmin_wrapper table.jqplot-cursor-legend { font-size:11px;}
+#msadmin_wrapper table.jqplot-table-legend td.jqplot-table-legend { padding:5px 5px 0 !important; }
+#msadmin_wrapper table.jqplot-table-legend tr:last-child td.jqplot-table-legend { padding-bottom:5px !important; }
 #msadmin_wrapper .jqplot-axis { font-size:12px; }
 #msadmin_wrapper #chartTurnOverPerProduct { margin-bottom:20px; }
 
