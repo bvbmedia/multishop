@@ -845,7 +845,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
 				$(\'#msAdminTableInterface\').tablesorter({
-				    headers: { ' . implode(", ", $sort_js) . ' }
+				    headers: { ' . implode(', ', $sort_js) . ' }
 				});
 			});
 			</script>
