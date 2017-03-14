@@ -736,7 +736,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         } else {
             $interfaceTitle = $params['title'];
         }
-        $content .= '<h3>' . htmlspecialchars($interfaceTitle) . '</h3>';
+        if (!$params['settings']['skipTitle']) {
+            $content .= '<h3>' . htmlspecialchars($interfaceTitle) . '</h3>';
+        }
         if (is_array($params['settings']['headingButtons'])) {
             $content .= '<div class="form-inline">';
             foreach ($params['settings']['headingButtons'] as $headingButton) {
@@ -850,7 +852,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			';
         }
         if ($params['settings']['returnOnlyWhenRecordsFound'] && !$pageset['total_rows']) {
-            //return;
+            // return nothing
+            return;
         } else {
             if ($params['settings']['returnResultSetAsArray']) {
                 $array = array();
