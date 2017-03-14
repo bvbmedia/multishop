@@ -36,7 +36,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader li:not(.ms_new_ticket) > a > .fa,
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader li:not(.ms_new_ticket) > span > .fa { float:left; width:21px; line-height:18px; margin-bottom:2px; }
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li:not(.ms_new_ticket) > a > .fa,
-#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li:not(.ms_new_ticket) > span > .fa { line-height:0; padding:1px 7px 1px 5px; }
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li:not(.ms_new_ticket) > span > .fa { float:none; width:21px; line-height:38px; margin-bottom:0; }
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.open > a,
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.open > span { background:#333; }
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > ul { width:250px; border:none; background:#333; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); z-index:0; }
