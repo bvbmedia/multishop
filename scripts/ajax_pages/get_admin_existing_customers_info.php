@@ -59,7 +59,21 @@ if ($this->ADMIN_USER) {
                 $filter[] = 'f.uid=o.customer_id';
                 $from = array();
                 $from[] = 'fe_users f, tx_multishop_orders o';
-                $select[] = 'o.customer_id';
+                $select[] = 'o.customer_id, o.billing_email';
+            }
+            break;
+        case 'proposals':
+            $filter = array();
+            if (isset($this->get['proposals_id']) && is_numeric($this->get['proposals_id']) && $this->get['proposals_id'] > 0) {
+                if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
+                    $filter[] = 'f.uid=' . $this->get['cid'];
+                }
+                $filter[] = 'p.proposals_id=' . $this->get['proposals_id'];
+                $filter[] = 'f.deleted=0';
+                $filter[] = 'f.uid=p.customer_id';
+                $from = array();
+                $from[] = 'fe_users f, tx_multishop_proposals p';
+                $select[] = 'p.customer_id, p.billing_email';
             }
             break;
         default:
