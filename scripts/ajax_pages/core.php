@@ -1838,6 +1838,17 @@ switch ($this->ms['page']) {
                                         // valid image
                                         $ext = image_type_to_extension($imgtype, false);
                                         if ($ext) {
+                                            // hook for adding new items to details fieldset
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUploadProductImagesDefaultFileNameProc'])) {
+                                                $params = array(
+                                                        'tmp_filename' => &$tmp_filename,
+                                                        'ext' => &$ext
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUploadProductImagesDefaultFileNameProc'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                                }
+                                                // hook oef
+                                            }
                                             $i = 0;
                                             $filename = mslib_fe::rewritenamein($tmp_filename) . '.' . $ext;
                                             $folder = mslib_befe::getImagePrefixFolder($filename);
