@@ -4828,12 +4828,15 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $headingFontAwesomeClass = 'fa fa-file-text-o') {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $options=array()) {
+        if (!$options['headingCollapseFontAwesomeClass']) {
+            $options['headingCollapseFontAwesomeClass']='fa fa-file-text-o';
+        }
         if ($enableCollapse) {
             if ($collapsed) {
                 $panelHeadingClasses[] = 'collapsed';
             }
-            $heading = '<a role="button" data-toggle="collapse" href="#' . $panelId . 'Body"><i class="'.$headingFontAwesomeClass.'"></i> ' . $heading . '</a>';
+            $heading = '<a role="button"'.($options['headingCollapseLinkTitle']?' title="'.htmlspecialchars($options['headingCollapseLinkTitle']).'"':'').' data-toggle="collapse" href="#' . $panelId . 'Body"><i class="'.$options['headingCollapseFontAwesomeClass'].'"></i> ' . $heading . '</a>';
             $panelHeadingParams .= 'data-toggle="collapse" data-target="#' . $panelId . 'Body" aria-expanded="true"';
         }
         $content = '<div' . ($panelId ? ' id="' . $panelId . '"' : '') . ' class="panel panel-' . $panelClass . '">';
