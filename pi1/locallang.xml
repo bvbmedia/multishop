@@ -1405,7 +1405,8 @@
             <label index="weeks">Weeks</label>
             <label index="select_customer">Select customer</label>
             <label index="select_order">Select order</label>
-            <label index="select_invoice">Selecteer invoice</label>
+            <label index="select_invoice">Select invoice</label>
+            <label index="select_company">Select company</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2791,6 +2792,7 @@
             <label index="select_customer">Selecteer klant</label>
             <label index="select_order">Selecteer bestelling</label>
             <label index="select_invoice">Selecteer factuur</label>
+            <label index="select_company">Selecteer bedrijf</label>
         </languageKey>
     </data>
 </T3locallang>
