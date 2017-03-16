@@ -365,15 +365,15 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                 if (tablevel1.active!=undefined && tablevel1.active==1) {
                     active_class=' active';
                 }
-                newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '">';
                 if (tablevel1.subs == null) {
+                    newheader_tree += '<li role="presentation" class="' + tablevel1_key + active_class + '">';
                     if (tablevel1.link != null && tablevel1.link != "") {
                         newheader_tree += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + ' class="admin_panel_menu">' + tablevel1.label + '</a>';
                     } else {
                         newheader_tree += tablevel1.label;
                     }
                 } else {
-
+                    newheader_tree += '<li role="presentation" class="ms_admin_has_subs ' + tablevel1_key + active_class + '">';
                     var tablevel2_ctr = 0;
                     jQuery.each(tablevel1.subs, function (_tablevel2_key, _tablevel2) {
                         if (_tablevel2_key != '') {
