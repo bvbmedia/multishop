@@ -5235,11 +5235,20 @@ class mslib_befe {
         if (is_array($rows) && count($rows)) {
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
             $content .= '<thead><tr>';
-            foreach ($rows[0] as $colName => $colVal) {
-                $content .= '<th>' . $colVal . '</th>';
+            if ($settings['keyNameAsHeadingTitle']) {
+                foreach ($rows[0] as $colName => $colVal) {
+                    $content .= '<th>' . $colName . '</th>';
+                }
+            } else {
+                foreach ($rows[0] as $colName => $colVal) {
+                    $content .= '<th>' . $colVal . '</th>';
+                }
             }
             $content .= '</tr></thead><tbody>';
             $rowCounter = 0;
+            if ($settings['keyNameAsHeadingTitle']) {
+                $rowCounter = 1;
+            }
             foreach ($rows as $row) {
                 if ($rowCounter) {
                     $content .= '<tr>';
