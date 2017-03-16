@@ -5236,7 +5236,7 @@ class mslib_befe {
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
             $content .= '<thead><tr>';
             foreach ($rows[0] as $colName => $colVal) {
-                $content .= '<th>' . htmlspecialchars($colVal) . '</th>';
+                $content .= '<th>' . $colVal . '</th>';
             }
             $content .= '</tr></thead><tbody>';
             $rowCounter = 0;
@@ -5249,7 +5249,7 @@ class mslib_befe {
                         if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . htmlspecialchars($val) . '</td>';
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';
