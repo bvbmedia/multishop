@@ -882,7 +882,7 @@ if ($this->post) {
 				<label class="control-label col-md-2" for="meta_title">' . $this->pi_getLL('admin_label_input_meta_title') . '</label>
 				<div class="col-md-10">
                     <div class="input-group width-fw">
-                        <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="'.$language['uid'].'" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_title']) . '" maxlength="60">
+                        <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_title']) . '" maxlength="60">
                         <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
                     </div>
 				</div>
@@ -897,7 +897,7 @@ if ($this->post) {
 				<label class="control-label col-md-2" for="meta_description">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
 				    <div class="input-group width-fw">
-				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="'.$language['uid'].'" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
+				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
 				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
                     </div>
 				</div>

@@ -22,15 +22,15 @@ if ($this->post['proceed_order']) {
         }
     }
     if (!$customer_id) {
-        $username='';
+        $username = '';
         if (!empty($this->post['tx_multishop_pi1']['telephone'])) {
-            $username =$this->post['tx_multishop_pi1']['telephone'];
+            $username = $this->post['tx_multishop_pi1']['telephone'];
         }
         if (!empty($this->post['email'])) {
-            $username =$this->post['email'];
+            $username = $this->post['email'];
         }
         if (!$username) {
-            $username=$unique_id;
+            $username = $unique_id;
         }
         $insertArray = array();
         $insertArray['page_uid'] = $this->shop_pid;
@@ -67,11 +67,11 @@ if ($this->post['proceed_order']) {
     }
     //add to orders
     if ($customer_id) {
-        $billing_gender='';
-        if (!$this->post['gender'] || $this->post['gender']=='0') {
-            $billing_gender='m';
-        } else if ($this->post['gender']=='1') {
-            $billing_gender='f';
+        $billing_gender = '';
+        if (!$this->post['gender'] || $this->post['gender'] == '0') {
+            $billing_gender = 'm';
+        } else if ($this->post['gender'] == '1') {
+            $billing_gender = 'f';
         }
         // now add the order
         $insertArray = array();
@@ -131,7 +131,7 @@ if ($this->post['proceed_order']) {
         $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
         if ($delivery_address) {
-            $this->post['different_delivery_address']=true;
+            $this->post['different_delivery_address'] = true;
             $insertArray['delivery_email'] = $delivery_address['email'];
             $insertArray['delivery_company'] = $delivery_address['company'];
             $insertArray['delivery_first_name'] = $delivery_address['first_name'];

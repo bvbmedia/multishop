@@ -12,12 +12,12 @@ $str_gy = "SELECT crdate FROM tx_multishop_products_search_log WHERE crdate > 0 
 $qry_gy = $GLOBALS['TYPO3_DB']->sql_query($str_gy);
 $row_gy = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_gy);
 $lowest_year = date('Y');
-if ($row_gy['crdate']>0) {
+if ($row_gy['crdate'] > 0) {
     $lowest_year = date('Y', $row_gy['crdate']);
 }
-$year_options=array();
-for ($y=date('Y'); $y>=$lowest_year; $y--) {
-    if (isset($this->get['year']) && is_numeric($this->get['year']) && $this->get['year']==$y) {
+$year_options = array();
+for ($y = date('Y'); $y >= $lowest_year; $y--) {
+    if (isset($this->get['year']) && is_numeric($this->get['year']) && $this->get['year'] == $y) {
         $year_options[] = '<option value="' . $y . '" selected="selected">' . $y . '</option>';
     } else {
         $year_options[] = '<option value="' . $y . '">' . $y . '</option>';
@@ -34,9 +34,9 @@ $content .= '<div class="panel-body">
     <div class="row formfield-container-wrapper">
         <div class="col-sm-4 formfield-wrapper">
             <div class="form-group">
-                <label class="control-label" for="year">'.$this->pi_getLL('year').'</label>
+                <label class="control-label" for="year">' . $this->pi_getLL('year') . '</label>
                 <select class="form-control" name="year" id="year">
-                    '.implode("\n", $year_options).'
+                    ' . implode("\n", $year_options) . '
                 </select>    
             </div>
             <div class="form-group">
@@ -62,9 +62,9 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 	});
 </script>
 ';
-$current_year=date('Y');
+$current_year = date('Y');
 if (isset($this->get['year']) && is_numeric($this->get['year'])) {
-    $current_year=$this->get['year'];
+    $current_year = $this->get['year'];
 }
 $dates = array();
 $content .= '<h2>' . htmlspecialchars($this->pi_getLL('month')) . '</h2>';

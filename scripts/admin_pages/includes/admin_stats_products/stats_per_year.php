@@ -22,8 +22,8 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
     $search_end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
     $data_query['where'][] = "o.crdate BETWEEN '" . $search_start_time . "' and '" . $search_end_time . "'";
 } else {
-    if ($this->cookie['stats_year_sb'] && $this->cookie['stats_year_sb']!=date('Y')) {
-        $data_query['where'][] = 'o.crdate BETWEEN ' . strtotime(date($this->cookie['stats_year_sb'].'-01-01 00:00:00')) . ' and ' . strtotime(date($this->cookie['stats_year_sb'].'-12-31 23:59:59'));
+    if ($this->cookie['stats_year_sb'] && $this->cookie['stats_year_sb'] != date('Y')) {
+        $data_query['where'][] = 'o.crdate BETWEEN ' . strtotime(date($this->cookie['stats_year_sb'] . '-01-01 00:00:00')) . ' and ' . strtotime(date($this->cookie['stats_year_sb'] . '-12-31 23:59:59'));
     } else {
         $data_query['where'][] = 'o.crdate BETWEEN ' . strtotime(date('Y-01-01 00:00:00')) . ' and ' . time();
     }

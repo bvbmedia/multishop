@@ -516,7 +516,7 @@ switch ($this->ms['page']) {
         }
         $return_data = array();
         $tmp_return_data = array();
-        $tmp_return_data_sort=array();
+        $tmp_return_data_sort = array();
         switch ($this->get['tx_multishop_pi1']['get_category_tree']) {
             case 'getValues':
                 $tmp_preselecteds = array();
@@ -558,21 +558,20 @@ switch ($this->ms['page']) {
                             } else {
                                 $tmp_return_data[$preselected_id] = implode(' > ', $catpath);
                             }
-                            $tmp_return_data_sort[$preselected_id]=implode(' > ', $catpath);;
+                            $tmp_return_data_sort[$preselected_id] = implode(' > ', $catpath);;
                         }
                     }
                     if (is_array($tmp_return_data_sort) && count($tmp_return_data_sort)) {
                         natsort($tmp_return_data_sort);
-                        $tmp_return_data_list=array();
-                        $tmp_return_data_list=$tmp_return_data;
+                        $tmp_return_data_list = array();
+                        $tmp_return_data_list = $tmp_return_data;
                         // return data
-                        $tmp_return_data=array();
+                        $tmp_return_data = array();
                         foreach ($tmp_return_data_sort as $tmp_preselected_id => $tmp_path) {
-                            $tmp_return_data[$tmp_preselected_id]=$tmp_return_data_list[$tmp_preselected_id];
+                            $tmp_return_data[$tmp_preselected_id] = $tmp_return_data_list[$tmp_preselected_id];
                         }
                     }
                 }
-
                 if (!count($tmp_preselecteds) || (count($tmp_preselecteds) === 1 && !$tmp_preselecteds[0]) || !count($tmp_return_data)) {
                     $return_data[] = array(
                             'id' => 0,
@@ -586,7 +585,7 @@ switch ($this->ms['page']) {
                 if (is_numeric($this->categoriesStartingPoint)) {
                     $categoriesStartingPoint = $this->categoriesStartingPoint;
                 }
-                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) >= 2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, $page_uid, $include_disabled_cats);
@@ -637,7 +636,7 @@ switch ($this->ms['page']) {
                 if (isset($this->get['skip_ids']) && !empty($this->get['skip_ids'])) {
                     $skip_ids = explode(',', $this->get['skip_ids']);
                 }
-                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q'])>=2) {
+                if (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) >= 2) {
                     $keyword = trim($this->get['q']);
                     $categories_tree = array();
                     mslib_fe::getSubcatsArray($categories_tree, $keyword, $categoriesStartingPoint, '', $include_disabled_cats);
@@ -723,18 +722,18 @@ switch ($this->ms['page']) {
                 break;
         }
         //natsort($tmp_return_data);
-        $categories_results_limit=0; // 0 = unlimited
+        $categories_results_limit = 0; // 0 = unlimited
         if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
-            $categories_results_limit=15;
+            $categories_results_limit = 15;
         }
-        $category_counter=0;
+        $category_counter = 0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {
             $return_data[] = array(
                     'id' => $tree_id,
                     'text' => $tree_path
             );
             $category_counter++;
-            if ($categories_results_limit>0) {
+            if ($categories_results_limit > 0) {
                 if ($category_counter >= $categories_results_limit) {
                     break;
                 }
@@ -1010,8 +1009,8 @@ switch ($this->ms['page']) {
         $data = array();
         if (!isset($this->get['preselected_id'])) {
             $data[] = array(
-                'id' => '99999',
-                'text' => $this->pi_getLL('all')
+                    'id' => '99999',
+                    'text' => $this->pi_getLL('all')
             );
         }
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -1033,8 +1032,8 @@ switch ($this->ms['page']) {
                 }
                 if (count($catpath)) {
                     $data[] = array(
-                        'id' => $row['categories_id'],
-                        'text' => implode(' > ', $catpath)
+                            'id' => $row['categories_id'],
+                            'text' => implode(' > ', $catpath)
                     );
                 }
             }
@@ -1070,8 +1069,8 @@ switch ($this->ms['page']) {
         $data = array();
         if (!isset($this->get['preselected_id'])) {
             $data[] = array(
-                'id' => '99999',
-                'text' => $this->pi_getLL('all')
+                    'id' => '99999',
+                    'text' => $this->pi_getLL('all')
             );
         }
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -1079,8 +1078,8 @@ switch ($this->ms['page']) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 if (!empty($row['products_name'])) {
                     $data[] = array(
-                        'id' => $row['products_id'],
-                        'text' => $row['products_name']
+                            'id' => $row['products_id'],
+                            'text' => $row['products_name']
                     );
                 }
             }
@@ -1541,7 +1540,7 @@ switch ($this->ms['page']) {
     case 'admin_upload_redactor':
         if ($this->ADMIN_USER) {
             $continueUpload = 0;
-            $filename='';
+            $filename = '';
             switch ($this->get['tx_multishop_pi1']['redactorType']) {
                 case 'imageGetJson':
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
@@ -1624,7 +1623,7 @@ switch ($this->ms['page']) {
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
                     move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
-                    $filename=$_FILES["file"]["name"];
+                    $filename = $_FILES["file"]["name"];
                     $path_parts = pathinfo($_FILES["file"]["name"]);
                     $ext = $path_parts['extension'];
                     if ($ext) {
@@ -1839,6 +1838,17 @@ switch ($this->ms['page']) {
                                         // valid image
                                         $ext = image_type_to_extension($imgtype, false);
                                         if ($ext) {
+                                            // hook for adding new items to details fieldset
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUploadProductImagesDefaultFileNameProc'])) {
+                                                $params = array(
+                                                        'tmp_filename' => &$tmp_filename,
+                                                        'ext' => &$ext
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUploadProductImagesDefaultFileNameProc'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                                }
+                                                // hook oef
+                                            }
                                             $i = 0;
                                             $filename = mslib_fe::rewritenamein($tmp_filename) . '.' . $ext;
                                             $folder = mslib_befe::getImagePrefixFolder($filename);
@@ -2072,7 +2082,7 @@ switch ($this->ms['page']) {
                 //
                 $name = '';
                 $erno = array();
-                $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']=(int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
+                $this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'] = (int)$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION'];
                 if ($details_type == 'billing_details') {
                     if (!$this->ms['MODULES']['DISABLE_EDIT_ORDER_CUSTOMER_DETAILS_VALIDATION']) {
                         // validate essential info

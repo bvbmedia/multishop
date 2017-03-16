@@ -5,6 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     //$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
+    $use_company=false;
     $customers = array();
     $groupid = $this->conf['fe_customer_usergroup'];
     if (is_numeric($this->get['tx_multishop_pi1']['usergroup'])) {
@@ -125,10 +126,12 @@ if ($this->ADMIN_USER) {
                 }
             }
             ksort($htmlTitle_array);
-            $htmlTitle = '<strong>' . implode(' | ', $htmlTitle_array) . '</strong>';
+            $htmlTitle = implode(' | ', $htmlTitle_array);
             $return_data[] = array(
                     'id' => $customer['uid'],
-                    'text' => $htmlTitle
+                    'text' => $htmlTitle,
+                    'company' => $itemArray['company']['value'],
+                    'name' => $itemArray['name']['value']
             );
         }
     }
@@ -139,11 +142,10 @@ if ($this->ADMIN_USER) {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
                     'id' => '',
-                    'text' => $this->pi_getLL('select_customer')
+                    'text' => $this->pi_getLL('select_company')
             );
             array_unshift($return_data, $array_select_none);
         }
-
     }
     echo json_encode($return_data, ENT_NOQUOTES);
 }

@@ -81,7 +81,7 @@ $content .= '
 $tr_type = 'even';
 $dates = array();
 $content .= '<h2>' . htmlspecialchars($this->pi_getLL('day')) . '</h2>';
-$pageset['total_rows']=30;
+$pageset['total_rows'] = 30;
 $this->ms['MODULES']['PAGESET_LIMIT'] = 2;
 if (is_numeric($this->get['p'])) {
     $p = $this->get['p'];
@@ -92,7 +92,7 @@ if ($p > 0) {
     $p = 0;
     $offset = 0;
 }
-for ($i = $offset; $i < $offset+2; $i++) {
+for ($i = $offset; $i < $offset + 2; $i++) {
     $time = strtotime("-" . $i . " day");
     $dates[strftime("%a. %x", $time)] = $time;
 }
@@ -119,8 +119,8 @@ foreach ($dates as $key => $value) {
     $end_time = strtotime($system_date . " 23:59:59");
     $str = "SELECT * FROM tx_multishop_cart_contents c WHERE (" . implode(" AND ", $data_query['where']) . ") and (c.crdate BETWEEN " . $start_time . " and " . $end_time . ") and page_uid='" . $this->shop_pid . "' order by c.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $counter_session=array();
-    $cart_contents=array();
+    $counter_session = array();
+    $cart_contents = array();
     while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         if (!in_array($rows['session_id'], $counter_session)) {
             $cart = unserialize($rows['contents']);
@@ -139,88 +139,88 @@ foreach ($dates as $key => $value) {
     //$session_ids = array();
     foreach ($cart_contents as $row) {
         //if (!in_array($row['session_id'], $session_ids)) {
-            $cart = unserialize($row['contents']);
-            if (count($cart['products']) > 0) {
-                $products = array();
-                foreach ($cart['products'] as $product) {
-                    $products[] = $product;
+        $cart = unserialize($row['contents']);
+        if (count($cart['products']) > 0) {
+            $products = array();
+            foreach ($cart['products'] as $product) {
+                $products[] = $product;
+            }
+            if (count($products) > 0) {
+                // print customer settings
+                $content .= '<table id="product_import_table" class="table table-striped table-bordered ' . (!$row['is_checkout'] ? 'is_not_checkout' : '') . '">';
+                $tr_rows = array();
+                //$tr_rows[] = '<th class="text-right" width="100">Session ID</th><td>' . $row['session_id'] . '</td>';
+                $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('date') . '</th><td>' . strftime("%a. %x %X", $row['crdate']) . '</td>';
+                if ($row['ip_address']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('ip_address') . '</th><td>' . $row['ip_address'] . '</td>';
                 }
-                if (count($products) > 0) {
-                    // print customer settings
-                    $content .= '<table id="product_import_table" class="table table-striped table-bordered ' . (!$row['is_checkout'] ? 'is_not_checkout' : '') . '">';
-                    $tr_rows = array();
-                    //$tr_rows[] = '<th class="text-right" width="100">Session ID</th><td>' . $row['session_id'] . '</td>';
-                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('date') . '</th><td>' . strftime("%a. %x %X", $row['crdate']) . '</td>';
-                    if ($row['ip_address']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('ip_address') . '</th><td>' . $row['ip_address'] . '</td>';
-                    }
-                    if ($row['is_checkout']) {
-                        // lets find out how long the user did to finish the checkout
-                        $str2 = "SELECT crdate FROM tx_multishop_cart_contents c where c.session_id='" . $row['session_id'] . "' and c.id < '" . $row['id'] . "'  and page_uid='" . $this->shop_pid . "' order by c.id asc limit 1";
-                        $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
-                        $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
-                        $time = ($row['crdate'] - $row2['crdate']);
-                        if ($time >= 60) {
-                            $time_label = round(($time / 60)) . ' minutes';
-                        } else {
-                            $time_label = $time . ' seconds';
-                        }
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('time_needed_to_finish_checkout') . '</th><td>' . $time_label . '</td>';
+                if ($row['is_checkout']) {
+                    // lets find out how long the user did to finish the checkout
+                    $str2 = "SELECT crdate FROM tx_multishop_cart_contents c where c.session_id='" . $row['session_id'] . "' and c.id < '" . $row['id'] . "'  and page_uid='" . $this->shop_pid . "' order by c.id asc limit 1";
+                    $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
+                    $time = ($row['crdate'] - $row2['crdate']);
+                    if ($time >= 60) {
+                        $time_label = round(($time / 60)) . ' minutes';
                     } else {
-                        if ($row['customer_id']) {
-                            $user = mslib_fe::getUser($row['customer_id']);
-                            $cart['user'] = $user;
-                        }
+                        $time_label = $time . ' seconds';
                     }
-                    if ($cart['user']['username']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('username') . '</th><td>' . $cart['user']['username'] . '</td>';
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('time_needed_to_finish_checkout') . '</th><td>' . $time_label . '</td>';
+                } else {
+                    if ($row['customer_id']) {
+                        $user = mslib_fe::getUser($row['customer_id']);
+                        $cart['user'] = $user;
                     }
-                    if ($cart['user']['first_name']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('name') . '</th><td>' . $cart['user']['first_name'] . ' ' . $cart['user']['middle_name'] . ' ' . $cart['user']['last_name'] . '</td>';
-                    }
-                    if ($cart['user']['company']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('company') . '</th><td>' . $cart['user']['company'] . '</td>';
-                    }
-                    if ($cart['user']['telephone']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('telephone') . '</th><td>' . $cart['user']['telephone'] . '</td>';
-                    }
-                    if ($cart['user']['email']) {
-                        $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('email') . '</th><td>' . $cart['user']['email'] . '</td>';
-                    }
-                    $tmp_content = '<table class="table table-striped table-bordered table-condensed no-mb">';
-                    $tmp_content .= '<thead><tr>
+                }
+                if ($cart['user']['username']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('username') . '</th><td>' . $cart['user']['username'] . '</td>';
+                }
+                if ($cart['user']['first_name']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('name') . '</th><td>' . $cart['user']['first_name'] . ' ' . $cart['user']['middle_name'] . ' ' . $cart['user']['last_name'] . '</td>';
+                }
+                if ($cart['user']['company']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('company') . '</th><td>' . $cart['user']['company'] . '</td>';
+                }
+                if ($cart['user']['telephone']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('telephone') . '</th><td>' . $cart['user']['telephone'] . '</td>';
+                }
+                if ($cart['user']['email']) {
+                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('email') . '</th><td>' . $cart['user']['email'] . '</td>';
+                }
+                $tmp_content = '<table class="table table-striped table-bordered table-condensed no-mb">';
+                $tmp_content .= '<thead><tr>
 					<th class="cellQty">' . $this->pi_getLL('qty') . '</th>
 					<th class="cellName">' . $this->pi_getLL('products_name') . '</th>
 					<th class="cellPrice">' . $this->pi_getLL('price') . '</th>
 					</tr></thead><tbody>';
-                    $sub_sub_tr_type = 'odd';
-                    foreach ($products as $product) {
-                        if (!$sub_sub_tr_type or $sub_sub_tr_type == 'even') {
-                            $sub_sub_tr_type = 'odd';
-                        } else {
-                            $sub_sub_tr_type = 'even';
-                        }
-                        $tmp_content .= '<tr class="' . $sub_sub_tr_type . '">';
-                        $tmp_content .= '<td class="cellQty">' . $product['qty'] . '</td>';
-                        $tmp_content .= '<td class="cellName">' . $product['products_name'] . '</td>';
-                        $tmp_content .= '<td class="cellPrice">' . mslib_fe::amount2Cents($product['final_price'], 0) . '</td>';
-                        $tmp_content .= '</tr>';
+                $sub_sub_tr_type = 'odd';
+                foreach ($products as $product) {
+                    if (!$sub_sub_tr_type or $sub_sub_tr_type == 'even') {
+                        $sub_sub_tr_type = 'odd';
+                    } else {
+                        $sub_sub_tr_type = 'even';
                     }
-                    $tmp_content .= '</tbody></table>';
-//					$tmp_content.='</table>';
-                    $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('content') . '</th><td>' . $tmp_content . '</td>';
-                    $sub_tr_type = 'odd';
-                    foreach ($tr_rows as $tr_row) {
-                        if (!$sub_tr_type or $sub_tr_type == 'even') {
-                            $sub_tr_type = 'odd';
-                        } else {
-                            $sub_tr_type = 'even';
-                        }
-                        $content .= '<tr class="' . $sub_tr_type . '">' . $tr_row . '</tr>';
-                    }
-                    $content .= '</table>';
+                    $tmp_content .= '<tr class="' . $sub_sub_tr_type . '">';
+                    $tmp_content .= '<td class="cellQty">' . $product['qty'] . '</td>';
+                    $tmp_content .= '<td class="cellName">' . $product['products_name'] . '</td>';
+                    $tmp_content .= '<td class="cellPrice">' . mslib_fe::amount2Cents($product['final_price'], 0) . '</td>';
+                    $tmp_content .= '</tr>';
                 }
+                $tmp_content .= '</tbody></table>';
+//					$tmp_content.='</table>';
+                $tr_rows[] = '<th class="text-right" width="100">' . $this->pi_getLL('content') . '</th><td>' . $tmp_content . '</td>';
+                $sub_tr_type = 'odd';
+                foreach ($tr_rows as $tr_row) {
+                    if (!$sub_tr_type or $sub_tr_type == 'even') {
+                        $sub_tr_type = 'odd';
+                    } else {
+                        $sub_tr_type = 'even';
+                    }
+                    $content .= '<tr class="' . $sub_tr_type . '">' . $tr_row . '</tr>';
+                }
+                $content .= '</table>';
             }
+        }
         //}
         //$session_ids[] = $row['session_id'];
     }

@@ -290,33 +290,33 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
     case 'update_options_values_data':
         // save/update values
         if (is_array($this->post['option_values']) and count($this->post['option_values'])) {
-            $pov2po_id=$this->post['data_id'];
-            $attribute_options=mslib_befe::getRecord($pov2po_id, 'tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id');
-            $option_id=0;
+            $pov2po_id = $this->post['data_id'];
+            $attribute_options = mslib_befe::getRecord($pov2po_id, 'tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id');
+            $option_id = 0;
             if (is_array($attribute_options) && isset($attribute_options['products_options_id'])) {
-                $option_id=$attribute_options['products_options_id'];
+                $option_id = $attribute_options['products_options_id'];
             }
             foreach ($this->post['option_values'] as $products_options_values_id => $array) {
                 // check if the current value also have relation with other attribute options
-                $insert_new=false;
-                if ($option_id>0) {
+                $insert_new = false;
+                if ($option_id > 0) {
                     $attribute_records = mslib_befe::getRecords($products_options_values_id, 'tx_multishop_products_options_values_to_products_options', 'products_options_values_id', array('products_options_id!=' . $option_id), '', '', '', array('products_options_id'));
                     if (is_array($attribute_records) && count($attribute_records)) {
-                        $insert_new=true;
+                        $insert_new = true;
                     }
                 }
                 foreach ($array as $language_id => $value) {
                     if ($insert_new) {
-                        $value_record=mslib_befe::getRecord($products_options_values_id, 'tx_multishop_products_options_values', 'products_options_values_id');
+                        $value_record = mslib_befe::getRecord($products_options_values_id, 'tx_multishop_products_options_values', 'products_options_values_id');
                         if (is_array($value_record) && isset($value_record['products_options_values_name'])) {
                             // only insert if the db value is different than the post'ed value
-                            if ($value_record['products_options_values_name']!=$value) {
+                            if ($value_record['products_options_values_name'] != $value) {
                                 $insertArray = array();
                                 $insertArray['language_id'] = $language_id;
                                 $insertArray['products_options_values_name'] = $value;
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                $new_products_options_values_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+                                $new_products_options_values_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
                                 // update the pov2po table record
                                 $updateArray = array();
                                 $updateArray['products_options_values_id'] = $new_products_options_values_id;
@@ -325,7 +325,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                                 // update the product_attributes
                                 $updateArray = array();
                                 $updateArray['options_values_id'] = $new_products_options_values_id;
-                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $option_id . '\' and options_values_id=\''.$products_options_values_id.'\'', $updateArray);
+                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $option_id . '\' and options_values_id=\'' . $products_options_values_id . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
                         }

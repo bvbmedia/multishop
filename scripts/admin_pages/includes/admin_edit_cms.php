@@ -218,17 +218,17 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     $tmpcontent .= '</select></div>
 		</div>';
     if (count($active_shop) > 1) {
-        if (is_numeric($this->get['cms_id']) && $this->get['cms_id']>0) {
+        if (is_numeric($this->get['cms_id']) && $this->get['cms_id'] > 0) {
             $tmpcontent .= '<div class="form-group">
 			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_cms_to_shop', 'Relate this CMS to') . '</label>
 			<div class="col-md-10">
-			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.($cms[0]['page_uid']=='0' ? ' checked="checked"' : '').' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
+			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"' . ($cms[0]['page_uid'] == '0' ? ' checked="checked"' : '') . ' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
             foreach ($active_shop as $pageinfo) {
                 $pageTitle = $pageinfo['title'];
                 if ($pageinfo['nav_title']) {
                     $pageTitle = $pageinfo['nav_title'];
                 }
-                $tmpcontent .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '"'.($cms[0]['page_uid']==$pageinfo['uid'] ? ' checked="checked"' : '').' /><label>' . $pageTitle . '</label></div>';
+                $tmpcontent .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '"' . ($cms[0]['page_uid'] == $pageinfo['uid'] ? ' checked="checked"' : '') . ' /><label>' . $pageTitle . '</label></div>';
             }
             $tmpcontent .= '</div></div>';
         } else {
@@ -248,10 +248,7 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     } else {
         $tmpcontent .= '<input type="hidden" name="related_shop_pid" value="' . $this->shop_pid . '">';
     }
-
-
-
-		$tmpcontent.='<div class="form-group custom_type">
+    $tmpcontent .= '<div class="form-group custom_type">
 			<div class="col-md-offset-2 col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="' . htmlspecialchars($cms[0]['type']) . '" class="text form-control" /></div>
 		</div>
 		<script type="text/javascript">

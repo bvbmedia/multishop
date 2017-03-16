@@ -179,7 +179,6 @@ if (is_array($products) && count($products)) {
         $markerArray['ORDER_UNIT_NAME'] = $current_product['order_unit_name'];
         $markerArray['MANUFACTURERS_ID'] = $current_product['manufacturers_id'];
         $markerArray['MANUFACTURERS_NAME'] = $current_product['manufacturers_name'];
-
         $markerArray['OLD_PRICE'] = '';
         if ($current_product['old_price']) {
             $markerArray['OLD_PRICE'] = mslib_fe::amount2Cents($current_product['old_price']);

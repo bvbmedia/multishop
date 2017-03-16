@@ -390,7 +390,7 @@ $limits[] = '600';
 $limits[] = '1500';
 $limits[] = '3000';
 if (!in_array($this->get['limit'], $limits)) {
-    $limits[]=$this->get['limit'];
+    $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->get['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
@@ -681,7 +681,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script>
 	jQuery(document).ready(function($) {
 	    $(document).on("click", "#reset-advanced-search", function(e){
-			location.href="'.mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_invoices').'";
+			location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_invoices') . '";
 			
 		});
 		' . ($this->get['tx_multishop_pi1']['action'] != 'mail_selected_invoices_to_merchants' ? '$("#msadmin_invoices_mailto").hide();' : '') . '

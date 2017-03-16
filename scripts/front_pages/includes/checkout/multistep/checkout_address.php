@@ -434,10 +434,10 @@ if (count($cart['products']) < 1) {
         //
         $markerArray = array();
         $markerArray['###DISABLE_AUTOFILL###'] = '';
-        $disable_autofill='';
-        if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CHECKOUT']>0) {
+        $disable_autofill = '';
+        if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CHECKOUT'] > 0) {
             $markerArray['###DISABLE_AUTOFILL###'] = ' autocomplete="off"';
-            $disable_autofill=' autocomplete="off"';
+            $disable_autofill = ' autocomplete="off"';
         }
         $markerArray['###CHECKOUT_MULTISTEP_FORM_URL###'] = mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout&tx_multishop_pi1[previous_checkout_section]=' . current($stepCodes));
         $markerArray['###LABEL_BILLING_ADDRESS###'] = $this->pi_getLL('billing_address');
@@ -451,7 +451,7 @@ if (count($cart['products']) < 1) {
         $birthdate_block = '';
         if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
             $birthdate_block .= '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '</label>
-					<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor"'.$disable_autofill.' value="' . htmlspecialchars($user['birthday']) . '" >
+					<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor"' . $disable_autofill . ' value="' . htmlspecialchars($user['birthday']) . '" >
 					<input type="hidden" name="birthday" id="birthday" value="' . htmlspecialchars($user['birthday']) . '" >';
         }
         $markerArray['###BIRTHDATE_BLOCK###'] = $birthdate_block;
@@ -477,14 +477,14 @@ if (count($cart['products']) < 1) {
         if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
             $vat_id_block .= '<div class="account-field col-sm-6" id="input-tx_multishop_vat_id">
 			<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id')) . '</label>
-			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id"'.$disable_autofill.' value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '"/>
+			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id"' . $disable_autofill . ' value="' . htmlspecialchars($user['tx_multishop_vat_id']) . '"/>
 			</div>';
         }
         $coc_id_block = '';
         if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
             $coc_id_block .= '<div class="account-field col-sm-6" id="input-tx_multishop_coc_id">
 			<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id')) . '</label>
-			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id"'.$disable_autofill.' value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '"/>
+			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id"' . $disable_autofill . ' value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '"/>
 			</div>
 			';
         }
@@ -495,7 +495,7 @@ if (count($cart['products']) < 1) {
         if ($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
             $state_block .= '<div class="account-field col-sm-12" id="input-state">
 				<label class="account-state" for="state">' . ucfirst($this->pi_getLL('state')) . '*</label>
-				<input type="text" name="state" id="state" class="state"'.$disable_autofill.' value="' . htmlspecialchars($user['state']) . '" >
+				<input type="text" name="state" id="state" class="state"' . $disable_autofill . ' value="' . htmlspecialchars($user['state']) . '" >
 			</div>';
         }
         $markerArray['###STATE_BLOCK###'] = $state_block;
@@ -569,7 +569,7 @@ if (count($cart['products']) < 1) {
             $mobile_input = '
 			<div class="account-field col-sm-6" id="input-mobile">
 				<label for="mobile" id="account-mobile">' . ucfirst($this->pi_getLL('mobile')) . '</label>
-				<input type="text" name="mobile" id="mobile" class="mobile"'.$disable_autofill.' value="' . htmlspecialchars($user['mobile']) . '">
+				<input type="text" name="mobile" id="mobile" class="mobile"' . $disable_autofill . ' value="' . htmlspecialchars($user['mobile']) . '">
 			</div>
 			';
         }
@@ -624,7 +624,7 @@ if (count($cart['products']) < 1) {
             $delivery_state_block = '
 			<div class="account-field col-sm-7" id="input-dfstate">
 				<label class="account-state" for="delivery_state">' . ucfirst($this->pi_getLL('state')) . '*</label>
-				<input type="text" name="delivery_state" id="delivery_state" class="delivery_state"'.$disable_autofill.' value="' . htmlspecialchars($user['delivery_state']) . '" >
+				<input type="text" name="delivery_state" id="delivery_state" class="delivery_state"' . $disable_autofill . ' value="' . htmlspecialchars($user['delivery_state']) . '" >
 			</div>';
         }
         $markerArray['###DELIVERY_STATE_BLOCK###'] = $delivery_state_block;
@@ -651,7 +651,7 @@ if (count($cart['products']) < 1) {
             $mobile_input = '
 			<div class="account-field col-sm-6" id="input-dfmobile">
 				<label for="delivery_mobile" class="account_mobile">' . ucfirst($this->pi_getLL('mobile')) . '</label>
-				<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile"'.$disable_autofill.' value="' . htmlspecialchars($user['delivery_mobile']) . '">
+				<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile"' . $disable_autofill . ' value="' . htmlspecialchars($user['delivery_mobile']) . '">
 			</div>
 			';
         }

@@ -297,21 +297,21 @@ class mslib_fe {
             $filter[] = $having[0];
             unset($having);
         }
-        $continue=true;
+        $continue = true;
         $offset = 0;
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'])) {
             $params = array(
-                'filter' => &$filter,
-                'offset' => &$offset,
-                'limit' => &$limit,
-                'orderby' => &$orderby,
-                'having' => &$having,
-                'select' => &$select,
-                'where' => &$where,
-                'type' => &$type,
-                'product' => &$product,
-                'continue' => &$continue
+                    'filter' => &$filter,
+                    'offset' => &$offset,
+                    'limit' => &$limit,
+                    'orderby' => &$orderby,
+                    'having' => &$having,
+                    'select' => &$select,
+                    'where' => &$where,
+                    'type' => &$type,
+                    'product' => &$product,
+                    'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -689,14 +689,14 @@ class mslib_fe {
             $prefix = 'pf.';
             $prefix_p2c = 'pf.';
         }
-        $str_nolimit = $GLOBALS['TYPO3_DB']->SELECTquery($prefix.'products_id, '.$prefix_p2c.'categories_id', // SELECT ...
+        $str_nolimit = $GLOBALS['TYPO3_DB']->SELECTquery($prefix . 'products_id, ' . $prefix_p2c . 'categories_id', // SELECT ...
                 $from_clause, // FROM ...
                 $where_clause, // WHERE...
                 implode($groupby, ",") . $having_clause, // GROUP BY...
                 '', // ORDER BY...
                 '' // LIMIT ...
         );
-        $array['sql_nolimit']=$str_nolimit;
+        $array['sql_nolimit'] = $str_nolimit;
         // now do the real query including the order by and the limit
         $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode($select, ","), // SELECT ...
                 $from_clause, // FROM ...
@@ -945,7 +945,7 @@ class mslib_fe {
                     $GLOBALS['TYPO3_DB']->sql_free_result($qry);
                 }
                 if ($CACHE_FRONT_END) {
-                    $copy=serialize($output);
+                    $copy = serialize($output);
                     $Cache_Lite->save($copy, $string);
                 }
             } else {
@@ -2120,7 +2120,9 @@ class mslib_fe {
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
         if ($user['email']) {
-            $mail = new PHPMailer();
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/PHPMailer/PHPMailerAutoload.php');
+            $mail = new PHPMailer;
+            //$mail = new PHPMailer();
             $mail->CharSet = 'UTF-8';
             $mail->Encoding = 'base64';
             $mail->XMailer = ' ';
@@ -2146,7 +2148,7 @@ class mslib_fe {
             if (is_array($options['add_custom_header'])) {
                 foreach ($options['add_custom_header'] as $custom_header) {
                     if (is_array($custom_header)) {
-                        $mail->AddCustomHeader($custom_header[0],$custom_header[1]);
+                        $mail->AddCustomHeader($custom_header[0], $custom_header[1]);
                     } elseif ($custom_header) {
                         $mail->AddCustomHeader($custom_header);
                     }
@@ -2204,6 +2206,9 @@ class mslib_fe {
                 }
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
+            if (isset($options['sender'])) {
+                $mail->Sender=$options['sender'];
+            }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
             if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
@@ -2216,12 +2221,18 @@ class mslib_fe {
                     }
                 }
             }
+            $mail->isHTML(true);
             $mail->Subject = $subject;
-            //$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
             if (!$options['withoutImageEmbedding']) {
                 self::MsgHTMLwithEmbedImages($mail, $body);
             } else {
                 $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
+            }
+            // Plain version
+            if (isset($options['alt_body'])) {
+                $mail->AltBody = $options['alt_body'];
+            } else {
+                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
@@ -2244,7 +2255,7 @@ class mslib_fe {
             }
             // Sometims the dispatcher is using name instead of username
             if (!$user['username'] && $user['name']) {
-                $user['username']=$user['name'];
+                $user['username'] = $user['name'];
             }
             $mail->AddAddress($user['email'], $user['username']);
             if (is_array($options['add_cc']) && count($options['add_cc'])) {
@@ -2478,7 +2489,7 @@ class mslib_fe {
                     $GLOBALS['TYPO3_DB']->sql_free_result($qry);
                 }
                 if ($CACHE_FRONT_END) {
-                    $copy=serialize($output);
+                    $copy = serialize($output);
                     $Cache_Lite->save($copy, $string);
                     //$Cache_Lite->save(serialize($output), $string);
                 }
@@ -4529,6 +4540,31 @@ class mslib_fe {
         }
         return $category_tree_array;
     }
+    public function getProductCountOfSubCats($categories_id) {
+        $subcategories_array = array();
+        mslib_fe::getSubcats($subcategories_array, $categories_id);
+        $subcategories_array[sizeof($subcategories_array)] = $categories_id;
+        return mslib_fe::hasProducts($subcategories_array);
+    }
+    public function getSubcats(&$subcategories_array, $parent_id = 0, $page_uid = '') {
+        if (!is_numeric($page_uid)) {
+            $page_uid = $this->showCatalogFromPage;
+        }
+        $qry = $GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
+                'tx_multishop_categories', // FROM ...
+                'page_uid=\'' . $page_uid . '\' and status = \'1\' and parent_id = \'' . $parent_id . '\'', // WHERE...
+                '', // GROUP BY...
+                '', // ORDER BY...
+                '' // LIMIT ...
+        );
+        $subcategories_query = $GLOBALS['TYPO3_DB']->sql_query($qry);
+        while ($subcategories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
+            $subcategories_array[sizeof($subcategories_array)] = $subcategories['categories_id'];
+            if ($subcategories['categories_id'] != $parent_id) {
+                mslib_fe::getSubcats($subcategories_array, $subcategories['categories_id']);
+            }
+        }
+    }
     public function hasProducts($categories_ids, $include_disabled_products = 1) {
         if (is_numeric($categories_ids)) {
             $categories_ids = array($categories_ids);
@@ -4570,31 +4606,6 @@ class mslib_fe {
             return $row['total'];
         } else {
             return '0';
-        }
-    }
-    public function getProductCountOfSubCats($categories_id) {
-        $subcategories_array = array();
-        mslib_fe::getSubcats($subcategories_array, $categories_id);
-        $subcategories_array[sizeof($subcategories_array)] = $categories_id;
-        return mslib_fe::hasProducts($subcategories_array);
-    }
-    public function getSubcats(&$subcategories_array, $parent_id = 0, $page_uid = '') {
-        if (!is_numeric($page_uid)) {
-            $page_uid = $this->showCatalogFromPage;
-        }
-        $qry = $GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
-                'tx_multishop_categories', // FROM ...
-                'page_uid=\'' . $page_uid . '\' and status = \'1\' and parent_id = \'' . $parent_id . '\'', // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '' // LIMIT ...
-        );
-        $subcategories_query = $GLOBALS['TYPO3_DB']->sql_query($qry);
-        while ($subcategories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
-            $subcategories_array[sizeof($subcategories_array)] = $subcategories['categories_id'];
-            if ($subcategories['categories_id'] != $parent_id) {
-                mslib_fe::getSubcats($subcategories_array, $subcategories['categories_id']);
-            }
         }
     }
     public function hasCats($categories_id, $include_disabled_categories = 1) {
@@ -4751,7 +4762,7 @@ class mslib_fe {
                 }
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShoppingcartShippingCostsOverviewPostProc'] as $funcRef) {
-                        $params=array();
+                        $params = array();
                         $params['row3'] = &$row3;
                         $params['shipping_cost'] = &$shipping_cost;
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4856,8 +4867,8 @@ class mslib_fe {
             // hook
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingMethodPostProc'])) {
                 $params = array(
-                    'row3' => &$row3,
-                    'countries_id' =>$countries_id
+                        'row3' => &$row3,
+                        'countries_id' => $countries_id
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingMethodPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4963,12 +4974,12 @@ class mslib_fe {
     }
     public function countCartWeight() {
         //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-        $order=array();
-        $fetch_weight_record=false;
-        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id']>0) {
-            $order=mslib_fe::getOrder($this->get['orders_id']);
-            $products=$order['products'];
-            $fetch_weight_record=true;
+        $order = array();
+        $fetch_weight_record = false;
+        if (isset($this->get['orders_id']) && is_numeric($this->get['orders_id']) && $this->get['orders_id'] > 0) {
+            $order = mslib_fe::getOrder($this->get['orders_id']);
+            $products = $order['products'];
+            $fetch_weight_record = true;
         } else {
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
             $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
@@ -4981,15 +4992,21 @@ class mslib_fe {
             if (is_numeric($value['products_id'])) {
                 // get the product weight record when in edit order only
                 if (!$value['products_weight'] && $fetch_weight_record) {
-                    $tmp_product=mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
+                    $tmp_product = mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
                     if ($tmp_product['products_weight']) {
-                        $value['products_weight']=$tmp_product['products_weight'];
+                        $value['products_weight'] = $tmp_product['products_weight'];
                     }
                 }
                 $weight = ($weight + ($value['qty'] * $value['products_weight']));
             }
         }
         return $weight;
+    }
+    public function getOrder($string, $field = 'orders_id', $includeDeleted = 0) {
+        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+        $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+        $mslib_order->init($this);
+        return $mslib_order->getOrder($string, $field, $includeDeleted);
     }
     public function countCartQuantity() {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
@@ -5316,14 +5333,14 @@ class mslib_fe {
                 }
             }
         }
-        $round_product_price=false;
+        $round_product_price = false;
         if (is_numeric($this->get['products_id']) and ($this->get['tx_multishop_pi1']['action'] == 'add_to_cart' || $this->get['tx_multishop_pi1']['page_section'] == 'shopping_cart')) {
             if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                $round_product_price=true;
+                $round_product_price = true;
             }
         } else {
             if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                $round_product_price=true;
+                $round_product_price = true;
             }
         }
         if ($round_product_price) {
@@ -5542,7 +5559,7 @@ class mslib_fe {
             //hook to let other plugins further manipulate the settings
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCosts'] as $funcRef) {
-                    $params=array();
+                    $params = array();
                     $params['row3'] =& $row3;
                     $params['shipping_method'] =& $shipping_method;
                     $params['countries_id'] =& $countries_id;
@@ -5584,7 +5601,7 @@ class mslib_fe {
             } else {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsCustomType'] as $funcRef) {
-                        $params=array();
+                        $params = array();
                         $params['row3'] =& $row3;
                         $params['countries_id'] =& $countries_id;
                         $params['shipping_method'] =& $shipping_method;
@@ -6131,6 +6148,7 @@ class mslib_fe {
             }
         }
     }
+    // sea functions (for relatives) eof
     public function getNameProductById($id) {
         if (!is_numeric($id)) {
             return false;
@@ -6147,7 +6165,6 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         return $row['products_name'];
     }
-    // sea functions (for relatives) eof
     public function getNameCategoryById($id) {
         if (!is_numeric($id)) {
             return false;
@@ -6437,6 +6454,8 @@ class mslib_fe {
         } while ($oldstring != $string);
         return $string;
     }
+    ////
+    // Output a form input field
     public function tep_not_null($value) {
         if (is_array($value)) {
             if (sizeof($value) > 0) {
@@ -6452,8 +6471,6 @@ class mslib_fe {
             }
         }
     }
-    ////
-    // Output a form input field
     public function tep_cfg_select_option($select_array, $key_value, $key = '') {
         $string = '';
         for ($i = 0; $i < sizeof($select_array); $i++) {
@@ -6538,7 +6555,7 @@ class mslib_fe {
                 $loadFromPids[] = $this->showCatalogFromPage;
             }
         }
-        $pages=array();
+        $pages = array();
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentPreProc'])) {
             $params = array(
@@ -6567,7 +6584,7 @@ class mslib_fe {
                     while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentIteratorPreProc'])) {
                             $params = array(
-                                'row' => &$row
+                                    'row' => &$row
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCMScontentIteratorPreProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -6756,6 +6773,7 @@ class mslib_fe {
             return $row['products_options_values_id'];
         }
     }
+    // if the user is logged in and has admin rights lets check if the shop is fully configured
     public function countProducts($categories_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
@@ -6793,7 +6811,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         return $row['total'];
     }
-    // if the user is logged in and has admin rights lets check if the shop is fully configured
+    // checking if the required extensions are loaded eof
     public function giveSiteConfigurationNotice() {
         if (!$this->ms['MODULES']['DISABLE_MULTISHOP_CONFIGURATION_VALIDATION']) {
             $messages = array();
@@ -6899,7 +6917,6 @@ class mslib_fe {
             }
         }
     }
-    // checking if the required extensions are loaded eof
     function createStoreTTAddress() {
         $str = "select uid from tt_address where tx_multishop_address_type='store' and pid='" . $this->conf['fe_customer_pid'] . "' and tx_multishop_customer_id='0' and tx_multishop_default='0'";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -6943,7 +6960,7 @@ class mslib_fe {
     }
     public function TypoBox($header = '', $content = '', $id_name = '', $heading_type = 'h2') {
         return mslib_fe::htmlBox($header, $content);
-    }
+    } //end array2json
     public function ifPermissioned($uid, $usergroup_id) {
         if (!is_numeric($uid)) {
             return false;
@@ -6964,7 +6981,7 @@ class mslib_fe {
         } else {
             return 0;
         }
-    } //end array2json
+    }
     public function shadowBox($content) {
         return $content;
 //TODO: Please remove all calls to this method and remove the method
@@ -7695,7 +7712,7 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class'] = 'fa fa-money';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['label'] = $this->pi_getLL('admin_payment');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['description'] = $this->pi_getLL('admin_payment') . '.';
-            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['link']=mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['class'] = 'fa fa-credit-card';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label'] = $this->pi_getLL('admin_payment_methods');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
@@ -8115,7 +8132,7 @@ class mslib_fe {
             } else {
                 $filter[] = 'c.page_uid=\'' . $page_uid . '\'';
             }
-            $filter[] = 'cd.language_id='.$this->sys_language_uid;
+            $filter[] = 'cd.language_id=' . $this->sys_language_uid;
             $filter[] = 'c.categories_id=cd.categories_id';
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name', // SELECT ...
                     'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
@@ -8582,7 +8599,7 @@ class mslib_fe {
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $id, $updateArray);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         // update orders to paid
-                        $updateArray=array();
+                        $updateArray = array();
                         $updateArray['orders_paid_timestamp'] = time();
                         $updateArray['paid'] = 1;
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $row['orders_id'], $updateArray);
@@ -8732,12 +8749,6 @@ class mslib_fe {
         } else {
             return false;
         }
-    }
-    public function getOrder($string, $field = 'orders_id', $includeDeleted = 0) {
-        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
-        $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
-        $mslib_order->init($this);
-        return $mslib_order->getOrder($string, $field, $includeDeleted);
     }
     /*
 		this method is used to request the categories page set
@@ -9008,13 +9019,13 @@ class mslib_fe {
                 }
             }
             if (is_array($data['having']) && !count($data['where'])) {
-                $data['where']=array();
-                $data['where'][]='1=1';
+                $data['where'] = array();
+                $data['where'][] = '1=1';
             }
             if ($data['group_by']) {
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
                         implode(',', $data['from']), // FROM ...
-                        implode(' AND ', $data['where']).(is_array($data['having']) ? ' HAVING '.implode(' AND ', $data['having']) : ''), // WHERE...
+                        implode(' AND ', $data['where']) . (is_array($data['having']) ? ' HAVING ' . implode(' AND ', $data['having']) : ''), // WHERE...
                         implode(',', $data['group_by']), // GROUP BY...
                         '', // ORDER BY...
                         '' // LIMIT ...
@@ -9025,18 +9036,17 @@ class mslib_fe {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 $results['total_rows'] = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
             } else {
-                $selectQuery=$data['select_count'];
+                $selectQuery = $data['select_count'];
                 if ($data['having']) {
-                    $selectQuery=$data['select_count'].','.implode(',', $data['select']);
+                    $selectQuery = $data['select_count'] . ',' . implode(',', $data['select']);
                 }
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery($selectQuery, // SELECT ...
                         implode(',', $data['from']), // FROM ...
-                        implode(' AND ', $data['where']).(is_array($data['having']) ? ' HAVING '.implode(' AND ', $data['having']) : ''), // WHERE...
+                        implode(' AND ', $data['where']) . (is_array($data['having']) ? ' HAVING ' . implode(' AND ', $data['having']) : ''), // WHERE...
                         '', // GROUP BY...
                         '', // ORDER BY...
                         '' // LIMIT ...
                 );
-
                 if ($this->msDebug) {
                     $this->msDebugInfo .= $query . "\n\n";
                 }
@@ -9047,7 +9057,7 @@ class mslib_fe {
             if ($results['total_rows']) {
                 $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
                         implode(',', $data['from']), // FROM ...
-                        implode(' AND ', $data['where']).(is_array($data['having']) ? ' HAVING '.implode(' AND ', $data['having']) : ''), // WHERE...
+                        implode(' AND ', $data['where']) . (is_array($data['having']) ? ' HAVING ' . implode(' AND ', $data['having']) : ''), // WHERE...
                         implode(',', $data['group_by']), // GROUP BY...
                         implode(',', $data['order_by']), // ORDER BY...
                         $data['offset'] . ',' . $data['limit'] // LIMIT ...
@@ -9328,7 +9338,7 @@ class mslib_fe {
         } else {
             $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
             $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
-            $pageTitle=$shop[0]['title'];
+            $pageTitle = $shop[0]['title'];
             if ($shop[0]['nav_title']) {
                 $pageTitle = $shop[0]['nav_title'];
             }
@@ -10078,12 +10088,12 @@ class mslib_fe {
         }
     }
     public function getAddressInfo($type = 'shop', $customer_id = 0) {
-        $data=array();
+        $data = array();
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'])) {
             $params = array(
                     'data' => &$data,
-                    'type'=>&$type,
-                    'customer_id'=>&$customer_id,
+                    'type' => &$type,
+                    'customer_id' => &$customer_id,
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

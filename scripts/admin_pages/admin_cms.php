@@ -284,13 +284,13 @@ if (!count($pageset['dataset'])) {
         $markerArray['CMS_TYPE'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $row['id'] . '&action=edit_cms', 1) . '">' . htmlspecialchars($row['type']) . '</a>';
         $markerArray['CMS_DATE_CREATED'] = strftime("%x %X", $row['crdate']);
         $markerArray['CMS_VALUE_SHOP'] = '';
-        if (count($active_shop)>1) {
+        if (count($active_shop) > 1) {
             if ($row['page_uid'] > 0) {
                 $map_to_shop = '<strong>' . mslib_fe::getShopNameByPageUid($row['page_uid']) . '</strong>';
             } else {
                 $map_to_shop = '<strong>All</strong>';
             }
-            $markerArray['CMS_VALUE_SHOP'] = '<td class="cellStatus">'.$map_to_shop.'</td>';
+            $markerArray['CMS_VALUE_SHOP'] = '<td class="cellStatus">' . $map_to_shop . '</td>';
         }
         $markerArray['CMS_STATUS'] = $status_html;
         $markerArray['CMS_REMOVE_BUTTON'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&cms_id=' . $row['id'] . '&delete=1') . '" onclick="return confirm(\'' . htmlspecialchars($this->pi_getLL('are_you_sure')) . '?\')" class="text-danger admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-lg"></i></a>';
@@ -345,11 +345,11 @@ if (!count($pageset['dataset'])) {
     $subpartArray['###FOOTER_SORTBY_LINK_DATE_ADDED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
     $subpartArray['###LABEL_FOOTER_CMS_DATE_ADDED###'] = htmlspecialchars($this->pi_getLL('date_added'));
     $subpartArray['###LABEL_HEADER_STATUS###'] = $this->pi_getLL('status');
-    $subpartArray['###LABEL_HEADER_SHOP###']='';
-    $subpartArray['###LABEL_FOOTER_SHOP###']='';
+    $subpartArray['###LABEL_HEADER_SHOP###'] = '';
+    $subpartArray['###LABEL_FOOTER_SHOP###'] = '';
     if (count($active_shop) > 1) {
-        $subpartArray['###LABEL_HEADER_SHOP###'] = '<th class="cellStatus">'.$this->pi_getLL('shop', 'Shop').'</th>';
-        $subpartArray['###LABEL_FOOTER_SHOP###'] = '<th class="cellStatus">'.$this->pi_getLL('shop', 'Shop').'</th>';
+        $subpartArray['###LABEL_HEADER_SHOP###'] = '<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
+        $subpartArray['###LABEL_FOOTER_SHOP###'] = '<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
     }
     $subpartArray['###LABEL_HEADER_CMS_ACTION###'] = $this->pi_getLL('action');
     $subpartArray['###LABEL_FOOTER_STATUS###'] = $this->pi_getLL('status');

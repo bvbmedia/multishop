@@ -12,7 +12,7 @@ if ($p > 0) {
                             'Submit',
                             'tx_multishop_pi1[action]',
                             'clearcache'
-                    )),1) . '"><i class="fa fa-angle-double-left"></i></a></li>';
+                    )), 1) . '"><i class="fa fa-angle-double-left"></i></a></li>';
 } else {
     $tmp .= '<li class="pagenav_first disabled"><span><i class="fa fa-angle-double-left"></i></span></li>';
 }
@@ -23,14 +23,14 @@ if ($p > 0) {
                                 'Submit',
                                 'tx_multishop_pi1[action]',
                                 'clearcache'
-                        )),1) . '"><i class="fa fa-angle-left"></i></a></li>';
+                        )), 1) . '"><i class="fa fa-angle-left"></i></a></li>';
     } else {
         $tmp .= '<li class="pagenav_previous"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'tx_multishop_pi1[action]',
                                 'clearcache'
-                        )),1) . '"><i class="fa fa-angle-left"></i></a></li>';
+                        )), 1) . '"><i class="fa fa-angle-left"></i></a></li>';
     }
 } else {
     $tmp .= '<li class="pagenav_previous disabled"><span><i class="fa fa-angle-left"></i></span></li>';
@@ -62,7 +62,7 @@ for ($x = $start_page_number; $x <= $end_page_number; $x++) {
                                 'page',
                                 'tx_multishop_pi1[action]',
                                 'clearcache'
-                        )),1) . '">' . $x . '</a></li>';
+                        )), 1) . '">' . $x . '</a></li>';
     }
 }
 if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows']) {
@@ -71,7 +71,7 @@ if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows'])
                             'Submit',
                             'tx_multishop_pi1[action]',
                             'clearcache'
-                    )),1) . '"><span><i class="fa fa-angle-right"></i></span></a></li>';
+                    )), 1) . '"><span><i class="fa fa-angle-right"></i></span></a></li>';
 } else {
     $tmp .= '<li class="pagenav_next disabled"><span><i class="fa fa-angle-right"></i></span></li>';
 }
@@ -82,7 +82,7 @@ if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows'])
                             'Submit',
                             'tx_multishop_pi1[action]',
                             'clearcache'
-                    )),1) . '"><span><i class="fa fa-angle-double-right"></i></span></a></li>';
+                    )), 1) . '"><span><i class="fa fa-angle-double-right"></i></span></a></li>';
 } else {
     $tmp .= '<li class="pagenav_last disabled"><span><i class="fa fa-angle-double-right"></i></span></li>';
 }

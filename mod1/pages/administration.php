@@ -1,61 +1,5 @@
 <?php
-/*
-//QUICK LANGUAGE UID FIXER:
-
-$str='
-	tx_multishop_undo_products
-	tx_multishop_categories
-	tx_multishop_categories_description
-	tx_multishop_cms
-	tx_multishop_cms_description
-	tx_multishop_configuration_values
-	tx_multishop_manufacturers
-	tx_multishop_manufacturers_cms
-	tx_multishop_manufacturers_info
-	tx_multishop_orders
-	tx_multishop_orders_products
-	tx_multishop_orders_products_attributes
-	tx_multishop_orders_status_history
-	tx_multishop_payment_methods
-	tx_multishop_payment_shipping_mappings
-	tx_multishop_products
-	tx_multishop_products_attributes
-	tx_multishop_products_attributes_download
-	tx_multishop_products_attributes_extra
-	tx_multishop_products_description
-	tx_multishop_products_faq
-	tx_multishop_products_options
-	tx_multishop_products_options_values
-	tx_multishop_products_options_values_extra
-	tx_multishop_products_options_values_to_products_options
-	tx_multishop_products_to_categories
-	tx_multishop_products_to_extra_options
-	tx_multishop_products_to_relative_products
-	tx_multishop_product_wishlist
-	tx_multishop_reviews
-	tx_multishop_reviews_description
-	tx_multishop_shipping_countries
-	tx_multishop_countries_to_zones
-	tx_multishop_shipping_methods
-	tx_multishop_shipping_methods_costs
-	tx_multishop_shipping_options
-	tx_multishop_zones
-	tx_multishop_specials
-';
-$tables=explode("\n",$str);
-foreach ($tables as $table) {
-	$table=trim($table);
-	if ($table) {
-		$query='update '.$table.' set language_id=0 where language_id=6';
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-//		echo $query.'<br>';
-		$query='update '.$table.' set language_id=2 where language_id=8';
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-	}
-}
-//die();
-*/
-set_time_limit(86400);
+set_time_limit(7200);
 ignore_user_abort(true);
 switch ($_REQUEST['action']) {
     case 'configuration_actions':
@@ -1396,7 +1340,6 @@ switch ($_REQUEST['action']) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/categories');
             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . 'uploads/tx_multishop/tmp/' . $backup_folder . '/images/products');
             if (is_array($_GET['tx_multishop_pi']['selected_tables'])) {
-
                 if (in_array('images', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
                     // copy the category images to the backup folder
                     foreach ($data['tx_multishop_categories'] as $record) {

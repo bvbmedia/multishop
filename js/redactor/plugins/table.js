@@ -179,7 +179,7 @@
 				var rows = 2;
 				var columns = 3;
 				var $tableBox = $('<div>');
-				var $table = $('<table />');
+				var $table = $('<table class="table table-striped table-bordered" />');
 
 				for (var i = 0; i < rows; i++)
 				{

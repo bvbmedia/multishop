@@ -71,6 +71,41 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         return $menuArr;
     }
     // Create tmenu object for categories menu
+    function subMenuArray($dataArray) {
+        if (count($dataArray['subs'])) {
+            $tel = 0;
+            foreach ($dataArray['subs'] as $item) {
+                $menuArr[$tel]['title'] = $item['categories_name'];
+                $menuArr[$tel]['uid'] = '9999' . $item['categories_id'];
+                $menuArr[$tel]['description'] = $item['meta_description'];
+                $menuArr[$tel]['keywords'] = $item['meta_keywords'];
+                $menuArr[$tel]['image'] = '';
+                if ($item['categories_image']) {
+                    $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
+                }
+                // get all cats to generate multilevel fake url
+                $level = 0;
+                $cats = mslib_fe::Crumbar($item['categories_id']);
+                $cats = array_reverse($cats);
+                $where = '';
+                if (count($cats) > 0) {
+                    foreach ($cats as $tmp) {
+                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
+                        $level++;
+                    }
+                    $where = substr($where, 0, (strlen($where) - 1));
+                }
+                $link = mslib_fe::typolink($this->conf['shop_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
+                $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
+                $sub_content = $this->subMenuArray($item);
+                if ($sub_content) {
+                    $menuArr[$tel]['_SUB_MENU'] = $sub_content;
+                }
+                $tel++;
+            }
+        }
+        return $menuArr;
+    }
     function makeManufacturersHmenuArray($content, $conf) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_befe.php');
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_fe.php');
@@ -197,41 +232,6 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
             }
             $tel++;
-        }
-        return $menuArr;
-    }
-    function subMenuArray($dataArray) {
-        if (count($dataArray['subs'])) {
-            $tel = 0;
-            foreach ($dataArray['subs'] as $item) {
-                $menuArr[$tel]['title'] = $item['categories_name'];
-                $menuArr[$tel]['uid'] = '9999' . $item['categories_id'];
-                $menuArr[$tel]['description'] = $item['meta_description'];
-                $menuArr[$tel]['keywords'] = $item['meta_keywords'];
-                $menuArr[$tel]['image'] = '';
-                if ($item['categories_image']) {
-                    $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
-                }
-                // get all cats to generate multilevel fake url
-                $level = 0;
-                $cats = mslib_fe::Crumbar($item['categories_id']);
-                $cats = array_reverse($cats);
-                $where = '';
-                if (count($cats) > 0) {
-                    foreach ($cats as $tmp) {
-                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                        $level++;
-                    }
-                    $where = substr($where, 0, (strlen($where) - 1));
-                }
-                $link = mslib_fe::typolink($this->conf['shop_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
-                $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
-                $sub_content = $this->subMenuArray($item);
-                if ($sub_content) {
-                    $menuArr[$tel]['_SUB_MENU'] = $sub_content;
-                }
-                $tel++;
-            }
         }
         return $menuArr;
     }

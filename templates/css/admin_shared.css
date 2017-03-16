@@ -249,3 +249,10 @@ th.cellContentWithoutSpace { word-break:normal; }
 .info-light { color:#7BADC5 !important; }
 .success-light { color:#82B282 !important; }
 .default-light { color:#7F7E7E !important; }
+
+.btn { transition:background .25s, color .25s; }
+.btn .fa-stack .fa-circle { color:rgba(255,255,255,.2); }
+
+.redactor-modal-tab .checkbox { line-height:24px; padding:0; }
+.redactor-modal-tab .checkbox:after { clear:both; display:table; content:""; }
+.redactor-modal-tab .checkbox input[type="checkbox"] { position:static; float:left; line-height:0; margin:5px 5px 0 0; opacity:1; }

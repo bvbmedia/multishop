@@ -32,9 +32,8 @@ if ($this->post) {
             if (intval($this->post['tx_multishop_pi1']['orders_status_id'])) {
                 $updateArray = array();
                 $updateArray['page_uid'] = $this->post['related_shop_pid'];
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'].'\'', $updateArray);
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                 foreach ($this->post['tx_multishop_pi1']['order_status_name'] as $key => $value) {
                     $updateArray = array();
                     $updateArray['name'] = $value;
@@ -123,13 +122,13 @@ if (count($active_shop) > 1) {
         $content .= '<div class="form-group">
 			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_order_status_to_shop', 'Relate this order status to') . '</label>
 			<div class="col-md-10">
-			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.($row_status['page_uid']=='0' ? ' checked="checked"' : '').' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
+			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"' . ($row_status['page_uid'] == '0' ? ' checked="checked"' : '') . ' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
         foreach ($active_shop as $pageinfo) {
             $pageTitle = $pageinfo['title'];
             if ($pageinfo['nav_title']) {
                 $pageTitle = $pageinfo['nav_title'];
             }
-            $content .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '"'.($row_status['page_uid']==$pageinfo['uid'] ? ' checked="checked"' : '').' /><label>' . $pageTitle . '</label></div>';
+            $content .= '<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="' . $pageinfo['uid'] . '"' . ($row_status['page_uid'] == $pageinfo['uid'] ? ' checked="checked"' : '') . ' /><label>' . $pageTitle . '</label></div>';
         }
         $content .= '</div></div>';
     } else {
@@ -149,7 +148,7 @@ if (count($active_shop) > 1) {
 } else {
     $content .= '<input type="hidden" name="related_shop_pid" value="' . $this->showCatalogFromPage . '">';
 }
-$content .='
+$content .= '
 	<div class="form-group">
 		<div class="col-md-10 col-md-offset-2">
 		<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> ' . $this->pi_getLL('save') . '</button>
@@ -172,10 +171,10 @@ if (count($statusses)) {
     $content .= '<table class="table table-striped table-bordered msadmin_border">
 		<thead><th class="cellID">' . $this->pi_getLL('id') . '</th>
         <th class="cellName">' . $this->pi_getLL('name') . '</th>';
-        if (count($active_shop)>1) {
-            $content.='<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
-        }
-		$content.='<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
+    if (count($active_shop) > 1) {
+        $content .= '<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
+    }
+    $content .= '<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
 		<th class="cellAction">' . $this->pi_getLL('action') . '</th></thead><tbody>';
     foreach ($statusses as $status) {
         if (!$tr_type or $tr_type == 'even') {
@@ -189,7 +188,7 @@ if (count($statusses)) {
 		</td>
 		';
         $content .= '<td class="cellName">' . $status['name'] . '</td>';
-        if (count($active_shop)>1) {
+        if (count($active_shop) > 1) {
             $content .= '<td class="cellStatus">';
             if ($status['page_uid'] > 0) {
                 $content .= '<strong>' . mslib_fe::getShopNameByPageUid($status['page_uid']) . '</strong>';
@@ -198,7 +197,7 @@ if (count($statusses)) {
             }
             $content .= '</td>';
         }
-        $content.='
+        $content .= '
 		<td class="cellStatus">';
         if (!$status['default_status']) {
             $content .= '';

@@ -36,7 +36,7 @@ switch ($this->get['action']) {
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $content .= '<strong>Adding files for queue: ' . $objectFolderName . '</strong><br />';
             $filesToInsert = array();
-            $tel=0;
+            $tel = 0;
             foreach ($objectFolders as $key => $path) {
                 $content .= 'Scanning: ' . $key . ' folder.<br/>';
                 $GLOBALS['TYPO3_DB']->connectDB();

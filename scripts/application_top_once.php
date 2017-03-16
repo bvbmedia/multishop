@@ -16,7 +16,6 @@ if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_t
     exit();
 }
 // explanation: end loading globals
-include_once($this->DOCUMENT_ROOT_MS . 'res/PHPMailer/class.phpmailer.php');
 $paths = array();
 $paths[] = $this->DOCUMENT_ROOT . 'uploads/tx_multishop';
 $paths[] = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp';

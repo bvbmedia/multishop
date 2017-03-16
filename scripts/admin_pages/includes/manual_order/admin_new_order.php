@@ -223,7 +223,7 @@ if (count($products) < 0) {
         // country eof
         $content .= '</div>
 		<div class="form-group">
-			<label for="email" id="account-email">' . ucfirst($this->pi_getLL('e-mail_address')) . '</label>
+			<label for="email" id="account-email">' . ucfirst($this->pi_getLL('e-mail_address')) . '<span class="text-danger">*</span></label>
 			<input type="text" name="email" id="email" class="form-control email" autocomplete="off" value="' . htmlspecialchars($user['email']) . '" required="required" data-h5-errorid="invalid-email" title="' . $this->pi_getLL('email_is_required') . '">
 			<div id="invalid-email" class="error-space" style="display:none"></div>
 		</div>

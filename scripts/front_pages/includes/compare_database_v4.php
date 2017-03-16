@@ -257,12 +257,11 @@ if (!$qry) {
     $str = "ALTER TABLE `tx_multishop_orders_products` ADD `product_capital_price` decimal(24,14) default '0.00000000000000', ADD KEY `product_capital_price` (`product_capital_price`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
-
-    $sql_upd="UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
-    $res_upd=$GLOBALS['TYPO3_DB']->sql_query($sql_upd);
+    $sql_upd = "UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
+    $res_upd = $GLOBALS['TYPO3_DB']->sql_query($sql_upd);
 } else {
-    $sql_upd="UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
-    $res_upd=$GLOBALS['TYPO3_DB']->sql_query($sql_upd);
+    $sql_upd = "UPDATE tx_multishop_orders_products op INNER JOIN tx_multishop_products p ON op.products_id=p.products_id SET op.product_capital_price=p.product_capital_price WHERE op.product_capital_price=0";
+    $res_upd = $GLOBALS['TYPO3_DB']->sql_query($sql_upd);
 }
 $str = "select foreign_source_name from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -305,10 +304,10 @@ if (!$qry) {
     $order_records = mslib_befe::getRecords('', 'tx_multishop_orders_products');
     if (is_array($order_records) && count($order_records)) {
         foreach ($order_records as $order_record) {
-            $category_name=mslib_fe::getCategoryName($order_record['categories_id']);
+            $category_name = mslib_fe::getCategoryName($order_record['categories_id']);
             if ($category_name) {
                 $updateArray = array();
-                $updateArray['categories_name']=$category_name;
+                $updateArray['categories_name'] = $category_name;
                 $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=' . $order_record['orders_products_id'], $updateArray);
                 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
             }
@@ -343,7 +342,6 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-
 // add combined index for maximum speed
 $indexes = array();
 $table_name = 'tx_multishop_products_attributes';
@@ -387,10 +385,10 @@ if (!$qry) {
     $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `page_uid` int(11) default '0', ADD KEY `page_uid` (`page_uid`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
-    $products=mslib_befe::getRecords('', 'tx_multishop_orders_products', '', array(), '', '', '', array('orders_products_id', 'products_id'));
+    $products = mslib_befe::getRecords('', 'tx_multishop_orders_products', '', array(), '', '', '', array('orders_products_id', 'products_id'));
     if (is_array($products) && count($products)) {
         foreach ($products as $product) {
-            $product_info=mslib_befe::getRecord($product['products_id'], 'tx_multishop_products p, tx_multishop_products_to_categories p2c', 'p.products_id', array('p2c.is_deepest=1 and p.products_id=p2c.products_id'), 'p.page_uid, p2c.categories_id');
+            $product_info = mslib_befe::getRecord($product['products_id'], 'tx_multishop_products p, tx_multishop_products_to_categories p2c', 'p.products_id', array('p2c.is_deepest=1 and p.products_id=p2c.products_id'), 'p.page_uid, p2c.categories_id');
             if (is_array($product_info) && count($product_info)) {
                 if ($product_info['categories_id']) {
                     // get all cats to generate multilevel fake url
@@ -408,7 +406,7 @@ if (!$qry) {
                     }
                     // get all cats to generate multilevel fake url eof
                 }
-                $product_detail_link = $this->FULL_HTTP_URL.mslib_fe::typolink($product_info['page_uid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                $product_detail_link = $this->FULL_HTTP_URL . mslib_fe::typolink($product_info['page_uid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                 // update orders_products table
                 $updateArray = array();
                 $updateArray['page_uid'] = $product_info['page_uid'];
@@ -425,7 +423,7 @@ if (!$qry) {
     $str = "ALTER TABLE  `tx_multishop_payment_methods` ADD `hash` varchar(127) default '', ADD KEY `hash` (`hash`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
-    $payments=mslib_befe::getRecords('', 'tx_multishop_payment_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
+    $payments = mslib_befe::getRecords('', 'tx_multishop_payment_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
     if (is_array($payments) && count($payments)) {
         foreach ($payments as $payment) {
             // update orders_products table
@@ -442,7 +440,7 @@ if (!$qry) {
     $str = "ALTER TABLE  `tx_multishop_shipping_methods` ADD `hash` varchar(127) default '', ADD KEY `hash` (`hash`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
-    $shippings=mslib_befe::getRecords('', 'tx_multishop_shipping_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
+    $shippings = mslib_befe::getRecords('', 'tx_multishop_shipping_methods', '', array('hash=\'\''), '', '', '', array('id', 'hash'));
     if (is_array($shippings) && count($shippings)) {
         foreach ($shippings as $shipping) {
             // update orders_products table
