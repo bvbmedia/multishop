@@ -3,12 +3,13 @@
 <script type="text/javascript">
 function populateRelatedProduct(data) {
     if (data.related_product!=undefined) {
+        $('.cekbox:not(:checked)').parent().parent().remove();
+        $('.checkAll:not(:checked)').parent().parent().remove();
         $.each(data.related_product, function (categories_id, related_data) {
             var html_elem = '';
             if (categories_id > 0) {
                 var existing_fieldset_id = "#category" + categories_id;
                 var last_row_existing_fieldset = "#checkAllC" + categories_id;
-
                 if ($(existing_fieldset_id).length > 0) {
                     if (related_data.products.length>0) {
                         $.each(related_data.products, function (i, products_data) {
@@ -16,7 +17,6 @@ function populateRelatedProduct(data) {
                             if ($(existing_cb).length == 0) {
                                 if (products_data.checked == 1) {
                                     html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-
                                 } else {
                                     html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
                                 }
@@ -45,6 +45,11 @@ function populateRelatedProduct(data) {
                     html_elem += '</ul></div>';
                     $("#related_product_placeholder").append(html_elem);
                 }
+            }
+        });
+        $('.related_data_categories_name_listing > ul').each(function(i, obj){
+            if ($(this).children().length=='0') {
+                $(this).parent().remove();
             }
         });
     }
