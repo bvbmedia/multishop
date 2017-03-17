@@ -5273,7 +5273,12 @@ class mslib_befe {
             }
             foreach ($rows as $row) {
                 if ($rowCounter) {
-                    $content .= '<tr>';
+                    $trClass=array();
+                    if ($settings['trClassClass'][($rowCounter+1)]) {
+                        $trClass=array();
+                        $trClass[]=$settings['trClassClass'][($rowCounter+1)];
+                    }
+                    $content .= '<tr'.(count($trClass)?' class="'.implode(' ',$trClass).'"':'').'>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
