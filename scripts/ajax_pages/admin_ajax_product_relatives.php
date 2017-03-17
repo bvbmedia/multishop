@@ -122,7 +122,7 @@ if ($this->post['req'] == 'init') {
     }
 } else {
     if ($this->post['req'] == 'search') {
-        $where_relatives = '((products_id = ' . $pid . ') or (relative_product_id =  ' . $pid . ')) and relation_types=\'cross-sell\'';
+        /*$where_relatives = '((products_id = ' . $pid . ') or (relative_product_id =  ' . $pid . ')) and relation_types=\'cross-sell\'';
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('products_id, relative_product_id', // SELECT ...
                 'tx_multishop_products_to_relative_products', // FROM ...
                 $where_relatives, // WHERE.
@@ -134,25 +134,29 @@ if ($this->post['req'] == 'init') {
         $relations_data = array();
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-            if ($rows['relative_product_id'] != $product['products_id']) {
+            if ($rows['relative_product_id'] != $pid) {
                 if ($rows['relative_product_id'] > 0) {
                     $relations_data[] = $rows['relative_product_id'];
                 }
             } else {
-                if ($rows['products_id'] != $product['products_id']) {
+                if ($rows['products_id'] != $pid) {
                     if ($rows['products_id'] > 0) {
                         $relations_data[] = $rows['products_id'];
                     }
                 }
             }
         }
+        */
         $filter = array();
+        //if (is_array($relations_data) and count($relations_data)) {
+            //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
+        //}
         if (strlen($this->post['keypas']) > 1) {
             $filter[] = "A.products_name LIKE '%" . trim(mslib_befe::strtolower($this->post['keypas'])) . "%'";
         }
         $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "' and A.products_id=p.products_id";
         if (is_array($relations_data) and count($relations_data)) {
-            $filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
+            //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         }
         $subcat_query = '';
         if ($this->post['s_cid'] > 0) {
@@ -213,7 +217,7 @@ if ($this->post['req'] == 'init') {
                         $json_data['related_product'][$row['categories_id']]['products'] = array();
                         $product_counter = 0;
                         while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
-                            if (!in_array($row2['products_id'], $pid_regs)) {
+                            //if (!in_array($row2['products_id'], $pid_regs)) {
                                 $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id'] = $row2['products_id'];
                                 $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] = $row2['products_name'];
                                 if ($row2['products_model']) {
@@ -229,7 +233,7 @@ if ($this->post['req'] == 'init') {
                                 $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['link'] = $product_link;
                                 $pid_regs[] = $row2['products_id'];
                                 $product_counter++;
-                            }
+                            //}
                         }
                         if (!count($json_data['related_product'][$row['categories_id']]['products'])) {
                             unset($json_data['related_product'][$row['categories_id']]);
