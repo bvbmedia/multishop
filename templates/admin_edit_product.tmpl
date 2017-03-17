@@ -4,7 +4,7 @@
 function populateRelatedProduct(data) {
     if (data.related_product!=undefined) {
         $('.cekbox:not(:checked)').parent().parent().remove();
-        $('.checkAll:not(:checked)').parent().parent().remove();
+        //$('.checkAll:not(:checked)').parent().parent().remove();
         $.each(data.related_product, function (categories_id, related_data) {
             var html_elem = '';
             if (categories_id > 0) {
@@ -47,11 +47,36 @@ function populateRelatedProduct(data) {
             }
         });
         $('.related_data_categories_name_listing > ul').each(function(i, obj){
-            if ($(this).children().length=='0') {
-                $(this).parent().remove();
+            if ($(this).children().length=='0' || $(this).children().length=='1') {
+                var ul_id=$(this).attr('id').replace('category', '');
+                if ($(this).children().length=='1') {
+                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+                        $(this).parent().remove();
+                    }
+                } else {
+                    $(this).parent().remove();
+                }
             }
         });
+    } else {
+        $('.cekbox:not(:checked)').parent().parent().remove();
+        $('.related_data_categories_name_listing > ul').each(function(i, obj){
+            if ($(this).children().length=='0' || $(this).children().length=='1') {
+                var ul_id=$(this).attr('id').replace('category', '');
+                if ($(this).children().length=='1') {
+                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+                        $(this).parent().remove();
+                    }
+                } else {
+                    $(this).parent().remove();
+                }
+            }
+        });
+        if ($("#related_product_placeholder").children().length=='0'){
+            $("#related_product_placeholder").empty();
+        }
     }
+    $('#load').hide();
 }
 function saveRelation(url, related_pid) {
     $.ajax({
@@ -68,6 +93,7 @@ function deleteRelation(url, related_pid) {
     });
 }
 function initRelatedProduct(url) {
+    $('#load').show();
     $.ajax({
         type: "POST",
         url: url,
@@ -290,6 +316,7 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     // populate the existing related products
     initRelatedProduct(url_relatives);
     $(document).on('click', '#filter', function () {
+        $('#load').show();
         var keywords = $("#key").val();
         var cid = $("#rel_catid").val();
         if (cid=="" || cid=='undefined') {
