@@ -5274,7 +5274,7 @@ class mslib_befe {
             foreach ($rows as $row) {
                 if ($rowCounter) {
                     $trClass=array();
-                    if ($settings['trClassClass'][($rowCounter+1)]) {
+                    if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter+1)]) {
                         $trClass=array();
                         $trClass[]=$settings['trClassClass'][($rowCounter+1)];
                     }
