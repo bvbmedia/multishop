@@ -5243,7 +5243,7 @@ class mslib_befe {
                     }
                 }
             }
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' border=5 class="table table-striped table-bordered tablesorter">';
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
             $content .= '<thead><tr>';
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
