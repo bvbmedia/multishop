@@ -31,7 +31,6 @@ function populateRelatedProduct(data) {
                     $.each(related_data.products, function (i, products_data) {
                         if (products_data.checked == 1) {
                             html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-
                             checked_rp++;
                         } else {
                             html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
