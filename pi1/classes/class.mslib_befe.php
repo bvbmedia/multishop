@@ -5258,6 +5258,7 @@ class mslib_befe {
                         if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
+                        $classes[] = 'cell'.($cellCounter+1);
                         $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $val . '</td>';
                         $cellCounter++;
                     }
