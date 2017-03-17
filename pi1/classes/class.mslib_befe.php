@@ -5233,15 +5233,37 @@ class mslib_befe {
     }
     public function arrayToTable($rows, $idName = '', $settings = array()) {
         if (is_array($rows) && count($rows)) {
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
+            $maxCellCounter=0;
+            foreach ($rows as $row) {
+                $cellCounter = 0;
+                foreach ($row as $col => $val) {
+                    $cellCounter++;
+                    if ($cellCounter >= $maxCellCounter) {
+                        $maxCellCounter++;
+                    }
+                }
+            }
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' border=5 class="table table-striped table-bordered tablesorter">';
             $content .= '<thead><tr>';
             if ($settings['keyNameAsHeadingTitle']) {
+                $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $content .= '<th>' . $colName . '</th>';
+                    $colspan='';
+                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    }
+                    $content .= '<th'.$colspan.'>' . $colName . '</th>';
+                    $cellCounter++;
                 }
             } else {
+                $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $content .= '<th>' . $colVal . '</th>';
+                    $colspan='';
+                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    }
+                    $content .= '<th'.$colspan.'>' . $colVal . '</th>';
+                    $cellCounter++;
                 }
             }
             $content .= '</tr></thead><tbody>';
@@ -5259,10 +5281,15 @@ class mslib_befe {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
                         $classes[] = 'cell'.($cellCounter+1);
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $val . '</td>';
+                        $colspan='';
+                        if (count($row) == ($cellCounter+1) && count($row) < ($maxCellCounter)) {
+                            $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                        }
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') .$colspan. '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';
+
                 }
                 $rowCounter++;
             }
