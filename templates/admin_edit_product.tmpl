@@ -2,48 +2,81 @@
 <!-- ###JS_HEADER### begin -->
 <script type="text/javascript">
 function populateRelatedProduct(data) {
-    $.each(data.related_product, function (categories_id, related_data) {
-        var html_elem = '';
-        if (categories_id > 0) {
-            var existing_fieldset_id = "#category" + categories_id;
-            var last_row_existing_fieldset = "#checkAllC" + categories_id;
-
-            if ($(existing_fieldset_id).length > 0) {
-                $.each(related_data.products, function (i, products_data) {
-                    var existing_cb = '#cb_' + categories_id + '_' + products_data.id;
-                    if ($(existing_cb).length == 0) {
-                        if (products_data.checked == 1) {
-                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-
-                        } else {
-                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-                        }
+    if (data.related_product!=undefined) {
+        $('.cekbox:not(:checked)').parent().parent().remove();
+        //$('.checkAll:not(:checked)').parent().parent().remove();
+        $.each(data.related_product, function (categories_id, related_data) {
+            var html_elem = '';
+            if (categories_id > 0) {
+                var existing_fieldset_id = "#category" + categories_id;
+                var last_row_existing_fieldset = "#checkAllC" + categories_id;
+                if ($(existing_fieldset_id).length > 0) {
+                    if (related_data.products.length>0) {
+                        $.each(related_data.products, function (i, products_data) {
+                            var existing_cb = '#cb_' + categories_id + '_' + products_data.id;
+                            if ($(existing_cb).length == 0) {
+                                if (products_data.checked == 1) {
+                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                } else {
+                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                }
+                            }
+                        });
+                        $(last_row_existing_fieldset).before(html_elem);
                     }
-                });
-                $(last_row_existing_fieldset).before(html_elem);
-            } else {
-                html_elem += '<div class="related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
-                html_elem += '<ul id="category' + categories_id + '">';
-                var checked_rp = 0;
-                $.each(related_data.products, function (i, products_data) {
-                    if (products_data.checked == 1) {
-                        html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-
-                        checked_rp++;
-                    } else {
-                        html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                    }
-                });
-                if (checked_rp > 0) {
-                    html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
                 } else {
-                    html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
+                    html_elem += '<div class="related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
+                    html_elem += '<ul id="category' + categories_id + '">';
+                    var checked_rp = 0;
+                    $.each(related_data.products, function (i, products_data) {
+                        if (products_data.checked == 1) {
+                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                            checked_rp++;
+                        } else {
+                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                        }
+                    });
+                    if (checked_rp > 0) {
+                        html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
+                    } else {
+                        html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
+                    }
+                    html_elem += '</ul></div>';
+                    $("#related_product_placeholder").append(html_elem);
                 }
-                html_elem += '</ul></div>';
-                $("#related_product_placeholder").append(html_elem);
             }
+        });
+        $('.related_data_categories_name_listing > ul').each(function(i, obj){
+            if ($(this).children().length=='0' || $(this).children().length=='1') {
+                var ul_id=$(this).attr('id').replace('category', '');
+                if ($(this).children().length=='1') {
+                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+                        $(this).parent().remove();
+                    }
+                } else {
+                    $(this).parent().remove();
+                }
+            }
+        });
+    } else {
+        $('.cekbox:not(:checked)').parent().parent().remove();
+        $('.related_data_categories_name_listing > ul').each(function(i, obj){
+            if ($(this).children().length=='0' || $(this).children().length=='1') {
+                var ul_id=$(this).attr('id').replace('category', '');
+                if ($(this).children().length=='1') {
+                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+                        $(this).parent().remove();
+                    }
+                } else {
+                    $(this).parent().remove();
+                }
+            }
+        });
+        if ($("#related_product_placeholder").children().length=='0'){
+            $("#related_product_placeholder").empty();
         }
-    });
+    }
+    $('#load').hide();
 }
 function saveRelation(url, related_pid) {
     $.ajax({
@@ -60,6 +93,7 @@ function deleteRelation(url, related_pid) {
     });
 }
 function initRelatedProduct(url) {
+    $('#load').show();
     $.ajax({
         type: "POST",
         url: url,
@@ -100,6 +134,12 @@ jQuery(document).ready(function ($) {
             $('.save_as_new').attr('name', 'Submit');
         }
     });
+    $(document).on('keypress', 'input[name="keypas"]', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            $('#filter').click();
+        }
+    });
     $(document).on("keyup", ".msPriceExcludingVat", function (e) {
        if (e.keyCode!=9) {
            priceEditRealtimeCalc(true, this);
@@ -124,8 +164,7 @@ jQuery(document).ready(function ($) {
         }
     });
     $("#specials_sections").hide();
-    getSpecialsSections(###AJAX_PID###)
-    ;
+    getSpecialsSections(###AJAX_PID###);
 
 var url = document.location.toString();
 if (url.match('#')) {
@@ -276,9 +315,13 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
     // populate the existing related products
     initRelatedProduct(url_relatives);
-    $("#filter").click(function () {
+    $(document).on('click', '#filter', function () {
+        $('#load').show();
         var keywords = $("#key").val();
         var cid = $("#rel_catid").val();
+        if (cid=="" || cid=='undefined') {
+            cid=0;
+        }
         $.ajax({
             type: "POST",
             url: url_relatives,
