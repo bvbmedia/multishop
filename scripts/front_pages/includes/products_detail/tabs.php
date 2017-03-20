@@ -265,7 +265,7 @@ if (!$product['products_id']) {
         }
     }
     $output['products_description'] .= '
-		<ul class="tabs nav nav-tabs"">
+		<ul class="tabs nav nav-tabs">
 			' . $tab_header . '
 		</ul>
 		<div class="tab_container">
