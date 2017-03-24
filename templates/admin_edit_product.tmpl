@@ -129,11 +129,11 @@ function getSpecialsSections(products_id) {
 }
 ###JS_FUNCTIONS_EXTRA###
 jQuery(document).ready(function ($) {
-    /*$('input').keypress(function (event) {
+    $('input').keypress(function (event) {
         if (event.keyCode == 13) {
             $('.save_as_new').attr('name', 'Submit');
         }
-    });*/
+    });
     $(document).on('keypress', 'input[name="keypas"]', function (e) {
         if (e.keyCode == 13) {
             e.preventDefault();

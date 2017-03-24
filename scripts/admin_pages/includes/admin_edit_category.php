@@ -904,8 +904,8 @@ if ($this->post) {
 			</div>';
             $categories_meta_block .= '</div></div></div>';
         }
-        if (!empty($categories_content_block)) {
-            $GLOBALS['TSFE']->additionalHeaderData[] = '
+        if (!empty($categories_meta_block)) {
+            $GLOBALS['TSFE']->additionalHeaderData['meta_char_counter'] = '
             <script type="text/javascript">
             jQuery(document).ready(function($) {
                 $(".meta-title").each(function(idx, obj) {
@@ -1491,6 +1491,7 @@ $(document).on("change", "#remove_aspectratio", function(){
             $params = array(
                     'subpartArray' => &$subpartArray,
                     'category' => &$category,
+                    'lngcat' => $lngcat,
                     'plugins_extra_tab' => &$plugins_extra_tab,
                     'js_extra' => &$js_extra
             );
