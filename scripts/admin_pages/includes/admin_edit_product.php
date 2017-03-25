@@ -3077,7 +3077,7 @@ if ($this->post) {
 				<label for="products_meta_description" class="col-md-2 control-label">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
                     <div class="input-group width-fw">
-                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '">
+                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="168">
                         <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
                     </div>    
 				</div>
@@ -3088,7 +3088,7 @@ if ($this->post) {
 			';
         }
         if (!empty($meta_tags_block)) {
-            $GLOBALS['TSFE']->additionalHeaderData[] = '
+            $GLOBALS['TSFE']->additionalHeaderData['meta_char_counter'] = '
             <script type="text/javascript">
             jQuery(document).ready(function($) {
                 $(".meta-title").each(function(idx, obj) {
@@ -4513,6 +4513,7 @@ if ($this->post) {
             $params = array(
                     'subpartArray' => &$subpartArray,
                     'product' => &$product,
+                    'lngproduct' => &$lngproduct,
                     'plugins_extra_tab' => &$plugins_extra_tab
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPreProc'] as $funcRef) {
