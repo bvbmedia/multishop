@@ -3710,7 +3710,9 @@ class mslib_befe {
                     break;
                 case 'delete':
                     // removes the cache
-                    $Cache_Lite->remove($string);
+                    if ($Cache_Lite->get($string)) {
+                        $Cache_Lite->remove($string);
+                    }
                     break;
             }
         }

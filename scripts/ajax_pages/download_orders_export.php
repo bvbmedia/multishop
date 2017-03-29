@@ -18,7 +18,9 @@ if ($this->get['orders_export_hash']) {
     $Cache_Lite = new Cache_Lite($options);
     $string = 'productfeed_' . $this->shop_pid . '_' . serialize($orders_export) . '-' . md5($this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING']);
     if ($this->ADMIN_USER and $this->get['clear_cache']) {
-        $Cache_Lite->remove($string);
+        if ($Cache_Lite->get($string)) {
+            $Cache_Lite->remove($string);
+        }
     }
     if (!$content = $Cache_Lite->get($string)) {
         $fields = unserialize($orders_export['fields']);
@@ -397,6 +399,17 @@ if ($this->get['orders_export_hash']) {
                                 $excelCols[] = '';
                                 $excelCols[] = '';
                                 $excelCols[] = '';
+                                //hook to let other plugins further manipulate the replacers
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
+                                    $params = array(
+                                            'excelCols' => &$excelCols,
+                                            'product_tmp' => &$product_tmp,
+                                            'prod_ctr' => &$prod_ctr
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                             }
                         }
                         break;
