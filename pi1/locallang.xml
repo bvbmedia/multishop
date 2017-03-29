@@ -1167,7 +1167,7 @@
             <label index="your_payment_is_failed_">Your payment is failed</label>
             <label index="your_payment_is_pending">Your payment is pending</label>
             <label index="your_vat_id">Your VAT-id</label>
-            <label index="zip">zip</label>
+            <label index="zip">Zip</label>
             <label index="zip_is_required">Zip is a required field.</label>
             <label index="up_to_and_including">up to and including</label>
             <label index="feed_exporter_fields_label_products_multiplication">Multiplication</label>
@@ -2570,7 +2570,7 @@
             <label index="your_payment_is_failed_">Je betaling is mislukt</label>
             <label index="your_payment_is_pending">Je betaling is lopende</label>
             <label index="your_vat_id">Uw BTW-nummer</label>
-            <label index="zip">postcode</label>
+            <label index="zip">Postcode</label>
             <label index="zip_is_required">Postcode is verplicht</label>
             <label index="up_to_and_including">tot en met</label>
             <label index="feed_exporter_fields_label_products_multiplication">Vermeningvuldiging</label>
