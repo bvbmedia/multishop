@@ -53,13 +53,13 @@ if ($this->ADMIN_USER) {
                 }
             }
             $return_data[$invoice_idx] = array(
-                'id' => $invoice['invoice_id'],
-                'text' => $itemTitle,
-                'topic_prefix' => $this->pi_getLL('invoice_number'),
-                'topic_id' => $invoice['invoice_id'],
-                'company' => $company,
-                'customer_id' => $invoice['customer_id'],
-                'paid_status' => (!$invoice['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
+                    'id' => $invoice['invoice_id'],
+                    'text' => $itemTitle,
+                    'topic_prefix' => $this->pi_getLL('invoice_number'),
+                    'topic_id' => $invoice['invoice_id'],
+                    'company' => $company,
+                    'customer_id' => $invoice['customer_id'],
+                    'paid_status' => (!$invoice['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
             );
         }
     }

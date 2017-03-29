@@ -775,7 +775,6 @@ class mslib_fe {
                                 'product' => &$product,
                                 'disable_product' => &$disable_product,
                                 'current_tstamp' => &$current_tstamp
-
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArrayContinueIteratorPreProc'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2132,7 +2131,7 @@ class mslib_fe {
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
         if ($user['email']) {
-            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/PHPMailer/PHPMailerAutoload.php');
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/PHPMailer/PHPMailerAutoload.php');
             $mail = new PHPMailer;
             //$mail = new PHPMailer();
             $mail->CharSet = 'UTF-8';
@@ -2219,7 +2218,7 @@ class mslib_fe {
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
             if (isset($options['sender'])) {
-                $mail->Sender=$options['sender'];
+                $mail->Sender = $options['sender'];
             }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);

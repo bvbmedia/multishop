@@ -504,7 +504,7 @@ if ($this->ADMIN_USER) {
                     $prod['Product'] = false;
                     $prod['SmallListing'] = true;
                     $prod['EditIcons'] = '';
-                    $extra_buttons=array();
+                    $extra_buttons = array();
                     // hook to rewrite the whole methods
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchCustomersIteratorPostProc'])) {
                         $params_internal = array(
@@ -517,12 +517,12 @@ if ($this->ADMIN_USER) {
                         }
                     }
                     if (is_array($extra_buttons) && count($extra_buttons)) {
-                        $prod['HTMLRES']='<div class="row">
+                        $prod['HTMLRES'] = '<div class="row">
                             <div class="ajax_items_info col-md-8">
-                                <a href="'.$prod['Link'].'" class="contact_name linkItem"><span>'.$prod['Title'].'</span></a>
+                                <a href="' . $prod['Link'] . '" class="contact_name linkItem"><span>' . $prod['Title'] . '</span></a>
                             </div>
                             <div class="ajax_items_info col-md-4" style="text-align:right">
-                                '.implode(' | ', $extra_buttons).'
+                                ' . implode(' | ', $extra_buttons) . '
                             </div>
                         </div>';
                     }
