@@ -769,6 +769,18 @@ class mslib_fe {
                             $disable_product = true;
                         }
                     }
+                    //hook to let other plugins further manipulate the query
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArrayContinueIteratorPreProc'])) {
+                        $params = array(
+                                'product' => &$product,
+                                'disable_product' => &$disable_product,
+                                'current_tstamp' => &$current_tstamp
+
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArrayContinueIteratorPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     if ($disable_product && !$include_disabled_products) {
                         continue;
                     }
