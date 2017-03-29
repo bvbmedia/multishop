@@ -130,6 +130,16 @@ if ($this->get['orders_export_hash']) {
                             $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
                             $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
                             $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
+                            //hook to let other plugins further manipulate the replacers
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'])) {
+                                $params = array(
+                                        'excelHeaderCols' => &$excelHeaderCols,
+                                        'i' => &$i
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
                         }
                         break;
                     case 'turnover_per_category_incl_vat':
@@ -364,6 +374,17 @@ if ($this->get['orders_export_hash']) {
                             $excelCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
                             $excelCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
                             $excelCols[] = $product_tmp['products_tax'] . '%';
+                            //hook to let other plugins further manipulate the replacers
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'])) {
+                                $params = array(
+                                        'excelCols' => &$excelCols,
+                                        'product_tmp' => &$product_tmp,
+                                        'prod_ctr' => &$prod_ctr
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
                             $prod_ctr++;
                         }
                         if ($prod_ctr < $max_cols_num) {
