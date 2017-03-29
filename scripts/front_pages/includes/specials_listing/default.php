@@ -137,7 +137,7 @@ if (is_array($products)) {
         $markerArray['ITEM_PRODUCTS_PRICE'] = $item_products_price;
         $markerArray['ADMIN_MENU'] = $admin_menu;
         $markerArray['ADMIN_ICONS'] = $admin_menu;
-        $markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('view')) . ' ' . htmlspecialchars($product['products_name']);;
+        $markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('view')) . ' ' . htmlspecialchars($product['products_name']);
         $markerArray['ITEM_LABEL_VIEW'] = htmlspecialchars($this->pi_getLL('view'));
         $markerArray['ITEM_PRODUCTS_EXTERNAL_LINK'] = $product['products_url'];
         $markerArray['ITEM_PRODUCTS_EXTERNAL_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('buy')) . ' ' . htmlspecialchars($product['products_name']);

@@ -280,7 +280,7 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 $subpartArray['###HEADER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_AMOUNT###'] = $this->pi_getLL('amount');
 $subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
-$subpartArray['###LABEL_FOOTER_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);;
+$subpartArray['###LABEL_FOOTER_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);
 $key = 'shipping_method_label';
 if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
     $final_order_link = $order_link;

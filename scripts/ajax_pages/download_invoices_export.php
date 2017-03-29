@@ -232,7 +232,7 @@ if ($this->get['invoices_export_hash']) {
                             if (!empty($product_tmp['products_model'])) {
                                 $excelCols[] = $product_tmp['products_name'] . ' (' . $product_tmp['products_model'] . ')';
                             } else {
-                                $excelCols[] = $product_tmp['products_name'];;
+                                $excelCols[] = $product_tmp['products_name'];
                             }
                             $excelCols[] = $product_tmp['qty'];
                             $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');

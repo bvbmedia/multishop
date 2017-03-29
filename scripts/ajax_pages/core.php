@@ -558,7 +558,7 @@ switch ($this->ms['page']) {
                             } else {
                                 $tmp_return_data[$preselected_id] = implode(' > ', $catpath);
                             }
-                            $tmp_return_data_sort[$preselected_id] = implode(' > ', $catpath);;
+                            $tmp_return_data_sort[$preselected_id] = implode(' > ', $catpath);
                         }
                     }
                     if (is_array($tmp_return_data_sort) && count($tmp_return_data_sort)) {

@@ -1169,7 +1169,7 @@ class Stylesheet {
       print "<pre>[_image\n";
       print_r($parsed_url);
       print $this->get_protocol()."\n".$this->get_base_path()."\n".$path."\n";
-      print "_image]</pre>";;
+      print "_image]</pre>";
     }
     
     return $path;

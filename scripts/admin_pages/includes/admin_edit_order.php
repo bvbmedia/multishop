@@ -282,7 +282,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
                                             $optname = $this->post['edit_manual_option'][$x];
                                             $optid = 0;
-                                            $optvalname = $this->post['edit_manual_values'][$x];;
+                                            $optvalname = $this->post['edit_manual_values'][$x];
                                             $optvalid = 0;
                                             if (!$this->post['is_manual_option'][$x]) {
                                                 $optid = $this->post['edit_manual_option'][$x];

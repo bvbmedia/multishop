@@ -223,7 +223,7 @@ if ($this->post['req'] == 'init') {
                                 if ($row2['products_model']) {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
                                 }
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');;
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
                                 if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
                                     $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 1;
                                 } else {

@@ -252,9 +252,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //die();
                 $order_tax_data['total_orders_tax'] = (string)number_format($sub_total_tax + $shipping_tax + $payment_tax, 14, '.', '');
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)number_format((($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 }
                 $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
                 //
