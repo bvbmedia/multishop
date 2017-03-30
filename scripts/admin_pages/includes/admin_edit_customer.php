@@ -1063,19 +1063,18 @@ switch ($_REQUEST['action']) {
                     <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
                 </div>';
             }
-
-            $md5_list=array();
-            $md5_list[]=$this->post['gender'];
-            $md5_list[]=$this->post['first_name'];
-            $md5_list[]=$this->post['middle_name'];
-            $md5_list[]=$this->post['last_name'];
-            $md5_list[]=$this->post['street_name'];
-            $md5_list[]=$this->post['address_number'];
-            $md5_list[]=$this->post['address_ext'];
-            $md5_list[]=$this->post['zip'];
-            $md5_list[]=$this->post['city'];
-            $md5_list[]=$this->post['email'];
-            $billing_address_md5=md5(implode("", $md5_list));
+            $md5_list = array();
+            $md5_list[] = $this->post['gender'];
+            $md5_list[] = $this->post['first_name'];
+            $md5_list[] = $this->post['middle_name'];
+            $md5_list[] = $this->post['last_name'];
+            $md5_list[] = $this->post['street_name'];
+            $md5_list[] = $this->post['address_number'];
+            $md5_list[] = $this->post['address_ext'];
+            $md5_list[] = $this->post['zip'];
+            $md5_list[] = $this->post['city'];
+            $md5_list[] = $this->post['email'];
+            $billing_address_md5 = md5(implode("", $md5_list));
             //
             $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
             $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
@@ -1113,19 +1112,19 @@ switch ($_REQUEST['action']) {
             // delivery address
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
-                $md5_list=array();
-                $md5_list[]=$delivery_address['gender'];
-                $md5_list[]=$delivery_address['first_name'];
-                $md5_list[]=$delivery_address['middle_name'];
-                $md5_list[]=$delivery_address['last_name'];
-                $md5_list[]=$delivery_address['street_name'];
-                $md5_list[]=$delivery_address['address_number'];
-                $md5_list[]=$delivery_address['address_ext'];
-                $md5_list[]=$delivery_address['zip'];
-                $md5_list[]=$delivery_address['city'];
-                $md5_list[]=$delivery_address['email'];
-                $delivery_address_md5=md5(implode("", $md5_list));
-                if ($billing_address_md5!=$delivery_address_md5) {
+                $md5_list = array();
+                $md5_list[] = $delivery_address['gender'];
+                $md5_list[] = $delivery_address['first_name'];
+                $md5_list[] = $delivery_address['middle_name'];
+                $md5_list[] = $delivery_address['last_name'];
+                $md5_list[] = $delivery_address['street_name'];
+                $md5_list[] = $delivery_address['address_number'];
+                $md5_list[] = $delivery_address['address_ext'];
+                $md5_list[] = $delivery_address['zip'];
+                $md5_list[] = $delivery_address['city'];
+                $md5_list[] = $delivery_address['email'];
+                $delivery_address_md5 = md5(implode("", $md5_list));
+                if ($billing_address_md5 != $delivery_address_md5) {
                     $subpartArray['###DIFFERENT_DELIVERY_ADDRESS_CHECKED###'] = ' checked="checked"';
                     $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
                     $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');

@@ -4830,15 +4830,15 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $options=array()) {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $options = array()) {
         if (!$options['headingCollapseFontAwesomeClass']) {
-            $options['headingCollapseFontAwesomeClass']='fa fa-file-text-o';
+            $options['headingCollapseFontAwesomeClass'] = 'fa fa-file-text-o';
         }
         if ($enableCollapse) {
             if ($collapsed) {
                 $panelHeadingClasses[] = 'collapsed';
             }
-            $heading = '<a role="button"'.($options['headingCollapseLinkTitle']?' title="'.htmlspecialchars($options['headingCollapseLinkTitle']).'"':'').' data-toggle="collapse" href="#' . $panelId . 'Body"><i class="'.$options['headingCollapseFontAwesomeClass'].'"></i> ' . $heading . '</a>';
+            $heading = '<a role="button"' . ($options['headingCollapseLinkTitle'] ? ' title="' . htmlspecialchars($options['headingCollapseLinkTitle']) . '"' : '') . ' data-toggle="collapse" href="#' . $panelId . 'Body"><i class="' . $options['headingCollapseFontAwesomeClass'] . '"></i> ' . $heading . '</a>';
             $panelHeadingParams .= 'data-toggle="collapse" data-target="#' . $panelId . 'Body" aria-expanded="true"';
         }
         $content = '<div' . ($panelId ? ' id="' . $panelId . '"' : '') . ' class="panel panel-' . $panelClass . '">';
@@ -5235,7 +5235,7 @@ class mslib_befe {
     }
     public function arrayToTable($rows, $idName = '', $settings = array()) {
         if (is_array($rows) && count($rows)) {
-            $maxCellCounter=0;
+            $maxCellCounter = 0;
             foreach ($rows as $row) {
                 $cellCounter = 0;
                 foreach ($row as $col => $val) {
@@ -5250,21 +5250,21 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan='';
-                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    $colspan = '';
+                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th'.$colspan.'>' . $colName . '</th>';
+                    $content .= '<th' . $colspan . '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan='';
-                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    $colspan = '';
+                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th'.$colspan.'>' . $colVal . '</th>';
+                    $content .= '<th' . $colspan . '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
@@ -5275,28 +5275,27 @@ class mslib_befe {
             }
             foreach ($rows as $row) {
                 if ($rowCounter) {
-                    $trClass=array();
-                    if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter+1)]) {
-                        $trClass=array();
-                        $trClass[]=$settings['trClassClass'][($rowCounter+1)];
+                    $trClass = array();
+                    if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
+                        $trClass = array();
+                        $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $content .= '<tr'.(count($trClass)?' class="'.implode(' ',$trClass).'"':'').'>';
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . '>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
                         if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
-                        $classes[] = 'cell'.($cellCounter+1);
-                        $colspan='';
-                        if (count($row) == ($cellCounter+1) && count($row) < ($maxCellCounter)) {
-                            $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                        $classes[] = 'cell' . ($cellCounter + 1);
+                        $colspan = '';
+                        if (count($row) == ($cellCounter + 1) && count($row) < ($maxCellCounter)) {
+                            $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') .$colspan. '>' . $val . '</td>';
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $colspan . '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';
-
                 }
                 $rowCounter++;
             }

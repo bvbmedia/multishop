@@ -149,7 +149,7 @@ if ($this->post['req'] == 'init') {
         */
         $filter = array();
         //if (is_array($relations_data) and count($relations_data)) {
-            //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
+        //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         //}
         if (strlen($this->post['keypas']) > 1) {
             $filter[] = "A.products_name LIKE '%" . trim(mslib_befe::strtolower($this->post['keypas'])) . "%'";
@@ -218,21 +218,21 @@ if ($this->post['req'] == 'init') {
                         $product_counter = 0;
                         while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
                             //if (!in_array($row2['products_id'], $pid_regs)) {
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id'] = $row2['products_id'];
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] = $row2['products_name'];
-                                if ($row2['products_model']) {
-                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
-                                }
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
-                                if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
-                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 1;
-                                } else {
-                                    $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 0;
-                                }
-                                $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
-                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['link'] = $product_link;
-                                $pid_regs[] = $row2['products_id'];
-                                $product_counter++;
+                            $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id'] = $row2['products_id'];
+                            $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] = $row2['products_name'];
+                            if ($row2['products_model']) {
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
+                            }
+                            $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
+                            if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 1;
+                            } else {
+                                $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked'] = 0;
+                            }
+                            $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                            $json_data['related_product'][$row['categories_id']]['products'][$product_counter]['link'] = $product_link;
+                            $pid_regs[] = $row2['products_id'];
+                            $product_counter++;
                             //}
                         }
                         if (!count($json_data['related_product'][$row['categories_id']]['products'])) {

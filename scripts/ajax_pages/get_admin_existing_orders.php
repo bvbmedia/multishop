@@ -57,13 +57,13 @@ if ($this->ADMIN_USER) {
                 }
             }
             $return_data[] = array(
-                'id' => $order['orders_id'],
-                'text' => $itemTitle,
-                'topic_prefix' => $this->pi_getLL('admin_order_id'),
-                'topic_id' => $order['orders_id'],
-                'company' => $company,
-                'customer_id' => $order['customer_id'],
-                'paid_status' => (!$order['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
+                    'id' => $order['orders_id'],
+                    'text' => $itemTitle,
+                    'topic_prefix' => $this->pi_getLL('admin_order_id'),
+                    'topic_id' => $order['orders_id'],
+                    'company' => $company,
+                    'customer_id' => $order['customer_id'],
+                    'paid_status' => (!$order['paid'] ? $this->pi_getLL('has_not_been_paid') : '')
             );
         }
     }
