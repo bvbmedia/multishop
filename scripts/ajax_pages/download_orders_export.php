@@ -426,7 +426,7 @@ if ($this->get['orders_export_hash']) {
                         $excelCols[] = ($row['crdate'] > 0 ? strftime('%x', $row['crdate']) : '');
                         break;
                     case 'order_datetime':
-                        $excelCols[] = ($row['crdate'] > 0 ? date('Y-m-d H:i:s', $row['crdate']) : '');
+                        $excelCols[] = ($row['crdate'] > 0 ? date('Y-m-d G:i:s', $row['crdate']) : '');
                         break;
                     case 'order_company_name':
                         $excelCols[] = $row['billing_company'];
