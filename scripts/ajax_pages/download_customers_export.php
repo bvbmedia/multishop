@@ -25,8 +25,14 @@ if ($this->get['customers_export_hash']) {
     if (!$content = $Cache_Lite->get($string)) {
         $fields = unserialize($customers_export['fields']);
         $post_data = unserialize($customers_export['post_data']);
-        if (!$post_data['delimeter_type']) {
-            $post_data['delimeter_type'] = ';';
+        switch ($post_data['delimeter_type']) {
+            case '\t':
+                $post_data['delimeter_type'] = "\t";
+                break;
+            case '':
+                $post_data['delimeter_type'] = ';';
+                break;
+
         }
         $fields_values = $post_data['fields_values'];
         $records = array();
