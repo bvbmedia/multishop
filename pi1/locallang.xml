@@ -1407,6 +1407,7 @@
             <label index="select_order">Select order</label>
             <label index="select_invoice">Select invoice</label>
             <label index="select_company">Select company</label>
+            <label index="feed_exporter_fields_label_order_datetime">Order datetime</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2793,6 +2794,7 @@
             <label index="select_order">Selecteer bestelling</label>
             <label index="select_invoice">Selecteer factuur</label>
             <label index="select_company">Selecteer bedrijf</label>
+            <label index="feed_exporter_fields_label_order_datetime">Bestelling - besteldatum en tijdstip</label>
         </languageKey>
     </data>
 </T3locallang>
