@@ -3027,6 +3027,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 'item' => &$item,
                                 'product' => &$product,
                                 'cart' => &$this->cart,
+                                'shopping_cart_item'=>$shopping_cart_item,
                                 'c' => &$c,
                                 'sectionTemplateType' => &$sectionTemplateType
                         );

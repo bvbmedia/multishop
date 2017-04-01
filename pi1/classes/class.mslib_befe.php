@@ -4357,8 +4357,11 @@ class mslib_befe {
                     $params_internal = array(
                             'markerArray' => &$markerArray,
                             'table_type' => $table_type,
+                            'prefix' => $prefix,
                             'product' => $product_tmp,
                             'order_product' => $product,
+                            'customer_currency' => $customer_currency,
+                            'display_currency_symbol' => $display_currency_symbol
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
