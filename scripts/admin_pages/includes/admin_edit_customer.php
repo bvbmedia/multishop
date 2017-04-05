@@ -216,11 +216,17 @@ if ($this->post && $this->post['email']) {
                 }
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
                 if (!$this->post['different_delivery_address']) {
                     $updateTTAddressArray['tx_multishop_address_type'] = 'delivery';
                     $updateTTAddressArray['tx_multishop_default'] = 0;
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 } else {
                     // ADD TT_ADDRESS RECORD
                     $updateTTAddressArray = array();
@@ -276,8 +282,13 @@ if ($this->post && $this->post['email']) {
                             $updateTTAddressArray['department'] = $this->post['delivery_department'];
                         }
                     }
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 }
                 // custom hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPostProc'])) {
