@@ -2177,23 +2177,42 @@ class mslib_fe {
             }
             $markerArray = array();
             $markerArray['###SUBJECT###'] = $subject;
+            $markerArray['###MAIL_TITLE###'] = $subject;
             $markerArray['###BODY###'] = $body;
             // ADDITIONAL OPTIONAL MARKERS
             $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
             $markerArray['###STORE_EMAIL###'] = $this->ms['MODULES']['STORE_EMAIL'];
             $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
             $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
-            $markerArray['###STORE_ADDRESS###'] = '';
-            $markerArray['###STORE_ZIP###'] = '';
-            $markerArray['###STORE_CITY###'] = '';
-            $markerArray['###STORE_COUNTRY###'] = '';
+            $markerArray['###STORE_TELEPHONE###']='';
+            $markerArray['###STORE_COMPANY###']='';
+            $markerArray['###STORE_ADDRESS###']='';
+            $markerArray['###STORE_ZIP###']='';
+            $markerArray['###STORE_CITY###']='';
+            $markerArray['###STORE_COUNTRY###']='';
+            $markerArray['###STORE_LOCALIZED_COUNTRY###']='';
+            $markerArray['###STORE_BANK_NAME###']='';
+            $markerArray['###STORE_BANK_IBAN###']='';
+            $markerArray['###STORE_BANK_BIC###']='';
+            $markerArray['###STORE_VAT_ID###']='';
+            $markerArray['###STORE_COC_ID###']='';
+            $markerArray['###STORE_ADMINISTRATION_EMAIL###']='';
             if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store'] > 0) {
                 $address = mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
                 if (is_array($address) && $address['uid']) {
-                    $markerArray['###STORE_ADDRESS###'] = $address['address'];
-                    $markerArray['###STORE_ZIP###'] = $address['zip'];
-                    $markerArray['###STORE_CITY###'] = $address['city'];
-                    $markerArray['###STORE_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+                    $markerArray['###STORE_TELEPHONE###']=$address['phone'];
+                    $markerArray['###STORE_COMPANY###']=$address['company'];
+                    $markerArray['###STORE_ADDRESS###']=$address['address'];
+                    $markerArray['###STORE_ZIP###']=$address['zip'];
+                    $markerArray['###STORE_CITY###']=$address['city'];
+                    $markerArray['###STORE_COUNTRY###']=$address['country'];
+                    $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+                    $markerArray['###STORE_BANK_NAME###']=$address['tx_multishop_bank_name'];
+                    $markerArray['###STORE_BANK_IBAN###']=$address['tx_multishop_iban'];
+                    $markerArray['###STORE_BANK_BIC###']=$address['tx_multishop_bic'];
+                    $markerArray['###STORE_VAT_ID###']=$address['tx_multishop_vat_id'];
+                    $markerArray['###STORE_COC_ID###']=$address['tx_multishop_coc_id'];
+                    $markerArray['###STORE_ADMINISTRATION_EMAIL###']=$address['email'];
                 }
             }
             if (is_array($options['markerArray']) && count($options['markerArray'])) {
