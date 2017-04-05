@@ -412,6 +412,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
         // MARKERS EOL
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'])) {
+            $params = array(
+                    'cmsKeys' => &$cmsKeys,
+                    'order' => &$order,
+                    'markerArray' => &$markerArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $tmpcontent = $this->cObj->substituteMarkerArray($template, $markerArray);
         if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['debug']) {
             echo $tmpcontent;
