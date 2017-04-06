@@ -458,7 +458,7 @@ if (!$product['products_id']) {
             }
         }
     }
-    $markerArray['###CANONICAL_URL###'] = $productLink;
+    $markerArray['###CANONICAL_URL###'] = $this->FULL_HTTP_URL.$productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = '';
     if ($product['manufacturers_advice_price']) {
         if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
