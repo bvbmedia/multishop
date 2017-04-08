@@ -5141,6 +5141,9 @@ class mslib_befe {
         }
     }
     public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array()) {
+        if ($select && !is_array($select)) {
+            $select=array($select);
+        }
         if (!count($select)) {
             $select = array();
             $select[] = '*';
