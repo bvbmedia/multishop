@@ -5237,6 +5237,7 @@ class mslib_fe {
                     $shipping_tax += $handling_tax;
                     $shipping_methods[$shipping_method['code']]['shipping_costs'] = $shipping_cost;
                     $shipping_methods[$shipping_method['code']]['shipping_costs_including_vat'] = $shipping_cost + $shipping_tax;
+                    $shipping_methods[$shipping_method['code']]['override_shippingcosts'] = $row3['override_shippingcosts'];
                     $unserialize_sm = unserialize($row3['vars']);
                     $shipping_methods[$shipping_method['code']]['deliver_by'] = $shipping_method['name'];//$unserialize_sm['name'][0];
                     $shipping_methods[$shipping_method['code']]['product_name'] = $product_data['products_name'];
