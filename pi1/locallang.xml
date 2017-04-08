@@ -899,7 +899,7 @@
             <label index="new">new</label>
             <label index="new_customer">new customer</label>
             <label index="newsletter">Newsletter</label>
-            <label index="next">next</label>
+            <label index="next">Next</label>
             <label index="no">No</label>
             <label index="no_address_has_been_specified">address has not been specified</label>
             <label index="no_address_number_has_been_specified">address number has not been specified</label>
@@ -973,7 +973,7 @@
             <label index="personal_details">Personal details</label>
             <label index="personal_details_description">Fields with * are required</label>
             <label index="please_select_your_gender">Please select your salutation</label>
-            <label index="previous">previous</label>
+            <label index="previous">Previous</label>
             <label index="price">Price</label>
             <label index="price_excluding_vat">Price excl. VAT</label>
             <label index="price_including_vat">Price incl. VAT</label>
@@ -2304,7 +2304,7 @@
             <label index="new">nieuw</label>
             <label index="new_customer">nieuwe klant</label>
             <label index="newsletter">Nieuwsbrief</label>
-            <label index="next">volgende</label>
+            <label index="next">Volgende</label>
             <label index="no">Nee</label>
             <label index="no_address_has_been_specified">Adres is niet opgegeven</label>
             <label index="no_address_number_has_been_specified">Huisnummer is niet opgegeven</label>
@@ -2378,7 +2378,7 @@
             <label index="personal_details">Persoonlijke gegevens</label>
             <label index="personal_details_description">Velden gemarkeerd met * zijn verplicht</label>
             <label index="please_select_your_gender">Selecteer begroeting</label>
-            <label index="previous">vorige</label>
+            <label index="previous">Vorige</label>
             <label index="price">Prijs</label>
             <label index="price_excluding_vat">Prijs excl. BTW</label>
             <label index="price_including_vat">Prijs incl. BTW</label>
