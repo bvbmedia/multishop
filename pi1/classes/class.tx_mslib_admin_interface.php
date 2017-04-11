@@ -860,6 +860,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $array['searchForm'] = $searchForm;
                 $array['paginationMarkup'] = $paginationMarkup;
                 $array['dataset'] = $pageset['dataset'];
+                $array['total_rows'] = $pageset['total_rows'];
                 return $array;
             } else {
                 return $content;
