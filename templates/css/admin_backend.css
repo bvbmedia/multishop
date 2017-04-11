@@ -874,3 +874,4 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 }
 
 .img-border { border:1px solid #ccc; text-align:center; padding:1px; border-radius:4px; }
+.ui-widget-content .btn { color:#fff; }
