@@ -2162,7 +2162,18 @@ if (is_numeric($this->get['orders_id'])) {
                         $order_products_body_data['products_qty']['class'] = 'cellQty';
                         $order_products_body_data['products_qty']['value'] = '<input type="hidden" name="product_name" id="product_name" value="' . htmlspecialchars($order['products_name']) . '">';
                         $order_products_body_data['products_qty']['value'] .= '<input type="hidden" name="orders_products_id" value="' . $order['orders_products_id'] . '">';
-                        $order_products_body_data['products_qty']['value'] .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+
+
+
+                        $quantity_html = '<div class="quantity buttons_added">';
+                        $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty">';
+                        $quantity_html .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+                        $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="product_qty">';
+                        $quantity_html .= '</div>';
+
+
+                        $order_products_body_data['products_qty']['value'] .= $quantity_html;
+
                         // products name col
                         $order_products_body_data['products_name']['align'] = 'left';
                         $order_products_body_data['products_name']['class'] = 'cellName';
@@ -2972,7 +2983,13 @@ if (is_numeric($this->get['orders_id'])) {
                 $order_products_body_data['products_qty']['align'] = 'right';
                 $order_products_body_data['products_qty']['valign'] = 'top';
                 $order_products_body_data['products_qty']['value'] = '<input type="hidden" name="manual_product_name" id="product_name" value="">';
-                $order_products_body_data['products_qty']['value'] .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                // qty
+                $quantity_html = '<div class="quantity buttons_added">';
+                $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="manual_product_qty">';
+                $quantity_html .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="manual_product_qty">';
+                $quantity_html .= '</div>';
+                $order_products_body_data['products_qty']['value'] .= $quantity_html;
                 // products name col
                 $order_products_body_data['products_name']['align'] = 'left';
                 $order_products_body_data['products_name']['valign'] = 'top';
@@ -3509,6 +3526,41 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $tmpcontent .= '<script type="text/javascript">';
                 $tmpcontent .= '
+                $(".qty_minus").click(function () {
+                    var stepSize=parseFloat($(this).attr("data-stepSize"));
+                    var minQty=parseFloat($(this).attr("data-minQty"));
+                    var maxQty=parseFloat($(this).attr("data-maxQty"));
+                    var new_val = 0;
+                    var qty_id = "#" + $(this).attr("rel");
+                    var qty = parseFloat($(qty_id).val());
+                    if (qty > minQty) {
+                        new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    }
+                    if (parseFloat(new_val)==0) {
+                        new_val=minQty;
+                    }
+                    $(qty_id).val(new_val);
+                });
+                $(".qty_plus").click(function () {
+                    var stepSize=parseFloat($(this).attr("data-stepSize"));
+                    var minQty=parseFloat($(this).attr("data-minQty"));
+                    var maxQty=parseFloat($(this).attr("data-maxQty"));
+                    var qty_id = "#" + $(this).attr("rel");
+                    var qty = parseFloat($(qty_id).val());
+                    var new_val = 0;
+                    if (maxQty>0) {
+                        new_val=qty;
+                        if (qty < maxQty) {
+                            new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+                        }
+                        if (new_val>maxQty) {
+                            new_val=maxQty;
+                        }
+                    } else {
+                        new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+                    }
+                    $(qty_id).val(new_val);
+                });
                 // autocomplete for options val
                 var select2_cn = function(selector_str, placeholder, dropdowncss, ajax_url) {
                     $(selector_str).select2({
