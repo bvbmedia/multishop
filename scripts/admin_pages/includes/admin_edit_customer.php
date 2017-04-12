@@ -53,26 +53,26 @@ if ($this->post && $this->post['email']) {
         if ($this->post['birthday']) {
             $updateArray['date_of_birth'] = strtotime($this->post['birthday']);
         }
-        $updateArray['first_name'] = $this->post['first_name'];
-        $updateArray['middle_name'] = $this->post['middle_name'];
-        $updateArray['last_name'] = $this->post['last_name'];
+        $updateArray['first_name'] = trim($this->post['first_name']);
+        $updateArray['middle_name'] = trim($this->post['middle_name']);
+        $updateArray['last_name'] = trim($this->post['last_name']);
         $updateArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
         $updateArray['name'] = preg_replace('/\s+/', ' ', $updateArray['name']);
         $updateArray['gender'] = $this->post['gender'];
-        $updateArray['company'] = $this->post['company'];
-        $updateArray['building'] = $this->post['building'];
-        $updateArray['street_name'] = $this->post['street_name'];
-        $updateArray['address_number'] = $this->post['address_number'];
-        $updateArray['address_ext'] = $this->post['address_ext'];
+        $updateArray['company'] = trim($this->post['company']);
+        $updateArray['building'] = trim($this->post['building']);
+        $updateArray['street_name'] = trim($this->post['street_name']);
+        $updateArray['address_number'] = trim($this->post['address_number']);
+        $updateArray['address_ext'] = trim($this->post['address_ext']);
         $updateArray['address'] = $updateArray['street_name'] . ' ' . $updateArray['address_number'] . $updateArray['address_ext'];
         $updateArray['address'] = preg_replace('/\s+/', ' ', $updateArray['address']);
-        $updateArray['zip'] = $this->post['zip'];
-        $updateArray['city'] = $this->post['city'];
-        $updateArray['country'] = $this->post['country'];
-        $updateArray['email'] = $this->post['email'];
-        $updateArray['www'] = $this->post['www'];
-        $updateArray['telephone'] = $this->post['telephone'];
-        $updateArray['mobile'] = $this->post['mobile'];
+        $updateArray['zip'] = trim($this->post['zip']);
+        $updateArray['city'] = trim($this->post['city']);
+        $updateArray['country'] = trim($this->post['country']);
+        $updateArray['email'] = trim($this->post['email']);
+        $updateArray['www'] = trim($this->post['www']);
+        $updateArray['telephone'] = trim($this->post['telephone']);
+        $updateArray['mobile'] = trim($this->post['mobile']);
         $updateArray['tx_multishop_discount'] = $this->post['tx_multishop_discount'];
         $updateArray['tx_multishop_payment_condition'] = $this->post['tx_multishop_payment_condition'];
         if ($this->post['password']) {
@@ -83,14 +83,14 @@ if ($this->post && $this->post['email']) {
         }
         if (isset($this->post['tx_multishop_vat_id'])) {
             if (!empty($this->post['tx_multishop_vat_id'])) {
-                $updateArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
+                $updateArray['tx_multishop_vat_id'] = trim($this->post['tx_multishop_vat_id']);
             } else {
                 $updateArray['tx_multishop_vat_id'] = '';
             }
         }
         if (isset($this->post['tx_multishop_coc_id'])) {
             if (!empty($this->post['tx_multishop_coc_id'])) {
-                $updateArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
+                $updateArray['tx_multishop_coc_id'] = trim($this->post['tx_multishop_coc_id']);
             } else {
                 $updateArray['tx_multishop_coc_id'] = '';
             }
@@ -100,7 +100,7 @@ if ($this->post && $this->post['email']) {
         }
         if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
             if (isset($this->post['department'])) {
-                $updateArray['department'] = $this->post['department'];
+                $updateArray['department'] = trim($this->post['department']);
             }
         }
         if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
@@ -140,10 +140,10 @@ if ($this->post && $this->post['email']) {
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'])) {
                 $params = array(
-                        'uid' => $this->post['tx_multishop_pi1']['cid'],
-                        'updateArray' => &$updateArray,
-                        'user' => $user,
-                        'erno' => $erno
+                    'uid' => $this->post['tx_multishop_pi1']['cid'],
+                    'updateArray' => &$updateArray,
+                    'user' => $user,
+                    'erno' => $erno
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -164,7 +164,7 @@ if ($this->post && $this->post['email']) {
                 $updateTTAddressArray['tstamp'] = time();
                 $updateTTAddressArray['company'] = $updateArray['company'];
                 $updateTTAddressArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
-                $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+                $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $updateTTAddressArray['name']);
                 $updateTTAddressArray['first_name'] = $updateArray['first_name'];
                 $updateTTAddressArray['middle_name'] = $updateArray['middle_name'];
                 $updateTTAddressArray['last_name'] = $updateArray['last_name'];

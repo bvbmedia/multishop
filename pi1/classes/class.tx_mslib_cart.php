@@ -1347,8 +1347,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         // check for NULL, convert to empty string - typo3 v6.x related bug
         if (is_array($address) && count($address)) {
             foreach ($address as $key => $val) {
-                if ($val == null || $val == null) {
+                $val = trim($val);
+                if ($val == null || empty($val)) {
                     $address[$key] = '';
+                } else {
+                    $address[$key] = $val;
                 }
             }
         }

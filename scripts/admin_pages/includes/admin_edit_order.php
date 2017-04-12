@@ -158,9 +158,9 @@ if (is_numeric($this->get['orders_id'])) {
                         $keys[] = 'fax';
                         foreach ($keys as $key) {
                             $string = 'billing_' . $key;
-                            $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
+                            $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                             $string = 'delivery_' . $key;
-                            $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
+                            $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                         }
                         $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
                         $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
