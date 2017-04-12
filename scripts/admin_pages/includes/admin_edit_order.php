@@ -2990,6 +2990,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="manual_product_qty">';
                 $quantity_html .= '</div>';
                 $order_products_body_data['products_qty']['value'] .= $quantity_html;
+                $order_products_body_data['products_qty']['class'] = 'cellQty';
                 // products name col
                 $order_products_body_data['products_name']['align'] = 'left';
                 $order_products_body_data['products_name']['valign'] = 'top';
