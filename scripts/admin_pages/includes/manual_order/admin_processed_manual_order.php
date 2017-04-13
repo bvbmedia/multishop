@@ -206,7 +206,6 @@ if ($this->post['proceed_order']) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'])) {
             // hook
             $params = array(
-                    'ms' => $ms,
                     'insertArray' => &$insertArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'] as $funcRef) {
