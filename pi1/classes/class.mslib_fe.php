@@ -8828,7 +8828,7 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            if (!$force && $order['total_amount'] == 0) {
+            if ($order['total_amount'] == 0) {
                 // it does not make sense to create an invoice without an amount
                 return false;
             }
