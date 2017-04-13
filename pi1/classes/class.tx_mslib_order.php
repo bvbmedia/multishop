@@ -1359,6 +1359,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
             $insertArray['billing_email'] = $address['email'];
             $insertArray['billing_gender'] = $address['gender'];
+            switch($insertArray['billing_gender']) {
+                case '0':
+                    $insertArray['billing_gender']='m';
+                    break;
+                case '1':
+                    $insertArray['billing_gender']='f';
+                    break;
+            }
             $insertArray['billing_birthday'] = $address['birthday'];
             if (!$address['street_name']) {
                 $address['street_name'] = $address['address'];
@@ -1387,6 +1395,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
                 $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
                 $insertArray['delivery_gender'] = $insertArray['billing_gender'];
+                switch($insertArray['delivery_gender']) {
+                    case '0':
+                        $insertArray['delivery_gender']='m';
+                        break;
+                    case '1':
+                        $insertArray['delivery_gender']='f';
+                        break;
+                }
                 $insertArray['delivery_building'] = $insertArray['billing_building'];
                 $insertArray['delivery_street_name'] = $insertArray['billing_street_name'];
                 $insertArray['delivery_address'] = $insertArray['billing_address'];
@@ -1407,6 +1423,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
                 $insertArray['delivery_email'] = $address['delivery_email'];
                 $insertArray['delivery_gender'] = $address['delivery_gender'];
+                switch($insertArray['delivery_gender']) {
+                    case '0':
+                        $insertArray['delivery_gender']='m';
+                        break;
+                    case '1':
+                        $insertArray['delivery_gender']='f';
+                        break;
+                }
                 if (!$address['delivery_street_name']) {
                     $address['delivery_street_name'] = $address['delivery_address'];
                 }
