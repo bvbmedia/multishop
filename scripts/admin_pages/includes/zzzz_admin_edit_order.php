@@ -360,8 +360,8 @@ if (is_numeric($this->get['orders_id'])) {
                         $string = 'delivery_' . $key;
                         $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
                     }
-                    $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
-                    $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                    $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                    $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                     if (count($updateArray)) {
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);

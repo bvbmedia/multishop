@@ -162,8 +162,8 @@ if (is_numeric($this->get['orders_id'])) {
                             $string = 'delivery_' . $key;
                             $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                         }
-                        $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
-                        $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                        $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                        $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                         if (count($updateArray)) {
                             $updateArray['orders_last_modified'] = time();
                             // hook to let other plugins further manipulate
@@ -721,8 +721,8 @@ if (is_numeric($this->get['orders_id'])) {
                         $string = 'delivery_' . $key;
                         $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
                     }
-                    $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
-                    $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                    $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                    $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                     $updateArray['expected_delivery_date'] = '';
                     if ($this->post['expected_delivery_date']) {
                         $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);

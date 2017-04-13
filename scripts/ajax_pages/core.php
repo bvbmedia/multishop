@@ -2262,7 +2262,7 @@ switch ($this->ms['page']) {
                                     $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                                 }
                             }
-                            $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                            $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                             break;
                         case "billing_details":
                             $keys[] = 'gender';
@@ -2274,7 +2274,7 @@ switch ($this->ms['page']) {
                                     $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                                 }
                             }
-                            $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                            $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
                             break;
                     }
                     if (count($updateArray)) {

@@ -1821,7 +1821,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];
             $insertArray['billing_last_name'] = $address['last_name'];
-            $insertArray['billing_name'] = preg_replace('/ +/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
+            $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
             $insertArray['billing_email'] = $address['email'];
             $insertArray['billing_gender'] = $address['gender'];
             $insertArray['billing_birthday'] = strtotime($address['birthday']);
@@ -1887,7 +1887,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_first_name'] = $address['delivery_first_name'];
                 $insertArray['delivery_middle_name'] = $address['delivery_middle_name'];
                 $insertArray['delivery_last_name'] = $address['delivery_last_name'];
-                $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
+                $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
                 $insertArray['delivery_email'] = $address['delivery_email'];
                 $insertArray['delivery_gender'] = $address['delivery_gender'];
                 if (!$address['street_name']) {
