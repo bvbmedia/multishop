@@ -1308,7 +1308,8 @@ switch ($this->ms['page']) {
             // -------------------------------------------------- //
             $im = imagecreatetruecolor($canvas_width, $canvas_height);
             $black = ImageColorAllocate($im, 0x00, 0x00, 0x00);
-            $white = ImageColorAllocate($im, 0xff, 0xff, 0xff);
+            //$white = ImageColorAllocate($im, 0xff, 0xff, 0xff);
+            $white = imagecolorallocate($im, 255, 255, 255);
             $red = ImageColorAllocate($im, 0xff, 0x00, 0x00);
             $blue = ImageColorAllocate($im, 0x00, 0x00, 0xff);
             imagefilledrectangle($im, 0, 0, 300, 300, $white);
@@ -1418,9 +1419,13 @@ switch ($this->ms['page']) {
             // -------------------------------------------------- //
             //                    GENERATE
             // -------------------------------------------------- //
-            header('Content-type: image/gif');
-            imagegif($im);
+            header('Content-type: image/png');
+            imagepng($im);
             imagedestroy($im);
+
+            //header('Content-type: image/gif');
+            //imagegif($im);
+            //imagedestroy($im);
             exit();
         }
 //		}
