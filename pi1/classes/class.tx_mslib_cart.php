@@ -222,8 +222,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->post['quantity'] = $product['minimum_quantity'];
                     }
                     $product['qty'] = ($this->post['quantity']);
-                    $product['qty'] = round(number_format($product['qty'], 2), 2);
-                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2), 2);
+                    $product['qty'] = round(number_format($product['qty'], 2,'.',''), 2);
+                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2,'.',''), 2);
                     // chk if the product has staffel price
                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
                         if ($this->post['quantity']) {
@@ -233,6 +233,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                         $product['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
                     }
+
                     // custom hook that can be controlled by third-party plugin
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPricePostHook'])) {
                         $params = array(
