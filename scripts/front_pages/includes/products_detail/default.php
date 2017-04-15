@@ -663,6 +663,6 @@ if (!$product['products_id']) {
 		';
     }
     // custom hook that can be controlled by third-party plugin eof
-    $content .= $output['top_content'] . '<form action="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id=' . $product['products_id']) . '" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data"><div id="products_detail">' . $this->cObj->substituteMarkerArray($template, $markerArray) . '</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="' . htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']) . '" /></form>';
+    $content .= $output['top_content'] . '<form action="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id=' . $product['products_id']) . '" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data" autocomplete="off"><div id="products_detail">' . $this->cObj->substituteMarkerArray($template, $markerArray) . '</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="' . htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']) . '" /></form>';
 }
 ?>
