@@ -8763,7 +8763,7 @@ class mslib_fe {
                 }
             }
             $mailOrder = 1;
-            if (isset($this->post['send_paid_letter']) && $this->post['send_paid_letter']=='0') {
+            if (isset($this->post['tx_multishop_pi1']['send_paid_letter']) && $this->post['tx_multishop_pi1']['send_paid_letter']=='0') {
                 $mailOrder = 0;
             }
             //hook to let other plugins further manipulate the replacers
