@@ -70,6 +70,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $where = array();
         $orderby = array();
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
+        if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
+            $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
+        }
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (strpos($this->get['q'], '||optid') !== false) {
@@ -144,7 +147,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 );
             }
         }
-        $content = json_encode($data);
+        //$content = json_encode($data);
         break;
     case 'delete_product_attributes':
         if ($this->ADMIN_USER) {
