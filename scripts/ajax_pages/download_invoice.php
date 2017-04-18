@@ -162,6 +162,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_YOUR_COC_ID###'] = $this->pi_getLL('your_coc_id');
             $markerArray['###YOUR_COC_ID###'] = strtoupper($order['billing_coc_id']);
         }
+        $markerArray['###BILLING_EMAIL###']=$order['billing_email'];
         $markerArray['###BILLING_TELEPHONE###'] = '';
         if (!empty($order['billing_telephone'])) {
             $markerArray['###BILLING_TELEPHONE###'] = $order['billing_telephone'] . '<br/>';
@@ -177,6 +178,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###DELIVERY_MOBILE###'] = '';
         if (!empty($order['delivery_mobile'])) {
             $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'] . '<br/>';
+        }
+        $markerArray['###DELIVERY_EMAIL###']=$order['delivery_email'];
+        $markerArray['###DELIVERY_VAT_ID###']='';
+        if ($order['delivery_vat_id']) {
+            $markerArray['###DELIVERY_VAT_ID###']=strtoupper($order['delivery_vat_id']);
         }
         $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
         // CMS HEADER
@@ -482,7 +488,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
     }
 }
 if (file_exists($pdfFilePath)) {
-    header("Content-type:application/pdf");
+    $filename='';
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment; filename="'.$invoice['invoice_id'].'.pdf"');
+    header('Content-Length: ' . filesize($pdfFilePath));
     readfile($pdfFilePath);
     if ($this->get['tx_multishop_pi1']['forceRecreate']) {
         unlink($pdfFilePath);
