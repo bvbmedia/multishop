@@ -490,7 +490,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 if (file_exists($pdfFilePath)) {
     $filename='';
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="'.$invoice['invoice_id'].'.pdf"');
+    //header('Content-Disposition: attachment; filename="'.$invoice['invoice_id'].'.pdf"');
+    header('Content-Disposition: inline; filename="'.$invoice['invoice_id'].'.pdf"');
     header('Content-Length: ' . filesize($pdfFilePath));
     readfile($pdfFilePath);
     if ($this->get['tx_multishop_pi1']['forceRecreate']) {
