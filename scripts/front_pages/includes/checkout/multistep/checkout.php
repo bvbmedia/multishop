@@ -2,6 +2,8 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
+// Add header so Google never indexes the page
+header("X-Robots-Tag: noindex", true);
 $GLOBALS['TSFE']->additionalHeaderData[] = '<meta name="robots" content="noindex">' . "\n";
 if (!mslib_fe::loggedin() and $this->ms['MODULES']['DISABLE_CHECKOUT_FOR_GUESTS']) {
     // redirect to login page
