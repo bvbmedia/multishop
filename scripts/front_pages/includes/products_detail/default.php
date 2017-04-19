@@ -405,6 +405,8 @@ if (!$product['products_id']) {
     $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
     $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
     $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
+    $markerArray['###OLD_PRICE_RAW###'] = number_format($product['old_price'], 2, '.', '');
+    $markerArray['###FINAL_PRICE_RAW###'] = number_format($product['final_price'], 2, '.', '');
     $markerArray['###BACK_BUTTON###'] = $output['back_button'];
     $markerArray['###ADD_TO_CART_BUTTON###'] = $output['add_to_cart_button'];
     $markerArray['###PRODUCTS_META_DESCRIPTION###'] = $product['products_meta_description'];
