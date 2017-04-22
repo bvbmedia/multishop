@@ -147,7 +147,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 );
             }
         }
-        //$content = json_encode($data);
+        $content=json_encode($data);
         break;
     case 'delete_product_attributes':
         if ($this->ADMIN_USER) {
