@@ -5386,6 +5386,15 @@ class mslib_befe {
             return preg_replace('/<br\s?\/?>/i', "\r\n", $html);
         }
     }
+    function tableExists($tableName) {
+        if ($tableName) {
+            $query='SELECT 1 FROM '.addslashes($tableName).' LIMIT 1;';
+            if ($res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
+                return true;
+            }
+            return false;
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
