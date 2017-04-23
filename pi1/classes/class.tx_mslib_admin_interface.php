@@ -143,11 +143,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         $updateCookie = 0;
-        if ($that->get['Search'] and ($that->get['limit'] != $that->cookie['limit'])) {
-            $that->cookie['limit'] = $that->get['limit'];
-            $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
-            $params['settings']['limit'] = $that->cookie['limit'];
-            $updateCookie = 1;
+        if (!isset($params['settings']['limit'])) {
+            if ($that->get['Search'] and ($that->get['limit'] != $that->cookie['limit'])) {
+                $that->cookie['limit'] = $that->get['limit'];
+                $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
+                $params['settings']['limit'] = $that->cookie['limit'];
+                $updateCookie = 1;
+            }
         }
         if ($that->get['Search'] and ($that->get['display_all_records'] != $that->cookie['display_all_records'])) {
             $that->cookie['display_all_records'] = $that->get['display_all_records'];
@@ -166,7 +168,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $that->get['limit'] = $that->get['tx_multishop_pi1']['limit'];
             $params['settings']['limit'] = $that->get['limit'];
         }
-        if ($that->cookie['limit']) {
+        if (!isset($params['settings']['limit']) && $that->cookie['limit']) {
             /*
             if (!isset($that->get['limit']) || $that->get['limit']!=$that->cookie['limit']) {
                 if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
