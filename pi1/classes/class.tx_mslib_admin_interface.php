@@ -503,6 +503,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = '';
                             }
                             break;
+                        case 'date_datetime_tooltip':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
                         case 'timestamp':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%x %X", $row[$col]);
@@ -611,6 +618,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             }
                             $status_html .= '</span>';
                             $row[$col] = $status_html;
+                            break;
+                        case 'options_selectbox':
+                            $options_selectbox_html='';
+                            $options_array=$valArray['optionsValue'];
+                            $options_name=(isset($valArray['optionsName']) && !empty($valArray['optionsName']) ? $valArray['optionsName'] : $col);
+                            $options_class=(isset($valArray['optionsClass']) && !empty($valArray['optionsClass']) ? ' ' . $valArray['optionsClass'] : 'change_'.$col);
+                            if (is_array($options_array) && count($options_array)) {
+                                $options_selectbox_html = '<select name="'.$options_name.'" class="form-control'.$options_class.'">
+		                        <option value="">' . $this->pi_getLL('choose') . '</option>';
+                                if (is_array($options_array)) {
+                                    foreach ($options_array as $item) {
+                                        $options_selectbox_html .= '<option value="' . $item['id'] . '"' . ($item['id'] == $originalValue ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                    }
+                                }
+                                $options_selectbox_html .= '</select>';
+                            }
+                            $row[$col] = $options_selectbox_html;
                             break;
                     }
                     $adjustedValue = $row[$col];
