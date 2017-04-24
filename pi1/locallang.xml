@@ -1410,6 +1410,7 @@
             <label index="feed_exporter_fields_label_order_datetime">Order datetime</label>
             <label index="go_to_order_details">Go to order details</label>
             <label index="send_payment_received_email">Send payment received email</label>
+            <label index="feeds">Feeds</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
