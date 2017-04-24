@@ -5424,9 +5424,6 @@ class mslib_fe {
                     }
                 }
             }
-            if ($disable_product && !$include_disabled_products) {
-                return false;
-            }
             // hook
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'])) {
                 $params = array(
@@ -5436,12 +5433,16 @@ class mslib_fe {
                         'extra_fields' => $extra_fields,
                         'include_disabled_products' => $include_disabled_products,
                         'skipFlatDatabase' => $skipFlatDatabase,
+                        'disable_product' => &$disable_product
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
             // hook eof
+            if ($disable_product && !$include_disabled_products) {
+                return false;
+            }
             if ($this->conf['disableFeFromCalculatingVatPrices'] != '1') {
                 $tax_ruleset = self::getTaxRuleSet($product['tax_id'], 0);
                 $product['tax_rate'] = ($tax_ruleset['total_tax_rate'] / 100);
