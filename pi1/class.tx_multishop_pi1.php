@@ -105,6 +105,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $this->server['REMOTE_ADDR'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
         }
         $this->server['HTTP_HOST'] = mslib_befe::strtolower(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'));
+        $this->server['HTTPS'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTPS');
         $tmp = explode("?", $this->server['REQUEST_URI']);
         $this->server['REQUEST_URI'] = $tmp[0];
         $this->server['REQUEST_URI'] = preg_replace("/^\//is", '', $this->server['REQUEST_URI']);
