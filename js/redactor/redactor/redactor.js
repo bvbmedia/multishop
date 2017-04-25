@@ -1,7 +1,7 @@
 /*
 	Redactor II
-	Version 2.2
-	Updated: February 20, 2017
+	Version 2.4
+	Updated: March 24, 2017
 
 	http://imperavi.com/redactor/
 
@@ -101,7 +101,7 @@
 
 	// Options
 	$.Redactor = Redactor;
-	$.Redactor.VERSION = '2.2';
+	$.Redactor.VERSION = '2.4';
 	$.Redactor.modules = ['air', 'autosave', 'block', 'buffer', 'build', 'button', 'caret', 'clean', 'code', 'core', 'detect', 'dropdown',
 						  'events', 'file', 'focus', 'image', 'indent', 'inline', 'insert', 'keydown', 'keyup',
 						  'lang', 'line', 'link', 'linkify', 'list', 'marker', 'modal', 'observe', 'offset', 'paragraphize', 'paste', 'placeholder',
@@ -312,6 +312,7 @@
 							'button', 'option', 'map', 'area', 'math', 'hr', 'fieldset', 'legend', 'hgroup', 'nav', 'figure', 'details', 'menu', 'summary', 'p'],
 		emptyHtml: '<p>&#x200b;</p>',
 		invisibleSpace: '&#x200b;',
+		emptyHtmlRendered: $('').html('​').html(),
 		imageTypes: ['image/png', 'image/jpeg', 'image/gif'],
 		userAgent: navigator.userAgent.toLowerCase(),
 		observe: {
@@ -1695,7 +1696,7 @@
 									func: 'link.show',
 									observe: {
 										element: 'a',
-										in: {
+										'in': {
 											title: this.lang.get('link-edit'),
 										},
 										out: {
@@ -2884,6 +2885,11 @@
 
 					html = $div.html();
 
+					// convert php tags
+					html = html.replace('<!--?php', '<?php');
+					html = html.replace('<!--?', '<?');
+					html = html.replace('?-->', '?>');
+
 					$div.remove();
 
 					return html;
@@ -3187,8 +3193,7 @@
 
     					if (s.match(/<pre(.*?)>(([\n\r\s]+)?)<code(.*?)>/i))
     					{
-
-        					arr = s.match(/<pre(.*?)>(([\n\r\s]+)?)<code(.*?)>([\w\W]*?)<\/code><\/pre>/i);
+        					arr = s.match(/<pre(.*?)>(([\n\r\s]+)?)<code(.*?)>([\w\W]*?)<\/code>(([\n\r\s]+)?)<\/pre>/i);
         					codeTag = true;
 
                             contents = arr[5];
@@ -4609,8 +4614,22 @@
 					}
 
 					this.events.dropImage = false;
-
 					this.storage.add({ type: type, node: $img[0], url: $img[0].src, id: id });
+
+					var nextNode = $img[0].nextSibling;
+					var $nextFigure = $figure.next();
+					var isNextEmpty = $(nextNode).text().replace(/\u200B/g, '');
+					var isNextFigureEmpty = $nextFigure.text().replace(/\u200B/g, '');
+
+					if (isNextEmpty === '')
+					{
+    					$(nextNode).remove();
+					}
+
+					if ($nextFigure.length === 1 && $nextFigure[0].tagName === 'FIGURE' && isNextFigureEmpty === '')
+					{
+    					$nextFigure.remove();
+					}
 
 					if (direct !== null)
 					{
@@ -4752,7 +4771,6 @@
 					});
 
 					$(document).off('mousedown.redactor-image-resize-hide.' + this.uuid);
-
 
 					if (typeof this.image.resizeHandle !== 'undefined')
 					{
@@ -5497,6 +5515,12 @@
             				}
                         }
 
+                        // bugfix: remove empty inline tags after selection
+                        if (self.detect.isFirefox())
+                        {
+                            self.core.editor().find(tag + ':empty').remove();
+                        }
+
                         // cache style
                         $el.attr('data-redactor-style-cache', $el.attr('style'));
 
@@ -5734,7 +5758,23 @@
 				},
 				removeFormat: function()
 				{
-					document.execCommand('removeFormat');
+    				this.selection.save();
+
+    				var nodes = this.inline.getClearedNodes();
+
+    				for (var i = 0; i < nodes.length; i++)
+    				{
+        				if (nodes[i].nodeType === 1)
+        				{
+            				$(nodes[i]).replaceWith(function()
+                            {
+                                return $(this).contents();
+                            });
+
+        				}
+    				}
+
+    				this.selection.restore();
 				},
 				removeStyleRule: function(name)
 				{
@@ -6280,7 +6320,7 @@
 					}
 
 					// on Shift+Space or Ctrl+Space
-					if (key === this.keyCode.SPACE && (e.ctrlKey || e.shiftKey))
+					if (!this.keyup.lastShiftKey && key === this.keyCode.SPACE && (e.ctrlKey || e.shiftKey))
 					{
 						e.preventDefault();
 
@@ -6307,10 +6347,28 @@
 						return this.keydown.onTab(e, key);
 					}
 
+                    // firefox bugfix
+					if (this.detect.isFirefox() && key === this.keyCode.BACKSPACE && this.keydown.block && this.keydown.block.tagName === 'P' && this.utils.isStartOfElement(this.keydown.block))
+					{
+    					var $prev = $(this.keydown.block).prev();
+    					if ($prev.length !== 0)
+    					{
+        					e.preventDefault();
+
+        					$prev.append(this.marker.get());
+        					$prev.append($(this.keydown.block).html());
+        					$(this.keydown.block).remove();
+
+                            this.selection.restore();
+
+        					return;
+    					}
+					}
+
 					// backspace & delete
 					if (key === this.keyCode.BACKSPACE || key === this.keyCode.DELETE)
 					{
-    					if (this.observe.image && typeof this.observe.image !== 'undefined')
+    					if (this.observe.image && typeof this.observe.image !== 'undefined' && $('#redactor-image-box').length !== 0)
     					{
         					e.preventDefault();
 
@@ -6332,7 +6390,6 @@
 
 						this.keydown.onBackspaceAndDeleteBefore();
 					}
-
 
 					if (key === this.keyCode.DELETE)
 					{
@@ -6440,7 +6497,7 @@
 						this.code.syncFire = false;
 						this.keydown.removeEmptyLists();
 
-						this.core.editor().find('*[style]').not('img, #redactor-image-box, #redactor-image-editter, [data-redactor-span]').removeAttr('style');
+						this.core.editor().find('*[style]').not('img, figure, #redactor-image-box, #redactor-image-editter, [data-redactor-span]').removeAttr('style');
 
 						this.keydown.formatEmpty(e);
 						this.code.syncFire = true;
@@ -6611,22 +6668,19 @@
 				},
 				exitFromBlockquote: function(e)
 				{
-
 					if (!this.utils.isEndOfElement(this.keydown.blockquote))
 					{
 						return;
 					}
 
 					var tmp = this.clean.removeSpacesHard($(this.keydown.blockquote).html());
-					if (tmp.search(/(<br\s?\/?>){3}$/i) !== -1)
+					if (tmp.search(/(<br\s?\/?>){1}$/i) !== -1)
 					{
 						e.preventDefault();
 
-						var $last = $(this.keydown.blockquote).children().last().prev();
+						var $last = $(this.keydown.blockquote).children().last();
 
-						$last.prev().filter('br').remove();
 						$last.filter('br').remove();
-						$(this.keydown.blockquote).children().last().filter('br').remove();
 						$(this.keydown.blockquote).children().last().filter('span').remove();
 
 						var node = $(this.opts.emptyHtml);
@@ -6638,7 +6692,6 @@
 					}
 
 					return;
-
 				},
 				onArrowDown: function()
 				{
@@ -6833,6 +6886,11 @@
 					{
 						var br2 = document.createElement('br');
 						this.insert.node(br2);
+						this.caret.after(br2);
+					}
+					else
+					{
+    					this.caret.after(br1);
 					}
 
 					return false;
@@ -7006,6 +7064,8 @@
 					this.keyup.block = this.selection.block();
 					this.keyup.current = this.selection.current();
 					this.keyup.parent = this.selection.parent();
+					this.keyup.lastShiftKey = e.shiftKey;
+
 
 					// callback
 					var stop = this.core.callback('keyup', e);
@@ -7039,7 +7099,6 @@
 
 							return;
 						}
-
 
 						// if caret before figure - delete image
 						if (this.keyup.block && this.keydown.block && this.keyup.block.tagName === 'FIGURE' && this.utils.isStartOfElement(this.keydown.block))
@@ -7253,7 +7312,6 @@
 				update: function($el, link)
 				{
 					$el.text(link.text);
-                    $el.attr('title', link.title);
 					$el.attr('href', link.url);
 
 					this.link.target($el, link.target);
@@ -7312,7 +7370,6 @@
 				{
 					$('#redactor-link-blank').prop('checked', link.target);
 					$('#redactor-link-url').val(link.url);
-                    $('#redactor-link-title').val(link.title);
 					$('#redactor-link-url-text').val(link.text);
 				},
 				buildModal: function($el)
@@ -7414,9 +7471,6 @@
 					link.text = this.link.cleanText($('#redactor-link-url-text').val());
 					link.text = this.link.getText(link);
 
-					// title
-                    link.title = this.link.cleanText($('#redactor-link-title').val());
-
 					// target
 					link.target = ($('#redactor-link-blank').prop('checked')) ? true : false;
 
@@ -7433,8 +7487,6 @@
 					link.text = (typeof link.text === 'undefined' && this.selection.is()) ? this.selection.text() : this.link.cleanText(link.text);
 					link.text = this.link.getText(link);
 
-                    link.title = (typeof link.title === 'undefined') ? '' : this.link.cleanText(link.title);
-
 					// target
 					link.target = ($el === false) ? link.target : this.link.buildTarget($el);
 
@@ -7447,14 +7499,12 @@
 					var link = {
 						url: '',
 						text: (this.selection.is()) ? this.selection.text() : '',
-                        title: '',
 						target: false
 					};
 
 					if ($el !== false)
 					{
 						link.url = $el.attr('href');
-                        link.title = $el.attr('title');
 						link.text = $el.text();
 						link.target = this.link.buildTarget($el);
 					}
@@ -7958,10 +8008,6 @@
 
 						'link': String()
 						+ '<div class="redactor-modal-tab" data-title="General">'
-                            + '<section>'
-                                + '<label>Title</label>'
-                                + '<input type="text" id="redactor-link-title" aria-label="Title" />'
-                            + '</section>'
 							+ '<section>'
 								+ '<label>URL</label>'
 								+ '<input type="url" id="redactor-link-url" aria-label="URL" />'
@@ -8399,7 +8445,7 @@
 						var observe = value.observe,
 							element = observe.element,
 							$item   = value.item,
-							inValues = typeof observe.in !== 'undefined' ? observe.in : false,
+							inValues = typeof observe['in'] !== 'undefined' ? observe['in'] : false,
 							outValues = typeof observe.out !== 'undefined' ? observe.out : false;
 
 						if (($current.closest(element).length > 0 && isRedactor) || (element === 'a' && finded !== 0))
@@ -8968,8 +9014,6 @@
 							return;
 						}
 
-						this.buffer.set();
-
 						this.upload.direct = true;
 						this.upload.type = 'image';
 						this.upload.url = this.opts.imageUpload;
@@ -8999,6 +9043,7 @@
 						this.progress.show();
 						this.upload.send(formData, false);
 						this.code.sync();
+						this.rtePaste = false;
 
 					}, this));
 				},
@@ -9009,8 +9054,6 @@
 					{
 						return;
 					}
-
-					this.buffer.set();
 
 					this.upload.direct = true;
 					this.upload.type = 'image';
@@ -9024,6 +9067,7 @@
 
 					this.progress.show();
 					this.upload.send(formData, e);
+					this.rtePaste = false;
 				},
 				insert: function(html, data)
 				{
@@ -9133,7 +9177,7 @@
 				isEditorEmpty: function()
 				{
 					var html = $.trim(this.core.editor().html()).replace(/[\t\n]/g, '');
-					var states = ['', '<p>​</p>', '<p>​<br></p>'];
+					var states = ['', '<p>​</p>', '<p>​<br></p>', this.opts.emptyHtmlRendered];
 
 					return ($.inArray(html, states) !== -1);
 				},
@@ -9956,16 +10000,29 @@
 
 					setTimeout($.proxy(function()
 					{
+    					var self = this;
 						this.toolbar.observeScroll(false);
 						if (this.detect.isDesktop())
 						{
-							$(this.opts.toolbarFixedTarget).on('scroll.redactor.' + this.uuid, $.proxy(this.toolbar.observeScroll, this));
+							$(this.opts.toolbarFixedTarget).on('scroll.redactor.' + this.uuid, function()
+							{
+                                if (self.core.editor().height() < 100 || self.placeholder.isEditorEmpty())
+            					{
+                					return;
+            					}
+
+    							self.toolbar.observeScroll();
+                            });
 						}
 						else
 						{
-							var self = this;
 							$(this.opts.toolbarFixedTarget).on('scroll.redactor.' + this.uuid, function()
 							{
+                                if (self.core.editor().height() < 100 || self.placeholder.isEditorEmpty())
+            					{
+                					return;
+            					}
+
 								self.core.toolbar().hide();
 								clearTimeout($.data(this, "scrollCheck"));
 								$.data(this, "scrollCheck", setTimeout(function()
@@ -9982,7 +10039,7 @@
 				},
 				getBoxTop: function()
 				{
-					return (this.opts.toolbarFixedTarget === document) ? this.core.box().offset().top : this.toolbarOffsetTop;
+					return (this.opts.toolbarFixedTarget === document) ? this.core.box().offset().top : this.toolbar.toolbarOffsetTop;
 				},
 				observeScroll: function(start)
 				{
@@ -10373,7 +10430,7 @@
 
 					return xhr;
 				},
-				sendToS3: function(file, url, e)
+				sendToS3: function(file, url, formData)
 				{
 					var xhr = this.uploads3.createCORSRequest('PUT', url);
 					if (!xhr)
@@ -10428,7 +10485,7 @@
 					xhr.setRequestHeader('Content-Type', file.type);
 					xhr.setRequestHeader('x-amz-acl', 'public-read');
 
-					xhr.send(file);
+					xhr.send(formData);
 
 				}
 			};
