@@ -70,6 +70,7 @@ class mslib_fe {
         $this->STATISTICSADMIN_USER =& $ref->STATISTICSADMIN_USER;
         $this->languages =& $ref->languages;
         $this->defaultLanguageArray =& $ref->defaultLanguageArray;
+        $this->hidePagination =& $ref->hidePagination;
         $this->initLanguage($ref->LOCAL_LANG);
     }
     /**
