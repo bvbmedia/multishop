@@ -7460,6 +7460,7 @@
 						link.url = this.link.isUrl(link.url);
 					}
 
+					// BVBMedia tweak
 					// title
 					link.title = this.link.cleanText($('#redactor-link-title').val());
 
