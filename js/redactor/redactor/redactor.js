@@ -7371,9 +7371,9 @@
 				setModalValues: function(link)
 				{
 					$('#redactor-link-blank').prop('checked', link.target);
+					$('#redactor-link-url').val(link.url);
 					// BVBMedia tweak
 					$('#redactor-link-title').val(link.title);
-					$('#redactor-link-url').val(link.url);
 					$('#redactor-link-url-text').val(link.text);
 				},
 				buildModal: function($el)
@@ -7459,6 +7459,9 @@
 					{
 						link.url = this.link.isUrl(link.url);
 					}
+
+					// title
+					link.title = this.link.cleanText($('#redactor-link-title').val());
 
 					// empty url or text or isn't url
 					return (this.link.isEmpty(link) || link.url === false) ? false : link;
