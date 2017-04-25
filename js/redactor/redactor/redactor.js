@@ -7312,6 +7312,8 @@
 				update: function($el, link)
 				{
 					$el.text(link.text);
+					// BVBMedia tweak
+					$el.attr('title', link.title);
 					$el.attr('href', link.url);
 
 					this.link.target($el, link.target);
@@ -7369,6 +7371,8 @@
 				setModalValues: function(link)
 				{
 					$('#redactor-link-blank').prop('checked', link.target);
+					// BVBMedia tweak
+					$('#redactor-link-title').val(link.title);
 					$('#redactor-link-url').val(link.url);
 					$('#redactor-link-url-text').val(link.text);
 				},
@@ -7471,6 +7475,10 @@
 					link.text = this.link.cleanText($('#redactor-link-url-text').val());
 					link.text = this.link.getText(link);
 
+					// BVBMedia tweak
+					// Title
+					link.title = (typeof link.title === 'undefined') ? '' : this.link.cleanText(link.title);
+
 					// target
 					link.target = ($('#redactor-link-blank').prop('checked')) ? true : false;
 
@@ -7487,6 +7495,10 @@
 					link.text = (typeof link.text === 'undefined' && this.selection.is()) ? this.selection.text() : this.link.cleanText(link.text);
 					link.text = this.link.getText(link);
 
+					// BVBMedia tweak
+					// title
+					link.title = this.link.cleanText($('#redactor-link-title').val());
+
 					// target
 					link.target = ($el === false) ? link.target : this.link.buildTarget($el);
 
@@ -7496,15 +7508,19 @@
 				},
 				buildLinkFromElement: function($el)
 				{
+					// BVBMedia tweak
 					var link = {
 						url: '',
 						text: (this.selection.is()) ? this.selection.text() : '',
+						title: '',
 						target: false
 					};
 
 					if ($el !== false)
 					{
 						link.url = $el.attr('href');
+						// BVBMedia tweak
+						link.title = $el.attr('title');
 						link.text = $el.text();
 						link.target = this.link.buildTarget($el);
 					}
@@ -8008,6 +8024,10 @@
 
 						'link': String()
 						+ '<div class="redactor-modal-tab" data-title="General">'
+							+ '<section>'
+                                + '<label>Title</label>'
+                                + '<input type="text" id="redactor-link-title" aria-label="Title" />'
+                            + '</section>'
 							+ '<section>'
 								+ '<label>URL</label>'
 								+ '<input type="url" id="redactor-link-url" aria-label="URL" />'
