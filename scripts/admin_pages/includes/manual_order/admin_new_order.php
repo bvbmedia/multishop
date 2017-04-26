@@ -38,8 +38,8 @@ if (count($products) < 0) {
             <div class="row">
                 <div class="col-md-8">
                     <div class="checkbox checkbox-success checkbox">
-                        <input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
-                        <label for="tx_multishop_newsletter">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
+                        <input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter_top" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+                        <label for="tx_multishop_newsletter_top">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
                     </div>
                     <hr>
                 </div>
@@ -256,8 +256,8 @@ if (count($products) < 0) {
 		</div>
 		<div class="form-group">
 			<div class="checkbox checkbox-success checkbox">
-				<input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
-				<label for="tx_multishop_newsletter">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
+				<input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter_bottom" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+				<label for="tx_multishop_newsletter_bottom">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
 			</div>
 		</div>
 		<div class="form-group">
