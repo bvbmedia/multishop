@@ -27,11 +27,25 @@ if (count($products) < 0) {
             $content .= '<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="' . $this->get['tx_multishop_pi1']['is_proposal'] . '" />';
         }
         $content .= '<div class="form-group">
-<div class="row">
-<div class="col-md-8">
-			<label>' . $this->pi_getLL('admin_customer') . '</label>
-			<input type="hidden" id="manual_order_customer_id" name="customer_id" value="" />';
-        $content .= '<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/><hr></div><div class="col-md-4"></div></div></div>';
+            <div class="row">
+                <div class="col-md-8">
+			        <label>' . $this->pi_getLL('admin_customer') . '</label>
+			        <input type="hidden" id="manual_order_customer_id" name="customer_id" value="" />
+			        <input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="checkbox checkbox-success checkbox">
+                        <input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+                        <label for="tx_multishop_newsletter">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
+                    </div>
+                    <hr>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>';
         $content .= '</form>';
     }
     if ($this->post) {
@@ -238,6 +252,12 @@ if (count($products) < 0) {
 					<input type="text" name="mobile" id="mobile" class="form-control mobile" autocomplete="off" value="' . htmlspecialchars($user['mobile']) . '">
 					<div id="invalid-mobile" class="error-space" style="display:none"></div>
 				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="checkbox checkbox-success checkbox">
+				<input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+				<label for="tx_multishop_newsletter">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
 			</div>
 		</div>
 		<div class="form-group">

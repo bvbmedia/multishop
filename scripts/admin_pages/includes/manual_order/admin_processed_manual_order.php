@@ -59,6 +59,7 @@ if ($this->post['proceed_order']) {
         $insertArray['password'] = mslib_befe::getHashedPassword(rand(1000000, 9000000));
         $insertArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
+        $insertArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter_manual'];
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {
