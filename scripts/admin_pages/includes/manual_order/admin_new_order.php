@@ -32,19 +32,23 @@ if (count($products) < 0) {
 			        <label>' . $this->pi_getLL('admin_customer') . '</label>
 			        <input type="hidden" id="manual_order_customer_id" name="customer_id" value="" />
 			        <input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/>
+			        <input type="hidden" name="tx_multishop_newsletter_manual" value="0" id="tx_multishop_newsletter_top" />
+			        <hr />
                 </div>
                 <div class="col-md-4"></div>
             </div>
+            <!--
             <div class="row">
                 <div class="col-md-8">
                     <div class="checkbox checkbox-success checkbox">
-                        <input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter_top" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+                        <input type="hidden" name="tx_multishop_newsletter_manual" value="0" id="tx_multishop_newsletter_top" />
                         <label for="tx_multishop_newsletter_top">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
                     </div>
                     <hr>
                 </div>
                 <div class="col-md-4"></div>
             </div>
+            -->
         </div>';
         $content .= '</form>';
     }
@@ -257,7 +261,7 @@ if (count($products) < 0) {
 		<div class="form-group">
 			<div class="checkbox checkbox-success checkbox">
 				<input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter_bottom" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
-				<label for="tx_multishop_newsletter_bottom">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
+				<label for="tx_multishop_newsletter_bottom">' . $this->pi_getLL('subscribe_to_newsletter') . '.</label>
 			</div>
 		</div>
 		<div class="form-group">
@@ -280,6 +284,13 @@ if (count($products) < 0) {
 				    $("#customer_details_form").hide();
 					$("#ms_checkout_direct").submit();
 				' : '') . '
+				$(document).on("click", "#tx_multishop_newsletter_bottom", function(){
+				    if ($(this).prop("checked")) {
+				        $("#tx_multishop_newsletter_top").val("1");
+				    } else {
+				        $("#tx_multishop_newsletter_top").val("0");
+				    }
+				});
 				$(\'#manual_order_customer_id\').select2({
 					placeholder:\'' . htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')) . '\',
 					width:\'100%\',
