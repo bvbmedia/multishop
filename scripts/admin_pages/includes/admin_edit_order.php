@@ -263,6 +263,15 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \'' . (int)$this->get['orders_id'] . '\' and orders_products_id = \'' . (int)$this->post['orders_products_id'] . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                // hook for adding new items to details fieldset
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'])) {
+                                    // hook
+                                    $params = array();
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                    // hook oef
+                                }
                                 //$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // clean up the order product attributes to prepare the update
@@ -427,6 +436,17 @@ if (is_numeric($this->get['orders_id'])) {
                                 //$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 $orders_products_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                // hook for adding new items to details fieldset
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProducts'])) {
+                                    // hook
+                                    $params = array(
+                                        'orders_products_id' => $orders_products_id
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProducts'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                    // hook oef
+                                }
                                 // insert the update attributes
                                 $count_manual_attributes = count($this->post['edit_manual_option']);
                                 if ($count_manual_attributes > 0) {
