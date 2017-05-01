@@ -1,3 +1,7 @@
+var shift_key_pressed=false;
+$(document).on('keydown', '#ms_admin_skeyword', function(e){
+    console.log(e);
+});
 var adminPanelSearch = function () {
     var select2=jQuery("form#ms_admin_top_search > input#ms_admin_skeyword").select2({
         placeholder: MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL,
@@ -78,6 +82,7 @@ var adminPanelSearch = function () {
         });
     }).on("select2-selecting", function(data, options){
         var elem=$(data.srcEvent[0].srcElement);
+        var shift_key_pressed=data.keyPress.shiftKey;
         //location.href=$(elem).attr('href');
         var href_elem=$(elem).parent();
         if (!$(href_elem).hasClass('linkItem')) {
@@ -85,18 +90,42 @@ var adminPanelSearch = function () {
         }
         if ($(href_elem).hasClass('linkItem')) {
             if ($(href_elem).attr('data-require-confirmation')!=undefined) {
-                ifConfirm('', $(href_elem).attr('data-require-confirmation') + ' ?', (function(){location.href=$(href_elem).attr('href')}), (function(){}));
+                ifConfirm('', $(href_elem).attr('data-require-confirmation') + ' ?', (function(){
+                    if (shift_key_pressed) {
+                        var win = window.open($(href_elem).attr('href'), '_blank');
+                        win.location;
+                    } else {
+                        location.href = $(href_elem).attr('href');
+                    }
+                }), (function(){}));
             } else {
-                location.href=$(href_elem).attr('href');
+                if (shift_key_pressed) {
+                    var win = window.open($(href_elem).attr('href'), '_blank');
+                    win.location;
+                } else {
+                    location.href = $(href_elem).attr('href');
+                }
             }
         } else {
             var href_elem=$(elem).parentsUntil('.ajaxItem').parent();
             var link_item=$(href_elem).find('a.linkItem');
             if ($(link_item).hasClass('linkItem')) {
                 if ($(link_item).attr('data-require-confirmation')!=undefined) {
-                    ifConfirm('', $(link_item).attr('data-require-confirmation') + ' ?', (function(){location.href=$(href_elem).attr('href')}), (function(){}));
+                    ifConfirm('', $(link_item).attr('data-require-confirmation') + ' ?', (function(){
+                        if (shift_key_pressed) {
+                            var win = window.open($(href_elem).attr('href'), '_blank');
+                            win.location;
+                        } else {
+                            location.href = $(href_elem).attr('href');
+                        }
+                    }), (function(){}));
                 } else {
-                    location.href=$(link_item).attr('href');
+                    if (shift_key_pressed) {
+                        var win = window.open($(href_elem).attr('href'), '_blank');
+                        win.location;
+                    } else {
+                        location.href = $(link_item).attr('href');
+                    }
                 }
             }
         }

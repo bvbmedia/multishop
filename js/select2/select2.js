@@ -1046,18 +1046,18 @@ the specific language governing permissions and limitations under the Apache Lic
         },
 
         // abstract
-       /* triggerSelect: function(data) {
-            var evt = $.Event("select2-selecting", { val: this.id(data), object: data });
-            this.opts.element.trigger(evt);
-            return !evt.isDefaultPrevented();
-        },*/
         triggerSelect: function(data, options) {
             var dom, oriEvent;
+            var keyEvent={};
             if (options !== undefined) {
                 dom = $(options.currentTarget);
                 oriEvent=$(options.originalEvent);
+                keyEvent.altKey=options.altKey;
+                keyEvent.ctrlKey=options.ctrlKey;
+                keyEvent.metaKey=options.metaKey;
+                keyEvent.shiftKey=options.shiftKey;
             }
-            var evt = $.Event("select2-selecting", { val: this.id(data), object: data, domTarget: dom, srcEvent: oriEvent });
+            var evt = $.Event("select2-selecting", { val: this.id(data), object: data, domTarget: dom, srcEvent: oriEvent, keyPress: keyEvent });
             this.opts.element.trigger(evt);
             return !evt.isDefaultPrevented();
         },
