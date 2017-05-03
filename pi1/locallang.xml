@@ -1411,6 +1411,7 @@
             <label index="go_to_order_details">Go to order details</label>
             <label index="send_payment_received_email">Send payment received email</label>
             <label index="feeds">Feeds</label>
+            <label index="subscribe_to_newsletter">Subscribe newsletter</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2800,6 +2801,7 @@
             <label index="feed_exporter_fields_label_order_datetime">Bestelling - besteldatum en tijdstip</label>
             <label index="go_to_order_details">Ga naar bestelling</label>
             <label index="send_payment_received_email">Verstuur betaling ontvangen email</label>
+            <label index="subscribe_to_newsletter">aanmelden nieuwsbrief</label>
         </languageKey>
     </data>
 </T3locallang>

@@ -33,6 +33,13 @@ if ($this->post['proceed_order']) {
             $username = $unique_id;
         }
         $insertArray = array();
+        $billing_gender = '0';
+        if (!$this->post['gender'] || $this->post['gender'] == 'm') {
+            $billing_gender = '0';
+        } else if ($this->post['gender'] == 'f') {
+            $billing_gender = '1';
+        }
+        $insertArray['gender'] = $billing_gender;
         $insertArray['page_uid'] = $this->shop_pid;
         $insertArray['company'] = $this->post['company'];
         $insertArray['name'] = $this->post['first_name'] . ' ' . $this->post['middle_name'] . ' ' . $this->post['last_name'];
@@ -59,6 +66,7 @@ if ($this->post['proceed_order']) {
         $insertArray['password'] = mslib_befe::getHashedPassword(rand(1000000, 9000000));
         $insertArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
+        $insertArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter_manual'];
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {
@@ -67,12 +75,7 @@ if ($this->post['proceed_order']) {
     }
     //add to orders
     if ($customer_id) {
-        $billing_gender = '';
-        if (!$this->post['gender'] || $this->post['gender'] == '0') {
-            $billing_gender = 'm';
-        } else if ($this->post['gender'] == '1') {
-            $billing_gender = 'f';
-        }
+        $billing_gender = $this->post['gender'];
         // now add the order
         $insertArray = array();
         $insertArray['customer_id'] = $customer_id;

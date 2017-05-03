@@ -2227,7 +2227,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $params = array(
                                             'ms' => $this->ms,
                                             'value' => $value,
-                                            'continue_update_stock' => &$continue_update_stock
+                                            'continue_update_stock' => &$continue_update_stock,
+                                            'orders_id' => $orders_id,
+                                            'orders_products_id' => $orders_products_id
                                     );
                                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
