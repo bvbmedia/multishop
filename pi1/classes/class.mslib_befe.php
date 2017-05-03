@@ -5315,7 +5315,7 @@ class mslib_befe {
                 ';
             }
             if ($settings['sumTr']) {
-                $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_' . $idName] = '<script data-ignore="true">
+                $GLOBALS['TSFE']->additionalHeaderData['sumtr_js_' . $idName] = '<script data-ignore="true">
                 jQuery(document).ready(function($) {
                         $(\'#' . $idName . '\').sumtr({
                             readValue : function(e) {
