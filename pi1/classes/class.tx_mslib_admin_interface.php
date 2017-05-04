@@ -100,6 +100,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        $tableId=uniqid();
         // for pagination
         $this->get = $that->get;
         $this->post = $that->post;
@@ -369,9 +370,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<div class="table-responsive">';
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
-                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface">';
+                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface'.$tableId.'">';
             } else {
-                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface'.$tableId.'">';
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
@@ -718,7 +719,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $actions = $params['settings']['tableSelectionActions'];
                 if (count($actions)) {
                     // custom page hook that can be controlled by third-party plugin eof
-                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
+                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction'.$tableId.'" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
                     foreach ($actions as $key => $value) {
                         $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
                     }
@@ -870,7 +871,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_css'] = '<link rel="stylesheet" type="text/css" href="typo3conf/ext/multishop/templates/global/css/tablesorter.css" media="all" />';
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
-				$(\'#msAdminTableInterface\').tablesorter({
+				$(\'#msAdminTableInterface'.$tableId.'\').tablesorter({
 				    headers: { ' . implode(', ', $sort_js) . ' }
 				});
 			});
