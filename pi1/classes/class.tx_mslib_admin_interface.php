@@ -869,7 +869,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
             }
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_css'] = '<link rel="stylesheet" type="text/css" href="typo3conf/ext/multishop/templates/global/css/tablesorter.css" media="all" />';
-            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
+            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'.$tableId] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
 				$(\'#msAdminTableInterface'.$tableId.'\').tablesorter({
 				    headers: { ' . implode(', ', $sort_js) . ' }
