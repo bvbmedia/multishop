@@ -402,7 +402,7 @@ if (!$product['products_id']) {
     $markerArray['###QUANTITY###'] = $output['quantity'];
     $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($old_price);
     $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
-    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($final_price);
     $markerArray['###OLD_PRICE_PLAIN###'] = number_format($old_price, 2, ',', '.');
     $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($final_price, 2, ',', '.');
     $markerArray['###OLD_PRICE_RAW###'] = number_format($old_price, 2, '.', '');
