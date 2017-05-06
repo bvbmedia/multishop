@@ -2,60 +2,74 @@
 <!-- ###JS_HEADER### begin -->
 <script type="text/javascript">
 function populateRelatedProduct(data) {
+    var relations_type=['main','sub','search'];
     if (data.related_product!=undefined) {
         $('.cekbox:not(:checked)').parent().parent().remove();
         //$('.checkAll:not(:checked)').parent().parent().remove();
         $.each(data.related_product, function (categories_id, related_data) {
-            var html_elem = '';
-            if (categories_id > 0) {
-                var existing_fieldset_id = "#category" + categories_id;
-                var last_row_existing_fieldset = "#checkAllC" + categories_id;
-                if ($(existing_fieldset_id).length > 0) {
-                    if (related_data.products.length>0) {
-                        $.each(related_data.products, function (i, products_data) {
-                            var existing_cb = '#cb_' + categories_id + '_' + products_data.id;
-                            if ($(existing_cb).length == 0) {
-                                if (products_data.checked == 1) {
-                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-                                } else {
-                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-                                }
+            $.each(relations_type, function(idx, relation_type){
+                if (typeof related_data[relation_type]!='undefined') {
+                    var html_elem = '';
+                    if (categories_id > 0) {
+                        var existing_fieldset_id = "#" + relation_type + "_category" + categories_id;
+                        var last_row_existing_fieldset = "#" + relation_type + "_checkAllC" + categories_id;
+                        if ($(existing_fieldset_id).length > 0) {
+                            if (related_data[relation_type].products.length > 0) {
+                                $.each(related_data[relation_type].products, function (i, products_data) {
+                                    var existing_cb = '#" + relation_type + "_cb_' + categories_id + '_' + products_data.id;
+                                    if ($(existing_cb).length == 0) {
+                                        if (products_data.checked == 1) {
+                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                        } else {
+                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                        }
+                                    }
+                                });
+                                $(last_row_existing_fieldset).before(html_elem);
                             }
-                        });
-                        $(last_row_existing_fieldset).before(html_elem);
-                    }
-                } else {
-                    html_elem += '<div class="related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
-                    html_elem += '<ul id="category' + categories_id + '">';
-                    var checked_rp = 0;
-                    $.each(related_data.products, function (i, products_data) {
-                        if (products_data.checked == 1) {
-                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                            checked_rp++;
                         } else {
-                            html_elem += '<li><div class="checkbox checkbox-success"><input class="cekbox shiftCheckbox category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                            html_elem += '<div class="' + relation_type + '_related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
+                            html_elem += '<ul id="' + relation_type + '_category' + categories_id + '">';
+                            var checked_rp = 0;
+                            $.each(related_data[relation_type].products, function (i, products_data) {
+                                if (products_data.checked == 1) {
+                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                    checked_rp++;
+                                } else {
+                                    html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                }
+                            });
+                            if (checked_rp > 0) {
+                                html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
+                            } else {
+                                html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
+                            }
+                            html_elem += '</ul></div>';
+                            $("#" + relation_type + "_related_product_placeholder").append(html_elem);
+                            var block_title_id='#' + relation_type + '_block_panel';
+                            if (!$(block_title_id).is(':visible')) {
+                                $(block_title_id).show();
+                            }
                         }
-                    });
-                    if (checked_rp > 0) {
-                        html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
-                    } else {
-                        html_elem += '<li id="checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="category_' + categories_id + '" rel="category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
                     }
-                    html_elem += '</ul></div>';
-                    $("#related_product_placeholder").append(html_elem);
                 }
-            }
+            });
         });
-        $('.related_data_categories_name_listing > ul').each(function(i, obj){
-            if ($(this).children().length=='0' || $(this).children().length=='1') {
-                var ul_id=$(this).attr('id').replace('category', '');
-                if ($(this).children().length=='1') {
-                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
-                        $(this).parent().remove();
+        $.each(relations_type, function(idx, relation_type) {
+            var ul_wrapper_class_path='.' + relation_type + 'related_data_categories_name_listing > ul';
+            if ($(ul_wrapper_class_path).length>0) {
+                $(ul_wrapper_class_path).each(function (i, obj) {
+                    if ($(this).children().length == '0' || $(this).children().length == '1') {
+                        var ul_id = $(this).attr('id').replace(relation_type + '_category', '');
+                        if ($(this).children().length == '1') {
+                            if ($(this).children().attr('id') == relation_type + '_checkAllC' + ul_id) {
+                                $(this).parent().remove();
+                            }
+                        } else {
+                            $(this).parent().remove();
+                        }
                     }
-                } else {
-                    $(this).parent().remove();
-                }
+                });
             }
         });
     } else {
@@ -82,7 +96,7 @@ function saveRelation(url, related_pid) {
     $.ajax({
         type: "POST",
         url: url,
-        data: {product_id: related_pid, pid: "###AJAX_PID###", req: "save"}
+        data: {product_id: related_pid, pid: "###AJAX_PID###", req: "save", relation_type: $("#product_relation_save_as").val()}
     });
 }
 function deleteRelation(url, related_pid) {
@@ -344,7 +358,7 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
             $(product_class_name).prop("checked", false);
         }
     });
-    $(document).on("click", ".cekbox", function () {
+    $(document).on("click", ".search_cekbox, .main_cekbox, .sub_cekbox, .cekbox", function () {
         var related_id = $(this).val();
 
         if ($(this).is(":checked")) {
