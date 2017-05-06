@@ -5306,10 +5306,17 @@ class mslib_befe {
                 $rowCounter++;
             }
             $content .= '</tbody>';
-            if ($settings['sumTr']) {
+            if ($settings['sorter']) {
                 $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_' . $idName] = '<script data-ignore="true">
                 jQuery(document).ready(function($) {
                         $(\'#' . $idName . '\').tablesorter();
+                    });
+                </script>
+                ';
+            }
+            if ($settings['sumTr']) {
+                $GLOBALS['TSFE']->additionalHeaderData['sumtr_js_' . $idName] = '<script data-ignore="true">
+                jQuery(document).ready(function($) {
                         $(\'#' . $idName . '\').sumtr({
                             readValue : function(e) {
                                 return Math.round(e.html().toString().replace(/[^\d.-]/g, \'\') * 100) / 100; return !isNaN(r) ? r : 0;

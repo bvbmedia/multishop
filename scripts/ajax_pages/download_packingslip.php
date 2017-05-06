@@ -32,6 +32,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/admin_packingslip_pdf.tmpl');
         }
         $markerArray = array();
+        $markerArray['###BARKODE_IMG_URL###'] = $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=generateBarkode&tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[string]='.$order['orders_id'],1);
         $markerArray['###GENDER_SALUTATION###'] = mslib_fe::genderSalutation($order['billing_gender']);
         if ($this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE']) {
             $imageLocation = $this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE'];
