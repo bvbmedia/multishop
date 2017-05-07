@@ -184,7 +184,7 @@ if (is_array($rel_products) && count($rel_products)) {
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $admin_icons = '<div class="admin_menu">
                 <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&cid=' . $rel_rs['categories_id'] . '&pid=' . $rel_rs['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a>
-                <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&cid=' . $rel_rs['categories_id'] . '&pid=' . $rel_rs['products_id'] . '&action=delete_product', 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a>
+                <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&cid=' . $rel_rs['categories_id'] . '&pid=' . $rel_rs['products_id'] . '&action=delete_product&cid=' . $rel_rs['categories_id'], 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a>
             </div>';
         }
         $markerArray['RELATIVE_ADMIN_ICONS'] = $admin_icons;

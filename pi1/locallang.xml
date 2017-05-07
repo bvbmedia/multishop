@@ -1412,6 +1412,8 @@
             <label index="send_payment_received_email">Send payment received email</label>
             <label index="feeds">Feeds</label>
             <label index="subscribe_to_newsletter">Subscribe newsletter</label>
+            <label index="delete_product_x_from_current_category_x">Delete product %s from category %s</label>
+            <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2802,6 +2804,8 @@
             <label index="go_to_order_details">Ga naar bestelling</label>
             <label index="send_payment_received_email">Verstuur betaling ontvangen email</label>
             <label index="subscribe_to_newsletter">aanmelden nieuwsbrief</label>
+            <label index="delete_product_x_from_current_category_x">Verwijder: %s in %s</label>
+            <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
         </languageKey>
     </data>
 </T3locallang>

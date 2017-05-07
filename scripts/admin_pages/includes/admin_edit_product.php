@@ -2463,7 +2463,7 @@ if ($this->post) {
             $headingButton['btn_class'] = 'btn btn-danger';
             $headingButton['fa_class'] = 'fa fa-remove';
             $headingButton['title'] = $this->pi_getLL('admin_delete_product');
-            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product');
+            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id']);
             $headerButtons[] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-primary viewfront';

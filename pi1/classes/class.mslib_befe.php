@@ -1109,7 +1109,7 @@ class mslib_befe {
             }
         }
     }
-    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false) {
+    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false, $delete_all_cat_relation=false) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -1127,25 +1127,30 @@ class mslib_befe {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
-                    // just delete the relation to the category
-                    $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id . ' and categories_id=' . $categories_id);
-                    // count if there are relations left
-                    $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
-                            'tx_multishop_products_to_categories', // FROM ...
-                            "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
-                            '', // GROUP BY...
-                            '', // ORDER BY...
-                            '' // LIMIT ...
-                    );
-                    //var_dump($str);
-                    //die();
-                    //
-                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                    if ($row['total']) {
-                        // dont delete the product, cause there is another category that has relation
-                        return true;
+                    if (!$delete_all_cat_relation) {
+                        // just delete the relation to the category
+                        $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id . ' and categories_id=' . $categories_id);
+                        // count if there are relations left
+                        $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
+                                'tx_multishop_products_to_categories', // FROM ...
+                                "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
+                                '', // GROUP BY...
+                                '', // ORDER BY...
+                                '' // LIMIT ...
+                        );
+                        //var_dump($str);
+                        //die();
+                        //
+                        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                        if ($row['total']) {
+                            // dont delete the product, cause there is another category that has relation
+                            return true;
+                        } else {
+                            $definitive_delete = 1;
+                        }
                     } else {
+                        $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id);
                         $definitive_delete = 1;
                     }
                 } else {

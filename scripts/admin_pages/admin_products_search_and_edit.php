@@ -646,7 +646,7 @@ if ($pageset['total_rows'] > 0) {
         }
         $link_edit_cat = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $rs['categories_id'] . '&action=edit_category');
         $link_edit_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $rs['products_id'] . '&cid=' . $rs['categories_id'] . '&action=edit_product');
-        $link_delete_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $rs['products_id'] . '&action=delete_product');
+        $link_delete_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $rs['products_id'] . '&action=delete_product&cid=' . $rs['categories_id']);
         // view product link
         $where = '';
         if ($rs['categories_id']) {
