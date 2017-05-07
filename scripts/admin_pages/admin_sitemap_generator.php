@@ -21,16 +21,16 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // hook eof
+$prefix_domain = $this->FULL_HTTP_URL;
 $content = '';
 //
 $log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp.txt';
+// file counter
 $logs_file_reg=1;
+// links line counter
 $logs_lines_reg=0;
 $max_lines_per_file=50000; // google sitemap max lines per file
 //
-
-$max_pages = 2;
-$prefix_domain = $this->FULL_HTTP_URL;
 $log_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_file_reg_cache';
 $previous_log_file_reg_cache=file_get_contents($log_file_reg_cache);
 if ($previous_log_file_reg_cache>1) {
