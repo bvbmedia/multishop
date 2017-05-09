@@ -1280,6 +1280,14 @@ switch ($this->ms['page']) {
             $imgSettings['angle'] = 0;
             $imgSettings['string'] = $this->get['tx_multishop_pi1']['string'];
             $imgSettings['font_type'] = 'code39';
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'])) {
+                $params = array(
+                        'imgSettings' => &$imgSettings
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $im = imagecreatetruecolor($imgSettings['canvas_width'], $imgSettings['canvas_height']);
             $black = ImageColorAllocate($im, 0x00, 0x00, 0x00);
             $white = imagecolorallocate($im, 255, 255, 255);
