@@ -91,10 +91,10 @@ foreach ($categories as $category) {
         }
         $content .= '<li id="productlisting_' . $item['products_id'] . '">';
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
-            $content .= '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $item['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"></a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $item['products_id'] . '&action=delete_product', 1) . '" class="admin_menu_remove" title="Remove"></a></div>';
+            $content .= '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $item['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"></a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $item['products_id'] . '&action=delete_product&cid=' . $item['categories_id'], 1) . '" class="admin_menu_remove" title="Remove"></a></div>';
         }
-//			if ($item['products_quantity'] > 0)	$content.='<div style="float:right;color:green">'.$item['products_quantity'].'</div>';			
-//			else											$content.='<div style="float:right;color:red">not on stock</div>';					
+//			if ($item['products_quantity'] > 0)	$content.='<div style="float:right;color:green">'.$item['products_quantity'].'</div>';
+//			else											$content.='<div style="float:right;color:red">not on stock</div>';
         $content .= '<a href="' . $link . '" class="ajax_link">' . $item['products_name'] . '</a>';
         if ($item['products_price'] > 0) {
             if ($item['products_price'] <> $item['final_price']) {

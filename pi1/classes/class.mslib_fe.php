@@ -7246,7 +7246,7 @@ class mslib_fe {
                 }
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['label'] = $this->pi_getLL('admin_delete_product');
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['description'] = $this->pi_getLL('admin_delete_product_description') . '.';
-                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $product['categories_id'] . '&pid=' . $this->get['products_id'] . '&action=delete_product');
+                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $this->get['categories_id'] . '&pid=' . $this->get['products_id'] . '&action=delete_product');
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['class'] = 'fa fa-trash-o';
                 if ($this->get['tx_multishop_pi1']['page_section'] == 'delete_product' || $this->post['tx_multishop_pi1']['page_section'] == 'delete_product') {
                     $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['active'] = 1;

@@ -21,11 +21,36 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // hook eof
-$content = '';
-$log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp.txt';
-$max_pages = 2;
 $prefix_domain = $this->FULL_HTTP_URL;
-@unlink($log_file);
+$content = '';
+//
+$log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp.txt';
+// file counter
+$logs_file_reg=1;
+// links line counter
+$logs_lines_reg=0;
+$max_lines_per_file=50000; // google sitemap max lines per file
+//
+$log_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_file_reg_cache';
+$previous_log_file_reg_cache=file_get_contents($log_file_reg_cache);
+if ($previous_log_file_reg_cache>1) {
+    $sitemap_file_path_parts = pathinfo($sitemap_file);
+    $sitemap_file_fn=$sitemap_file_path_parts['filename'];
+    $sitemap_file_ext=$sitemap_file_path_parts['extension'];
+    for ($lfrc=1; $lfrc<=$previous_log_file_reg_cache; $lfrc++) {
+        $suffix='';
+        if ($lfrc>1) {
+            $suffix='-' . $lfrc;
+        }
+        $log_file_fn=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp' . $suffix . '.txt';
+        $sitemap_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_file_fn . $suffix . '.' . $sitemap_file_ext;
+        // clean it before write
+        @unlink($sitemap_file_iterate);
+        @unlink($log_file_fn);
+    }
+} else {
+    @unlink($log_file);
+}
 $log_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml.txt';
 $prefix_domain = $this->FULL_HTTP_URL;
 @unlink($log_xml_file);
@@ -37,6 +62,7 @@ $link = $prefix_domain . mslib_fe::typolink($this->shop_pid);
 // TXT
 $tmpContent = $link . "\n";
 file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
+$logs_lines_reg++;
 // XML
 $tmpContent = '<url>' . "\n";
 $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
@@ -63,8 +89,14 @@ if (!$this->get['skip_categories']) {
         }
         $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
         // TXT
+        if ($logs_lines_reg==$max_lines_per_file) {
+            $logs_file_reg++;
+            $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+            $logs_lines_reg=0;
+        }
         $tmpContent = $link . "\n";
         file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
+        $logs_lines_reg++;
         // XML
         $tmpContent = '<url>' . "\n";
         $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
@@ -115,8 +147,14 @@ if (!$this->get['skip_products']) {
         if (!empty($where)) {
             $link = $prefix_domain . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
             // TXT
+            if ($logs_lines_reg==$max_lines_per_file) {
+                $logs_file_reg++;
+                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+                $logs_lines_reg=0;
+            }
             $tmpContent = $link . "\n";
             file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
+            $logs_lines_reg++;
             // XML
             $tmpContent = '<url>' . "\n";
             $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
@@ -136,9 +174,15 @@ if (!$this->get['skip_manufacturers']) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $link = $prefix_domain . mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=manufacturers_products_listing&manufacturers_id=' . $row['manufacturers_id']);
         if ($link) {
+            if ($logs_lines_reg==$max_lines_per_file) {
+                $logs_file_reg++;
+                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+                $logs_lines_reg=0;
+            }
             // TXT
             $tmpContent = $link . "\n";
             file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
+            $logs_lines_reg++;
             // XML
             $tmpContent = '<url>' . "\n";
             $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
@@ -155,13 +199,49 @@ if (!$this->get['skip_manufacturers']) {
 $tmpContent = '</urlset>';
 file_put_contents($log_xml_file, $tmpContent, FILE_APPEND | LOCK_EX);
 $tmpContent = '';
-@unlink($sitemap_file);
-@copy($log_file, $sitemap_file);
+if ($logs_file_reg>1) {
+    $sitemap_file_web_path_list=array();
+    $log_file_fn='sitemap_tmp';
+    $sitemap_file_path_parts = pathinfo($sitemap_file);
+    $sitemap_file_fn=$sitemap_file_path_parts['filename'];
+    $sitemap_file_ext=$sitemap_file_path_parts['extension'];
+    for ($lfr=1; $lfr<=$logs_file_reg; $lfr++) {
+        $suffix='';
+        if ($lfr>1) {
+            $suffix='-' . $lfr;
+        }
+        $log_file_iterate=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/' . $log_file_fn . $suffix . '.txt';
+        $sitemap_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_file_fn . $suffix . '.' . $sitemap_file_ext;
+        $sitemap_file_web_path_list[]='uploads/tx_multishop/' . $sitemap_file_fn . $suffix . '.' . $sitemap_file_ext;
+        // clean it before write
+        @unlink($sitemap_file_iterate);
+        // write content
+        @copy($log_file_iterate, $sitemap_file_iterate);
+    }
+} else {
+    @unlink($sitemap_file);
+    @copy($log_file, $sitemap_file);
+}
 @unlink($sitemap_xml_file);
 @copy($log_xml_file, $sitemap_xml_file);
+
+@unlink($log_file_reg_cache);
+file_put_contents($log_file_reg_cache, $logs_file_reg, FILE_APPEND | LOCK_EX);
+
 $content .= '<div class="main-heading"><h1>' . $this->pi_getLL('admin_label_sitemap_creator') . '</h1></div>';
-$content .= '<p>' . $this->pi_getLL('admin_label_your_sitemap_has_been_created') . '</p>' . $this->pi_getLL('admin_label_you_can_download_it_here') . ':<br/>
+$content .= '<p>' . $this->pi_getLL('admin_label_your_sitemap_has_been_created') . '</p>' . $this->pi_getLL('admin_label_you_can_download_it_here') . ':<br/>';
+if (is_array($sitemap_file_web_path_list) && count($sitemap_file_web_path_list)>0) {
+    foreach ($sitemap_file_web_path_list as $web_path) {
+        $content .= '
+TXT: <a href="' . $web_path . '" target="_blank">' . $web_path . '</a><br/>
+';
+    }
+} else {
+    $content .= '
 TXT: <a href="' . $sitemap_file_web_path . '" target="_blank">' . $sitemap_file_web_path . '</a><br/>
+';
+}
+$content .= '
 XML: <a href="' . $sitemap_xml_file_web_path . '" target="_blank">' . $sitemap_xml_file_web_path . '</a><br/>
 ';
 ?>
