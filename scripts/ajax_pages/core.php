@@ -1268,164 +1268,39 @@ switch ($this->ms['page']) {
             // hook oef
             require($this->DOCUMENT_ROOT_MS . 'res/barcode-coder/php-barcode-2.0.1.php');
             $font = $this->DOCUMENT_ROOT_MS . 'res/barcode-coder/code39.ttf';
-            // download a ttf font here for example : http://www.dafont.com/fr/nottke.font
-            //$font     = './NOTTB___.TTF';
-            // - -
-            $canvas_width = 200;
-            $canvas_height = 75;
-            $fontSize = 9; // GD1 in px ; GD2 in point
-            $marge = 10; // between barcode and hri in pixel
-            $x = 100; // barcode center
-            $y = 40; // barcode center
-            $height = 50; // barcode height in 1D ; module size in 2D
-            $width = 1; // barcode width in 1D ; not use in 2D
-            $angle = 0; // rotation in degrees : nb : non horizontable barcode might not be usable because of pixelisation
-            $code = $this->get['tx_multishop_pi1']['string']; // barcode, of course ;)
-            $type = 'code39';
-            /*
-				 *    standard 2 of 5 (std25)
-				 *    interleaved 2 of 5 (int25)
-				 *    ean 8 (ean8)
-				 *    ean 13 (ean13)
-				 *    code 11 (code11)
-				 *    code 39 (code39)
-				 *    code 93 (code93)
-				 *    code 128 (code128)
-				 *    codabar (codabar)
-				 *    msi (msi)
-				 *    datamatrix (datamatrix)
-			*/
-            // -------------------------------------------------- //
-            //                    USEFUL
-            // -------------------------------------------------- //
-            function drawCross($im, $color, $x, $y) {
-                imageline($im, $x - 10, $y, $x + 10, $y, $color);
-                imageline($im, $x, $y - 10, $x, $y + 10, $color);
+            $imgSettings = array();
+            $imgSettings['canvas_width'] = 200;
+            $imgSettings['canvas_height'] = 75;
+            $imgSettings['font_size'] = 9;
+            $imgSettings['margin'] = 10;
+            $imgSettings['barcode_x_pos'] = ($imgSettings['canvas_width'] / 2);
+            $imgSettings['barcode_y_pos'] = ($imgSettings['canvas_height'] / 2);
+            $imgSettings['width'] = 1;
+            $imgSettings['height'] = ($imgSettings['canvas_height'] / 100 * 90); // barcode height in 1D ; module size in 2D
+            $imgSettings['angle'] = 0;
+            $imgSettings['string'] = $this->get['tx_multishop_pi1']['string'];
+            $imgSettings['font_type'] = 'code39';
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'])) {
+                $params = array(
+                        'imgSettings' => &$imgSettings
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
-
-            // -------------------------------------------------- //
-            //            ALLOCATE GD RESOURCE
-            // -------------------------------------------------- //
-            $im = imagecreatetruecolor($canvas_width, $canvas_height);
+            $im = imagecreatetruecolor($imgSettings['canvas_width'], $imgSettings['canvas_height']);
             $black = ImageColorAllocate($im, 0x00, 0x00, 0x00);
-            //$white = ImageColorAllocate($im, 0xff, 0xff, 0xff);
             $white = imagecolorallocate($im, 255, 255, 255);
             $red = ImageColorAllocate($im, 0xff, 0x00, 0x00);
             $blue = ImageColorAllocate($im, 0x00, 0x00, 0xff);
             imagefilledrectangle($im, 0, 0, 300, 300, $white);
-            // -------------------------------------------------- //
-            //                      BARCODE
-            // -------------------------------------------------- //
             if (is_numeric($this->get['tx_multishop_pi1']['angle'])) {
-                $angle=$this->get['tx_multishop_pi1']['angle'];
+                $imgSettings['angle'] = $this->get['tx_multishop_pi1']['angle'];
             }
-            $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code' => $code), $width, $height);
-            // -------------------------------------------------- //
-            //                        HRI
-            // -------------------------------------------------- //
-            /*
-							if ( isset($font) ){
-							$box = imagettfbbox($fontSize, 0, $font, $data['hri']);
-							$len = $box[2] - $box[0];
-							Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-							imagettftext($im, $fontSize, $angle, $x + $xt, $y + $yt, $blue, $font, $data['hri']);
-							}
-			*/
-            // -------------------------------------------------- //
-            //                     ROTATE
-            // -------------------------------------------------- //
-            // Beware ! the rotate function should be use only with right angle
-            // Remove the comment below to see a non right rotation
-            switch($this->get['tx_multishop_pi1']['orientation']) {
-                case 'vertical':
-                    // Barcode rotation : 90
-                   /* $angle = 90;
-                    $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code'=>$code), $width, $height);
-                    Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-                    imagettftext($im, $fontSize, $angle, $x + $xt, $y + $yt, $blue, $font, $data['hri']);
-                    imagettftext($im, 10, 0, 60, 290, $black, $font, 'BARCODE ROTATION : 90');*/
-                    /*
-                    $rot = imagerotate($im, 45, $white);
-                    imagedestroy($im);
-                    $im     = imagecreatetruecolor(900, 300);
-                    $black  = ImageColorAllocate($im,0x00,0x00,0x00);
-                    $white  = ImageColorAllocate($im,0xff,0xff,0xff);
-                    $red    = ImageColorAllocate($im,0xff,0x00,0x00);
-                    $blue   = ImageColorAllocate($im,0x00,0x00,0xff);
-                    imagefilledrectangle($im, 0, 0, 900, 300, $white);
-                    // Barcode rotation : 90
-                    $angle = 90;
-                    $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code'=>$code), $width, $height);
-                    Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-                    imagettftext($im, $fontSize, $angle, $x + $xt, $y + $yt, $blue, $font, $data['hri']);
-                    imagettftext($im, 10, 0, 60, 290, $black, $font, 'BARCODE ROTATION : 90�');
-                    // barcode rotation : 135
-                    $angle = 135;
-                    Barcode::gd($im, $black, $x+300, $y, $angle, $type, array('code'=>$code), $width, $height);
-                    Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-                    imagettftext($im, $fontSize, $angle, $x + 300 + $xt, $y + $yt, $blue, $font, $data['hri']);
-                    imagettftext($im, 10, 0, 360, 290, $black, $font, 'BARCODE ROTATION : 135�');
-                    // last one : image rotation
-                    imagecopy($im, $rot, 580, -50, 0, 0, 300, 300);
-                    imagerectangle($im, 0, 0, 299, 299, $black);
-                    imagerectangle($im, 299, 0, 599, 299, $black);
-                    imagerectangle($im, 599, 0, 899, 299, $black);
-                    imagettftext($im, 10, 0, 690, 290, $black, $font, 'IMAGE ROTATION');
-                    */
-                    break;
-                case 'horizontal':
-                default:
-                    break;
-            }
-            /** /
-             * $rot = imagerotate($im, 45, $white);
-             * imagedestroy($im);
-             * $im     = imagecreatetruecolor(900, 300);
-             * $black  = ImageColorAllocate($im,0x00,0x00,0x00);
-             * $white  = ImageColorAllocate($im,0xff,0xff,0xff);
-             * $red    = ImageColorAllocate($im,0xff,0x00,0x00);
-             * $blue   = ImageColorAllocate($im,0x00,0x00,0xff);
-             * imagefilledrectangle($im, 0, 0, 900, 300, $white);
-             * // Barcode rotation : 90�
-             * $angle = 90;
-             * $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code'=>$code), $width, $height);
-             * Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-             * imagettftext($im, $fontSize, $angle, $x + $xt, $y + $yt, $blue, $font, $data['hri']);
-             * imagettftext($im, 10, 0, 60, 290, $black, $font, 'BARCODE ROTATION : 90�');
-             * // barcode rotation : 135
-             * $angle = 135;
-             * Barcode::gd($im, $black, $x+300, $y, $angle, $type, array('code'=>$code), $width, $height);
-             * Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
-             * imagettftext($im, $fontSize, $angle, $x + 300 + $xt, $y + $yt, $blue, $font, $data['hri']);
-             * imagettftext($im, 10, 0, 360, 290, $black, $font, 'BARCODE ROTATION : 135�');
-             * // last one : image rotation
-             * imagecopy($im, $rot, 580, -50, 0, 0, 300, 300);
-             * imagerectangle($im, 0, 0, 299, 299, $black);
-             * imagerectangle($im, 299, 0, 599, 299, $black);
-             * imagerectangle($im, 599, 0, 899, 299, $black);
-             * imagettftext($im, 10, 0, 690, 290, $black, $font, 'IMAGE ROTATION');
-             * /**/
-            // -------------------------------------------------- //
-            //                    MIDDLE AXE
-            // -------------------------------------------------- //
-//				imageline($im, $x, 0, $x, 250, $red);
-//				imageline($im, 0, $y, 250, $y, $red);
-            // -------------------------------------------------- //
-            //                  BARCODE BOUNDARIES
-            // -------------------------------------------------- //
-//				for($i=1; $i<5; $i++){
-//				drawCross($im, $blue, $data['p'.$i]['x'], $data['p'.$i]['y']);
-//				}
-            // -------------------------------------------------- //
-            //                    GENERATE
-            // -------------------------------------------------- //
+            $data = Barcode::gd($im, $black, $imgSettings['barcode_x_pos'], $imgSettings['barcode_y_pos'], $imgSettings['angle'], $imgSettings['font_type'], array('code' => $imgSettings['string']), $width, $imgSettings['height']);
             header('Content-type: image/png');
             imagepng($im);
             imagedestroy($im);
-
-            //header('Content-type: image/gif');
-            //imagegif($im);
-            //imagedestroy($im);
             exit();
         }
 //		}
