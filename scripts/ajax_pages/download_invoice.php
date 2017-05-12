@@ -22,6 +22,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $prefix = '';
     }
     $order = mslib_fe::getOrder($invoice['orders_id'], 'orders_id', 1);
+    if (!$this->get['language'] && is_numeric($order['language_id']) && $order['language_id']>0) {
+        // Switch to language that is stored in the order
+        mslib_befe::setSystemLanguage($order['language_id']);
+    }
     if ($order['orders_id']) {
         $orders_tax_data = $order['orders_tax_data'];
         if ($this->sys_language_uid != $order['sys_language_uid']) {
