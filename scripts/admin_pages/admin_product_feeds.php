@@ -555,8 +555,17 @@ if ($this->ms['show_main']) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $feeds[] = $row;
     }
+    $content .= '<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>' . htmlspecialchars($this->pi_getLL('product_feeds')) . '</h3>
+        <div class="form-inline pull-right">
+            <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&section=add') . '" class="btn btn-primary"><i class="fa fa-plus-circle"></i> ' . htmlspecialchars($this->pi_getLL('add')) . '</a>
+        </div>
+    </div>
+    <div class="panel-body">
+    ';
     if (is_array($feeds) and count($feeds)) {
-        $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . htmlspecialchars($this->pi_getLL('product_feeds')) . '</h3></div>
+        $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . htmlspecialchars($this->pi_getLL('feeds')) . '</h3></div>
 		<div class="panel-body">
 		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
 		<thead>
@@ -614,7 +623,7 @@ if ($this->ms['show_main']) {
         }
         $content .= '</table></div></div>';
     } else {
-        $content .= '<h3>' . htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')) . '</h3></div></div>';
+        $content .= '<h3>' . htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')) . '</h3>';
     }
     $content .= '<div class="panel panel-default"><div class="panel-heading"><h3>' . $this->pi_getLL('import_feed_record') . '</h3></div>
 	<div class="panel-body">
@@ -638,7 +647,9 @@ if ($this->ms['show_main']) {
 				</div>
 			</div>
 		</form>
-	</fieldset>';
-    $content .= '<hr><div class="clearfix"><div class="pull-right"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&section=add') . '" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> ' . htmlspecialchars($this->pi_getLL('add')) . '</a></div></div></div></div>';
+	</fieldset>
+	</div></div>';
+    $content.='</div></div>';
+    //$content .= '<hr><div class="clearfix"><div class="pull-right"></div></div></div></div>';
 }
 ?>

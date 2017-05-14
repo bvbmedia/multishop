@@ -39,8 +39,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
     $staffel_price['use_tax_id'] = true;
     if (isset($this->get['oid']) && is_numeric($this->get['oid']) && $this->get['oid'] > 0) {
         $orders = mslib_fe::getOrder($this->get['oid']);
+        if (!$customer_address = mslib_fe::getAddressInfo('customer', $orders['customer_id'])) {
+            $customer_address['country'] = $order['billing_country'];
+            $customer_address['region'] = $order['billing_region'];
+        }
+        if (!isset($customer_address['country']) && isset($customer_address['default']['country'])) {
+            $customer_address = $customer_address['default'];
+        }
         $iso_customer = mslib_fe::getCountryByName($orders['billing_country']);
         $iso_customer['country'] = $iso_customer['cn_short_en'];
+        if (!empty($customer_address['region'])) {
+            $zone = mslib_fe::getRegionByName($customer_address['region']);
+        } else {
+            $zone['zn_country_iso_nr'] = 0;
+        }
         $vat_id = $orders['billing_vat_id'];
         // hook for adding new fieldsets into edit_order
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/ajax_products_staffelprice_search.php']['ajaxProductsStaffelPriceSearchExistingOrder'])) {
@@ -60,7 +72,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
             }
             $sql_tax_sb = $GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name, trg.default_status', // SELECT ...
                     'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
-                    't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\'' . $iso_customer['cn_iso_nr'] . '\'', // WHERE...
+                    't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\'' . $iso_customer['cn_iso_nr'] . '\' and tr.zn_country_iso_nr = \'' . addslashes($zone['zn_country_iso_nr']) . '\' and tr.rules_group_id = \'' . addslashes($product['tax_id']) . '\'', // WHERE...
                     '', // GROUP BY...
                     '', // ORDER BY...
                     '' // LIMIT ...
@@ -78,16 +90,18 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
             if ($tax_id_data[$default_tax_id]['tax_id'] > 0) {
                 if ($tax_id_data[$default_tax_id]['rate'] < 0.1) {
                     //$staffel_price['use_tax_id']=false;
+                    $this->ms['MODULES']['DISABLE_VAT_RATE']=1;
                 }
                 $product['tax_id'] = $tax_id_data[$default_tax_id]['tax_id'];
             }
+            //$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
         }
     }
     //
     $staffel_price['tax_id'] = $product['tax_id'];
     if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
         //$staffel_price['use_tax_id']=false;
-        $staffel_price['tax_id'] = '';
+        //$staffel_price['tax_id'] = '';
         $staffel_price['price_include_vat'] = $staffel_price['price'];
         $staffel_price['display_price'] = number_format($staffel_price['price'], 2, '.', '');
         $staffel_price['display_price_include_vat'] = number_format($staffel_price['price'], 2, '.', '');

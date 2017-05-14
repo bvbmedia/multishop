@@ -94,6 +94,7 @@ $array['payment_cost_vat_rate'] = $this->pi_getLL('feed_exporter_fields_label_pa
 $array['order_products'] = $this->pi_getLL('feed_exporter_fields_label_order_products');
 $array['order_total_vat'] = $this->pi_getLL('feed_exporter_fields_label_order_total_vat');
 $array['order_date'] = $this->pi_getLL('feed_exporter_fields_label_order_date');
+$array['order_datetime'] = $this->pi_getLL('feed_exporter_fields_label_order_datetime');
 $array['order_company_name'] = $this->pi_getLL('feed_exporter_fields_label_order_company_name');
 $array['order_vat_id'] = $this->pi_getLL('feed_exporter_fields_label_order_vat_id');
 $array['order_customer_currency'] = $this->pi_getLL('feed_exporter_fields_label_order_customer_currency');
@@ -249,10 +250,10 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</select>';
         // delimeter type selectbox
         $delimeter_type_sb = '<select name="delimeter_type" class="form-control">
-			<option value=";"' . ($post_data['order_type'] == ';' ? ' selected="selected"' : '') . '>semicolon (;)</option>
-			<option value=","' . ($post_data['order_type'] == ',' ? ' selected="selected"' : '') . '>comma (,)</option>
-			<option value="\t"' . ($post_data['order_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
-			<option value="|"' . ($post_data['order_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
+			<option value=";"' . ($post_data['delimeter_type'] == ';' ? ' selected="selected"' : '') . '>semicolon (;)</option>
+			<option value=","' . ($post_data['delimeter_type'] == ',' ? ' selected="selected"' : '') . '>comma (,)</option>
+			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
+			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
         $content .= '
 		 <div class="form-group">

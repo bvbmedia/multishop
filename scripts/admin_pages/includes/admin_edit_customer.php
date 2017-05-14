@@ -53,26 +53,26 @@ if ($this->post && $this->post['email']) {
         if ($this->post['birthday']) {
             $updateArray['date_of_birth'] = strtotime($this->post['birthday']);
         }
-        $updateArray['first_name'] = $this->post['first_name'];
-        $updateArray['middle_name'] = $this->post['middle_name'];
-        $updateArray['last_name'] = $this->post['last_name'];
+        $updateArray['first_name'] = trim($this->post['first_name']);
+        $updateArray['middle_name'] = trim($this->post['middle_name']);
+        $updateArray['last_name'] = trim($this->post['last_name']);
         $updateArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
         $updateArray['name'] = preg_replace('/\s+/', ' ', $updateArray['name']);
         $updateArray['gender'] = $this->post['gender'];
-        $updateArray['company'] = $this->post['company'];
-        $updateArray['building'] = $this->post['building'];
-        $updateArray['street_name'] = $this->post['street_name'];
-        $updateArray['address_number'] = $this->post['address_number'];
-        $updateArray['address_ext'] = $this->post['address_ext'];
+        $updateArray['company'] = trim($this->post['company']);
+        $updateArray['building'] = trim($this->post['building']);
+        $updateArray['street_name'] = trim($this->post['street_name']);
+        $updateArray['address_number'] = trim($this->post['address_number']);
+        $updateArray['address_ext'] = trim($this->post['address_ext']);
         $updateArray['address'] = $updateArray['street_name'] . ' ' . $updateArray['address_number'] . $updateArray['address_ext'];
         $updateArray['address'] = preg_replace('/\s+/', ' ', $updateArray['address']);
-        $updateArray['zip'] = $this->post['zip'];
-        $updateArray['city'] = $this->post['city'];
-        $updateArray['country'] = $this->post['country'];
-        $updateArray['email'] = $this->post['email'];
-        $updateArray['www'] = $this->post['www'];
-        $updateArray['telephone'] = $this->post['telephone'];
-        $updateArray['mobile'] = $this->post['mobile'];
+        $updateArray['zip'] = trim($this->post['zip']);
+        $updateArray['city'] = trim($this->post['city']);
+        $updateArray['country'] = trim($this->post['country']);
+        $updateArray['email'] = trim($this->post['email']);
+        $updateArray['www'] = trim($this->post['www']);
+        $updateArray['telephone'] = trim($this->post['telephone']);
+        $updateArray['mobile'] = trim($this->post['mobile']);
         $updateArray['tx_multishop_discount'] = $this->post['tx_multishop_discount'];
         $updateArray['tx_multishop_payment_condition'] = $this->post['tx_multishop_payment_condition'];
         if ($this->post['password']) {
@@ -83,14 +83,14 @@ if ($this->post && $this->post['email']) {
         }
         if (isset($this->post['tx_multishop_vat_id'])) {
             if (!empty($this->post['tx_multishop_vat_id'])) {
-                $updateArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
+                $updateArray['tx_multishop_vat_id'] = trim($this->post['tx_multishop_vat_id']);
             } else {
                 $updateArray['tx_multishop_vat_id'] = '';
             }
         }
         if (isset($this->post['tx_multishop_coc_id'])) {
             if (!empty($this->post['tx_multishop_coc_id'])) {
-                $updateArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
+                $updateArray['tx_multishop_coc_id'] = trim($this->post['tx_multishop_coc_id']);
             } else {
                 $updateArray['tx_multishop_coc_id'] = '';
             }
@@ -100,7 +100,7 @@ if ($this->post && $this->post['email']) {
         }
         if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
             if (isset($this->post['department'])) {
-                $updateArray['department'] = $this->post['department'];
+                $updateArray['department'] = trim($this->post['department']);
             }
         }
         if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
@@ -140,10 +140,10 @@ if ($this->post && $this->post['email']) {
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'])) {
                 $params = array(
-                        'uid' => $this->post['tx_multishop_pi1']['cid'],
-                        'updateArray' => &$updateArray,
-                        'user' => $user,
-                        'erno' => $erno
+                    'uid' => $this->post['tx_multishop_pi1']['cid'],
+                    'updateArray' => &$updateArray,
+                    'user' => $user,
+                    'erno' => $erno
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -164,7 +164,7 @@ if ($this->post && $this->post['email']) {
                 $updateTTAddressArray['tstamp'] = time();
                 $updateTTAddressArray['company'] = $updateArray['company'];
                 $updateTTAddressArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
-                $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+                $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $updateTTAddressArray['name']);
                 $updateTTAddressArray['first_name'] = $updateArray['first_name'];
                 $updateTTAddressArray['middle_name'] = $updateArray['middle_name'];
                 $updateTTAddressArray['last_name'] = $updateArray['last_name'];
@@ -189,12 +189,16 @@ if ($this->post && $this->post['email']) {
                 $updateTTAddressArray['mobile'] = $updateArray['mobile'];
                 $updateTTAddressArray['city'] = $updateArray['city'];
                 $updateTTAddressArray['country'] = $updateArray['country'];
-                $updateTTAddressArray['gender'] = $updateArray['gender'];
+                if ($updateArray['gender']=='0' || $updateArray['gender']=='1') {
+                    $updateTTAddressArray['gender'] = ($updateArray['gender']=='0' ? 'm' : 'f');
+                } else {
+                    $updateTTAddressArray['gender'] = $updateArray['gender'];
+                }
                 $updateTTAddressArray['birthday'] = strtotime($updateArray['birthday']);
-                if ($updateArray['gender'] == 'm') {
+                if ($updateTTAddressArray['gender'] == 'm') {
                     $updateTTAddressArray['title'] = 'Mr.';
                 } else {
-                    if ($updateArray['gender'] == 'f') {
+                    if ($updateTTAddressArray['gender'] == 'f') {
                         $updateTTAddressArray['title'] = 'Mrs.';
                     }
                 }
@@ -212,11 +216,17 @@ if ($this->post && $this->post['email']) {
                 }
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
                 if (!$this->post['different_delivery_address']) {
                     $updateTTAddressArray['tx_multishop_address_type'] = 'delivery';
                     $updateTTAddressArray['tx_multishop_default'] = 0;
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 } else {
                     // ADD TT_ADDRESS RECORD
                     $updateTTAddressArray = array();
@@ -248,11 +258,15 @@ if ($this->post && $this->post['email']) {
                     $updateTTAddressArray['mobile'] = $this->post['delivery_mobile'];
                     $updateTTAddressArray['city'] = $this->post['delivery_city'];
                     $updateTTAddressArray['country'] = $this->post['delivery_country'];
-                    $updateTTAddressArray['gender'] = $this->post['delivery_gender'];
-                    if ($this->post['delivery_gender'] == 'm') {
+                    if ($this->post['delivery_gender']=='0' || $this->post['delivery_gender']=='1') {
+                        $updateTTAddressArray['gender'] = ($this->post['delivery_gender']=='0' ? 'm' : 'f');
+                    } else {
+                        $updateTTAddressArray['gender'] = $this->post['delivery_gender'];
+                    }
+                    if ($updateTTAddressArray['gender'] == 'm') {
                         $updateTTAddressArray['title'] = 'Mr.';
                     } else {
-                        if ($this->post['delivery_gender'] == 'f') {
+                        if ($updateTTAddressArray['gender'] == 'f') {
                             $updateTTAddressArray['title'] = 'Mrs.';
                         }
                     }
@@ -268,8 +282,13 @@ if ($this->post && $this->post['email']) {
                             $updateTTAddressArray['department'] = $this->post['delivery_department'];
                         }
                     }
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 }
                 // custom hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPostProc'])) {
@@ -407,12 +426,16 @@ if ($this->post && $this->post['email']) {
                 $insertArray['mobile'] = $updateArray['mobile'];
                 $insertArray['city'] = $updateArray['city'];
                 $insertArray['country'] = $updateArray['country'];
-                $insertArray['gender'] = $updateArray['gender'];
+                if ($updateArray['gender']=='0' || $updateArray['gender']=='1') {
+                    $insertArray['gender'] = ($updateArray['gender']=='0' ? 'm' : 'f');
+                } else {
+                    $insertArray['gender'] = $updateArray['gender'];
+                }
                 $insertArray['birthday'] = strtotime($updateArray['birthday']);
-                if ($updateArray['gender'] == 'm') {
+                if ($insertArray['gender'] == 'm') {
                     $insertArray['title'] = 'Mr.';
                 } else {
-                    if ($updateArray['gender'] == 'f') {
+                    if ($insertArray['gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
                     }
                 }
@@ -466,7 +489,11 @@ if ($this->post && $this->post['email']) {
                     $insertArray['mobile'] = $this->post['delivery_mobile'];
                     $insertArray['city'] = $this->post['delivery_city'];
                     $insertArray['country'] = $this->post['delivery_country'];
-                    $insertArray['gender'] = $this->post['delivery_gender'];
+                    if ($this->post['delivery_gender']=='0' || $this->post['delivery_gender']=='1') {
+                        $insertArray['gender'] = ($this->post['delivery_gender']=='0' ? 'm' : 'f');
+                    } else {
+                        $insertArray['gender'] = $this->post['delivery_gender'];
+                    }
                     $insertArray['birthday'] = strtotime($this->post['delivery_birthday']);
                     if ($this->post['delivery_gender'] == 'm') {
                         $insertArray['title'] = 'Mr.';
@@ -1063,19 +1090,20 @@ switch ($_REQUEST['action']) {
                     <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
                 </div>';
             }
-
-            $md5_list=array();
-            $md5_list[]=$this->post['gender'];
-            $md5_list[]=$this->post['first_name'];
-            $md5_list[]=$this->post['middle_name'];
-            $md5_list[]=$this->post['last_name'];
-            $md5_list[]=$this->post['street_name'];
-            $md5_list[]=$this->post['address_number'];
-            $md5_list[]=$this->post['address_ext'];
-            $md5_list[]=$this->post['zip'];
-            $md5_list[]=$this->post['city'];
-            $md5_list[]=$this->post['email'];
-            $billing_address_md5=md5(implode("", $md5_list));
+            $md5_list = array();
+            $md5_list[] = $this->post['gender'];
+            $md5_list[] = $this->post['first_name'];
+            $md5_list[] = $this->post['middle_name'];
+            $md5_list[] = $this->post['last_name'];
+            $md5_list[] = $this->post['company'];
+            $md5_list[] = $this->post['street_name'];
+            $md5_list[] = $this->post['address_number'];
+            $md5_list[] = $this->post['address_ext'];
+            $md5_list[] = $this->post['zip'];
+            $md5_list[] = $this->post['city'];
+            $md5_list[] = $this->post['telephone'];
+            $md5_list[] = $this->post['email'];
+            $billing_address_md5 = md5(implode("", $md5_list));
             //
             $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
             $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
@@ -1113,47 +1141,50 @@ switch ($_REQUEST['action']) {
             // delivery address
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
-                $md5_list=array();
-                $md5_list[]=$delivery_address['gender'];
-                $md5_list[]=$delivery_address['first_name'];
-                $md5_list[]=$delivery_address['middle_name'];
-                $md5_list[]=$delivery_address['last_name'];
-                $md5_list[]=$delivery_address['street_name'];
-                $md5_list[]=$delivery_address['address_number'];
-                $md5_list[]=$delivery_address['address_ext'];
-                $md5_list[]=$delivery_address['zip'];
-                $md5_list[]=$delivery_address['city'];
-                $md5_list[]=$delivery_address['email'];
-                $delivery_address_md5=md5(implode("", $md5_list));
-                if ($billing_address_md5!=$delivery_address_md5) {
+                $md5_list = array();
+                $md5_list[] = ($delivery_address['gender']=='m' ? '0' : '1');
+                $md5_list[] = $delivery_address['first_name'];
+                $md5_list[] = $delivery_address['middle_name'];
+                $md5_list[] = $delivery_address['last_name'];
+                $md5_list[] = $delivery_address['company'];
+                $md5_list[] = $delivery_address['street_name'];
+                $md5_list[] = $delivery_address['address_number'];
+                $md5_list[] = $delivery_address['address_ext'];
+                $md5_list[] = $delivery_address['zip'];
+                $md5_list[] = $delivery_address['city'];
+                $md5_list[] = $delivery_address['phone'];
+                $md5_list[] = $delivery_address['email'];
+                $delivery_address_md5 = md5(implode("", $md5_list));
+                if ($billing_address_md5 != $delivery_address_md5) {
                     $subpartArray['###DIFFERENT_DELIVERY_ADDRESS_CHECKED###'] = ' checked="checked"';
-                    $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
-                    $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');
-                    $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = htmlspecialchars($delivery_address['first_name']);
-                    $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = htmlspecialchars($delivery_address['middle_name']);
-                    $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
-                    //
-                    $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
-                    // department input
-                    if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
-                        $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
-                            <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
-                            <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
-                        </div>';
-                    }
-                    //
-                    $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
-                    $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);
-                    $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($delivery_address['address_number']);
-                    $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = htmlspecialchars($delivery_address['address_ext']);
-                    $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = htmlspecialchars($delivery_address['zip']);
-                    $subpartArray['###VALUE_DELIVERY_CITY###'] = htmlspecialchars($delivery_address['city']);
-                    $subpartArray['###VALUE_DELIVERY_EMAIL###'] = htmlspecialchars($delivery_address['email']);
-                    $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = htmlspecialchars($delivery_address['telephone']);
-                    $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
-                    $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
-                    $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
                 }
+                $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
+                $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');
+                $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = htmlspecialchars($delivery_address['first_name']);
+                $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = htmlspecialchars($delivery_address['middle_name']);
+                $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
+                //
+                $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
+                // department input
+                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                    $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
+                        <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
+                        <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
+                    </div>';
+                }
+                //
+                $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
+                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);
+                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($delivery_address['address_number']);
+                $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = htmlspecialchars($delivery_address['address_ext']);
+                $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = htmlspecialchars($delivery_address['zip']);
+                $subpartArray['###VALUE_DELIVERY_CITY###'] = htmlspecialchars($delivery_address['city']);
+                $subpartArray['###VALUE_DELIVERY_EMAIL###'] = htmlspecialchars($delivery_address['email']);
+                $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = htmlspecialchars($delivery_address['phone']);
+                $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
+                $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
+                $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
+
             }
             $subpartArray['###LABEL_DISCOUNT###'] = ucfirst($this->pi_getLL('discount'));
             $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
@@ -1631,11 +1662,11 @@ $interfaceHeaderButtons = $objRef->renderHeaderButtons();
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 if ($this->get['tx_multishop_pi1']['cid'] > 0 && !is_numeric($user['uid'])) {
-    $content = $this->pi_getLL('customer_not_found');
+    $content .= $this->pi_getLL('customer_not_found');
 } else {
     if (isset($this->get['tx_multishop_pi1']['cid'])) {
         if (!$this->get['tx_multishop_pi1']['cid'] || !is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-            $content = $this->pi_getLL('customer_not_found');
+            $content .= $this->pi_getLL('customer_not_found');
         }
     }
 }

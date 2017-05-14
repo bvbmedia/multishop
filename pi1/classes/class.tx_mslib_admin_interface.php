@@ -100,6 +100,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        $tableId=uniqid();
         // for pagination
         $this->get = $that->get;
         $this->post = $that->post;
@@ -143,11 +144,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         $updateCookie = 0;
-        if ($that->get['Search'] and ($that->get['limit'] != $that->cookie['limit'])) {
-            $that->cookie['limit'] = $that->get['limit'];
-            $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
-            $params['settings']['limit'] = $that->cookie['limit'];
-            $updateCookie = 1;
+        if (!isset($params['settings']['limit'])) {
+            if ($that->get['Search'] and ($that->get['limit'] != $that->cookie['limit'])) {
+                $that->cookie['limit'] = $that->get['limit'];
+                $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
+                $params['settings']['limit'] = $that->cookie['limit'];
+                $updateCookie = 1;
+            }
         }
         if ($that->get['Search'] and ($that->get['display_all_records'] != $that->cookie['display_all_records'])) {
             $that->cookie['display_all_records'] = $that->get['display_all_records'];
@@ -166,7 +169,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $that->get['limit'] = $that->get['tx_multishop_pi1']['limit'];
             $params['settings']['limit'] = $that->get['limit'];
         }
-        if ($that->cookie['limit']) {
+        if (!isset($params['settings']['limit']) && $that->cookie['limit']) {
             /*
             if (!isset($that->get['limit']) || $that->get['limit']!=$that->cookie['limit']) {
                 if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
@@ -264,14 +267,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         if ($queryData['keywordSearchWhere'] && is_array($params['query']['whereMatch'])) {
-            $orFilter=array();
-            $orFilter[]=$queryData['keywordSearchWhere'];
-            $orFilter[]='('.implode(' OR ',$params['query']['whereMatch']).')';
-            $queryData['where'][]='('.implode(' OR ',$orFilter).')';
+            $orFilter = array();
+            $orFilter[] = $queryData['keywordSearchWhere'];
+            $orFilter[] = '(' . implode(' OR ', $params['query']['whereMatch']) . ')';
+            $queryData['where'][] = '(' . implode(' OR ', $orFilter) . ')';
         } elseif ($queryData['keywordSearchWhere']) {
-            $queryData['where'][]=$queryData['keywordSearchWhere'];
+            $queryData['where'][] = $queryData['keywordSearchWhere'];
         } elseif (is_array($params['query']['whereMatch'])) {
-            $queryData['where'][]='('.implode(' OR ',$params['query']['whereMatch']).')';
+            $queryData['where'][] = '(' . implode(' OR ', $params['query']['whereMatch']) . ')';
         }
         if ($params['query']['where']) {
             if (is_array($params['query']['where'])) {
@@ -367,9 +370,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<div class="table-responsive">';
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
-                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface">';
+                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface'.$tableId.'">';
             } else {
-                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface'.$tableId.'">';
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
@@ -501,6 +504,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = '';
                             }
                             break;
+                        case 'date_datetime_tooltip':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
                         case 'timestamp':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%x %X", $row[$col]);
@@ -610,6 +620,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $status_html .= '</span>';
                             $row[$col] = $status_html;
                             break;
+                        case 'options_selectbox':
+                            $options_selectbox_html='';
+                            $options_array=$valArray['optionsValue'];
+                            $options_name=(isset($valArray['optionsName']) && !empty($valArray['optionsName']) ? $valArray['optionsName'] : $col);
+                            $options_class=(isset($valArray['optionsClass']) && !empty($valArray['optionsClass']) ? ' ' . $valArray['optionsClass'] : 'change_'.$col);
+                            if (is_array($options_array) && count($options_array)) {
+                                $options_selectbox_html = '<select name="'.$options_name.'" class="form-control'.$options_class.'">
+		                        <option value="">' . $this->pi_getLL('choose') . '</option>';
+                                if (is_array($options_array)) {
+                                    foreach ($options_array as $item) {
+                                        $options_selectbox_html .= '<option value="' . $item['id'] . '"' . ($item['id'] == $originalValue ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                    }
+                                }
+                                $options_selectbox_html .= '</select>';
+                            }
+                            $row[$col] = $options_selectbox_html;
+                            break;
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['href']) {
@@ -627,7 +654,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 'adjustedValue' => &$adjustedValue,
                                 'params' => &$params,
                                 'valArray' => &$valArray,
-                                'summarize' => &$summarize
+                                'summarize' => &$summarize,
+                                'interfaceKey' => $this->interfaceKey
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
@@ -692,7 +720,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $actions = $params['settings']['tableSelectionActions'];
                 if (count($actions)) {
                     // custom page hook that can be controlled by third-party plugin eof
-                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
+                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction'.$tableId.'" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
                     foreach ($actions as $key => $value) {
                         $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
                     }
@@ -842,9 +870,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
             }
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_css'] = '<link rel="stylesheet" type="text/css" href="typo3conf/ext/multishop/templates/global/css/tablesorter.css" media="all" />';
-            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'] = '<script type="text/javascript" data-ignore="1">
+            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'.$tableId] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
-				$(\'#msAdminTableInterface\').tablesorter({
+				$(\'#msAdminTableInterface'.$tableId.'\').tablesorter({
 				    headers: { ' . implode(', ', $sort_js) . ' }
 				});
 			});
@@ -860,6 +888,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $array['searchForm'] = $searchForm;
                 $array['paginationMarkup'] = $paginationMarkup;
                 $array['dataset'] = $pageset['dataset'];
+                $array['total_rows'] = $pageset['total_rows'];
                 return $array;
             } else {
                 return $content;

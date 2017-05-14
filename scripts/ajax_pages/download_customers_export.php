@@ -18,13 +18,21 @@ if ($this->get['customers_export_hash']) {
     $Cache_Lite = new Cache_Lite($options);
     $string = 'customersfeed_' . $this->shop_pid . '_' . serialize($customers_export) . '-' . md5($this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING']);
     if ($this->ADMIN_USER and $this->get['clear_cache']) {
-        $Cache_Lite->remove($string);
+        if ($Cache_Lite->get($string)) {
+            $Cache_Lite->remove($string);
+        }
     }
     if (!$content = $Cache_Lite->get($string)) {
         $fields = unserialize($customers_export['fields']);
         $post_data = unserialize($customers_export['post_data']);
-        if (!$post_data['delimeter_type']) {
-            $post_data['delimeter_type'] = ';';
+        switch ($post_data['delimeter_type']) {
+            case '\t':
+                $post_data['delimeter_type'] = "\t";
+                break;
+            case '':
+                $post_data['delimeter_type'] = ';';
+                break;
+
         }
         $fields_values = $post_data['fields_values'];
         $records = array();

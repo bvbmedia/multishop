@@ -252,9 +252,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 //die();
                 $order_tax_data['total_orders_tax'] = (string)number_format($sub_total_tax + $shipping_tax + $payment_tax, 14, '.', '');
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)number_format((($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total - $discount_price)) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                    $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');;
+                    $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 }
                 $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
                 //
@@ -1356,9 +1356,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];
             $insertArray['billing_last_name'] = $address['last_name'];
-            $insertArray['billing_name'] = preg_replace('/ +/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
+            $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
             $insertArray['billing_email'] = $address['email'];
             $insertArray['billing_gender'] = $address['gender'];
+            switch($insertArray['billing_gender']) {
+                case '0':
+                    $insertArray['billing_gender']='m';
+                    break;
+                case '1':
+                    $insertArray['billing_gender']='f';
+                    break;
+            }
             $insertArray['billing_birthday'] = $address['birthday'];
             if (!$address['street_name']) {
                 $address['street_name'] = $address['address'];
@@ -1387,6 +1395,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
                 $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
                 $insertArray['delivery_gender'] = $insertArray['billing_gender'];
+                switch($insertArray['delivery_gender']) {
+                    case '0':
+                        $insertArray['delivery_gender']='m';
+                        break;
+                    case '1':
+                        $insertArray['delivery_gender']='f';
+                        break;
+                }
                 $insertArray['delivery_building'] = $insertArray['billing_building'];
                 $insertArray['delivery_street_name'] = $insertArray['billing_street_name'];
                 $insertArray['delivery_address'] = $insertArray['billing_address'];
@@ -1404,9 +1420,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_first_name'] = $address['delivery_first_name'];
                 $insertArray['delivery_middle_name'] = $address['delivery_middle_name'];
                 $insertArray['delivery_last_name'] = $address['delivery_last_name'];
-                $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
+                $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
                 $insertArray['delivery_email'] = $address['delivery_email'];
                 $insertArray['delivery_gender'] = $address['delivery_gender'];
+                switch($insertArray['delivery_gender']) {
+                    case '0':
+                        $insertArray['delivery_gender']='m';
+                        break;
+                    case '1':
+                        $insertArray['delivery_gender']='f';
+                        break;
+                }
                 if (!$address['delivery_street_name']) {
                     $address['delivery_street_name'] = $address['delivery_address'];
                 }
@@ -1493,7 +1517,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'])) {
                 $params = array(
-                        'insertArray' => &$insertArray
+                        'insertArray' => &$insertArray,
+                        'address'=>&$address
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

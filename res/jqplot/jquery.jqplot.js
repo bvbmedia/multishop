@@ -2789,7 +2789,7 @@
                 // // parse the renderer options and apply default colors if not provided
                 // if (!temp.color && temp.show != false) {
                 //     temp.color = cg.next();
-                //     colorIndex = cg.getIndex() - 1;;
+                //     colorIndex = cg.getIndex() - 1;
                 // }
                 // if (!temp.negativeColor && temp.show != false) {
                 //     temp.negativeColor = ncg.get(colorIndex);

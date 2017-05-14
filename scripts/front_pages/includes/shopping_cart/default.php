@@ -2,6 +2,8 @@
 if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
+// Add header to prevent search-engines from indexing this page
+header("X-Robots-Tag: noindex", true);
 if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
     $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] = 1;
 }

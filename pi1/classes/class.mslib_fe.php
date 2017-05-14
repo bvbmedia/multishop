@@ -70,6 +70,7 @@ class mslib_fe {
         $this->STATISTICSADMIN_USER =& $ref->STATISTICSADMIN_USER;
         $this->languages =& $ref->languages;
         $this->defaultLanguageArray =& $ref->defaultLanguageArray;
+        $this->hidePagination =& $ref->hidePagination;
         $this->initLanguage($ref->LOCAL_LANG);
     }
     /**
@@ -767,6 +768,17 @@ class mslib_fe {
                     if ($product['endtime'] > 0) {
                         if ($product['endtime'] <= $current_tstamp) {
                             $disable_product = true;
+                        }
+                    }
+                    //hook to let other plugins further manipulate the query
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArrayContinueIteratorPreProc'])) {
+                        $params = array(
+                                'product' => &$product,
+                                'disable_product' => &$disable_product,
+                                'current_tstamp' => &$current_tstamp
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArrayContinueIteratorPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
                     if ($disable_product && !$include_disabled_products) {
@@ -2120,7 +2132,7 @@ class mslib_fe {
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
         if ($user['email']) {
-            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/PHPMailer/PHPMailerAutoload.php');
+            require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/PHPMailer/PHPMailerAutoload.php');
             $mail = new PHPMailer;
             //$mail = new PHPMailer();
             $mail->CharSet = 'UTF-8';
@@ -2166,23 +2178,42 @@ class mslib_fe {
             }
             $markerArray = array();
             $markerArray['###SUBJECT###'] = $subject;
+            $markerArray['###MAIL_TITLE###'] = $subject;
             $markerArray['###BODY###'] = $body;
             // ADDITIONAL OPTIONAL MARKERS
             $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
             $markerArray['###STORE_EMAIL###'] = $this->ms['MODULES']['STORE_EMAIL'];
             $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
             $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
-            $markerArray['###STORE_ADDRESS###'] = '';
-            $markerArray['###STORE_ZIP###'] = '';
-            $markerArray['###STORE_CITY###'] = '';
-            $markerArray['###STORE_COUNTRY###'] = '';
+            $markerArray['###STORE_TELEPHONE###']='';
+            $markerArray['###STORE_COMPANY###']='';
+            $markerArray['###STORE_ADDRESS###']='';
+            $markerArray['###STORE_ZIP###']='';
+            $markerArray['###STORE_CITY###']='';
+            $markerArray['###STORE_COUNTRY###']='';
+            $markerArray['###STORE_LOCALIZED_COUNTRY###']='';
+            $markerArray['###STORE_BANK_NAME###']='';
+            $markerArray['###STORE_BANK_IBAN###']='';
+            $markerArray['###STORE_BANK_BIC###']='';
+            $markerArray['###STORE_VAT_ID###']='';
+            $markerArray['###STORE_COC_ID###']='';
+            $markerArray['###STORE_ADMINISTRATION_EMAIL###']='';
             if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store'] > 0) {
                 $address = mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
                 if (is_array($address) && $address['uid']) {
-                    $markerArray['###STORE_ADDRESS###'] = $address['address'];
-                    $markerArray['###STORE_ZIP###'] = $address['zip'];
-                    $markerArray['###STORE_CITY###'] = $address['city'];
-                    $markerArray['###STORE_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+                    $markerArray['###STORE_TELEPHONE###']=$address['phone'];
+                    $markerArray['###STORE_COMPANY###']=$address['company'];
+                    $markerArray['###STORE_ADDRESS###']=$address['address'];
+                    $markerArray['###STORE_ZIP###']=$address['zip'];
+                    $markerArray['###STORE_CITY###']=$address['city'];
+                    $markerArray['###STORE_COUNTRY###']=$address['country'];
+                    $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+                    $markerArray['###STORE_BANK_NAME###']=$address['tx_multishop_bank_name'];
+                    $markerArray['###STORE_BANK_IBAN###']=$address['tx_multishop_iban'];
+                    $markerArray['###STORE_BANK_BIC###']=$address['tx_multishop_bic'];
+                    $markerArray['###STORE_VAT_ID###']=$address['tx_multishop_vat_id'];
+                    $markerArray['###STORE_COC_ID###']=$address['tx_multishop_coc_id'];
+                    $markerArray['###STORE_ADMINISTRATION_EMAIL###']=$address['email'];
                 }
             }
             if (is_array($options['markerArray']) && count($options['markerArray'])) {
@@ -2207,7 +2238,7 @@ class mslib_fe {
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
             if (isset($options['sender'])) {
-                $mail->Sender=$options['sender'];
+                $mail->Sender = $options['sender'];
             }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
@@ -2747,8 +2778,8 @@ class mslib_fe {
                                     if ($products_options_values['options_values_price'] != '0') {
                                         $image_alt .= ' ' . $products_options_values['price_prefix'] . ' ' . mslib_fe::currency() . mslib_fe::amount2Cents2($products_options_values['options_values_price']);
                                     }
-                                    $tooltips_attribute_image = htmlspecialchars('<div class="valuesdesc_info"><img src="' . mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'small') . '" />');
-                                    $attribute_value_image = '<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $tooltips_attribute_image . '"><img src="' . mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'small') . '" alt="' . $image_alt . '" class="attribute_value_images" width="20px" height="20px" /></a>';
+                                    $tooltips_attribute_image = htmlspecialchars('<div class="valuesdesc_info"><img src="' . mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'normal') . '" />');
+                                    $attribute_value_image = '<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $tooltips_attribute_image . '"><img src="' . mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'normal') . '" alt="' . $image_alt . '" class="attribute_value_images" width="20px" height="20px" /></a>';
                                 }
                             }
                             // hook for manipulating the $products_options_values array
@@ -3075,7 +3106,7 @@ class mslib_fe {
                 'products_id=\'' . $pid . '\'', // WHERE...
                 '', // GROUP BY...
                 '', // ORDER BY...
-                '' // LIMIT ...
+                '1' // LIMIT ...
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -5207,6 +5238,7 @@ class mslib_fe {
                     $shipping_tax += $handling_tax;
                     $shipping_methods[$shipping_method['code']]['shipping_costs'] = $shipping_cost;
                     $shipping_methods[$shipping_method['code']]['shipping_costs_including_vat'] = $shipping_cost + $shipping_tax;
+                    $shipping_methods[$shipping_method['code']]['override_shippingcosts'] = $row3['override_shippingcosts'];
                     $unserialize_sm = unserialize($row3['vars']);
                     $shipping_methods[$shipping_method['code']]['deliver_by'] = $shipping_method['name'];//$unserialize_sm['name'][0];
                     $shipping_methods[$shipping_method['code']]['product_name'] = $product_data['products_name'];
@@ -5393,9 +5425,6 @@ class mslib_fe {
                     }
                 }
             }
-            if ($disable_product && !$include_disabled_products) {
-                return false;
-            }
             // hook
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'])) {
                 $params = array(
@@ -5405,12 +5434,16 @@ class mslib_fe {
                         'extra_fields' => $extra_fields,
                         'include_disabled_products' => $include_disabled_products,
                         'skipFlatDatabase' => $skipFlatDatabase,
+                        'disable_product' => &$disable_product
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
             // hook eof
+            if ($disable_product && !$include_disabled_products) {
+                return false;
+            }
             if ($this->conf['disableFeFromCalculatingVatPrices'] != '1') {
                 $tax_ruleset = self::getTaxRuleSet($product['tax_id'], 0);
                 $product['tax_rate'] = ($tax_ruleset['total_tax_rate'] / 100);
@@ -7213,7 +7246,7 @@ class mslib_fe {
                 }
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['label'] = $this->pi_getLL('admin_delete_product');
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['description'] = $this->pi_getLL('admin_delete_product_description') . '.';
-                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $product['categories_id'] . '&pid=' . $this->get['products_id'] . '&action=delete_product');
+                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $this->get['categories_id'] . '&pid=' . $this->get['products_id'] . '&action=delete_product');
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['class'] = 'fa fa-trash-o';
                 if ($this->get['tx_multishop_pi1']['page_section'] == 'delete_product' || $this->post['tx_multishop_pi1']['page_section'] == 'delete_product') {
                     $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['active'] = 1;
@@ -8732,6 +8765,9 @@ class mslib_fe {
                 }
             }
             $mailOrder = 1;
+            if (isset($this->post['tx_multishop_pi1']['send_paid_letter']) && $this->post['tx_multishop_pi1']['send_paid_letter']=='0') {
+                $mailOrder = 0;
+            }
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateOrderStatusToPaidPostProc'])) {
                 $params = array(
@@ -8787,17 +8823,19 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($orders_id)) {
+            $allowZeroAmountInvoice=0;
             $order = mslib_fe::getOrder($orders_id);
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'])) {
                 $params = array(
                         'force' => &$force,
-                        'order' => $order
+                        'order' => $order,
+                        'allowZeroAmountInvoice' =>&$allowZeroAmountInvoice
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            if (!$force && $order['total_amount'] == 0) {
+            if (!$allowZeroAmountInvoice && $order['total_amount'] == 0) {
                 // it does not make sense to create an invoice without an amount
                 return false;
             }
@@ -10475,6 +10513,8 @@ class mslib_fe {
             $array1[] = '###BILLING_COMPANY###';
             $array2[] = $newCustomer['company'];
             $array1[] = '###FULL_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FULL_NAME###';
             $array2[] = $newCustomer['name'];
             $array1[] = '###BILLING_NAME###';
             $array2[] = $newCustomer['name'];

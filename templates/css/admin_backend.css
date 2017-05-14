@@ -874,3 +874,16 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 }
 
 .img-border { border:1px solid #ccc; text-align:center; padding:1px; border-radius:4px; }
+.ui-widget-content .btn { color:#fff; }
+
+.cellQty .quantity.buttons_added { white-space:nowrap; }
+.cellQty .quantity.buttons_added > * { display:inline-block; }
+.cellQty .quantity.buttons_added .form-control { border-radius:0; text-align:center; }
+.cellQty .quantity.buttons_added .qty_minus,
+.cellQty .quantity.buttons_added .qty_plus { height:34px; border:1px solid #2e6da4; background:#337ab7; font-size:14px; line-height:1.42857143; color:#fff; padding:6px 12px; -webkit-transition:background .25s ease; transition:background .25s ease; }
+.cellQty .quantity.buttons_added .qty_minus { border-right:none; border-radius:4px 0 0 4px; }
+.cellQty .quantity.buttons_added .qty_plus { border-left:none; border-radius:0 4px 4px 0; }
+.cellQty .quantity.buttons_added .qty_minus:hover,
+.cellQty .quantity.buttons_added .qty_plus:hover,
+.cellQty .quantity.buttons_added .qty_minus:focus,
+.cellQty .quantity.buttons_added .qty_plus:focus { border-color:#204d74; background:#286090; }

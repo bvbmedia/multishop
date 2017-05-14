@@ -158,12 +158,12 @@ if (is_numeric($this->get['orders_id'])) {
                         $keys[] = 'fax';
                         foreach ($keys as $key) {
                             $string = 'billing_' . $key;
-                            $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
+                            $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                             $string = 'delivery_' . $key;
-                            $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
+                            $updateArray[$string] = trim($this->post['tx_multishop_pi1'][$string]);
                         }
-                        $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
-                        $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                        $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                        $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                         if (count($updateArray)) {
                             $updateArray['orders_last_modified'] = time();
                             // hook to let other plugins further manipulate
@@ -263,6 +263,15 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \'' . (int)$this->get['orders_id'] . '\' and orders_products_id = \'' . (int)$this->post['orders_products_id'] . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                // hook for adding new items to details fieldset
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'])) {
+                                    // hook
+                                    $params = array();
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                    // hook oef
+                                }
                                 //$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // clean up the order product attributes to prepare the update
@@ -282,7 +291,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
                                             $optname = $this->post['edit_manual_option'][$x];
                                             $optid = 0;
-                                            $optvalname = $this->post['edit_manual_values'][$x];;
+                                            $optvalname = $this->post['edit_manual_values'][$x];
                                             $optvalid = 0;
                                             if (!$this->post['is_manual_option'][$x]) {
                                                 $optid = $this->post['edit_manual_option'][$x];
@@ -427,6 +436,17 @@ if (is_numeric($this->get['orders_id'])) {
                                 //$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 $orders_products_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                // hook for adding new items to details fieldset
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProducts'])) {
+                                    // hook
+                                    $params = array(
+                                        'orders_products_id' => $orders_products_id
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProducts'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                    // hook oef
+                                }
                                 // insert the update attributes
                                 $count_manual_attributes = count($this->post['edit_manual_option']);
                                 if ($count_manual_attributes > 0) {
@@ -721,8 +741,8 @@ if (is_numeric($this->get['orders_id'])) {
                         $string = 'delivery_' . $key;
                         $updateArray[$string] = $this->post['tx_multishop_pi1'][$string];
                     }
-                    $updateArray['billing_address'] = preg_replace('/ +/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
-                    $updateArray['delivery_address'] = preg_replace('/ +/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
+                    $updateArray['billing_address'] = preg_replace('/\s+/', ' ', $updateArray['billing_street_name'] . ' ' . $updateArray['billing_address_number'] . ' ' . $updateArray['billing_address_ext']);
+                    $updateArray['delivery_address'] = preg_replace('/\s+/', ' ', $updateArray['delivery_street_name'] . ' ' . $updateArray['delivery_address_number'] . ' ' . $updateArray['delivery_address_ext']);
                     $updateArray['expected_delivery_date'] = '';
                     if ($this->post['expected_delivery_date']) {
                         $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
@@ -1975,7 +1995,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions">';
                     $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_condition') . '</label>';
                     if (!$orders['is_locked']) {
-                        $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . ($orders['payment_condition'] ? htmlspecialchars($orders['payment_condition']) : $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
+                        $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . htmlspecialchars($orders['payment_condition']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
                     } else {
                         $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . htmlspecialchars($orders['payment_condition'] . ' ' . $this->pi_getLL('days')) . '</p></div>';
                     }
@@ -2162,7 +2182,18 @@ if (is_numeric($this->get['orders_id'])) {
                         $order_products_body_data['products_qty']['class'] = 'cellQty';
                         $order_products_body_data['products_qty']['value'] = '<input type="hidden" name="product_name" id="product_name" value="' . htmlspecialchars($order['products_name']) . '">';
                         $order_products_body_data['products_qty']['value'] .= '<input type="hidden" name="orders_products_id" value="' . $order['orders_products_id'] . '">';
-                        $order_products_body_data['products_qty']['value'] .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+
+
+
+                        $quantity_html = '<div class="quantity buttons_added">';
+                        $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty">';
+                        $quantity_html .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+                        $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="product_qty">';
+                        $quantity_html .= '</div>';
+
+
+                        $order_products_body_data['products_qty']['value'] .= $quantity_html;
+
                         // products name col
                         $order_products_body_data['products_name']['align'] = 'left';
                         $order_products_body_data['products_name']['class'] = 'cellName';
@@ -2972,7 +3003,14 @@ if (is_numeric($this->get['orders_id'])) {
                 $order_products_body_data['products_qty']['align'] = 'right';
                 $order_products_body_data['products_qty']['valign'] = 'top';
                 $order_products_body_data['products_qty']['value'] = '<input type="hidden" name="manual_product_name" id="product_name" value="">';
-                $order_products_body_data['products_qty']['value'] .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                // qty
+                $quantity_html = '<div class="quantity buttons_added">';
+                $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="manual_product_qty">';
+                $quantity_html .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="manual_product_qty">';
+                $quantity_html .= '</div>';
+                $order_products_body_data['products_qty']['value'] .= $quantity_html;
+                $order_products_body_data['products_qty']['class'] = 'cellQty';
                 // products name col
                 $order_products_body_data['products_name']['align'] = 'left';
                 $order_products_body_data['products_name']['valign'] = 'top';
@@ -3509,6 +3547,41 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $tmpcontent .= '<script type="text/javascript">';
                 $tmpcontent .= '
+                $(".qty_minus").click(function () {
+                    var stepSize=parseFloat($(this).attr("data-stepSize"));
+                    var minQty=parseFloat($(this).attr("data-minQty"));
+                    var maxQty=parseFloat($(this).attr("data-maxQty"));
+                    var new_val = 0;
+                    var qty_id = "#" + $(this).attr("rel");
+                    var qty = parseFloat($(qty_id).val());
+                    if (qty > minQty) {
+                        new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    }
+                    if (parseFloat(new_val)==0) {
+                        new_val=minQty;
+                    }
+                    $(qty_id).val(new_val);
+                });
+                $(".qty_plus").click(function () {
+                    var stepSize=parseFloat($(this).attr("data-stepSize"));
+                    var minQty=parseFloat($(this).attr("data-minQty"));
+                    var maxQty=parseFloat($(this).attr("data-maxQty"));
+                    var qty_id = "#" + $(this).attr("rel");
+                    var qty = parseFloat($(qty_id).val());
+                    var new_val = 0;
+                    if (maxQty>0) {
+                        new_val=qty;
+                        if (qty < maxQty) {
+                            new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+                        }
+                        if (new_val>maxQty) {
+                            new_val=maxQty;
+                        }
+                    } else {
+                        new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+                    }
+                    $(qty_id).val(new_val);
+                });
                 // autocomplete for options val
                 var select2_cn = function(selector_str, placeholder, dropdowncss, ajax_url) {
                     $(selector_str).select2({

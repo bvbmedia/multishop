@@ -377,6 +377,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
     case 'get_attributes_values':
         $where = array();
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
+        if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
+            $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
+        }
+        $from=array();
+        $from=
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['q']) . "%'";
@@ -384,11 +389,15 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
             if (is_numeric($this->get['preselected_id'])) {
                 $where[] = "optval2opt.products_options_values_id = '" . $this->get['preselected_id'] . "'";
             } else {
-                $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
+                if (strpos($this->get['preselected_id'], ',') !== false) {
+                    $where[] = "optval.products_options_values_id in (" . $this->get['preselected_id'] . ")";
+                } else {
+                    $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
+                }
             }
         }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT ...
-                'tx_multishop_products_options_values as optval', // FROM ...
+                'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
                 implode(' and ', $where), // WHERE...
                 'optval.products_options_values_id', // GROUP BY...
                 'optval.products_options_values_name asc', // ORDER BY...

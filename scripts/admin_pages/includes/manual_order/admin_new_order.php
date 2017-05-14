@@ -27,11 +27,29 @@ if (count($products) < 0) {
             $content .= '<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="' . $this->get['tx_multishop_pi1']['is_proposal'] . '" />';
         }
         $content .= '<div class="form-group">
-<div class="row">
-<div class="col-md-8">
-			<label>' . $this->pi_getLL('admin_customer') . '</label>
-			<input type="hidden" id="manual_order_customer_id" name="customer_id" value="" />';
-        $content .= '<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/><hr></div><div class="col-md-4"></div></div></div>';
+            <div class="row">
+                <div class="col-md-8">
+			        <label>' . $this->pi_getLL('admin_customer') . '</label>
+			        <input type="hidden" id="manual_order_customer_id" name="customer_id" value="" />
+			        <input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/>
+			        <input type="hidden" name="tx_multishop_newsletter_manual" value="0" id="tx_multishop_newsletter_top" />
+			        <hr />
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <!--
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="checkbox checkbox-success checkbox">
+                        <input type="hidden" name="tx_multishop_newsletter_manual" value="0" id="tx_multishop_newsletter_top" />
+                        <label for="tx_multishop_newsletter_top">' . $this->pi_getLL('subscribe_to_our_newsletter') . '.</label>
+                    </div>
+                    <hr>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            -->
+        </div>';
         $content .= '</form>';
     }
     if ($this->post) {
@@ -242,6 +260,12 @@ if (count($products) < 0) {
 		</div>
 		<div class="form-group">
 			<div class="checkbox checkbox-success checkbox">
+				<input type="checkbox" name="tx_multishop_newsletter_manual" value="1" id="tx_multishop_newsletter_bottom" ' . (($this->post['tx_multishop_newsletter']) ? 'checked' : '') . ' />
+				<label for="tx_multishop_newsletter_bottom">' . $this->pi_getLL('subscribe_to_newsletter') . '.</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="checkbox checkbox-success checkbox">
 				<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" ' . (($this->post['different_delivery_address']) ? 'checked' : '') . ' />
 				<label for="checkboxdifferent_delivery_address">' . $this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address') . '.</label>
 			</div>
@@ -260,6 +284,13 @@ if (count($products) < 0) {
 				    $("#customer_details_form").hide();
 					$("#ms_checkout_direct").submit();
 				' : '') . '
+				$(document).on("click", "#tx_multishop_newsletter_bottom", function(){
+				    if ($(this).prop("checked")) {
+				        $("#tx_multishop_newsletter_top").val("1");
+				    } else {
+				        $("#tx_multishop_newsletter_top").val("0");
+				    }
+				});
 				$(\'#manual_order_customer_id\').select2({
 					placeholder:\'' . htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')) . '\',
 					width:\'100%\',

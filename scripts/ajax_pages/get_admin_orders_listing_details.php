@@ -343,7 +343,7 @@ if ($this->ADMIN_USER) {
                 $jsonData_content .= '</div>';
             }
             if (!empty($jsonData_content)) {
-                $jsonData['title'] = '<h3 class="popover-title">' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . '</h3>';
+                $jsonData['title'] = '<h3 class="popover-title">' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . ' <a href="'.mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order').'" class="btn btn-sm btn-success">'.$this->pi_getLL('go_to_order_details').'</a></h3>';
                 $jsonData['content'] = '<div class="popover-content">' . $jsonData_content . '</div>';
             }
         } else {

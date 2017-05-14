@@ -2463,7 +2463,7 @@ if ($this->post) {
             $headingButton['btn_class'] = 'btn btn-danger';
             $headingButton['fa_class'] = 'fa fa-remove';
             $headingButton['title'] = $this->pi_getLL('admin_delete_product');
-            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product');
+            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id']);
             $headerButtons[] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-primary viewfront';
@@ -4087,7 +4087,44 @@ if ($this->post) {
 			</div>
 			</div>';
             // mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
-            $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>' . $form_category_search . '<hr><div id="load"><img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
+            $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>';
+            $product_relatives_block .= $form_category_search;
+            $product_relatives_block .='<hr>';
+            $product_relatives_block .= '<div class="form-group">';
+            $product_relatives_block .= '<label class="col-md-2 control-label">Save relation as:</label><div class="col-md-10 form-inline"><select class="form-control" name="product_relation_save_as" id="product_relation_save_as"><option value="sub">Sub</option><option value="main">Main</option></select></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .='<hr>';
+            $product_relatives_block .='<div id="load">';
+            $product_relatives_block .='<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
+            $product_relatives_block .='<strong>Loading....</strong>';
+            $product_relatives_block .='</div>';
+            // main block
+            $product_relatives_block .= '<div class="panel panel-default" id="search_block_panel" style="display: none">';
+            $product_relatives_block .= '<div class="panel-heading">';
+            $product_relatives_block .= '<h4>' . $this->pi_getLL('search_results', 'Search results:') . '</h4>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '<div class="panel-body">';
+            $product_relatives_block .='<div id="search_related_product_placeholder"></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '</div>';
+            // main block
+            $product_relatives_block .= '<div class="panel panel-default" id="main_block_panel" style="display: none">';
+            $product_relatives_block .= '<div class="panel-heading">';
+            $product_relatives_block .= '<h4>' . $this->pi_getLL('these_products_related_to_this_product', 'Main related products:') . '</h4>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '<div class="panel-body">';
+            $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '</div>';
+            // sub block
+            $product_relatives_block .= '<div class="panel panel-default" id="sub_block_panel" style="display: none">';
+            $product_relatives_block .= '<div class="panel-heading">';
+            $product_relatives_block .= '<h4>' . $this->pi_getLL('this_product_related_to_these_products', 'Sub related products:') . '</h4>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '<div class="panel-body">';
+            $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .= '</div>';
         }
         /*
 		 * layout page

@@ -111,7 +111,7 @@ class tx_mslib_user {
      * @param string $middle_name
      */
     public function setMiddle_name($middle_name) {
-        $this->middle_name = $middle_name;
+        $this->middle_name = trim($middle_name);
     }
     /**
      * @return the $name
@@ -124,7 +124,7 @@ class tx_mslib_user {
      */
     public function setName($name) {
         $name = preg_replace('/\s+/', ' ', $name);
-        $this->name = $name;
+        $this->name = trim($name);
     }
     /**
      * @return the $address_ext
@@ -136,7 +136,7 @@ class tx_mslib_user {
      * @param string $address_ext
      */
     public function setAddress_ext($address_ext) {
-        $this->address_ext = $address_ext;
+        $this->address_ext = trim($address_ext);
     }
     /**
      * @return the $telephone
@@ -148,7 +148,7 @@ class tx_mslib_user {
      * @param string $telephone
      */
     public function setTelephone($telephone) {
-        $this->telephone = $telephone;
+        $this->telephone = trim($telephone);
     }
     /**
      * @return the $mobile
@@ -160,7 +160,7 @@ class tx_mslib_user {
      * @param string $mobile
      */
     public function setMobile($mobile) {
-        $this->mobile = $mobile;
+        $this->mobile = trim($mobile);
     }
     /**
      * @return the $newsletter
@@ -184,7 +184,7 @@ class tx_mslib_user {
      * @param string $birthday
      */
     public function setBirthday($birthday) {
-        $this->birthday = $birthday;
+        $this->birthday = trim($birthday);
     }
     /**
      * @return the $region
@@ -196,7 +196,7 @@ class tx_mslib_user {
      * @param string $region
      */
     public function setRegion($region) {
-        $this->region = $region;
+        $this->region = trim($region);
     }
     public function checkUserData() {
         $captcha_code = $this->getCaptcha_code();
@@ -296,7 +296,7 @@ class tx_mslib_user {
      * @param string $captcha_code
      */
     public function setCaptcha_code($captcha_code) {
-        $this->captcha_code = $captcha_code;
+        $this->captcha_code = trim($captcha_code);
     }
     /**
      * @return the $gender
@@ -323,7 +323,7 @@ class tx_mslib_user {
         if (strpos($email, '@') === false) {
             $email = '';
         }
-        $this->email = $email;
+        $this->email = trim($email);
     }
     /**
      * @return the $address
@@ -335,7 +335,7 @@ class tx_mslib_user {
      * @param string $address
      */
     public function setAddress($address) {
-        $this->address = $address;
+        $this->address = trim($address);
     }
     /**
      * @return the $address_number
@@ -347,7 +347,7 @@ class tx_mslib_user {
      * @param string $address_number
      */
     public function setAddress_number($address_number) {
-        $this->address_number = $address_number;
+        $this->address_number = trim($address_number);
     }
     /**
      * @return the $first_name
@@ -359,7 +359,7 @@ class tx_mslib_user {
      * @param string $first_name
      */
     public function setFirst_name($first_name) {
-        $this->first_name = $first_name;
+        $this->first_name = trim($first_name);
     }
     /**
      * @return the $last_name
@@ -371,7 +371,7 @@ class tx_mslib_user {
      * @param string $last_name
      */
     public function setLast_name($last_name) {
-        $this->last_name = $last_name;
+        $this->last_name = trim($last_name);
     }
     /**
      * @return the $zip
@@ -383,7 +383,7 @@ class tx_mslib_user {
      * @param string $zip
      */
     public function setZip($zip) {
-        $this->zip = $zip;
+        $this->zip = trim($zip);
     }
     /**
      * @return the $city
@@ -395,7 +395,7 @@ class tx_mslib_user {
      * @param string $city
      */
     public function setCity($city) {
-        $this->city = $city;
+        $this->city = trim($city);
     }
     /**
      * @return the $country
@@ -407,7 +407,7 @@ class tx_mslib_user {
      * @param string $country
      */
     public function setCountry($country) {
-        $this->country = $country;
+        $this->country = trim($country);
     }
     /**
      * @return the $password
@@ -434,7 +434,7 @@ class tx_mslib_user {
         if (strpos($confirmation_email, '@') === false) {
             $confirmation_email = '';
         }
-        $this->confirmation_email = $confirmation_email;
+        $this->confirmation_email = trim($confirmation_email);
     }
     /**
      * @return the $confirmation_password
@@ -458,7 +458,7 @@ class tx_mslib_user {
      * @param string $company
      */
     public function setCompany($company) {
-        $this->company = $company;
+        $this->company = trim($company);
     }
     /**
      * @return the $username
@@ -470,7 +470,7 @@ class tx_mslib_user {
      * @param string $username
      */
     public function setUsername($username) {
-        $this->username = $username;
+        $this->username = trim($username);
     }
     function saveUserData() {
         $checkEmail = mslib_fe::getUser($this->getEmail(), 'email');
@@ -872,7 +872,7 @@ class tx_mslib_user {
         return false;
     }
     function setCustomField($name, $val) {
-        $this->customFields[$name] = $val;
+        $this->customFields[$name] = trim($val);
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_user.php"]) {

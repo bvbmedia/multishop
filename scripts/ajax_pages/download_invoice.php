@@ -22,6 +22,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $prefix = '';
     }
     $order = mslib_fe::getOrder($invoice['orders_id'], 'orders_id', 1);
+    if (!$this->get['language'] && is_numeric($order['language_id']) && $order['language_id']>0) {
+        // Switch to language that is stored in the order
+        mslib_befe::setSystemLanguage($order['language_id']);
+    }
     if ($order['orders_id']) {
         $orders_tax_data = $order['orders_tax_data'];
         if ($this->sys_language_uid != $order['sys_language_uid']) {
@@ -162,6 +166,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_YOUR_COC_ID###'] = $this->pi_getLL('your_coc_id');
             $markerArray['###YOUR_COC_ID###'] = strtoupper($order['billing_coc_id']);
         }
+        $markerArray['###BILLING_EMAIL###']=$order['billing_email'];
         $markerArray['###BILLING_TELEPHONE###'] = '';
         if (!empty($order['billing_telephone'])) {
             $markerArray['###BILLING_TELEPHONE###'] = $order['billing_telephone'] . '<br/>';
@@ -177,6 +182,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###DELIVERY_MOBILE###'] = '';
         if (!empty($order['delivery_mobile'])) {
             $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'] . '<br/>';
+        }
+        $markerArray['###DELIVERY_EMAIL###']=$order['delivery_email'];
+        $markerArray['###DELIVERY_VAT_ID###']='';
+        if ($order['delivery_vat_id']) {
+            $markerArray['###DELIVERY_VAT_ID###']=strtoupper($order['delivery_vat_id']);
         }
         $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
         // CMS HEADER
@@ -411,7 +421,32 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
         }
         $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
+        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
+        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
+        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
+        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
+        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
+        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
+        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
+        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
+        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
+        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
+        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
+        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
+        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
+        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         // MARKERS EOL
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'])) {
+            $params = array(
+                    'cmsKeys' => &$cmsKeys,
+                    'order' => &$order,
+                    'markerArray' => &$markerArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $tmpcontent = $this->cObj->substituteMarkerArray($template, $markerArray);
         if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['debug']) {
             echo $tmpcontent;
@@ -457,7 +492,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
     }
 }
 if (file_exists($pdfFilePath)) {
-    header("Content-type:application/pdf");
+    $filename='';
+    header('Content-Type: application/pdf');
+    //header('Content-Disposition: attachment; filename="'.$invoice['invoice_id'].'.pdf"');
+    header('Content-Disposition: inline; filename="'.$invoice['invoice_id'].'.pdf"');
+    header('Content-Length: ' . filesize($pdfFilePath));
     readfile($pdfFilePath);
     if ($this->get['tx_multishop_pi1']['forceRecreate']) {
         unlink($pdfFilePath);

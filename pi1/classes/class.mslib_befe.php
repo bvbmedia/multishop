@@ -1109,7 +1109,7 @@ class mslib_befe {
             }
         }
     }
-    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false) {
+    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false, $delete_all_cat_relation=false) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -1127,25 +1127,30 @@ class mslib_befe {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
-                    // just delete the relation to the category
-                    $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id . ' and categories_id=' . $categories_id);
-                    // count if there are relations left
-                    $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
-                            'tx_multishop_products_to_categories', // FROM ...
-                            "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
-                            '', // GROUP BY...
-                            '', // ORDER BY...
-                            '' // LIMIT ...
-                    );
-                    //var_dump($str);
-                    //die();
-                    //
-                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                    if ($row['total']) {
-                        // dont delete the product, cause there is another category that has relation
-                        return true;
+                    if (!$delete_all_cat_relation) {
+                        // just delete the relation to the category
+                        $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id . ' and categories_id=' . $categories_id);
+                        // count if there are relations left
+                        $str = $GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
+                                'tx_multishop_products_to_categories', // FROM ...
+                                "products_id='" . $products_id . "' and is_deepest=1", // WHERE...
+                                '', // GROUP BY...
+                                '', // ORDER BY...
+                                '' // LIMIT ...
+                        );
+                        //var_dump($str);
+                        //die();
+                        //
+                        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                        if ($row['total']) {
+                            // dont delete the product, cause there is another category that has relation
+                            return true;
+                        } else {
+                            $definitive_delete = 1;
+                        }
                     } else {
+                        $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id);
                         $definitive_delete = 1;
                     }
                 } else {
@@ -3710,7 +3715,9 @@ class mslib_befe {
                     break;
                 case 'delete':
                     // removes the cache
-                    $Cache_Lite->remove($string);
+                    if ($Cache_Lite->get($string)) {
+                        $Cache_Lite->remove($string);
+                    }
                     break;
             }
         }
@@ -4355,8 +4362,11 @@ class mslib_befe {
                     $params_internal = array(
                             'markerArray' => &$markerArray,
                             'table_type' => $table_type,
+                            'prefix' => $prefix,
                             'product' => $product_tmp,
                             'order_product' => $product,
+                            'customer_currency' => $customer_currency,
+                            'display_currency_symbol' => $display_currency_symbol
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4828,15 +4838,15 @@ class mslib_befe {
             ), $string);
         }
     }
-    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $options=array()) {
+    function bootstrapPanel($heading = '', $body = '', $panelClass = 'default', $footer = '', $panelHeadingClass = '', $panelId = '', $enableCollapse = 0, $collapsed = '0', $headingButtons = array(), $options = array()) {
         if (!$options['headingCollapseFontAwesomeClass']) {
-            $options['headingCollapseFontAwesomeClass']='fa fa-file-text-o';
+            $options['headingCollapseFontAwesomeClass'] = 'fa fa-file-text-o';
         }
         if ($enableCollapse) {
             if ($collapsed) {
                 $panelHeadingClasses[] = 'collapsed';
             }
-            $heading = '<a role="button"'.($options['headingCollapseLinkTitle']?' title="'.htmlspecialchars($options['headingCollapseLinkTitle']).'"':'').' data-toggle="collapse" href="#' . $panelId . 'Body"><i class="'.$options['headingCollapseFontAwesomeClass'].'"></i> ' . $heading . '</a>';
+            $heading = '<a role="button"' . ($options['headingCollapseLinkTitle'] ? ' title="' . htmlspecialchars($options['headingCollapseLinkTitle']) . '"' : '') . ' data-toggle="collapse" href="#' . $panelId . 'Body"><i class="' . $options['headingCollapseFontAwesomeClass'] . '"></i> ' . $heading . '</a>';
             $panelHeadingParams .= 'data-toggle="collapse" data-target="#' . $panelId . 'Body" aria-expanded="true"';
         }
         $content = '<div' . ($panelId ? ' id="' . $panelId . '"' : '') . ' class="panel panel-' . $panelClass . '">';
@@ -5136,6 +5146,9 @@ class mslib_befe {
         }
     }
     public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array()) {
+        if ($select && !is_array($select)) {
+            $select=array($select);
+        }
         if (!count($select)) {
             $select = array();
             $select[] = '*';
@@ -5233,7 +5246,7 @@ class mslib_befe {
     }
     public function arrayToTable($rows, $idName = '', $settings = array()) {
         if (is_array($rows) && count($rows)) {
-            $maxCellCounter=0;
+            $maxCellCounter = 0;
             foreach ($rows as $row) {
                 $cellCounter = 0;
                 foreach ($row as $col => $val) {
@@ -5248,21 +5261,21 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan='';
-                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    $colspan = '';
+                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th'.$colspan.'>' . $colName . '</th>';
+                    $content .= '<th' . $colspan . '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan='';
-                    if (count($rows[0]) == ($cellCounter+1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                    $colspan = '';
+                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th'.$colspan.'>' . $colVal . '</th>';
+                    $content .= '<th' . $colspan . '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
@@ -5273,36 +5286,42 @@ class mslib_befe {
             }
             foreach ($rows as $row) {
                 if ($rowCounter) {
-                    $trClass=array();
-                    if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter+1)]) {
-                        $trClass=array();
-                        $trClass[]=$settings['trClassClass'][($rowCounter+1)];
+                    $trClass = array();
+                    if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
+                        $trClass = array();
+                        $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $content .= '<tr'.(count($trClass)?' class="'.implode(' ',$trClass).'"':'').'>';
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . '>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
                         if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
-                        $classes[] = 'cell'.($cellCounter+1);
-                        $colspan='';
-                        if (count($row) == ($cellCounter+1) && count($row) < ($maxCellCounter)) {
-                            $colspan=' colspan="'.($maxCellCounter-($cellCounter+1)).'"';
+                        $classes[] = 'cell' . ($cellCounter + 1);
+                        $colspan = '';
+                        if (count($row) == ($cellCounter + 1) && count($row) < ($maxCellCounter)) {
+                            $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') .$colspan. '>' . $val . '</td>';
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $colspan . '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';
-
                 }
                 $rowCounter++;
             }
             $content .= '</tbody>';
-            if ($settings['sumTr']) {
+            if ($settings['sorter']) {
                 $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js_' . $idName] = '<script data-ignore="true">
                 jQuery(document).ready(function($) {
                         $(\'#' . $idName . '\').tablesorter();
+                    });
+                </script>
+                ';
+            }
+            if ($settings['sumTr']) {
+                $GLOBALS['TSFE']->additionalHeaderData['sumtr_js_' . $idName] = '<script data-ignore="true">
+                jQuery(document).ready(function($) {
                         $(\'#' . $idName . '\').sumtr({
                             readValue : function(e) {
                                 return Math.round(e.html().toString().replace(/[^\d.-]/g, \'\') * 100) / 100; return !isNaN(r) ? r : 0;
@@ -5377,6 +5396,30 @@ class mslib_befe {
     function br2nl($html) {
         if ($html) {
             return preg_replace('/<br\s?\/?>/i', "\r\n", $html);
+        }
+    }
+    function tableExists($tableName) {
+        if ($tableName) {
+            $query='SELECT 1 FROM '.addslashes($tableName).' LIMIT 1;';
+            if ($res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
+                return true;
+            }
+            return false;
+        }
+    }
+    function getCategoryCrumString($categories_id) {
+        if (is_numeric($categories_id)) {
+            $cats = mslib_fe::Crumbar($categories_id);
+            if (is_array($cats)) {
+                $cats = array_reverse($cats);
+                $items = array();
+                if (count($cats) > 0) {
+                    foreach ($cats as $cat) {
+                        $items[]=$cat['name'];
+                    }
+                }
+                return implode(' > ',$items);
+            }
         }
     }
 }

@@ -22,6 +22,8 @@ if (mslib_fe::loggedin()) {
             $array2[] = $newCustomer['company'];
             $array1[] = '###FULL_NAME###';
             $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FULL_NAME###';
+            $array2[] = $newCustomer['name'];
             $array1[] = '###BILLING_NAME###';
             $array2[] = $newCustomer['name'];
             $array1[] = '###BILLING_FIRST_NAME###';

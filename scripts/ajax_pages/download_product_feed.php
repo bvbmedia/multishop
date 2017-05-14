@@ -18,7 +18,9 @@ if ($this->get['feed_hash']) {
     $Cache_Lite = new Cache_Lite($options);
     $string = 'productfeed_' . $this->shop_pid . '_' . serialize($feed) . '-' . md5($this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING']);
     if ($this->ADMIN_USER and $this->get['clear_cache']) {
-        $Cache_Lite->remove($string);
+        if ($Cache_Lite->get($string)) {
+            $Cache_Lite->remove($string);
+        }
     }
     if (!$content = $Cache_Lite->get($string)) {
         // preload attibute option names

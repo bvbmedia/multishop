@@ -222,8 +222,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->post['quantity'] = $product['minimum_quantity'];
                     }
                     $product['qty'] = ($this->post['quantity']);
-                    $product['qty'] = round(number_format($product['qty'], 2), 2);
-                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2), 2);
+                    $product['qty'] = round(number_format($product['qty'], 2,'.',''), 2);
+                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2,'.',''), 2);
                     // chk if the product has staffel price
                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
                         if ($this->post['quantity']) {
@@ -233,6 +233,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                         $product['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
                     }
+
                     // custom hook that can be controlled by third-party plugin
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPricePostHook'])) {
                         $params = array(
@@ -1347,8 +1348,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         // check for NULL, convert to empty string - typo3 v6.x related bug
         if (is_array($address) && count($address)) {
             foreach ($address as $key => $val) {
-                if ($val == null || $val == null) {
+                $val = trim($val);
+                if ($val == null || empty($val)) {
                     $address[$key] = '';
+                } else {
+                    $address[$key] = $val;
                 }
             }
         }
@@ -1818,7 +1822,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];
             $insertArray['billing_last_name'] = $address['last_name'];
-            $insertArray['billing_name'] = preg_replace('/ +/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
+            $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
             $insertArray['billing_email'] = $address['email'];
             $insertArray['billing_gender'] = $address['gender'];
             $insertArray['billing_birthday'] = strtotime($address['birthday']);
@@ -1884,7 +1888,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_first_name'] = $address['delivery_first_name'];
                 $insertArray['delivery_middle_name'] = $address['delivery_middle_name'];
                 $insertArray['delivery_last_name'] = $address['delivery_last_name'];
-                $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
+                $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
                 $insertArray['delivery_email'] = $address['delivery_email'];
                 $insertArray['delivery_gender'] = $address['delivery_gender'];
                 if (!$address['street_name']) {
@@ -2223,7 +2227,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $params = array(
                                             'ms' => $this->ms,
                                             'value' => $value,
-                                            'continue_update_stock' => &$continue_update_stock
+                                            'continue_update_stock' => &$continue_update_stock,
+                                            'orders_id' => $orders_id,
+                                            'orders_products_id' => $orders_products_id
                                     );
                                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3027,6 +3033,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 'item' => &$item,
                                 'product' => &$product,
                                 'cart' => &$this->cart,
+                                'shopping_cart_item'=>$shopping_cart_item,
                                 'c' => &$c,
                                 'sectionTemplateType' => &$sectionTemplateType
                         );

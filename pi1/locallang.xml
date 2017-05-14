@@ -899,7 +899,7 @@
             <label index="new">new</label>
             <label index="new_customer">new customer</label>
             <label index="newsletter">Newsletter</label>
-            <label index="next">next</label>
+            <label index="next">Next</label>
             <label index="no">No</label>
             <label index="no_address_has_been_specified">address has not been specified</label>
             <label index="no_address_number_has_been_specified">address number has not been specified</label>
@@ -973,7 +973,7 @@
             <label index="personal_details">Personal details</label>
             <label index="personal_details_description">Fields with * are required</label>
             <label index="please_select_your_gender">Please select your salutation</label>
-            <label index="previous">previous</label>
+            <label index="previous">Previous</label>
             <label index="price">Price</label>
             <label index="price_excluding_vat">Price excl. VAT</label>
             <label index="price_including_vat">Price incl. VAT</label>
@@ -1407,6 +1407,13 @@
             <label index="select_order">Select order</label>
             <label index="select_invoice">Select invoice</label>
             <label index="select_company">Select company</label>
+            <label index="feed_exporter_fields_label_order_datetime">Order datetime</label>
+            <label index="go_to_order_details">Go to order details</label>
+            <label index="send_payment_received_email">Send payment received email</label>
+            <label index="feeds">Feeds</label>
+            <label index="subscribe_to_newsletter">Subscribe newsletter</label>
+            <label index="delete_product_x_from_current_category_x">Delete product %s from category %s</label>
+            <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2302,7 +2309,7 @@
             <label index="new">nieuw</label>
             <label index="new_customer">nieuwe klant</label>
             <label index="newsletter">Nieuwsbrief</label>
-            <label index="next">volgende</label>
+            <label index="next">Volgende</label>
             <label index="no">Nee</label>
             <label index="no_address_has_been_specified">Adres is niet opgegeven</label>
             <label index="no_address_number_has_been_specified">Huisnummer is niet opgegeven</label>
@@ -2376,7 +2383,7 @@
             <label index="personal_details">Persoonlijke gegevens</label>
             <label index="personal_details_description">Velden gemarkeerd met * zijn verplicht</label>
             <label index="please_select_your_gender">Selecteer begroeting</label>
-            <label index="previous">vorige</label>
+            <label index="previous">Vorige</label>
             <label index="price">Prijs</label>
             <label index="price_excluding_vat">Prijs excl. BTW</label>
             <label index="price_including_vat">Prijs incl. BTW</label>
@@ -2793,6 +2800,12 @@
             <label index="select_order">Selecteer bestelling</label>
             <label index="select_invoice">Selecteer factuur</label>
             <label index="select_company">Selecteer bedrijf</label>
+            <label index="feed_exporter_fields_label_order_datetime">Bestelling - besteldatum en tijdstip</label>
+            <label index="go_to_order_details">Ga naar bestelling</label>
+            <label index="send_payment_received_email">Verstuur betaling ontvangen email</label>
+            <label index="subscribe_to_newsletter">aanmelden nieuwsbrief</label>
+            <label index="delete_product_x_from_current_category_x">Verwijder: %s in %s</label>
+            <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
         </languageKey>
     </data>
 </T3locallang>

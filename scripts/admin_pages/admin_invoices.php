@@ -706,12 +706,13 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 						confirm: function(){
 							var payment_id=this.$b.find("#payment_method_sb_listing").val();
 							var date_paid=this.$b.find("#orders_paid_timestamp").val();
+							var send_paid_letter=this.$b.find("#send_payment_received_email").prop("checked") ? 1 : 0;
 							//
 							jQuery.ajax({
 								type: "POST",
 								url: "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=update_invoice_paid_status_save_popup_value') . '",
 								dataType: \'json\',
-								data: "tx_multishop_pi1[payment_id]=" + payment_id + "&tx_multishop_pi1[date_paid]=" + date_paid + "&tx_multishop_pi1[order_id]=" + order_id + "&tx_multishop_pi1[invoice_nr]=" + invoice_nr + "&tx_multishop_pi1[invoice_id]=" + invoice_id + "&tx_multishop_pi1[action]=update_selected_invoices_to_paid",
+								data: "tx_multishop_pi1[payment_id]=" + payment_id + "&tx_multishop_pi1[date_paid]=" + date_paid + "&tx_multishop_pi1[order_id]=" + order_id + "&tx_multishop_pi1[invoice_nr]=" + invoice_nr + "&tx_multishop_pi1[invoice_id]=" + invoice_id + "&tx_multishop_pi1[send_paid_letter]=" + send_paid_letter + "&tx_multishop_pi1[action]=update_selected_invoices_to_paid",
 								success: function(d) {
 									if (d.status=="OK") {
 										var return_string = \'<a href="#" class="update_to_unpaid" data-order-id="\' + order_id + \'" data-invoice-nr="\' + invoice_nr + \'" data-invoice-id="\' + invoice_id + \'"><span class="admin_status_red disabled" alt="' . $this->pi_getLL('admin_label_disable') . '"></span></a><span class="admin_status_green" alt="' . $this->pi_getLL('admin_label_enable') . '"></span>\';

@@ -32,6 +32,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/admin_packingslip_pdf.tmpl');
         }
         $markerArray = array();
+        $markerArray['###BARKODE_IMG_URL###'] = $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=generateBarkode&tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[string]='.$order['orders_id'],1);
         $markerArray['###GENDER_SALUTATION###'] = mslib_fe::genderSalutation($order['billing_gender']);
         if ($this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE']) {
             $imageLocation = $this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE'];
@@ -269,6 +270,20 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###PACKINGSLIP_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
         $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
+        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
+        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
+        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
+        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
+        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
+        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
+        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
+        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
+        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
+        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
+        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
+        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
+        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
+        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         // MARKERS EOL
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_packingslip.php']['downloadPackingslipTemplateMarkerPreProc'])) {

@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ADMIN_USER) {
     $return_data = array();
     //$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
-    $use_company=false;
+    $use_company = false;
     $customers = array();
     $groupid = $this->conf['fe_customer_usergroup'];
     if (is_numeric($this->get['tx_multishop_pi1']['usergroup'])) {

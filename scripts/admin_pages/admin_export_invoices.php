@@ -245,10 +245,10 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</select>';
         // delimeter type selectbox
         $delimeter_type_sb = '<select class="form-control" name="delimeter_type">
-			<option value=";"' . ($post_data['order_type'] == ';' ? ' selected="selected"' : '') . '>semicolon (;)</option>
-			<option value=","' . ($post_data['order_type'] == ',' ? ' selected="selected"' : '') . '>comma (,)</option>
-			<option value="\t"' . ($post_data['order_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
-			<option value="|"' . ($post_data['order_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
+			<option value=";"' . ($post_data['delimeter_type'] == ';' ? ' selected="selected"' : '') . '>semicolon (;)</option>
+			<option value=","' . ($post_data['delimeter_type'] == ',' ? ' selected="selected"' : '') . '>comma (,)</option>
+			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
+			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
         $content .= '
 		<div class="form-group">

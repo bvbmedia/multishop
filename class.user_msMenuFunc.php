@@ -40,6 +40,15 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $menuArr = array();
         $tel = 0;
         foreach ($cats as $cat) {
+            //hook to let other plugins further manipulate the query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'])) {
+                $params = array(
+                    'cat' => &$cat
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $menuArr[$tel]['title'] = $cat['categories_name'];
             $menuArr[$tel]['uid'] = '9999' . $cat['categories_id'];
             // get all cats to generate multilevel fake url
@@ -64,6 +73,17 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (count($dataArray)) {
                     $sub_content = self::subMenuArray($dataArray);
                     $menuArr[$tel]['_SUB_MENU'] = $sub_content;
+                }
+            }
+            //hook to let other plugins further manipulate the query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'])) {
+                $params = array(
+                    'cat' => &$cat,
+                    'menuArr' => &$menuArr,
+                    'tel' => &$tel
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
             $tel++;

@@ -33,6 +33,13 @@ if ($this->post['proceed_order']) {
             $username = $unique_id;
         }
         $insertArray = array();
+        $billing_gender = '0';
+        if (!$this->post['gender'] || $this->post['gender'] == 'm') {
+            $billing_gender = '0';
+        } else if ($this->post['gender'] == 'f') {
+            $billing_gender = '1';
+        }
+        $insertArray['gender'] = $billing_gender;
         $insertArray['page_uid'] = $this->shop_pid;
         $insertArray['company'] = $this->post['company'];
         $insertArray['name'] = $this->post['first_name'] . ' ' . $this->post['middle_name'] . ' ' . $this->post['last_name'];
@@ -59,6 +66,7 @@ if ($this->post['proceed_order']) {
         $insertArray['password'] = mslib_befe::getHashedPassword(rand(1000000, 9000000));
         $insertArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
+        $insertArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter_manual'];
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {
@@ -67,12 +75,7 @@ if ($this->post['proceed_order']) {
     }
     //add to orders
     if ($customer_id) {
-        $billing_gender = '';
-        if (!$this->post['gender'] || $this->post['gender'] == '0') {
-            $billing_gender = 'm';
-        } else if ($this->post['gender'] == '1') {
-            $billing_gender = 'f';
-        }
+        $billing_gender = $this->post['gender'];
         // now add the order
         $insertArray = array();
         $insertArray['customer_id'] = $customer_id;
@@ -82,7 +85,7 @@ if ($this->post['proceed_order']) {
         $insertArray['billing_first_name'] = $this->post['first_name'];
         $insertArray['billing_middle_name'] = $this->post['middle_name'];
         $insertArray['billing_last_name'] = $this->post['last_name'];
-        $insertArray['billing_name'] = preg_replace('/ +/', ' ', $this->post['first_name'] . ' ' . $this->post['middle_name'] . ' ' . $this->post['last_name']);
+        $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $this->post['first_name'] . ' ' . $this->post['middle_name'] . ' ' . $this->post['last_name']);
         $insertArray['billing_email'] = $this->post['email'];
         $insertArray['billing_gender'] = $billing_gender;
         $insertArray['billing_birthday'] = $this->post['birthday'];
@@ -90,7 +93,7 @@ if ($this->post['proceed_order']) {
         $insertArray['billing_street_name'] = $this->post['street_name'];
         $insertArray['billing_address_number'] = $this->post['address_number'];
         $insertArray['billing_address_ext'] = $this->post['address_ext'];
-        $insertArray['billing_address'] = preg_replace('/ +/', ' ', $insertArray['billing_street_name'] . ' ' . $insertArray['billing_address_number'] . ' ' . $insertArray['billing_address_ext']);
+        $insertArray['billing_address'] = preg_replace('/\s+/', ' ', $insertArray['billing_street_name'] . ' ' . $insertArray['billing_address_number'] . ' ' . $insertArray['billing_address_ext']);
         $insertArray['billing_room'] = '';
         $insertArray['billing_city'] = $this->post['city'];
         $insertArray['billing_zip'] = $this->post['zip'];
@@ -105,13 +108,13 @@ if ($this->post['proceed_order']) {
         $insertArray['delivery_first_name'] = $this->post['delivery_first_name'];
         $insertArray['delivery_middle_name'] = $this->post['delivery_middle_name'];
         $insertArray['delivery_last_name'] = $this->post['delivery_last_name'];
-        $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name']);
+        $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name']);
         $insertArray['delivery_email'] = $this->post['delivery_email'];
         $insertArray['delivery_gender'] = $this->post['delivery_gender'];
         $insertArray['delivery_street_name'] = $this->post['delivery_street_name'];
         $insertArray['delivery_building'] = $this->post['delivery_building'];
         $insertArray['delivery_address_number'] = $this->post['delivery_address_number'];
-        $insertArray['delivery_address'] = preg_replace('/ +/', ' ', $insertArray['delivery_street_name'] . ' ' . $insertArray['delivery_address_number'] . ' ' . $insertArray['delivery_address_ext']);
+        $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $insertArray['delivery_street_name'] . ' ' . $insertArray['delivery_address_number'] . ' ' . $insertArray['delivery_address_ext']);
         $insertArray['delivery_city'] = $this->post['delivery_city'];
         $insertArray['delivery_zip'] = $this->post['delivery_zip'];
         $insertArray['delivery_address_ext'] = $this->post['delivery_address_ext'];
@@ -144,12 +147,12 @@ if ($this->post['proceed_order']) {
             $insertArray['delivery_street_name'] = $delivery_address['street_name'];
             $insertArray['delivery_address_number'] = $delivery_address['address_number'];
             $insertArray['delivery_address_ext'] = $delivery_address['address_ext'];
-            $insertArray['delivery_address'] = preg_replace('/ +/', ' ', $delivery_address['street_name'] . ' ' . $delivery_address['address_number'] . ' ' . $delivery_address['address_ext']);
+            $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $delivery_address['street_name'] . ' ' . $delivery_address['address_number'] . ' ' . $delivery_address['address_ext']);
             $insertArray['delivery_zip'] = $delivery_address['zip'];
             $insertArray['delivery_city'] = $delivery_address['city'];
             $insertArray['delivery_country'] = $delivery_address['country'];
             $insertArray['delivery_state'] = $delivery_address['state'];
-            $insertArray['delivery_name'] = preg_replace('/ +/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
+            $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
         } else if (!$this->post['different_delivery_address']) {
             $insertArray['delivery_email'] = $insertArray['billing_email'];
             $insertArray['delivery_company'] = $insertArray['billing_company'];
@@ -206,7 +209,6 @@ if ($this->post['proceed_order']) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'])) {
             // hook
             $params = array(
-                    'ms' => $ms,
                     'insertArray' => &$insertArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'] as $funcRef) {

@@ -122,7 +122,7 @@ if (is_array($products)) {
             }
             $admin_menu = '';
             if ($this->ADMIN_USER) {
-                $admin_menu = '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $product['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product', 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
+                $admin_menu = '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $product['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id'], 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
             }
             if (!strstr($product['products_url'], 'http://') and !strstr($product['products_url'], 'http://')) {
                 $product['products_url'] = 'http://' . $product['products_url'];
@@ -137,7 +137,7 @@ if (is_array($products)) {
         $markerArray['ITEM_PRODUCTS_PRICE'] = $item_products_price;
         $markerArray['ADMIN_MENU'] = $admin_menu;
         $markerArray['ADMIN_ICONS'] = $admin_menu;
-        $markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('view')) . ' ' . htmlspecialchars($product['products_name']);;
+        $markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('view')) . ' ' . htmlspecialchars($product['products_name']);
         $markerArray['ITEM_LABEL_VIEW'] = htmlspecialchars($this->pi_getLL('view'));
         $markerArray['ITEM_PRODUCTS_EXTERNAL_LINK'] = $product['products_url'];
         $markerArray['ITEM_PRODUCTS_EXTERNAL_LINK_TITLE'] = htmlspecialchars($this->pi_getLL('buy')) . ' ' . htmlspecialchars($product['products_name']);

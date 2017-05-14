@@ -148,7 +148,7 @@ if (!$product['products_id']) {
     $output['products_name_marker'] = $product['products_name'];
     $output['admin_link'] = '';
     if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
-        $output['admin_link'] = '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_product&cid=' . $product['categories_id'] . '&pid=' . $product['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $product['categories_id'] . '&pid=' . $product['products_id'] . '&action=delete_product', 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
+        $output['admin_link'] = '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_product&cid=' . $product['categories_id'] . '&pid=' . $product['products_id'] . '&action=edit_product', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=delete_product&cid=' . $product['categories_id'] . '&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id'], 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
         $output['products_name'] .= $output['admin_link'];
     }
     $final_price = mslib_fe::final_products_price($product);
@@ -400,11 +400,13 @@ if (!$product['products_id']) {
     $markerArray['###HIDDEN_PRODUCT_ID###'] = '<input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />';
     // new
     $markerArray['###QUANTITY###'] = $output['quantity'];
-    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($product['old_price']);
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($old_price);
     $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
-    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($product['final_price']);
-    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($product['old_price'], 2, ',', '.');
-    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($product['final_price'], 2, ',', '.');
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($final_price);
+    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($old_price, 2, ',', '.');
+    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($final_price, 2, ',', '.');
+    $markerArray['###OLD_PRICE_RAW###'] = number_format($old_price, 2, '.', '');
+    $markerArray['###FINAL_PRICE_RAW###'] = number_format($final_price, 2, '.', '');
     $markerArray['###BACK_BUTTON###'] = $output['back_button'];
     $markerArray['###ADD_TO_CART_BUTTON###'] = $output['add_to_cart_button'];
     $markerArray['###PRODUCTS_META_DESCRIPTION###'] = $product['products_meta_description'];
@@ -458,7 +460,7 @@ if (!$product['products_id']) {
             }
         }
     }
-    $markerArray['###CANONICAL_URL###'] = $productLink;
+    $markerArray['###CANONICAL_URL###'] = $this->FULL_HTTP_URL.$productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = '';
     if ($product['manufacturers_advice_price']) {
         if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
@@ -663,6 +665,6 @@ if (!$product['products_id']) {
 		';
     }
     // custom hook that can be controlled by third-party plugin eof
-    $content .= $output['top_content'] . '<form action="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id=' . $product['products_id']) . '" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data"><div id="products_detail">' . $this->cObj->substituteMarkerArray($template, $markerArray) . '</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="' . htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']) . '" /></form>';
+    $content .= $output['top_content'] . '<form action="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id=' . $product['products_id']) . '" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data" autocomplete="off"><div id="products_detail">' . $this->cObj->substituteMarkerArray($template, $markerArray) . '</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="' . htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']) . '" /></form>';
 }
 ?>

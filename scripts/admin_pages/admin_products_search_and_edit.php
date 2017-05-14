@@ -219,10 +219,29 @@ $fields['categories_name'] = $this->pi_getLL('admin_category');
 $fields['products_quantity'] = $this->pi_getLL('admin_stock');
 $fields['products_weight'] = $this->pi_getLL('admin_weight');
 $fields['manufacturers_name'] = $this->pi_getLL('manufacturer');
-//asort($fields);
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilter'])) {
+    $params = array(
+        'fields' => &$fields
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilter'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+asort($fields);
 $searchby_selectbox = '<select name="tx_multishop_pi1[search_by]" class="form-control">';
 foreach ($fields as $key => $label) {
-    $searchby_selectbox .= '<option value="' . $key . '"' . ($this->get['tx_multishop_pi1']['search_by'] == $key ? ' selected="selected"' : '') . '>' . $label . '</option>' . "\n";
+    $option_selected='';
+    if (isset($this->get['tx_multishop_pi1']['search_by'])) {
+        if ($this->get['tx_multishop_pi1']['search_by'] == $key) {
+            $option_selected=' selected="selected"';
+        }
+    } else {
+        if ($key=='products_name') {
+            $option_selected=' selected="selected"';
+        }
+    }
+    $searchby_selectbox .= '<option value="' . $key . '"' . $option_selected . '>' . $label . '</option>' . "\n";
 }
 $searchby_selectbox .= '</select>';
 //$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
@@ -331,20 +350,31 @@ if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
             }
             $filter[] = "(" . $prefix . "products_id like '" . addslashes($this->get['keyword']) . "%')";
             break;
-        case 'products_name':
-        default:
-            $prefix = 'pd.';
-            if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                $prefix = 'pf.';
-            }
-            $filter[] = "(" . $prefix . "products_name like '%" . addslashes($this->get['keyword']) . "%')";
-            break;
         case 'manufacturers_name':
             $prefix = 'm.';
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
                 $prefix = 'pf.';
             }
             $filter[] = "(" . $prefix . "manufacturers_name like '" . addslashes($this->get['keyword']) . "%')";
+            break;
+        case 'products_name':
+            $prefix = 'pd.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[] = "(" . $prefix . "products_name like '%" . addslashes($this->get['keyword']) . "%')";
+            break;
+        default:
+            // custom page hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilterQuery'])) {
+                $params = array(
+                    'filter' => &$filter,
+                    'select' => &$select
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilterQuery'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             break;
     }
 }
@@ -616,7 +646,7 @@ if ($pageset['total_rows'] > 0) {
         }
         $link_edit_cat = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $rs['categories_id'] . '&action=edit_category');
         $link_edit_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $rs['products_id'] . '&cid=' . $rs['categories_id'] . '&action=edit_product');
-        $link_delete_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $rs['products_id'] . '&action=delete_product');
+        $link_delete_prod = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $rs['products_id'] . '&action=delete_product&cid=' . $rs['categories_id']);
         // view product link
         $where = '';
         if ($rs['categories_id']) {
