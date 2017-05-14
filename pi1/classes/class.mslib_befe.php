@@ -5410,14 +5410,16 @@ class mslib_befe {
     function getCategoryCrumString($categories_id) {
         if (is_numeric($categories_id)) {
             $cats = mslib_fe::Crumbar($categories_id);
-            $cats = array_reverse($cats);
-            $items = array();
-            if (count($cats) > 0) {
-                foreach ($cats as $cat) {
-                    $items[]=$cat['name'];
+            if (is_array($cats)) {
+                $cats = array_reverse($cats);
+                $items = array();
+                if (count($cats) > 0) {
+                    foreach ($cats as $cat) {
+                        $items[]=$cat['name'];
+                    }
                 }
+                return implode(' > ',$items);
             }
-            return implode(' > ',$items);
         }
     }
 }
