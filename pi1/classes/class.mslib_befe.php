@@ -5407,6 +5407,19 @@ class mslib_befe {
             return false;
         }
     }
+    function getCategoryCrumString($categories_id) {
+        if (is_numeric($categories_id)) {
+            $cats = mslib_fe::Crumbar($categories_id);
+            $cats = array_reverse($cats);
+            $items = array();
+            if (count($cats) > 0) {
+                foreach ($cats as $cat) {
+                    $items[]=$cat['name'];
+                }
+            }
+            return implode(' > ',$items);
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
