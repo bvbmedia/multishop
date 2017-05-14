@@ -654,7 +654,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 'adjustedValue' => &$adjustedValue,
                                 'params' => &$params,
                                 'valArray' => &$valArray,
-                                'summarize' => &$summarize
+                                'summarize' => &$summarize,
+                                'interfaceKey' => $this->interfaceKey
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
