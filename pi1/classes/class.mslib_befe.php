@@ -3291,7 +3291,11 @@ class mslib_befe {
                     $array2[] = '';
                 }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
-                $array2[] = $order['track_and_trace_code'];
+                if ($order['track_and_trace_link']) {
+                    $array2[] = $order['track_and_trace_link'];
+                } else {
+                    $array2[] = $order['track_and_trace_code'];
+                }
                 $array1[] = '###BILLING_STREET_NAME###';
                 $array2[] = $order['billing_street_name'];
                 $array1[] = '###BILLING_ADDRESS_NUMBER###';
