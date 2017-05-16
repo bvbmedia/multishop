@@ -540,11 +540,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $array1[] = '###ORDER_STATUS###';
                 $array2[] = $order['orders_status'];
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
-                if ($order['track_and_trace_link']) {
-                    $array2[] = $order['track_and_trace_link'];
-                } else {
-                    $array2[] = $order['track_and_trace_code'];
-                }
+                $array2[] = $order['track_and_trace_code'];
+                $array1[] = '###TRACK_AND_TRACE_LINK###';
+                $array2[] = $order['track_and_trace_link'];
                 $array1[] = '###BILLING_ADDRESS###';
                 $array2[] = $billing_address;
                 $array1[] = '###DELIVERY_ADDRESS###';
