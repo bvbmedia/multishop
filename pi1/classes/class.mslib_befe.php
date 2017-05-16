@@ -3292,6 +3292,8 @@ class mslib_befe {
                 }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
+                $array1[] = '###TRACK_AND_TRACE_LINK###';
+                $array2[] = $order['track_and_trace_link'];
                 $array1[] = '###BILLING_STREET_NAME###';
                 $array2[] = $order['billing_street_name'];
                 $array1[] = '###BILLING_ADDRESS_NUMBER###';
@@ -5405,6 +5407,21 @@ class mslib_befe {
                 return true;
             }
             return false;
+        }
+    }
+    function getCategoryCrumString($categories_id) {
+        if (is_numeric($categories_id)) {
+            $cats = mslib_fe::Crumbar($categories_id);
+            if (is_array($cats)) {
+                $cats = array_reverse($cats);
+                $items = array();
+                if (count($cats) > 0) {
+                    foreach ($cats as $cat) {
+                        $items[]=$cat['name'];
+                    }
+                }
+                return implode(' > ',$items);
+            }
         }
     }
 }

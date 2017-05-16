@@ -8823,17 +8823,19 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($orders_id)) {
+            $allowZeroAmountInvoice=0;
             $order = mslib_fe::getOrder($orders_id);
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'])) {
                 $params = array(
                         'force' => &$force,
-                        'order' => $order
+                        'order' => $order,
+                        'allowZeroAmountInvoice' =>&$allowZeroAmountInvoice
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_fe.php']['forceCreateOrderInvoice'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            if ($order['total_amount'] == 0) {
+            if (!$allowZeroAmountInvoice && $order['total_amount'] == 0) {
                 // it does not make sense to create an invoice without an amount
                 return false;
             }

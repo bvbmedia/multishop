@@ -458,4 +458,47 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+
+$str = "describe `fe_users`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `fe_users` CHANGE  `address_ext`  `address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+$str = "describe `tt_address`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tt_address` CHANGE  `address_ext`  `address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+
+
+$str = "describe `tx_multishop_orders`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'billing_address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tx_multishop_orders` CHANGE  `billing_address_ext`  `billing_address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    } elseif ($row['Field'] == 'delivery_address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tx_multishop_orders` CHANGE  `delivery_address_ext`  `delivery_address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+
 ?>
