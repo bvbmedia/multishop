@@ -331,7 +331,7 @@ if (!$qry) {
 $str = "select delivery_department from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-    $str = "ALTER TABLE  `tx_multishop_orders` ADD `delivery_department` varchar(127) not null default '', ADD KEY `delivery_department` (`delivery_department`)";
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `delivery_department` varchar(127) not null default ''";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }

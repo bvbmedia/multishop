@@ -579,7 +579,6 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
  KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`),
  KEY `billing_department` (`billing_department`),
- KEY `delivery_department` (`delivery_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_orders_id` (`foreign_orders_id`),
 ) COMMENT='Ordersysteem';
