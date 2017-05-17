@@ -547,6 +547,16 @@ class tx_mslib_user {
                     $updateArray[$key] = $val;
                 }
             }
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['updateUserPreProc'])) {
+                $params = array(
+                        'updateArray' => &$updateArray,
+                        'customer_id' => &$customer_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['updateUserPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\'' . $customer_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($customer_id) {
