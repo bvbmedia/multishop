@@ -1340,6 +1340,23 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         return $products_tax;
     }
     function convertCartToOrder($cart) {
+        $return_orders_id=false;
+        $orders_id=0;
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'])) {
+            // hook
+            $params = array(
+                'cart' => &$cart,
+                'orders_id' => &$orders_id,
+                'return_orders_id' => &$return_orders_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+            // hook oef
+        }
+        if ($return_orders_id) {
+            return $orders_id;
+        }
         // var for total amount
         $tax_separation = array();
         $total_price = 0;
