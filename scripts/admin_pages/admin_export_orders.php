@@ -111,6 +111,8 @@ $array['turnover_per_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields
 $array['turnover_per_main_category_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_incl_vat');
 $array['turnover_per_main_category_excl_vat'] = $this->pi_getLL('feed_exporter_fields_label_turnover_per_main_category_excl_vat');
 $array['bought_products_per_main_category'] = $this->pi_getLL('feed_exporter_fields_label_bought_products_per_main_category');
+$array['ordered_by'] = $this->pi_getLL('ordered_by');
+$array['discount'] = $this->pi_getLL('discount');
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';

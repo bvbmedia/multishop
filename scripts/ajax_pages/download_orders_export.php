@@ -587,6 +587,25 @@ if ($this->get['orders_export_hash']) {
                             }
                         }
                         break;
+                    case 'ordered_by':
+                        if ($row['cruser_id']) {
+                            $user = mslib_fe::getUser($row['cruser_id']);
+                            if ($user['username']) {
+                                $excelCols[] = $user['username'];
+                            } else {
+                                $excelCols[] = '';
+                            }
+                        } else {
+                            $excelCols[] = '';
+                        }
+                        break;
+                    case 'discount':
+                        if ($row['discount']) {
+                            $excelCols[] = number_format($row['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '');
+                        } else {
+                            $excelCols[] = '';
+                        }
+                        break;
                 }
             }
             // new rows
