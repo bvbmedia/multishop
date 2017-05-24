@@ -427,7 +427,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         // get all cats to generate multilevel fake url eof
                     }
 //					$cart['products'][$shopping_cart_item]['link']=mslib_fe::typolink($product['page_uid'],'&'.$where.'&products_id='.$products_id.'&tx_multishop_pi1[page_section]=products_detail&tx_multishop_pi1[cart_item]='.$shopping_cart_item);
-                    $cart['products'][$shopping_cart_item]['link'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $products_id . '&tx_multishop_pi1[page_section]=products_detail&tx_multishop_pi1[cart_item]=' . $shopping_cart_item);
+                    $cart['products'][$shopping_cart_item]['link'] = $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $products_id . '&tx_multishop_pi1[page_section]=products_detail&tx_multishop_pi1[cart_item]=' . $shopping_cart_item);
                     $cart['products'][$shopping_cart_item]['total_attributes_tax'] = $attributes_tax;
                     // custom hook that can be controlled by third-party plugin
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPreHook'])) {
