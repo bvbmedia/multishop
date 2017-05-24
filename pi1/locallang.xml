@@ -2806,6 +2806,7 @@
             <label index="subscribe_to_newsletter">aanmelden nieuwsbrief</label>
             <label index="delete_product_x_from_current_category_x">Verwijder: %s in %s</label>
             <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
+            <label index="department">Afdeling</label>
         </languageKey>
     </data>
 </T3locallang>

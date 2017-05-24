@@ -373,6 +373,7 @@ $headerData .= '
 					var confirm_box=jQuery.confirm({
 						title: \'\',
 						content: confirm_content,
+						columnClass: \'col-md-6 col-md-offset-4 \',
 						confirm: function(){
 							var payment_id=this.$b.find("#payment_method_sb_listing").val();
 							var date_paid=this.$b.find("#orders_paid_timestamp").val();
@@ -420,6 +421,7 @@ $headerData .= '
 			$.confirm({
 				title: \'\',
 				content: confirm_content,
+				columnClass: \'col-md-6 col-md-offset-4 \',
 				confirm: function(){
 					jQuery.ajax({
 						type: "POST",

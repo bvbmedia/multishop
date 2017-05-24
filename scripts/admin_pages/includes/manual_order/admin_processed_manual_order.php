@@ -51,6 +51,7 @@ if ($this->post['proceed_order']) {
         $insertArray['email'] = $this->post['email'];
         $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
+        $insertArray['department'] = $this->post['department'];
         $insertArray['street_name'] = $this->post['street_name'];
         $insertArray['address_number'] = $this->post['address_number'];
         $insertArray['address_ext'] = $this->post['address_ext'];
@@ -99,6 +100,7 @@ if ($this->post['proceed_order']) {
         $insertArray['billing_gender'] = $billing_gender;
         $insertArray['billing_birthday'] = $this->post['birthday'];
         $insertArray['billing_building'] = $this->post['building'];
+        $insertArray['billing_department'] = $this->post['department'];
         $insertArray['billing_street_name'] = $this->post['street_name'];
         $insertArray['billing_address_number'] = $this->post['address_number'];
         $insertArray['billing_address_ext'] = $this->post['address_ext'];
@@ -122,6 +124,7 @@ if ($this->post['proceed_order']) {
         $insertArray['delivery_gender'] = $this->post['delivery_gender'];
         $insertArray['delivery_street_name'] = $this->post['delivery_street_name'];
         $insertArray['delivery_building'] = $this->post['delivery_building'];
+        $insertArray['delivery_department'] = $this->post['delivery_department'];
         $insertArray['delivery_address_number'] = $this->post['delivery_address_number'];
         $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $insertArray['delivery_street_name'] . ' ' . $insertArray['delivery_address_number'] . ' ' . $insertArray['delivery_address_ext']);
         $insertArray['delivery_city'] = $this->post['delivery_city'];
@@ -151,6 +154,7 @@ if ($this->post['proceed_order']) {
             $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
             $insertArray['delivery_gender'] = $insertArray['billing_gender'];
             $insertArray['delivery_building'] = $insertArray['billing_building'];
+            $insertArray['delivery_department'] = $insertArray['billing_department'];
             $insertArray['delivery_street_name'] = $insertArray['billing_street_name'];
             $insertArray['delivery_address'] = $insertArray['billing_address'];
             $insertArray['delivery_address_number'] = $insertArray['billing_address_number'];

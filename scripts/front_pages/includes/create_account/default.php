@@ -130,6 +130,15 @@ if (mslib_fe::loggedin()) {
                 }
             }
             $erno = $mslib_user->checkUserData();
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'])) {
+                $params = array(
+                    'erno' => &$erno,
+                    'mslib_user' => &$mslib_user
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER'] && !isset($this->post['tx_multishop_pi1']['create_account_disclaimer'])) {
                 $erno[] = $this->pi_getLL('you_havent_accepted_the_create_account_disclaimer');
             }
