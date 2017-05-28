@@ -1850,6 +1850,10 @@ if ($this->post['action'] == 'category-insert') {
                                     $insertArray['date_added'] = time();
                                     $insertArray['page_uid'] = $this->showCatalogFromPage;
                                     $insertArray['hashed_id'] = md5($hashed_id);
+                                    if ($this->post['prefix_source_name']) {
+                                        // save also the feed source name, maybe we need it later
+                                        $insertArray['foreign_source_name'] = $this->post['prefix_source_name'];
+                                    }
                                     $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
                                     if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -1980,8 +1984,17 @@ if ($this->post['action'] == 'category-insert') {
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
                             $item['manufacturers_id'] = $row['manufacturers_id'];
                         } else {
-                            $str = "insert into tx_multishop_manufacturers (date_added,manufacturers_name, status) VALUES ('" . time() . "','" . addslashes($item['manufacturers_name']) . "',1)";
-                            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                            //$str = "insert into tx_multishop_manufacturers (date_added, manufacturers_name, status) VALUES ('" . time() . "','" . addslashes($item['manufacturers_name']) . "',1)";
+                            $insertArrayManufacturer=array();
+                            $insertArrayManufacturer['date_added']=time();
+                            $insertArrayManufacturer['manufacturers_name']=addslashes($item['manufacturers_name']);
+                            $insertArrayManufacturer['status']=1;
+                            if ($this->post['prefix_source_name']) {
+                                // save also the feed source name, maybe we need it later
+                                $insertArrayManufacturer['foreign_source_name'] = $this->post['prefix_source_name'];
+                            }
+                            $query_insert_manufacturer = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers', $insertArrayManufacturer);
+                            $qry = $GLOBALS['TYPO3_DB']->sql_query($query_insert_manufacturer);
                             $item['manufacturers_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
                             if ($item['manufacturers_id']) {
                                 $str = "insert into tx_multishop_manufacturers_cms (manufacturers_id,language_id) VALUES (" . $item['manufacturers_id'] . "," . $language_id . ")";

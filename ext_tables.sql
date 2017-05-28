@@ -116,6 +116,7 @@ CREATE TABLE `tx_multishop_categories` (
  `hide_in_menu` tinyint(1) default '0',
  `col_position` tinyint(1) default '0',
  `related_to` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
  PRIMARY KEY (`categories_id`),
  KEY `idx_categories_parent_id` (`parent_id`),
  KEY `status` (`status`),
@@ -130,7 +131,8 @@ CREATE TABLE `tx_multishop_categories` (
  KEY `hashed_id` (`hashed_id`),
  KEY `hide_in_menu` (`hide_in_menu`),
  KEY `col_position` (`col_position`),
- KEY `related_to` (`related_to`)
+ KEY `related_to` (`related_to`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_categories_description` (
@@ -349,10 +351,12 @@ CREATE TABLE `tx_multishop_manufacturers` (
  `icecat_mid` int(5) default '0',
  `manufacturers_extra_cost` decimal(24,14) default '0.00000000000000',
  `status` tinyint(1) default '1',
+ `foreign_source_name` varchar(30) default '',
  PRIMARY KEY (`manufacturers_id`),
  KEY `IDX_MANUFACTURERS_NAME` (`manufacturers_name`),
  KEY `sort_order` (`sort_order`),
- KEY `status` (`status`)
+ KEY `status` (`status`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_manufacturers_cms` (
