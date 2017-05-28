@@ -3222,9 +3222,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 			*/
             //DISCOUNT_WRAPPER EOF
-// new
-//error_log(print_r($this->cart,1));
-// still not good. having partials of orders class
+            // new
+            //error_log(print_r($this->cart,1));
+            // still not good. having partials of orders class
             //DISCOUNT_WRAPPER
             $key = 'DISCOUNT_WRAPPER';
             if ($this->cart['discount_amount'] > 0) {
@@ -3252,7 +3252,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } else {
                 $subpartArray['###NEWSUBTOTAL_WRAPPER###'] = '';
             }
-//		error_log(print_r($this->cart['summarize'],1));
+            //		error_log(print_r($this->cart['summarize'],1));
             //DISCOUNT_WRAPPER EOF
             //TAX_COSTS_WRAPPER
             $key = 'TAX_COSTS_WRAPPER';
@@ -3282,6 +3282,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			*/
             //TAX_COSTS_WRAPPER EOF
             // finally convert global markers and return output
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'])) {
+                $params = array(
+                        'shopping_cart_item'=>$shopping_cart_item,
+                        'c' => &$c,
+                        'sectionTemplateType' => &$sectionTemplateType,
+                        'subpartArray' => &$subpartArray,
+                        'subparts' => $subparts
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $content = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
         }
         return $content;
