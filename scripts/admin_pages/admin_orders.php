@@ -775,8 +775,14 @@ if ($this->post['payment_status'] == 'paid_only') {
         $filter[] = "(o.paid='0')";
     }
 }
-if (!$this->masterShop) {
-    $filter[] = 'o.page_uid=' . $this->shop_pid;
+if (isset($this->post['tx_multishop_pi1']['search_in_shop']) && !empty($this->post['tx_multishop_pi1']['search_in_shop'])) {
+    if ($this->post['tx_multishop_pi1']['search_in_shop']!='all') {
+        $filter[] = 'o.page_uid=' . (int) $this->post['tx_multishop_pi1']['search_in_shop'];
+    }
+} else {
+    if (!$this->masterShop) {
+        $filter[] = 'o.page_uid=' . $this->shop_pid;
+    }
 }
 //$orderby[]='orders_id desc';
 $select[] = 'o.*';
@@ -1001,6 +1007,28 @@ $subpartArray['###RESULTS###'] = $order_results;
 $subpartArray['###NORESULTS###'] = $no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
+// search on shop
+$subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']='';
+if ($this->conf['masterShop']) {
+    $active_shop = mslib_fe::getActiveShop();
+    if (count($active_shop) > 1) {
+        $shop_select2=array();
+        $shop_select2[]='<option value="all">'.$this->pi_getLL('all').'</option>';
+        foreach ($active_shop as $pageinfo) {
+            $pageTitle = $pageinfo['title'];
+            if ($pageinfo['nav_title']) {
+                $pageTitle = $pageinfo['nav_title'];
+            }
+            $shop_select2[]='<option value="'.$pageinfo['uid'].'"'.($this->post['tx_multishop_pi1']['search_in_shop']==$pageinfo['uid'] ? ' selected="selected"' : '').'>'.$pageTitle.'</option>';
+        }
+        $subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']='<div class="form-group">
+            <label for="search_in_shop" class="control-label">'.$this->pi_getLL('search_in_shop').'</label>
+            '.(count($shop_select2)>1 ? '<select name="tx_multishop_pi1[search_in_shop]" id="search_in_shop" style="width: 200px;">'.implode('', $shop_select2).'</select>' : '').'
+        </div>
+        ';
+    }
+
+}
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);
@@ -1030,6 +1058,9 @@ jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '";
     });
+    '.(!empty($subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']) ? '
+    $("#search_in_shop").select2();
+    ' : '').'
 	$(".order_select2").select2();
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",

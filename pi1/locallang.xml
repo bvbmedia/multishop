@@ -1414,6 +1414,7 @@
             <label index="subscribe_to_newsletter">Subscribe newsletter</label>
             <label index="delete_product_x_from_current_category_x">Delete product %s from category %s</label>
             <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
+            <label index="search_in_shop">Search in shop</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2807,6 +2808,7 @@
             <label index="delete_product_x_from_current_category_x">Verwijder: %s in %s</label>
             <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
             <label index="department">Afdeling</label>
+            <label index="search_in_shop">Zoeken in de winkel</label>
         </languageKey>
     </data>
 </T3locallang>
