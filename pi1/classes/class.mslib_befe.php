@@ -3258,8 +3258,6 @@ class mslib_befe {
                 $long_date = strftime($this->pi_getLL('full_date_format'), $time);
                 $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
                 $array2[] = $long_date;
-                $array1[] = '###STORE_NAME###';
-                $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###PROPOSAL_NUMBER###';
