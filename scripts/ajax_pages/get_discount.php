@@ -141,17 +141,19 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE'] > 0) {
     $return_data['shipping_method']['deliver_by'] = '';
     $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
     //
-    foreach ($shipping_cost_data as $shipping_code => $shipping_cost) {
-        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
-            $count_cart_incl_vat = 1;
-            $return_data['shipping_cost'] = $shipping_cost['shipping_costs_including_vat'];
-            $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
-        } else {
-            $return_data['shipping_cost'] = $shipping_cost['shipping_costs'];
-            $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+    if (is_array($shipping_cost_data) && count($shipping_cost_data)) {
+        foreach ($shipping_cost_data as $shipping_code => $shipping_cost) {
+            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
+                $count_cart_incl_vat = 1;
+                $return_data['shipping_cost'] = $shipping_cost['shipping_costs_including_vat'];
+                $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+            } else {
+                $return_data['shipping_cost'] = $shipping_cost['shipping_costs'];
+                $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+            }
+            $return_data['shipping_method'] = $shipping_cost;
+            $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']) + $return_data['shipping_cost']);
         }
-        $return_data['shipping_method'] = $shipping_cost;
-        $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']) + $return_data['shipping_cost']);
     }
 } else {
     $count_cart_incl_vat = 0;
