@@ -40,6 +40,7 @@ class mslib_fe {
         $this->cObj = &$ref->cObj;
         $this->extKey = &$ref->extKey;
         $this->server = &$ref->server;
+        $this->cart = &$ref->cart;
         $this->cart_page_uid = &$ref->cart_page_uid;
         $this->shop_pid = &$ref->shop_pid;
         $this->showCatalogFromPage = &$ref->showCatalogFromPage;
