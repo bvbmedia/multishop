@@ -145,26 +145,54 @@ if ($this->post['proceed_order']) {
         $insertArray['payment_method_costs'] = $this->post['payment_method_costs'];
         $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         if (!$this->post['different_delivery_address']) {
-            $insertArray['delivery_email'] = $insertArray['billing_email'];
-            $insertArray['delivery_company'] = $insertArray['billing_company'];
-            $insertArray['delivery_first_name'] = $insertArray['billing_first_name'];
-            $insertArray['delivery_middle_name'] = $insertArray['billing_middle_name'];
-            $insertArray['delivery_last_name'] = $insertArray['billing_last_name'];
-            $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
-            $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
-            $insertArray['delivery_gender'] = $insertArray['billing_gender'];
-            $insertArray['delivery_building'] = $insertArray['billing_building'];
-            $insertArray['delivery_department'] = $insertArray['billing_department'];
-            $insertArray['delivery_street_name'] = $insertArray['billing_street_name'];
-            $insertArray['delivery_address'] = $insertArray['billing_address'];
-            $insertArray['delivery_address_number'] = $insertArray['billing_address_number'];
-            $insertArray['delivery_address_ext'] = $insertArray['billing_address_ext'];
-            $insertArray['delivery_zip'] = $insertArray['billing_zip'];
-            $insertArray['delivery_city'] = $insertArray['billing_city'];
-            $insertArray['delivery_country'] = $insertArray['billing_country'];
-            $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
-            $insertArray['delivery_region'] = $insertArray['billing_region'];
-            $insertArray['delivery_name'] = $insertArray['billing_name'];
+            $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
+            if ($delivery_address) {
+                if (!$delivery_address['name']) {
+                    $delivery_address['name']=preg_replace('/\s+/', ' ', $delivery_address['first_name'] . ' ' . $delivery_address['middle_name'] . ' ' . $delivery_address['last_name']);
+                }
+                if (!$delivery_address['address']) {
+                    $delivery_address['address']=preg_replace('/\s+/', ' ', $delivery_address['street_name'] . ' ' . $delivery_address['address_number'] . ' ' . $delivery_address['address_ext']);
+                }
+                $insertArray['delivery_email'] = $delivery_address['email'];
+                $insertArray['delivery_company'] = $delivery_address['company'];
+                $insertArray['delivery_first_name'] = $delivery_address['first_name'];
+                $insertArray['delivery_middle_name'] = $delivery_address['middle_name'];
+                $insertArray['delivery_last_name'] = $delivery_address['last_name'];
+                $insertArray['delivery_mobile'] = $delivery_address['mobile'];
+                $insertArray['delivery_gender'] = $insertArray['gender'];
+                $insertArray['delivery_building'] = $delivery_address['building'];
+                $insertArray['delivery_department'] = $delivery_address['department'];
+                $insertArray['delivery_street_name'] = $delivery_address['street_name'];
+                $insertArray['delivery_address'] = $delivery_address['address'];
+                $insertArray['delivery_address_number'] = $delivery_address['address_number'];
+                $insertArray['delivery_address_ext'] = $delivery_address['address_ext'];
+                $insertArray['delivery_zip'] = $delivery_address['zip'];
+                $insertArray['delivery_city'] = $delivery_address['city'];
+                $insertArray['delivery_country'] = $delivery_address['country'];
+                $insertArray['delivery_telephone'] = $delivery_address['phone'];
+                $insertArray['delivery_name'] = $delivery_address['name'];
+            } else {
+                $insertArray['delivery_email'] = $insertArray['billing_email'];
+                $insertArray['delivery_company'] = $insertArray['billing_company'];
+                $insertArray['delivery_first_name'] = $insertArray['billing_first_name'];
+                $insertArray['delivery_middle_name'] = $insertArray['billing_middle_name'];
+                $insertArray['delivery_last_name'] = $insertArray['billing_last_name'];
+                $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
+                $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
+                $insertArray['delivery_gender'] = $insertArray['billing_gender'];
+                $insertArray['delivery_building'] = $insertArray['billing_building'];
+                $insertArray['delivery_department'] = $insertArray['billing_department'];
+                $insertArray['delivery_street_name'] = $insertArray['billing_street_name'];
+                $insertArray['delivery_address'] = $insertArray['billing_address'];
+                $insertArray['delivery_address_number'] = $insertArray['billing_address_number'];
+                $insertArray['delivery_address_ext'] = $insertArray['billing_address_ext'];
+                $insertArray['delivery_zip'] = $insertArray['billing_zip'];
+                $insertArray['delivery_city'] = $insertArray['billing_city'];
+                $insertArray['delivery_country'] = $insertArray['billing_country'];
+                $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
+                $insertArray['delivery_region'] = $insertArray['billing_region'];
+                $insertArray['delivery_name'] = $insertArray['billing_name'];
+            }
         } else if ($this->post['different_delivery_address']) {
             $this->post['different_delivery_address'] = true;
             $insertArray['delivery_email']=$this->post['delivery_email'];
