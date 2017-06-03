@@ -1207,6 +1207,12 @@ switch ($_REQUEST['action']) {
             }
             $customer_billing_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid']);
             $customer_delivery_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid'], 'delivery');
+            if (!$customer_billing_address['address']) {
+                $customer_billing_address['address']=preg_replace('/\s+/', ' ', $customer_billing_address['street_name'] . ' ' . $customer_billing_address['address_number'] . ' ' . $customer_billing_address['address_ext']);
+            }
+            if (!$customer_delivery_address['address']) {
+                $customer_delivery_address['address']=preg_replace('/\s+/', ' ', $customer_delivery_address['street_name'] . ' ' . $customer_delivery_address['address_number'] . ' ' . $customer_delivery_address['address_ext']);
+            }
             if ($customer_billing_address['name'] && $customer_billing_address['phone'] && $customer_billing_address['email']) {
                 $fullname = $customer_billing_address['name'];
                 $telephone = $customer_billing_address['phone'];
