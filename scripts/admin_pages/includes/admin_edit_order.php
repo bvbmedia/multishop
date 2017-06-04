@@ -91,6 +91,7 @@ if (is_numeric($this->get['orders_id'])) {
             $address['delivery_telephone'] = $order['delivery_telephone'];
             $address['delivery_mobile'] = $order['delivery_mobile'];
             $address['delivery_vat_id'] = $order['delivery_vat_id'];
+            $address['by_phone'] = 1;
 
             $new_order_id=mslib_fe::createOrder($address);
             if (is_numeric($new_order_id) && $new_order_id>0) {

@@ -1494,6 +1494,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (isset($address['expected_delivery_date'])) {
                 $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
             }
+            if (isset($address['by_phone'])) {
+                $insertArray['by_phone'] = 1;
+            }
             $types = array();
             $types[] = 'billing';
             $types[] = 'delivery';
