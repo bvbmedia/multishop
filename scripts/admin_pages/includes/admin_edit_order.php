@@ -47,6 +47,57 @@ if (is_numeric($this->get['orders_id'])) {
         die('Unknown or deleted order');
     }
     if (count($order)) {
+        // process create new order
+        if (isset($this->get['tx_multishop_pi1']['new_order']) && $this->get['tx_multishop_pi1']['new_order']=='true') {
+            $address=array();
+            $address['uid']=$order['customer_id'];
+            $address['company'] = $order['billing_company'];
+            $address['first_name'] = $order['billing_first_name'];
+            $address['middle_name'] = $order['billing_middle_name'];
+            $address['last_name'] = $order['billing_last_name'];
+            $address['name'] = $order['billing_name'];
+            $address['email'] = $order['billing_email'];
+            $address['gender'] = $order['billing_gender'];
+            $address['building'] = $order['billing_building'];
+            $address['street_name'] = $order['billing_street_name'];
+            $address['address_number'] = $order['billing_address_number'];
+            $address['address_ext'] = $order['billing_address_ext'];
+            $address['address'] = $order['billing_address'];
+            $address['city'] = $order['billing_city'];
+            $address['zip'] = $order['billing_zip'];
+            $address['region'] = $order['billing_state'];
+            $address['country'] = $order['billing_country'];
+            $address['telephone'] = $order['billing_telephone'];
+            $address['mobile'] = $order['billing_mobile'];
+            $address['vat_id'] = $order['billing_vat_id'];
+            // delivery address
+            $address['different_delivery_address']=1;
+            $address['delivery_company'] = $order['delivery_company'];
+            $address['delivery_first_name'] = $order['delivery_first_name'];
+            $address['delivery_middle_name'] = $order['delivery_middle_name'];
+            $address['delivery_last_name'] = $order['delivery_last_name'];
+            $address['delivery_name'] = $order['delivery_name'];
+            $address['delivery_email'] = $order['delivery_email'];
+            $address['delivery_gender'] = $order['delivery_gender'];
+            $address['delivery_building'] = $order['delivery_building'];
+            $address['delivery_street_name'] = $order['delivery_street_name'];
+            $address['delivery_address_number'] = $order['delivery_address_number'];
+            $address['delivery_address_ext'] = $order['delivery_address_ext'];
+            $address['delivery_address'] = $order['delivery_address'];
+            $address['delivery_city'] = $order['delivery_city'];
+            $address['delivery_zip'] = $order['delivery_zip'];
+            $address['delivery_region'] = $order['delivery_state'];
+            $address['delivery_country'] = $order['delivery_country'];
+            $address['delivery_telephone'] = $order['delivery_telephone'];
+            $address['delivery_mobile'] = $order['delivery_mobile'];
+            $address['delivery_vat_id'] = $order['delivery_vat_id'];
+
+            $new_order_id=mslib_fe::createOrder($address);
+            if (is_numeric($new_order_id) && $new_order_id>0) {
+                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($order['page_uid'] . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $new_order_id . '&action=edit_order'));
+                exit();
+            }
+        }
         if ($order['customer_id']) {
             if (!$customer_address = mslib_fe::getAddressInfo('customer', $order['customer_id'])) {
                 $customer_address['country'] = $order['billing_country'];
@@ -4421,6 +4472,14 @@ if (is_numeric($this->get['orders_id'])) {
                 $headerButtons[] = $headingButton;
             }
         }
+        // create new order for same client as active order
+        $headingButton = array();
+        $headingButton['btn_class'] = 'btn btn-primary';
+        $headingButton['fa_class'] = 'fa fa-check-circle';
+        $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
+        $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
+        $headingButton['attributes'] = '';
+        $headerButtons[] = $headingButton;
         $headingButton = array();
         $headingButton['btn_class'] = 'btn btn-success';
         $headingButton['fa_class'] = 'fa fa-check-circle';
