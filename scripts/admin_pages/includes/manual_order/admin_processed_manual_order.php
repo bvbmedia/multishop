@@ -51,7 +51,7 @@ if ($this->post['proceed_order']) {
         $insertArray['email'] = $this->post['email'];
         $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
-        $insertArray['department'] = $this->post['department'];
+        $insertArray['department'] = ($this->post['department'] ? $this->post['department'] : '');
         $insertArray['street_name'] = $this->post['street_name'];
         $insertArray['address_number'] = $this->post['address_number'];
         $insertArray['address_ext'] = $this->post['address_ext'];
@@ -68,6 +68,7 @@ if ($this->post['proceed_order']) {
         $insertArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
         $insertArray['tx_multishop_newsletter'] = (!$this->post['tx_multishop_newsletter_manual'] ? 0 : 1);
+        $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {
@@ -257,6 +258,7 @@ if ($this->post['proceed_order']) {
             }
             // hook eof
         }
+        $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         // now add the order eof
