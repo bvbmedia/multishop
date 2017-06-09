@@ -106,7 +106,7 @@ if (is_numeric($this->get['orders_id'])) {
 
             $new_order_id=mslib_fe::createOrder($address);
             if (is_numeric($new_order_id) && $new_order_id>0) {
-                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($order['page_uid'] . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $new_order_id . '&action=edit_order'));
+                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $new_order_id . '&action=edit_order'));
                 exit();
             }
         }
