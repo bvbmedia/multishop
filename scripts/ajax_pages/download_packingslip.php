@@ -60,6 +60,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         } else {
             $markerArray['###DELIVERY_COMPANY###'] = '';
         }
+        if (!empty($order['delivery_department'])) {
+            $markerArray['###DELIVERY_COMPANY###'] .= '<strong>' . $order['delivery_department'] . '</strong><br/>';
+        }
         if (!empty($order['delivery_building'])) {
             $markerArray['###DELIVERY_BUILDING###'] = '<strong>' . $order['delivery_building'] . '</strong><br/>';
         } else {
