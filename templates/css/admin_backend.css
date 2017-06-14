@@ -889,3 +889,5 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 .cellQty .quantity.buttons_added .qty_plus:focus { border-color:#204d74; background:#286090; }
 
 .redactor-dropdown { z-index:99999999; }
+
+.select2-results .select2-highlighted a { color:#fff !important; text-decoration:none !important; }
