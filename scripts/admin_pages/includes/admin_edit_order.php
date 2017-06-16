@@ -811,7 +811,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
                     }
                     $updateArray['track_and_trace_code'] = '';
-                    if ($this->post['track_and_trace_code']) {
+                    if (isset($this->post['track_and_trace_code'])) {
                         $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
                     }
                     if (count($updateArray)) {
@@ -937,7 +937,7 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->post['expected_delivery_date'] && $this->post['expected_delivery_date_local']) {
                 $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
             }
-            if ($this->post['track_and_trace_code']) {
+            if (isset($this->post['track_and_trace_code'])) {
                 $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
             }
             if ($this->post['order_memo']) {
