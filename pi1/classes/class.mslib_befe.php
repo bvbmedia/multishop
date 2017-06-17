@@ -4126,6 +4126,7 @@ class mslib_befe {
         return $selectbox_str;
     }
     function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix = '', $display_currency_symbol = 1, $table_type = 'invoice') {
+        $template='';
         switch ($table_type) {
             case 'invoice':
                 if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
@@ -4141,6 +4142,20 @@ class mslib_befe {
                     $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_packingslip_pdf.tmpl');
                 }
                 break;
+        }
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'])) {
+            $params_internal = array(
+                'template' => &$template,
+                'order' => &$order,
+                'invoice_number' => &$invoice_number,
+                'prefix' => &$prefix,
+                'display_currency_symbol' => &$display_currency_symbol,
+                'table_type' => &$table_type
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
         }
         if (is_array($order['products']) && count($order['products'])) {
             $contentItem = '';
