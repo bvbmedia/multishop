@@ -4329,6 +4329,9 @@ class mslib_befe {
                 $markerArray['ITEM_PRODUCT_NAME'] = $product_name;
                 // Seperate marker version
                 $markerArray['ITEM_SEPERATE_PRODUCTS_NAME'] = htmlspecialchars($product['products_name']);
+                if ($product['sku_code']) {
+                    $markerArray['ITEM_SEPERATE_PRODUCTS_NAME'] .= ' (' . htmlspecialchars($product['sku_code']) . ')';
+                }
                 $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = nl2br(htmlspecialchars($product['products_description']));
                 $markerArray['ITEM_SEPERATE_PRODUCTS_MODEL'] = htmlspecialchars($product['products_model']);
                 // Seperate marker version eol
