@@ -131,16 +131,15 @@ if (count($products) < 0) {
 
 		<div class="form-group">
 			<div class="row">
-			<div class="col-md-6">
-				<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '</label>
-				<input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" autocomplete="off" value="' . htmlspecialchars($user['birthday']) . '" >
-				<input type="hidden" name="birthday" class="birthday" id="birthday" value="' . htmlspecialchars($user['birthday']) . '" >
-			</div>
-			<div class="col-md-6">
-				<label for="company" id="account-company">' . ucfirst($this->pi_getLL('company')) . '</label>
-				<input type="text" name="company" class="form-control company" id="company" autocomplete="off" value="' . htmlspecialchars($user['company']) . '"/>
-				' . ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '') . '
-			</div>
+                <div class="col-md-6">
+                    <label for="company" id="account-company">' . ucfirst($this->pi_getLL('company')) . '</label>
+                    <input type="text" name="company" class="form-control company" id="company" autocomplete="off" value="' . htmlspecialchars($user['company']) . '"/>
+                    ' . ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '') . '
+                </div>
+                <div class="col-md-6">
+                    <label for="department" id="account-department">' . ucfirst($this->pi_getLL('department')) . '</label>
+                    <input type="text" name="department" class="form-control department" id="department" autocomplete="off" value="' . htmlspecialchars($user['company']) . '"/>
+                </div>
 			</div>
 		</div>
 		<div class="form-group">
@@ -154,6 +153,11 @@ if (count($products) < 0) {
 					<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" autocomplete="off" value="' . htmlspecialchars($user['tx_multishop_coc_id']) . '" />
 				</div>
 			</div>
+		</div>
+		<div class="form-group">
+            <label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '</label>
+            <input type="text" name="birthday_visitor" class="form-control birthday" id="birthday_visitor" autocomplete="off" value="' . htmlspecialchars($user['birthday']) . '" >
+            <input type="hidden" name="birthday" class="birthday" id="birthday" value="' . htmlspecialchars($user['birthday']) . '" >
 		</div>
 		<div class="form-group">
 			<div class="row">
@@ -393,8 +397,16 @@ if (count($products) < 0) {
 				</span>
 		 </div>
 			<div class="form-group">
-				<label for="delivery_company">' . ucfirst($this->pi_getLL('company')) . ':</label>
-				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" autocomplete="off" value="' . htmlspecialchars($user['delivery_company']) . '">
+			    <div class="row">
+			        <div class="col-md-4">
+                        <label for="delivery_company">' . ucfirst($this->pi_getLL('company')) . ':</label>
+                        <input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" autocomplete="off" value="' . htmlspecialchars($user['delivery_company']) . '">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="delivery_department">' . ucfirst($this->pi_getLL('department')) . ':</label>
+                        <input type="text" name="delivery_department" id="delivery_department" class="form-control delivery_department" autocomplete="off" value="' . htmlspecialchars($user['delivery_company']) . '">
+                    </div>
+                </div>        
 			</div>
 			<div class="form-group">
 				<div class="row">
