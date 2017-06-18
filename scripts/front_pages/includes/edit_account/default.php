@@ -57,7 +57,9 @@ if ($this->post) {
     $user['city'] = $this->post['city'];
     $user['country'] = $this->post['country'];
     $user['email'] = $this->post['email'];
-    $user['contact_email'] = $this->post['contact_email'];
+    if (isset($this->post['contact_email'])) {
+        $user['contact_email'] = $this->post['contact_email'];
+    }
     $user['telephone'] = $this->post['telephone'];
     $user['date_of_birth'] = $this->post['date_of_birth'];
     // billing details eof
