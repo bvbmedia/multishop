@@ -3,11 +3,21 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 if (is_numeric($this->get['orders_id'])) {
+    $continue_download_invoice=true;
+    // post processing by third party plugins
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/admin_edit_order_print.php']['adminOrderDownloadInvoiceController'])) {
+        $params = array(
+                'continue_download_invoice' => &$continue_download_invoice
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/admin_edit_order_print.php']['adminOrderDownloadInvoiceController'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
     if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->get['print'] != 'packing') {
         $invoice = mslib_fe::getOrderInvoice($this->get['orders_id']);
         $invoice_data = mslib_fe::getInvoice($invoice['hash'], 'hash');
     }
-    if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] && $this->get['print'] != 'packing') {
+    if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] && $this->get['print'] != 'packing' && $continue_download_invoice) {
         header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']));
         exit();
     }

@@ -5,6 +5,19 @@ if (!defined('TYPO3_MODE')) {
 if (!$this->get['tx_multishop_pi1']['hash']) {
     die();
 }
+$continue_dowload_invoice=true;
+// post processing by third party plugins
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'])) {
+    $params = array(
+        'continue_download_invoice' => &$continue_download_invoice
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+if (!$continue_dowload_invoice) {
+    die();
+}
 if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
     $this->get['tx_multishop_pi1']['forceRecreate'] = 1;
 }
