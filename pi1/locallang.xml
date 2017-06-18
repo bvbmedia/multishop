@@ -1415,6 +1415,7 @@
             <label index="delete_product_x_from_current_category_x">Delete product %s from category %s</label>
             <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
             <label index="search_in_shop">Search in shop</label>
+            <label index="contact_email">Contact e-mail</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

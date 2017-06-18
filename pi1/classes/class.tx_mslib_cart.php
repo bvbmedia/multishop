@@ -1532,6 +1532,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
                 $insertArray['gender'] = '1';
             }
+            if (isset($address['contact_email']) && !empty($address['contact_email'])) {
+                $insertArray['contact_email'] = $address['contact_email'];
+            }
             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);

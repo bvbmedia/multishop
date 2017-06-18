@@ -34,6 +34,7 @@ CREATE TABLE `fe_users` (
  `tx_multishop_customer_id` int(11) default '0',
  `tx_multishop_language` varchar(127) default '',
  `department` varchar(127) default '',
+ `contact_email` varchar(256) default '',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
