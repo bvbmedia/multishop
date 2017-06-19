@@ -186,7 +186,7 @@ if ($this->get['customers_export_hash']) {
                             foreach ($userGroupUids as $userGroupUid) {
                                 $usergroup = mslib_fe::getUserGroup($userGroupUid);
                                 if (is_array($usergroup) && $usergroup['title']) {
-                                    $selected_groups[] = $userGroupUid;
+                                    $selected_groups[] = $usergroup['title'];
                                 }
                             }
                         }
