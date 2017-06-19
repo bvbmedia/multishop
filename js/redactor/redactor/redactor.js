@@ -7314,6 +7314,7 @@
 					$el.text(link.text);
 					// BVBMedia tweak
 					$el.attr('title', link.title);
+                    $el.attr('class', link.class);
 					$el.attr('href', link.url);
 
 					this.link.target($el, link.target);
@@ -7375,6 +7376,7 @@
 					// BVBMedia tweak
 					$('#redactor-link-title').val(link.title);
 					$('#redactor-link-url-text').val(link.text);
+                    $('#redactor-link-class').val(link.class);
 				},
 				buildModal: function($el)
 				{
@@ -7463,6 +7465,8 @@
 					// BVBMedia tweak
 					// title
 					link.title = this.link.cleanText($('#redactor-link-title').val());
+					// class
+                    link.class = this.link.cleanText($('#redactor-link-class').val());
 
 					// empty url or text or isn't url
 					return (this.link.isEmpty(link) || link.url === false) ? false : link;
@@ -7482,6 +7486,8 @@
 					// BVBMedia tweak
 					// Title
 					link.title = (typeof link.title === 'undefined') ? '' : this.link.cleanText(link.title);
+					// Class
+                    link.class = (typeof link.class === 'undefined') ? '' : this.link.cleanText(link.class);
 
 					// target
 					link.target = ($('#redactor-link-blank').prop('checked')) ? true : false;
@@ -7502,6 +7508,8 @@
 					// BVBMedia tweak
 					// title
 					link.title = this.link.cleanText($('#redactor-link-title').val());
+					// class
+                    link.class = this.link.cleanText($('#redactor-link-class').val());
 
 					// target
 					link.target = ($el === false) ? link.target : this.link.buildTarget($el);
@@ -7517,6 +7525,7 @@
 						url: '',
 						text: (this.selection.is()) ? this.selection.text() : '',
 						title: '',
+                        class: '',
 						target: false
 					};
 
@@ -7526,6 +7535,7 @@
 						// BVBMedia tweak
 						link.title = $el.attr('title');
 						link.text = $el.text();
+                        link.class = $el.attr('class');
 						link.target = this.link.buildTarget($el);
 					}
 
@@ -8029,17 +8039,21 @@
 						'link': String()
 						+ '<div class="redactor-modal-tab" data-title="General">'
 							+ '<section>'
-                                + '<label>Title</label>'
-                                + '<input type="text" id="redactor-link-title" aria-label="Title" />'
-                            + '</section>'
-							+ '<section>'
-								+ '<label>URL</label>'
-								+ '<input type="url" id="redactor-link-url" aria-label="URL" />'
-							+ '</section>'
-							+ '<section>'
 								+ '<label>' + this.lang.get('text') + '</label>'
 								+ '<input type="text" id="redactor-link-url-text" aria-label="' + this.lang.get('text') + '" />'
 							+ '</section>'
+                            + '<section>'
+                                + '<label>URL</label>'
+                                + '<input type="url" id="redactor-link-url" aria-label="URL" />'
+                            + '</section>'
+							+ '<section>'
+                                + '<label>Title</label>'
+                                + '<input type="text" id="redactor-link-title" aria-label="Title" />'
+                            + '</section>'
+                            + '<section>'
+                                + '<label>Class</label>'
+                                + '<input type="text" id="redactor-link-class" aria-label="Class" />'
+                            + '</section>'
 							+ '<section>'
 								+ '<label class="checkbox"><input type="checkbox" id="redactor-link-blank"> ' + this.lang.get('link-in-new-tab') + '</label>'
 							+ '</section>'
