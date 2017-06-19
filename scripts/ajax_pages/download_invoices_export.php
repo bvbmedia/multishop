@@ -52,13 +52,13 @@ if ($this->get['invoices_export_hash']) {
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
         if (!empty($post_data['start_duration'])) {
-            $start_duration = strtotime($post_data['start_duration']);
+            $start_duration = strtotime(date('Y-m-d 00:00:00', strtotime($post_data['start_duration'])));
             if (!empty($post_data['end_duration'])) {
                 $end_duration = strtotime($post_data['end_duration'], $start_duration);
             } else {
-                $end_duration = time();
+                $end_duration = strtotime(date('Y-m-d 23:59:59', time()));
             }
-            $column = 'o.crdate';
+            $column = 'i.crdate';
             $filter[] = $column . " BETWEEN '" . $start_duration . "' and '" . $end_duration . "'";
         }
         if ($post_data['order_status'] !== 'all') {
@@ -107,7 +107,7 @@ if ($this->get['invoices_export_hash']) {
                 break;
         }
         $orderby[] = $order_by . ' ' . $order;
-        if ($post_data['order_type'] == 'by_phone') {
+        /*if ($post_data['order_type'] == 'by_phone') {
             $filter[] = 'o.by_phone=1';
         } else {
             $filter[] = 'o.by_phone=0';
@@ -116,7 +116,7 @@ if ($this->get['invoices_export_hash']) {
             $filter[] = 'o.is_proposal=1';
         } else {
             $filter[] = 'o.is_proposal=0';
-        }
+        }*/
         $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
         $records = $pageset['invoices'];
         // load all products
@@ -336,7 +336,7 @@ if ($this->get['invoices_export_hash']) {
                 }
             }
             $objPHPExcel = new PHPExcel();
-            $objPHPExcel->getSheet(0)->setTitle('Orders Export');
+            $objPHPExcel->getSheet(0)->setTitle('Invoices Export');
             $objPHPExcel->getActiveSheet()->fromArray($excelRows);
             $ExcelWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
             header('Content-type: application/vnd.ms-excel');
