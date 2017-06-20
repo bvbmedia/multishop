@@ -696,6 +696,7 @@
             <label index="feed_exporter_fields_label_category_link">Category link</label>
             <label index="feed_exporter_fields_label_custom_field_with_values">Custom field with value</label>
             <label index="feed_exporter_fields_label_customer_billing_address">Customer billing address</label>
+            <label index="feed_exporter_fields_label_customer_billing_company">Customer billing company</label>
             <label index="feed_exporter_fields_label_customer_billing_city">Customer billing city</label>
             <label index="feed_exporter_fields_label_customer_billing_country">Customer billing country</label>
             <label index="feed_exporter_fields_label_customer_billing_email">Customer billing e-mail</label>
@@ -703,6 +704,7 @@
             <label index="feed_exporter_fields_label_customer_billing_telephone">Customer billing telephone</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Customer billing zip</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
+            <label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
             <label index="feed_exporter_fields_label_customer_delivery_city">Customer delivery city</label>
             <label index="feed_exporter_fields_label_customer_delivery_country">Customer delivery country</label>
             <label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
