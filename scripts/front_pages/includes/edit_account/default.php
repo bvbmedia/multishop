@@ -171,9 +171,6 @@ if ($this->post) {
         $insertArray['middle_name'] = $address['middle_name'];
         $insertArray['last_name'] = $address['last_name'];
         $insertArray['email'] = $address['email'];
-        if ($address['contact_email']) {
-            $insertArray['contact_email'] = $address['contact_email'];
-        }
         $insertArray['building'] = $address['building'];
         $insertArray['street_name'] = $address['street_name'];
         $insertArray['address_number'] = $address['address_number'];
@@ -608,13 +605,6 @@ if ($this->post) {
     $markerArray['###VALUE_MOBILE###'] = htmlspecialchars($user['mobile']);
     $markerArray['###LABEL_EMAIL###'] = ucfirst($this->pi_getLL('e-mail_address')) . '<span class="text-danger">*</span>';
     $markerArray['###VALUE_EMAIL###'] = htmlspecialchars($user['email']);
-    $markerArray['###CUSTOMER_CONTACT_EMAIL###']='';
-    if ($this->ms['MODULES']['ENABLE_CUSTOMER_CONTACT_EMAIL']) {
-        $markerArray['###CUSTOMER_CONTACT_EMAIL###']='<div class="account-field col-sm-12" id="user-contact_email">
-            <label class="account-contact_email" for="contact_email">'.$this->pi_getLL('contact_email').'</label>
-            <input type="text" name="contact_email" class="contact_email" id="contact_email"'.($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT'] == '1' ? ' autocomplete="off" ' : '').'value="'.htmlspecialchars($user['contact_email']).'" />
-        </div>';
-    }
     $markerArray['###LABEL_ERROR_EMAIL_IS_REQUIRED###'] = $this->pi_getLL('email_is_required');
     $markerArray['###LABEL_DELIVERY_ADDRESS_TITLE###'] = ucfirst($this->pi_getLL('delivery_address'));
     $markerArray['###LABEL_DELIVERY_TITLE###'] = ucfirst($this->pi_getLL('title')) . '<span class="text-danger">*</span>';
@@ -686,6 +676,7 @@ if ($this->post) {
     // custom hook that can be controlled by third-party plugin
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'])) {
         $params = array(
+                'user' => $user,
                 'markerArray' => &$markerArray
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'] as $funcRef) {

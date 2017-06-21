@@ -99,9 +99,6 @@ if (mslib_fe::loggedin()) {
             $mslib_user->setBirthday($this->post['birthday']);
             $mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
             $mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
-            if ($this->ms['MODULES']['ENABLE_CUSTOMER_CONTACT_EMAIL']=='1' && isset($this->post['contact_email']) && !empty($this->post['contact_email'])) {
-                $mslib_user->setCustomField('contact_email', $this->post['contact_email']);
-            }
             if ($this->post['tx_multishop_pi1']['www']) {
                 if (!strstr($this->post['tx_multishop_pi1']['www'], "http://") and !strstr($this->post['tx_multishop_pi1']['www'], "https://")) {
                     $this->post['tx_multishop_pi1']['www'] = 'http://' . $this->post['tx_multishop_pi1']['www'];
@@ -351,13 +348,6 @@ if (mslib_fe::loggedin()) {
             $markerArray['###VALUE_EMAIL###'] = htmlspecialchars($this->post['email']);
             $markerArray['###LABEL_EMAIL_CONFIRM###'] = $this->pi_getLL('confirm_email_address') . '<span class="text-danger">*</span>';
             $markerArray['###VALUE_EMAIL_CONFIRM###'] = htmlspecialchars($this->post['email_confirm']);
-            $markerArray['###CUSTOMER_CONTACT_EMAIL###']='';
-            if ($this->ms['MODULES']['ENABLE_CUSTOMER_CONTACT_EMAIL']) {
-                $markerArray['###CUSTOMER_CONTACT_EMAIL###']='<div class="account-field col-sm-12" id="user-contact_email">
-                    <label class="account-contact_email" for="contact_email">'.$this->pi_getLL('contact_email').'</label>
-                    <input type="text" name="contact_email" class="contact_email" id="contact_email"'.($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT'] == '1' ? ' autocomplete="off" ' : '').'value="" />
-                </div>';
-            }
             $markerArray['###LABEL_PASSWORD###'] = $this->pi_getLL('password') . '<span class="text-danger">*</span>';
             $markerArray['###VALUE_PASSWORD###'] = htmlspecialchars($this->post['password']);
             $markerArray['###LABEL_PASSWORD_CONFIRM###'] = $this->pi_getLL('confirm_password') . '<span class="text-danger">*</span>';

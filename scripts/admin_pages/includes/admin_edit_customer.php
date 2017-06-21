@@ -161,6 +161,9 @@ if ($this->post && $this->post['email']) {
             if ($continue) {
                 // custom hook that can be controlled by third-party plugin eof
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $this->post['tx_multishop_pi1']['cid'], $updateArray);
+                echo "<pre>";
+                var_dump($query);
+                die();
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 //update the tt_address billing
                 $updateTTAddressArray = array();
@@ -1557,13 +1560,6 @@ $subpartArray['###INVALID_CITY_MESSAGE###'] = $this->pi_getLL('city_is_required'
 $subpartArray['###INVALID_EMAIL_MESSAGE###'] = $this->pi_getLL('email_is_required');
 $subpartArray['###INVALID_USERNAME_MESSAGE###'] = $this->pi_getLL('username_is_required');
 $subpartArray['###INVALID_PASSWORD_MESSAGE###'] = $this->pi_getLL('password_is_required');
-$subpartArray['###CUSTOMER_CONTACT_EMAIL###'] = '';
-if ($this->ms['MODULES']['ENABLE_CUSTOMER_CONTACT_EMAIL']) {
-    $subpartArray['###CUSTOMER_CONTACT_EMAIL###']='<div class="account-field col-sm-6" id="user-contact_email">
-        <label class="account-contact_email" for="contact_email">'.$this->pi_getLL('contact_email').'</label>
-        <input type="text" name="contact_email" class="contact_email" id="contact_email" value="" />
-    </div>';
-}
 $telephone_validation = '';
 if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
     if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
