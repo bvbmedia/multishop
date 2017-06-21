@@ -2812,6 +2812,8 @@
             <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
             <label index="department">Afdeling</label>
             <label index="search_in_shop">Zoeken in de winkel</label>
+            <label index="feed_exporter_fields_label_customer_billing_company">Debiteur (factuur) bedrijfsnaam</label>
+            <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
         </languageKey>
     </data>
 </T3locallang>
