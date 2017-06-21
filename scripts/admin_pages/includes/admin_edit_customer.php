@@ -161,9 +161,6 @@ if ($this->post && $this->post['email']) {
             if ($continue) {
                 // custom hook that can be controlled by third-party plugin eof
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $this->post['tx_multishop_pi1']['cid'], $updateArray);
-                echo "<pre>";
-                var_dump($query);
-                die();
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 //update the tt_address billing
                 $updateTTAddressArray = array();
