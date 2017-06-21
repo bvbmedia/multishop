@@ -4485,13 +4485,15 @@ if (is_numeric($this->get['orders_id'])) {
             }
         }
         // create new order for same client as active order
-        $headingButton = array();
-        $headingButton['btn_class'] = 'btn btn-primary';
-        $headingButton['fa_class'] = 'fa fa-check-circle';
-        $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
-        $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
-        $headingButton['attributes'] = '';
-        $headerButtons[] = $headingButton;
+        if ($this->ms['MODULES']['CREATE_NEW_ORDER_FROM_EDIT_ORDER']) {
+            $headingButton = array();
+            $headingButton['btn_class'] = 'btn btn-primary';
+            $headingButton['fa_class'] = 'fa fa-check-circle';
+            $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
+            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
+            $headingButton['attributes'] = '';
+            $headerButtons[] = $headingButton;
+        }
         $headingButton = array();
         $headingButton['btn_class'] = 'btn btn-success';
         $headingButton['fa_class'] = 'fa fa-check-circle';
