@@ -1939,7 +1939,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
             $orderDetails[] = '<hr>';
-            $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod">';
+            $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod" id="msAdminEditOrderShippingMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('shipping_method') . '</label>';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $shipping_methods = mslib_fe::loadShippingMethods(1);
@@ -1974,7 +1974,7 @@ if (is_numeric($this->get['orders_id'])) {
             $orderDetailsItem .= '</div>';
             $orderDetails[] = $orderDetailsItem;
             $orderDetailsItem = '';
-            $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod">';
+            $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod" id="msAdminEditOrderPaymentMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_method') . '</label>';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 if (is_array($payment_methods) and count($payment_methods)) {
@@ -2055,7 +2055,7 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
                 if (!$orders['is_locked'] || ($orders['is_locked'] && $orders['payment_condition'] != '')) {
                     $orderDetailsItem = '';
-                    $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions">';
+                    $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions" id="msAdminEditOrderPaymentConditions">';
                     $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_condition') . '</label>';
                     if (!$orders['is_locked']) {
                         $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . htmlspecialchars($orders['payment_condition']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
