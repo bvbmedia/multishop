@@ -160,7 +160,7 @@ if ($this->post['proceed_order']) {
                 $insertArray['delivery_middle_name'] = $delivery_address['middle_name'];
                 $insertArray['delivery_last_name'] = $delivery_address['last_name'];
                 $insertArray['delivery_mobile'] = $delivery_address['mobile'];
-                $insertArray['delivery_gender'] = $insertArray['gender'];
+                $insertArray['delivery_gender'] = $delivery_address['gender'];
                 $insertArray['delivery_building'] = $delivery_address['building'];
                 $insertArray['delivery_department'] = $delivery_address['department'];
                 $insertArray['delivery_street_name'] = $delivery_address['street_name'];
