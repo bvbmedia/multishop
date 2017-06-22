@@ -4330,10 +4330,15 @@ class mslib_befe {
                 // Seperate marker version
                 $markerArray['ITEM_SEPERATE_PRODUCTS_NAME'] = htmlspecialchars($product['products_name']);
                 $markerArray['ITEM_SEPERATE_SKU_CODE']='';
-                if ($product['sku_code']) {
+                $product['sku_code']=trim($product['sku_code']);
+                if (!empty($product['sku_code'])) {
                     $markerArray['ITEM_SEPERATE_SKU_CODE'] = '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_sku')) . ': ' . htmlspecialchars($product['sku_code']);
                 }
-                $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = nl2br(htmlspecialchars($product['products_description']));
+                $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '';
+                $product['products_description']=trim($product['products_description']);
+                if (!empty($product['products_description'])) {
+                    $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '<br/>' . nl2br(htmlspecialchars($product['products_description']));
+                }
                 $markerArray['ITEM_SEPERATE_PRODUCTS_MODEL'] = htmlspecialchars($product['products_model']);
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
