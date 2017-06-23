@@ -891,3 +891,23 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 .redactor-dropdown { z-index:99999999; }
 
 .select2-results .select2-highlighted a { color:#fff !important; text-decoration:none !important; }
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn { opacity:0.5; }
+.btn-default.disabled,
+.btn-default[disabled],
+fieldset[disabled] .btn-default,
+.btn-default.disabled:hover,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default:hover,
+.btn-default.disabled:focus,
+.btn-default[disabled]:focus,
+fieldset[disabled] .btn-default:focus,
+.btn-default.disabled.focus,
+.btn-default[disabled].focus,
+fieldset[disabled] .btn-default.focus,
+.btn-default.disabled:active,
+.btn-default[disabled]:active,
+fieldset[disabled] .btn-default:active,
+.btn-default.disabled.active,
+.btn-default[disabled].active,
+fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
