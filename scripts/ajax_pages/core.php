@@ -2184,6 +2184,7 @@ switch ($this->ms['page']) {
                                 break;
                             case "billing_details":
                                 $select=array();
+                                $select[]='orders_id';
                                 $keys[] = 'gender';
                                 $keys[] = 'vat_id';
                                 $keys[] = 'coc_id';
