@@ -88,7 +88,9 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             //hook to let other plugins further manipulate the settings
                             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['invoicesMailToMerchantContentBody'])) {
                                 $params = array(
-                                    'mail_content' => &$mail_content
+                                    'invoice' => $invoice,
+                                    'mail_content' => &$mail_content,
+                                    'attachments_pdf' => &$attachments_pdf
                                 );
                                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['invoicesMailToMerchantContentBody'] as $funcRef) {
                                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
