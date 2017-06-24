@@ -15,10 +15,12 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
             $attachments = array();
             $disable_merge_attachment_files=false;
+            $selected_invoices=array();
             foreach ($this->post['selected_invoices'] as $invoice) {
                 if (is_numeric($invoice)) {
                     $invoice = mslib_fe::getInvoice($invoice, 'id');
                     if ($invoice['id']) {
+                        $selected_invoices[]=$invoice['invoice_id'];
                         // invoice as attachment
                         $invoice_path = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $invoice['invoice_id'] . '.pdf';
                         $invoice_data = mslib_fe::file_get_contents($this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']));
@@ -85,7 +87,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             if (mslib_fe::mailUser($user, $this->ms['MODULES']['STORE_NAME'] . ' invoices', $this->ms['MODULES']['STORE_NAME'] . ' invoices', $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments_pdf)) {
                                 $postErno[] = array(
                                     'status' => 'info',
-                                    'message' => 'The following invoices are mailed to ' . $user['email'] . ':<ul><li>' . implode('</li><li>', array_keys($attachments)) . '</li></ul>'
+                                    'message' => 'The following invoices are mailed to ' . $user['email'] . ':<ul><li>' . implode('</li><li>', $selected_invoices) . '</li></ul>'
                                 );
                             } else {
                                 $postErno[] = array(
