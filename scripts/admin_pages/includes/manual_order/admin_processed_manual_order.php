@@ -69,6 +69,16 @@ if ($this->post['proceed_order']) {
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
         $insertArray['tx_multishop_newsletter'] = (!$this->post['tx_multishop_newsletter_manual'] ? 0 : 1);
         $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderFEUsersPreHook'])) {
+            // hook
+            $params = array(
+                'insertArray' => &$insertArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderFEUsersPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+            // hook eof
+        }
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {

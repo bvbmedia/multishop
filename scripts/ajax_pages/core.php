@@ -2127,7 +2127,8 @@ switch ($this->ms['page']) {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'])) {
                     $params = array(
                             'details_type' => $details_type,
-                            'erno' => &$erno
+                            'erno' => &$erno,
+                            'keys' => &$keys
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsPreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2176,6 +2177,83 @@ switch ($this->ms['page']) {
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $return_data['status'] = 'OK';
                         $return_data['reason'] = '';
+                        // send back the updated data
+                        switch ($details_type) {
+                            case "delivery_details":
+                                $tmpcontent='';
+                                break;
+                            case "billing_details":
+                                $select=array();
+                                $keys[] = 'gender';
+                                $keys[] = 'vat_id';
+                                $keys[] = 'coc_id';
+                                $keys[] = 'address';
+                                foreach ($keys as $key) {
+                                    $select[] = 'billing_' . $key;
+                                }
+                                $str = "SELECT ".implode(', ', $select)." from tx_multishop_orders o where o.orders_id='" . $orders_id . "'";
+                                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                                $orders = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+
+                                $settings = array();
+                                $settings['enable_edit_customer_details'] = 1;
+                                $settings['enable_edit_orders_details'] = 1;
+                                if ($orders['is_locked']) {
+                                    $settings['enable_edit_customer_details'] = 0;
+                                    $settings['enable_edit_orders_details'] = 0;
+                                }
+                                $address_data = array();
+                                $address_data = $orders;
+                                $address_data['building'] = $orders['billing_building'];
+                                $address_data['address'] = $orders['billing_address'];
+                                $address_data['zip'] = $orders['billing_zip'];
+                                $address_data['city'] = $orders['billing_city'];
+                                $address_data['country'] = $orders['billing_country'];
+                                $settings['billing_address_value'] = mslib_befe::customerAddressFormat($address_data);
+                                $settings['customer_edit_link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $orders['customer_id'] . '&action=edit_customer', 1);
+                                $tmpcontent='';
+                                if ($orders['billing_company']) {
+                                    $tmpcontent .= '<strong>' . $orders['billing_company'] . '</strong><br />';
+                                }
+                                if ($orders['billing_department']) {
+                                    $tmpcontent .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+                                }
+                                $tmpcontent .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
+                                ' . $settings['billing_address_value'] . '<br /><br />';
+                                if ($orders['billing_email']) {
+                                    $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
+                                }
+                                if ($orders['billing_telephone']) {
+                                    $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
+                                }
+                                if ($orders['billing_mobile']) {
+                                    $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
+                                }
+                                if ($orders['billing_fax']) {
+                                    $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
+                                }
+                                if ($orders['billing_vat_id']) {
+                                    $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
+                                }
+                                if ($orders['billing_coc_id']) {
+                                    $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
+                                }
+                                break;
+                        }
+                        // hook for adding new items to details fieldset
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsReturnData'])) {
+                            $params = array(
+                                'details_type' => $details_type,
+                                'orders' => $orders,
+                                'settings' => $settings,
+                                'tmpcontent' => &$tmpcontent
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsReturnData'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                            // hook oef
+                        }
+                        $return_data['customer_details'] = $tmpcontent;
                     }
                 } else {
                     $erno_str = '<div class="erno_message well text-danger"><ul>' . implode("\n", $erno) . '</ul></div>';

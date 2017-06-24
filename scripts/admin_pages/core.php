@@ -174,7 +174,16 @@ switch ($this->ms['page']) {
         break;
     case 'admin_new_order':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_new_order.php');
+            if (strstr($this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'], "..")) {
+                die('error in ADMIN_NEW_MANUAL_ORDER_FORM_TYPE value');
+            } else {
+                if (strstr($this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'], "/")) {
+                    // relative mode
+                    require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'] . '.php');
+                } else {
+                    require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_new_order.php');
+                }
+            }
         }
         break;
     case 'admin_processed_manual_order':

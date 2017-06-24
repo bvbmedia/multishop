@@ -1313,37 +1313,49 @@ if (is_numeric($this->get['orders_id'])) {
                 $tmpcontent .= implode("\n", $edit_billing_details);
                 $tmpcontent .= '</div>';
             }
-            $tmpcontent .= '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
+            $billing_details_info = '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['billing_company']) {
-                $tmpcontent .= '<strong>' . $orders['billing_company'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $orders['billing_company'] . '</strong><br />';
             }
             if ($orders['billing_department']) {
-                $tmpcontent .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $orders['billing_department'] . '</strong><br />';
             }
-            $tmpcontent .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
+            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
-                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
+                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
             }
             if ($orders['billing_telephone']) {
-                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
             }
             if ($orders['billing_mobile']) {
-                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
             }
             if ($orders['billing_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
             }
             if ($orders['billing_vat_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
             }
             if ($orders['billing_coc_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
-                $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
+                $billing_details_info .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
             }
-            $tmpcontent .= '</div>';
+            $billing_details_info .= '</div>';
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInfo'])) {
+                $params = array(
+                    'orders' => $orders,
+                    'settings' => $settings,
+                    'billing_details_info' => &$billing_details_info,
+                    'count_validate_erno' => $count_validate_erno
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInfo'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            $tmpcontent.=$billing_details_info;
             $tmpcontent .= '
    	</div></div></div>
 	<div class="col-md-6">
@@ -1580,6 +1592,10 @@ if (is_numeric($this->get['orders_id'])) {
                          var edit_details_container_id="#edit_" + type + "_container";
                          var erno_wrapper_id="#" + type + "_erno_wrapper";
                          if (r.status=="OK") {
+                            if (r.customer_details!=\'\') {
+                                $(details_container_id).empty();
+                                $(details_container_id).html(r.customer_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
+                            }
                             $(details_container_id).show();
                             $(edit_details_container_id).hide();
                          } else if (r.status=="NOTOK") {
@@ -1711,87 +1727,6 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
-                var billing_details 	= "";
-                var building 		= "";
-                var address_data 		= "";
-                 var name="";
-                $("[id^=edit_billing]").each(function(){
-                    if ($(this).attr("id") == "edit_billing_company") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    
-                    ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
-                    if ($(this).attr("id") == "edit_billing_department") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    ' : '') . '
-                    
-                    if ($(this).attr("id") == "edit_billing_first_name") {
-                        name += $(this).val();
-                    }
-                    if ($(this).attr("id") == "edit_billing_middle_name") {
-                        name += " " + $(this).val();
-                    }
-					if ($(this).attr("id") == "edit_billing_last_name") {
-                        name += " " + $(this).val();
-                    }
-                    //
-                    if ($(this).attr("id") == "edit_billing_building") {
-                        if ($(this).val() != "") {
-                            building += $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_street_name") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_address_number") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_address_ext") {
-                        address_data += $(this).val();
-                        address_data_replace = address_data.replace(/\s\s+/g, " ");
-                        billing_details += address_data_replace + "<br/>";
-
-                    } else if ($(this).attr("id") == "edit_billing_zip") {
-                        billing_details += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_city") {
-                        billing_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_billing_region") {
-                        billing_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_billing_country") {
-                        billing_details += $(this).find(\':selected\').text() + "<br/><br/>";
-                    } else if ($(this).attr("id") == "edit_billing_email") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('email') . ': <a href=\"mailto:" + $(this).val() + "\">" + $(this).val() + "</a><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_telephone") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('telephone') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_mobile") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('mobile') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_fax") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('fax') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_vat_id") {
-                        if ($(this).val() != "") {
-                            billing_details += "<strong>' . $this->pi_getLL('vat_id') . ' " + $(this).val() + "</strong><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_coc_id") {
-                        if ($(this).val() != "") {
-                            billing_details += "<strong>' . $this->pi_getLL('coc_id', 'COC Nr.:') . ' " + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                });
-                if (name!="") {
-                	name+="<br/>";
-                }
-                $("#billing_details_container").empty();
-                $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio:checked").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
