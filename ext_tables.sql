@@ -798,6 +798,7 @@ CREATE TABLE `tx_multishop_payment_methods` (
  `cart_minimum_amount` decimal(24,14) default '0.00000000000000',
  `cart_maximum_amount` decimal(24,14) default '0.00000000000000',
  `hash` varchar(127) default '',
+ `payment_condition` varchar(50) default '',
  PRIMARY KEY (`id`),
  KEY `code` (`code`),
  KEY `isp` (`provider`),
@@ -806,7 +807,8 @@ CREATE TABLE `tx_multishop_payment_methods` (
  KEY `sort_order` (`sort_order`),
  KEY `page_uid` (`page_uid`,`zone_id`),
  KEY `enable_on_default` (`enable_on_default`),
- KEY `hash` (`hash`)
+ KEY `hash` (`hash`),
+ KEY `payment_condition` (`payment_condition`)
 );
 
 CREATE TABLE `tx_multishop_payment_methods_description` (
