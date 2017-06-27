@@ -655,6 +655,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'page' => &$page,
                             'content' => &$content,
                             'mail_template' => $mail_template,
+                            'psp_mail_template' => $psp_mail_template,
                             'send_mail' => &$send_mail,
                             'user' => &$user,
                             'order' => $order,
