@@ -84,11 +84,13 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             } else {
                                 $attachments_pdf=$attachments;
                             }
+                            $mail_subject=$this->ms['MODULES']['STORE_NAME'] . ' invoices';
                             $mail_content=$this->ms['MODULES']['STORE_NAME'] . ' invoices';
                             //hook to let other plugins further manipulate the settings
                             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['invoicesMailToMerchantContentBody'])) {
                                 $params = array(
                                     'invoice' => $invoice,
+                                    'mail_subject' => $mail_subject,
                                     'mail_content' => &$mail_content,
                                     'attachments_pdf' => &$attachments_pdf
                                 );
@@ -96,7 +98,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                 }
                             }
-                            if (mslib_fe::mailUser($user, $this->ms['MODULES']['STORE_NAME'] . ' invoices', $mail_content, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments_pdf)) {
+                            if (mslib_fe::mailUser($user, $mail_subject, $mail_content, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments_pdf)) {
                                 $postErno[] = array(
                                     'status' => 'info',
                                     'message' => 'The following invoices are mailed to ' . $user['email'] . ':<ul><li>' . implode('</li><li>', $selected_invoices) . '</li></ul>'
