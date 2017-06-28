@@ -64,9 +64,11 @@ if (isset($this->get['upload']) && $this->get['upload'] == 'export_orders_task' 
 // defining the types
 $array = array();
 $array['orders_id'] = $this->pi_getLL('feed_exporter_fields_label_orders_id');
+$array['order_date'] = $this->pi_getLL('feed_exporter_fields_label_order_date');
 //$array['orders_status']=$this->pi_getLL('feed_exporter_fields_label_orders_status');
 $array['customer_id'] = $this->pi_getLL('feed_exporter_fields_label_customer_id');
 $array['customer_billing_telephone'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_telephone');
+$array['customer_billing_company'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_company');
 $array['customer_billing_email'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_email');
 $array['customer_billing_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_name');
 $array['customer_billing_address'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_address');
@@ -74,6 +76,7 @@ $array['customer_billing_city'] = $this->pi_getLL('feed_exporter_fields_label_cu
 $array['customer_billing_zip'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_zip');
 $array['customer_billing_country'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_country');
 $array['customer_delivery_telephone'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone');
+$array['customer_delivery_company'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company');
 $array['customer_delivery_email'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email');
 $array['customer_delivery_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name');
 $array['customer_delivery_address'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address');
@@ -266,6 +269,20 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				<label class="form-control-static" for="visual_orders_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>&nbsp;
 				<input class="form-control" name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="' . $post_data['visual_orders_date_till'] . '" />&nbsp;
 				<input name="orders_date_till" id="orders_date_till" type="hidden" value="' . $post_data['orders_date_till'] . '" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('duration_date_range')) . '</label>
+			<div class="col-md-10">
+			<span class="input_label_wrapper form-inline">
+				<label for="start_duration">' . htmlspecialchars($this->pi_getLL('start_duration')) . '</label>
+				<input name="start_duration" id="start_duration" type="text" class="form-control" value="' . $post_data['start_duration'] . '" />
+			</span>
+			<span class="input_label_wrapper form-inline">
+				<label for="end_duration">' . htmlspecialchars($this->pi_getLL('end_duration')) . '</label>
+				<input name="end_duration" id="end_duration" type="text" class="form-control" value="' . $post_data['end_duration'] . '" />
+				
+			</span>
 			</div>
 		</div>
 		<div class="form-group">

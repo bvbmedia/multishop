@@ -696,6 +696,7 @@
             <label index="feed_exporter_fields_label_category_link">Category link</label>
             <label index="feed_exporter_fields_label_custom_field_with_values">Custom field with value</label>
             <label index="feed_exporter_fields_label_customer_billing_address">Customer billing address</label>
+            <label index="feed_exporter_fields_label_customer_billing_company">Customer billing company</label>
             <label index="feed_exporter_fields_label_customer_billing_city">Customer billing city</label>
             <label index="feed_exporter_fields_label_customer_billing_country">Customer billing country</label>
             <label index="feed_exporter_fields_label_customer_billing_email">Customer billing e-mail</label>
@@ -703,6 +704,7 @@
             <label index="feed_exporter_fields_label_customer_billing_telephone">Customer billing telephone</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Customer billing zip</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
+            <label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
             <label index="feed_exporter_fields_label_customer_delivery_city">Customer delivery city</label>
             <label index="feed_exporter_fields_label_customer_delivery_country">Customer delivery country</label>
             <label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
@@ -1415,6 +1417,7 @@
             <label index="delete_product_x_from_current_category_x">Delete product %s from category %s</label>
             <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
             <label index="search_in_shop">Search in shop</label>
+            <label index="contact_email">Contact e-mail</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2113,13 +2116,13 @@
             <label index="feed_exporter_fields_label_customer_billing_name">Debiteur (factuur) naam</label>
             <label index="feed_exporter_fields_label_customer_billing_telephone">Debiteur (factuur) telefoonnummer</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Debiteur (factuur) postcode</label>
-            <label index="feed_exporter_fields_label_customer_delivery_address">Debiteur (afleveradres) adres</label>
-            <label index="feed_exporter_fields_label_customer_delivery_city">Debiteur (afleveradres) woonplaats</label>
-            <label index="feed_exporter_fields_label_customer_delivery_country">Debiteur (afleveradres) land</label>
-            <label index="feed_exporter_fields_label_customer_delivery_email">Debiteur (afleveradres) e-mailadres</label>
-            <label index="feed_exporter_fields_label_customer_delivery_name">Debiteur (afleveradres) naam</label>
-            <label index="feed_exporter_fields_label_customer_delivery_telephone">Debiteur (afleveradres) telefoonnummer</label>
-            <label index="feed_exporter_fields_label_customer_delivery_zip">Debiteur (afleveradres) postcode</label>
+            <label index="feed_exporter_fields_label_customer_delivery_address">Debiteur (aflever) adres</label>
+            <label index="feed_exporter_fields_label_customer_delivery_city">Debiteur (aflever) woonplaats</label>
+            <label index="feed_exporter_fields_label_customer_delivery_country">Debiteur (aflever) land</label>
+            <label index="feed_exporter_fields_label_customer_delivery_email">Debiteur (aflever) e-mailadres</label>
+            <label index="feed_exporter_fields_label_customer_delivery_name">Debiteur (aflever) naam</label>
+            <label index="feed_exporter_fields_label_customer_delivery_telephone">Debiteur (aflever) telefoonnummer</label>
+            <label index="feed_exporter_fields_label_customer_delivery_zip">Debiteur (aflever) postcode</label>
             <label index="feed_exporter_fields_label_customer_id">Klantnummer</label>
             <label index="feed_exporter_fields_label_delivery_time">Levertijd</label>
             <label index="feed_exporter_fields_label_foreign_products_id">Refererend artikelnummer (Foreign products id / het unieke artikelnummer uit de feed)</label>
@@ -2809,6 +2812,8 @@
             <label index="delete_product_x_from_all_categories">Verwijder: %s in alle categorieën</label>
             <label index="department">Afdeling</label>
             <label index="search_in_shop">Zoeken in de winkel</label>
+            <label index="feed_exporter_fields_label_customer_billing_company">Debiteur (factuur) bedrijfsnaam</label>
+            <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
         </languageKey>
     </data>
 </T3locallang>

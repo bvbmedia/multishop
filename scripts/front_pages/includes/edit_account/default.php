@@ -57,6 +57,9 @@ if ($this->post) {
     $user['city'] = $this->post['city'];
     $user['country'] = $this->post['country'];
     $user['email'] = $this->post['email'];
+    if (isset($this->post['contact_email'])) {
+        $user['contact_email'] = $this->post['contact_email'];
+    }
     $user['telephone'] = $this->post['telephone'];
     $user['date_of_birth'] = $this->post['date_of_birth'];
     // billing details eof
@@ -673,6 +676,7 @@ if ($this->post) {
     // custom hook that can be controlled by third-party plugin
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'])) {
         $params = array(
+                'user' => $user,
                 'markerArray' => &$markerArray
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'] as $funcRef) {

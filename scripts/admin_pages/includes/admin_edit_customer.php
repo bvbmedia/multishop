@@ -70,6 +70,9 @@ if ($this->post && $this->post['email']) {
         $updateArray['city'] = trim($this->post['city']);
         $updateArray['country'] = trim($this->post['country']);
         $updateArray['email'] = trim($this->post['email']);
+        if (isset($this->post['contact_email'])) {
+            $updateArray['contact_email'] = trim($this->post['contact_email']);
+        }
         $updateArray['www'] = trim($this->post['www']);
         $updateArray['telephone'] = trim($this->post['telephone']);
         $updateArray['mobile'] = trim($this->post['mobile']);
@@ -1276,8 +1279,9 @@ switch ($_REQUEST['action']) {
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
                 $params = array(
-                        'actionButtons' => &$actionButtons,
-                        'customer' => &$user
+                    'actionButtons' => &$actionButtons,
+                    'customer' => &$user,
+                    'markerArray' => &$markerArray
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

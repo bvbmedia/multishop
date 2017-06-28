@@ -87,6 +87,7 @@ if ($this->post) {
             $insertArray['vars'] = serialize($this->post);
             $insertArray['hash'] = md5(uniqid('', true));
             $insertArray['enable_on_default'] = $this->post['enable_on_default'];
+            $insertArray['payment_condition'] = $this->post['payment_condition'];
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($res) {
@@ -129,6 +130,7 @@ if ($this->post) {
             $updateArray['tax_id'] = $this->post['tax_id'];
             $updateArray['vars'] = serialize($this->post);
             $updateArray['enable_on_default'] = $this->post['enable_on_default'];
+            $updateArray['payment_condition'] = $this->post['payment_condition'];
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\'' . $row['id'] . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             foreach ($this->post['name'] as $key => $value) {
@@ -327,16 +329,29 @@ if ($this->get['edit']) {
     if (strpos($row['handling_costs'], '%') !== false) {
         $percentage_cost = true;
     }
+    $payment_condition_input='';
+    if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD']>0) {
+        $payment_condition_input = '
+        <div class="form-group">
+            <label class="control-label col-md-2">' . $this->pi_getLL('payment_condition') . '</label>
+            <div class="col-md-10">
+                <div class="msAttribute">
+                    <div class="msAttributesField"><div class="input-group"><input type="text" name="payment_condition" id="payment_condition" class="form-control" value="' . $row['payment_condition'] . '"><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>
+                </div>
+            </div>
+        </div>
+        ';
+    }
     $tmpcontent .= '
 		<div class="form-group">
 			<label class="control-label col-md-2">' . $this->pi_getLL('handling_costs_type') . '</label>
 			<div class="col-md-10">
-			<div class="msAttribute">
-				<select name="handling_costs_type" id="handling_cost_type" class="form-control">
-					<option value="amount"' . (!$percentage_cost ? ' selected="selected"' : '') . '>amount</option>
-					<option value="percentage"' . ($percentage_cost ? ' selected="selected"' : '') . '>percentage</option>
-				</select>
-			</div>
+                <div class="msAttribute">
+                    <select name="handling_costs_type" id="handling_cost_type" class="form-control">
+                        <option value="amount"' . (!$percentage_cost ? ' selected="selected"' : '') . '>amount</option>
+                        <option value="percentage"' . ($percentage_cost ? ' selected="selected"' : '') . '>percentage</option>
+                    </select>
+                </div>
 			</div>
 		</div>
 		<div class="form-group" id="handling_cost_percentage_div"' . (!$percentage_cost ? ' style="display:none"' : '') . '>
@@ -409,6 +424,7 @@ if ($this->get['edit']) {
 		</select>
 		</div>
 	</div>
+	    '.$payment_condition_input.'
 		' . $inner_content . '
 		<div class="form-group">
 			<label class="control-label col-md-2">' . $this->pi_getLL('admin_label_method_is_enabled_on_default') . '</label>
@@ -466,6 +482,19 @@ if ($this->get['edit']) {
         }
         if (!isset($psp['vars']['order_payment_reminder'])) {
             $psp['vars']['order_payment_reminder']['type'] = 'psp_mail_template_payment_reminder_email_templates';
+        }
+        $payment_condition_input='';
+        if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD']>0) {
+            $payment_condition_input = '
+        <div class="form-group">
+            <label class="control-label col-md-2">' . $this->pi_getLL('payment_condition') . '</label>
+            <div class="col-md-10">
+                <div class="msAttribute">
+                    <div class="msAttributesField"><div class="input-group"><input type="text" name="payment_condition" id="payment_condition" class="form-control" value="' . $row['payment_condition'] . '"><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>
+                </div>
+            </div>
+        </div>
+        ';
         }
         $tmpcontent .= '<form class="form-horizontal edit_form" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '" id="add_payment_form" method="post">';
         foreach ($this->languages as $key => $language) {
@@ -565,6 +594,7 @@ if ($this->get['edit']) {
 		</div>
 	</div>
 		';
+        $tmpcontent.=$payment_condition_input;
         // js definition for tax
         $product_tax_rate_js = array();
         $product_tax_rate_js[] = 'var product_tax_rate_list_js=[];';

@@ -36,6 +36,8 @@ if (mslib_fe::loggedin()) {
             $array2[] = $last_name;
             $array1[] = '###CUSTOMER_EMAIL###';
             $array2[] = $newCustomer['email'];
+            $array1[] = '###CONTACT_EMAIL###';
+            $array2[] = $newCustomer['contact_email'];
             $array1[] = '###BILLING_EMAIL###';
             $array2[] = $newCustomer['email'];
             $array1[] = '###BILLING_ADDRESS###';

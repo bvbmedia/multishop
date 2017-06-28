@@ -1017,9 +1017,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $cart['user']['payment_method_costs_including_vat'] = $cart['user']['payment_method_costs'] + $payment_tax;
                 }
                 // discount
-                if (!$cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and $cart['user']['email']) {
+                if (!$cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+                    $guest_email=$cart['user']['email'];
+                    if (!$guest_email) {
+                        $guest_email=$this->post['tx_multishop_pi1']['email'];
+                    }
                     // check if guest user is already in the database and if so add possible group discount
-                    $user_check = mslib_fe::getUser($cart['user']['email'], 'email');
+                    $user_check = mslib_fe::getUser($guest_email, 'email');
                     if ($user_check['uid']) {
                         $discount_percentage = mslib_fe::getUserGroupDiscount($user_check['uid']);
                         if ($discount_percentage) {
@@ -1527,6 +1531,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['gender'] = '0';
             } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
                 $insertArray['gender'] = '1';
+            }
+            if (isset($address['contact_email']) && !empty($address['contact_email'])) {
+                $insertArray['contact_email'] = $address['contact_email'];
             }
             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);

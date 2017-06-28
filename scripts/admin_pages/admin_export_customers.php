@@ -83,10 +83,16 @@ $array['customer_address'] = $this->pi_getLL('customers') . ' ' . $this->pi_getL
 $array['customer_city'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('city');
 $array['customer_zip'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('admin_zip');
 $array['customer_country'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('country');
-$array['orders_id'] = $this->pi_getLL('feed_exporter_fields_label_orders_id');
 $array['customer_gender'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('gender');
 $array['customer_username'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('username');
 $array['customer_tx_multishop_newsletter'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('newsletter');
+$array['customer_salutation'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('admin_label_gender_salutation');
+$array['customer_department'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('department');
+$array['customer_vat_id'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('vat_id');
+$array['customer_coc_id'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('coc_id');
+$array['customer_contact_email'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('contact_email');
+$array['customer_payment_condition'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('payment_condition');
+$array['customer_usergroups'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('usergroup');
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_customers.php']['adminExportCustomersColtypesHook'])) {
     $params = array(
@@ -202,6 +208,20 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('duration_date_range')) . '</label>
+			<div class="col-md-10">
+			<span class="input_label_wrapper form-inline">
+				<label for="start_duration">' . htmlspecialchars($this->pi_getLL('start_duration')) . '</label>
+				<input name="start_duration" id="start_duration" type="text" class="form-control" value="' . $post_data['start_duration'] . '" />
+			</span>
+			<span class="input_label_wrapper form-inline">
+				<label for="end_duration">' . htmlspecialchars($this->pi_getLL('end_duration')) . '</label>
+				<input name="end_duration" id="end_duration" type="text" class="form-control" value="' . $post_data['end_duration'] . '" />
+				
+			</span>
 			</div>
 		</div>
 		<div class="form-group">

@@ -69,6 +69,16 @@ if ($this->post['proceed_order']) {
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
         $insertArray['tx_multishop_newsletter'] = (!$this->post['tx_multishop_newsletter_manual'] ? 0 : 1);
         $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderFEUsersPreHook'])) {
+            // hook
+            $params = array(
+                'insertArray' => &$insertArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderFEUsersPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+            // hook eof
+        }
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {
@@ -160,7 +170,7 @@ if ($this->post['proceed_order']) {
                 $insertArray['delivery_middle_name'] = $delivery_address['middle_name'];
                 $insertArray['delivery_last_name'] = $delivery_address['last_name'];
                 $insertArray['delivery_mobile'] = $delivery_address['mobile'];
-                $insertArray['delivery_gender'] = $insertArray['gender'];
+                $insertArray['delivery_gender'] = $delivery_address['gender'];
                 $insertArray['delivery_building'] = $delivery_address['building'];
                 $insertArray['delivery_department'] = $delivery_address['department'];
                 $insertArray['delivery_street_name'] = $delivery_address['street_name'];
@@ -251,7 +261,7 @@ if ($this->post['proceed_order']) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'])) {
             // hook
             $params = array(
-                    'insertArray' => &$insertArray
+                'insertArray' => &$insertArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
