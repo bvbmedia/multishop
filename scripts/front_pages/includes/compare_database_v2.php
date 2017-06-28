@@ -550,9 +550,9 @@ if ($rows) {
             }
         }
     }
-    $query = "update fe_users set gender=0 where gender='m'";
+    $query = "update fe_users set gender=0 where gender='m' and gender != '0' and gender != '1'";
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-    $query = "update fe_users set gender=1 where gender='f'";
+    $query = "update fe_users set gender=1 where gender='f' and gender != '0' and gender != '1'";
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     $str = "select billing_street_name from tx_multishop_orders limit 1";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
