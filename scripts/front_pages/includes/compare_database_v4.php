@@ -534,4 +534,8 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$query = "update tt_address set gender='m' where gender='0'";
+$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+$query = "update tt_address set gender='f' where gender='1'";
+$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 ?>
