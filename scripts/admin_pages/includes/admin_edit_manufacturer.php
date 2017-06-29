@@ -577,7 +577,8 @@ jQuery(document).ready(function ($) {
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersPreProc'])) {
         $params = array(
                 'js_extra' => &$js_extra,
-                'subpartArray' => &$subpartArray
+                'subpartArray' => &$subpartArray,
+                'manufacturer' => &$manufacturer
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersPreProc'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
