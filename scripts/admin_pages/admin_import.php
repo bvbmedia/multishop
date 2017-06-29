@@ -1394,7 +1394,7 @@ if ($this->post['action'] == 'category-insert') {
                             // if aux is defined use that value as option name. else use the field option name.
                             if ($this->post['input'][$i]) {
                                 if (strstr($this->post['input'][$i], "|")) {
-                                    // sometimes aux is also containing a delimiter sign, so many values depending on one product can be send through. the sign for this is dash (|)
+                                    // sometimes aux is also containing a delimiter sign, so many values depending on one product can be send through. the sign for this is pipe (|)
                                     $tmp = explode("|", $this->post['input'][$i]);
                                     $key = $tmp[0];
                                     $delimiter = $tmp[1];
