@@ -151,7 +151,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $invoice_id = $this->post['tx_multishop_pi1']['invoice_id'];
         $invoice_nr = $this->post['tx_multishop_pi1']['invoice_nr'];
         $return_data['status'] = 'NOTOK';
-        $return_data['status'] = 'NOTOK';
         if (is_numeric($invoice_id)) {
             $invoice = mslib_fe::getInvoice($invoice_id, 'id');
             if ($invoice['id']) {
