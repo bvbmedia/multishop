@@ -8736,7 +8736,12 @@ class mslib_fe {
             if ($payment_method['provider'] == 'generic' && isset($payment_method_vars['success_status']) && is_numeric($payment_method_vars['success_status']) && $payment_method_vars['success_status'] > 0) {
                 $updateArray['status'] = $payment_method_vars['success_status'];
             }
-            $updateArray['orders_paid_timestamp'] = $timestamp;
+            if (isset($this->post['tx_multishop_pi1']['date_paid'])) {
+                $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                $updateArray['orders_paid_timestamp'] = $date_paid;
+            } else {
+                $updateArray['orders_paid_timestamp'] = $timestamp;
+            }
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $orders_id, $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {
