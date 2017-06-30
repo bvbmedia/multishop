@@ -110,6 +110,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###BILLING_COMPANY###'] = '';
         }
         $markerArray['###BILLING_NAME###'] = $order['billing_name'];
+        $markerArray['###BILLING_DEPARTMENT###']='';
+        if ($order['billing_department'] != '') {
+            $markerArray['###BILLING_DEPARTMENT###'] = $order['billing_department'];
+        }
         $markerArray['###BILLING_BUILDING###'] = $order['billing_building'];
         if (strpos($template, '###BILLING_BUILDING###') === false && $order['billing_building'] != '') {
             $order['billing_address'] = $order['billing_building'] . '<br/>' . $order['billing_address'];
