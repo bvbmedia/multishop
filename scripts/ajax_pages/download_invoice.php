@@ -105,7 +105,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // billing address
         if (!empty($order['billing_company'])) {
-            $markerArray['###BILLING_COMPANY###'] = '<strong>' . $order['billing_company'] . '</strong><br/>';
+            $markerArray['###BILLING_COMPANY###'] = $order['billing_company'] . '<br/>';
         } else {
             $markerArray['###BILLING_COMPANY###'] = '';
         }
@@ -130,7 +130,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###BILLING_COUNTRY_RAW###'] = mslib_befe::strtoupper(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country'])) . '<br/>';
         // delivery address
         if (!empty($order['delivery_company'])) {
-            $markerArray['###DELIVERY_COMPANY###'] = '<strong>' . $order['delivery_company'] . '</strong><br/>';
+            $markerArray['###DELIVERY_COMPANY###'] = $order['delivery_company'] . '<br/>';
         } else {
             $markerArray['###DELIVERY_COMPANY###'] = '';
         }
