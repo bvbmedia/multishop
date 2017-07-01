@@ -575,10 +575,12 @@ switch ($this->ms['page']) {
                     }
                 }
                 if (!count($tmp_preselecteds) || (count($tmp_preselecteds) === 1 && !$tmp_preselecteds[0]) || !count($tmp_return_data)) {
-                    $return_data[] = array(
-                            'id' => 0,
-                            'text' => $this->pi_getLL('admin_main_category')
-                    );
+                    if (!isset($this->get['tx_multishop_pi1']['no_extra_label'])) {
+                        $return_data[] = array(
+                                'id' => 0,
+                                'text' => $this->pi_getLL('admin_main_category')
+                        );
+                    }
                 }
                 break;
             case 'getTree':
@@ -623,10 +625,12 @@ switch ($this->ms['page']) {
                             mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);
                         }
                     }
-                    $return_data[] = array(
-                            'id' => 0,
-                            'text' => $this->pi_getLL('admin_main_category')
-                    );
+                    if (!isset($this->get['tx_multishop_pi1']['no_extra_label'])) {
+                        $return_data[] = array(
+                                'id' => 0,
+                                'text' => $this->pi_getLL('admin_main_category')
+                        );
+                    }
                 }
                 break;
             case'getFullTree':
