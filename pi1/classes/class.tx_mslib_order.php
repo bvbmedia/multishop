@@ -1390,6 +1390,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_mobile'] = $address['mobile'];
             $insertArray['billing_fax'] = '';
             $insertArray['billing_vat_id'] = $address['tx_multishop_vat_id'];
+            $insertArray['billing_building'] = $address['building'];
+            $insertArray['billing_department'] = $address['department'];
             if (!$address['different_delivery_address']) {
                 $insertArray['delivery_email'] = $insertArray['billing_email'];
                 $insertArray['delivery_company'] = $insertArray['billing_company'];
@@ -1419,6 +1421,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_region'] = $insertArray['billing_region'];
                 $insertArray['delivery_name'] = $insertArray['billing_name'];
                 $insertArray['delivery_vat_id'] = $insertArray['billing_vat_id'];
+                $insertArray['delivery_building'] = $insertArray['billing_building'];
+                $insertArray['delivery_department'] = $insertArray['billing_department'];
             } else {
                 $insertArray['delivery_company'] = $address['delivery_company'];
                 $insertArray['delivery_first_name'] = $address['delivery_first_name'];
@@ -1452,6 +1456,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_mobile'] = $address['delivery_mobile'];
                 $insertArray['delivery_fax'] = '';
                 $insertArray['delivery_vat_id'] = $address['delivery_vat_id'];
+                $insertArray['delivery_building'] = $address['delivery_building'];
+                $insertArray['delivery_department'] = $address['delivery_department'];
             }
             $insertArray['bill'] = 1;
             if ($address['forceCustomCrdate']) {
