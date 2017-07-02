@@ -2132,6 +2132,20 @@ class mslib_fe {
         }
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplate'])) {
+            $params = array(
+                    'user' => &$user,
+                    'subject' => &$subject,
+                    'body' => &$body,
+                    'from_email' => &$from_email,
+                    'from_name' => &$from_name,
+                    'attachments' => &$attachments,
+                    'options' => &$options
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplate'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($user['email']) {
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/PHPMailer/PHPMailerAutoload.php');
             $mail = new PHPMailer;
