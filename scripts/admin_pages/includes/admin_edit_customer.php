@@ -312,7 +312,7 @@ if ($this->post && $this->post['email']) {
                 if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
                     foreach ($this->post['payment_method'] as $payment_method_id => $value) {
                         $updateArray = array();
-                        $this->post['delivery_customers_id'] = $customer_id;
+                        $updateArray['customers_id'] = $customer_id;
                         $updateArray['method_id'] = $payment_method_id;
                         $updateArray['type'] = 'payment';
                         $updateArray['negate'] = $value;
