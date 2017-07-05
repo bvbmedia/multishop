@@ -224,6 +224,26 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
             }
         }
         $order_status_sb .= '</select>';
+        // shipping methods
+        $shipping_methods = mslib_fe::loadShippingMethods();
+        // shipping methods selectbox
+        $shipping_method_sb = '<select name="shipping_method" class="form-control">
+			<option value="all"' . ($post_data['shipping_method'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
+		';
+        foreach ($shipping_methods as $shipping_method) {
+            $shipping_method_sb .= '<option value="'.$shipping_method['code'].'"' . ($post_data['shipping_method'] == $shipping_method['code'] ? ' selected="selected"' : '') . '>' . $shipping_method['name'] . '</option>';
+        }
+        $shipping_method_sb .= '</select>';
+        // payment methods
+        $payment_methods = mslib_fe::loadPaymentMethods();
+        // payment methods selectbox
+        $payment_method_sb = '<select name="payment_method" class="form-control">
+			<option value="all"' . ($post_data['payment_method'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
+		';
+        foreach ($payment_methods as $payment_method) {
+            $payment_method_sb .= '<option value="'.$payment_method['code'].'"' . ($post_data['payment_method'] == $payment_method['code'] ? ' selected="selected"' : '') . '>' . $payment_method['name'] . '</option>';
+        }
+        $payment_method_sb .= '</select>';
         // payment status selectbox
         $payment_status_sb = '<select name="payment_status" class="form-control">
 			<option value="all"' . ($post_data['payment_status'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
@@ -303,6 +323,18 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_payment_status')) . '</label>
 			<div class="col-md-10">
 			' . $payment_status_sb . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('shipping_method')) . '</label>
+			<div class="col-md-10">
+			' . $shipping_method_sb . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('payment_method')) . '</label>
+			<div class="col-md-10">
+			' . $payment_method_sb . '
 			</div>
 		</div>
 		<div class="form-group">
