@@ -644,6 +644,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             }
                             $row[$col] = $options_selectbox_html;
                             break;
+                        case 'nl2br':
+                            if (!empty($row[$col])) {
+                                $row[$col] = nl2br($row[$col]);
+                            }
+                            break;
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['href']) {

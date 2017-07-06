@@ -69,6 +69,12 @@ if ($this->get['orders_export_hash']) {
         } else if ($post_data['payment_status'] == 'unpaid') {
             $filter[] = "(o.paid='0')";
         }
+        if (isset($post_data['shipping_method']) && !empty($post_data['shipping_method']) && $post_data['shipping_method']!='all') {
+            $filter[] = "(o.shipping_method='".addslashes($post_data['shipping_method'])."')";
+        }
+        if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method']!='all') {
+            $filter[] = "(o.payment_method='".addslashes($post_data['payment_method'])."')";
+        }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
         }

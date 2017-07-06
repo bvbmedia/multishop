@@ -61,13 +61,13 @@ if ($this->post['req'] == 'init') {
 					SELECT pd.products_id,
 						   pd.products_name,
 						   p2c.categories_id,
-						   c.categories_name,
+						   cd.categories_name,
 						   p.products_status
 					FROM tx_multishop_products p,
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
-					INNER JOIN tx_multishop_categories_description c ON p2c.categories_id = c.categories_id
-					' . $where_A . ' AND (p2c.categories_id = ' . $row['categories_id'] . ') and p2c.is_deepest=1 and pd.language_id=' . $this->sys_language_uid . ' and c.language_id=' . $this->sys_language_uid . '
+					INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
+					' . $where_A . ' AND (p2c.categories_id = ' . $row['categories_id'] . ') and p2c.is_deepest=1 and pd.language_id=' . $this->sys_language_uid . ' and cd.language_id=' . $this->sys_language_uid . '
 					group by p.products_id ORDER BY pd.products_name ASC';
                     //var_dump($query2);
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
@@ -171,21 +171,21 @@ if ($this->post['req'] == 'init') {
         $relation_type='search';
         $filter = array();
         //if (is_array($relations_data) and count($relations_data)) {
-        //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
+        //$filter[] = 'pd.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         //}
         if (strlen($this->post['keypas']) > 1) {
-            $filter[] = "A.products_name LIKE '%" . trim(mslib_befe::strtolower($this->post['keypas'])) . "%'";
+            $filter[] = "pd.products_name LIKE '%" . trim(mslib_befe::strtolower($this->post['keypas'])) . "%'";
         }
-        $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "' and A.products_id=p.products_id";
+        $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "' and pd.products_id=p.products_id";
         if (is_array($relations_data) and count($relations_data)) {
-            //$filter[] = 'A.products_id NOT IN (' . implode(', ', $relations_data) . ')';
+            //$filter[] = 'pd.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         }
         $subcat_query = '';
         if ($this->post['s_cid'] > 0) {
             $subcats = mslib_fe::get_subcategory_ids($this->post['s_cid'], $subcats);
-            $subcat_queries[] = 'B.categories_id = ' . $this->post['s_cid'];
+            $subcat_queries[] = 'p2c.categories_id = ' . $this->post['s_cid'];
             foreach ($subcats as $subcat_id) {
-                $subcat_queries[] = 'B.categories_id = ' . $subcat_id;
+                $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
             }
             $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
             $filter[] = $subcat_query;
@@ -194,11 +194,11 @@ if ($this->post['req'] == 'init') {
             $filter[] = 'p.is_hidden=0';
         }
         //die($where);
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('B.categories_id,C.categories_name', // SELECT ...
-                'tx_multishop_products p, tx_multishop_products_description A INNER JOIN tx_multishop_products_to_categories B ON A.products_id = B.products_id INNER JOIN tx_multishop_categories_description C ON B.categories_id = C.categories_id', // FROM ...
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id,cd.categories_name', // SELECT ...
+                'tx_multishop_products p, tx_multishop_products_description pd INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id', // FROM ...
                 implode(" AND ", $filter), // WHERE...
-                'C.categories_id', // GROUP BY...
-                'C.categories_name ASC', // ORDER BY...
+                'cd.categories_id', // GROUP BY...
+                'cd.categories_name ASC', // ORDER BY...
                 '' // LIMIT ...
         );
         //	error_log($query);
@@ -209,12 +209,12 @@ if ($this->post['req'] == 'init') {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
                 if ($row['categories_name']) {
                     $productFilter = $filter;
-                    $productFilter[] = '(B.categories_id = ' . $row['categories_id'] . ' and B.is_deepest=1 and A.products_id <> ' . $this->post['pid'] . ')';
-                    $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('A.products_id, A.products_name, B.categories_id,C.categories_name, p.products_status', // SELECT ...
-                            'tx_multishop_products p, tx_multishop_products_description A INNER JOIN tx_multishop_products_to_categories B ON A.products_id = B.products_id INNER JOIN tx_multishop_categories_description C ON B.categories_id = C.categories_id', // FROM ...
+                    $productFilter[] = '(p2c.categories_id = ' . $row['categories_id'] . ' and p2c.is_deepest=1 and pd.products_id <> ' . $this->post['pid'] . ')';
+                    $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_id, pd.products_name, p2c.categories_id,cd.categories_name, p.products_status', // SELECT ...
+                            'tx_multishop_products p, tx_multishop_products_description pd INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id', // FROM ...
                             implode(" AND ", $productFilter), // WHERE...
                             'p.products_id', // GROUP BY...
-                            'A.products_name ASC', // ORDER BY...
+                            'pd.products_name ASC', // ORDER BY...
                             '' // LIMIT ...
                     );
                     //error_log($query2);
