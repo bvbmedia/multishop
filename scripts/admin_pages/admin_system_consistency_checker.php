@@ -221,7 +221,7 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         }
     }
 }
-$str = "SELECT manufacturers_id from tx_multishop_manufacturers where manufacturers_id NOT IN (SELECT manufacturers_id from tx_multishop_products)";
+$str = "SELECT manufacturers_id from tx_multishop_manufacturers where manufacturers_id NOT IN (SELECT manufacturers_id from tx_multishop_products group by manufacturers_id)";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
