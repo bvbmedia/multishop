@@ -256,6 +256,7 @@ CREATE TABLE `tx_multishop_countries_to_zones` (
  `id` int(11) NOT NULL auto_increment,
  `zone_id` int(4) default '0',
  `cn_iso_nr` int(11) default '0',
+ `hide_in_frontend` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  UNIQUE KEY `cn_iso_nr` (`cn_iso_nr`),
  UNIQUE KEY `zone_id` (`zone_id`,`cn_iso_nr`)
@@ -1494,6 +1495,7 @@ CREATE TABLE `tx_multishop_undo_products` (
 CREATE TABLE `tx_multishop_zones` (
  `id` int(4) NOT NULL auto_increment,
  `name` varchar(50) default '',
+ `hide_in_frontend` tinyint(1) default '0',
  PRIMARY KEY (`id`)
 );
 
