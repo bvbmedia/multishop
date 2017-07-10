@@ -707,7 +707,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 tx_mslib_cart::storeCart($cart);
             }
             // group discount
-            if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+            if ($GLOBALS['TSFE']->fe_user->user['uid'] && (!$cart['coupon_code'] && !$cart['discount_amount'])) {
                 $discount = mslib_fe::getUserGroupDiscount($GLOBALS['TSFE']->fe_user->user['uid']);
                 if ($discount) {
                     $cart['coupon_discount'] = $discount;
