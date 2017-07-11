@@ -52,9 +52,9 @@ if ($this->get['orders_export_hash']) {
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
         if (!empty($post_data['start_duration'])) {
-            $start_duration = strtotime($post_data['start_duration']);
+            $start_duration = strtotime(date('Y-m-d 00:00:00', strtotime($post_data['start_duration'])));
             if (!empty($post_data['end_duration'])) {
-                $end_duration = strtotime($post_data['end_duration'], $start_duration);
+                $end_duration = strtotime(date('Y-m-d 23:59:59', strtotime($post_data['end_duration'])));
             } else {
                 $end_duration = time();
             }
