@@ -790,9 +790,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function getCart() {
         $cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         // custom hook that can be controlled by third-party plugin
+        $no_discount=false;
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
             $params = array(
-                    'cart' => &$cart
+                    'cart' => &$cart,
+                    'no_discount' => &$no_discount,
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1017,7 +1019,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $cart['user']['payment_method_costs_including_vat'] = $cart['user']['payment_method_costs'] + $payment_tax;
                 }
                 // discount
-                if (!$cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+                if (!$cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email']) && !$no_discount) {
                     $guest_email=$cart['user']['email'];
                     if (!$guest_email) {
                         $guest_email=$this->post['tx_multishop_pi1']['email'];

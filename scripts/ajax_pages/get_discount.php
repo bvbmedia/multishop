@@ -3,21 +3,35 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+$mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart->init($this);
+$cart = $mslib_cart->getCart();
 $content = '0%';
 // first check group discount
-if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
-    $discount_percentage = mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
-    if ($discount_percentage) {
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $cart['coupon_code'] = '';
-        $cart['discount'] = $discount_percentage;
-        $cart['discount_type'] = 'percentage';
-        //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-        //$GLOBALS['TSFE']->fe_user->storeSessionData();
-        tx_mslib_cart::storeCart($cart);
-        $content = number_format($discount_percentage) . '%';
+if ($GLOBALS["TSFE"]->fe_user->user['uid'] || ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+    $customer_id=$GLOBALS["TSFE"]->fe_user->user['uid'];
+    if (!$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+        $guest_email=$cart['user']['email'];
+        if (!$guest_email) {
+            $guest_email=$this->post['tx_multishop_pi1']['email'];
+        }
+        // check if guest user is already in the database and if so add possible group discount
+        $user_check = mslib_fe::getUser($guest_email, 'email');
+        if ($user_check['uid']) {
+            $customer_id = $user_check['uid'];
+        }
+    }
+    if ($customer_id>0) {
+        $discount_percentage = mslib_fe::getUserGroupDiscount($customer_id);
+        if ($discount_percentage) {
+            $cart['coupon_code'] = '';
+            $cart['discount'] = $discount_percentage;
+            $cart['discount_type'] = 'percentage';
+            //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+            //$GLOBALS['TSFE']->fe_user->storeSessionData();
+            tx_mslib_cart::storeCart($cart);
+            $content = number_format($discount_percentage) . '%';
+        }
     }
 }
 //if(!$discount_percentage)
