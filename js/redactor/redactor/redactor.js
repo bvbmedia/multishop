@@ -187,7 +187,7 @@
 		linkSize: 30,
 		pasteLinkTarget: false,
 
-		videoContainerClass: 'video-container',
+		videoContainerClass: 'embed-responsive embed-responsive-16by9 video-container',
 
 		toolbar: true,
 		toolbarFixed: true,
