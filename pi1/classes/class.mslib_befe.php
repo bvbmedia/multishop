@@ -4444,20 +4444,20 @@ class mslib_befe {
                                 $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">&nbsp;</td>';
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
-                        }
-                        //hook to let other plugins further manipulate the replacers
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
-                            $params_internal = array(
-                                    'attributeMarkerArray' => &$attributeMarkerArray,
-                                    'table_type' => $table_type,
-                                    'product' => $product,
-                                    'options' => $options,
-                            );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
-                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                            //hook to let other plugins further manipulate the replacers
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
+                                $params_internal = array(
+                                        'attributeMarkerArray' => &$attributeMarkerArray,
+                                        'table_type' => $table_type,
+                                        'product' => $product,
+                                        'options' => $options,
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                                }
                             }
+                            $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                         }
-                        $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
                 if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {
