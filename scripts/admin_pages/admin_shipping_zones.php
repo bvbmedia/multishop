@@ -18,16 +18,22 @@ if ($this->post) {
                 $insertArray = array();
                 $insertArray['zone_id'] = $this->post['zone_id'];
                 $insertArray['cn_iso_nr'] = $country;
+                $insertArray['hide_in_frontend'] = isset($this->post['hide_zone']) ? 1 : 0;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_countries_to_zones', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
         }
+        $updateArray = array();
+        $updateArray['hide_in_frontend'] = isset($this->post['hide_zone']) ? 1 : 0;
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_zones', 'id=\'' .  $this->post['zone_id'] . '\'', $updateArray);
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     }
     // add countries to a specific zone eof
     // add new zone name
     if ($this->post['zone_name']) {
         $insertArray = array();
         $insertArray['name'] = $this->post['zone_name'];
+        $insertArray['hide_in_frontend'] = isset($this->post['hide_zone']) ? 1 : 0;
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_zones', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     }
@@ -75,6 +81,20 @@ foreach ($zones as $zone) {
                 $counter++;
             }
             $content .= '</ul>
+            <hr>
+            <div class="form-group">
+                <label class="control-label col-md-2">'.$this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend').'</label>
+                <div class="col-md-10">
+                    <div class="label_value_container">
+                        <div class="twocols_ul">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input id="hide_zone'.$this->get['zone_id'].'" name="hide_zone" type="checkbox" value="'.$this->get['zone_id'].'"'.($zone['hide_in_frontend']>0 ? ' checked="checked"' : '').'>
+                                <label for="hide_zone'.$this->get['zone_id'].'">'.$this->pi_getLL('yes').'</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>	
+            </div>		
 			<hr>
 			<div class="clearfix">
 			<div class="pull-right">
@@ -93,7 +113,18 @@ foreach ($zones as $zone) {
             while (($country = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 $content .= '<li class="zone_item_country"><i class=" fa-li fa fa-square"></i>' . mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']) . '</li>';
             }
-            $content .= '</ul>';
+            $content .= '</ul>
+            <div class="form-group">
+                <label class="control-label col-md-2">'.$this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend').'</label>
+                <div class="col-md-10">
+                    <div class="label_value_container">
+                        <div class="twocols_ul">
+                            <p class="static">'.($zone['hide_in_frontend'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</p>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
         } else {
             $content .= $this->pi_getLL('admin_label_current_no_countries_mapped_to_this_zone');
         }

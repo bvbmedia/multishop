@@ -538,4 +538,20 @@ $query = "update tt_address set gender='m' where gender='0'";
 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
 $query = "update tt_address set gender='f' where gender='1'";
 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+// hide zone
+$str = "select `hide_in_frontend` from tx_multishop_zones limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_zones` ADD `hide_in_frontend` tinyint(1) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+// hide zone
+$str = "select `hide_in_frontend` from tx_multishop_countries_to_zones limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_countries_to_zones` ADD `hide_in_frontend` tinyint(1) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
 ?>
