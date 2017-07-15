@@ -16,7 +16,7 @@ function populateRelatedProduct(data) {
                         if ($(existing_fieldset_id).length > 0) {
                             if (related_data[relation_type].products.length > 0) {
                                 $.each(related_data[relation_type].products, function (i, products_data) {
-                                    var existing_cb = '#" + relation_type + "_cb_' + categories_id + '_' + products_data.id;
+                                    var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
                                     if ($(existing_cb).length == 0) {
                                         if (products_data.checked == 1) {
                                             html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
