@@ -911,3 +911,22 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
+
+.redactor-styles a.btn-danger,
+.redactor-styles a.btn-danger:hover,
+.redactor-styles a.btn-danger:focus,
+.redactor-styles a.btn-info,
+.redactor-styles a.btn-info:hover,
+.redactor-styles a.btn-info:focus,
+.redactor-styles a.btn-success,
+.redactor-styles a.btn-success:hover,
+.redactor-styles a.btn-success:focus,
+.redactor-styles a.btn-warning,
+.redactor-styles a.btn-warning:hover,
+.redactor-styles a.btn-warning:focus { color:#fff; text-decoration:none; }
+
+.main_related_data_categories_name_listing ul { margin-left:0; padding-left:0; list-style:none; }
+
+.form-control,
+.select2-container .select2-choice > .select2-chosen,
+.select2-default { font-weight:normal; }
