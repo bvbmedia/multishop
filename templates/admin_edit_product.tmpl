@@ -4,6 +4,7 @@
 function populateRelatedProduct(data) {
     var relations_type=['main','sub','search'];
     if (data.related_product!=undefined) {
+        $("#search_related_product_placeholder").empty();
         $('.cekbox:not(:checked)').parent().parent().remove();
         //$('.checkAll:not(:checked)').parent().parent().remove();
         $.each(data.related_product, function (categories_id, related_data) {
@@ -101,6 +102,12 @@ function populateRelatedProduct(data) {
         });
         if ($("#related_product_placeholder").children().length=='0'){
             $("#related_product_placeholder").empty();
+        }
+
+        $("#search_block_panel").show();
+        $("#search_related_product_placeholder").empty();
+        if (data.no_records_found!=undefined) {
+            $("#search_related_product_placeholder").html(data.no_records_found);
         }
     }
     $('#load').hide();

@@ -263,9 +263,12 @@ if ($this->post['req'] == 'init') {
                         }
                     } else {
                         $json_data['related_product'] = 0;
+                        $json_data['no_records_found']=$this->pi_getLL('no_records_found');
                     }
                 }
             }
+        } else {
+            $json_data['no_records_found']=$this->pi_getLL('no_records_found');
         }
     } else {
         if ($this->post['req'] == 'save') {
