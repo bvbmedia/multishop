@@ -157,7 +157,7 @@ if ($this->ADMIN_USER) {
                     }
                     $productsName = '<a href="' . $productLink . '" target="_blank">' . $product['products_name'] . '</a>';
                     if ($product['products_description']) {
-                        $productsName .= '<br/>' . $product['products_description'];
+                        $productsName .= '<br/>' . nl2br($product['products_description']);
                     }
                     $jsonData_content .= '<tr class="' . $tr_subtype . '">
 					<td class="cellFixed cellNoWrap text-right"><a href="' . $productLink . '" target="_blank">' . $product['products_id'] . '</a></td>

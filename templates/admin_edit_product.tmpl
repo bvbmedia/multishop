@@ -20,9 +20,9 @@ function populateRelatedProduct(data) {
                                     var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
                                     if ($(existing_cb).length == 0) {
                                         if (products_data.checked == 1) {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                         } else {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                         }
                                     }
                                 });
@@ -38,26 +38,21 @@ function populateRelatedProduct(data) {
                                     var sub_product_eid='#sub_cb_' + categories_id + '_' + products_data.id;
                                     if ($(main_product_eid).length<1 && $(sub_product_eid).length<1) {
                                         if (products_data.checked == 1) {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                             checked_rp++;
                                         } else {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                         }
                                     }
                                 } else {
                                     if (products_data.checked == 1) {
-                                        html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                        html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                         checked_rp++;
                                     } else {
-                                        html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                        html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
                                     }
                                 }
                             });
-                            if (checked_rp > 0) {
-                                html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
-                            } else {
-                                html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
-                            }
                             html_elem += '</ul></div>';
                             $("#" + relation_type + "_related_product_placeholder").append(html_elem);
                             var block_title_id='#' + relation_type + '_block_panel';
