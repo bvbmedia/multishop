@@ -391,8 +391,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $params = array(
                         'page' => &$page,
                         'order' => &$order,
-                        'mail_template' => $mail_template,
-                        'psp_mail_template' => $psp_mail_template,
+                        'mail_template' => &$mail_template,
+                        'psp_mail_template' => &$psp_mail_template,
                         'loadFromPids' => $loadFromPids
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'] as $funcRef) {
