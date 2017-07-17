@@ -4374,13 +4374,15 @@ if (is_numeric($this->get['orders_id'])) {
                 $tmpcontent
         );
         // order status tab eof
+        $page_title=$this->pi_getLL('order_details');
         // hook for adding new tabs into edit_order
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'])) {
             // hook
             $params = array(
-                    'tabs' => &$tabs,
-                    'order_status_tab_content' => &$order_status_tab_content,
-                    'orders' => &$orders
+                'tabs' => &$tabs,
+                'order_status_tab_content' => &$order_status_tab_content,
+                'orders' => &$orders,
+                'page_title' => &$page_title
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4670,7 +4672,7 @@ if (is_numeric($this->get['orders_id'])) {
         </script>
         <div class="panel panel-default">
         <div class="panel-heading">
-        	<h3>' . htmlspecialchars($this->pi_getLL('order_details')) . '</h3>
+        	<h3>' . htmlspecialchars($page_title) . '</h3>
         	' . $interfaceHeaderButtons . '
         </div>
         <div class="panel-body">

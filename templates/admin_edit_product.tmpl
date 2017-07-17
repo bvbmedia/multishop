@@ -1,235 +1,240 @@
 <!-- ###TEMPLATE### begin -->
 <!-- ###JS_HEADER### begin -->
 <script type="text/javascript">
-function populateRelatedProduct(data) {
-    var relations_type=['main','sub','search'];
-    if (data.related_product!=undefined) {
-        $("#search_related_product_placeholder").empty();
-        $('.cekbox:not(:checked)').parent().parent().remove();
-        //$('.checkAll:not(:checked)').parent().parent().remove();
-        $.each(data.related_product, function (categories_id, related_data) {
-            $.each(relations_type, function(idx, relation_type){
-                if (typeof related_data[relation_type]!='undefined') {
-                    var html_elem = '';
-                    if (categories_id > 0) {
-                        var existing_fieldset_id = "#" + relation_type + "_category" + categories_id;
-                        var last_row_existing_fieldset = "#" + relation_type + "_checkAllC" + categories_id;
-                        if ($(existing_fieldset_id).length > 0) {
-                            if (related_data[relation_type].products.length > 0) {
+    function populateRelatedProduct(data) {
+        var relations_type=['main','sub','search'];
+        if (data.related_product!=undefined) {
+            $("#search_related_product_placeholder").empty();
+            $('.cekbox:not(:checked)').parent().parent().remove();
+            //$('.checkAll:not(:checked)').parent().parent().remove();
+            $.each(data.related_product, function (categories_id, related_data) {
+                $.each(relations_type, function(idx, relation_type){
+                    if (typeof related_data[relation_type]!='undefined') {
+                        var html_elem = '';
+                        if (categories_id > 0) {
+                            var existing_fieldset_id = "#" + relation_type + "_category" + categories_id;
+                            var last_row_existing_fieldset = "#" + relation_type + "_checkAllC" + categories_id;
+                            if ($(existing_fieldset_id).length > 0) {
+                                if (related_data[relation_type].products.length > 0) {
+                                    $.each(related_data[relation_type].products, function (i, products_data) {
+                                        var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
+                                        if ($(existing_cb).length == 0) {
+                                            if (products_data.checked == 1) {
+                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                            } else {
+                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
+                                            }
+                                        }
+                                    });
+                                    $(last_row_existing_fieldset).before(html_elem);
+                                }
+                            } else {
+                                html_elem += '<div class="' + relation_type + '_related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
+                                html_elem += '<ul id="' + relation_type + '_category' + categories_id + '">';
+                                var checked_rp = 0;
                                 $.each(related_data[relation_type].products, function (i, products_data) {
-                                    var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
-                                    if ($(existing_cb).length == 0) {
+                                    if (relation_type=='search') {
+                                        var main_product_eid='#main_cb_' + categories_id + '_' + products_data.id;
+                                        var sub_product_eid='#sub_cb_' + categories_id + '_' + products_data.id;
+                                        if ($(main_product_eid).length<1 && $(sub_product_eid).length<1) {
+                                            if (products_data.checked == 1) {
+                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                                checked_rp++;
+                                            } else {
+                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                            }
+                                        }
+                                    } else {
                                         if (products_data.checked == 1) {
-                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
+                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
+                                            checked_rp++;
                                         } else {
-                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
+                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
                                         }
                                     }
                                 });
-                                $(last_row_existing_fieldset).before(html_elem);
-                            }
-                        } else {
-                            html_elem += '<div class="' + relation_type + '_related_data_categories_name_listing"><strong>' + related_data.categories_name + '</strong>';
-                            html_elem += '<ul id="' + relation_type + '_category' + categories_id + '">';
-                            var checked_rp = 0;
-                            $.each(related_data[relation_type].products, function (i, products_data) {
-                                if (relation_type=='search') {
-                                    var main_product_eid='#main_cb_' + categories_id + '_' + products_data.id;
-                                    var sub_product_eid='#sub_cb_' + categories_id + '_' + products_data.id;
-                                    if ($(main_product_eid).length<1 && $(sub_product_eid).length<1) {
-                                        if (products_data.checked == 1) {
-                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
-                                            checked_rp++;
-                                        } else {
-                                            html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
-                                        }
-                                    }
+                                if (checked_rp > 0) {
+                                    html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
                                 } else {
-                                    if (products_data.checked == 1) {
-                                        html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
-                                        checked_rp++;
-                                    } else {
-                                        html_elem += '<li><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></li>';
-                                    }
+                                    html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
                                 }
-                            });
-                            html_elem += '</ul></div>';
-                            $("#" + relation_type + "_related_product_placeholder").append(html_elem);
-                            var block_title_id='#' + relation_type + '_block_panel';
-                            if (!$(block_title_id).is(':visible')) {
-                                $(block_title_id).show();
+                                html_elem += '</ul></div>';
+                                $("#" + relation_type + "_related_product_placeholder").append(html_elem);
+                                var block_title_id='#' + relation_type + '_block_panel';
+                                if (!$(block_title_id).is(':visible')) {
+                                    $(block_title_id).show();
+                                }
                             }
-                        }
-                    }
-                }
-            });
-        });
-        $.each(relations_type, function(idx, relation_type) {
-            var ul_wrapper_class_path='.' + relation_type + 'related_data_categories_name_listing > ul';
-            if ($(ul_wrapper_class_path).length>0) {
-                $(ul_wrapper_class_path).each(function (i, obj) {
-                    if ($(this).children().length == '0' || $(this).children().length == '1') {
-                        var ul_id = $(this).attr('id').replace(relation_type + '_category', '');
-                        if ($(this).children().length == '1') {
-                            if ($(this).children().attr('id') == relation_type + '_checkAllC' + ul_id) {
-                                $(this).parent().remove();
-                            }
-                        } else {
-                            $(this).parent().remove();
                         }
                     }
                 });
-            }
-        });
-    } else {
-        $('.cekbox:not(:checked)').parent().parent().remove();
-        $('.related_data_categories_name_listing > ul').each(function(i, obj){
-            if ($(this).children().length=='0' || $(this).children().length=='1') {
-                var ul_id=$(this).attr('id').replace('category', '');
-                if ($(this).children().length=='1') {
-                    if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+            });
+            $.each(relations_type, function(idx, relation_type) {
+                var ul_wrapper_class_path='.' + relation_type + 'related_data_categories_name_listing > ul';
+                if ($(ul_wrapper_class_path).length>0) {
+                    $(ul_wrapper_class_path).each(function (i, obj) {
+                        if ($(this).children().length == '0' || $(this).children().length == '1') {
+                            var ul_id = $(this).attr('id').replace(relation_type + '_category', '');
+                            if ($(this).children().length == '1') {
+                                if ($(this).children().attr('id') == relation_type + '_checkAllC' + ul_id) {
+                                    $(this).parent().remove();
+                                }
+                            } else {
+                                $(this).parent().remove();
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            $('.cekbox:not(:checked)').parent().parent().remove();
+            $('.related_data_categories_name_listing > ul').each(function(i, obj){
+                if ($(this).children().length=='0' || $(this).children().length=='1') {
+                    var ul_id=$(this).attr('id').replace('category', '');
+                    if ($(this).children().length=='1') {
+                        if ($(this).children().attr('id')=='checkAllC' + ul_id) {
+                            $(this).parent().remove();
+                        }
+                    } else {
                         $(this).parent().remove();
                     }
-                } else {
-                    $(this).parent().remove();
                 }
+            });
+            if ($("#related_product_placeholder").children().length=='0'){
+                $("#related_product_placeholder").empty();
             }
-        });
-        if ($("#related_product_placeholder").children().length=='0'){
-            $("#related_product_placeholder").empty();
-        }
 
-        $("#search_block_panel").show();
-        $("#search_related_product_placeholder").empty();
-        if (data.no_records_found!=undefined) {
-            $("#search_related_product_placeholder").html(data.no_records_found);
+            $("#search_block_panel").show();
+            $("#search_related_product_placeholder").empty();
+            if (data.no_records_found!=undefined) {
+                $("#search_related_product_placeholder").html(data.no_records_found);
+            }
         }
+        $('#load').hide();
     }
-    $('#load').hide();
-}
-function saveRelation(url, related_pid) {
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {product_id: related_pid, pid: "###AJAX_PID###", req: "save", relation_type: $("#product_relation_save_as").val()}
-    });
-}
-function deleteRelation(url, related_pid) {
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {product_id: related_pid, pid: "###AJAX_PID###", req: "delete"}
-    });
-}
-function initRelatedProduct(url) {
-    $('#load').show();
-    $.ajax({
-        type: "POST",
-        url: url,
-        dataType: "json",
-        data: {req: "init", pid: "###AJAX_PID###"},
-        success: function (data) {
-            if (data.related_product) {
-                populateRelatedProduct(data);
+    function saveRelation(url, related_pid) {
+        $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: {product_id: related_pid, pid: "###AJAX_PID###", req: "save", relation_type: $("#product_relation_save_as").val()}
+               });
+    }
+    function deleteRelation(url, related_pid) {
+        $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: {product_id: related_pid, pid: "###AJAX_PID###", req: "delete"}
+               });
+    }
+    function initRelatedProduct(url) {
+        $('#load').show();
+        $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: {req: "init", pid: "###AJAX_PID###"},
+                   success: function (data) {
+                       if (data.related_product) {
+                           populateRelatedProduct(data);
+                       }
+                   }
+               });
+    }
+    function mathRound(float) {
+        //return float;
+        return Math.round(float * 100) / 100;
+    }
+    function getSpecialsSections(products_id) {
+        $.ajax({
+                   url: '###AJAX_URL_GET_SPECIAL_SECTIONS###',
+                   data: 'products_id=###AJAX_PID###',
+                   type: 'post',
+                   dataType: 'html',
+                   success: function (j) {
+                       if (j) {
+                           if (parseFloat(jQuery('#specials_new_products_price_excl_vat').val()) > 0 || parseFloat(jQuery('#specials_new_products_price_incl_vat').val()) > 0) {
+                               $("#specials_sections").hide();
+                               $("#specials_sections").html(j);
+                               $("#specials_sections").slideDown("fast");
+                           }
+                       }
+                   }
+               });
+    }
+    ###JS_FUNCTIONS_EXTRA###
+    jQuery(document).ready(function ($) {
+        $('input').keypress(function (event) {
+            if (event.keyCode == 13) {
+                $('.save_as_new').attr('name', 'Submit');
             }
-        }
-    });
-}
-function mathRound(float) {
-    //return float;
-    return Math.round(float * 100) / 100;
-}
-function getSpecialsSections(products_id) {
-    $.ajax({
-        url: '###AJAX_URL_GET_SPECIAL_SECTIONS###',
-        data: 'products_id=###AJAX_PID###',
-        type: 'post',
-        dataType: 'html',
-        success: function (j) {
-            if (j) {
-                if (parseFloat(jQuery('#specials_new_products_price_excl_vat').val()) > 0 || parseFloat(jQuery('#specials_new_products_price_incl_vat').val()) > 0) {
-                    $("#specials_sections").hide();
-                    $("#specials_sections").html(j);
-                    $("#specials_sections").slideDown("fast");
+        });
+        $(document).on('keypress', 'input[name="keypas"]', function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                $('#filter').click();
+            }
+        });
+        $(document).on("keyup", ".msPriceExcludingVat", function (e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(true, this);
+                if ($(this).attr("id")=="specials_new_products_price_excl_vat") {
+                    $("#specials_price_percentage").select2("val", "");
                 }
             }
-        }
-    });
-}
-###JS_FUNCTIONS_EXTRA###
-jQuery(document).ready(function ($) {
-    $('input').keypress(function (event) {
-        if (event.keyCode == 13) {
-            $('.save_as_new').attr('name', 'Submit');
-        }
-    });
-    $(document).on('keypress', 'input[name="keypas"]', function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            $('#filter').click();
-        }
-    });
-    $(document).on("keyup", ".msPriceExcludingVat", function (e) {
-       if (e.keyCode!=9) {
-           priceEditRealtimeCalc(true, this);
-           if ($(this).attr("id")=="specials_new_products_price_excl_vat") {
-                $("#specials_price_percentage").select2("val", "");
-           }
-       }
-    });
-
-    $("#tax_id").change(function () {
-        $(".msPriceExcludingVat").each(function (i) {
-            priceEditRealtimeCalc(true, this);
         });
-    });
 
-    $(document).on("keyup", ".msPriceIncludingVat", function (e) {
-        if (e.keyCode!=9) {
-            priceEditRealtimeCalc(false, this);
-            if ($(this).attr("id")=="specials_new_products_price_incl_vat") {
-                $("#specials_price_percentage").select2("val", "");
+        $("#tax_id").change(function () {
+            $(".msPriceExcludingVat").each(function (i) {
+                priceEditRealtimeCalc(true, this);
+            });
+        });
+
+        $(document).on("keyup", ".msPriceIncludingVat", function (e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(false, this);
+                if ($(this).attr("id")=="specials_new_products_price_incl_vat") {
+                    $("#specials_price_percentage").select2("val", "");
+                }
             }
-        }
-    });
-    $("#specials_sections").hide();
-    getSpecialsSections(###AJAX_PID###);
+        });
+        $("#specials_sections").hide();
+        getSpecialsSections(###AJAX_PID###);
 
-var url = document.location.toString();
-if (url.match('#')) {
-    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
-} else {
-	$('.nav-tabs a:first').tab('show');
-}
-var lochash=window.location.hash;
-if (lochash!="") {
-	$("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
-		var href_value=$(anchor).attr("href");
-		if (href_value!="#") {
-			href_value+=lochash;
-			$(anchor).prop("href", href_value);
-		}
-	})
-}
+        var url = document.location.toString();
+        if (url.match('#')) {
+            $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+        } else {
+            $('.nav-tabs a:first').tab('show');
+        }
+        var lochash=window.location.hash;
+        if (lochash!="") {
+            $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+                var href_value=$(anchor).attr("href");
+                if (href_value!="#") {
+                    href_value+=lochash;
+                    $(anchor).prop("href", href_value);
+                }
+            })
+        }
 
 // Change hash for page-reload
-$('.nav-tabs a').on('shown.bs.tab', function (e) {
-	window.location.hash = e.target.hash;
-	$("body,html,document").scrollTop(0);
-    //
-    var lochash=window.location.hash;
-    if (lochash!="") {
-        //
-        $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
-            var href_value=$(anchor).attr("href").split("#");
+        $('.nav-tabs a').on('shown.bs.tab', function (e) {
+            window.location.hash = e.target.hash;
+            $("body,html,document").scrollTop(0);
+            //
+            var lochash=window.location.hash;
+            if (lochash!="") {
+                //
+                $("ul#admin_pagination_ul").find("a").each(function(idx, anchor){
+                    var href_value=$(anchor).attr("href").split("#");
 
-            if (href_value[0]!="") {
-                href_value[0]+=lochash;
-                $(anchor).prop("href", href_value[0]);
+                    if (href_value[0]!="") {
+                        href_value[0]+=lochash;
+                        $(anchor).prop("href", href_value[0]);
+                    }
+                })
             }
-        })
-    }
-});
+        });
 
 	###AJAX_REQUEST_SPECIAL_PRICE###
 	$('#specials_new_products_price_excl_vat').keyup(function () {
@@ -249,522 +254,522 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
             this.lastValue = value;
         }
     });
-    $('#specials_new_products_price_incl_vat').keyup(function () {
-        var value = this.value;
-        if (this.value != this.lastValue) {
-            if (this.timer) {
-                clearTimeout(this.timer);
-            }
-            this.timer = setTimeout(function () {
-                if (value != '' && parseFloat(value) > 0) {
-                    getSpecialsSections(###AJAX_PID###)
-                    ;
-                } else {
-                    $("#specials_sections").slideUp("fast");
+        $('#specials_new_products_price_incl_vat').keyup(function () {
+            var value = this.value;
+            if (this.value != this.lastValue) {
+                if (this.timer) {
+                    clearTimeout(this.timer);
                 }
-            }, 200);
-            this.lastValue = value;
-        }
-    });
-    $("#products_date_added_visitor").datepicker({
-        dateFormat: "###DATE_FORMAT###",
-        altField: "#products_date_added",
-        altFormat: "yy-mm-dd",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###"
-    });
-    $("#products_date_available_visitor").datepicker({
-        dateFormat: "###DATE_FORMAT###",
-        altField: "#products_date_available",
-        altFormat: "yy-mm-dd",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###"
-    });
-    $("#starttime_visitor").datetimepicker({
-        dateFormat: "###DATE_FORMAT###",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###",
-        timeFormat: 'HH:mm:ss',
-        altField: "#starttime",
-        altFieldTimeOnly: false,
-        altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss"
-    });
-    $("#endtime_visitor").datetimepicker({
-        dateFormat: "###DATE_FORMAT###",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###",
-        timeFormat: 'HH:mm:ss',
-        altField: "#endtime",
-        altFieldTimeOnly: false,
-        altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss",
-        hour: 23,
-        minute: 59,
-        second: 59
-    });
-    $("#specials_price_start_visitor").datetimepicker({
-        dateFormat: "###DATE_FORMAT###",
-        altField: "#specials_price_start",
-        altFormat: "yy-mm-dd",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###",
-        timeFormat: 'HH:mm:ss',
-        altFieldTimeOnly: false,
-        altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss"
-    });
-    $("#specials_price_expired_visitor").datetimepicker({
-        dateFormat: "###DATE_FORMAT###",
-        altField: "#specials_price_expired",
-        altFormat: "yy-mm-dd",
-        changeMonth: true,
-        changeYear: true,
-        showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###",
-        timeFormat: 'HH:mm:ss',
-        altFieldTimeOnly: false,
-        altFormat: "yy-mm-dd",
-        altTimeFormat: "HH:mm:ss",
-        hour: 23,
-        minute: 59,
-        second: 59
-    });
-    // related product ajax server
-    var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
-    // populate the existing related products
-    initRelatedProduct(url_relatives);
-    $(document).on('click', '#filter', function () {
-        $('#load').show();
-        var keywords = $("#key").val();
-        var cid = $("#rel_catid").val();
-        if (cid=="" || cid=='undefined') {
-            cid=0;
-        }
-        $.ajax({
-            type: "POST",
-            url: url_relatives,
-            dataType: "json",
-            data: {req: "search", keypas: keywords, pid: "###AJAX_PID###", s_cid: cid},
-            success: function (data) {
-                populateRelatedProduct(data);
+                this.timer = setTimeout(function () {
+                    if (value != '' && parseFloat(value) > 0) {
+                        getSpecialsSections(###AJAX_PID###)
+                        ;
+                    } else {
+                        $("#specials_sections").slideUp("fast");
+                    }
+                }, 200);
+                this.lastValue = value;
             }
         });
-    });
-    $(document).on("click", ".checkAll", function () {
-        var product_class_name = "." + $(this).attr("rel");
+        $("#products_date_added_visitor").datepicker({
+                                                         dateFormat: "###DATE_FORMAT###",
+                                                         altField: "#products_date_added",
+                                                         altFormat: "yy-mm-dd",
+                                                         changeMonth: true,
+                                                         changeYear: true,
+                                                         showOtherMonths: true,
+                                                         yearRange: "###YEAR_RANGE###"
+                                                     });
+        $("#products_date_available_visitor").datepicker({
+                                                             dateFormat: "###DATE_FORMAT###",
+                                                             altField: "#products_date_available",
+                                                             altFormat: "yy-mm-dd",
+                                                             changeMonth: true,
+                                                             changeYear: true,
+                                                             showOtherMonths: true,
+                                                             yearRange: "###YEAR_RANGE###"
+                                                         });
+        $("#starttime_visitor").datetimepicker({
+                                                   dateFormat: "###DATE_FORMAT###",
+                                                   changeMonth: true,
+                                                   changeYear: true,
+                                                   showOtherMonths: true,
+                                                   yearRange: "###YEAR_RANGE###",
+                                                   timeFormat: 'HH:mm:ss',
+                                                   altField: "#starttime",
+                                                   altFieldTimeOnly: false,
+                                                   altFormat: "yy-mm-dd",
+                                                   altTimeFormat: "HH:mm:ss"
+                                               });
+        $("#endtime_visitor").datetimepicker({
+                                                 dateFormat: "###DATE_FORMAT###",
+                                                 changeMonth: true,
+                                                 changeYear: true,
+                                                 showOtherMonths: true,
+                                                 yearRange: "###YEAR_RANGE###",
+                                                 timeFormat: 'HH:mm:ss',
+                                                 altField: "#endtime",
+                                                 altFieldTimeOnly: false,
+                                                 altFormat: "yy-mm-dd",
+                                                 altTimeFormat: "HH:mm:ss",
+                                                 hour: 23,
+                                                 minute: 59,
+                                                 second: 59
+                                             });
+        $("#specials_price_start_visitor").datetimepicker({
+                                                              dateFormat: "###DATE_FORMAT###",
+                                                              altField: "#specials_price_start",
+                                                              altFormat: "yy-mm-dd",
+                                                              changeMonth: true,
+                                                              changeYear: true,
+                                                              showOtherMonths: true,
+                                                              yearRange: "###YEAR_RANGE###",
+                                                              timeFormat: 'HH:mm:ss',
+                                                              altFieldTimeOnly: false,
+                                                              altFormat: "yy-mm-dd",
+                                                              altTimeFormat: "HH:mm:ss"
+                                                          });
+        $("#specials_price_expired_visitor").datetimepicker({
+                                                                dateFormat: "###DATE_FORMAT###",
+                                                                altField: "#specials_price_expired",
+                                                                altFormat: "yy-mm-dd",
+                                                                changeMonth: true,
+                                                                changeYear: true,
+                                                                showOtherMonths: true,
+                                                                yearRange: "###YEAR_RANGE###",
+                                                                timeFormat: 'HH:mm:ss',
+                                                                altFieldTimeOnly: false,
+                                                                altFormat: "yy-mm-dd",
+                                                                altTimeFormat: "HH:mm:ss",
+                                                                hour: 23,
+                                                                minute: 59,
+                                                                second: 59
+                                                            });
+        // related product ajax server
+        var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
+        // populate the existing related products
+        initRelatedProduct(url_relatives);
+        $(document).on('click', '#filter', function () {
+            $('#load').show();
+            var keywords = $("#key").val();
+            var cid = $("#rel_catid").val();
+            if (cid=="" || cid=='undefined') {
+                cid=0;
+            }
+            $.ajax({
+                       type: "POST",
+                       url: url_relatives,
+                       dataType: "json",
+                       data: {req: "search", keypas: keywords, pid: "###AJAX_PID###", s_cid: cid},
+                       success: function (data) {
+                           populateRelatedProduct(data);
+                       }
+                   });
+        });
+        $(document).on("click", ".checkAll", function () {
+            var product_class_name = "." + $(this).attr("rel");
 
-        if ($(this).is(":checked")) {
-            $(product_class_name).prop("checked", true);
-            saveRelation(url_relatives, $(product_class_name).serialize());
-        } else {
-            // .serialize only() take the checked checkbox
-            deleteRelation(url_relatives, $(product_class_name).serialize());
-            $(product_class_name).prop("checked", false);
-        }
-    });
-    $(document).on("click", ".search_cekbox, .main_cekbox, .sub_cekbox, .cekbox", function () {
-        var related_id = $(this).val();
+            if ($(this).is(":checked")) {
+                $(product_class_name).prop("checked", true);
+                saveRelation(url_relatives, $(product_class_name).serialize());
+            } else {
+                // .serialize only() take the checked checkbox
+                deleteRelation(url_relatives, $(product_class_name).serialize());
+                $(product_class_name).prop("checked", false);
+            }
+        });
+        $(document).on("click", ".search_cekbox, .main_cekbox, .sub_cekbox, .cekbox", function () {
+            var related_id = $(this).val();
 
-        if ($(this).is(":checked")) {
-            saveRelation(url_relatives, related_id);
+            if ($(this).is(":checked")) {
+                saveRelation(url_relatives, related_id);
 
-        } else {
-            deleteRelation(url_relatives, related_id);
-        }
-    });
-    $("#load").hide();
-    $().ajaxStart(function () {
-        $("#load").show();
-        $("#related_product_placeholder").hide();
-    }).ajaxStop(function () {
+            } else {
+                deleteRelation(url_relatives, related_id);
+            }
+        });
         $("#load").hide();
-        $("#related_product_placeholder").show();
-    });
-    // related product js EOF
-
-    //copy products
-    $("#cp_product").bind("click", function () {
-        $.ajax({
-            type: "POST",
-            url: "###AJAX_URL_COPY_PRODUCT###",
-            data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
-            success: function (data) {
-                $("#has_cd").html(data);
-            }
+        $().ajaxStart(function () {
+            $("#load").show();
+            $("#related_product_placeholder").hide();
+        }).ajaxStop(function () {
+            $("#load").hide();
+            $("#related_product_placeholder").show();
         });
-    });
+        // related product js EOF
 
-    $("#dp_product").bind("click", function () {
-        $.ajax({
-            type: "POST",
-            url: "###AJAX_URL_COPY_PRODUCT###",
-            data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
-            success: function (data) {
-                $("#has_cd").html(data);
-            }
+        //copy products
+        $("#cp_product").bind("click", function () {
+            $.ajax({
+                       type: "POST",
+                       url: "###AJAX_URL_COPY_PRODUCT###",
+                       data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
+                       success: function (data) {
+                           $("#has_cd").html(data);
+                       }
+                   });
         });
+
+        $("#dp_product").bind("click", function () {
+            $.ajax({
+                       type: "POST",
+                       url: "###AJAX_URL_COPY_PRODUCT###",
+                       data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
+                       success: function (data) {
+                           $("#has_cd").html(data);
+                       }
+                   });
+        });
+        //copy products eof
+        ###JS_TRIGGERS_EXTRA###
     });
-    //copy products eof
-    ###JS_TRIGGERS_EXTRA###
-});
 </script>
 <!-- ###JS_HEADER### end -->
 <div class="panel panel-default">
-<div class="panel-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
-<div class="panel-body">
-<div id="tab-container" class="msadminVerticalTabs">
-<ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" id="product_detailsWrapper"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
-    <li role="presentation" id="product_optionsWrapper"><a href="#product_options" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
-    <li role="presentation" id="product_imagesWrapper"><a href="#product_images" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
-    <li role="presentation" id="meta_tagsWrapper"><a href="#meta_tags" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_META_TAGS###</a></li>
-    <li role="presentation" id="product_attributesWrapper"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
-    <li role="presentation" id="product_relativesWrapper"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
-    ###LABEL_EXTRA_PLUGIN_TABS###
-</ul>
-<div class="tab-content">
-<form class="form-horizontal admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
-<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
-###INPUT_OLD_LAYERED_CATEGORY_INPUT###
-<div role="tabpanel" id="product_details" class="tab-pane">
-    <div class="form-group" id="msEditProductInputStatus">
-        <label for="products_status" class="col-md-2 control-label">###LABEL_PRODUCT_STATUS###</label>
-        <div class="col-md-10">
-        <div class="radio radio-success radio-inline">
-        <input name="products_status" id="products_status1" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /><label for="products_status1">###LABEL_ADMIN_YES###</label>
-        </div>
-        <div class="radio radio-success radio-inline">
-        <input name="products_status" id="products_status2" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /><label for="products_status2">###LABEL_ADMIN_NO###</label>
-        </div>
-        </div>
-    </div>
-    <div class="form-group" id="msEditProductInputSearchEngineIndexing">
-        <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
-        <div class="col-md-10">
-        <div class="radio radio-success radio-inline">
-        <input name="search_engines_allow_indexing" id="search_engines_allow_indexing1" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /><label for="search_engines_allow_indexing1">###LABEL_ADMIN_YES_INDEXING###</label>
-        </div>
-        <div class="radio radio-success radio-inline">
-        <input name="search_engines_allow_indexing" id="search_engines_allow_indexing2" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /><label for="search_engines_allow_indexing2">###LABEL_ADMIN_NO_INDEXING###</label>
-        </div>
-        </div>
-    </div>
-    <div class="form-group" id="msEditProductInputCategory">
-        <label for="categories_id" class="col-md-2 control-label">###LABEL_PRODUCT_CATEGORY###<span class="text-danger">*</span></label>
-        <div class="col-md-10">
-        <input name="old_categories_id" type="hidden" value="###VALUE_OLD_CATEGORY_ID###" />
-        ###INPUT_CATEGORY_TREE###
-        </div>
-    </div>
-    ###INPUT_CATEGORY_TREE_DEFAULT_PATH###
-    ###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###
-    <!-- ###DETAILS_CONTENT### begin -->
-    <div class="productInfoItem">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-heading-toggle###ARROW_COLLAPSE_CLASS###" data-toggle="collapse" data-target="#msAdminTabLanguage###LANGUAGE_UID###">
-                <h3 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#msAdminTabLanguage###LANGUAGE_UID###"><i class="fa fa-file-text-o"></i> ###LANGUAGE_LABEL###</a>
-                </h3>
-            </div>
-            <div id="msAdminTabLanguage###LANGUAGE_UID###" class="###PANEL_COLLAPSE_CLASS###">
-                <div class="panel-body">
-                    <div class="form-group msEditProductInputName" id="msEditProductInputName###LANGUAGE_UID###">
-                        <label for="products_name_###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_NAME###</label>
-                        <div class="col-md-10">
-                        <input type="text" class="form-control text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
-                        ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
+    <div class="panel-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
+    <div class="panel-body">
+        <div id="tab-container" class="msadminVerticalTabs">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" id="product_detailsWrapper"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
+                <li role="presentation" id="product_optionsWrapper"><a href="#product_options" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
+                <li role="presentation" id="product_imagesWrapper"><a href="#product_images" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
+                <li role="presentation" id="meta_tagsWrapper"><a href="#meta_tags" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_META_TAGS###</a></li>
+                <li role="presentation" id="product_attributesWrapper"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
+                <li role="presentation" id="product_relativesWrapper"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
+                ###LABEL_EXTRA_PLUGIN_TABS###
+            </ul>
+            <div class="tab-content">
+                <form class="form-horizontal admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
+                    <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
+                    ###INPUT_OLD_LAYERED_CATEGORY_INPUT###
+                    <div role="tabpanel" id="product_details" class="tab-pane">
+                        <div class="form-group" id="msEditProductInputStatus">
+                            <label for="products_status" class="col-md-2 control-label">###LABEL_PRODUCT_STATUS###</label>
+                            <div class="col-md-10">
+                                <div class="radio radio-success radio-inline">
+                                    <input name="products_status" id="products_status1" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /><label for="products_status1">###LABEL_ADMIN_YES###</label>
+                                </div>
+                                <div class="radio radio-success radio-inline">
+                                    <input name="products_status" id="products_status2" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /><label for="products_status2">###LABEL_ADMIN_NO###</label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group msEditProductInputShortDesc" id="msEditProductInputShortDesc###LANGUAGE_UID###">
-                        <label for="products_shortdescription###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_SHORT_DESCRIPTION###</label>
-                        <div class="col-md-10">
-                        <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription###LANGUAGE_UID###" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
+                        <div class="form-group" id="msEditProductInputSearchEngineIndexing">
+                            <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
+                            <div class="col-md-10">
+                                <div class="radio radio-success radio-inline">
+                                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing1" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /><label for="search_engines_allow_indexing1">###LABEL_ADMIN_YES_INDEXING###</label>
+                                </div>
+                                <div class="radio radio-success radio-inline">
+                                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing2" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /><label for="search_engines_allow_indexing2">###LABEL_ADMIN_NO_INDEXING###</label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="msEditProductInputDesc###LANGUAGE_UID###">
-                        <label for="products_description###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_DESCRIPTION###</label>
-                        <div class="col-md-10">
-                        <textarea name="products_description[###LANGUAGE_UID###]" id="products_description###LANGUAGE_UID###" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
+                        <div class="form-group" id="msEditProductInputCategory">
+                            <label for="categories_id" class="col-md-2 control-label">###LABEL_PRODUCT_CATEGORY###<span class="text-danger">*</span></label>
+                            <div class="col-md-10">
+                                <input name="old_categories_id" type="hidden" value="###VALUE_OLD_CATEGORY_ID###" />
+                                ###INPUT_CATEGORY_TREE###
+                            </div>
                         </div>
-                    </div>
-                    ###DETAILS_TAB_CONTENT###
-                    <div class="form-group toggle_advanced_option msEditProductInputExternalUrl" id="msEditProductInputExternalUrl###LANGUAGE_UID###">
-                        <label for="products_url###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_URL###</label>
-                        <div class="col-md-10">
-                        <input type="text" class="form-control text" name="products_url[###LANGUAGE_UID###]" id="products_url###LANGUAGE_UID###" value="###VALUE_PRODUCT_URL###">
+                        ###INPUT_CATEGORY_TREE_DEFAULT_PATH###
+                        ###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###
+                        <!-- ###DETAILS_CONTENT### begin -->
+                        <div class="productInfoItem">
+                            <div class="panel panel-default">
+                                <div class="panel-heading panel-heading-toggle###ARROW_COLLAPSE_CLASS###" data-toggle="collapse" data-target="#msAdminTabLanguage###LANGUAGE_UID###">
+                                    <h3 class="panel-title">
+                                        <a role="button" data-toggle="collapse" href="#msAdminTabLanguage###LANGUAGE_UID###"><i class="fa fa-file-text-o"></i> ###LANGUAGE_LABEL###</a>
+                                    </h3>
+                                </div>
+                                <div id="msAdminTabLanguage###LANGUAGE_UID###" class="###PANEL_COLLAPSE_CLASS###">
+                                    <div class="panel-body">
+                                        <div class="form-group msEditProductInputName" id="msEditProductInputName###LANGUAGE_UID###">
+                                            <label for="products_name_###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_NAME###</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
+                                                ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
+                                            </div>
+                                        </div>
+                                        <div class="form-group msEditProductInputShortDesc" id="msEditProductInputShortDesc###LANGUAGE_UID###">
+                                            <label for="products_shortdescription###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_SHORT_DESCRIPTION###</label>
+                                            <div class="col-md-10">
+                                                <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription###LANGUAGE_UID###" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="msEditProductInputDesc###LANGUAGE_UID###">
+                                            <label for="products_description###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_DESCRIPTION###</label>
+                                            <div class="col-md-10">
+                                                <textarea name="products_description[###LANGUAGE_UID###]" id="products_description###LANGUAGE_UID###" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
+                                            </div>
+                                        </div>
+                                        ###DETAILS_TAB_CONTENT###
+                                        <div class="form-group toggle_advanced_option msEditProductInputExternalUrl" id="msEditProductInputExternalUrl###LANGUAGE_UID###">
+                                            <label for="products_url###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_URL###</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control text" name="products_url[###LANGUAGE_UID###]" id="products_url###LANGUAGE_UID###" value="###VALUE_PRODUCT_URL###">
+                                            </div>
+                                        </div>
+                                        <div class="form-group msEditProductInputDeliveryTime" id="msEditProductInputDeliveryTime###LANGUAGE_UID###">
+                                            <label for="delivery_time###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_DELIVERY_TIME###</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time###LANGUAGE_UID###" value="###VALUE_DELIVERY_TIME###">
+                                            </div>
+                                        </div>
+                                        <div class="form-group toggle_advanced_option msEditProductInputNegativeKeywords" id="msEditProductInputNegativeKeywords###LANGUAGE_UID###">
+                                            <label for="products_negative_keywords###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_NEGATIVE_KEYWORDS###</label>
+                                            <div class="col-md-10">
+                                                <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords###LANGUAGE_UID###" class="form-control expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <!-- ###DETAILS_CONTENT### end -->
                     </div>
-                    <div class="form-group msEditProductInputDeliveryTime" id="msEditProductInputDeliveryTime###LANGUAGE_UID###">
-                        <label for="delivery_time###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_DELIVERY_TIME###</label>
-                        <div class="col-md-10">
-                        <input type="text" class="form-control text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time###LANGUAGE_UID###" value="###VALUE_DELIVERY_TIME###">
+                    <div role="tabpanel" id="product_options" class="tab-pane">
+                        <h3>###LABEL_HEADING_TAB_OPTION###</h3>
+                        ###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###
+                        <div class="form-group">
+                            <label for="tax_id" class="col-md-2 control-label">###LABEL_VAT_RATE###</label>
+                            <div class="col-md-10 form-inline">
+                                ###INPUT_VATE_RATE###
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group toggle_advanced_option msEditProductInputNegativeKeywords" id="msEditProductInputNegativeKeywords###LANGUAGE_UID###">
-                        <label for="products_negative_keywords###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_NEGATIVE_KEYWORDS###</label>
-                        <div class="col-md-10">
-                        <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords###LANGUAGE_UID###" class="form-control expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+                        ###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###
+                        <div class="form-group" id="msEditProductInputPrice">
+                            <label class="col-md-2 control-label">###LABEL_PRICE###</label>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
+                                        <label for="products_price">###LABEL_NORMAL_PRICE###</label>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY0###</span><input type="text" name="products_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT0###</span></div></div></div>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY1###</span><input type="text" name="products_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT0###</span></div></div></div>
+                                        <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
+                                    </div>
+                                    <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
+                                        <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY2###</span><input type="text" name="specials_new_products_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT1###</span></div></div></div>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY3###</span><input type="text" name="specials_new_products_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT1###</span></div></div></div>
+                                        <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
+                                        <div class="form-group form-inline special_price_percentage">
+                                            <div class="col-md-12">
+                                                <label for="special_price_percentage">###LABEL_PERCENTAGE_SELECTBOX###</label>
+                                                ###PERCENTAGE_SELECTBOX###
+                                            </div>
+                                        </div>
+                                        <div class="form-group special_price_timer">
+                                            <div class="col-md-12">
+                                                <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
+                                                <input type="text" name="specials_price_start_visitor" class="form-control price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
+                                                <input type="hidden" name="specials_price_start" class="price small_input" id="specials_price_start" value="###VALUE_SPECIAL_PRICE_START_SYS###">
+                                                <label for="specials_price_expired">###LABEL_SPECIAL_PRICE_EXPIRED###</label>
+                                                <input type="text" name="specials_price_expired_visitor" class="form-control price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###">
+                                                <input type="hidden" name="specials_price_expired" class="price small_input" id="specials_price_expired" value="###VALUE_SPECIAL_PRICE_EXPIRED_SYS###">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
+                                        <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY4###</span><input type="text" name="product_capital_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT2###</span></div></div></div>
+                                        <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY5###</span><input type="text" name="product_capital_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT2###</span></div></div></div>
+                                        <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ###DETAILS_CONTENT### end -->
-</div>
-<div role="tabpanel" id="product_options" class="tab-pane">
-    <h3>###LABEL_HEADING_TAB_OPTION###</h3>
-    ###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###
-    <div class="form-group">
-        <label for="tax_id" class="col-md-2 control-label">###LABEL_VAT_RATE###</label>
-        <div class="col-md-10 form-inline">
-        ###INPUT_VATE_RATE###
-        </div>
-    </div>
-    ###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###
-    <div class="form-group" id="msEditProductInputPrice">
-        <label class="col-md-2 control-label">###LABEL_PRICE###</label>
-        <div class="col-md-10">
-        <div class="row">
-            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
-                <label for="products_price">###LABEL_NORMAL_PRICE###</label>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY0###</span><input type="text" name="products_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT0###</span></div></div></div>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY1###</span><input type="text" name="products_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT0###</span></div></div></div>
-                <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
-            </div>
-            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
-                <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY2###</span><input type="text" name="specials_new_products_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT1###</span></div></div></div>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY3###</span><input type="text" name="specials_new_products_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT1###</span></div></div></div>
-                <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
-                <div class="form-group form-inline special_price_percentage">
-                <div class="col-md-12">
-                    <label for="special_price_percentage">###LABEL_PERCENTAGE_SELECTBOX###</label>
-                    ###PERCENTAGE_SELECTBOX###
-                    </div>
-                </div>
-                <div class="form-group special_price_timer">
-                <div class="col-md-12">
-                    <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
-                    <input type="text" name="specials_price_start_visitor" class="form-control price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
-                    <input type="hidden" name="specials_price_start" class="price small_input" id="specials_price_start" value="###VALUE_SPECIAL_PRICE_START_SYS###">
-                    <label for="specials_price_expired">###LABEL_SPECIAL_PRICE_EXPIRED###</label>
-                    <input type="text" name="specials_price_expired_visitor" class="form-control price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###">
-                    <input type="hidden" name="specials_price_expired" class="price small_input" id="specials_price_expired" value="###VALUE_SPECIAL_PRICE_EXPIRED_SYS###">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
-                <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY4###</span><input type="text" name="product_capital_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT2###</span></div></div></div>
-                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY5###</span><input type="text" name="product_capital_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT2###</span></div></div></div>
-                <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
-            </div>
-        </div>
-        </div>
-    </div>
-    ###CUSTOM_MARKER_BELOW_PRICE_FORM_FIELD###
-    <div class="form-group" id="specials_sections"></div>
-    ###INPUT_STAFFEL_PRICE_BLOCK###
-    <!-- ###MANUFACTURERS_ADVICE_PRICE### begin -->
-    <div class="form-group" id="msEditProductInputManufacturersPrice">
-        <label for="msEditProductInputManufacturersPriceInput" class="col-md-2 control-label">###LABEL_MANUFACTURERS_ADVIES_PRICE###</label>
-        <div class="form-group col-md-4" id="msEditProductInputManufacturersPriceInput">
-            <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY6###</span><input type="text" name="manufacturers_advice_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="manufacturers_advice_price_excl_vat" value="###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT3###</span></div></div></div>
-            <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY7###</span><input type="text" name="manufacturers_advice_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="manufacturers_advice_price_incl_vat" value="###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT3###</span></div></div></div>
-            <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="manufacturers_advice_price" value="###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###" /></div>
-        </div>
-    </div>
-    <!-- ###MANUFACTURERS_ADVICE_PRICE### end -->
-    <div class="form-group" id="msEditProductInputQuantity">
-        <label for="products_quantity" class="col-md-2 control-label">###LABEL_STOCK###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" name="products_quantity" class="form-control products_quantity" id="products_quantity" value="###VALUE_STOCK###"> <p class="form-control-static"><strong>###LABEL_THRESHOLD_QTY###</strong></p> <input type="text" name="alert_quantity_threshold" class="form-control alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
-        <label for="starttime" class="starttime col-md-2 control-label">###LABEL_STARTTIME###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
-        <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputDateAvailable">
-        <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
-        <div class="col-md-10 form-inline">
-            <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
-            <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###">
-            <p class="form-control-static">
-                <strong>###LABEL_DATE_ADDED###</strong>
-            </p>
-            <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
-            <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
-            <p class="form-control-static"><strong>###LABEL_DATE_MODIFIED###</strong></p>
-            <p class="form-control-static">###VALUE_DATE_MODIFIED###</p>
-        </div>
-    </div>
-    <div class="form-group" id="msEditProductInputModel">
-        <label for="products_model" class="col-md-2 control-label">###LABEL_PRODUCT_MODEL###</label>
-        <div class="col-md-10 form-inline">
-        <input type="form-control text" class="form-control text" name="products_model" id="products_model" value="###VALUE_PRODUCT_MODEL###">
-        </div>
-    </div>
-    <div class="form-group" id="msEditProductInputManufacturerName">
-        <label for="manufacturers_id" class="col-md-2 control-label">###LABEL_PRODUCT_MANUFACTURER###</label>
-        <div class="col-md-10 form-inline">
-        ###INPUT_MANUFACTURER### <p class="form-control-static"><strong>###LABEL_ADD_NEW_MANUFACTURER###</strong></p> <input name="manufacturers_name" type="text" value="" class="form-control" />
-        </div>
-    </div>
-    <div class="form-group" id="msEditProductInputWeight">
-        <label for="products_weight" class="col-md-2 control-label">###LABEL_PRODUCT_WEIGHT###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="products_weight" id="products_weight" value="###VALUE_PRODUCT_WEIGHT###">
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputCondition">
-        <label for="products_condition" class="col-md-2 control-label">###LABEL_PRODUCT_CONDITION###</label>
-        <div class="col-md-10 form-inline">
-        <select name="products_condition" class="form-control">
-            <option value="new" ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
-            <option value="used" ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
-            <option value="refurbished" ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
-        </select>
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputEANCode">
-        <label for="ean_code" class="col-md-2 control-label">###LABEL_EAN_CODE###</label>
-        <div class="col-md-10 form-inline">
-            <div class="form-group">
-                <div class="col-md-12">
-                <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
-                </div>
-            </div>
-            <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
-                <div class="col-md-12">
-                <p class="form-control-static"><strong>###LABEL_SKU_CODE###</strong></p>
-                <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
-                </div>
-            </div>
-            <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
-                <div class="col-md-12">
-                <p class="form-control-static"><strong>###LABEL_MANUFACTURER_CODE###</strong></p>
-                <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
-                </div>
-            </div>
-        </div>
-    </div>
+                        ###CUSTOM_MARKER_BELOW_PRICE_FORM_FIELD###
+                        <div class="form-group" id="specials_sections"></div>
+                        ###INPUT_STAFFEL_PRICE_BLOCK###
+                        <!-- ###MANUFACTURERS_ADVICE_PRICE### begin -->
+                        <div class="form-group" id="msEditProductInputManufacturersPrice">
+                            <label for="msEditProductInputManufacturersPriceInput" class="col-md-2 control-label">###LABEL_MANUFACTURERS_ADVIES_PRICE###</label>
+                            <div class="form-group col-md-4" id="msEditProductInputManufacturersPriceInput">
+                                <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY6###</span><input type="text" name="manufacturers_advice_price_excl_vat" class="form-control price small_input msPriceExcludingVat priceInputDisplay" id="manufacturers_advice_price_excl_vat" value="###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_EXCLUDING_VAT3###</span></div></div></div>
+                                <div class="form-group msAttributesField"><div class="col-md-10"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY7###</span><input type="text" name="manufacturers_advice_price_incl_vat" class="form-control price small_input msPriceIncludingVat priceInputDisplay" id="manufacturers_advice_price_incl_vat" value="###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###" autocomplete="off"><span class="input-group-addon">###LABEL_INCLUDING_VAT3###</span></div></div></div>
+                                <div class="msAttributesField hidden"><input type="hidden" class="priceInputReal msFinalPriceExcludingVat" name="manufacturers_advice_price" value="###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###" /></div>
+                            </div>
+                        </div>
+                        <!-- ###MANUFACTURERS_ADVICE_PRICE### end -->
+                        <div class="form-group" id="msEditProductInputQuantity">
+                            <label for="products_quantity" class="col-md-2 control-label">###LABEL_STOCK###</label>
+                            <div class="col-md-10 form-inline">
+                                <input type="text" name="products_quantity" class="form-control products_quantity" id="products_quantity" value="###VALUE_STOCK###"> <p class="form-control-static"><strong>###LABEL_THRESHOLD_QTY###</strong></p> <input type="text" name="alert_quantity_threshold" class="form-control alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
+                            </div>
+                        </div>
+                        <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
+                            <label for="starttime" class="starttime col-md-2 control-label">###LABEL_STARTTIME###</label>
+                            <div class="col-md-10 form-inline">
+                                <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
+                                <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+                                <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
+                            </div>
+                        </div>
+                        <div class="form-group toggle_advanced_option" id="msEditProductInputDateAvailable">
+                            <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
+                            <div class="col-md-10 form-inline">
+                                <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
+                                <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###">
+                                <p class="form-control-static">
+                                    <strong>###LABEL_DATE_ADDED###</strong>
+                                </p>
+                                <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
+                                <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
+                                <p class="form-control-static"><strong>###LABEL_DATE_MODIFIED###</strong></p>
+                                <p class="form-control-static">###VALUE_DATE_MODIFIED###</p>
+                            </div>
+                        </div>
+                        <div class="form-group" id="msEditProductInputModel">
+                            <label for="products_model" class="col-md-2 control-label">###LABEL_PRODUCT_MODEL###</label>
+                            <div class="col-md-10 form-inline">
+                                <input type="form-control text" class="form-control text" name="products_model" id="products_model" value="###VALUE_PRODUCT_MODEL###">
+                            </div>
+                        </div>
+                        <div class="form-group" id="msEditProductInputManufacturerName">
+                            <label for="manufacturers_id" class="col-md-2 control-label">###LABEL_PRODUCT_MANUFACTURER###</label>
+                            <div class="col-md-10 form-inline">
+                                ###INPUT_MANUFACTURER### <p class="form-control-static"><strong>###LABEL_ADD_NEW_MANUFACTURER###</strong></p> <input name="manufacturers_name" type="text" value="" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group" id="msEditProductInputWeight">
+                            <label for="products_weight" class="col-md-2 control-label">###LABEL_PRODUCT_WEIGHT###</label>
+                            <div class="col-md-10 form-inline">
+                                <input type="text" class="form-control text" name="products_weight" id="products_weight" value="###VALUE_PRODUCT_WEIGHT###">
+                            </div>
+                        </div>
+                        <div class="form-group toggle_advanced_option" id="msEditProductInputCondition">
+                            <label for="products_condition" class="col-md-2 control-label">###LABEL_PRODUCT_CONDITION###</label>
+                            <div class="col-md-10 form-inline">
+                                <select name="products_condition" class="form-control">
+                                    <option value="new" ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
+                                    <option value="used" ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
+                                    <option value="refurbished" ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group toggle_advanced_option" id="msEditProductInputEANCode">
+                            <label for="ean_code" class="col-md-2 control-label">###LABEL_EAN_CODE###</label>
+                            <div class="col-md-10 form-inline">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+                                    </div>
+                                </div>
+                                <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
+                                    <div class="col-md-12">
+                                        <p class="form-control-static"><strong>###LABEL_SKU_CODE###</strong></p>
+                                        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
+                                    </div>
+                                </div>
+                                <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
+                                    <div class="col-md-12">
+                                        <p class="form-control-static"><strong>###LABEL_MANUFACTURER_CODE###</strong></p>
+                                        <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
-    <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
-    <hr/>
-    <div class="form-group" id="msEditProductInputExcludeFromFeeds">
-        <label class="col-md-2 control-label">###LABEL_EXCLUDE_FROM_FEED###</label>
-        <div class="col-md-10">
-        ###FEEDS_LIST###
-        </div>
-    </div>
-    <hr/>
-    <div class="form-group" id="msEditProductInputExcludeStockFromFeeds">
-        <label class="col-md-2 control-label">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
-        <div class="col-md-10">
-            ###STOCK_FEEDS_LIST###
-        </div>
-    </div>
-    <hr/>
-    <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
-    <div id="msEditProductInputUnitWrapper">
-        <div class="toggle_advanced_option" id="msEditProductInputUnit">
-            <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
-        </div>
-        <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
-            <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
-            <div class="col-md-10 form-inline">
-            ###INPUT_PRODUCT_UNIT###
-            </div>
-        </div>
-        <div class="form-group" id="msEditProductInputMinimumQuantity">
-            <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
-            <div class="col-md-10 form-inline">
-            <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <strong class="form-control-static">###LABEL_MAXIMUM_QTY###</strong> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
-            </div>
-        </div>
-        <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
-            <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
-            <div class="col-md-10">
-            <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
-            </div>
-        </div>
-    </div>
-    <!-- ###VIRTUAL_PRODUCTS_WRAPPER### begin -->
-    <div class="toggle_advanced_option" id="msEditProductInputVirtualProduct">
-        <h3 class="page-header">###LABEL_VIRTUAL_PRODUCT###</h3>
-    </div>
-    ###OPTIONS_TAB_VIRTUAL_PRODUCT###
-    <div class="form-group toggle_advanced_option" id="msEditProductInputNumberDownload">
-        <label for="file_number_of_downloads" class="col-md-2 control-label">###LABEL_FILE_NUMBER_OF_DOWNLOADS###</label>
-        <div class="col-md-10">
-            <input type="text" class="form-control text" name="file_number_of_downloads" id="file_number_of_downloads" value="###VALUE_FILE_NUMBER_OF_DOWNLOADS###">
-        </div>
-    </div>
-    <!-- ###VIRTUAL_PRODUCTS_WRAPPER### end -->
-    ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-    <input name="pid" type="hidden" value="###VALUE_PRODUCT_PID0###" />
-    <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
+                        <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
+                        <hr/>
+                        <div class="form-group" id="msEditProductInputExcludeFromFeeds">
+                            <label class="col-md-2 control-label">###LABEL_EXCLUDE_FROM_FEED###</label>
+                            <div class="col-md-10">
+                                ###FEEDS_LIST###
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group" id="msEditProductInputExcludeStockFromFeeds">
+                            <label class="col-md-2 control-label">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+                            <div class="col-md-10">
+                                ###STOCK_FEEDS_LIST###
+                            </div>
+                        </div>
+                        <hr/>
+                        <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
+                        <div id="msEditProductInputUnitWrapper">
+                            <div class="toggle_advanced_option" id="msEditProductInputUnit">
+                                <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
+                            </div>
+                            <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
+                                <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
+                                <div class="col-md-10 form-inline">
+                                    ###INPUT_PRODUCT_UNIT###
+                                </div>
+                            </div>
+                            <div class="form-group" id="msEditProductInputMinimumQuantity">
+                                <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
+                                <div class="col-md-10 form-inline">
+                                    <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <strong class="form-control-static">###LABEL_MAXIMUM_QTY###</strong> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+                                </div>
+                            </div>
+                            <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
+                                <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ###VIRTUAL_PRODUCTS_WRAPPER### begin -->
+                        <div class="toggle_advanced_option" id="msEditProductInputVirtualProduct">
+                            <h3 class="page-header">###LABEL_VIRTUAL_PRODUCT###</h3>
+                        </div>
+                        ###OPTIONS_TAB_VIRTUAL_PRODUCT###
+                        <div class="form-group toggle_advanced_option" id="msEditProductInputNumberDownload">
+                            <label for="file_number_of_downloads" class="col-md-2 control-label">###LABEL_FILE_NUMBER_OF_DOWNLOADS###</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control text" name="file_number_of_downloads" id="file_number_of_downloads" value="###VALUE_FILE_NUMBER_OF_DOWNLOADS###">
+                            </div>
+                        </div>
+                        <!-- ###VIRTUAL_PRODUCTS_WRAPPER### end -->
+                        ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
+                        <input name="pid" type="hidden" value="###VALUE_PRODUCT_PID0###" />
+                        <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
-    <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
-    <div id="msEditProductInputAdvancedSettingsWrapper">
-        <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
-            <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
-        </div>
-        <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
-            <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
-            <div class="col-md-10">
-            <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+                        <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
+                        <div id="msEditProductInputAdvancedSettingsWrapper">
+                            <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
+                                <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
+                            </div>
+                            <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
+                                <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
+                                <div class="col-md-10">
+                                    <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="product_images" class="tab-pane">
+                        <h3>###LABEL_HEADING_TAB_IMAGES###</h3>
+                        ###INPUT_IMAGES_BLOCK###
+                    </div>
+                    <div role="tabpanel" id="meta_tags" class="tab-pane">
+                        <h3>###LABEL_HEADING_TAB_META_TAGS###</h3>
+                        ###INPUT_META_TAGS_BLOCK###
+                    </div>
+                    <div role="tabpanel" id="product_attributes" class="tab-pane">
+                        ###INPUT_ATTRIBUTES_BLOCK###
+                    </div>
+                    <div role="tabpanel" id="product_relatives" class="tab-pane">
+                        ###INPUT_PRODUCT_RELATIVES_BLOCK###
+                    </div>
+                    ###CONTENT_EXTRA_PLUGIN_TABS###
+                    <hr>
+                    <div class="clearfix">
+                        <div class="pull-right">
+                            <button name="advanced" type="button" value="" class="toggle_advanced_options btn btn-warning"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-minus fa-stack-1x"></i></span> ###FOOTER_VALUE_ADVANCED_OPTION###</button>
+                            <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_CANCEL###</a>
+                            ###FOOTER_BUTTON_SAVE_AS_NEW###
+                            <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE###</button>
+                            <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE_CLOSE###</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-<div role="tabpanel" id="product_images" class="tab-pane">
-    <h3>###LABEL_HEADING_TAB_IMAGES###</h3>
-    ###INPUT_IMAGES_BLOCK###
-</div>
-<div role="tabpanel" id="meta_tags" class="tab-pane">
-    <h3>###LABEL_HEADING_TAB_META_TAGS###</h3>
-    ###INPUT_META_TAGS_BLOCK###
-</div>
-<div role="tabpanel" id="product_attributes" class="tab-pane">
-    ###INPUT_ATTRIBUTES_BLOCK###
-</div>
-<div role="tabpanel" id="product_relatives" class="tab-pane">
-    ###INPUT_PRODUCT_RELATIVES_BLOCK###
-</div>
-###CONTENT_EXTRA_PLUGIN_TABS###
-<hr>
-<div class="clearfix">
-<div class="pull-right">
-    <button name="advanced" type="button" value="" class="toggle_advanced_options btn btn-warning"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-minus fa-stack-1x"></i></span> ###FOOTER_VALUE_ADVANCED_OPTION###</button>
-    <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_CANCEL###</a>
-    ###FOOTER_BUTTON_SAVE_AS_NEW###
-    <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE###</button>
-    <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE_CLOSE###</button>
-</div>
-</div>
-</form>
-</div>
-</div>
-</div>
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {

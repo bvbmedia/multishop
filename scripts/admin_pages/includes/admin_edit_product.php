@@ -4090,6 +4090,10 @@ if ($this->post) {
             $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>';
             $product_relatives_block .= $form_category_search;
             $product_relatives_block .='<hr>';
+            $product_relatives_block .= '<div class="form-group">';
+            $product_relatives_block .= '<label class="col-md-2 control-label">Save relation as:</label><div class="col-md-10 form-inline"><select class="form-control" name="product_relation_save_as" id="product_relation_save_as"><option value="sub">Sub</option><option value="main">Main</option></select></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .='<hr>';
             $product_relatives_block .='<div id="load">';
             $product_relatives_block .='<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
             $product_relatives_block .='<strong>Loading....</strong>';
@@ -4103,9 +4107,6 @@ if ($this->post) {
             $product_relatives_block .='<div id="search_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-            // main & sub grid block
-            $product_relatives_block .= '<div class="row">';
-            $product_relatives_block .= '<div class="col-md-6" id="main_block_grid_panel">';
             // main block
             $product_relatives_block .= '<div class="panel panel-default" id="main_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
@@ -4115,8 +4116,6 @@ if ($this->post) {
             $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="col-md-6" id="sub_block_grid_panel">';
             // sub block
             $product_relatives_block .= '<div class="panel panel-default" id="sub_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
@@ -4126,9 +4125,6 @@ if ($this->post) {
             $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
-
         }
         /*
 		 * layout page
