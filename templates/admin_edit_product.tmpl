@@ -271,15 +271,19 @@
                 this.lastValue = value;
             }
         });
-        $("#products_date_added_visitor").datepicker({
-                                                         dateFormat: "###DATE_FORMAT###",
-                                                         altField: "#products_date_added",
-                                                         altFormat: "yy-mm-dd",
-                                                         changeMonth: true,
-                                                         changeYear: true,
-                                                         showOtherMonths: true,
-                                                         yearRange: "###YEAR_RANGE###"
-                                                     });
+        $("#products_date_added_visitor").datetimepicker({
+            dateFormat: "###DATE_FORMAT###",
+            altField: "#products_date_added",
+            altFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###",
+            timeFormat: 'HH:mm:ss',
+            altFieldTimeOnly: false,
+            altFormat: "yy-mm-dd",
+            altTimeFormat: "HH:mm:ss"
+        });
         $("#products_date_available_visitor").datepicker({
                                                              dateFormat: "###DATE_FORMAT###",
                                                              altField: "#products_date_available",

@@ -4430,8 +4430,8 @@ if ($this->post) {
             $product['products_date_added_sys'] = '';
             $product['products_date_added_visual'] = '';
         } else {
-            $product['products_date_added_visual'] = strftime('%x', $product['products_date_added']);
-            $product['products_date_added_sys'] = date("Y-m-d", $product['products_date_added']);
+            $product['products_date_added_visual'] = strftime('%x %X', $product['products_date_added']);
+            $product['products_date_added_sys'] = date("Y-m-d H:i:s", $product['products_date_added']);
         }
         if ($product['starttime'] == 0) {
             $product['endtime_sys'] = '';
