@@ -2510,7 +2510,7 @@ if ($this->post) {
             $markerArray['AJAX_REQUEST_SPECIAL_PRICE'] = '';
         }
         $markerArray['DATE_FORMAT'] = $this->pi_getLL('locale_date_format_js', 'yy/mm/dd');
-        $markerArray['YEAR_RANGE'] = date("Y") . ':' . (date("Y") + 2);
+        $markerArray['YEAR_RANGE'] = date("Y") - 3 . ':' . (date("Y") + 2);
         $markerArray['AJAX_URL_PRODUCT_RELATIVE'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives&relation_types=cross-sell');
         $js_extra = array();
         // custom page hook that can be controlled by third-party plugin
