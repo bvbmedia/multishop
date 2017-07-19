@@ -32,11 +32,21 @@ if ($this->post['req'] == 'init') {
     // pre-defined product relation
     if (is_array($relations_data) and count($relations_data)) {
         $where_A ='';
-        $where_A .= " WHERE p.page_uid='" . $this->showCatalogFromPage . "' ";
-        $where_A .= " and p.products_id IN (" . implode(', ', $relations_data) . ") and pd.products_id=p.products_id";
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
-            $where_A .= ' and p.is_hidden=0';
+        $filter=array();
+        if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
+            if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
+            }
+        } else {
+            $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
         }
+        $filter[] = "p.products_id IN (" . implode(', ', $relations_data) . ")";
+        $filter[] = "pd.products_id=p.products_id";
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
+            $filter[] = 'p.is_hidden=0';
+        }
+        $filter[]='pd.language_id=' . $this->sys_language_uid;
+        $filter[]='cd.language_id=' . $this->sys_language_uid;
         //die($where_A);
         $query = '
 		SELECT pd.products_id,
@@ -47,7 +57,7 @@ if ($this->post['req'] == 'init') {
 			 tx_multishop_products_description pd
 		INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 		INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
-		' . $where_A . ' and pd.language_id=' . $this->sys_language_uid . ' and cd.language_id=' . $this->sys_language_uid . '
+		WHERE ' . implode(' AND ', $filter) . '
 		GROUP BY cd.categories_name ASC ORDER BY cd.categories_name';
         //	error_log($query);
         $pid_regs = array();
@@ -57,6 +67,23 @@ if ($this->post['req'] == 'init') {
                 $have_main_relation_type=false;
                 $have_sub_relation_type=false;
                 if ($row['categories_name']) {
+                    $filter=array();
+                    if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
+                        if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                            $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
+                        }
+                    } else {
+                        $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
+                    }
+                    $filter[] = "p.products_id IN (" . implode(', ', $relations_data) . ")";
+                    $filter[] = "pd.products_id=p.products_id";
+                    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
+                        $filter[] = 'p.is_hidden=0';
+                    }
+                    $filter[]='p2c.categories_id = ' . $row['categories_id'];
+                    $filter[]='p2c.is_deepest=1';
+                    $filter[]='pd.language_id=' . $this->sys_language_uid;
+                    $filter[]='cd.language_id=' . $this->sys_language_uid;
                     $query2 = '
 					SELECT pd.products_id,
 						   pd.products_name,
@@ -67,7 +94,7 @@ if ($this->post['req'] == 'init') {
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 					INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
-					' . $where_A . ' AND (p2c.categories_id = ' . $row['categories_id'] . ') and p2c.is_deepest=1 and pd.language_id=' . $this->sys_language_uid . ' and cd.language_id=' . $this->sys_language_uid . '
+					WHERE ' . implode(' AND ', $filter) . '
 					group by p.products_id ORDER BY pd.products_name ASC';
                     //var_dump($query2);
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
@@ -174,9 +201,21 @@ if ($this->post['req'] == 'init') {
         //$filter[] = 'pd.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         //}
         if (strlen($this->post['keypas']) > 1) {
-            $filter[] = "pd.products_name LIKE '%" . addslashes(trim(mslib_befe::strtolower($this->post['keypas']))) . "%'";
+            $subfilter=array();
+            $subfilter[] = "pd.products_name LIKE '%" . addslashes(trim(mslib_befe::strtolower($this->post['keypas']))) . "%'";
+            $subfilter[] = "p.products_model LIKE '%" . addslashes(trim(mslib_befe::strtolower($this->post['keypas']))) . "%'";
+            $subfilter[] = "p.ean_code LIKE '%" . addslashes(trim(mslib_befe::strtolower($this->post['keypas']))) . "%'";
+            $subfilter[] = "p.sku_code LIKE '%" . addslashes(trim(mslib_befe::strtolower($this->post['keypas']))) . "%'";
+            $filter[]='('.implode(' OR ', $subfilter).')';
         }
-        $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "' and pd.products_id=p.products_id";
+        if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
+            if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
+            }
+        } else {
+            $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
+        }
+        $filter[] = 'pd.products_id=p.products_id';
         if (is_array($relations_data) and count($relations_data)) {
             //$filter[] = 'pd.products_id NOT IN (' . implode(', ', $relations_data) . ')';
         }
