@@ -710,6 +710,15 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesTmplPostProc'])) {
+    $params = array(
+        'content' => &$content
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesTmplPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script>
 	jQuery(document).ready(function($) {
