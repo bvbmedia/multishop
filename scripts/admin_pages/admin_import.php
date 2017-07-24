@@ -1987,7 +1987,7 @@ if ($this->post['action'] == 'category-insert') {
                             //$str = "insert into tx_multishop_manufacturers (date_added, manufacturers_name, status) VALUES ('" . time() . "','" . addslashes($item['manufacturers_name']) . "',1)";
                             $insertArrayManufacturer=array();
                             $insertArrayManufacturer['date_added']=time();
-                            $insertArrayManufacturer['manufacturers_name']=addslashes($item['manufacturers_name']);
+                            $insertArrayManufacturer['manufacturers_name']=$item['manufacturers_name'];
                             $insertArrayManufacturer['status']=1;
                             if ($this->post['prefix_source_name']) {
                                 // save also the feed source name, maybe we need it later
