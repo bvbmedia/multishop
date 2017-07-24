@@ -1216,6 +1216,8 @@ if ($this->post) {
             }
             $updateArray['page_uid'] = $this->showCatalogFromPage;
             $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $updateArray['products_date_added'] = time();
+            $updateArray['products_last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1614,6 +1616,7 @@ if ($this->post) {
     } else {
         $updateArray['page_uid'] = $this->showCatalogFromPage;
         $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+        $updateArray['products_last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2510,7 +2513,7 @@ if ($this->post) {
             $markerArray['AJAX_REQUEST_SPECIAL_PRICE'] = '';
         }
         $markerArray['DATE_FORMAT'] = $this->pi_getLL('locale_date_format_js', 'yy/mm/dd');
-        $markerArray['YEAR_RANGE'] = date("Y") . ':' . (date("Y") + 2);
+        $markerArray['YEAR_RANGE'] = date("Y") - 3 . ':' . (date("Y") + 2);
         $markerArray['AJAX_URL_PRODUCT_RELATIVE'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives&relation_types=cross-sell');
         $js_extra = array();
         // custom page hook that can be controlled by third-party plugin
@@ -4430,8 +4433,8 @@ if ($this->post) {
             $product['products_date_added_sys'] = '';
             $product['products_date_added_visual'] = '';
         } else {
-            $product['products_date_added_visual'] = strftime('%x', $product['products_date_added']);
-            $product['products_date_added_sys'] = date("Y-m-d", $product['products_date_added']);
+            $product['products_date_added_visual'] = strftime('%x %X', $product['products_date_added']);
+            $product['products_date_added_sys'] = date("Y-m-d H:i:s", $product['products_date_added']);
         }
         if ($product['starttime'] == 0) {
             $product['endtime_sys'] = '';

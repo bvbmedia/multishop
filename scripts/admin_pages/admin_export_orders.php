@@ -449,7 +449,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				counter++;
 				var item=\'<div class="form-group"><label class="control-label col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminOrdersExportSelectField">';
         foreach ($array as $key => $option) {
-            $content .= '<option value="' . $key . '">' . htmlspecialchars($option) . '</option>';
+            $content .= '<option value="' . $key . '">' . htmlspecialchars(addslashes($option)) . '</option>';
         }
         $content .= '</select> <button class="delete_field btn btn-danger" name="delete_field" type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '"><i class="fa fa-trash-o"></i></button></div></div>\';
 				$(\'#admin_orders_exports_fields\').append(item);

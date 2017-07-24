@@ -2686,12 +2686,23 @@ $records[] = array(
         'configuration_title' => 'Clear guest user session data after checkout',
         'configuration_key' => 'CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT',
         'configuration_value' => '0',
-        'description' => 'Clear',
+        'description' => 'Clear guest user session data after checkout',
         'group_id' => '8',
         'use_function' => '',
         'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
         'depend_on_configuration_key' => '',
         'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Relate product to products across multiple shop',
+    'configuration_key' => 'CROSS_SHOP_PRODUCT_RELATION',
+    'configuration_value' => '0',
+    'description' => 'Relate product to products across multiple shop',
+    'group_id' => '3',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
 );
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
