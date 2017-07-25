@@ -2005,69 +2005,80 @@ if ($this->post['action'] == 'category-insert') {
                         }
                     }
                     if ($item['manufacturers_image']) {
-                        $manufacturers_name = $item['manufacturers_image'];
+                        if (isset($item['manufacturers_name'])) {
+                            $manufacturers_name = $item['manufacturers_name'];
+                        } elseif($item['manufacturers_id']) {
+                            $manufacturers_name = $item['manufacturers_id'];
+                        }
                         $image = $item['manufacturers_image'];
-                        $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_id='" . $item['manufacturers_id'] . "'";
-                        $qrychk = $GLOBALS['TYPO3_DB']->sql_query($strchk);
-                        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-                            $rowchk = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
-                            // custom hook that can be controlled by third-party plugin
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'])) {
-                                $params = array(
-                                        'rowchk' => &$rowchk,
-                                        'item' => &$item,
-                                        'column' => 'manufacturers_image'
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                                }
-                            }
-                            // custom hook that can be controlled by third-party plugin eof
-                            if (!$rowchk['manufacturers_image']) {
-                                // download image
-                                $data = mslib_fe::file_get_contents($image);
-                                if ($data) {
-                                    $plaatje1_name = $item['manufacturers_id'] . '-' . ($colname) . '-' . time();
-                                    $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
-                                    file_put_contents($tmpfile, $data);
-                                    $plaatje1 = $tmpfile;
-                                    if (($extentie1 = mslib_befe::exif_imagetype($plaatje1)) && $plaatje1_name <> '') {
-                                        $extentie1 = image_type_to_extension($extentie1, false);
-                                        $ext = $extentie1;
-                                        $ix = 0;
-                                        $filename = mslib_fe::rewritenamein($manufacturers_name) . '.' . $ext;
-                                        $folder = mslib_befe::getImagePrefixFolder($filename);
-                                        if (!is_dir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder)) {
-                                            \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder);
-                                        }
-                                        $folder .= '/';
-                                        $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
-                                        if (file_exists($target)) {
-                                            do {
-                                                $filename = mslib_fe::rewritenamein($manufacturers_name) . ($ix > 0 ? '-' . $ix : '') . '.' . $ext;
-                                                $folder = mslib_befe::getImagePrefixFolder($filename);
-                                                if (!is_dir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder)) {
-                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder);
-                                                }
-                                                $folder .= '/';
-                                                $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
-                                                $ix++;
-                                            } while (file_exists($target));
-                                        }
-                                        // end
-                                        $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
-                                        copy($tmpfile, $target);
-                                        @unlink($tmpfile);
-                                        $manufacturers_image_name = mslib_befe::resizeManufacturerImage($target, $filename, PATH_site . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
-                                        if ($manufacturers_image_name) {
-                                            $updateArray = array();
-                                            $updateArray['manufacturers_image'] = $manufacturers_image_name;
-                                            $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
-                                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', "manufacturers_id=" . $rowchk['manufacturers_id'], $updateArray);
-                                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                        }
+                        $strchk='';
+                        if (isset($item['manufacturers_id']) && is_numeric($item['manufacturers_id'])) {
+                            $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_id='" . addslashes($item['manufacturers_id']) . "'";
+                        } elseif($item['manufacturers_name']) {
+                            $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_name='" . addslashes($item['manufacturers_name']) . "'";
+                        }
+                        if ($strchk) {
+                            $qrychk = $GLOBALS['TYPO3_DB']->sql_query($strchk);
+                            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+                                $rowchk = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+                                // custom hook that can be controlled by third-party plugin
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'])) {
+                                    $params = array(
+                                            'rowchk' => &$rowchk,
+                                            'item' => &$item,
+                                            'column' => 'manufacturers_image'
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['fetchManufacturersImagePreProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                     }
-                                    @unlink($tmpfile);
+                                }
+                                // custom hook that can be controlled by third-party plugin eof
+                                if (!$rowchk['manufacturers_image']) {
+                                    // download image
+                                    $data = mslib_fe::file_get_contents($image);
+                                    if ($data) {
+                                        $plaatje1_name = $item['manufacturers_id'] . '-' . time();
+                                        $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
+                                        file_put_contents($tmpfile, $data);
+                                        $plaatje1 = $tmpfile;
+                                        if (($extentie1 = mslib_befe::exif_imagetype($plaatje1)) && $plaatje1_name <> '') {
+                                            $extentie1 = image_type_to_extension($extentie1, false);
+                                            $ext = $extentie1;
+                                            $ix = 0;
+                                            $filename = mslib_fe::rewritenamein($manufacturers_name) . '.' . $ext;
+                                            $folder = mslib_befe::getImagePrefixFolder($filename);
+                                            if (!is_dir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder)) {
+                                                \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder);
+                                            }
+                                            $folder .= '/';
+                                            $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
+                                            if (file_exists($target)) {
+                                                do {
+                                                    $filename = mslib_fe::rewritenamein($manufacturers_name) . ($ix > 0 ? '-' . $ix : '') . '.' . $ext;
+                                                    $folder = mslib_befe::getImagePrefixFolder($filename);
+                                                    if (!is_dir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder)) {
+                                                        \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder);
+                                                    }
+                                                    $folder .= '/';
+                                                    $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
+                                                    $ix++;
+                                                } while (file_exists($target));
+                                            }
+                                            // end
+                                            $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
+                                            copy($tmpfile, $target);
+                                            @unlink($tmpfile);
+                                            $manufacturers_image_name = mslib_befe::resizeManufacturerImage($target, $filename, PATH_site . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
+                                            if ($manufacturers_image_name) {
+                                                $updateArray = array();
+                                                $updateArray['manufacturers_image'] = $manufacturers_image_name;
+                                                $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
+                                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', "manufacturers_id=" . $rowchk['manufacturers_id'], $updateArray);
+                                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                            }
+                                        }
+                                        @unlink($tmpfile);
+                                    }
                                 }
                             }
                         }

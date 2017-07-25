@@ -417,6 +417,8 @@ class mslib_fe {
             $required_cols[] = 'p.minimum_quantity';
             $required_cols[] = 'p.maximum_quantity';
             $required_cols[] = 'p.products_multiplication';
+            $required_cols[] = 'p.starttime';
+            $required_cols[] = 'p.endtime';
             $required_cols[] = 'oud.name as order_unit_name';
             if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
                 $required_cols[] = 'pd.products_description';
