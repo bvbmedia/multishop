@@ -2035,7 +2035,7 @@ if ($this->post['action'] == 'category-insert') {
                                         $extentie1 = image_type_to_extension($extentie1, false);
                                         $ext = $extentie1;
                                         $ix = 0;
-                                        $filename = mslib_fe::rewritenamein($categories_name) . '.' . $ext;
+                                        $filename = mslib_fe::rewritenamein($manufacturers_name) . '.' . $ext;
                                         $folder = mslib_befe::getImagePrefixFolder($filename);
                                         if (!is_dir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder)) {
                                             \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder);
@@ -2055,12 +2055,9 @@ if ($this->post['action'] == 'category-insert') {
                                             } while (file_exists($target));
                                         }
                                         // end
-                                        $manufacturers_image = $path . '/' . $naam;
-                                        // backup original
                                         $target = PATH_site . $this->ms['image_paths']['manufacturers']['original'] . '/' . $folder . $filename;
                                         copy($tmpfile, $target);
                                         @unlink($tmpfile);
-                                        // backup original eof
                                         $manufacturers_image_name = mslib_befe::resizeManufacturerImage($target, $filename, PATH_site . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
                                         if ($manufacturers_image_name) {
                                             $updateArray = array();
