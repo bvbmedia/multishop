@@ -548,10 +548,12 @@ switch ($this->ms['page']) {
                         $catpath = array();
                         $level = 0;
                         $where = '';
-                        foreach ($cats as $cat) {
-                            $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-                            $catpath[] = $cat['name'] . (!$cat['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
-                            $level++;
+                        if (is_array($cats) && count($cats)) {
+                            foreach ($cats as $cat) {
+                                $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                                $catpath[] = $cat['name'] . (!$cat['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
+                                $level++;
+                            }
                         }
                         if (count($catpath) > 0) {
                             $cat_link = mslib_fe::typolink($this->conf['products_listing_page_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
