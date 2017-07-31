@@ -1231,6 +1231,17 @@ class mslib_fe {
     // wrapper to in_array() for PHP3 compatibility
     // Checks if the lookup value exists in the lookup array
     public function typolink($page_id = '', $vars = '', $manual_link = 0, $forceAbsoluteUrl = 0) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'])) {
+            $params = array(
+                    'page_id' => &$page_id,
+                    'vars' => &$vars,
+                    'manual_link' => &$manual_link,
+                    'forceAbsoluteUrl' => &$forceAbsoluteUrl
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($vars and preg_match("/^&/", $vars)) {
             $vars = substr($vars, 1, strlen($vars));
         }
