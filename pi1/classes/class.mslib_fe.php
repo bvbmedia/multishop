@@ -680,7 +680,7 @@ class mslib_fe {
             \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
         }
         if ($this->msDebug) {
-            $this->msDebugInfo .= $str . "\n\n";
+            $this->msDebugInfo .= $str .'<br/><br/>'. "\n\n";
         }
         if ($returnTotalCountOnly) {
             return $array['total_rows'];
