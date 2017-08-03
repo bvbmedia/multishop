@@ -2235,6 +2235,8 @@ class mslib_befe {
 		  `starttime` int(11) default '0',
 		  `endtime` int(11) default '0',
 		";
+        $additionalColumns=array();
+
         if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
             $additional_indexes = '';
             foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
@@ -2248,10 +2250,21 @@ class mslib_befe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'])) {
             $params = array(
                     'str' => &$str,
-                    'additional_indexes' => &$additional_indexes
+                    'additional_indexes' => &$additional_indexes,
+                    'additionalColumns' =>&$additionalColumns
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if (count($additionalColumns)) {
+            foreach ($additionalColumns as $additionColumn) {
+                if ($additionColumn['column_name']) {
+                    $str .= "		  `" . $additionColumn['column_name'] . "` " . $additionColumn['column_type'] . " NULL," . "\n";
+                }
+                if ($additionColumn['enable_index']) {
+                    $additional_indexes .= "KEY `" . $additionColumn['column_name'] . "` (`" . $additionColumn['column_name'] . "`)," . "\n";
+                }
             }
         }
         $str .= "PRIMARY KEY (`id`),
