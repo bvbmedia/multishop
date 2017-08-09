@@ -3540,13 +3540,15 @@ if ($this->post['action'] != 'product-import-preview' && $this->get['action'] !=
                 $schedule_content .= '</tr>';
                 // build the select2 cache
                 $cats = mslib_fe::Crumbar($job['categories_id']);
-                $cats = array_reverse($cats);
-                $catpath = array();
-                foreach ($cats as $cat) {
-                    $catpath[] = $cat['name'];
-                }
-                if (count($catpath) > 0) {
-                    $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $job['categories_id'] . ']={id:"' . $job['categories_id'] . '", text:"' . implode(' > ', $catpath) . '"};';
+                if (is_array($cats)) {
+                    $cats = array_reverse($cats);
+                    $catpath = array();
+                    foreach ($cats as $cat) {
+                        $catpath[] = $cat['name'];
+                    }
+                    if (count($catpath) > 0) {
+                        $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $job['categories_id'] . ']={id:"' . $job['categories_id'] . '", text:"' . implode(' > ', $catpath) . '"};';
+                    }
                 }
             }
             $schedule_content .= '</tbody>';
