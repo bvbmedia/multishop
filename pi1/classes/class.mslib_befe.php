@@ -847,8 +847,12 @@ class mslib_befe {
                         foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
                             if ($option_id) {
                                 $option_values = mslib_fe::getProductsOptionValues($option_id, $flat_product['products_id']);
-                                if ($option_values[0]['products_options_values_name']) {
-                                    $flat_product[$array[0]] = $option_values[0]['products_options_values_name'];
+                                if (is_array($option_values)) {
+                                    $values=array();
+                                    foreach ($option_values as $option_value) {
+                                        $values[]=$option_value['products_options_values_name'];
+                                    }
+                                    $flat_product[$array[0]] = implode('·',$values);
                                 }
                             }
                         }
