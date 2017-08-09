@@ -52,7 +52,8 @@ if ($this->post['req'] == 'init') {
 		SELECT pd.products_id,
 			   pd.products_name,
 			   p2c.categories_id,
-			   cd.categories_name
+			   cd.categories_name,
+			   p.page_uid
 		FROM tx_multishop_products p,
 			 tx_multishop_products_description pd
 		INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
@@ -89,7 +90,8 @@ if ($this->post['req'] == 'init') {
 						   pd.products_name,
 						   p2c.categories_id,
 						   cd.categories_name,
-						   p.products_status
+						   p.products_status,
+						   p.page_uid
 					FROM tx_multishop_products p,
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
@@ -101,14 +103,30 @@ if ($this->post['req'] == 'init') {
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
                         $level = 0;
-                        $crum = mslib_fe::Crumbar($row['categories_id']);
-                        $crum = array_reverse($crum);
-                        $cats = array();
+
+                        $default_path = $row['categories_id'];
+                        $product_path = mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+                        if (is_array($product_path) && count($product_path)) {
+                            $default_path = $product_path['node_id'];
+                        }
+                        if ($default_path) {
+                            // get all cats to generate multilevel fake url
+                            $level=0;
+                            if ($row['page_uid']!=$this->shop_pid) {
+                                $crum=mslib_fe::Crumbar($default_path, '', array(), $row['page_uid']);
+                            } else {
+                                $crum=mslib_fe::Crumbar($default_path);
+                            }
+                            $crum=array_reverse($crum);
+                        }
                         $where = '';
-                        foreach ($crum as $item) {
-                            $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
-                            $cats[] = $item['name'];
-                            $level++;
+                        if ($crum) {
+                            $cats = array();
+                            foreach ($crum as $item) {
+                                $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
+                                $cats[] = $item['name'];
+                                $level++;
+                            }
                         }
                         if (!empty($where)) {
                             $where = substr($where, 0, (strlen($where) - 1));
@@ -146,7 +164,14 @@ if ($this->post['req'] == 'init') {
                                 }
                                 $product_link = '#';
                                 if (!empty($where)) {
-                                    $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                    if ($row['page_uid']!=$this->shop_pid) {
+                                        $product_link = mslib_fe::typolink($row['page_uid'], '&' . $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                    } else {
+                                        $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                    }
+
+
+                                    //$product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                 }
                                 $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['link'] = $product_link;
                                 $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['relation_type'] = $relation_type;
