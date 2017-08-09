@@ -4430,6 +4430,7 @@ if (is_numeric($this->get['orders_id'])) {
             $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
             $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
             $headingButton['attributes'] = '';
+            $headingButton['target'] = '_blank';
             $headerButtons[] = $headingButton;
         }
         $headingButton = array();
