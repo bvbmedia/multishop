@@ -1314,7 +1314,7 @@ class mslib_befe {
                 $count = mslib_befe::getCount('', 'tx_multishop_manufacturers', '', $filter);
                 if ($count < 2) {
                     // Only delete the file is we have found 1 category using it
-                    mslib_befe::deleteManufacturersImage($record['manufacturers_image']);
+                    mslib_befe::deleteManufacturerImage($record['manufacturers_image']);
                 }
             }
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers', 'manufacturers_id=' . $id);
