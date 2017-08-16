@@ -2,6 +2,19 @@
 if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
+$ajax_page_uid=$this->shop_pid;
+if (isset($this->get['pid']) && is_numeric($this->get['pid']) && $this->get['pid']>0) {
+    $puid_rec=mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products', 'products_id', array(), 'page_uid');
+    if (is_array($puid_rec) && isset($puid_rec['page_uid']) && is_numeric($puid_rec['page_uid']) && $puid_rec['page_uid']>0) {
+        if ($puid_rec['page_uid']!=$this->shop_pid) {
+            $ajax_page_uid=$puid_rec['page_uid'];
+        }
+    }
+}
+$catalog_page_uid=$this->showCatalogFromPage;
+if ($ajax_page_uid!=$catalog_page_uid) {
+    $catalog_page_uid=$ajax_page_uid;
+}
 $jsSelect2InitialValue = array();
 $jsSelect2InitialValue[] = 'var categoriesIdTerm=[];';
 $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $this->shop_pid . ']=[];';
@@ -172,7 +185,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 				data: {
 					q: query.term
 				},
@@ -187,25 +200,7 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
-				/*$.each(split_id, function(i, v) {
-					if (typeof categoriesIdTerm[' . $this->shop_pid . '][v] !== "undefined") {
-						callback_data[i]=categoriesIdTerm[' . $this->shop_pid . '][v];
-					}
-				});
-				if (callback_data.length) {
-					callback(callback_data);
-				} else {
-					$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1') . '\', {
-						data: {
-							preselected_id: id
-						},
-						dataType: "json"
-					}).done(function(data) {
-						categoriesIdTerm[' . $this->shop_pid . '][data.id]={id: data.id, text: data.text};
-						callback(data);
-					});
-				}*/
-				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 					data: {
 						preselected_id: id
 					},
@@ -1177,6 +1172,7 @@ if ($this->post) {
             //if (!$updateArray['products_image']) {
             $image_tstamp = time();
             $product_original = mslib_fe::getProduct($this->post['pid']);
+            $catalog_page_uid=$this->showCatalogFromPage;
             $original_images = array();
             foreach ($product_original as $arr_key => $arr_val) {
                 if (strpos($arr_key, 'products_image') !== false && !empty($arr_val)) {
@@ -1361,9 +1357,9 @@ if ($this->post) {
                 $catOldIds = array();
                 if (!empty($this->post['old_categories_id'])) {
                     if (strpos($this->post['old_categories_id'], ',') !== false) {
-                        $catOldIds[$this->showCatalogFromPage] = explode(',', $this->post['old_categories_id']);
+                        $catOldIds[$catalog_page_uid] = explode(',', $this->post['old_categories_id']);
                     } else {
-                        $catOldIds[$this->showCatalogFromPage][] = $this->post['old_categories_id'];
+                        $catOldIds[$catalog_page_uid][] = $this->post['old_categories_id'];
                     }
                 }
                 // if enableMultipleShops is enabled also collect these old category ids
@@ -1384,7 +1380,7 @@ if ($this->post) {
                 if (strpos($this->post['categories_id'], ',') !== false) {
                     $tmp_categories_id = explode(',', $this->post['categories_id']);
                     foreach ($tmp_categories_id as $tmp_category_id) {
-                        $catIds[$this->showCatalogFromPage][] = $tmp_category_id;
+                        $catIds[$catalog_page_uid][] = $tmp_category_id;
                         if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->shop_pid][$tmp_category_id]) && $tmp_category_id != $this->get['cid']) {
                             //$this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->showCatalogFromPage][$tmp_category_id]=1;
                             /*foreach ($this->post['products_name'] as $key=>$value) {
@@ -1395,7 +1391,7 @@ if ($this->post) {
                         }
                     }
                 } else {
-                    $catIds[$this->showCatalogFromPage][] = $this->post['categories_id'];
+                    $catIds[$catalog_page_uid][] = $this->post['categories_id'];
                     if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->shop_pid][$this->post['categories_id']]) && $this->post['categories_id'] != $this->get['cid']) {
                         //$this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$this->showCatalogFromPage][$this->post['categories_id']]=1;
                         /*foreach ($this->post['products_name'] as $key=>$value) {
@@ -1457,10 +1453,6 @@ if ($this->post) {
                         }
                     }
                 }
-                //echo "<pre>";
-                //print_r($catOldIds);
-                //print_r($catIds);
-                //die();
                 // finally get the category ids that we must remove
                 if (is_array($catOldIds) && count($catOldIds)) {
                     foreach ($catOldIds as $page_uid => $catOldArray) {
@@ -1485,20 +1477,18 @@ if ($this->post) {
                                 }
                                 $crumbar_ident_string = implode(',', $crumbar_ident_array);
                                 //
+
                                 if (!empty($crumbar_ident_string)) {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and crumbar_identifier=\'' . $crumbar_ident_string . '\' and page_uid=' . $page_uid);
-                                    //var_dump($query);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\'' . $prodid . '\' and layered_categories_id=\'' . $catId . '\' and page_uid=' . $page_uid);
-                                    //var_dump($query);
-                                    //$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                                    $res=$GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
                             }
                         }
                     }
                 }
-                //die();
                 // remove the p2c relation when the external shops are not linked anymore
                 if ($this->conf['enableMultipleShops']) {
                     if (is_array($shopPids) && count($shopPids)) {
@@ -1515,7 +1505,7 @@ if ($this->post) {
                                         $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     }
-                                } else if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+                                }/* else if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
@@ -1524,7 +1514,7 @@ if ($this->post) {
                                     //
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                }
+                                }*/
                             }
                         }
                     }
@@ -1797,7 +1787,7 @@ if ($this->post) {
                 $updateArray['products_meta_description'] = $this->post['products_meta_description'][$key];
                 $updateArray['products_negative_keywords'] = $this->post['products_negative_keywords'][$key];
                 $updateArray['products_url'] = $this->post['products_url'][$key];
-                $updateArray['page_uid'] = $this->showCatalogFromPage;
+                $updateArray['page_uid'] = $catalog_page_uid;
                 if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
                     $updateArray['layered_categories_id'] = $this->post['local_primary_product_categories'];
                 }
