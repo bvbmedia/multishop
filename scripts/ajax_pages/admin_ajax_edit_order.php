@@ -269,9 +269,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             }
             if (!empty($this->get['q']) && strlen($this->get['q']) > 0) {
                 if (!is_numeric($this->get['q'])) {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
                 } else {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
                 }
                 $limit = '';
             }
@@ -314,6 +314,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                 }
                 if (!empty($row['products_name'])) {
+                    if (!empty($row['products_model'])) {
+                        $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
+                    }
                     if ($row['products_status'] < 1) {
                         $row['products_name'] .= ' [disabled]';
                     }
@@ -322,6 +325,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                             $data[] = array(
                                     'id' => $row['products_id'],
                                     'text' => $row['products_name'],
+                                    'products_model' => $row['products_model'],
                                     'sku_code' => $row['sku_code']
                             );
                         }
@@ -329,6 +333,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         $data[] = array(
                                 'id' => $row['products_id'],
                                 'text' => $row['products_name'],
+                                'products_model' => $row['products_model'],
                                 'sku_code' => $row['sku_code']
                         );
                     }
