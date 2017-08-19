@@ -3393,13 +3393,16 @@ if ($this->post) {
 					var pa_option_sb=$("#tmp_options_sb").select2("data");
 					var pa_attributes_sb=$("#tmp_attributes_sb").select2("data");
 					if (pa_option_sb !== null && pa_attributes_sb !== null) {
-						var selected_pa_option_id=pa_option_sb.id;
-						var selected_pa_option_text=pa_option_sb.text;
+						var selected_pa_option_id=addslashes(pa_option_sb.id);
+						var selected_pa_option_text=addslashes(pa_option_sb.text);
 					} else {
 						var selected_pa_option_id="";
 						var selected_pa_option_text="";
 					}
-					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div > div > div.items_wrapper";
+				    var pa_option_data_id=encodeURIComponent(selected_pa_option_id).replace(/%[0-9A-F]{2}/gi,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/\'/g,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/"/g,\'\');
+					var target_liwrapper_id="#products_attributes_item_" + pa_option_data_id + " > div > div > div.items_wrapper";
 					if (selected_pa_option_id != "") {
 						var delete_button_html=\'<button type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
 						// add class for marker
@@ -3436,11 +3439,11 @@ if ($this->post) {
 								li_class="even_group_row";
 							}
 							var new_li = $("<div/>", {
-								id: "products_attributes_item_" + selected_pa_option_id,
+								id: "products_attributes_item_" + pa_option_data_id,
 								alt: selected_pa_option_text,
 								class: "panel panel-default products_attributes_item " + li_class
 							});
-							$(new_li).append(\'<div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_\' + selected_pa_option_id + \'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_\' + selected_pa_option_id + \'"><h3 class="panel-title"><i class="fa fa-bars"></i> \' + selected_pa_option_text + \'</h3></div><div class="collapse in" id="bodyproducts_attributes_item_\' + selected_pa_option_id + \'"><div class="panel-body"><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="' . addslashes($this->pi_getLL('admin_add_new_value')) . ' [+]" rel="\' + selected_pa_option_id + \'" /></div></div></div>\');
+							$(new_li).append(\'<div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_\' + pa_option_data_id + \'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_\' + pa_option_data_id + \'"><h3 class="panel-title"><i class="fa fa-bars"></i> \' + selected_pa_option_text + \'</h3></div><div class="collapse in" id="bodyproducts_attributes_item_\' + pa_option_data_id + \'"><div class="panel-body"><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="' . addslashes($this->pi_getLL('admin_add_new_value')) . ' [+]" rel="\' + pa_option_data_id + \'" /></div></div></div>\');
 							$(pa_main_divwrapper).addClass("odd_item_row");
 							// rewrite the button
 							$(this).parent().empty().html(delete_button_html);
