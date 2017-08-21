@@ -3269,11 +3269,25 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         // update flat database
                         if ($this->ms['MODULES']['FLAT_DATABASE'] or $this->ms['MODULES']['GLOBAL_MODULES']['FLAT_DATABASE']) {
-                            if (isset($item['products_status']) and $item['products_status'] == '0' and is_numeric($products_id)) {
-                                $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_flat', 'products_id=' . $products_id);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            } else {
-                                mslib_befe::convertProductToFlat($products_id, 'tx_multishop_products_flat');
+                            $updateFlat=1;
+                            // custom hook that can be controlled by third-party plugin
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHookFlat'])) {
+                                $params = array(
+                                        'products_id' => $item['added_products_id'],
+                                        'item' => &$item,
+                                        'updateFlat' => &$updateFlat
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHookFlat'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
+                            if ($updateFlat) {
+                                if (isset($item['products_status']) and $item['products_status'] == '0' and is_numeric($products_id)) {
+                                    $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_flat', 'products_id=' . $products_id);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                } else {
+                                    mslib_befe::convertProductToFlat($products_id, 'tx_multishop_products_flat');
+                                }
                             }
                         }
                         // lets notify plugin that we have update action in product
