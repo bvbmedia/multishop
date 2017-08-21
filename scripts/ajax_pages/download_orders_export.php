@@ -52,9 +52,9 @@ if ($this->get['orders_export_hash']) {
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
         if (!empty($post_data['start_duration'])) {
-            $start_duration = strtotime($post_data['start_duration']);
+            $start_duration = strtotime(date('Y-m-d 00:00:00', strtotime($post_data['start_duration'])));
             if (!empty($post_data['end_duration'])) {
-                $end_duration = strtotime($post_data['end_duration'], $start_duration);
+                $end_duration = strtotime(date('Y-m-d 23:59:59', strtotime($post_data['end_duration'])));
             } else {
                 $end_duration = time();
             }
@@ -68,6 +68,12 @@ if ($this->get['orders_export_hash']) {
             $filter[] = "(o.paid='1')";
         } else if ($post_data['payment_status'] == 'unpaid') {
             $filter[] = "(o.paid='0')";
+        }
+        if (isset($post_data['shipping_method']) && !empty($post_data['shipping_method']) && $post_data['shipping_method']!='all') {
+            $filter[] = "(o.shipping_method='".addslashes($post_data['shipping_method'])."')";
+        }
+        if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method']!='all') {
+            $filter[] = "(o.payment_method='".addslashes($post_data['payment_method'])."')";
         }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
@@ -585,6 +591,25 @@ if ($this->get['orders_export_hash']) {
                             } else {
                                 $excelCols[] = '0';
                             }
+                        }
+                        break;
+                    case 'ordered_by':
+                        if ($row['cruser_id']) {
+                            $user = mslib_fe::getUser($row['cruser_id']);
+                            if ($user['username']) {
+                                $excelCols[] = $user['username'];
+                            } else {
+                                $excelCols[] = '';
+                            }
+                        } else {
+                            $excelCols[] = '';
+                        }
+                        break;
+                    case 'discount':
+                        if ($row['discount']) {
+                            $excelCols[] = number_format($row['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '');
+                        } else {
+                            $excelCols[] = '';
                         }
                         break;
                 }

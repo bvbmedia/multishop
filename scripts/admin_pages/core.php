@@ -2,7 +2,31 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-// Code moved from admin_ajax.php
+// custom page hook that can be controlled by third-party plugin
+$settings=array();
+$settings['plugins']=array();
+$settings['plugins'][]='table';
+$settings['plugins'][]='alignment';
+$settings['plugins'][]='fontcolor';
+$settings['plugins'][]='fontsize';
+$settings['plugins'][]='filemanager';
+$settings['plugins'][]='imagemanager';
+$settings['plugins'][]='video';
+$settings['plugins'][]='textexpander';
+$settings['plugins'][]='source';
+$settings['plugins'][]='fullscreen';
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/core.php']['redactorPreProc'])) {
+    $params = array(
+            'settings' => &$settings
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/core.php']['redactorPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+foreach ($settings['plugins'] as $key => $val) {
+    $settings['plugins'][$key]='\''.$val.'\'';
+}
+// custom page hook that can be controlled by third-party plugin eof
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 	jQuery(function($){
@@ -22,7 +46,7 @@ $(function() {
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
 		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
 		minHeight:\'400\',
-		plugins: [\'table\',\'alignment\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'source\',[\'fullscreen\']],
+		plugins: ['.implode(',',$settings['plugins']).'],
 		callbacks: {
             keydown: function(e) {
                 if (e.ctrlKey && e.keyCode === 13) {
@@ -150,7 +174,16 @@ switch ($this->ms['page']) {
         break;
     case 'admin_new_order':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_new_order.php');
+            if (strstr($this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'], "..")) {
+                die('error in ADMIN_NEW_MANUAL_ORDER_FORM_TYPE value');
+            } else {
+                if (strstr($this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'], "/")) {
+                    // relative mode
+                    require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_NEW_MANUAL_ORDER_FORM_TYPE'] . '.php');
+                } else {
+                    require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_new_order.php');
+                }
+            }
         }
         break;
     case 'admin_processed_manual_order':

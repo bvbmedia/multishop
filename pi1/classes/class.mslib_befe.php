@@ -847,8 +847,12 @@ class mslib_befe {
                         foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
                             if ($option_id) {
                                 $option_values = mslib_fe::getProductsOptionValues($option_id, $flat_product['products_id']);
-                                if ($option_values[0]['products_options_values_name']) {
-                                    $flat_product[$array[0]] = $option_values[0]['products_options_values_name'];
+                                if (is_array($option_values)) {
+                                    $values=array();
+                                    foreach ($option_values as $option_value) {
+                                        $values[]=$option_value['products_options_values_name'];
+                                    }
+                                    $flat_product[$array[0]] = implode('·',$values);
                                 }
                             }
                         }
@@ -1310,7 +1314,7 @@ class mslib_befe {
                 $count = mslib_befe::getCount('', 'tx_multishop_manufacturers', '', $filter);
                 if ($count < 2) {
                     // Only delete the file is we have found 1 category using it
-                    mslib_befe::deleteManufacturersImage($record['manufacturers_image']);
+                    mslib_befe::deleteManufacturerImage($record['manufacturers_image']);
                 }
             }
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers', 'manufacturers_id=' . $id);
@@ -2235,6 +2239,8 @@ class mslib_befe {
 		  `starttime` int(11) default '0',
 		  `endtime` int(11) default '0',
 		";
+        $additionalColumns=array();
+
         if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
             $additional_indexes = '';
             foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
@@ -2248,10 +2254,21 @@ class mslib_befe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'])) {
             $params = array(
                     'str' => &$str,
-                    'additional_indexes' => &$additional_indexes
+                    'additional_indexes' => &$additional_indexes,
+                    'additionalColumns' =>&$additionalColumns
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if (count($additionalColumns)) {
+            foreach ($additionalColumns as $additionColumn) {
+                if ($additionColumn['column_name']) {
+                    $str .= "		  `" . $additionColumn['column_name'] . "` " . $additionColumn['column_type'] . " NULL," . "\n";
+                }
+                if ($additionColumn['enable_index']) {
+                    $additional_indexes .= "KEY `" . $additionColumn['column_name'] . "` (`" . $additionColumn['column_name'] . "`)," . "\n";
+                }
             }
         }
         $str .= "PRIMARY KEY (`id`),
@@ -3258,8 +3275,6 @@ class mslib_befe {
                 $long_date = strftime($this->pi_getLL('full_date_format'), $time);
                 $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
                 $array2[] = $long_date;
-                $array1[] = '###STORE_NAME###';
-                $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###PROPOSAL_NUMBER###';
@@ -3292,6 +3307,8 @@ class mslib_befe {
                 }
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
+                $array1[] = '###TRACK_AND_TRACE_LINK###';
+                $array2[] = $order['track_and_trace_link'];
                 $array1[] = '###BILLING_STREET_NAME###';
                 $array2[] = $order['billing_street_name'];
                 $array1[] = '###BILLING_ADDRESS_NUMBER###';
@@ -4126,6 +4143,7 @@ class mslib_befe {
         return $selectbox_str;
     }
     function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix = '', $display_currency_symbol = 1, $table_type = 'invoice') {
+        $template='';
         switch ($table_type) {
             case 'invoice':
                 if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
@@ -4141,6 +4159,20 @@ class mslib_befe {
                     $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'templates/order_details_table_packingslip_pdf.tmpl');
                 }
                 break;
+        }
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'])) {
+            $params_internal = array(
+                'template' => &$template,
+                'order' => &$order,
+                'invoice_number' => &$invoice_number,
+                'prefix' => &$prefix,
+                'display_currency_symbol' => &$display_currency_symbol,
+                'table_type' => &$table_type
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
         }
         if (is_array($order['products']) && count($order['products'])) {
             $contentItem = '';
@@ -4314,7 +4346,16 @@ class mslib_befe {
                 $markerArray['ITEM_PRODUCT_NAME'] = $product_name;
                 // Seperate marker version
                 $markerArray['ITEM_SEPERATE_PRODUCTS_NAME'] = htmlspecialchars($product['products_name']);
-                $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = nl2br(htmlspecialchars($product['products_description']));
+                $markerArray['ITEM_SEPERATE_SKU_CODE']='';
+                $product['sku_code']=trim($product['sku_code']);
+                if (!empty($product['sku_code'])) {
+                    $markerArray['ITEM_SEPERATE_SKU_CODE'] = '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_sku')) . ': ' . htmlspecialchars($product['sku_code']);
+                }
+                $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '';
+                $product['products_description']=trim($product['products_description']);
+                if (!empty($product['products_description'])) {
+                    $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '<br/>' . nl2br(htmlspecialchars($product['products_description']));
+                }
                 $markerArray['ITEM_SEPERATE_PRODUCTS_MODEL'] = htmlspecialchars($product['products_model']);
                 // Seperate marker version eol
                 $markerArray['ITEM_VAT'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
@@ -4420,20 +4461,20 @@ class mslib_befe {
                                 $attributeMarkerArray['ITEM_ATTRIBUTE_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">&nbsp;</td>';
                             }
                             $attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE'] = $cell_products_final_price;
-                        }
-                        //hook to let other plugins further manipulate the replacers
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
-                            $params_internal = array(
-                                    'attributeMarkerArray' => &$attributeMarkerArray,
-                                    'table_type' => $table_type,
-                                    'product' => $product,
-                                    'options' => $options,
-                            );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
-                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                            //hook to let other plugins further manipulate the replacers
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'])) {
+                                $params_internal = array(
+                                        'attributeMarkerArray' => &$attributeMarkerArray,
+                                        'table_type' => $table_type,
+                                        'product' => $product,
+                                        'options' => $options,
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableProductAttributesIteratorPostProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                                }
                             }
+                            $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                         }
-                        $contentItem .= $this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
                     }
                 }
                 if (empty($subparts['ITEM_ATTRIBUTES_WRAPPER'])) {

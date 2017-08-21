@@ -15,9 +15,11 @@ if ($this->ADMIN_USER) {
     }
     $counter = 0;
     if (!count($filter)) {
-        $return_data[0]['text'] = htmlentities($this->pi_getLL('admin_choose_manufacturer'));
-        $return_data[0]['id'] = '0';
-        $counter = 1;
+        if (!isset($this->get['tx_multishop_pi1']['no_extra_label'])) {
+            $return_data[0]['text'] = htmlentities($this->pi_getLL('admin_choose_manufacturer'));
+            $return_data[0]['id'] = '0';
+            $counter = 1;
+        }
     }
     if (count($filter) || (isset($this->get['q']) && empty($this->get['q']))) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...

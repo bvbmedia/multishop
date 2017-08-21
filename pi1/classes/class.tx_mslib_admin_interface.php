@@ -95,6 +95,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     function renderInterface($params, &$that) {
         mslib_fe::init($that);
         //hook to let other plugins further manipulate the method
+        $params['interfaceKey']=$this->interfaceKey;
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -604,16 +605,22 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefEnable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefEnable']);
                                         $valArray['hrefEnable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefEnable']);
+                                        // attributes
+                                        $valArray['hrefEnableAttributes'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefEnableAttributes']);
+                                        $valArray['hrefEnableAttributes'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefEnableAttributes']);
                                     }
-                                    $status_html .= '<a href="' . $valArray['hrefEnable'] . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
+                                    $status_html .= '<a href="' . $valArray['hrefEnable'] . '"'.($valArray['hrefEnableAttributes'] ? ' ' . $valArray['hrefEnableAttributes'] : '').'><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
                                 }
                             } else {
                                 if ($valArray['hrefDisable']) {
                                     foreach ($row as $tmpCol => $tmpVal) {
                                         $valArray['hrefDisable'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefDisable']);
                                         $valArray['hrefDisable'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefDisable']);
+                                        // attributes
+                                        $valArray['hrefDisableAttributes'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefDisableAttributes']);
+                                        $valArray['hrefDisableAttributes'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefDisableAttributes']);
                                     }
-                                    $status_html .= '<a href="' . $valArray['hrefDisable'] . '"><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
+                                    $status_html .= '<a href="' . $valArray['hrefDisable'] . '"'.($valArray['hrefDisableAttributes'] ? ' ' . $valArray['hrefDisableAttributes'] : '').'><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
                                 }
                                 $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
                             }
@@ -636,6 +643,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $options_selectbox_html .= '</select>';
                             }
                             $row[$col] = $options_selectbox_html;
+                            break;
+                        case 'nl2br':
+                            if (!empty($row[$col])) {
+                                $row[$col] = nl2br($row[$col]);
+                            }
                             break;
                     }
                     $adjustedValue = $row[$col];

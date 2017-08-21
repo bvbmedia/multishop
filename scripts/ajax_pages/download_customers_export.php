@@ -51,6 +51,16 @@ if ($this->get['customers_export_hash']) {
             $column = 'f.crdate';
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
+        if (!empty($post_data['start_duration'])) {
+            $start_duration = strtotime($post_data['start_duration']);
+            if (!empty($post_data['end_duration'])) {
+                $end_duration = strtotime($post_data['end_duration'], $start_duration);
+            } else {
+                $end_duration = time();
+            }
+            $column = 'f.crdate';
+            $filter[] = $column . " BETWEEN '" . $start_duration . "' and '" . $end_duration . "'";
+        }
         if (isset($post_data['status'])) {
             if (!$post_data['status']) {
                 $filter[] = "(f.disable='1')";
@@ -138,6 +148,49 @@ if ($this->get['customers_export_hash']) {
                                 break;
                         }
                         $excelCols[] = $gender;
+                        break;
+                    case 'customer_salutation':
+                        $salutation='';
+                        switch ($row['gender']) {
+                            case '0':
+                                $salutation = $this->pi_getLL('mr');
+                                break;
+                            case '1':
+                                $salutation = $this->pi_getLL('mrs');
+                                break;
+                            default:
+                                $salutation = '';
+                                break;
+                        }
+                        $excelCols[] = $salutation;
+                        break;
+                    case 'customer_department':
+                        $excelCols[] = $row['department'];
+                        break;
+                    case 'customer_vat_id':
+                        $excelCols[] = $row['tx_multishop_vat_id'];
+                        break;
+                    case 'customer_coc_id':
+                        $excelCols[] = $row['tx_multishop_coc_id'];
+                        break;
+                    case 'customer_contact_email':
+                        $excelCols[] = $row['contact_email'];
+                        break;
+                    case 'customer_payment_condition':
+                        $excelCols[] = $row['tx_multishop_payment_condition'];
+                        break;
+                    case 'customer_usergroups':
+                        $selected_groups = array();
+                        $userGroupUids = explode(',', $row['usergroup']);
+                        if (is_array($userGroupUids) && count($userGroupUids)) {
+                            foreach ($userGroupUids as $userGroupUid) {
+                                $usergroup = mslib_fe::getUserGroup($userGroupUid);
+                                if (is_array($usergroup) && $usergroup['title']) {
+                                    $selected_groups[] = $usergroup['title'];
+                                }
+                            }
+                        }
+                        $excelCols[] = implode(',', $selected_groups);
                         break;
                     case 'customer_first_name':
                         $excelCols[] = $row['first_name'];

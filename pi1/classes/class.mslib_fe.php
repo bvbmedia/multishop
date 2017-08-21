@@ -40,6 +40,7 @@ class mslib_fe {
         $this->cObj = &$ref->cObj;
         $this->extKey = &$ref->extKey;
         $this->server = &$ref->server;
+        $this->cart = &$ref->cart;
         $this->cart_page_uid = &$ref->cart_page_uid;
         $this->shop_pid = &$ref->shop_pid;
         $this->showCatalogFromPage = &$ref->showCatalogFromPage;
@@ -416,6 +417,8 @@ class mslib_fe {
             $required_cols[] = 'p.minimum_quantity';
             $required_cols[] = 'p.maximum_quantity';
             $required_cols[] = 'p.products_multiplication';
+            $required_cols[] = 'p.starttime';
+            $required_cols[] = 'p.endtime';
             $required_cols[] = 'oud.name as order_unit_name';
             if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
                 $required_cols[] = 'pd.products_description';
@@ -677,7 +680,7 @@ class mslib_fe {
             \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
         }
         if ($this->msDebug) {
-            $this->msDebugInfo .= $str . "\n\n";
+            $this->msDebugInfo .= $str .'<br/><br/>'. "\n\n";
         }
         if ($returnTotalCountOnly) {
             return $array['total_rows'];
@@ -1228,6 +1231,17 @@ class mslib_fe {
     // wrapper to in_array() for PHP3 compatibility
     // Checks if the lookup value exists in the lookup array
     public function typolink($page_id = '', $vars = '', $manual_link = 0, $forceAbsoluteUrl = 0) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'])) {
+            $params = array(
+                    'page_id' => &$page_id,
+                    'vars' => &$vars,
+                    'manual_link' => &$manual_link,
+                    'forceAbsoluteUrl' => &$forceAbsoluteUrl
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($vars and preg_match("/^&/", $vars)) {
             $vars = substr($vars, 1, strlen($vars));
         }
@@ -2131,6 +2145,20 @@ class mslib_fe {
         }
     }
     public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplate'])) {
+            $params = array(
+                    'user' => &$user,
+                    'subject' => &$subject,
+                    'body' => &$body,
+                    'from_email' => &$from_email,
+                    'from_name' => &$from_name,
+                    'attachments' => &$attachments,
+                    'options' => &$options
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplate'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($user['email']) {
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/PHPMailer/PHPMailerAutoload.php');
             $mail = new PHPMailer;
@@ -6246,7 +6274,7 @@ class mslib_fe {
         }
         if (is_numeric($parent_id)) {
             $query_array = array();
-            $query_array['select'][] = 'c.categories_id,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description';
+            $query_array['select'][] = 'c.categories_id,c.hide_in_menu,cd.categories_name,c.status,c.parent_id,c.categories_image,cd.content,cd.content_footer,cd.shortdescription,cd.categories_external_url,cd.meta_keywords,cd.meta_description';
             $query_array['from'][] = 'tx_multishop_categories c';
             $query_array['from'][] = 'tx_multishop_categories_description cd';
             $query_array['where'][] = 'c.page_uid=\'' . $page_uid . '\'';
@@ -8735,7 +8763,12 @@ class mslib_fe {
             if ($payment_method['provider'] == 'generic' && isset($payment_method_vars['success_status']) && is_numeric($payment_method_vars['success_status']) && $payment_method_vars['success_status'] > 0) {
                 $updateArray['status'] = $payment_method_vars['success_status'];
             }
-            $updateArray['orders_paid_timestamp'] = $timestamp;
+            if (isset($this->post['tx_multishop_pi1']['date_paid'])) {
+                $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                $updateArray['orders_paid_timestamp'] = $date_paid;
+            } else {
+                $updateArray['orders_paid_timestamp'] = $timestamp;
+            }
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $orders_id, $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {

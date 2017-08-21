@@ -19,7 +19,7 @@ $records = array();
 $records[] = array(
         'configuration_title' => 'Automatically convert uploaded images to PNG format',
         'configuration_key' => 'ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG',
-        'configuration_value' => '1',
+        'configuration_value' => '0',
         'description' => 'Automatically convert uploaded images for products, categories, and manufaturers to PNG format',
         'group_id' => '2',
         'use_function' => '',
@@ -2659,6 +2659,50 @@ $records[] = array(
         'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
         'depend_on_configuration_key' => '',
         'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Create new order from edit order use same client details',
+        'configuration_key' => 'CREATE_NEW_ORDER_FROM_EDIT_ORDER',
+        'configuration_value' => '0',
+        'description' => 'Create new order from edit order use same client details',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Admin New Manual Order Type',
+        'configuration_key' => 'ADMIN_NEW_MANUAL_ORDER_FORM_TYPE',
+        'configuration_value' => '',
+        'description' => 'Optional field (leave empty to use the default). Use this for customizing the admin new manual order page. Example value: fileadmin/scripts/admin_new_order',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Clear guest user session data after checkout',
+        'configuration_key' => 'CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT',
+        'configuration_value' => '0',
+        'description' => 'Clear guest user session data after checkout',
+        'group_id' => '8',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Relate product to products across multiple shop',
+    'configuration_key' => 'CROSS_SHOP_PRODUCT_RELATION',
+    'configuration_value' => '0',
+    'description' => 'Relate product to products across multiple shop',
+    'group_id' => '3',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
 );
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {

@@ -36,6 +36,8 @@ if (mslib_fe::loggedin()) {
             $array2[] = $last_name;
             $array1[] = '###CUSTOMER_EMAIL###';
             $array2[] = $newCustomer['email'];
+            $array1[] = '###CONTACT_EMAIL###';
+            $array2[] = $newCustomer['contact_email'];
             $array1[] = '###BILLING_EMAIL###';
             $array2[] = $newCustomer['email'];
             $array1[] = '###BILLING_ADDRESS###';
@@ -130,6 +132,15 @@ if (mslib_fe::loggedin()) {
                 }
             }
             $erno = $mslib_user->checkUserData();
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'])) {
+                $params = array(
+                    'erno' => &$erno,
+                    'mslib_user' => &$mslib_user
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER'] && !isset($this->post['tx_multishop_pi1']['create_account_disclaimer'])) {
                 $erno[] = $this->pi_getLL('you_havent_accepted_the_create_account_disclaimer');
             }
@@ -274,7 +285,7 @@ if (mslib_fe::loggedin()) {
             $markerArray['###VALUE_WEBSITE###'] = $this->post['tx_multishop_pi1']['www'];
             //
             // load enabled countries to array
-            $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+            $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and c2z.hide_in_frontend=0 and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
             //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             $enabled_countries = array();

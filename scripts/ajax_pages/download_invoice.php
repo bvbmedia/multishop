@@ -5,6 +5,19 @@ if (!defined('TYPO3_MODE')) {
 if (!$this->get['tx_multishop_pi1']['hash']) {
     die();
 }
+$continue_dowload_invoice=true;
+// post processing by third party plugins
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'])) {
+    $params = array(
+        'continue_download_invoice' => &$continue_download_invoice
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+if (!$continue_dowload_invoice) {
+    die();
+}
 if ($this->ms['MODULES']['DELETE_PDF_INVOICE_AFTER_BEING_DOWNLOADED']) {
     $this->get['tx_multishop_pi1']['forceRecreate'] = 1;
 }
@@ -92,11 +105,15 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // billing address
         if (!empty($order['billing_company'])) {
-            $markerArray['###BILLING_COMPANY###'] = '<strong>' . $order['billing_company'] . '</strong><br/>';
+            $markerArray['###BILLING_COMPANY###'] = $order['billing_company'] . '<br/>';
         } else {
             $markerArray['###BILLING_COMPANY###'] = '';
         }
         $markerArray['###BILLING_NAME###'] = $order['billing_name'];
+        $markerArray['###BILLING_DEPARTMENT###']='';
+        if ($order['billing_department'] != '') {
+            $markerArray['###BILLING_DEPARTMENT###'] = $order['billing_department'].'<br/>';
+        }
         $markerArray['###BILLING_BUILDING###'] = $order['billing_building'];
         if (strpos($template, '###BILLING_BUILDING###') === false && $order['billing_building'] != '') {
             $order['billing_address'] = $order['billing_building'] . '<br/>' . $order['billing_address'];
@@ -113,7 +130,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###BILLING_COUNTRY_RAW###'] = mslib_befe::strtoupper(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country'])) . '<br/>';
         // delivery address
         if (!empty($order['delivery_company'])) {
-            $markerArray['###DELIVERY_COMPANY###'] = '<strong>' . $order['delivery_company'] . '</strong><br/>';
+            $markerArray['###DELIVERY_COMPANY###'] = $order['delivery_company'] . '<br/>';
         } else {
             $markerArray['###DELIVERY_COMPANY###'] = '';
         }

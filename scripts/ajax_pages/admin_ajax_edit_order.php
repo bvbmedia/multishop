@@ -56,8 +56,16 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 /*} else {
                     $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
                 }*/
-                $orderDetailsItem .= '<div class="col-md-9"><div class="checkbox checkbox-inline checkbox-success"><input type="checkbox" id="send_payment_received_email" value="1"><label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').'</label></div></div>';
                 $orderDetailsItem .= '</div>';
+                $orderDetailsItem .= '<div class="form-group row">
+                    <label class="control-label col-md-3">&nbsp;</label>
+                    <div class="col-md-9">
+                        <div class="checkbox checkbox-inline checkbox-success">
+                            <input type="checkbox" id="send_payment_received_email" value="1">
+                            <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').'</label>
+                        </div>
+                    </div>
+                </div>';
                 $return_data['payment_method_date_purchased'] = $orderDetailsItem;
             }
         }
@@ -142,7 +150,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $order_id = $this->post['tx_multishop_pi1']['order_id'];
         $invoice_id = $this->post['tx_multishop_pi1']['invoice_id'];
         $invoice_nr = $this->post['tx_multishop_pi1']['invoice_nr'];
-        $return_data['status'] = 'NOTOK';
         $return_data['status'] = 'NOTOK';
         if (is_numeric($invoice_id)) {
             $invoice = mslib_fe::getInvoice($invoice_id, 'id');
@@ -262,9 +269,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             }
             if (!empty($this->get['q']) && strlen($this->get['q']) > 0) {
                 if (!is_numeric($this->get['q'])) {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
                 } else {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
                 }
                 $limit = '';
             }
@@ -307,6 +314,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                 }
                 if (!empty($row['products_name'])) {
+                    if (!empty($row['products_model'])) {
+                        $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
+                    }
                     if ($row['products_status'] < 1) {
                         $row['products_name'] .= ' [disabled]';
                     }
@@ -315,6 +325,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                             $data[] = array(
                                     'id' => $row['products_id'],
                                     'text' => $row['products_name'],
+                                    'products_model' => $row['products_model'],
                                     'sku_code' => $row['sku_code']
                             );
                         }
@@ -322,6 +333,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         $data[] = array(
                                 'id' => $row['products_id'],
                                 'text' => $row['products_name'],
+                                'products_model' => $row['products_model'],
                                 'sku_code' => $row['sku_code']
                         );
                     }

@@ -3,32 +3,49 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+$mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart->init($this);
+$cart = $mslib_cart->getCart();
 $content = '0%';
 // first check group discount
-if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
-    $discount_percentage = mslib_fe::getUserGroupDiscount($GLOBALS["TSFE"]->fe_user->user['uid']);
-    if ($discount_percentage) {
-        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
-        $mslib_cart->init($this);
-        $cart = $mslib_cart->getCart();
-        $cart['coupon_code'] = '';
-        $cart['discount'] = $discount_percentage;
-        $cart['discount_type'] = 'percentage';
-        //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
-        //$GLOBALS['TSFE']->fe_user->storeSessionData();
-        tx_mslib_cart::storeCart($cart);
-        $content = number_format($discount_percentage) . '%';
+if ($GLOBALS["TSFE"]->fe_user->user['uid'] || ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+    $customer_id=$GLOBALS["TSFE"]->fe_user->user['uid'];
+    if (!$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
+        $guest_email=$cart['user']['email'];
+        if (!$guest_email) {
+            $guest_email=$this->post['tx_multishop_pi1']['email'];
+        }
+        // check if guest user is already in the database and if so add possible group discount
+        $user_check = mslib_fe::getUser($guest_email, 'email');
+        if ($user_check['uid']) {
+            $customer_id = $user_check['uid'];
+        }
+    }
+    if ($customer_id>0) {
+        $discount_percentage = mslib_fe::getUserGroupDiscount($customer_id);
+        if ($discount_percentage) {
+            $cart['coupon_code'] = '';
+            $cart['discount'] = $discount_percentage;
+            $cart['discount_type'] = 'percentage';
+            //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+            //$GLOBALS['TSFE']->fe_user->storeSessionData();
+            tx_mslib_cart::storeCart($cart);
+            $content = number_format($discount_percentage) . '%';
+        }
     }
 }
 //if(!$discount_percentage)
 if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
-    $code = mslib_fe::RemoveXSS(mslib_befe::strtolower($_POST['code']));
+    //$code = mslib_fe::RemoveXSS(mslib_befe::strtolower($_POST['code']));
+    $code = mslib_fe::RemoveXSS($_POST['code']);
     $time = time();
     $str = "SELECT * from tx_multishop_coupons where code = '" . addslashes($code) . "' and status = 1 and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "') and (startdate <= '" . $time . "' and enddate >= '" . $time . "')";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         $continue_calculate_discount = true;
+        $row['max_usage']=(int)$row['max_usage'];
+        $row['times_used']=(int)$row['times_used'];
         if ($row['max_usage'] > 0) {
             if ($row['times_used'] >= $row['max_usage']) {
                 $content = "0%";
@@ -141,17 +158,19 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE'] > 0) {
     $return_data['shipping_method']['deliver_by'] = '';
     $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
     //
-    foreach ($shipping_cost_data as $shipping_code => $shipping_cost) {
-        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
-            $count_cart_incl_vat = 1;
-            $return_data['shipping_cost'] = $shipping_cost['shipping_costs_including_vat'];
-            $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
-        } else {
-            $return_data['shipping_cost'] = $shipping_cost['shipping_costs'];
-            $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+    if (is_array($shipping_cost_data) && count($shipping_cost_data)) {
+        foreach ($shipping_cost_data as $shipping_code => $shipping_cost) {
+            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
+                $count_cart_incl_vat = 1;
+                $return_data['shipping_cost'] = $shipping_cost['shipping_costs_including_vat'];
+                $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+            } else {
+                $return_data['shipping_cost'] = $shipping_cost['shipping_costs'];
+                $return_data['shipping_costs_display'] = mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+            }
+            $return_data['shipping_method'] = $shipping_cost;
+            $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']) + $return_data['shipping_cost']);
         }
-        $return_data['shipping_method'] = $shipping_cost;
-        $return_data['shopping_cart_total_price'] = mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']) + $return_data['shipping_cost']);
     }
 } else {
     $count_cart_incl_vat = 0;

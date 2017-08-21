@@ -47,6 +47,70 @@ if (is_numeric($this->get['orders_id'])) {
         die('Unknown or deleted order');
     }
     if (count($order)) {
+        // process create new order
+        if (isset($this->get['tx_multishop_pi1']['new_order']) && $this->get['tx_multishop_pi1']['new_order']=='true') {
+            $address=array();
+            $address['uid']=$order['customer_id'];
+            $address['company'] = $order['billing_company'];
+            $address['first_name'] = $order['billing_first_name'];
+            $address['middle_name'] = $order['billing_middle_name'];
+            $address['last_name'] = $order['billing_last_name'];
+            $address['name'] = $order['billing_name'];
+            $address['email'] = $order['billing_email'];
+            $address['gender'] = $order['billing_gender'];
+            $address['building'] = $order['billing_building'];
+            $address['street_name'] = $order['billing_street_name'];
+            $address['address_number'] = $order['billing_address_number'];
+            $address['address_ext'] = $order['billing_address_ext'];
+            $address['address'] = $order['billing_address'];
+            $address['city'] = $order['billing_city'];
+            $address['zip'] = $order['billing_zip'];
+            $address['region'] = $order['billing_state'];
+            $address['country'] = $order['billing_country'];
+            $address['telephone'] = $order['billing_telephone'];
+            $address['mobile'] = $order['billing_mobile'];
+            $address['vat_id'] = $order['billing_vat_id'];
+            // delivery address
+            $address['different_delivery_address']=1;
+            $address['delivery_company'] = $order['delivery_company'];
+            $address['delivery_first_name'] = $order['delivery_first_name'];
+            $address['delivery_middle_name'] = $order['delivery_middle_name'];
+            $address['delivery_last_name'] = $order['delivery_last_name'];
+            $address['delivery_name'] = $order['delivery_name'];
+            $address['delivery_email'] = $order['delivery_email'];
+            $address['delivery_gender'] = $order['delivery_gender'];
+            $address['delivery_building'] = $order['delivery_building'];
+            $address['delivery_street_name'] = $order['delivery_street_name'];
+            $address['delivery_address_number'] = $order['delivery_address_number'];
+            $address['delivery_address_ext'] = $order['delivery_address_ext'];
+            $address['delivery_address'] = $order['delivery_address'];
+            $address['delivery_city'] = $order['delivery_city'];
+            $address['delivery_zip'] = $order['delivery_zip'];
+            $address['delivery_region'] = $order['delivery_state'];
+            $address['delivery_country'] = $order['delivery_country'];
+            $address['delivery_telephone'] = $order['delivery_telephone'];
+            $address['delivery_mobile'] = $order['delivery_mobile'];
+            $address['delivery_vat_id'] = $order['delivery_vat_id'];
+            $address['by_phone'] = 1;
+            $address['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPostProc'])) {
+                // hook
+                $params = array(
+                    'address' => &$address
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
+
+            $new_order_id=mslib_fe::createOrder($address);
+            if (is_numeric($new_order_id) && $new_order_id>0) {
+                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $new_order_id . '&action=edit_order'));
+                exit();
+            }
+        }
         if ($order['customer_id']) {
             if (!$customer_address = mslib_fe::getAddressInfo('customer', $order['customer_id'])) {
                 $customer_address['country'] = $order['billing_country'];
@@ -748,7 +812,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
                     }
                     $updateArray['track_and_trace_code'] = '';
-                    if ($this->post['track_and_trace_code']) {
+                    if (isset($this->post['track_and_trace_code'])) {
                         $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
                     }
                     if (count($updateArray)) {
@@ -874,7 +938,7 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->post['expected_delivery_date'] && $this->post['expected_delivery_date_local']) {
                 $updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
             }
-            if ($this->post['track_and_trace_code']) {
+            if (isset($this->post['track_and_trace_code'])) {
                 $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
             }
             if ($this->post['order_memo']) {
@@ -1250,37 +1314,49 @@ if (is_numeric($this->get['orders_id'])) {
                 $tmpcontent .= implode("\n", $edit_billing_details);
                 $tmpcontent .= '</div>';
             }
-            $tmpcontent .= '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
+            $billing_details_info = '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['billing_company']) {
-                $tmpcontent .= '<strong>' . $orders['billing_company'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $orders['billing_company'] . '</strong><br />';
             }
             if ($orders['billing_department']) {
-                $tmpcontent .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $orders['billing_department'] . '</strong><br />';
             }
-            $tmpcontent .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
+            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
-                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
+                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
             }
             if ($orders['billing_telephone']) {
-                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
             }
             if ($orders['billing_mobile']) {
-                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
             }
             if ($orders['billing_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
             }
             if ($orders['billing_vat_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
             }
             if ($orders['billing_coc_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
-                $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
+                $billing_details_info .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
             }
-            $tmpcontent .= '</div>';
+            $billing_details_info .= '</div>';
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInfo'])) {
+                $params = array(
+                    'orders' => $orders,
+                    'settings' => $settings,
+                    'billing_details_info' => &$billing_details_info,
+                    'count_validate_erno' => $count_validate_erno
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['editOrderBillingDetailsInfo'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            $tmpcontent.=$billing_details_info;
             $tmpcontent .= '
    	</div></div></div>
 	<div class="col-md-6">
@@ -1517,6 +1593,10 @@ if (is_numeric($this->get['orders_id'])) {
                          var edit_details_container_id="#edit_" + type + "_container";
                          var erno_wrapper_id="#" + type + "_erno_wrapper";
                          if (r.status=="OK") {
+                            if (r.customer_details!=\'\') {
+                                $(details_container_id).empty();
+                                $(details_container_id).html(r.customer_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
+                            }
                             $(details_container_id).show();
                             $(edit_details_container_id).hide();
                          } else if (r.status=="NOTOK") {
@@ -1648,87 +1728,6 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
-                var billing_details 	= "";
-                var building 		= "";
-                var address_data 		= "";
-                 var name="";
-                $("[id^=edit_billing]").each(function(){
-                    if ($(this).attr("id") == "edit_billing_company") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    
-                    ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
-                    if ($(this).attr("id") == "edit_billing_department") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    ' : '') . '
-                    
-                    if ($(this).attr("id") == "edit_billing_first_name") {
-                        name += $(this).val();
-                    }
-                    if ($(this).attr("id") == "edit_billing_middle_name") {
-                        name += " " + $(this).val();
-                    }
-					if ($(this).attr("id") == "edit_billing_last_name") {
-                        name += " " + $(this).val();
-                    }
-                    //
-                    if ($(this).attr("id") == "edit_billing_building") {
-                        if ($(this).val() != "") {
-                            building += $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_street_name") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_address_number") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_address_ext") {
-                        address_data += $(this).val();
-                        address_data_replace = address_data.replace(/\s\s+/g, " ");
-                        billing_details += address_data_replace + "<br/>";
-
-                    } else if ($(this).attr("id") == "edit_billing_zip") {
-                        billing_details += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_billing_city") {
-                        billing_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_billing_region") {
-                        billing_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_billing_country") {
-                        billing_details += $(this).find(\':selected\').text() + "<br/><br/>";
-                    } else if ($(this).attr("id") == "edit_billing_email") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('email') . ': <a href=\"mailto:" + $(this).val() + "\">" + $(this).val() + "</a><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_telephone") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('telephone') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_mobile") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('mobile') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_fax") {
-                        if ($(this).val() != "") {
-                            billing_details += "' . $this->pi_getLL('fax') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_vat_id") {
-                        if ($(this).val() != "") {
-                            billing_details += "<strong>' . $this->pi_getLL('vat_id') . ' " + $(this).val() + "</strong><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_billing_coc_id") {
-                        if ($(this).val() != "") {
-                            billing_details += "<strong>' . $this->pi_getLL('coc_id', 'COC Nr.:') . ' " + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                });
-                if (name!="") {
-                	name+="<br/>";
-                }
-                $("#billing_details_container").empty();
-                $("#billing_details_container").html(name + building + billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio:checked").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
@@ -1876,7 +1875,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
             $orderDetails[] = '<hr>';
-            $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod">';
+            $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod" id="msAdminEditOrderShippingMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('shipping_method') . '</label>';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $shipping_methods = mslib_fe::loadShippingMethods(1);
@@ -1911,7 +1910,7 @@ if (is_numeric($this->get['orders_id'])) {
             $orderDetailsItem .= '</div>';
             $orderDetails[] = $orderDetailsItem;
             $orderDetailsItem = '';
-            $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod">';
+            $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod" id="msAdminEditOrderPaymentMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_method') . '</label>';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 if (is_array($payment_methods) and count($payment_methods)) {
@@ -1992,7 +1991,7 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
                 if (!$orders['is_locked'] || ($orders['is_locked'] && $orders['payment_condition'] != '')) {
                     $orderDetailsItem = '';
-                    $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions">';
+                    $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions" id="msAdminEditOrderPaymentConditions">';
                     $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_condition') . '</label>';
                     if (!$orders['is_locked']) {
                         $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . htmlspecialchars($orders['payment_condition']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
@@ -2383,7 +2382,7 @@ if (is_numeric($this->get['orders_id'])) {
                             if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS'] == '1' && !empty($product['ean_code'])) {
                                 $row[2] .= '<br />EAN: ' . $product['ean_code'];
                             }
-                            if (!empty($product['vendor_code'])) {
+                            if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS'] == '1' && !empty($product['vendor_code'])) {
                                 $row[2] .= '<br />Vendor code: ' . $product['vendor_code'];
                             }
                             if ($product['products_id']) {
@@ -4376,13 +4375,15 @@ if (is_numeric($this->get['orders_id'])) {
                 $tmpcontent
         );
         // order status tab eof
+        $page_title=$this->pi_getLL('order_details');
         // hook for adding new tabs into edit_order
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'])) {
             // hook
             $params = array(
-                    'tabs' => &$tabs,
-                    'order_status_tab_content' => &$order_status_tab_content,
-                    'orders' => &$orders
+                'tabs' => &$tabs,
+                'order_status_tab_content' => &$order_status_tab_content,
+                'orders' => &$orders,
+                'page_title' => &$page_title
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4420,6 +4421,17 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 $headerButtons[] = $headingButton;
             }
+        }
+        // create new order for same client as active order
+        if ($this->ms['MODULES']['CREATE_NEW_ORDER_FROM_EDIT_ORDER']) {
+            $headingButton = array();
+            $headingButton['btn_class'] = 'btn btn-primary';
+            $headingButton['fa_class'] = 'fa fa-check-circle';
+            $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
+            $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
+            $headingButton['attributes'] = '';
+            $headingButton['target'] = '_blank';
+            $headerButtons[] = $headingButton;
         }
         $headingButton = array();
         $headingButton['btn_class'] = 'btn btn-success';
@@ -4662,7 +4674,7 @@ if (is_numeric($this->get['orders_id'])) {
         </script>
         <div class="panel panel-default">
         <div class="panel-heading">
-        	<h3>' . htmlspecialchars($this->pi_getLL('order_details')) . '</h3>
+        	<h3>' . htmlspecialchars($page_title) . '</h3>
         	' . $interfaceHeaderButtons . '
         </div>
         <div class="panel-body">

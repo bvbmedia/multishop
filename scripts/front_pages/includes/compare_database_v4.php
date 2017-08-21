@@ -331,7 +331,7 @@ if (!$qry) {
 $str = "select delivery_department from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-    $str = "ALTER TABLE  `tx_multishop_orders` ADD `delivery_department` varchar(127) not null default '', ADD KEY `delivery_department` (`delivery_department`)";
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `delivery_department` varchar(127) not null default ''";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
@@ -455,6 +455,102 @@ $str = "select is_shipping_costs_manual from tx_multishop_orders limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
     $str = "ALTER TABLE `tx_multishop_orders` ADD `is_shipping_costs_manual` tinyint(1) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+$str = "describe `fe_users`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `fe_users` CHANGE  `address_ext`  `address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+$str = "describe `tt_address`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tt_address` CHANGE  `address_ext`  `address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+
+
+$str = "describe `tx_multishop_orders`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    if ($row['Field'] == 'billing_address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tx_multishop_orders` CHANGE  `billing_address_ext`  `billing_address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    } elseif ($row['Field'] == 'delivery_address_ext') {
+        if ($row['Type'] == 'varchar(10)') {
+            $str2 = "ALTER TABLE  `tx_multishop_orders` CHANGE  `delivery_address_ext`  `delivery_address_ext` varchar(35)";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            $messages[] = $str2;
+        }
+    }
+}
+$str = "select foreign_source_name from tx_multishop_categories limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_categories` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select foreign_source_name from tx_multishop_manufacturers limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_manufacturers` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+// add contact e-mail
+$str = "select `contact_email` from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `fe_users` ADD `contact_email` varchar(256) default ''";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    // copy fe_users.email to fe_users.contact_email
+    $str = "UPDATE `fe_users` set contact_email=email";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+// add contact e-mail
+$str = "select `payment_condition` from tx_multishop_payment_methods limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_payment_methods` ADD `payment_condition` varchar(50) default ''";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$query = "update tt_address set gender='m' where gender='0'";
+$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+$query = "update tt_address set gender='f' where gender='1'";
+$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+// hide zone
+$str = "select `hide_in_frontend` from tx_multishop_zones limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_zones` ADD `hide_in_frontend` tinyint(1) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+// hide zone
+$str = "select `hide_in_frontend` from tx_multishop_countries_to_zones limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_countries_to_zones` ADD `hide_in_frontend` tinyint(1) default '0'";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }

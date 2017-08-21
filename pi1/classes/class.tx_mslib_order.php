@@ -391,8 +391,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $params = array(
                         'page' => &$page,
                         'order' => &$order,
-                        'mail_template' => $mail_template,
-                        'psp_mail_template' => $psp_mail_template,
+                        'mail_template' => &$mail_template,
+                        'psp_mail_template' => &$psp_mail_template,
                         'loadFromPids' => $loadFromPids
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreCMSContent'] as $funcRef) {
@@ -541,6 +541,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $array2[] = $order['orders_status'];
                 $array1[] = '###TRACK_AND_TRACE_CODE###';
                 $array2[] = $order['track_and_trace_code'];
+                $array1[] = '###TRACK_AND_TRACE_LINK###';
+                $array2[] = $order['track_and_trace_link'];
                 $array1[] = '###BILLING_ADDRESS###';
                 $array2[] = $billing_address;
                 $array1[] = '###DELIVERY_ADDRESS###';
@@ -652,8 +654,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'this' => &$this,
                             'page' => &$page,
                             'content' => &$content,
+                            'mail_template' => $mail_template,
+                            'psp_mail_template' => $psp_mail_template,
                             'send_mail' => &$send_mail,
-                            'user' => $user,
+                            'user' => &$user,
                             'order' => $order,
                             'order_details' => $ORDER_DETAILS,
                             'copy_to_merchant' => $copy_to_merchant,
@@ -1386,6 +1390,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_mobile'] = $address['mobile'];
             $insertArray['billing_fax'] = '';
             $insertArray['billing_vat_id'] = $address['tx_multishop_vat_id'];
+            $insertArray['billing_building'] = $address['building'];
+            $insertArray['billing_department'] = $address['department'];
             if (!$address['different_delivery_address']) {
                 $insertArray['delivery_email'] = $insertArray['billing_email'];
                 $insertArray['delivery_company'] = $insertArray['billing_company'];
@@ -1415,6 +1421,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_region'] = $insertArray['billing_region'];
                 $insertArray['delivery_name'] = $insertArray['billing_name'];
                 $insertArray['delivery_vat_id'] = $insertArray['billing_vat_id'];
+                $insertArray['delivery_building'] = $insertArray['billing_building'];
+                $insertArray['delivery_department'] = $insertArray['billing_department'];
             } else {
                 $insertArray['delivery_company'] = $address['delivery_company'];
                 $insertArray['delivery_first_name'] = $address['delivery_first_name'];
@@ -1431,15 +1439,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['delivery_gender']='f';
                         break;
                 }
-                if (!$address['delivery_street_name']) {
-                    $address['delivery_street_name'] = $address['delivery_address'];
-                }
                 $insertArray['delivery_building'] = $address['delivery_building'];
                 $insertArray['delivery_street_name'] = $address['delivery_street_name'];
                 $insertArray['delivery_address_number'] = $address['delivery_address_number'];
                 $insertArray['delivery_address_ext'] = $address['delivery_address_ext'];
-                $insertArray['delivery_address'] = $address['delivery_street_name'] . ' ' . $address['delivery_address_number'] . $address['delivery_address_ext'];
-                $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $insertArray['delivery_address']);
+                $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $address['delivery_street_name'] . ' ' . $address['delivery_address_number'] . $address['delivery_address_ext']);
+                if (!$address['delivery_street_name']) {
+                    $address['delivery_street_name'] = $address['delivery_address'];
+                }
                 $insertArray['delivery_city'] = $address['delivery_city'];
                 $insertArray['delivery_zip'] = $address['delivery_zip'];
                 $insertArray['delivery_room'] = '';
@@ -1449,6 +1456,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_mobile'] = $address['delivery_mobile'];
                 $insertArray['delivery_fax'] = '';
                 $insertArray['delivery_vat_id'] = $address['delivery_vat_id'];
+                $insertArray['delivery_building'] = $address['delivery_building'];
+                $insertArray['delivery_department'] = $address['delivery_department'];
             }
             $insertArray['bill'] = 1;
             if ($address['forceCustomCrdate']) {
@@ -1492,6 +1501,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             if (isset($address['expected_delivery_date'])) {
                 $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
+            }
+            if (isset($address['by_phone'])) {
+                $insertArray['by_phone'] = $address['by_phone'];
+            }
+            if (isset($address['cruser_id'])) {
+                $insertArray['cruser_id'] = $address['cruser_id'];
             }
             $types = array();
             $types[] = 'billing';
@@ -1546,6 +1561,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($orders_id) {
                 return $orders_id;
             }
+            return false;
         }
     }
     function createOrdersProduct($orders_id, $insertArray = array()) {

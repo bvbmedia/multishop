@@ -20,7 +20,7 @@ CREATE TABLE `fe_users` (
  `tx_multishop_optin_ip` varchar(50) default '',
  `tx_multishop_optin_crdate` int(10) default '0',
  `tx_multishop_payment_condition` varchar(50) default '',
- `address_ext` varchar(10) default '',
+ `address_ext` varchar(35) default '',
  `tx_multishop_source_id` varchar(50) default '',
  `page_uid` int(11) default '0',
  `street_name` varchar(75) default '',
@@ -34,6 +34,7 @@ CREATE TABLE `fe_users` (
  `tx_multishop_customer_id` int(11) default '0',
  `tx_multishop_language` varchar(127) default '',
  `department` varchar(127) default '',
+ `contact_email` varchar(256) default '',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
@@ -116,6 +117,7 @@ CREATE TABLE `tx_multishop_categories` (
  `hide_in_menu` tinyint(1) default '0',
  `col_position` tinyint(1) default '0',
  `related_to` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
  PRIMARY KEY (`categories_id`),
  KEY `idx_categories_parent_id` (`parent_id`),
  KEY `status` (`status`),
@@ -130,7 +132,8 @@ CREATE TABLE `tx_multishop_categories` (
  KEY `hashed_id` (`hashed_id`),
  KEY `hide_in_menu` (`hide_in_menu`),
  KEY `col_position` (`col_position`),
- KEY `related_to` (`related_to`)
+ KEY `related_to` (`related_to`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_categories_description` (
@@ -253,6 +256,7 @@ CREATE TABLE `tx_multishop_countries_to_zones` (
  `id` int(11) NOT NULL auto_increment,
  `zone_id` int(4) default '0',
  `cn_iso_nr` int(11) default '0',
+ `hide_in_frontend` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  UNIQUE KEY `cn_iso_nr` (`cn_iso_nr`),
  UNIQUE KEY `zone_id` (`zone_id`,`cn_iso_nr`)
@@ -349,10 +353,12 @@ CREATE TABLE `tx_multishop_manufacturers` (
  `icecat_mid` int(5) default '0',
  `manufacturers_extra_cost` decimal(24,14) default '0.00000000000000',
  `status` tinyint(1) default '1',
+ `foreign_source_name` varchar(30) default '',
  PRIMARY KEY (`manufacturers_id`),
  KEY `IDX_MANUFACTURERS_NAME` (`manufacturers_name`),
  KEY `sort_order` (`sort_order`),
- KEY `status` (`status`)
+ KEY `status` (`status`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_manufacturers_cms` (
@@ -492,8 +498,8 @@ CREATE TABLE `tx_multishop_orders` (
  `discount_percentage` int(3) default '0',
  `customer_comments` text,
  `is_locked` tinyint(1) default '0',
- `billing_address_ext` varchar(10) default '',
- `delivery_address_ext` varchar(10) default '',
+ `billing_address_ext` varchar(35) default '',
+ `delivery_address_ext` varchar(35) default '',
  `hash` varchar(50) default '0',
  `cruser_id` int(11) default '0',
  `is_proposal` tinyint(1) default '0',
@@ -579,7 +585,6 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `delivery_tr_parent_iso_nr` (`delivery_tr_parent_iso_nr`),
  KEY `delivery_tr_parent_name_en` (`delivery_tr_parent_name_en`),
  KEY `billing_department` (`billing_department`),
- KEY `delivery_department` (`delivery_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_orders_id` (`foreign_orders_id`),
 ) COMMENT='Ordersysteem';
@@ -794,6 +799,7 @@ CREATE TABLE `tx_multishop_payment_methods` (
  `cart_minimum_amount` decimal(24,14) default '0.00000000000000',
  `cart_maximum_amount` decimal(24,14) default '0.00000000000000',
  `hash` varchar(127) default '',
+ `payment_condition` varchar(50) default '',
  PRIMARY KEY (`id`),
  KEY `code` (`code`),
  KEY `isp` (`provider`),
@@ -802,7 +808,8 @@ CREATE TABLE `tx_multishop_payment_methods` (
  KEY `sort_order` (`sort_order`),
  KEY `page_uid` (`page_uid`,`zone_id`),
  KEY `enable_on_default` (`enable_on_default`),
- KEY `hash` (`hash`)
+ KEY `hash` (`hash`),
+ KEY `payment_condition` (`payment_condition`)
 );
 
 CREATE TABLE `tx_multishop_payment_methods_description` (
@@ -1488,6 +1495,7 @@ CREATE TABLE `tx_multishop_undo_products` (
 CREATE TABLE `tx_multishop_zones` (
  `id` int(4) NOT NULL auto_increment,
  `name` varchar(50) default '',
+ `hide_in_frontend` tinyint(1) default '0',
  PRIMARY KEY (`id`)
 );
 
@@ -1524,7 +1532,7 @@ CREATE TABLE tt_address (
  address_number varchar(10) default '',
  tx_multishop_customer_id int(11) default '0',
  tx_multishop_default tinyint(1) default '0',
- address_ext varchar(10) default '',
+ address_ext varchar(35) default '',
  page_uid int(11) default '0',
  street_name varchar(75) default '',
  tx_multishop_address_type varchar(127) default 'billing',
