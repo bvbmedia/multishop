@@ -1327,34 +1327,6 @@ if ($this->post) {
                     }
                 }
             }
-            // copy also the product relation
-            if ($product_original) {
-                $related_main_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'products_id');
-                if (is_array($related_main_recs) && count($related_main_recs)) {
-                    // copy as main product to relation
-                    foreach ($related_main_recs as $related_main_rec) {
-                        $relatedMainArray = array();
-                        $relatedMainArray['products_id'] = $prodid;
-                        $relatedMainArray['relative_product_id'] = $related_main_rec['relative_product_id'];
-                        $relatedMainArray['relation_types'] = $related_main_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedMainArray);
-                        $GLOBALS['TYPO3_DB']->sql_query($rel_query);
-                    }
-                }
-
-                $related_sub_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'relative_product_id');
-                if (is_array($related_sub_recs) && count($related_sub_recs)) {
-                    // copy as sub product to relation
-                    foreach ($related_sub_recs as $related_sub_rec) {
-                        $relatedSubArray = array();
-                        $relatedSubArray['products_id'] = $related_sub_rec['products_id'];
-                        $relatedSubArray['relative_product_id'] = $prodid;
-                        $relatedSubArray['relation_types'] = $related_sub_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedSubArray);
-                        $GLOBALS['TYPO3_DB']->sql_query($rel_query);
-                    }
-                }
-            }
         } else {
             $prodid = $this->post['pid'];
             $updateArray['products_last_modified'] = time();
