@@ -648,6 +648,24 @@ switch ($this->ms['page']) {
         }
         // custom page hook that can be controlled by third-party plugin eof
         break;
+    case 'clear_last_visited_list':
+        // eid
+        foreach ($_COOKIE['last_visited'] as $pid) {
+            setcookie('last_visited[' . $pid . ']', '', 1, '/');
+        }
+        // traditional way
+        require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
+        $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+        $mslib_cart->init($this);
+        $cart = $mslib_cart->getCart();
+        $cart['last_visited'] = array();
+        tx_mslib_cart::storeCart($cart);
+        if ($_SERVER['HTTP_REFERER']) {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        } else {
+            header('Location: /');
+        }
+        break;
     default:
         $this->ms['page'] = 'home';
         // load cms top

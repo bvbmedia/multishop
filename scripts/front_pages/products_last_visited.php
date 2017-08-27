@@ -10,6 +10,9 @@ require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multis
 $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart = $mslib_cart->getCart();
+if (isset($_COOKIE['last_visited']) && count($_COOKIE['last_visited'])) {
+    $cart['last_visited']=$_COOKIE['last_visited'];
+}
 if (isset($this->get['clear_list'])) {
     $cart['last_visited'] = array();
     //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
@@ -97,7 +100,7 @@ if (count($cart['last_visited'])) {
         }
     }
     if ($pageset['total_rows'] > 0) {
-        $link = mslib_fe::typolink('', 'clear_list=1&' . mslib_fe::tep_get_all_get_params(array('clear_list')));
+        $link = mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=clear_last_visited_list&clear_last_visited_list=1&' . mslib_fe::tep_get_all_get_params(array('clear_list')));
         $content .= '<a href="' . $link . '" class="btn btn-default btnClearList"><span class="glyphicon glyphicon-remove"></span> ' . $this->pi_getLL('clear_list') . '</a>';
     }
 }
