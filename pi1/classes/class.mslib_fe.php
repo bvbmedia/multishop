@@ -978,6 +978,15 @@ class mslib_fe {
         }
         $input = mslib_befe::strtolower($input);
         $input = strip_tags($input);
+        // hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['rewritenameinPreProc'])) {
+            $params = array(
+                    'input' => &$input
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['rewritenameinPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $input = str_replace("+", "-", $input);
         $input = preg_replace("/[^[:alnum:]+]/i", "-", $input);
         $input = str_replace("\\", "-", $input);
