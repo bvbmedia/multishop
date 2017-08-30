@@ -3682,10 +3682,19 @@ if (is_numeric($this->get['orders_id'])) {
                         formatResult: function(data){
                             if (data.text === undefined) {
                                 $.each(data, function(i,val){
-                                    return val.text;
+                                    var product_name=val.text;
+                                    if (val.products_model!=undefined && val.products_model!=\'\') {
+                                        product_name += \'(model: \' + val.products_model + \')\';
+                                    }
+                                    return product_name;
                                 });
                             } else {
-                                return data.text;
+                                var product_name=data.text;
+                                if (data.products_model!=undefined && data.products_model!=\'\') {
+                                    product_name += \' (model: \' + data.products_model + \')\';
+                                }
+                                return product_name;
+                                //return data.text;
                             }
                         },
                         formatSelection: function(data){
