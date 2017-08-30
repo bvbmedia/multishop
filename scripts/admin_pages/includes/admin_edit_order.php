@@ -3684,14 +3684,14 @@ if (is_numeric($this->get['orders_id'])) {
                                 $.each(data, function(i,val){
                                     var product_name=val.text;
                                     if (val.products_model!=undefined && val.products_model!=\'\') {
-                                        product_name += \'(model: \' + val.products_model + \')\';
+                                        product_name += \' (MODEL: \' + val.products_model + \')\';
                                     }
                                     return product_name;
                                 });
                             } else {
                                 var product_name=data.text;
                                 if (data.products_model!=undefined && data.products_model!=\'\') {
-                                    product_name += \' (model: \' + data.products_model + \')\';
+                                    product_name += \' (MODEL: \' + data.products_model + \')\';
                                 }
                                 return product_name;
                                 //return data.text;
