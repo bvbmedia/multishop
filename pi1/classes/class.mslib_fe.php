@@ -8172,11 +8172,11 @@ class mslib_fe {
         }
         if (is_numeric($option_id)) {
             //language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
-            $str = "select pa.options_values_id, pov.products_options_values_name from  tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where ";
+            $str = "select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where ";
             if (is_numeric($products_id)) {
                 $str .= "pa.products_id='" . $products_id . "' and ";
             }
-            $str .= "pa.options_id='" . $option_id . "' and pa.page_uid = '" . $this->showCatalogFromPage . "' and pa.options_values_id=pov.products_options_values_id";
+            $str .= "pa.options_id='" . $option_id . "' and pa.page_uid = '" . $this->showCatalogFromPage . "' and pa.options_values_id=pov.products_options_values_id order by pa.sort_order_option_value";
             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
             if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
                 $array = array();
