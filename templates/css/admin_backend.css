@@ -932,3 +932,6 @@ fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
 .form-control,
 .select2-container .select2-choice > .select2-chosen,
 .select2-default { font-weight:normal; }
+
+td.print_r_key { word-break:normal; }
+td.print_r_value { word-break:break-word; }
