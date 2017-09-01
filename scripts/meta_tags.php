@@ -212,7 +212,7 @@ if ($this->ADMIN_USER) {
             }
         }
         // orders this month eof
-        if (count($messages)) {
+        if (count($messages) && $this->conf['enableAdminTicker']) {
             shuffle($messages);
             $html .= '
 					var messages=[' . implode(", ", $messages) . '];
