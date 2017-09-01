@@ -118,103 +118,104 @@ if ($this->ADMIN_USER) {
 if ($this->ADMIN_USER) {
     $admin_menu_panel = mslib_fe::jQueryAdminMenu();
     // admin stats
-    if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
-        $options = array(
-                'caching' => true,
-                'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-                'lifeTime' => 180
-        );
-        $Cache_Lite = new Cache_Lite($options);
-        $string = md5('admin_stats_' . $this->shop_pid);
-    }
-    if (!$this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] and !$html = $Cache_Lite->get($string))) {
-        $html = '
+    if ($this->conf['enableAdminTicker']) {
+        if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
+            $options = array(
+                    'caching' => true,
+                    'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+                    'lifeTime' => 180
+            );
+            $Cache_Lite = new Cache_Lite($options);
+            $string = md5('admin_stats_' . $this->shop_pid);
+        }
+        if (!$this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] and !$html = $Cache_Lite->get($string))) {
+            $html = '
 		<script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {
 			var intervalID;
 			// messages
 		';
-        $messages = array();
-        // total customers
-        $str = "SELECT count(1) as total from fe_users where disable=0";
-        if (!$this->masterShop) {
-            $str .= " and page_uid='" . $this->shop_pid . "'";
-        }
-        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-        if ($row['total'] > 0) {
-            if ($row['total'] == 1) {
-                $string = sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
-            } else {
-                $string = sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+            $messages = array();
+            // total customers
+            $str = "SELECT count(1) as total from fe_users where disable=0";
+            if (!$this->masterShop) {
+                $str .= " and page_uid='" . $this->shop_pid . "'";
             }
-            $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers') . '\">' . $string . '</a>"';
-        }
-        // total customers eof
-        // orders today
-        $from = strtotime(date("Y-m-d") . ' 00:00:00');
-        $till = time();
-        $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
-        if (!$this->masterShop) {
-            $str .= " and page_uid='" . $this->shop_pid . "'";
-        }
-        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-        if ($row['total'] > 0) {
-            if ($row['total'] == 1) {
-                $string = sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
-            } else {
-                $string = sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            if ($row['total'] > 0) {
+                if ($row['total'] == 1) {
+                    $string = sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                } else {
+                    $string = sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                }
+                $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers') . '\">' . $string . '</a>"';
             }
-            $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
-        }
-        // orders today eof
-        // orders this week
-        $days = mslib_befe::Week((date("W") + 1));
-        $from = $days[0];
-        $till = $days[5];
-        $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
-        if (!$this->masterShop) {
-            $str .= " and page_uid='" . $this->shop_pid . "'";
-        }
-        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-        if ($row['total'] > 0) {
-            if ($row['total'] == 1) {
-                $string = sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
-            } else {
-                $string = sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('week'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+            // total customers eof
+            // orders today
+            $from = strtotime(date("Y-m-d") . ' 00:00:00');
+            $till = time();
+            $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
+            if (!$this->masterShop) {
+                $str .= " and page_uid='" . $this->shop_pid . "'";
             }
-            $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
-        }
-        // orders this week eof
-        // orders this month
-        $from = strtotime(date("Y-m-1 00:00:00"));
-        $till = strtotime("+1 MONTH -1 DAY " . date("Y-m-1 23:59:59"));
-        $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
-        if (!$this->masterShop) {
-            $str .= " and page_uid='" . $this->shop_pid . "'";
-        }
-        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-        if ($row['total'] > 0) {
-            if ($row['total'] == 1) {
-                $string = sprintf($this->pi_getLL('this_s_there_is_one_order_created'), mslib_befe::strtolower($this->pi_getLL('month')), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
-            } else {
-                $string = sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), mslib_befe::strtolower($this->pi_getLL('month')), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            if ($row['total'] > 0) {
+                if ($row['total'] == 1) {
+                    $string = sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                } else {
+                    $string = sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                }
+                $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
             }
-            $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
-        }
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'])) {
-            $params = array('messages' => &$messages);
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'] as $funcRef) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            // orders today eof
+            // orders this week
+            $days = mslib_befe::Week((date("W") + 1));
+            $from = $days[0];
+            $till = $days[5];
+            $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
+            if (!$this->masterShop) {
+                $str .= " and page_uid='" . $this->shop_pid . "'";
             }
-        }
-        // orders this month eof
-        if (count($messages) && $this->conf['enableAdminTicker']) {
-            shuffle($messages);
-            $html .= '
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            if ($row['total'] > 0) {
+                if ($row['total'] == 1) {
+                    $string = sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                } else {
+                    $string = sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('week'), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                }
+                $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
+            }
+            // orders this week eof
+            // orders this month
+            $from = strtotime(date("Y-m-1 00:00:00"));
+            $till = strtotime("+1 MONTH -1 DAY " . date("Y-m-1 23:59:59"));
+            $str = "SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN " . $from . " and " . $till;
+            if (!$this->masterShop) {
+                $str .= " and page_uid='" . $this->shop_pid . "'";
+            }
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            if ($row['total'] > 0) {
+                if ($row['total'] == 1) {
+                    $string = sprintf($this->pi_getLL('this_s_there_is_one_order_created'), mslib_befe::strtolower($this->pi_getLL('month')), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                } else {
+                    $string = sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), mslib_befe::strtolower($this->pi_getLL('month')), '<strong>' . number_format($row['total'], 0, '', '.') . '</strong>');
+                }
+                $messages[] = '"<a href=\"' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '\">' . $string . '</a>"';
+            }
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'])) {
+                $params = array('messages' => &$messages);
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // orders this month eof
+            if (count($messages)) {
+                shuffle($messages);
+                $html .= '
 					var messages=[' . implode(", ", $messages) . '];
 					var countMessage = messages.length * 4;
 					var secondInterval = countMessage + 1 + "000";
@@ -229,18 +230,19 @@ if ($this->ADMIN_USER) {
 						});
 					}
 					';
-            $html .= '
+                $html .= '
 					//scroll messages
 					multishop_admin_scroller();
 					changeText();
 			';
-        }
-        $html .= '
+            }
+            $html .= '
 		});
 		</script>
 		';
-        if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
-            $Cache_Lite->save($html);
+            if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
+                $Cache_Lite->save($html);
+            }
         }
     }
     /*
