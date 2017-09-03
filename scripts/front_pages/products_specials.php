@@ -14,11 +14,15 @@ $where = array();
 $select = array();
 $extrajoin = array();
 if ($contentType == 'specials_listing_page') {
+    $limit_per_page = $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+    if ($this->ADMIN_USER) {
+        $limit_per_page=250;
+    }
     if (is_numeric($this->get['p'])) {
         $p = $this->get['p'];
     }
     if ($p > 0) {
-        $offset = (((($p) * $this->limit)));
+        $offset = (((($p) * $limit_per_page)));
     } else {
         $p = 0;
         $offset = 0;
@@ -114,9 +118,8 @@ if ($contentType == 'specials_listing_page') {
             }
             $filter[] = '(' . $tbl . 'categories_id IN (' . implode(",", $cats) . '))';
         }
-        $limit_per_page = $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
         $orderby = 's.sort_order asc';
-        $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
+        $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
         $products = $pageset['products'];
         if (!$products) {
             // return nothing
