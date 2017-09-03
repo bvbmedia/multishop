@@ -115,6 +115,7 @@ if ($contentType == 'specials_listing_page') {
             $filter[] = '(' . $tbl . 'categories_id IN (' . implode(",", $cats) . '))';
         }
         $limit_per_page = $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+        $orderby = 's.sort_order asc';
         $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
         $products = $pageset['products'];
         if (!$products) {

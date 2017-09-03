@@ -2573,6 +2573,36 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'product_specials':
+        if ($this->ADMIN_USER) {
+            // custom page hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProductsSpecials'])) {
+                $params = array();
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProductsSpecials'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            } else {
+                $getPost = $this->post['productlisting'];
+                $no = 1;
+                foreach ($getPost as $prod_id) {
+                    if (is_numeric($prod_id)) {
+                        $where = 'products_id = ' . $prod_id;
+                        $updateArray = array(
+                            'sort_order' => $no
+                        );
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', "products_id = $prod_id", $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                            // if the flat database module is enabled we have to sync the changes to the flat table
+                            mslib_befe::convertProductToFlat($prod_id);
+                        }
+                        $no++;
+                    }
+                }
+            }
+        }
+        exit();
+        break;
     case 'manufacturers':
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $getPost = $this->post['sortable_manufacturer'];
