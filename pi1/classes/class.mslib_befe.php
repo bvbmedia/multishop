@@ -3390,6 +3390,16 @@ class mslib_befe {
                         $keys = array();
                         $keys[] = 'email_order_status_changed_' . mslib_befe::strtolower($orders_status_name);
                         $keys[] = 'email_order_status_changed';
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'])) {
+                            $params = array(
+                                    'keys' => &$keys,
+                                    'orders_status' => $orders_status,
+                                    'order' => $order
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                         foreach ($keys as $key) {
                             //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                             $page = mslib_fe::getCMScontent($key, $order['language_id']);
