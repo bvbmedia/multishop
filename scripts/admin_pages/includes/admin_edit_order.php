@@ -1948,6 +1948,10 @@ if (is_numeric($this->get['orders_id'])) {
                         $payment_method_id = $item['id'];
                     }
                 }
+                if (!$payment_method_id) {
+                    $payment_method_data=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code');
+                    $payment_method_id=$payment_method_data['id'];
+                }
                 $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . ($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']) . '<input type="hidden" name="payment_method" value="' . $payment_method_id . '"></p></div>';
             }
             $orderDetailsItem .= '</div>';
