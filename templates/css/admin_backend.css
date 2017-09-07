@@ -935,3 +935,12 @@ fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
 
 td.print_r_key { word-break:normal; }
 td.print_r_value { word-break:break-word; }
+
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus { z-index:1; }
+.pagination > li.disabled > a:hover,
+.pagination > li.disabled > span:hover,
+.pagination > li.disabled > a:focus,
+.pagination > li.disabled > span:focus { z-index:0; }
