@@ -162,7 +162,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         }
                         if (isset($discount_value)) {
-                            $discount_value = mslib_befe::formatNumbersToMysql($discount_value);
+                            //$discount_value = mslib_befe::formatNumbersToMysql($discount_value);
                             $updateArray['discount'] = $discount_value;
                         }
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
