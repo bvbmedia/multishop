@@ -807,10 +807,14 @@ switch ($this->get['tx_multishop_pi1']['order_by']) {
     case 'status_last_modified':
         $order_by = 'o.status_last_modified';
         break;
+    case 'custom_sort_by':
+        $order_by = 'o.' . $this->get['tx_multishop_pi1']['custom_order_by'];
+        break;
     case 'orders_id':
     default:
         $order_by = 'o.orders_id';
         break;
+
 }
 switch ($this->get['tx_multishop_pi1']['order']) {
     case 'a':
