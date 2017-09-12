@@ -9922,7 +9922,7 @@ class mslib_fe {
             $amount = urlencode($amount);
             $from_Currency = urlencode($from_Currency);
             $to_Currency = urlencode($to_Currency);
-            $url = 'http://www.google.com/finance/converter?a=1&from=' . mslib_befe::strtoupper($from_Currency) . '&to=' . mslib_befe::strtoupper($to_Currency);
+            $url = 'http://finance.google.com/finance/converter?a=1&from=' . mslib_befe::strtoupper($from_Currency) . '&to=' . mslib_befe::strtoupper($to_Currency);
             $ch = curl_init();
             $timeout = 0;
             curl_setopt($ch, CURLOPT_URL, $url);
