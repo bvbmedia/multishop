@@ -545,6 +545,15 @@ class mslib_fe {
             $required_cols[] = 'pf.order_unit_name';
             $required_cols[] = 'pf.ean_code';
             $required_cols[] = 'pf.sku_code';
+            //hook to let other plugins further manipulate the query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetFlatSelectPreProc'])) {
+                $params = array(
+                        'required_cols' => &$required_cols
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetFlatSelectPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
                 $required_cols[] = 'pf.products_description';
             }
@@ -9913,7 +9922,7 @@ class mslib_fe {
             $amount = urlencode($amount);
             $from_Currency = urlencode($from_Currency);
             $to_Currency = urlencode($to_Currency);
-            $url = 'http://www.google.com/finance/converter?a=1&from=' . mslib_befe::strtoupper($from_Currency) . '&to=' . mslib_befe::strtoupper($to_Currency);
+            $url = 'http://finance.google.com/finance/converter?a=1&from=' . mslib_befe::strtoupper($from_Currency) . '&to=' . mslib_befe::strtoupper($to_Currency);
             $ch = curl_init();
             $timeout = 0;
             curl_setopt($ch, CURLOPT_URL, $url);
