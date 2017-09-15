@@ -507,7 +507,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'date_datetime_tooltip':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
-                                $row[$col] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
+                                $row[$col] = '<a href="javascript:void(0);" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
                             } else {
                                 $row[$col] = '';
                             }

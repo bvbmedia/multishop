@@ -656,7 +656,7 @@ if ($this->post['skeyword']) {
             $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
             $search_name=str_replace('%%', '%', $search_name);
             $items[] = "(billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
-            $filter[] = '(' . implode(" or ", $items) . ')';
+            $filter['all'] = '(' . implode(" or ", $items) . ')';
             break;
         case 'orders_id':
             $filter[] = " o.orders_id='" . addslashes($this->post['skeyword']) . "'";
@@ -846,10 +846,11 @@ if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']
 }
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'])) {
     $params = array(
-            'select' => &$select,
-            'filter' => &$filter,
-            'orderby' => &$orderby,
-            'offset' => &$offset
+        'select' => &$select,
+        'filter' => &$filter,
+        'orderby' => &$orderby,
+        'offset' => &$offset,
+        'option_fields' => &$option_fields
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
