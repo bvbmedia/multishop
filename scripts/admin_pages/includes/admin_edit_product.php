@@ -1505,8 +1505,11 @@ if ($this->post) {
                                 }
                                 $crumbar_ident_string = implode(',', $crumbar_ident_array);
                                 //
-
                                 if (!empty($crumbar_ident_string)) {
+                                    foreach ($crumbar_ident_array as $crumbar_node_id) {
+                                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and node_id=\'' . $crumbar_node_id . '\' and page_uid=' . $page_uid);
+                                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                    }
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and crumbar_identifier=\'' . $crumbar_ident_string . '\' and page_uid=' . $page_uid);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
@@ -2321,6 +2324,13 @@ if ($this->post) {
             $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             // update the new one
             if (is_numeric($this->post['default_path_categories_id'])) {
+                $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
+                if (!is_array($product_path)) {
+                    $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
+                    if (is_array($product_path) && count($product_path)) {
+                        $this->post['default_path_categories_id']=$product_path['node_id'];
+                    }
+                }
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
                 $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $this->get['pid'] . '\'', $updateArray);
