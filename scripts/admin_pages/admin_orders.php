@@ -653,7 +653,9 @@ if ($this->post['skeyword']) {
                         break;
                 }
             }
-            $items[] = "(billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $items[] = "(billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
             $filter[] = '(' . implode(" or ", $items) . ')';
             break;
         case 'orders_id':
@@ -663,7 +665,9 @@ if ($this->post['skeyword']) {
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'name':
-            $filter[] = " (billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $filter[] = " (billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
             break;
         case 'billing_zip':
             $filter[] = " billing_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
