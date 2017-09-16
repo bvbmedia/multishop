@@ -255,6 +255,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
     case 'mail_selected_orders_for_payment_reminder':
         if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
             foreach ($this->post['selected_orders'] as $orders_id) {
+                $this->post['selected_order_id']=$orders_id;
                 $tmpArray = mslib_fe::getOrder($orders_id); //=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id');
                 if ($tmpArray['paid'] == 0) {
                     // replacing the variables with dynamic values
@@ -461,7 +462,21 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                         $user['email'] = $tmpArray['billing_email'];
                         if ($user['email']) {
                             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+                            $postErno[] = array(
+                                'status' => 'info',
+                                'message' => 'Payment reminder e-mail has been sent to ' . $user['email'] . ' (Order ID: ' . $orders_id . ').'
+                            );
+                        } else {
+                            $postErno[] = array(
+                                    'status' => 'error',
+                                    'message' => 'Failed to sent payment reminder e-mail to ' . $user['email'] . ' (Order ID: ' . $orders_id . ').'
+                            );
                         }
+                    } else {
+                        $postErno[] = array(
+                            'status' => 'error',
+                            'message' => 'Failed to sent payment reminder e-mail to ' . $user['email'] . ' (Order ID: ' . $orders_id . '). reason: payment method has no link to payment reminder cms'
+                        );
                     }
                 }
             }
