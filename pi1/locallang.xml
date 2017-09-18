@@ -1418,6 +1418,7 @@
             <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
             <label index="search_in_shop">Search in shop</label>
             <label index="contact_email">Contact e-mail</label>
+            <label index="track_and_trace_link">Track and Trace Link</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2814,6 +2815,7 @@
             <label index="search_in_shop">Zoeken in de winkel</label>
             <label index="feed_exporter_fields_label_customer_billing_company">Debiteur (factuur) bedrijfsnaam</label>
             <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
+            <label index="track_and_trace_link">Track en Trace Link</label>
         </languageKey>
     </data>
 </T3locallang>

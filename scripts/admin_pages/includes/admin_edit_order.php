@@ -4269,6 +4269,14 @@ if (is_numeric($this->get['orders_id'])) {
             	<input class="form-control" name="track_and_trace_code" type="text" value="' . htmlspecialchars($orders['track_and_trace_code']) . '" />
             </div>
         </div>';
+        if (!empty($orders['track_and_trace_link'])) {
+            $order_status_tab_content['track_and_trace_code'] .= '<div class="form-group">
+                <label for="track_and_trace_code" class="control-label col-md-2">' . $this->pi_getLL('track_and_trace_link') . '</label>
+                <div class="col-md-10">
+                    <p class="form-control-static"><a href="' . $orders['track_and_trace_link'] . '" target="_blank">' . $orders['track_and_trace_link'] . '</a></p>
+                </div>
+            </div>';
+        }
         $order_status_tab_content['customer_notified'] = '<div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">' . $this->pi_getLL('send_email_to_customer') . '</label>
             <div class="col-md-10">
