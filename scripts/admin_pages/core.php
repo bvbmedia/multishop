@@ -1,4 +1,5 @@
 <?php
+header('X-XSS-Protection: 0');
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
