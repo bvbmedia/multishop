@@ -503,7 +503,7 @@ if ($this->ms['MODULES']['FLAT_DATABASE'] and count($having)) {
     $filter[] = $having[0];
     unset($having);
 }
-if (isset($this->get['stock_from']) && !empty($this->get['stock_from']) && isset($this->get['stock_till']) && !empty($this->get['stock_till'])) {
+if (isset($this->get['stock_from']) && $this->get['stock_from']!='' && isset($this->get['stock_till']) && $this->get['stock_till']!='') {
     $prefix = 'p.';
     $filter[] = "(" . $prefix . "products_quantity between " . $this->get['stock_from'] . " and " . $this->get['stock_till'] . ")";
 }

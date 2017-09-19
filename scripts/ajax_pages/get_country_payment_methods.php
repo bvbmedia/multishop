@@ -114,7 +114,8 @@ foreach ($payment_methods as $payment_name => $payment_data) {
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'])) {
         $params = array(
                 'data' => &$data,
-                'payment_data' => &$payment_data
+                'payment_data' => &$payment_data,
+                'cart' => &$cart
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

@@ -3356,7 +3356,7 @@ class mslib_befe {
                 $updateArray = array();
                 $updateArray['orders_id'] = $order['orders_id'];
                 $updateArray['old_value'] = $order['status'];
-                $updateArray['comments'] = $this->post['comments'];
+                $updateArray['comments'] = (!empty($this->post['comments']) ? $this->post['comments'] : '');
                 $updateArray['customer_notified'] = $mail_customer;
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
