@@ -2404,7 +2404,7 @@ class mslib_fe {
         $i = 1;
         foreach ($matches[0] as $img) {
             // make cid
-            $id = 'img' . ($i++);
+            $id = 'img' .uniqid(). ($i++);
             // replace image web path with local path
             preg_match('/src="(.*?)"/', $img, $m);
             if (!isset($m[1])) {
