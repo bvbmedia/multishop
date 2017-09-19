@@ -1008,6 +1008,7 @@ class mslib_fe {
         } else {
             $final_file = $input;
         }
+        $final_file = ltrim($final_file, '-');
         $final_file = rtrim($final_file, '-');
         if ($replaceDashByUnderscore) {
             $final_file = str_replace('-', '_', $final_file);
