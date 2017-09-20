@@ -2201,7 +2201,7 @@
             <label index="filter_by_date_status_last_modified">Filter op status wijzigingsdatum</label>
             <label index="final_price_ex_vat">Totaal (excl. BTW)</label>
             <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
-            <label index="first">eerste</label>
+            <label index="first">Eerste</label>
             <label index="first_name">voornaam</label>
             <label index="first_name_required">Voornaam is verplicht. Deze mag enkel uit normale karakters bestaan</label>
             <label index="flat_based">Flat based</label>
@@ -2256,7 +2256,7 @@
             <label index="keyword">Zoekwoord</label>
             <label index="lang">nl</label>
             <label index="language">Taal</label>
-            <label index="last">laatste</label>
+            <label index="last">Laatste</label>
             <label index="last_name">achternaam</label>
             <label index="last_run">Laatst gedraaid op</label>
             <label index="latest_login">Laatst ingelogd op</label>
