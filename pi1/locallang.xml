@@ -1957,9 +1957,9 @@
             <label index="choose_country">kies land</label>
             <label index="choose_image">Selecteer afbeelding</label>
             <label index="choose_manufacturers">selecteer fabrikant</label>
-            <label index="choose_payment_method">Kies Betaalmethode</label>
+            <label index="choose_payment_method">Kies betaalmethode</label>
             <label index="choose_selection">Maak uw keuze</label>
-            <label index="choose_shipping_method">Kies Verzendmethode</label>
+            <label index="choose_shipping_method">Kies verzendmethode</label>
             <label index="choose_type_of_content">kies type content</label>
             <label index="city">woonplaats</label>
             <label index="city_is_required">Woonplaats is verplicht</label>
