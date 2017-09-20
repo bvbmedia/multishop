@@ -126,7 +126,6 @@ plugin.tx_multishop_pi1 {
 	connectedShopPids = {$plugin.multishop.connectedShopPids}
 	login_as_customer_target_pid = {$plugin.multishop.login_as_customer_target_pid}
 	confirmed_create_account_target_pid = {$plugin.multishop.confirmed_create_account_target_pid}
-	manufacturers_pid = {$plugin.multishop.manufacturers_pid}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
