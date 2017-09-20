@@ -3321,11 +3321,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             // finally convert global markers and return output
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'])) {
                 $params = array(
-                        'shopping_cart_item'=>$shopping_cart_item,
-                        'c' => &$c,
-                        'sectionTemplateType' => &$sectionTemplateType,
-                        'subpartArray' => &$subpartArray,
-                        'subparts' => $subparts
+                    'shopping_cart_item'=>$shopping_cart_item,
+                    'c' => &$c,
+                    'sectionTemplateType' => &$sectionTemplateType,
+                    'subpartArray' => &$subpartArray,
+                    'subparts' => $subparts,
+                    'order' => $order
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
