@@ -710,6 +710,9 @@ switch ($this->ms['page']) {
             }
         }
         break;
+    case 'delete_manufacturer':
+        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_delete_manufacturer.php');
+        break;
     case 'add_customer':
     case 'edit_customer':
         if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "..")) {
