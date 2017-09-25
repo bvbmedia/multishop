@@ -5321,7 +5321,7 @@ class mslib_befe {
                         $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
                     $content .= '<th' . $inlineStyle . '>' . $colName . '</th>';
                     $cellCounter++;
@@ -5334,7 +5334,7 @@ class mslib_befe {
                         $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
                     $content .= '<th' . $inlineStyle . '>' . $colVal . '</th>';
                     $cellCounter++;
@@ -5365,7 +5365,7 @@ class mslib_befe {
                             $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
                         if (isset($settings['inlineStyles']['td'][$cellCounter]) && is_array($settings['inlineStyles']['td'][$cellCounter])) {
-                            $inlineStyle .= implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
+                            $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
                         }
                         $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $inlineStyle . '>' . $val . '</td>';
                         $cellCounter++;
