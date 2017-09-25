@@ -2,6 +2,15 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
+// hook to manipulate the continuity of update stock
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/manufacturers_products_listing.php']['manufacturersProductsListingPreProc'])) {
+    // hook
+    $params = array();
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/manufacturers_products_listing.php']['manufacturersProductsListingPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+    // hook oef
+}
 if (is_numeric($this->get['manufacturers_id'])) {
     if ($this->productsLimit) {
         $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'] = $this->productsLimit;
@@ -18,9 +27,9 @@ if (is_numeric($this->get['manufacturers_id'])) {
             $this->cacheLifeTime = $this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
         }
         $options = array(
-                'caching' => true,
-                'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-                'lifeTime' => $this->cacheLifeTime
+            'caching' => true,
+            'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+            'lifeTime' => $this->cacheLifeTime
         );
         $Cache_Lite = new Cache_Lite($options);
         $string = $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
