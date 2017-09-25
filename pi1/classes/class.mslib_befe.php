@@ -5307,26 +5307,36 @@ class mslib_befe {
                     }
                 }
             }
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
+            $inlineStyle='';
+            if (isset($settings['inlineStyles']['table']) && is_array($settings['inlineStyles']['table'])) {
+                $inlineStyle .= implode(' ', $settings['inlineStyles']['table']);
+            }
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"'.($inlineStyle? ' '.$inlineStyle:'').'>';
             $content .= '<thead><tr>';
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan = '';
+                    $inlineStyle = '';
                     if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th' . $colspan . '>' . $colName . '</th>';
+                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                    }
+                    $content .= '<th' . $inlineStyle . '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan = '';
+                    $inlineStyle = '';
                     if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th' . $colspan . '>' . $colVal . '</th>';
+                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                    }
+                    $content .= '<th' . $inlineStyle . '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
@@ -5335,14 +5345,24 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $rowCounter = 1;
             }
+            $odd='1';
             foreach ($rows as $row) {
                 if ($rowCounter) {
+                    if ($odd) {
+                        $odd=0;
+                    } else {
+                        $odd=1;
+                    }
                     $trClass = array();
                     if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
                         $trClass = array();
                         $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . '>';
+                    $inlineStyle='';
+                    if (isset($settings['inlineStyles']['trOddEven'][$odd]) && is_array($settings['inlineStyles']['td'][$odd])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['trOddEven'][$odd]);
+                    }
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . ($inlineStyle?' '.$inlineStyle:'').'>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
@@ -5350,11 +5370,14 @@ class mslib_befe {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
                         $classes[] = 'cell' . ($cellCounter + 1);
-                        $colspan = '';
+                        $inlineStyle = '';
                         if (count($row) == ($cellCounter + 1) && count($row) < ($maxCellCounter)) {
-                            $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                            $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $colspan . '>' . $val . '</td>';
+                        if (isset($settings['inlineStyles']['td'][$cellCounter]) && is_array($settings['inlineStyles']['td'][$cellCounter])) {
+                            $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
+                        }
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $inlineStyle . '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';

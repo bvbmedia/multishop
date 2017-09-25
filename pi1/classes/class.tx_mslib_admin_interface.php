@@ -95,7 +95,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     function renderInterface($params, &$that) {
         mslib_fe::init($that);
         //hook to let other plugins further manipulate the method
-        $params['interfaceKey']=$this->interfaceKey;
+        if (!isset($params['interfaceKey']) && isset($this->interfaceKey)) {
+            $params['interfaceKey']=$this->interfaceKey;
+        }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
