@@ -5345,14 +5345,24 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $rowCounter = 1;
             }
+            $odd='1';
             foreach ($rows as $row) {
                 if ($rowCounter) {
+                    if ($odd) {
+                        $odd=0;
+                    } else {
+                        $odd=1;
+                    }
                     $trClass = array();
                     if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
                         $trClass = array();
                         $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . '>';
+                    $inlineStyle='';
+                    if (isset($settings['inlineStyles']['trOddEven'][$odd]) && is_array($settings['inlineStyles']['td'][$odd])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['trOddEven'][$odd]);
+                    }
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . ($inlineStyle?' '.$inlineStyle:'').'>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
