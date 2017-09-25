@@ -544,11 +544,11 @@ switch ($this->ms['page']) {
                     foreach ($tmp_preselecteds as $preselected_id) {
                         $preselected_id = trim($preselected_id);
                         $cats = mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
-                        $cats = array_reverse($cats);
                         $catpath = array();
                         $level = 0;
                         $where = '';
                         if (is_array($cats) && count($cats)) {
+                            $cats = array_reverse($cats);
                             foreach ($cats as $cat) {
                                 $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
                                 $catpath[] = $cat['name'] . (!$cat['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
