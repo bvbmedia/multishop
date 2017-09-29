@@ -524,7 +524,8 @@ if (count($postErno)) {
 	jQuery(document).ready(function ($) {
 		$.confirm({
 			title: \'\',
-			content: $(\'#msAdminPostMessage\').html()
+			content: $(\'#msAdminPostMessage\').html(),
+			cancelButton: false // hides the cancel button.
 		});
 	});
 	</script>
