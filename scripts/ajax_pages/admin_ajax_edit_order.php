@@ -56,16 +56,18 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 /*} else {
                     $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
                 }*/
+                $language_code = mslib_befe::getLanguageIso2ByLanguageUid($order_data['language_id']);
                 $orderDetailsItem .= '</div>';
                 $orderDetailsItem .= '<div class="form-group row">
                     <label class="control-label col-md-3">&nbsp;</label>
                     <div class="col-md-9">
                         <div class="checkbox checkbox-inline checkbox-success">
                             <input type="checkbox" id="send_payment_received_email" value="1">
-                            <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').'</label>
+                            <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
                         </div>
                     </div>
-                </div>';
+                </div>
+                ';
                 $return_data['payment_method_date_purchased'] = $orderDetailsItem;
             }
         }
