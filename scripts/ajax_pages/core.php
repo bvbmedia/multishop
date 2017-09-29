@@ -10,7 +10,11 @@ switch ($this->ms['page']) {
         $counter = 0;
         if ($this->get['q']) {
             foreach ($users as $user) {
-                if (strpos($user['name'], $this->get['q']) !== false) {
+                if (strpos(strtolower($user['name']), strtolower($this->get['q'])) !== false) {
+                    $return_data[$counter]['text'] = $user['name'];
+                    $return_data[$counter]['id'] = $user['uid'];
+                    $counter++;
+                } else if (strpos(strtolower($user['email']), strtolower($this->get['q'])) !== false) {
                     $return_data[$counter]['text'] = $user['name'];
                     $return_data[$counter]['id'] = $user['uid'];
                     $counter++;
