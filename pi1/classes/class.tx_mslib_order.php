@@ -399,48 +399,44 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            $cms_language_uid=$GLOBALS['TSFE']->sys_language_uid;
-            if ($order['language_id']!=='') {
-                $cms_language_uid=$this->languages[$order['language_id']]['uid'];
-            }
             if ($mail_template) {
                 switch ($mail_template) {
                     case 'email_order_paid_letter':
                         if (isset($psp_mail_template['order_paid'])) {
                             $page = array();
                             if (!empty($psp_mail_template['order_paid'])) {
-                                $page = mslib_fe::getCMScontent($psp_mail_template['order_paid'], $cms_language_uid, $loadFromPids);
+                                $page = mslib_fe::getCMScontent($psp_mail_template['order_paid'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                             }
                         } else {
                             if ($order['payment_method']) {
-                                $page = mslib_fe::getCMScontent('email_order_paid_letter_' . $order['payment_method'], $cms_language_uid, $loadFromPids);
+                                $page = mslib_fe::getCMScontent('email_order_paid_letter_' . $order['payment_method'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                             }
                             if (!count($page[0])) {
-                                $page = mslib_fe::getCMScontent('email_order_paid_letter', $cms_language_uid, $loadFromPids);
+                                $page = mslib_fe::getCMScontent('email_order_paid_letter', $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                             }
                         }
                         break;
                     default:
-                        $page = mslib_fe::getCMScontent($mail_template, $cms_language_uid, $loadFromPids);
+                        $page = mslib_fe::getCMScontent($mail_template, $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                         break;
                 }
             } else if ($order['is_proposal']) {
                 // proposal template
                 $mail_template = 'email_order_proposal';
-                $page = mslib_fe::getCMScontent($mail_template, $cms_language_uid, $loadFromPids);
+                $page = mslib_fe::getCMScontent($mail_template, $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
             } else {
                 // normal order template
                 if (isset($psp_mail_template['order_confirmation'])) {
                     $page = array();
                     if (!empty($psp_mail_template['order_confirmation'])) {
-                        $page = mslib_fe::getCMScontent($psp_mail_template['order_confirmation'], $cms_language_uid, $loadFromPids);
+                        $page = mslib_fe::getCMScontent($psp_mail_template['order_confirmation'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                     }
                 } else {
                     if ($order['payment_method']) {
-                        $page = mslib_fe::getCMScontent('email_order_confirmation_' . $order['payment_method'], $cms_language_uid, $loadFromPids);
+                        $page = mslib_fe::getCMScontent('email_order_confirmation_' . $order['payment_method'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                     }
                     if (!count($page[0])) {
-                        $page = mslib_fe::getCMScontent('email_order_confirmation', $cms_language_uid, $loadFromPids);
+                        $page = mslib_fe::getCMScontent('email_order_confirmation', $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
                     }
                 }
             }
