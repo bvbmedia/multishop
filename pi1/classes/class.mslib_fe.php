@@ -3054,6 +3054,8 @@ class mslib_fe {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
+        /*
+         *
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('products_attributes_id', // SELECT ...
                 'tx_multishop_products_attributes', // FROM ...
                 'products_id=\'' . (int)$products_id . '\' and page_uid=\'' . $page_uid . '\'', // WHERE...
@@ -3061,15 +3063,8 @@ class mslib_fe {
                 '', // ORDER BY...
                 '1' // LIMIT ...
         );
-        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-        /*
-		 * note: this query is not optimal
-		$str=$GLOBALS['TYPO3_DB']->SELECTquery('popt.products_options_id', // SELECT ...
+        */
+        $str=$GLOBALS['TYPO3_DB']->SELECTquery('popt.products_options_id', // SELECT ...
 			'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
 			'patrib.products_id=\''.(int)$products_id.'\' and (popt.hide_in_cart=0 or popt.hide_in_cart is null) and patrib.options_id = popt.products_options_id', // WHERE...
 			'popt.products_options_id', // GROUP BY...
@@ -3082,7 +3077,6 @@ class mslib_fe {
 		} else {
 			return false;
 		}
-		*/
     }
     public function categoryHasSubs($categories_id) {
         if (is_numeric($categories_id)) {

@@ -147,6 +147,10 @@ if ($this->get['invoices_export_hash']) {
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
             $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            $prefix='';
+            if ($row['reversal_invoice']>0) {
+                $prefix='-';
+            }
             $excelCols = array();
             $total = count($fields);
             $count = 0;
@@ -215,10 +219,10 @@ if ($this->get['invoices_export_hash']) {
                         $excelCols[$field] = $row['delivery_country'];
                         break;
                     case 'orders_grand_total_excl_vat':
-                        $excelCols[$field] = number_format($order_tax_data['grand_total'] - $order_tax_data['total_orders_tax'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($order_tax_data['grand_total'] - $order_tax_data['total_orders_tax'], 2, ',', '.');
                         break;
                     case 'orders_grand_total_incl_vat':
-                        $excelCols[$field] = number_format($order_tax_data['grand_total'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($order_tax_data['grand_total'], 2, ',', '.');
                         break;
                     case 'payment_status':
                         $excelCols[$field] = ($row['paid']) ? $this->pi_getLL('paid') : $this->pi_getLL('unpaid');
@@ -227,10 +231,10 @@ if ($this->get['invoices_export_hash']) {
                         $excelCols[$field] = $row['shipping_method_label'];
                         break;
                     case 'shipping_cost_excl_vat':
-                        $excelCols[$field] = number_format($row['shipping_method_costs'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($row['shipping_method_costs'], 2, ',', '.');
                         break;
                     case 'shipping_cost_incl_vat':
-                        $excelCols[$field] = number_format($row['shipping_method_costs'] + $order_tmp['orders_tax_data']['shipping_tax'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($row['shipping_method_costs'] + $order_tmp['orders_tax_data']['shipping_tax'], 2, ',', '.');
                         break;
                     case 'shipping_cost_vat_rate':
                         $excelCols[$field] = ($order_tmp['orders_tax_data']['shipping_total_tax_rate'] * 100) . '%';
@@ -239,10 +243,10 @@ if ($this->get['invoices_export_hash']) {
                         $excelCols[$field] = $row['payment_method_label'];
                         break;
                     case 'payment_cost_excl_vat':
-                        $excelCols[$field] = number_format($row['payment_method_cost'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($row['payment_method_cost'], 2, ',', '.');
                         break;
                     case 'payment_cost_incl_vat':
-                        $excelCols[$field] = number_format($row['payment_method_cost'] + $order_tmp['orders_tax_data']['payment_tax'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($row['payment_method_cost'] + $order_tmp['orders_tax_data']['payment_tax'], 2, ',', '.');
                         break;
                     case 'payment_cost_vat_rate':
                         $excelCols[$field] = ($order_tmp['orders_tax_data']['payment_total_tax_rate'] * 100) . '%';
@@ -261,11 +265,11 @@ if ($this->get['invoices_export_hash']) {
                             } else {
                                 $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_name'];
                             }
-                            $excelCols[$field.'_'.$prod_ctr] = $product_tmp['qty'];
-                            $excelCols[$field.'_'.$prod_ctr] = number_format($product_tmp['final_price'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                            $excelCols[$field.'_'.$prod_ctr] = $prefix . $product_tmp['qty'];
+                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'], 2, ',', '.');
+                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
                             $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_tax'] . '%';
                             $prod_ctr++;
                         }
@@ -320,7 +324,7 @@ if ($this->get['invoices_export_hash']) {
                         $excelCols[$field] = $row['reversal_related_id'];
                         break;
                     case 'order_total_vat':
-                        $excelCols[$field] = number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
+                        $excelCols[$field] = $prefix . number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
                         break;
                 }
                 //hook to let other plugins further manipulate the replacers

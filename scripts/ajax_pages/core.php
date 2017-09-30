@@ -10,7 +10,11 @@ switch ($this->ms['page']) {
         $counter = 0;
         if ($this->get['q']) {
             foreach ($users as $user) {
-                if (strpos($user['name'], $this->get['q']) !== false) {
+                if (strpos(strtolower($user['name']), strtolower($this->get['q'])) !== false) {
+                    $return_data[$counter]['text'] = $user['name'];
+                    $return_data[$counter]['id'] = $user['uid'];
+                    $counter++;
+                } else if (strpos(strtolower($user['email']), strtolower($this->get['q'])) !== false) {
                     $return_data[$counter]['text'] = $user['name'];
                     $return_data[$counter]['id'] = $user['uid'];
                     $counter++;
@@ -544,11 +548,11 @@ switch ($this->ms['page']) {
                     foreach ($tmp_preselecteds as $preselected_id) {
                         $preselected_id = trim($preselected_id);
                         $cats = mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
-                        $cats = array_reverse($cats);
                         $catpath = array();
                         $level = 0;
                         $where = '';
                         if (is_array($cats) && count($cats)) {
+                            $cats = array_reverse($cats);
                             foreach ($cats as $cat) {
                                 $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
                                 $catpath[] = $cat['name'] . (!$cat['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
