@@ -1537,6 +1537,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
                 $insertArray['gender'] = '1';
             }
+            if (isset($address['title']) && !empty($address['title'])) {
+                $insertArray['title'] = ucfirst($address['title']) . '.';
+            }
             if (isset($address['contact_email']) && !empty($address['contact_email'])) {
                 $insertArray['contact_email'] = $address['contact_email'];
             }
@@ -1578,11 +1581,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['city'] = $address['city'];
                 $insertArray['country'] = $address['country'];
                 $insertArray['gender'] = $address['gender'];
-                $insertArray['birthday'] = strtotime($address['birthday']);
+                $insertArray['birthday'] = strtotime(['birthday']);
                 if ($address['gender'] == 'm') {
                     $insertArray['title'] = 'Mr.';
                 } else if ($address['gender'] == 'f') {
                     $insertArray['title'] = 'Mrs.';
+                }
+                if (isset($address['title']) && !empty($address['title'])) {
+                    $insertArray['title'] = ucfirst($address['title']) . '.';
                 }
                 $insertArray['region'] = $address['state'];
                 $insertArray['pid'] = $this->conf['fe_customer_pid'];
@@ -1638,6 +1644,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     } else if ($address['gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
                     }
+                    if (isset($address['title']) && !empty($address['title'])) {
+                        $insertArray['title'] = ucfirst($address['title']) . '.';
+                    }
                     $insertArray['region'] = $address['state'];
                 } else {
                     $insertArray = array();
@@ -1678,6 +1687,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['title'] = 'Mr.';
                     } else if ($address['delivery_gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
+                    }
+                    if (isset($address['delivery_title']) && !empty($address['delivery_title'])) {
+                        $insertArray['title'] = ucfirst($address['delivery_title']) . '.';
                     }
                     $insertArray['region'] = $address['delivery_state'];
                 }
