@@ -23,14 +23,6 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         var original_val = $(o).val();
         var current_value = parseFloat($(o).val());
     }
-
-
-    console.log($(o));
-    console.log(to_include_vat);
-    console.log(price_value);
-    console.log(current_value);
-
-
     if ($(o).attr("rel")!=undefined) {
         price_subject_id = $(o).attr("rel");
     }
