@@ -22,6 +22,7 @@ if ($this->post) {
         if ($order_unit_id) {
             $updateArray = array();
             $updateArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
+            $updateArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $order_unit_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // order unit name
@@ -40,7 +41,7 @@ if ($this->post) {
             if ($this->post['tx_multishop_pi1']['order_unit_name'][0]) {
                 $insertArray = array();
                 $insertArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
-                $insertArray['page_uid'] = $this->shop_pid;
+                $insertArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
                 $insertArray['crdate'] = time();
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -62,11 +63,13 @@ if ($this->post) {
         // add new order status eof
     }
 }
+$active_shop = mslib_fe::getActiveShop();
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
-    $str = "SELECT o.id, o.code, od.name, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='0' or o.page_uid='" . $this->shop_pid . "') and o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
+    $str = "SELECT o.id, o.page_uid, o.code, od.name, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $lngstatus = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $edit_page_uid=$row['page_uid'];
         $lngstatus[$row['language_id']] = $row;
     }
 }
@@ -112,6 +115,22 @@ foreach ($this->languages as $key => $language) {
 		</div>
 	';
 }
+if (count($active_shop) > 1) {
+    $tmpcontent .= '<div class="form-group">
+			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_shipping_to_shop', 'Relate this method to') . '</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline"><input name="tx_multishop_pi1[related_shop_pid]" id="related_shop_pid" type="radio" value="0"' . (($edit_page_uid == 0) ? ' checked="checked"' : '') . ' /><label for="related_shop_pid">' . $this->pi_getLL('relate_payment_to_all_shop', 'All shop') . '</label></div>';
+    foreach ($active_shop as $pageinfo) {
+        $pageTitle = $pageinfo['title'];
+        if ($pageinfo['nav_title']) {
+            $pageTitle = $pageinfo['nav_title'];
+        }
+        $tmpcontent .= '<div class="radio radio-success radio-inline"><input name="tx_multishop_pi1[related_shop_pid]" id="related_shop_pid'.$pageinfo['uid'].'" type="radio" value="' . $pageinfo['uid'] . '"' . (($edit_page_uid == $pageinfo['uid']) ? ' checked="checked"' : '') . ' /><label for="related_shop_pid'.$pageinfo['uid'].'">' . $pageTitle . '</label></div>';
+    }
+    $tmpcontent .= '</div></div>';
+} else {
+    $tmpcontent .= '<input type="hidden" name="tx_multishop_pi1[related_shop_pid]" value="' . $row['page_uid'] . '">';
+}
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $tmpcontent .= '<input type="hidden" class="text" name="tx_multishop_pi1[order_unit_id]" value="' . $this->get['tx_multishop_pi1']['order_unit_id'] . '">';
 }
@@ -125,7 +144,7 @@ $content .= $tmpcontent . '
 </div>
 </form>
 ';
-$str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='" . $this->shop_pid . "' and o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
+$str = "SELECT o.id, o.page_uid, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $zones = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -134,6 +153,13 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 if (count($order_units)) {
     $content .= '<table class="table table-striped table-bordered msadmin_border">
 		<thead><tr><th class="cellID">' . $this->pi_getLL('id') . '</th>
+		';
+    if (count($active_shop) > 1) {
+        $content .= '
+		<th class="cellCode">' . $this->pi_getLL('shop', 'Shop') . '</th>
+		';
+    }
+    $content .= '
 		<th class="cellCode">' . $this->pi_getLL('code') . '</th>
 		<th class="cellName">' . $this->pi_getLL('name') . '</th>
 		<th class="cellAction">' . $this->pi_getLL('action') . '</th></tr></thead>';
@@ -148,6 +174,17 @@ if (count($order_units)) {
 			' . $status['id'] . '
 		</td>
 		';
+        if (count($active_shop) > 1) {
+            if ($row['page_uid'] > 0) {
+                $content .= '
+                <td class="cellCode">' . mslib_fe::getShopNameByPageUid($status['page_uid']) . '</td>
+                ';
+            } else {
+                $content .= '
+                <td class="cellCode">All</td>
+                ';
+            }
+        }
         $content .= '
 		<td class="cellCode">' . $status['code'] . '</td>
 		<td class="cellName">' . $status['name'] . '</td>
