@@ -195,11 +195,16 @@ if (is_array($rel_products) && count($rel_products)) {
                     'markerArray' => &$markerArray,
                     'product' => &$rel_rs,
                     'output' => &$output,
+                    'plugins_item_extra_content' => &$plugins_item_extra_content,
                     'products_compare' => &$products_compare
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
+        }
+        $markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT'] = '';
+        if (count($plugins_item_extra_content)) {
+            $markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT'] = implode("\n", $plugins_item_extra_content);
         }
         // custom hook that can be controlled by third-party plugin eof
         $contentItem .= $this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');

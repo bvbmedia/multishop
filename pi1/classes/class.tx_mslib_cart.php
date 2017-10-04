@@ -126,7 +126,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     //
                     $query = $GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
                             'tx_multishop_products_attributes pa, tx_multishop_products_options po', // FROM ...
-                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . $this->showCatalogFromPage . '\' and po.hide!=1 and po.hide_in_cart!=1 and po.language_id=' . $this->sys_language_uid . ' and po.products_options_id=pa.options_id', // WHERE...
+                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . $this->showCatalogFromPage . '\' and po.required=1 and (po.hide=0 or po.hide is null) and (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id=' . $this->sys_language_uid . ' and po.products_options_id=pa.options_id', // WHERE...
                             '', // GROUP BY...
                             'pa.sort_order_option_name asc, pa.sort_order_option_value asc', // ORDER BY...
                             '' // LIMIT ...
@@ -1537,6 +1537,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
                 $insertArray['gender'] = '1';
             }
+            if (isset($address['title']) && !empty($address['title'])) {
+                $insertArray['title'] = ucfirst($address['title']) . '.';
+            }
             if (isset($address['contact_email']) && !empty($address['contact_email'])) {
                 $insertArray['contact_email'] = $address['contact_email'];
             }
@@ -1578,11 +1581,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['city'] = $address['city'];
                 $insertArray['country'] = $address['country'];
                 $insertArray['gender'] = $address['gender'];
-                $insertArray['birthday'] = strtotime($address['birthday']);
+                $insertArray['birthday'] = strtotime(['birthday']);
                 if ($address['gender'] == 'm') {
                     $insertArray['title'] = 'Mr.';
                 } else if ($address['gender'] == 'f') {
                     $insertArray['title'] = 'Mrs.';
+                }
+                if (isset($address['title']) && !empty($address['title'])) {
+                    $insertArray['title'] = ucfirst($address['title']) . '.';
                 }
                 $insertArray['region'] = $address['state'];
                 $insertArray['pid'] = $this->conf['fe_customer_pid'];
@@ -1638,6 +1644,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     } else if ($address['gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
                     }
+                    if (isset($address['title']) && !empty($address['title'])) {
+                        $insertArray['title'] = ucfirst($address['title']) . '.';
+                    }
                     $insertArray['region'] = $address['state'];
                 } else {
                     $insertArray = array();
@@ -1678,6 +1687,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['title'] = 'Mr.';
                     } else if ($address['delivery_gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
+                    }
+                    if (isset($address['delivery_title']) && !empty($address['delivery_title'])) {
+                        $insertArray['title'] = ucfirst($address['delivery_title']) . '.';
                     }
                     $insertArray['region'] = $address['delivery_state'];
                 }

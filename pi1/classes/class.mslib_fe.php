@@ -10616,7 +10616,7 @@ class mslib_fe {
             return true;
         }
     }
-    public function genderSalutation($gender) {
+    public function genderSalutation($gender, $order=array()) {
         switch ($gender) {
             case '0':
             case 'm':
@@ -10638,8 +10638,9 @@ class mslib_fe {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'])) {
             $params = array(
-                    'salutation' => &$salutation,
-                    'gender' => &$gender
+                'salutation' => &$salutation,
+                'gender' => &$gender,
+                'order' => &$order
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

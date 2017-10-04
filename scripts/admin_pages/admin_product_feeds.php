@@ -133,6 +133,7 @@ if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 $array['custom_field'] = $this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
 $array['products_price_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 $array['products_price_with_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
+$array['products_feed_generated_date'] = $this->pi_getLL('feed_exporter_fields_label_generated_date');
 // load shipping costs per zone
 $str = "SELECT * from tx_multishop_zones order by name";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);

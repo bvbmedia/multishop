@@ -1001,6 +1001,9 @@ if ($this->get['feed_hash']) {
                     case 'products_meta_description':
                         $tmpcontent .= $row['products_meta_description'];
                         break;
+                    case 'products_feed_generated_date':
+                        $tmpcontent .= strftime('%x', time());
+                        break;
                     default:
                         if ($field) {
                             // COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES
