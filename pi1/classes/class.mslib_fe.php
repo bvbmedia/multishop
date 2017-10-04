@@ -420,6 +420,8 @@ class mslib_fe {
             $required_cols[] = 'p.starttime';
             $required_cols[] = 'p.endtime';
             $required_cols[] = 'oud.name as order_unit_name';
+            $required_cols[] = 'ou.code as order_unit_code';
+            $required_cols[] = 'p.order_unit_id';
             if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
                 $required_cols[] = 'pd.products_description';
             }
@@ -449,7 +451,7 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            $from_clause = 'tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id left join tx_multishop_order_units_description oud on p.order_unit_id=oud.order_unit_id and oud.language_id=' . $this->sys_language_uid;
+            $from_clause = 'tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id left join tx_multishop_order_units ou on p.order_unit_id=ou.id left join tx_multishop_order_units_description oud on p.order_unit_id=oud.order_unit_id and oud.language_id=' . $this->sys_language_uid;
             if (count($extra_join)) {
                 $from_clause .= " ";
                 $from_clause .= implode(" ", $extra_join);
