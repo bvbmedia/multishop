@@ -4401,7 +4401,7 @@ class mslib_befe {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price'] + (($product['final_price'] * $product['products_tax']) / 100)), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price'] - $product['discount_amount']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
-                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents((($product['final_price']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * ($product['final_price'] + $product['products_tax_data']['total_tax'])), $customer_currency, $display_currency_symbol, 0);
                     } else {
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price']), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
