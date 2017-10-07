@@ -2034,10 +2034,24 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
             }
             $user = mslib_fe::getUser($customer_id);
-            $insertArray['payment_condition'] = '';
+            $payment_condition='';
             if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition'] > 0) {
-                $insertArray['payment_condition'] = $user['tx_multishop_payment_condition'];
+                $payment_condition=$user['tx_multishop_payment_condition'];
             }
+            if (!$payment_condition) {
+                if ($address['payment_method']) {
+                    $psp_data = mslib_fe::loadPaymentMethod($address['payment_method']);
+                    if ($psp_data['payment_condition']) {
+                        $payment_condition = $psp_data['payment_condition'];
+                    }
+                }
+            }
+            if (!$payment_condition) {
+                if ($this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE']) {
+                    $insertArray['payment_condition'] = $this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
+                }
+            }
+            $insertArray['payment_condition'] = $payment_condition;
             // geo data
             $addresstypes = array();
             $addresstypes[] = 'billing';
