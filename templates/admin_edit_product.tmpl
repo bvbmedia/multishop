@@ -5,7 +5,7 @@
         var relations_type=['main','sub','search'];
         if (data.related_product!=undefined) {
             $("#search_related_product_placeholder").empty();
-            $('.cekbox:not(:checked)').parent().parent().remove();
+            //$('.cekbox:not(:checked)').parent().parent().remove();
             //$('.checkAll:not(:checked)').parent().parent().remove();
             $.each(data.related_product, function (categories_id, related_data) {
                 $.each(relations_type, function(idx, relation_type){
@@ -17,14 +17,12 @@
                             if ($(existing_fieldset_id).length > 0) {
                                 if (related_data[relation_type].products.length > 0) {
                                     $.each(related_data[relation_type].products, function (i, products_data) {
-                                        var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
-                                        if ($(existing_cb).length == 0) {
-                                            if (products_data.checked == 1) {
-                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-                                            } else {
-                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></div></li>';
-                                            }
-                                        }
+                                        //var existing_cb = '#' + relation_type + '_cb_' + categories_id + '_' + products_data.id;
+                                        //if ($(existing_cb).length == 0) {
+                                        html_elem += '<li>';
+                                        html_elem += '<a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a>';
+                                        html_elem += '</li>';
+                                        //}
                                     });
                                     $(last_row_existing_fieldset).before(html_elem);
                                 }
@@ -37,36 +35,32 @@
                                         var main_product_eid='#main_cb_' + categories_id + '_' + products_data.id;
                                         var sub_product_eid='#sub_cb_' + categories_id + '_' + products_data.id;
                                         if ($(main_product_eid).length<1 && $(sub_product_eid).length<1) {
-                                            if (products_data.checked == 1) {
-                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                                                checked_rp++;
-                                            } else {
-                                                html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                                            }
+                                            html_elem += '<li>';
+                                            html_elem += '<a href="' + products_data.link + '" target="_blank" id="product_sr_' + products_data.id + '">' + products_data.name + '</a>';
+                                            html_elem += ' <a href="#" class="btn btn-xs add_as_mpid" data-relation-type="main" data-relation-pid="' + products_data.id + '" data-current-pid="###AJAX_PID###" data-categories-id="' + categories_id + '" data-categories-name="' + products_data.categories_name + '"><i class="fa fa-plus"></i> add as main</a>';
+                                            html_elem += ' <a href="#" class="btn btn-xs add_as_spid" data-relation-type="sub" data-relation-pid="' + products_data.id + '" data-current-pid="###AJAX_PID###" data-categories-id="' + categories_id + '" data-categories-name="' + products_data.categories_name + '"><i class="fa fa-plus"></i> add as sub</a>';
+                                            html_elem += ' <a href="#" class="btn btn-xs add_relation_as_both" data-relation-type="both" data-relation-pid="' + products_data.id + '" data-current-pid="###AJAX_PID###" data-categories-id="' + categories_id + '" data-categories-name="' + products_data.categories_name + '"><i class="fa fa-plus"></i> add as both</a>';
+                                            html_elem += '</li>';
                                         }
                                     } else {
-                                        if (products_data.checked == 1) {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" checked="true" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                                            checked_rp++;
-                                        } else {
-                                            html_elem += '<li><div class="checkbox checkbox-success"><input class="' + relation_type + '_cekbox shiftCheckbox ' + relation_type + '_category' + categories_id + '" type="checkbox" name="category' + categories_id + '" id="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '" value="' + products_data.id + '" /><label for="' + relation_type + '_cb_' + categories_id + '_' + products_data.id + '"><a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a></label></li>';
-                                        }
+                                        html_elem += '<li>';
+                                        html_elem += '<a href="' + products_data.link + '" target="_blank">' + products_data.name + '</a>';
+                                        html_elem += ' <a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + products_data.id + '" data-current-pid="###AJAX_PID###"><i class="fa fa-remove"></i></a>';
+                                        html_elem += '</li>';
                                     }
                                 });
-                                if (checked_rp > 0) {
-                                    html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" checked="checked" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
-                                } else {
-                                    html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '"><div class="checkbox checkbox-success"><input type="checkbox" class="checkAll" id="' + relation_type + '_category_' + categories_id + '" rel="' + relation_type + '_category' + categories_id + '" /><label for="category_' + categories_id + '">Check / Uncheck All</label></li>';
-                                }
+                                html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '" style="display: none">&nbsp;</li>';
                                 html_elem += '</ul></div>';
                                 $("#" + relation_type + "_related_product_placeholder").append(html_elem);
                                 var block_title_id='#' + relation_type + '_block_panel';
                                 if (!$(block_title_id).is(':visible')) {
                                     $(block_title_id).show();
+                                    $('#block_panel_wrapper').show();
                                 }
                             }
                         }
                     }
+
                 });
             });
             $.each(relations_type, function(idx, relation_type) {
@@ -129,16 +123,16 @@
     function initRelatedProduct(url) {
         $('#load').show();
         $.ajax({
-                   type: "POST",
-                   url: url,
-                   dataType: "json",
-                   data: {req: "init", pid: "###AJAX_PID###"},
-                   success: function (data) {
-                       if (data.related_product) {
-                           populateRelatedProduct(data);
-                       }
-                   }
-               });
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: {req: "init", pid: "###AJAX_PID###"},
+            success: function (data) {
+                if (data.related_product) {
+                    populateRelatedProduct(data);
+                }
+            }
+        });
     }
     function mathRound(float) {
         //return float;
@@ -146,20 +140,20 @@
     }
     function getSpecialsSections(products_id) {
         $.ajax({
-                   url: '###AJAX_URL_GET_SPECIAL_SECTIONS###',
-                   data: 'products_id=###AJAX_PID###',
-                   type: 'post',
-                   dataType: 'html',
-                   success: function (j) {
-                       if (j) {
-                           if (parseFloat(jQuery('#specials_new_products_price_excl_vat').val()) > 0 || parseFloat(jQuery('#specials_new_products_price_incl_vat').val()) > 0) {
-                               $("#specials_sections").hide();
-                               $("#specials_sections").html(j);
-                               $("#specials_sections").slideDown("fast");
-                           }
-                       }
-                   }
-               });
+            url: '###AJAX_URL_GET_SPECIAL_SECTIONS###',
+            data: 'products_id=###AJAX_PID###',
+            type: 'post',
+            dataType: 'html',
+            success: function (j) {
+                if (j) {
+                    if (parseFloat(jQuery('#specials_new_products_price_excl_vat').val()) > 0 || parseFloat(jQuery('#specials_new_products_price_incl_vat').val()) > 0) {
+                        $("#specials_sections").hide();
+                        $("#specials_sections").html(j);
+                        $("#specials_sections").slideDown("fast");
+                    }
+                }
+            }
+        });
     }
     ###JS_FUNCTIONS_EXTRA###
     jQuery(document).ready(function ($) {
@@ -245,8 +239,7 @@
             }
             this.timer = setTimeout(function () {
                 if (value != '' && parseFloat(value) > 0) {
-                    getSpecialsSections(###AJAX_PID###)
-                    ;
+                    getSpecialsSections(###AJAX_PID###);
                 } else {
                     $("#specials_sections").slideUp("fast");
                 }
@@ -285,74 +278,230 @@
             altTimeFormat: "HH:mm:ss"
         });
         $("#products_date_available_visitor").datepicker({
-                                                             dateFormat: "###DATE_FORMAT###",
-                                                             altField: "#products_date_available",
-                                                             altFormat: "yy-mm-dd",
-                                                             changeMonth: true,
-                                                             changeYear: true,
-                                                             showOtherMonths: true,
-                                                             yearRange: "###YEAR_RANGE###"
-                                                         });
+            dateFormat: "###DATE_FORMAT###",
+            altField: "#products_date_available",
+            altFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###"
+        });
         $("#starttime_visitor").datetimepicker({
-                                                   dateFormat: "###DATE_FORMAT###",
-                                                   changeMonth: true,
-                                                   changeYear: true,
-                                                   showOtherMonths: true,
-                                                   yearRange: "###YEAR_RANGE###",
-                                                   timeFormat: 'HH:mm:ss',
-                                                   altField: "#starttime",
-                                                   altFieldTimeOnly: false,
-                                                   altFormat: "yy-mm-dd",
-                                                   altTimeFormat: "HH:mm:ss"
-                                               });
+            dateFormat: "###DATE_FORMAT###",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###",
+            timeFormat: 'HH:mm:ss',
+            altField: "#starttime",
+            altFieldTimeOnly: false,
+            altFormat: "yy-mm-dd",
+            altTimeFormat: "HH:mm:ss"
+        });
         $("#endtime_visitor").datetimepicker({
-                                                 dateFormat: "###DATE_FORMAT###",
-                                                 changeMonth: true,
-                                                 changeYear: true,
-                                                 showOtherMonths: true,
-                                                 yearRange: "###YEAR_RANGE###",
-                                                 timeFormat: 'HH:mm:ss',
-                                                 altField: "#endtime",
-                                                 altFieldTimeOnly: false,
-                                                 altFormat: "yy-mm-dd",
-                                                 altTimeFormat: "HH:mm:ss",
-                                                 hour: 23,
-                                                 minute: 59,
-                                                 second: 59
-                                             });
+            dateFormat: "###DATE_FORMAT###",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###",
+            timeFormat: 'HH:mm:ss',
+            altField: "#endtime",
+            altFieldTimeOnly: false,
+            altFormat: "yy-mm-dd",
+            altTimeFormat: "HH:mm:ss",
+            hour: 23,
+            minute: 59,
+            second: 59
+        });
         $("#specials_price_start_visitor").datetimepicker({
-                                                              dateFormat: "###DATE_FORMAT###",
-                                                              altField: "#specials_price_start",
-                                                              altFormat: "yy-mm-dd",
-                                                              changeMonth: true,
-                                                              changeYear: true,
-                                                              showOtherMonths: true,
-                                                              yearRange: "###YEAR_RANGE###",
-                                                              timeFormat: 'HH:mm:ss',
-                                                              altFieldTimeOnly: false,
-                                                              altFormat: "yy-mm-dd",
-                                                              altTimeFormat: "HH:mm:ss"
-                                                          });
+            dateFormat: "###DATE_FORMAT###",
+            altField: "#specials_price_start",
+            altFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###",
+            timeFormat: 'HH:mm:ss',
+            altFieldTimeOnly: false,
+            altFormat: "yy-mm-dd",
+            altTimeFormat: "HH:mm:ss"
+        });
         $("#specials_price_expired_visitor").datetimepicker({
-                                                                dateFormat: "###DATE_FORMAT###",
-                                                                altField: "#specials_price_expired",
-                                                                altFormat: "yy-mm-dd",
-                                                                changeMonth: true,
-                                                                changeYear: true,
-                                                                showOtherMonths: true,
-                                                                yearRange: "###YEAR_RANGE###",
-                                                                timeFormat: 'HH:mm:ss',
-                                                                altFieldTimeOnly: false,
-                                                                altFormat: "yy-mm-dd",
-                                                                altTimeFormat: "HH:mm:ss",
-                                                                hour: 23,
-                                                                minute: 59,
-                                                                second: 59
-                                                            });
+            dateFormat: "###DATE_FORMAT###",
+            altField: "#specials_price_expired",
+            altFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            showOtherMonths: true,
+            yearRange: "###YEAR_RANGE###",
+            timeFormat: 'HH:mm:ss',
+            altFieldTimeOnly: false,
+            altFormat: "yy-mm-dd",
+            altTimeFormat: "HH:mm:ss",
+            hour: 23,
+            minute: 59,
+            second: 59
+        });
         // related product ajax server
         var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
         // populate the existing related products
         initRelatedProduct(url_relatives);
+        // add / remove related product
+        $(document).on('click', '.remove_related_product', function(e){
+            e.preventDefault();
+            var cObj=$(this);
+            var relation_type=$(this).attr('data-relation-type');
+
+            if (relation_type=='main') {
+                var main_pid=$(this).attr('data-relation-pid');
+                var sub_pid=$(this).attr('data-current-pid');
+            } else if (relation_type=='sub') {
+                var main_pid=$(this).attr('data-current-pid');
+                var sub_pid=$(this).attr('data-relation-pid');
+            }
+            $.ajax({
+                type: "POST",
+                url: url_relatives,
+                dataType: "json",
+                data: {
+                    req: "delete", mpid: main_pid, spid: sub_pid
+                },
+                success: function (data) {
+                    if (data.deleted=='OK') {
+                        var parent_ul_id='#' + cObj.parent().parent().attr('id');
+                        cObj.parent().remove();
+                        if ($(parent_ul_id).children().length=='1') {
+                            $(parent_ul_id).hide();
+                            $(parent_ul_id).parent().hide();
+                        }
+                    }
+                }
+            });
+        });
+        // add the active product as related product
+        $(document).on('click', '.add_as_mpid', function(e){
+            e.preventDefault();
+            var relation_type=$(this).attr('data-relation-type');
+            var main_pid=$(this).attr('data-relation-pid');
+            var sub_pid=$(this).attr('data-current-pid');
+            var categories_id=$(this).attr('data-categories-id');
+            var product_element_id='#product_sr_' + main_pid;
+            var ul_element_id='#main_category' + categories_id;
+            var categories_name=$(this).attr('data-categories-name');
+            var clone_a_product=$(product_element_id).clone();
+            var last_line='#main_checkAllC' + categories_id;
+            $.ajax({
+               type: "POST",
+               url: url_relatives,
+               dataType: "json",
+               data: {
+                   req: "add_as_mpid", mpid: main_pid, spid: sub_pid
+               },
+               success: function (data) {
+                    if (data.saved=='OK') {
+                        if ($('#main_related_product_placeholder').find(ul_element_id).length=='0') {
+                            var html_elem = '<div class="main_related_data_categories_name_listing"><strong>' + categories_name + '</strong>';
+                            html_elem += '<ul id="main_category' + categories_id + '">';
+                            html_elem += '<li id="main_checkAllC' + categories_id + '" style="display: none">&nbsp;</li>';
+                            html_elem += '</ul></div>';
+                            $('#main_related_product_placeholder').append(html_elem);
+                        }
+                        $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="main" data-relation-pid="' + main_pid+ '" data-current-pid="' + sub_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
+                        if (!$(ul_element_id).is(':visible')) {
+                            $(ul_element_id).parent().show();
+                            $(ul_element_id).show();
+                            $('#main_block_panel').show();
+                        }
+                    }
+               }
+            });
+        });
+        // add the active product as the main product
+        $(document).on('click', '.add_as_spid', function(e){
+            e.preventDefault();
+            var relation_type=$(this).attr('data-relation-type');
+            var main_pid=$(this).attr('data-current-pid');
+            var sub_pid=$(this).attr('data-relation-pid');
+            var categories_id=$(this).attr('data-categories-id');
+            var product_element_id='#product_sr_' + sub_pid;
+            var ul_element_id='#sub_category' + categories_id;
+            var categories_name=$(this).attr('data-categories-name');
+            var clone_a_product=$(product_element_id).clone();
+            var last_line='#sub_checkAllC' + categories_id;
+            $.ajax({
+               type: "POST",
+               url: url_relatives,
+               dataType: "json",
+               data: {
+                   req: "add_as_spid", mpid: main_pid, spid: sub_pid
+               },
+               success: function (data) {
+                   if (data.saved=='OK') {
+                       if ($('#sub_related_product_placeholder').find(ul_element_id).length=='0') {
+                           var html_elem = '<div class="sub_related_data_categories_name_listing"><strong>' + categories_name + '</strong>';
+                           html_elem += '<ul id="sub_category' + categories_id + '">';
+                           html_elem += '<li id="sub_checkAllC' + categories_id + '" style="display: none">&nbsp;</li>';
+                           html_elem += '</ul></div>';
+                           $('#sub_related_product_placeholder').append(html_elem);
+                       }
+                       $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="main" data-relation-pid="' + main_pid+ '" data-current-pid="' + sub_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
+                       if (!$(ul_element_id).is(':visible')) {
+                           $(ul_element_id).parent().show();
+                           $(ul_element_id).show();
+                           $('#sub_block_panel').show();
+                       }
+                   }
+               }
+            });
+        });
+        // add the active product as
+        $(document).on('click', '.add_relation_as_both', function(e){
+            e.preventDefault();
+            var relations_type=['main', 'sub'];
+            var relation_type=$(this).attr('data-relation-type');
+            var main_pid=$(this).attr('data-current-pid');
+            var sub_pid=$(this).attr('data-relation-pid');
+            var categories_id=$(this).attr('data-categories-id');
+            var categories_name=$(this).attr('data-categories-name');
+            $.ajax({
+               type: "POST",
+               url: url_relatives,
+               dataType: "json",
+               data: {
+                   req: "add_relation_as_both", mpid: main_pid, spid: sub_pid
+               },
+               success: function (data) {
+                   $.each(relations_type, function(i, relation_type){
+                       if (data.saved[relation_type]=='OK') {
+                           var ul_element_id='#' + relation_type + '_category' + categories_id;
+                           var last_line='#' + relation_type + '_checkAllC' + categories_id;
+                           if ($('#' + relation_type + '_related_product_placeholder').find(ul_element_id).length=='0') {
+                               var html_elem = '<div class="' + relation_type + '_related_data_categories_name_listing"><strong>' + categories_name + '</strong>';
+                               html_elem += '<ul id="' + relation_type + '_category' + categories_id + '">';
+                               html_elem += '<li id="' + relation_type + '_checkAllC' + categories_id + '" style="display: none">&nbsp;</li>';
+                               html_elem += '</ul></div>';
+                               $('#' + relation_type + '_related_product_placeholder').append(html_elem);
+                           }
+                           if (relation_type=='main') {
+                               var product_element_id='#product_sr_' + sub_pid;
+                               var clone_a_product=$(product_element_id).clone();
+                               $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + main_pid + '" data-current-pid="' + sub_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
+                           } else {
+                               var product_element_id='#product_sr_' + sub_pid;
+                               var clone_a_product=$(product_element_id).clone();
+                               $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + sub_pid + '" data-current-pid="' + main_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
+                           }
+                           if (!$(ul_element_id).is(':visible')) {
+                               $(ul_element_id).parent().show();
+                               $(ul_element_id).show();
+                               $('#' + relation_type + '_block_panel').show();
+                           }
+                       }
+                   });
+               }
+            });
+        });
+        // add / remove related product eol
         $(document).on('click', '#filter', function () {
             $('#load').show();
             var keywords = $("#key").val();
@@ -361,18 +510,18 @@
                 cid=0;
             }
             $.ajax({
-                       type: "POST",
-                       url: url_relatives,
-                       dataType: "json",
-                       data: {req: "search", keypas: keywords, pid: "###AJAX_PID###", s_cid: cid},
-                       success: function (data) {
-                           populateRelatedProduct(data);
-                       }
-                   });
+                type: "POST",
+                url: url_relatives,
+                dataType: "json",
+                data: {req: "search", keypas: keywords, pid: "###AJAX_PID###", s_cid: cid},
+                success: function (data) {
+                    populateRelatedProduct(data);
+                }
+            });
         });
+
         $(document).on("click", ".checkAll", function () {
             var product_class_name = "." + $(this).attr("rel");
-
             if ($(this).is(":checked")) {
                 $(product_class_name).prop("checked", true);
                 saveRelation(url_relatives, $(product_class_name).serialize());
@@ -384,10 +533,8 @@
         });
         $(document).on("click", ".search_cekbox, .main_cekbox, .sub_cekbox, .cekbox", function () {
             var related_id = $(this).val();
-
             if ($(this).is(":checked")) {
                 saveRelation(url_relatives, related_id);
-
             } else {
                 deleteRelation(url_relatives, related_id);
             }
@@ -405,27 +552,26 @@
         //copy products
         $("#cp_product").bind("click", function () {
             $.ajax({
-                       type: "POST",
-                       url: "###AJAX_URL_COPY_PRODUCT###",
-                       data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
-                       success: function (data) {
-                           $("#has_cd").html(data);
-                       }
-                   });
+                type: "POST",
+                url: "###AJAX_URL_COPY_PRODUCT###",
+                data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
+                success: function (data) {
+                   $("#has_cd").html(data);
+                }
+            });
         });
-
         $("#dp_product").bind("click", function () {
             $.ajax({
-                       type: "POST",
-                       url: "###AJAX_URL_COPY_PRODUCT###",
-                       data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
-                       success: function (data) {
-                           $("#has_cd").html(data);
-                       }
-                   });
+                type: "POST",
+                url: "###AJAX_URL_COPY_PRODUCT###",
+                data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
+                success: function (data) {
+                   $("#has_cd").html(data);
+                }
+            });
         });
         //copy products eof
-        ###JS_TRIGGERS_EXTRA###
+    ###JS_TRIGGERS_EXTRA###
     });
 </script>
 <!-- ###JS_HEADER### end -->

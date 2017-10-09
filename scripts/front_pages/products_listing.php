@@ -194,23 +194,23 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                     $output_array['meta']['sortables'] = '
 					<script>
 					jQuery(document).ready(function($) {
-					var result = jQuery("#category_listing").sortable({
-					 cursor:     "move",
-						//axis:       "y",
-						update: function(e, ui) {
-							href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=subcatlisting') . '";
-							jQuery(this).sortable("refresh");
-							sorted = jQuery(this).sortable("serialize", "id");
-							jQuery.ajax({
-									type:   "POST",
-									url:    href,
-									data:   sorted,
-									success: function(msg) {
-											//do something with the sorted data
-									}
-							});
-						}
-					});
+					    var result = jQuery("#category_listing").sortable({
+                            cursor:     "move",
+                            //axis:       "y",
+                            update: function(e, ui) {
+                                href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=subcatlisting') . '";
+                                jQuery(this).sortable("refresh");
+                                sorted = jQuery(this).sortable("serialize", "id");
+                                jQuery.ajax({
+                                    type:   "POST",
+                                    url:    href,
+                                    data:   sorted,
+                                    success: function(msg) {
+                                            //do something with the sorted data
+                                    }
+                                });
+                            }
+                        });
 					});
 					</script>';
                 }
