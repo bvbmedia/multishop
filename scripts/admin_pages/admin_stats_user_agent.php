@@ -84,8 +84,11 @@ $data_query['order_by'] = array();
 $data_query['where'] = array();
 $data_query['select'] = array();
 if ($this->post['skeyword']) {
-    $data_query['filter'][] = "delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
-    $data_query['filter'][] = "billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $orFilter=array();
+    $orFilter[]= "orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $orFilter[]= "delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $orFilter[]= "billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $data_query['filter'][] ='('.implode(' OR ',$orFilter).')'; 
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
     list($from_date, $from_time) = explode(" ", $this->post['order_date_from']);
@@ -105,7 +108,7 @@ if (!$this->masterShop) {
     $data_query['filter'][] = 'o.page_uid=' . $this->shop_pid;
 }
 $data_query['select'][] = 'o.*, osd.name as orders_status';
-$order_by = 'o.billing_name';
+$order_by = 'o.orders_id';
 $order = 'desc';
 $order_link = 'a';
 $data_query['order_by'][] = $order_by . ' ' . $order;
