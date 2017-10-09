@@ -10604,6 +10604,17 @@ class mslib_fe {
             $array2[] = $newCustomer['email'];
             $array1[] = '###PASSWORD###';
             $array2[] = $password;
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountConfirmationLetter'])) {
+                $params = array(
+                    'array1' => &$array1,
+                    'array2' => &$array2,
+                    'user' => $newCustomer
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountConfirmationLetter'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($page[0]['content']) {
                 $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
             }
@@ -10617,7 +10628,7 @@ class mslib_fe {
             return true;
         }
     }
-    public function genderSalutation($gender, $order=array()) {
+    public function genderSalutation($gender, $custom_salutation='') {
         switch ($gender) {
             case '0':
             case 'm':
@@ -10641,7 +10652,7 @@ class mslib_fe {
             $params = array(
                 'salutation' => &$salutation,
                 'gender' => &$gender,
-                'order' => &$order
+                'custom_salutation' => $custom_salutation
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['genderSalutationPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

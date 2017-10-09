@@ -440,6 +440,16 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             $page = mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
                         }
                     }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['ordersListingActionMailSelectedOrdersForPaymentReminder'])) {
+                        $params = array(
+                            'array1' => &$array1,
+                            'array2' => &$array2,
+                            'order' => $tmpArray
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['ordersListingActionMailSelectedOrdersForPaymentReminder'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     if ($page[0]['name']) {
                         $reminder_cms_content = '';
                         if ($page[0]['name']) {
