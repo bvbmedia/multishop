@@ -278,6 +278,8 @@ switch ($this->ms['page']) {
             $array2[] = $delivery_address;
             $array1[] = '###CUSTOMER_ID###';
             $array2[] = $order['customer_id'];
+            $array1[] = '###CUSTOMER_NUMBER###';
+            $array2[] = $order['customer_id'];
             $array1[] = '###SHIPPING_METHOD###';
             $array2[] = $order['shipping_method_label'];
             $array1[] = '###PAYMENT_METHOD###';
