@@ -95,7 +95,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     function renderInterface($params, &$that) {
         mslib_fe::init($that);
         //hook to let other plugins further manipulate the method
-        $params['interfaceKey']=$this->interfaceKey;
+        if (!isset($params['interfaceKey']) && isset($this->interfaceKey)) {
+            $params['interfaceKey']=$this->interfaceKey;
+        }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -507,7 +509,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'date_datetime_tooltip':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
-                                $row[$col] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
+                                $row[$col] = '<a href="javascript:void(0);" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $row[$col])) . '" data-original-title="" title="">' . strftime("%x", $row[$col]) . '</a>';
                             } else {
                                 $row[$col] = '';
                             }
@@ -647,6 +649,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'nl2br':
                             if (!empty($row[$col])) {
                                 $row[$col] = nl2br($row[$col]);
+                            }
+                            break;
+                        case 'unserialize':
+                            if (!empty($row[$col])) {
+                                $row[$col] = mslib_befe::print_r(unserialize($row[$col]));
                             }
                             break;
                     }

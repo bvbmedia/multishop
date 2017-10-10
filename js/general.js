@@ -49,7 +49,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         tax_rate=parseFloat(product_tax_rate_list_js[tax_id]);
     }
     if (!$(o).hasClass('singlePriceInput')) {
-        if (current_value > 0) {
+        if (parseFloat(current_value) > 0 || parseFloat(current_value) < 0) {
             if (to_include_vat) {
                 if (tax_rate > 0) {
                     var priceIncludeVat = parseFloat(current_value + (current_value * (tax_rate / 100)));

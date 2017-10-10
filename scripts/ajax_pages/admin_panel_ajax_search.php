@@ -675,11 +675,13 @@ if ($this->ADMIN_USER) {
                 $items[] = "(" . $tbl . "ean_code like '%" . addslashes($this->get['q']) . "%')";
                 $items[] = "(" . $tbl . "vendor_code like '%" . addslashes($this->get['q']) . "%')";
                 $filter[] = '(' . implode(" OR ", $items) . ')';
+                /*
                 if ($this->ms['MODULES']['FLAT_DATABASE']) {
                     $filter[] = "pf.sstatus=1";
                 } else {
                     $filter[] = "p.products_status=1";
                 }
+                */
             }
             if (is_numeric($parent_id) and $parent_id > 0) {
                 if ($this->ms['MODULES']['FLAT_DATABASE']) {

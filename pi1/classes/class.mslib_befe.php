@@ -3356,7 +3356,7 @@ class mslib_befe {
                 $updateArray = array();
                 $updateArray['orders_id'] = $order['orders_id'];
                 $updateArray['old_value'] = $order['status'];
-                $updateArray['comments'] = $this->post['comments'];
+                $updateArray['comments'] = (!empty($this->post['comments']) ? $this->post['comments'] : '');
                 $updateArray['customer_notified'] = $mail_customer;
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
@@ -3390,6 +3390,16 @@ class mslib_befe {
                         $keys = array();
                         $keys[] = 'email_order_status_changed_' . mslib_befe::strtolower($orders_status_name);
                         $keys[] = 'email_order_status_changed';
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'])) {
+                            $params = array(
+                                    'keys' => &$keys,
+                                    'orders_status' => $orders_status,
+                                    'order' => $order
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                         foreach ($keys as $key) {
                             //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                             $page = mslib_fe::getCMScontent($key, $order['language_id']);
@@ -4391,7 +4401,7 @@ class mslib_befe {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price'] + (($product['final_price'] * $product['products_tax']) / 100)), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price'] - $product['discount_amount']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
-                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents((($product['final_price']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * ($product['final_price'] + $product['products_tax_data']['total_tax'])), $customer_currency, $display_currency_symbol, 0);
                     } else {
                         $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price']), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
@@ -5297,26 +5307,36 @@ class mslib_befe {
                     }
                 }
             }
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter">';
+            $inlineStyle='';
+            if (isset($settings['inlineStyles']['table']) && is_array($settings['inlineStyles']['table'])) {
+                $inlineStyle .= implode(' ', $settings['inlineStyles']['table']);
+            }
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"'.($inlineStyle? ' '.$inlineStyle:'').'>';
             $content .= '<thead><tr>';
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan = '';
+                    $inlineStyle = '';
                     if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th' . $colspan . '>' . $colName . '</th>';
+                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                    }
+                    $content .= '<th' . $inlineStyle . '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
                 $cellCounter = 0;
                 foreach ($rows[0] as $colName => $colVal) {
-                    $colspan = '';
+                    $inlineStyle = '';
                     if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
-                    $content .= '<th' . $colspan . '>' . $colVal . '</th>';
+                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                    }
+                    $content .= '<th' . $inlineStyle . '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
@@ -5325,14 +5345,24 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $rowCounter = 1;
             }
+            $odd='1';
             foreach ($rows as $row) {
                 if ($rowCounter) {
+                    if ($odd) {
+                        $odd=0;
+                    } else {
+                        $odd=1;
+                    }
                     $trClass = array();
                     if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
                         $trClass = array();
                         $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . '>';
+                    $inlineStyle='';
+                    if (isset($settings['inlineStyles']['trOddEven'][$odd]) && is_array($settings['inlineStyles']['td'][$odd])) {
+                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['trOddEven'][$odd]);
+                    }
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . ($inlineStyle?' '.$inlineStyle:'').'>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
@@ -5340,11 +5370,14 @@ class mslib_befe {
                             $classes[] = $settings['cellClasses'][$cellCounter];
                         }
                         $classes[] = 'cell' . ($cellCounter + 1);
-                        $colspan = '';
+                        $inlineStyle = '';
                         if (count($row) == ($cellCounter + 1) && count($row) < ($maxCellCounter)) {
-                            $colspan = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                            $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
-                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $colspan . '>' . $val . '</td>';
+                        if (isset($settings['inlineStyles']['td'][$cellCounter]) && is_array($settings['inlineStyles']['td'][$cellCounter])) {
+                            $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
+                        }
+                        $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $inlineStyle . '>' . $val . '</td>';
                         $cellCounter++;
                     }
                     $content .= '</tr>';

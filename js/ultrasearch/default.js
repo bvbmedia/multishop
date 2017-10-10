@@ -112,12 +112,12 @@ jQuery(document).ready(function ($) {
             // PAGINATION
             var pagination_wrapper = '<div id="pagenav_container_list_wrapper"><ul id="pagenav_container_list">';
             if (data.resultSet.pagination.prev) {
-                pagination_wrapper += '<li class="pagenav_first"><div class="dyna_button"><a href="" id="1" class="ajax_link pagination_button">' + data.resultSet.pagination.firstText + '</a></div></li>';
+                pagination_wrapper += '<li class="pagenav_first"><div class="dyna_button"><a rel="first" href="" id="1" class="ajax_link pagination_button">' + data.resultSet.pagination.firstText + '</a></div></li>';
             } else {
                 pagination_wrapper += '<li class="pagenav_first"><div class="dyna_button"><span>' + data.resultSet.pagination.firstText + '</span></div></li>';
             }
             if (data.resultSet.pagination.prev) {
-                pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.prev + '" class="ajax_link pagination_button">' + data.resultSet.pagination.prevText + '</a></div></li>';
+                pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><a rel="prev" href="" id="' + data.resultSet.pagination.prev + '" class="ajax_link pagination_button">' + data.resultSet.pagination.prevText + '</a></div></li>';
             } else {
                 pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><span>' + data.resultSet.pagination.prevText + '</span></div></li>';
             }
@@ -135,12 +135,12 @@ jQuery(document).ready(function ($) {
             }
             // ITERATE PAGE NUMBERS EOF
             if (data.resultSet.pagination.next) {
-                pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.next + '" class="ajax_link pagination_button">' + data.resultSet.pagination.nextText + '</a></div></li>';
+                pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><a rel="next" href="" id="' + data.resultSet.pagination.next + '" class="ajax_link pagination_button">' + data.resultSet.pagination.nextText + '</a></div></li>';
             } else {
                 pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><span>' + data.resultSet.pagination.nextText + '</span></div></li>';
             }
             if (data.resultSet.pagination.current_p < data.resultSet.pagination.totpage) {
-                pagination_wrapper += '<li class="pagenav_last"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.totpage + '" class="ajax_link pagination_button">' + data.resultSet.pagination.lastText + '</a></div></li>';
+                pagination_wrapper += '<li class="pagenav_last"><div class="dyna_button"><a rel="last" href="" id="' + data.resultSet.pagination.totpage + '" class="ajax_link pagination_button">' + data.resultSet.pagination.lastText + '</a></div></li>';
             } else {
                 pagination_wrapper += '<li class="pagenav_last"><div class="dyna_button"><span>' + data.resultSet.pagination.lastText + '</span></div></li>';
             }

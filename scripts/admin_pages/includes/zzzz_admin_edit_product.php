@@ -1327,34 +1327,6 @@ if ($this->post) {
                     }
                 }
             }
-            // copy also the product relation
-            if ($product_original) {
-                $related_main_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'products_id');
-                if (is_array($related_main_recs) && count($related_main_recs)) {
-                    // copy as main product to relation
-                    foreach ($related_main_recs as $related_main_rec) {
-                        $relatedMainArray = array();
-                        $relatedMainArray['products_id'] = $prodid;
-                        $relatedMainArray['relative_product_id'] = $related_main_rec['relative_product_id'];
-                        $relatedMainArray['relation_types'] = $related_main_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedMainArray);
-                        $GLOBALS['TYPO3_DB']->sql_query($rel_query);
-                    }
-                }
-
-                $related_sub_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'relative_product_id');
-                if (is_array($related_sub_recs) && count($related_sub_recs)) {
-                    // copy as sub product to relation
-                    foreach ($related_sub_recs as $related_sub_rec) {
-                        $relatedSubArray = array();
-                        $relatedSubArray['products_id'] = $related_sub_rec['products_id'];
-                        $relatedSubArray['relative_product_id'] = $prodid;
-                        $relatedSubArray['relation_types'] = $related_sub_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedSubArray);
-                        $GLOBALS['TYPO3_DB']->sql_query($rel_query);
-                    }
-                }
-            }
         } else {
             $prodid = $this->post['pid'];
             $updateArray['products_last_modified'] = time();
@@ -1505,11 +1477,8 @@ if ($this->post) {
                                 }
                                 $crumbar_ident_string = implode(',', $crumbar_ident_array);
                                 //
+
                                 if (!empty($crumbar_ident_string)) {
-                                    foreach ($crumbar_ident_array as $crumbar_node_id) {
-                                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and node_id=\'' . $crumbar_node_id . '\' and page_uid=' . $page_uid);
-                                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                    }
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and crumbar_identifier=\'' . $crumbar_ident_string . '\' and page_uid=' . $page_uid);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
@@ -2324,13 +2293,6 @@ if ($this->post) {
             $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             // update the new one
             if (is_numeric($this->post['default_path_categories_id'])) {
-                $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
-                if (!is_array($product_path)) {
-                    $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
-                    if (is_array($product_path) && count($product_path)) {
-                        $this->post['default_path_categories_id']=$product_path['node_id'];
-                    }
-                }
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
                 $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $this->get['pid'] . '\'', $updateArray);
@@ -2547,9 +2509,9 @@ if ($this->post) {
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'])) {
             $params = array(
-                'markerArray' => &$markerArray,
-                'product' => &$product,
-                'js_extra' => &$js_extra
+                    'markerArray' => &$markerArray,
+                    'product' => &$product,
+                    'js_extra' => &$js_extra
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2866,7 +2828,7 @@ if ($this->post) {
 		*/
         //
         $order_unit = '<select name="order_unit_id" class="form-control"><option value="">' . $this->pi_getLL('default') . '</option>';
-        $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
+        $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='" . $this->shop_pid . "' and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
             $order_unit .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $product['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
@@ -4124,6 +4086,10 @@ if ($this->post) {
             $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>';
             $product_relatives_block .= $form_category_search;
             $product_relatives_block .='<hr>';
+            $product_relatives_block .= '<div class="form-group">';
+            $product_relatives_block .= '<label class="col-md-2 control-label">Save relation as:</label><div class="col-md-10 form-inline"><select class="form-control" name="product_relation_save_as" id="product_relation_save_as"><option value="sub">Sub</option><option value="main">Main</option></select></div>';
+            $product_relatives_block .= '</div>';
+            $product_relatives_block .='<hr>';
             $product_relatives_block .='<div id="load">';
             $product_relatives_block .='<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
             $product_relatives_block .='<strong>Loading....</strong>';
@@ -4137,9 +4103,6 @@ if ($this->post) {
             $product_relatives_block .='<div id="search_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-
-            $product_relatives_block .= '<div class="row" id="block_panel_wrapper" style="display: none">';
-            $product_relatives_block .= '<div class="col-md-6">';
             // main block
             $product_relatives_block .= '<div class="panel panel-default" id="main_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
@@ -4149,9 +4112,6 @@ if ($this->post) {
             $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="col-md-6">';
             // sub block
             $product_relatives_block .= '<div class="panel panel-default" id="sub_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
@@ -4159,9 +4119,6 @@ if ($this->post) {
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '<div class="panel-body">';
             $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
-
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
         }

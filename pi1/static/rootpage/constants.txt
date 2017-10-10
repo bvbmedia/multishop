@@ -273,4 +273,7 @@ plugin.multishop {
 	enableMultipleShops = 0
 	# cat=plugin.multishop - multiple shops; type=string; label= PIDs of the core shops: The page id's of the core shops that should be connected. I.e.: 1,2
 	connectedShopPids =
+
+	# cat=plugin.multishop - main/enable; type=boolean; label= Enable admin statistics ticker: Enable admin statistics ticker.
+	enableAdminTicker=1
 }

@@ -7,7 +7,7 @@ $tmp .= '<table id="pagenav_container">
 <tr>
  <td class="pagenav_first"><table><tr><td>';
 if ($p > 0) {
-    $tmp .= mslib_fe::flexibutton('<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', '' . mslib_fe::tep_get_all_get_params(array(
+    $tmp .= mslib_fe::flexibutton('<a rel="first" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', '' . mslib_fe::tep_get_all_get_params(array(
                             'p',
                             'Submit',
                             'page',
@@ -20,7 +20,7 @@ if ($p > 0) {
 $tmp .= '</td></tr></table></td><td class="pagenav_previous"><table><tr><td>';
 if ($p > 0) {
     if (($p - 1) > 0) {
-        $tmp .= mslib_fe::flexibutton('<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+        $tmp .= mslib_fe::flexibutton('<a rel="prev" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'page',
@@ -28,7 +28,7 @@ if ($p > 0) {
                                 'clearcache'
                         ))) . '">' . $this->pi_getLL('previous') . '</a>', 'pagenav_previous');
     } else {
-        $tmp .= mslib_fe::flexibutton('<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+        $tmp .= mslib_fe::flexibutton('<a rel="prev" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'page',
@@ -41,7 +41,7 @@ if ($p > 0) {
 }
 $tmp .= '</td></tr></table></td><td class="pagenav_next"><table><tr><td>';
 if ((($p + 1) * $limit_per_page) < $pageset['total_rows']) {
-    $tmp .= mslib_fe::flexibutton('<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p + 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+    $tmp .= mslib_fe::flexibutton('<a rel="next" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p + 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                             'p',
                             'Submit',
                             'page',
@@ -58,7 +58,7 @@ if ((($p + 1) * $limit_per_page) < $pageset['total_rows']) {
     if ($lastpage == $times) {
         $lastpage--;
     }
-    $tmp .= mslib_fe::flexibutton('<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . $lastpage . '&' . mslib_fe::tep_get_all_get_params(array(
+    $tmp .= mslib_fe::flexibutton('<a rel="last" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . $lastpage . '&' . mslib_fe::tep_get_all_get_params(array(
                             'p',
                             'Submit',
                             'page',

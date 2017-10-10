@@ -56,6 +56,17 @@ if (mslib_fe::loggedin()) {
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###CUSTOMER_ID###';
             $array2[] = $customer_id;
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['cmsPageMarkerReplacer'])) {
+                $params = array(
+                    'array1' => &$array1,
+                    'array2' => &$array2,
+                    'user' => &$newCustomer
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['cmsPageMarkerReplacer'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($page[0]['name']) {
                 $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
                 $content .= '<div class="main-heading"><h3>' . $page[0]['name'] . '</h3></div>';

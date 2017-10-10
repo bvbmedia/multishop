@@ -9,7 +9,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 <ul id="pagenav_container_list">
 <li class="pagenav_first"><div class="dyna_button">';
     if ($p > 0) {
-        $tmp .= '<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', '' . mslib_fe::tep_get_all_get_params(array(
+        $tmp .= '<a rel="first" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', '' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'page',
@@ -23,7 +23,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
     $tmp .= '<li class="pagenav_previous"><div class="dyna_button">';
     if ($p > 0) {
         if (($p - 1) > 0) {
-            $tmp .= '<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+            $tmp .= '<a rel="prev" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                     'p',
                                     'Submit',
                                     'page',
@@ -31,7 +31,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
                                     'clearcache'
                             )), 1) . '">' . $this->pi_getLL('previous') . '</a>';
         } else {
-            $tmp .= '<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+            $tmp .= '<a rel="prev" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p - 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                     'p',
                                     'Submit',
                                     'page',
@@ -78,7 +78,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 </li>';
     $tmp .= '<li class="pagenav_next"><div class="dyna_button">';
     if ((($p + 1) * $limit_per_page) < $pageset['total_rows']) {
-        $tmp .= '<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p + 1) . '&' . mslib_fe::tep_get_all_get_params(array(
+        $tmp .= '<a rel="next" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . ($p + 1) . '&' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'page',
@@ -96,7 +96,7 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
         if ($lastpage == $times) {
             $lastpage--;
         }
-        $tmp .= '<a class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . $lastpage . '&' . mslib_fe::tep_get_all_get_params(array(
+        $tmp .= '<a rel="last" class="ajax_link pagination_button" href="' . mslib_fe::typolink('', 'p=' . $lastpage . '&' . mslib_fe::tep_get_all_get_params(array(
                                 'p',
                                 'Submit',
                                 'page',

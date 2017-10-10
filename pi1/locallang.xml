@@ -1418,6 +1418,8 @@
             <label index="delete_product_x_from_all_categories">Delete product %s from all categories</label>
             <label index="search_in_shop">Search in shop</label>
             <label index="contact_email">Contact e-mail</label>
+            <label index="track_and_trace_link">Track and Trace Link</label>
+            <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1956,9 +1958,9 @@
             <label index="choose_country">kies land</label>
             <label index="choose_image">Selecteer afbeelding</label>
             <label index="choose_manufacturers">selecteer fabrikant</label>
-            <label index="choose_payment_method">Kies Betaalmethode</label>
+            <label index="choose_payment_method">Kies betaalmethode</label>
             <label index="choose_selection">Maak uw keuze</label>
-            <label index="choose_shipping_method">Kies Verzendmethode</label>
+            <label index="choose_shipping_method">Kies verzendmethode</label>
             <label index="choose_type_of_content">kies type content</label>
             <label index="city">woonplaats</label>
             <label index="city_is_required">Woonplaats is verplicht</label>
@@ -2200,7 +2202,7 @@
             <label index="filter_by_date_status_last_modified">Filter op status wijzigingsdatum</label>
             <label index="final_price_ex_vat">Totaal (excl. BTW)</label>
             <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
-            <label index="first">eerste</label>
+            <label index="first">Eerste</label>
             <label index="first_name">voornaam</label>
             <label index="first_name_required">Voornaam is verplicht. Deze mag enkel uit normale karakters bestaan</label>
             <label index="flat_based">Flat based</label>
@@ -2255,7 +2257,7 @@
             <label index="keyword">Zoekwoord</label>
             <label index="lang">nl</label>
             <label index="language">Taal</label>
-            <label index="last">laatste</label>
+            <label index="last">Laatste</label>
             <label index="last_name">achternaam</label>
             <label index="last_run">Laatst gedraaid op</label>
             <label index="latest_login">Laatst ingelogd op</label>
@@ -2814,6 +2816,8 @@
             <label index="search_in_shop">Zoeken in de winkel</label>
             <label index="feed_exporter_fields_label_customer_billing_company">Debiteur (factuur) bedrijfsnaam</label>
             <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
+            <label index="track_and_trace_link">Track en Trace Link</label>
+            <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
         </languageKey>
     </data>
 </T3locallang>

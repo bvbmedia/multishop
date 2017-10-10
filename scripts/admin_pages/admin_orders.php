@@ -255,6 +255,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
     case 'mail_selected_orders_for_payment_reminder':
         if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
             foreach ($this->post['selected_orders'] as $orders_id) {
+                $this->post['selected_order_id']=$orders_id;
                 $tmpArray = mslib_fe::getOrder($orders_id); //=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id');
                 if ($tmpArray['paid'] == 0) {
                     // replacing the variables with dynamic values
@@ -439,6 +440,16 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             $page = mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
                         }
                     }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['ordersListingActionMailSelectedOrdersForPaymentReminder'])) {
+                        $params = array(
+                            'array1' => &$array1,
+                            'array2' => &$array2,
+                            'order' => $tmpArray
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['ordersListingActionMailSelectedOrdersForPaymentReminder'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     if ($page[0]['name']) {
                         $reminder_cms_content = '';
                         if ($page[0]['name']) {
@@ -461,7 +472,21 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                         $user['email'] = $tmpArray['billing_email'];
                         if ($user['email']) {
                             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+                            $postErno[] = array(
+                                'status' => 'info',
+                                'message' => 'Payment reminder e-mail has been sent to ' . $user['email'] . ' (Order ID: ' . $orders_id . ').'
+                            );
+                        } else {
+                            $postErno[] = array(
+                                    'status' => 'error',
+                                    'message' => 'Failed to sent payment reminder e-mail to ' . $user['email'] . ' (Order ID: ' . $orders_id . ').'
+                            );
                         }
+                    } else {
+                        $postErno[] = array(
+                            'status' => 'error',
+                            'message' => 'Failed to sent payment reminder e-mail to ' . $user['email'] . ' (Order ID: ' . $orders_id . '). reason: payment method has no link to payment reminder cms'
+                        );
                     }
                 }
             }
@@ -509,7 +534,8 @@ if (count($postErno)) {
 	jQuery(document).ready(function ($) {
 		$.confirm({
 			title: \'\',
-			content: $(\'#msAdminPostMessage\').html()
+			content: $(\'#msAdminPostMessage\').html(),
+			cancelButton: false // hides the cancel button.
 		});
 	});
 	</script>
@@ -653,8 +679,10 @@ if ($this->post['skeyword']) {
                         break;
                 }
             }
-            $items[] = "(billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
-            $filter[] = '(' . implode(" or ", $items) . ')';
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $items[] = "(billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
+            $filter['all'] = '(' . implode(" or ", $items) . ')';
             break;
         case 'orders_id':
             $filter[] = " o.orders_id='" . addslashes($this->post['skeyword']) . "'";
@@ -663,7 +691,9 @@ if ($this->post['skeyword']) {
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'name':
-            $filter[] = " (billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%')";
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $filter[] = " (billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
             break;
         case 'billing_zip':
             $filter[] = " billing_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
@@ -807,10 +837,14 @@ switch ($this->get['tx_multishop_pi1']['order_by']) {
     case 'status_last_modified':
         $order_by = 'o.status_last_modified';
         break;
+    case 'custom_sort_by':
+        $order_by = 'o.' . $this->get['tx_multishop_pi1']['custom_order_by'];
+        break;
     case 'orders_id':
     default:
         $order_by = 'o.orders_id';
         break;
+
 }
 switch ($this->get['tx_multishop_pi1']['order']) {
     case 'a':
@@ -838,10 +872,11 @@ if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']
 }
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'])) {
     $params = array(
-            'select' => &$select,
-            'filter' => &$filter,
-            'orderby' => &$orderby,
-            'offset' => &$offset
+        'select' => &$select,
+        'filter' => &$filter,
+        'orderby' => &$orderby,
+        'offset' => &$offset,
+        'option_fields' => &$option_fields
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersSearchFilterPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

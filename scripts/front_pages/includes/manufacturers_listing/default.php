@@ -13,8 +13,8 @@ if ($this->conf['manufacturers_listing_tmpl_path']) {
 $subparts = array();
 $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item'] = $this->cObj->getSubpart($subparts['template'], '###ITEM###');
-$query = $GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
-        'tx_multishop_manufacturers m', // FROM ...
+$query = $GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name, m.manufacturers_image,mc.shortdescription', // SELECT ...
+        'tx_multishop_manufacturers m LEFT JOIN tx_multishop_manufacturers_cms mc on m.manufacturers_id=mc.manufacturers_id and mc.language_id='.$this->sys_language_uid, // FROM ...
         'm.status=1', // WHERE...
         '', // GROUP BY...
         'm.sort_order', // ORDER BY...
@@ -42,11 +42,18 @@ if (count($manufacturers) > 0) {
         $markerArray['CLASS_ACTIVE'] = $output['class_active'];
         $markerArray['MANUFACTURERS_LINK'] = $output['manufacturers_link'];
         $markerArray['MANUFACTURERS_NAME'] = $output['manufacturers_name'];
+        $markerArray['MANUFACTURERS_SHORTDESCRIPTION'] = $row['shortdescription'];
+        $markerArray['MANUFACTURERS_IMAGE_NORMAL'] = '';
         if ($row['manufacturers_image']) {
             $markerArray['MANUFACTURERS_IMAGE_NORMAL'] = '<img src="' . mslib_befe::getImagePath($row['manufacturers_image'], 'manufacturers', 'normal') . '">';
-        } else {
-            $markerArray['MANUFACTURERS_IMAGE_NORMAL'] = '';
         }
+        if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+            $output['admin_icons'] = '<div class="admin_menu">       
+            <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id=' . $row['manufacturers_id'] . '&action=edit_manufacturer', 1) . '" class="admin_menu_edit"><i class="fa fa-pencil"></i></a>
+            <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_manufacturer&manufacturers_id=' . $row['manufacturers_id'] . '&action=delete_manufacturer', 1) . '" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a>
+            </div>';
+        }
+        $markerArray['ADMIN_ICONS'] = $output['admin_icons'];
         $contentItem .= $this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
     }
     // fill the row marker with the expanded rows

@@ -6,67 +6,70 @@ $content = '';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
     case 'get_order_payment_methods':
         $return_data = array();
+        $return_data['payment_method_date_purchased']='';
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $order_id = $this->post['tx_multishop_pi1']['order_id'];
             if (is_numeric($order_id)) {
-                $payment_methods = mslib_fe::loadPaymentMethods();
                 $order_data = mslib_fe::getOrder($order_id);
-                //
-                $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod row">';
-                $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('date_paid', 'Date paid') . ': </label>';
-                $today_tstamp = time();
-                $orders_paid_timestamp_visual = strftime('%x', $today_tstamp);
-                $orders_paid_timestamp = date("Y-m-d", $today_tstamp);
-                if ($order_data['orders_paid_timestamp'] > 0) {
-                    $orders_paid_timestamp_visual = strftime('%x', $order_data['orders_paid_timestamp']);
-                    $orders_paid_timestamp = date("Y-m-d", $order_data['orders_paid_timestamp']);
-                }
-                $orderDetailsItem .= '<div class="col-md-9">
+                if (is_array($order_data)) {
+                    $payment_methods = mslib_fe::loadPaymentMethods();
+                    $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod row">';
+                    $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('date_paid', 'Date paid') . ': </label>';
+                    $today_tstamp = time();
+                    $orders_paid_timestamp_visual = strftime('%x', $today_tstamp);
+                    $orders_paid_timestamp = date("Y-m-d", $today_tstamp);
+                    if ($order_data['orders_paid_timestamp'] > 0) {
+                        $orders_paid_timestamp_visual = strftime('%x', $order_data['orders_paid_timestamp']);
+                        $orders_paid_timestamp = date("Y-m-d", $order_data['orders_paid_timestamp']);
+                    }
+                    $orderDetailsItem .= '<div class="col-md-9">
 					<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="' . htmlspecialchars($orders_paid_timestamp_visual) . '">
 					<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="' . htmlspecialchars($orders_paid_timestamp) . '">
 					</div>';
-                $orderDetailsItem .= '</div>';
-                $orderDetailsItem .= '<div class="form-group row">';
-                $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_method') . ': </label>';
-                //if ($this->ms['MODULES']['ORDER_EDIT']) {
-                if (is_array($payment_methods) and count($payment_methods)) {
-                    $optionItems = array();
-                    $dontOverrideDefaultOption = 0;
-                    foreach ($payment_methods as $code => $item) {
-                        if (!$item['status']) {
-                            $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
+                    $orderDetailsItem .= '</div>';
+                    $orderDetailsItem .= '<div class="form-group row">';
+                    $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_method') . ': </label>';
+                    //if ($this->ms['MODULES']['ORDER_EDIT']) {
+                    if (is_array($payment_methods) and count($payment_methods)) {
+                        $optionItems = array();
+                        $dontOverrideDefaultOption = 0;
+                        foreach ($payment_methods as $code => $item) {
+                            if (!$item['status']) {
+                                $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $order_data['payment_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
+                            if ($code == $order_data['payment_method']) {
+                                $dontOverrideDefaultOption = 1;
+                            }
                         }
-                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $order_data['payment_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
-                        if ($code == $order_data['payment_method']) {
+                        if (empty($order_data['payment_method'])) {
                             $dontOverrideDefaultOption = 1;
                         }
-                    }
-                    if (empty($order_data['payment_method'])) {
-                        $dontOverrideDefaultOption = 1;
-                    }
-                    if ($dontOverrideDefaultOption) {
-                        $optionItems = array_merge(array('<option value="">' . ucfirst($this->pi_getLL('choose')) . '</option>'), $optionItems);
+                        if ($dontOverrideDefaultOption) {
+                            $optionItems = array_merge(array('<option value="">' . ucfirst($this->pi_getLL('choose')) . '</option>'), $optionItems);
+                        } else {
+                            $optionItems = array_merge(array('<option value="">' . ($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']) . '</option>'), $optionItems);
+                        }
+                        $orderDetailsItem .= '<div class="col-md-9"><select name="payment_method" id="payment_method_sb_listing" class="form-control">' . implode("\n", $optionItems) . '</select></div>';
                     } else {
-                        $optionItems = array_merge(array('<option value="">' . ($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']) . '</option>'), $optionItems);
+                        $orderDetailsItem .= '<div class="col-md-9">' . ($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']) . '</div>';
                     }
-                    $orderDetailsItem .= '<div class="col-md-9"><select name="payment_method" id="payment_method_sb_listing" class="form-control">' . implode("\n", $optionItems) . '</select></div>';
-                } else {
-                    $orderDetailsItem .= '<div class="col-md-9">' . ($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']) . '</div>';
-                }
-                /*} else {
-                    $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
-                }*/
-                $orderDetailsItem .= '</div>';
-                $orderDetailsItem .= '<div class="form-group row">
-                    <label class="control-label col-md-3">&nbsp;</label>
-                    <div class="col-md-9">
-                        <div class="checkbox checkbox-inline checkbox-success">
-                            <input type="checkbox" id="send_payment_received_email" value="1">
-                            <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').'</label>
+                    /*} else {
+                        $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
+                    }*/
+                    $orderDetailsItem .= '</div>';
+                    $orderDetailsItem .= '<div class="form-group row">
+                        <label class="control-label col-md-3">&nbsp;</label>
+                        <div class="col-md-9">
+                            <div class="checkbox checkbox-inline checkbox-success">
+                                <input type="checkbox" id="send_payment_received_email" value="1">
+                                <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
+                            </div>
                         </div>
                     </div>
-                </div>';
-                $return_data['payment_method_date_purchased'] = $orderDetailsItem;
+                    ';
+                    $return_data['payment_method_date_purchased'] = $orderDetailsItem;
+                }
             }
         }
         echo json_encode($return_data);
@@ -269,9 +272,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             }
             if (!empty($this->get['q']) && strlen($this->get['q']) > 0) {
                 if (!is_numeric($this->get['q'])) {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_model like \'%' . addslashes($this->get['q']) . '%\')';
                 } else {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\' or p.products_model = \'' . addslashes($this->get['q']) . '\')';
+                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\' or p.products_model like \'%' . addslashes($this->get['q']) . '%\')';
                 }
                 $limit = '';
             }
@@ -314,9 +317,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                 }
                 if (!empty($row['products_name'])) {
-                    if (!empty($row['products_model'])) {
-                        $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
-                    }
+                    //if (!empty($row['products_model'])) {
+                    //    $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
+                    //}
                     if ($row['products_status'] < 1) {
                         $row['products_name'] .= ' [disabled]';
                     }
@@ -343,13 +346,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             if ($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT'] == '0') {
                 if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
                     $data[] = array(
-                            'id' => $this->get['preselected_id'],
-                            'text' => $this->get['preselected_id']
+                        'id' => $this->get['preselected_id'],
+                        'text' => $this->get['preselected_id'],
+                        'products_model' => '',
+                        'sku_code' => ''
                     );
                 } else {
                     $data[] = array(
-                            'id' => $this->get['q'],
-                            'text' => $this->get['q']
+                        'id' => $this->get['q'],
+                        'text' => $this->get['q'],
+                        'products_model' => '',
+                        'sku_code' => ''
                     );
                 }
             }

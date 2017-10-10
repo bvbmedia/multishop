@@ -165,11 +165,6 @@ if (count($available_sid) > 0) {
     $shipping_method_code = $shipping_method['code'];
     if (strlen($shipping_method['name']) > 1) {
         $char = substr($shipping_method['name'], 1, 1);
-        if ($char == mslib_befe::strtolower($char)) {
-            $shipping_method['name'] = $shipping_method['name'];
-        }
-    } else {
-        $shipping_method['name'] = $shipping_method['name'];
     }
     $shipping_method_label = $shipping_method['name'];
     // shipping
@@ -203,6 +198,7 @@ $data['available_shipping'] = implode(';', $available_sid);
 // rebuilt the shipping cost for available shipping methods based on selected payment
 foreach ($available_sid as $sids) {
     $this->post['caller_segment'] = 'available_shipping_costs';
+    $priceArray=array();
     $priceArray = mslib_fe::getShippingCosts($countries_id, $sids);
     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['DISABLE_VAT_RATE']) {
         $data['available_shippingcost'][$sids] = '';

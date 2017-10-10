@@ -613,6 +613,18 @@ if ($this->get['orders_export_hash']) {
                         }
                         break;
                 }
+                //hook to let other plugins further manipulate the replacers
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'])) {
+                    $params = array(
+                        'field' => &$field,
+                        'excelCols' => &$excelCols,
+                        'row' => &$row,
+                        'counter' => $counter
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
             }
             // new rows
             if ($this->get['format'] == 'excel') {

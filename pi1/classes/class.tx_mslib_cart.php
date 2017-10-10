@@ -126,7 +126,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     //
                     $query = $GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
                             'tx_multishop_products_attributes pa, tx_multishop_products_options po', // FROM ...
-                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . $this->showCatalogFromPage . '\' and po.hide!=1 and po.hide_in_cart!=1 and po.language_id=' . $this->sys_language_uid . ' and po.products_options_id=pa.options_id', // WHERE...
+                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . $this->showCatalogFromPage . '\' and po.required=1 and (po.hide=0 or po.hide is null) and (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id=' . $this->sys_language_uid . ' and po.products_options_id=pa.options_id', // WHERE...
                             '', // GROUP BY...
                             'pa.sort_order_option_name asc, pa.sort_order_option_value asc', // ORDER BY...
                             '' // LIMIT ...
@@ -337,7 +337,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         // hook
                                         foreach ($array as $item) {
-                                            $str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and a.page_uid='" . $this->showCatalogFromPage . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
+                                            //$str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and a.page_uid='" . $this->showCatalogFromPage . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
+                                            $str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
                                             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                             if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
                                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -1536,6 +1537,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } elseif ($address['gender'] == 'f' or $address['gender'] == '1') {
                 $insertArray['gender'] = '1';
             }
+            if (isset($address['title']) && !empty($address['title'])) {
+                $insertArray['title'] = ucfirst($address['title']) . '.';
+            }
             if (isset($address['contact_email']) && !empty($address['contact_email'])) {
                 $insertArray['contact_email'] = $address['contact_email'];
             }
@@ -1577,11 +1581,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['city'] = $address['city'];
                 $insertArray['country'] = $address['country'];
                 $insertArray['gender'] = $address['gender'];
-                $insertArray['birthday'] = strtotime($address['birthday']);
+                $insertArray['birthday'] = strtotime(['birthday']);
                 if ($address['gender'] == 'm') {
                     $insertArray['title'] = 'Mr.';
                 } else if ($address['gender'] == 'f') {
                     $insertArray['title'] = 'Mrs.';
+                }
+                if (isset($address['title']) && !empty($address['title'])) {
+                    $insertArray['title'] = ucfirst($address['title']) . '.';
                 }
                 $insertArray['region'] = $address['state'];
                 $insertArray['pid'] = $this->conf['fe_customer_pid'];
@@ -1637,6 +1644,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     } else if ($address['gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
                     }
+                    if (isset($address['title']) && !empty($address['title'])) {
+                        $insertArray['title'] = ucfirst($address['title']) . '.';
+                    }
                     $insertArray['region'] = $address['state'];
                 } else {
                     $insertArray = array();
@@ -1677,6 +1687,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $insertArray['title'] = 'Mr.';
                     } else if ($address['delivery_gender'] == 'f') {
                         $insertArray['title'] = 'Mrs.';
+                    }
+                    if (isset($address['delivery_title']) && !empty($address['delivery_title'])) {
+                        $insertArray['title'] = ucfirst($address['delivery_title']) . '.';
                     }
                     $insertArray['region'] = $address['delivery_state'];
                 }
@@ -2021,10 +2034,24 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
             }
             $user = mslib_fe::getUser($customer_id);
-            $insertArray['payment_condition'] = '';
+            $payment_condition='';
             if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition'] > 0) {
-                $insertArray['payment_condition'] = $user['tx_multishop_payment_condition'];
+                $payment_condition=$user['tx_multishop_payment_condition'];
             }
+            if (!$payment_condition) {
+                if ($address['payment_method']) {
+                    $psp_data = mslib_fe::loadPaymentMethod($address['payment_method']);
+                    if ($psp_data['payment_condition']) {
+                        $payment_condition = $psp_data['payment_condition'];
+                    }
+                }
+            }
+            if (!$payment_condition) {
+                if ($this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE']) {
+                    $insertArray['payment_condition'] = $this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
+                }
+            }
+            $insertArray['payment_condition'] = $payment_condition;
             // geo data
             $addresstypes = array();
             $addresstypes[] = 'billing';
@@ -3320,11 +3347,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             // finally convert global markers and return output
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'])) {
                 $params = array(
-                        'shopping_cart_item'=>$shopping_cart_item,
-                        'c' => &$c,
-                        'sectionTemplateType' => &$sectionTemplateType,
-                        'subpartArray' => &$subpartArray,
-                        'subparts' => $subparts
+                    'shopping_cart_item'=>$shopping_cart_item,
+                    'c' => &$c,
+                    'sectionTemplateType' => &$sectionTemplateType,
+                    'subpartArray' => &$subpartArray,
+                    'subparts' => $subparts,
+                    'order' => $order
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

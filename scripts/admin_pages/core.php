@@ -1,4 +1,5 @@
 <?php
+header('X-XSS-Protection: 0');
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
@@ -708,6 +709,9 @@ switch ($this->ms['page']) {
                 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_manufacturer.php');
             }
         }
+        break;
+    case 'delete_manufacturer':
+        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_delete_manufacturer.php');
         break;
     case 'add_customer':
     case 'edit_customer':

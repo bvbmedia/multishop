@@ -1156,6 +1156,7 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             $user['password'] = $item['password_hashed'];
                         } elseif ($item['password']) {
                             $item['password'] = mslib_befe::getHashedPassword($item['password']);
+                            $user['password'] = $item['password'];
                         }
                         $update = 0;
                         $user_check = array();

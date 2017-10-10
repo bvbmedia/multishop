@@ -162,7 +162,7 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                         }
                         if (isset($discount_value)) {
-                            $discount_value = mslib_befe::formatNumbersToMysql($discount_value);
+                            //$discount_value = mslib_befe::formatNumbersToMysql($discount_value);
                             $updateArray['discount'] = $discount_value;
                         }
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
@@ -1912,7 +1912,8 @@ if (is_numeric($this->get['orders_id'])) {
             $orderDetailsItem = '';
             $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentMethod" id="msAdminEditOrderPaymentMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_method') . '</label>';
-            if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
+            $payment_method_data=mslib_fe::loadPaymentMethod($orders['payment_method']);
+            if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details'] && (empty($orders['payment_method']) || (is_array($payment_method_data) && count($payment_method_data)))) {
                 if (is_array($payment_methods) and count($payment_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
@@ -1946,6 +1947,10 @@ if (is_numeric($this->get['orders_id'])) {
                     if ($code == $orders['payment_method']) {
                         $payment_method_id = $item['id'];
                     }
+                }
+                if (!$payment_method_id) {
+                    $payment_method_data=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code');
+                    $payment_method_id=$payment_method_data['id'];
                 }
                 $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . ($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']) . '<input type="hidden" name="payment_method" value="' . $payment_method_id . '"></p></div>';
             }
@@ -3682,10 +3687,19 @@ if (is_numeric($this->get['orders_id'])) {
                         formatResult: function(data){
                             if (data.text === undefined) {
                                 $.each(data, function(i,val){
-                                    return val.text;
+                                    var product_name=val.text;
+                                    if (val.products_model!=undefined && val.products_model!=\'\') {
+                                        product_name += \' (MODEL: \' + val.products_model + \')\';
+                                    }
+                                    return product_name;
                                 });
                             } else {
-                                return data.text;
+                                var product_name=data.text;
+                                if (data.products_model!=undefined && data.products_model!=\'\') {
+                                    product_name += \' (MODEL: \' + data.products_model + \')\';
+                                }
+                                return product_name;
+                                //return data.text;
                             }
                         },
                         formatSelection: function(data){
@@ -4255,6 +4269,14 @@ if (is_numeric($this->get['orders_id'])) {
             	<input class="form-control" name="track_and_trace_code" type="text" value="' . htmlspecialchars($orders['track_and_trace_code']) . '" />
             </div>
         </div>';
+        if (!empty($orders['track_and_trace_link'])) {
+            $order_status_tab_content['track_and_trace_code'] .= '<div class="form-group">
+                <label for="track_and_trace_code" class="control-label col-md-2">' . $this->pi_getLL('track_and_trace_link') . '</label>
+                <div class="col-md-10">
+                    <p class="form-control-static"><a href="' . $orders['track_and_trace_link'] . '" target="_blank">' . $orders['track_and_trace_link'] . '</a></p>
+                </div>
+            </div>';
+        }
         $order_status_tab_content['customer_notified'] = '<div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">' . $this->pi_getLL('send_email_to_customer') . '</label>
             <div class="col-md-10">

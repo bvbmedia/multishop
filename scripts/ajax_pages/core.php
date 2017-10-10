@@ -10,7 +10,11 @@ switch ($this->ms['page']) {
         $counter = 0;
         if ($this->get['q']) {
             foreach ($users as $user) {
-                if (strpos($user['name'], $this->get['q']) !== false) {
+                if (strpos(strtolower($user['name']), strtolower($this->get['q'])) !== false) {
+                    $return_data[$counter]['text'] = $user['name'];
+                    $return_data[$counter]['id'] = $user['uid'];
+                    $counter++;
+                } else if (strpos(strtolower($user['email']), strtolower($this->get['q'])) !== false) {
                     $return_data[$counter]['text'] = $user['name'];
                     $return_data[$counter]['id'] = $user['uid'];
                     $counter++;
@@ -544,11 +548,11 @@ switch ($this->ms['page']) {
                     foreach ($tmp_preselecteds as $preselected_id) {
                         $preselected_id = trim($preselected_id);
                         $cats = mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
-                        $cats = array_reverse($cats);
                         $catpath = array();
                         $level = 0;
                         $where = '';
                         if (is_array($cats) && count($cats)) {
+                            $cats = array_reverse($cats);
                             foreach ($cats as $cat) {
                                 $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
                                 $catpath[] = $cat['name'] . (!$cat['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
@@ -2567,6 +2571,36 @@ switch ($this->ms['page']) {
                         } else {
                             $no++;
                         }
+                    }
+                }
+            }
+        }
+        exit();
+        break;
+    case 'product_specials':
+        if ($this->ADMIN_USER) {
+            // custom page hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProductsSpecials'])) {
+                $params = array();
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProductsSpecials'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            } else {
+                $getPost = $this->post['productlisting'];
+                $no = 1;
+                foreach ($getPost as $prod_id) {
+                    if (is_numeric($prod_id)) {
+                        $where = 'products_id = ' . $prod_id;
+                        $updateArray = array(
+                            'sort_order' => $no
+                        );
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', "products_id = $prod_id", $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                            // if the flat database module is enabled we have to sync the changes to the flat table
+                            mslib_befe::convertProductToFlat($prod_id);
+                        }
+                        $no++;
                     }
                 }
             }

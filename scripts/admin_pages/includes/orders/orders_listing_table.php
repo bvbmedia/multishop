@@ -241,10 +241,10 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_ORDER_ID###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_ORDER_ID###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 //$subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('orders_id');
 $subpartArray['###LABEL_HEADER_ORDER_ID###'] = $this->pi_getLL('id');
-$subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 //$subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('orders_id');
 $subpartArray['###LABEL_FOOTER_ORDER_ID###'] = $this->pi_getLL('id');
 $master_shop_header = '';
@@ -267,9 +267,9 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_ORDER_DATE###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_ORDER_DATE###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_ORDER_DATE###'] = $this->pi_getLL('order_date');
-$subpartArray['###FOOTER_SORTBY_LINK_ORDER_DATE###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_ORDER_DATE###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_FOOTER_ORDER_DATE###'] = $this->pi_getLL('order_date');
 $key = 'grand_total';
 if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
@@ -277,9 +277,9 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_AMOUNT###'] = $this->pi_getLL('amount');
-$subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_FOOTER_AMOUNT###'] = mslib_fe::amount2Cents($totalAmount, 0);
 $key = 'shipping_method_label';
 if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
@@ -287,9 +287,9 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_SHIPPING_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_SHIPPING_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_SHIPPING_METHOD###'] = $this->pi_getLL('shipping_method');
-$subpartArray['###FOOTER_SORTBY_LINK_SHIPPING_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_SHIPPING_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_FOOTER_SHIPPING_METHOD###'] = $this->pi_getLL('shipping_method');
 $key = 'payment_method_label';
 if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
@@ -297,9 +297,9 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_PAYMENT_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_PAYMENT_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
-$subpartArray['###FOOTER_SORTBY_LINK_PAYMENT_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_PAYMENT_METHOD###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_FOOTER_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
 $subpartArray['###LABEL_HEADER_STATUS###'] = $this->pi_getLL('order_status');
 $subpartArray['###LABEL_FOOTER_STATUS###'] = $this->pi_getLL('order_status');
@@ -309,9 +309,9 @@ if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
 } else {
     $final_order_link = 'a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###HEADER_SORTBY_LINK_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_HEADER_MODIFIED###'] = $this->pi_getLL('modified_on', 'Modified on');
-$subpartArray['###FOOTER_SORTBY_LINK_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
 $subpartArray['###LABEL_FOOTER_MODIFIED###'] = $this->pi_getLL('modified_on', 'Modified on');
 $subpartArray['###LABEL_HEADER_PAID###'] = $this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###'] = $this->pi_getLL('admin_paid');

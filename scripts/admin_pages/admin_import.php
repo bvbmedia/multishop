@@ -2134,7 +2134,7 @@ if ($this->post['action'] == 'category-insert') {
                         if ($item['products_order_unit_id']) {
                             $item['order_unit_id'] = $item['products_order_unit_id'];
                         } elseif (isset($item['products_order_unit_name']) or isset($item['products_order_unit_code'])) {
-                            $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='" . $this->shop_pid . "'";
+                            $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0)";
                             if ($item['products_order_unit_code']) {
                                 $str .= " and o.code='" . addslashes($item['products_order_unit_code']) . "'";
                             } else {

@@ -315,7 +315,7 @@ if (($this->get['sub'] == 'add_shipping_method' && $this->get['shipping_method_c
 			<div class="col-md-10">
 				<select name="tax_id" id="tax_id" class="form-control "><option value="0">' . $this->pi_getLL('admin_label_no_tax') . '</option>';
         $str = "SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
-        $str = "SELECT * FROM `tx_multishop_tax_rule_groups`";
+        //$str = "SELECT * FROM `tx_multishop_tax_rule_groups`";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $tax_list_data = array();
         while (($tax_group = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
