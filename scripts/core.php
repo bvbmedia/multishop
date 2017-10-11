@@ -278,6 +278,8 @@ switch ($this->ms['page']) {
             $array2[] = $delivery_address;
             $array1[] = '###CUSTOMER_ID###';
             $array2[] = $order['customer_id'];
+            $array1[] = '###CUSTOMER_NUMBER###';
+            $array2[] = $order['customer_id'];
             $array1[] = '###SHIPPING_METHOD###';
             $array2[] = $order['shipping_method_label'];
             $array1[] = '###PAYMENT_METHOD###';
@@ -308,6 +310,8 @@ switch ($this->ms['page']) {
             $long_date = strftime($this->pi_getLL('full_date_format'), $time);
             $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
             $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+            $array2[] = strftime("%x", $time);
             $array1[] = '###STORE_NAME###';
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###STORE_EMAIL###';
@@ -534,6 +538,8 @@ switch ($this->ms['page']) {
                 $long_date = strftime($this->pi_getLL('full_date_format'), $time);
                 $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
                 $array2[] = $long_date;
+                $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+                $array2[] = strftime("%x", $time);
                 $array1[] = '###STORE_NAME###';
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';

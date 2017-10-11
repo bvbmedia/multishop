@@ -3275,6 +3275,8 @@ class mslib_befe {
                 $long_date = strftime($this->pi_getLL('full_date_format'), $time);
                 $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
                 $array2[] = $long_date;
+                $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+                $array2[] = strftime("%x");
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###PROPOSAL_NUMBER###';
