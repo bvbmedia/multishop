@@ -316,6 +316,14 @@ if ($this->get['feed_hash']) {
                 } else {
                     $includeDisabled = 0;
                 }
+                if (is_numeric($post_data['order_unit_id']) && $post_data['order_unit_id']>0) {
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $tbl = 'pf.';
+                    } else {
+                        $tbl = 'p.';
+                    }
+                    $where[] = '(' . $tbl . 'order_unit_id = '.$post_data['order_unit_id'].')';
+                }
                 if ($post_data['include_only_related_product']) {
                     if ($this->ms['MODULES']['FLAT_DATABASE']) {
                         $tbl = 'pf.';
