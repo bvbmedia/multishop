@@ -465,6 +465,7 @@ if ($this->post['req'] == 'init') {
             break;
     }
 }
+header('Content-Type: application/json');
 $data = json_encode($json_data);
 echo $data;
 exit();
