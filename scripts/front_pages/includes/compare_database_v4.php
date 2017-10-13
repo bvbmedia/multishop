@@ -554,4 +554,14 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+// add extra column for order status change in history table
+$str = "select `action_call` from tx_multishop_orders_status_history limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_orders_status_history` ADD `action_call` varchar(256) default ''";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+tx_multishop_orders_status_history
 ?>

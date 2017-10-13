@@ -3109,9 +3109,15 @@ class mslib_befe {
         chdir($currentDir);
         return $result;
     }
-    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0) {
+    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0, $action_call='') {
         if (!is_numeric($orders_id)) {
             return false;
+        }
+        if (empty($action_call)) {
+            $extra_data=array();
+            $extra_data['get']=$this->get;
+            $extra_data['post']=$this->post;
+            $action_call=serialize($extra_data);
         }
         $continue = 1;
         //hook to let other plugins further manipulate
@@ -3120,6 +3126,7 @@ class mslib_befe {
                     'orders_id' => &$orders_id,
                     'orders_status' => &$orders_status,
                     'mail_customer' => &$mail_customer,
+                    'action_call' => &$action_call,
                     'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPreProc'] as $funcRef) {
@@ -3363,6 +3370,8 @@ class mslib_befe {
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
                 $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
+                $updateArray['action_call'] = $action_call;
+                $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
                     if (!empty($this->post['comments']) && $mail_customer) {
