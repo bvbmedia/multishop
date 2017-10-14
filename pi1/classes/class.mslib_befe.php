@@ -5276,6 +5276,23 @@ class mslib_befe {
         $record = mslib_befe::getRecord('', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', '', $filter);
         return $record;
     }
+    function getSpecificOrderStatusHistoryByOrdersId($orders_id, $status_id) {
+        if (is_numeric($orders_id)) {
+            $query = $GLOBALS['TYPO3_DB']->SELECTquery('crdate, new_value', // SELECT ...
+                    'tx_multishop_orders_status_history', // FROM ...
+                    'orders_id=\'' . $orders_id . '\' and new_value=\''.$status_id.'\'', // WHERE.
+                    '', // GROUP BY...
+                    'orders_status_history_id desc', // ORDER BY...
+                    'limit 1' // LIMIT ...
+            );
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            $order_status_history_items = array();
+            while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
+                $order_status_history_items[] = $row;
+            }
+            return $order_status_history_items;
+        }
+    }
     function getOrderStatusHistoryByOrdersId($orders_id) {
         if (is_numeric($orders_id)) {
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('new_value', // SELECT ...
