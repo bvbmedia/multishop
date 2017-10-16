@@ -483,7 +483,7 @@ if (is_array($products) && count($products)) {
     $skippedTypes[] = 'products_new';
     $skippedTypes[] = 'products_specials';
     $skippedTypes[] = 'specials_listing_page';
-    if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+    if (!is_numeric($this->get['manufacturers_id']) && !in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
         $content .= '
 		<script type="text/javascript">
 		  jQuery(document).ready(function($) {
