@@ -2105,7 +2105,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // hook oef
             }
             if (!$orders_id) {
-                $subject = $this->FULL_HTTP_URL . ' - Convert cart to order failed';
+                $subject = 'DANGER: '.$this->FULL_HTTP_URL . ' - Convert cart to order failed';
                 $body = 'Warning. Convert cart to order failed.<br/>Website: ' . $this->FULL_HTTP_URL . '<br/>Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . '<br/>Query:<br/>' . $query;
                 $mailuser = array();
                 $mailuser['name'] = $this->ms['MODULES']['STORE_NAME'];
