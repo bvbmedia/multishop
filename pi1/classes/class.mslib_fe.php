@@ -8687,14 +8687,15 @@ class mslib_fe {
             }
         }
     }
-    public function generateInvoiceId() {
+    public function generateInvoiceId($orders_id='0') {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'])) {
             $invoice_id = '';
             $ms = '';
             // hook
             $params = array(
                     'ms' => $ms,
-                    'invoice_id' => &$invoice_id
+                    'invoice_id' => &$invoice_id,
+                    'orders_id' => &$orders_id
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -8722,7 +8723,8 @@ class mslib_fe {
                 $query_elements['orderby'] =& $orderby;
                 $query_elements['limit'] =& $limit;
                 $params = array(
-                        'query_elements' => &$query_elements
+                        'query_elements' => &$query_elements,
+                        'orders_id' => &$orders_id
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
