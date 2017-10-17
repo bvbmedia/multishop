@@ -8675,7 +8675,7 @@ class mslib_fe {
                 $query = $GLOBALS['TYPO3_DB']->sql_query($sql);
                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
                 if (!$row['reversal_invoice']) {
-                    $new_invoice_id = mslib_fe::generateInvoiceId();
+                    $new_invoice_id = mslib_fe::generateInvoiceId($row['orders_id']);
                     if ($new_invoice_id) {
                         unset($row['id']);
                         unset($row['invoice_processed']);
@@ -8914,7 +8914,7 @@ class mslib_fe {
                 return false;
             }
             if (($order['orders_id'] and $order['bill']) or ($order['orders_id'] and $force)) {
-                $invoice_id = mslib_fe::generateInvoiceId();
+                $invoice_id = mslib_fe::generateInvoiceId($orders_id);
                 if ($invoice_id) {
                     $hash = md5(uniqid('', true));
                     $insertArray = array();
