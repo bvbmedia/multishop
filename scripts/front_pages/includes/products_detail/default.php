@@ -342,7 +342,7 @@ if (!$product['products_id']) {
             $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('add_to_basket')) . '" />';
         }
     }
-    $output['add_to_cart_button'] .= '<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />' . $order_now_button . '</span>';
+    $output['add_to_cart_button'] .= '<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="categories_id" id="categories_id" type="hidden" value="' . $product['categories_id'] . '" /><input name="products_id" id="products_id" type="hidden" value="' . $product['products_id'] . '" />' . $order_now_button . '</span>';
     // add to basket eof
     // now parse all the objects in the tmpl file
     if ($this->conf['product_detail_tmpl_path']) {
