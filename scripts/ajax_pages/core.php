@@ -1221,7 +1221,7 @@ switch ($this->ms['page']) {
                     }
                 }
                 // hook eof
-                mslib_befe::updateOrderStatus($this->post['tx_multishop_pi1']['orders_id'], $this->post['tx_multishop_pi1']['orders_status_id'], 1);
+                mslib_befe::updateOrderStatus($this->post['tx_multishop_pi1']['orders_id'], $this->post['tx_multishop_pi1']['orders_status_id'], 1, 'admin_update_orders_status');
                 echo $returnOutput;
             }
         }

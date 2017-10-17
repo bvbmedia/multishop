@@ -529,6 +529,7 @@ if ($this->get['feed_hash']) {
                         //hook to let other plugins further manipulate the settings
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'])) {
                             $params = array(
+                                    'post_data' => &$post_data,
                                     'records' => &$records,
                                     'loadAttributeValues' => $loadAttributeValues,
                                     'feed' => $feed,
