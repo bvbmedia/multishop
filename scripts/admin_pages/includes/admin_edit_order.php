@@ -974,7 +974,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 if ($continue_update) {
                     // dynamic variables
-                    mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified']);
+                    mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified'], 'edit_order_save');
                 }
             }
         }

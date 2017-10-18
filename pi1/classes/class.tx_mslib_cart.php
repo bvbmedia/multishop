@@ -39,11 +39,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function updateCart() {
         if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
             $product_id = $this->post['products_id'];
+            $categories_id = $this->post['categories_id'];
             if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
                 $product_id = $this->get['products_id'];
             }
+            if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
+                $categories_id = $this->get['categories_id'];
+            }
             if (is_numeric($product_id)) {
-                $product = mslib_fe::getProduct($product_id);
+                $product = mslib_fe::getProduct($product_id, $categories_id);
                 if ($product['products_quantity'] < 1 && !$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
                     if ($product['categories_id']) {
                         // get all cats to generate multilevel fake url
@@ -99,6 +103,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 } elseif (is_array($this->post['attributes'])) {
                     $shopping_cart_item = md5($this->post['products_id'] . serialize($this->post['attributes']));
                 }
+                if (is_numeric($cart['products'][$shopping_cart_item]['products_id'])) {
+                    $products_id = $cart['products'][$shopping_cart_item]['products_id'];
+                    $categories_id = $cart['products'][$shopping_cart_item]['categories_id'];
+                } else {
+                    $products_id = $this->post['products_id'];
+                    $categories_id = $this->post['categories_id'];
+                }
+                $product = mslib_fe::getProduct($products_id, $categories_id);
                 // custom hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartSetShoppingCartItemPostProc'])) {
                     $params = array(
@@ -110,12 +122,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                 }
                 // custom hook that can be controlled by third-party plugin eof
-                if (is_numeric($cart['products'][$shopping_cart_item]['products_id'])) {
-                    $products_id = $cart['products'][$shopping_cart_item]['products_id'];
-                } else {
-                    $products_id = $this->post['products_id'];
-                }
-                $product = mslib_fe::getProduct($products_id);
                 if ($product['products_id']) {
                     $product['products_shortdescription_raw'] = $product['products_shortdescription'];
                     $product['products_description_raw'] = $product['products_description'];
@@ -2105,7 +2111,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // hook oef
             }
             if (!$orders_id) {
-                $subject = $this->FULL_HTTP_URL . ' - Convert cart to order failed';
+                $subject = 'DANGER: '.$this->FULL_HTTP_URL . ' - Convert cart to order failed';
                 $body = 'Warning. Convert cart to order failed.<br/>Website: ' . $this->FULL_HTTP_URL . '<br/>Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . '<br/>Query:<br/>' . $query;
                 $mailuser = array();
                 $mailuser['name'] = $this->ms['MODULES']['STORE_NAME'];

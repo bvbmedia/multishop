@@ -316,6 +316,14 @@ if ($this->get['feed_hash']) {
                 } else {
                     $includeDisabled = 0;
                 }
+                if (is_numeric($post_data['order_unit_id']) && $post_data['order_unit_id']>0) {
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $tbl = 'pf.';
+                    } else {
+                        $tbl = 'p.';
+                    }
+                    $where[] = '(' . $tbl . 'order_unit_id = '.$post_data['order_unit_id'].')';
+                }
                 if ($post_data['include_only_related_product']) {
                     if ($this->ms['MODULES']['FLAT_DATABASE']) {
                         $tbl = 'pf.';
@@ -521,6 +529,7 @@ if ($this->get['feed_hash']) {
                         //hook to let other plugins further manipulate the settings
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'])) {
                             $params = array(
+                                    'post_data' => &$post_data,
                                     'records' => &$records,
                                     'loadAttributeValues' => $loadAttributeValues,
                                     'feed' => $feed,

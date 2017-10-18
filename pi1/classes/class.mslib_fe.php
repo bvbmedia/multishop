@@ -3140,16 +3140,39 @@ class mslib_fe {
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $rs['products_name'];
     }
+    public function getOrdersProductData($order_id, $pid=0) {
+        if (!is_numeric($order_id)) {
+            return false;
+        }
+        $filter=array();
+        $filter[]='orders_id=\'' . $order_id . '\'';
+        if (is_numeric($pid) && $pid>0) {
+            $filter[]='products_id=\'' . $pid . '\'';
+        }
+        $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+            'tx_multishop_orders_products', // FROM ...
+            implode(' AND ', $filter), // WHERE...
+            '', // GROUP BY...
+            '', // ORDER BY...
+            '' // LIMIT ...
+        );
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $order_products=array();
+        while ($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+            $order_products[]=$rs;
+        }
+        return $order_products;
+    }
     public function getOrdersProductName($pid) {
         if (!is_numeric($pid)) {
             return false;
         }
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('products_name', // SELECT ...
-                'tx_multishop_orders_products', // FROM ...
-                'products_id=\'' . $pid . '\'', // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '1' // LIMIT ...
+            'tx_multishop_orders_products', // FROM ...
+            'products_id=\'' . $pid . '\'', // WHERE...
+            '', // GROUP BY...
+            '', // ORDER BY...
+            '1' // LIMIT ...
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -8652,7 +8675,7 @@ class mslib_fe {
                 $query = $GLOBALS['TYPO3_DB']->sql_query($sql);
                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
                 if (!$row['reversal_invoice']) {
-                    $new_invoice_id = mslib_fe::generateInvoiceId();
+                    $new_invoice_id = mslib_fe::generateInvoiceId($row['orders_id']);
                     if ($new_invoice_id) {
                         unset($row['id']);
                         unset($row['invoice_processed']);
@@ -8687,14 +8710,15 @@ class mslib_fe {
             }
         }
     }
-    public function generateInvoiceId() {
+    public function generateInvoiceId($orders_id='0') {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'])) {
             $invoice_id = '';
             $ms = '';
             // hook
             $params = array(
                     'ms' => $ms,
-                    'invoice_id' => &$invoice_id
+                    'invoice_id' => &$invoice_id,
+                    'orders_id' => &$orders_id
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -8722,7 +8746,8 @@ class mslib_fe {
                 $query_elements['orderby'] =& $orderby;
                 $query_elements['limit'] =& $limit;
                 $params = array(
-                        'query_elements' => &$query_elements
+                        'query_elements' => &$query_elements,
+                        'orders_id' => &$orders_id
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceIdGetLatestInvoiceIdPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -8889,7 +8914,7 @@ class mslib_fe {
                 return false;
             }
             if (($order['orders_id'] and $order['bill']) or ($order['orders_id'] and $force)) {
-                $invoice_id = mslib_fe::generateInvoiceId();
+                $invoice_id = mslib_fe::generateInvoiceId($orders_id);
                 if ($invoice_id) {
                     $hash = md5(uniqid('', true));
                     $insertArray = array();
@@ -10591,6 +10616,8 @@ class mslib_fe {
             $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
             $long_date = strftime($this->pi_getLL('full_date_format'));
             $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+            $array2[] = strftime("%x");
             $array1[] = '###STORE_NAME###';
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###CUSTOMER_ID###';

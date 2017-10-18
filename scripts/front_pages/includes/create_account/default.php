@@ -52,6 +52,8 @@ if (mslib_fe::loggedin()) {
             $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
             $long_date = strftime($this->pi_getLL('full_date_format'));
             $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+            $array2[] = strftime("%x");
             $array1[] = '###STORE_NAME###';
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###CUSTOMER_ID###';

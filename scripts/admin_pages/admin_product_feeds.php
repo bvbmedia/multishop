@@ -327,6 +327,22 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 					<input type="text" name="utm_campaign" value="' . htmlspecialchars($this->post['utm_campaign']) . '" class="form-control" />
 					</div>
 			</div>';
+        // order unit
+        $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $order_unit = '<option value="0">' . $this->pi_getLL('all') . '</option>';
+        while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+            $order_unit .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $post_data['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+        }
+        $order_unit .= '</select>';
+        $content .= '<div class="form-group">
+                <label class="control-label col-md-2">' . $this->pi_getLL('admin_order_unit') . '</label>
+                <div class="col-md-10">
+                <select name="order_unit_id" class="form-control">
+					' . $order_unit . '
+				</select>
+                </div>
+			</div>';
         // loading shipping methods
         $shipping_methods = mslib_fe::loadShippingMethods();
         $shipping_methods_options = '<option value="">' . $this->pi_getLL('choose') . '</option>';

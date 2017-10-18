@@ -3109,9 +3109,15 @@ class mslib_befe {
         chdir($currentDir);
         return $result;
     }
-    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0) {
+    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0, $action_call='') {
         if (!is_numeric($orders_id)) {
             return false;
+        }
+        if (empty($action_call)) {
+            $extra_data=array();
+            $extra_data['get']=$this->get;
+            $extra_data['post']=$this->post;
+            $action_call=serialize($extra_data);
         }
         $continue = 1;
         //hook to let other plugins further manipulate
@@ -3120,6 +3126,7 @@ class mslib_befe {
                     'orders_id' => &$orders_id,
                     'orders_status' => &$orders_status,
                     'mail_customer' => &$mail_customer,
+                    'action_call' => &$action_call,
                     'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPreProc'] as $funcRef) {
@@ -3275,6 +3282,8 @@ class mslib_befe {
                 $long_date = strftime($this->pi_getLL('full_date_format'), $time);
                 $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
                 $array2[] = $long_date;
+                $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+                $array2[] = strftime("%x");
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###PROPOSAL_NUMBER###';
@@ -3361,6 +3370,8 @@ class mslib_befe {
                 $updateArray['crdate'] = $status_last_modified;
                 $updateArray['new_value'] = $orders_status;
                 $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
+                $updateArray['action_call'] = $action_call;
+                $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
                     if (!empty($this->post['comments']) && $mail_customer) {
@@ -5264,6 +5275,23 @@ class mslib_befe {
         $filter[] = '(o.page_uid=\'0\' or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id and od.language_id=\'0\'';
         $record = mslib_befe::getRecord('', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', '', $filter);
         return $record;
+    }
+    function getSpecificOrderStatusHistoryByOrdersId($orders_id, $status_id) {
+        if (is_numeric($orders_id)) {
+            $query = $GLOBALS['TYPO3_DB']->SELECTquery('crdate, new_value', // SELECT ...
+                    'tx_multishop_orders_status_history', // FROM ...
+                    'orders_id=\'' . $orders_id . '\' and new_value=\''.$status_id.'\'', // WHERE.
+                    '', // GROUP BY...
+                    'orders_status_history_id desc', // ORDER BY...
+                    '1' // LIMIT ...
+            );
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            $order_status_history_items = array();
+            while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
+                $order_status_history_items[] = $row;
+            }
+            return $order_status_history_items;
+        }
     }
     function getOrderStatusHistoryByOrdersId($orders_id) {
         if (is_numeric($orders_id)) {
