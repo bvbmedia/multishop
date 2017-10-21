@@ -130,7 +130,7 @@ if ($this->get['orders_export_hash']) {
         $excelHeaderCols = array();
         foreach ($fields as $counter => $field) {
             if ($field != 'order_products' && $field != 'turnover_per_category_incl_vat' && $field != 'turnover_per_category_excl_vat' && $field != 'turnover_per_main_category_incl_vat' && $field != 'turnover_per_main_category_excl_vat' && $field != 'bought_products_per_main_category') {
-                $excelHeaderCols[$field] = $field;
+                $excelHeaderCols[$field.'-'.$counter] = $field;
             } else {
                 switch ($field) {
                     case 'order_products':
