@@ -6245,7 +6245,7 @@ class mslib_fe {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'])) {
                     $params = array('row' => &$row);
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'] as $funcRef) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
                 if ($filter) {
