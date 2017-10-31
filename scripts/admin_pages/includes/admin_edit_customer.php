@@ -1671,12 +1671,14 @@ $interfaceHeaderButtons = $objRef->renderHeaderButtons();
 // Get header buttons through interface class so we can render them
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-if ($this->get['tx_multishop_pi1']['cid'] > 0 && !is_numeric($user['uid'])) {
-    $content = $this->pi_getLL('customer_not_found');
-} else {
-    if (isset($this->get['tx_multishop_pi1']['cid'])) {
-        if (!$this->get['tx_multishop_pi1']['cid'] || !is_numeric($this->get['tx_multishop_pi1']['cid']) || !$user) {
-            $content = $this->pi_getLL('customer_not_found');
+if (!count($erno)) {
+    if ($this->get['tx_multishop_pi1']['cid'] > 0 && !is_numeric($user['uid'])) {
+        $content = $this->pi_getLL('customer_not_found');
+    } else {
+        if (isset($this->get['tx_multishop_pi1']['cid'])) {
+            if (!$this->get['tx_multishop_pi1']['cid'] || !is_numeric($this->get['tx_multishop_pi1']['cid']) || !$user) {
+                $content = $this->pi_getLL('customer_not_found');
+            }
         }
     }
 }

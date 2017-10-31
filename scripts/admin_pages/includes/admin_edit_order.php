@@ -3251,9 +3251,6 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
             // custom hook that can be controlled by third-party plugin eof
-            //echo "<pre>";
-            //print_r($order_products_table);
-            //die();
             if (is_array($order_products_table) && count($order_products_table)) {
                 // order products table header
                 foreach ($order_products_table['header'] as $header_data) {
@@ -3320,6 +3317,9 @@ if (is_numeric($this->get['orders_id'])) {
                             }
                             $tmpcontent .= '<tr' . $row_class . $row_id . $row_style . $row_align . $row_valign . '>';
                             foreach ($body_rows_data['value'] as $body_col) {
+                                if (count($body_rows_data['value'])=='1' && isset($body_col['colspan']) && $body_col['colspan']!=$colspan) {
+                                    $body_col['colspan']=$colspan;
+                                }
                                 $col_class = '';
                                 $col_id = '';
                                 $col_style = '';
