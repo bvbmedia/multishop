@@ -419,6 +419,21 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
             $markerArray['###INVOICE_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
+        $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
+        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
+        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
+        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
+        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
+        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
+        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
+        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
+        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
+        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
+        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
+        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
+        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
+        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
+        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
             $params = array(
@@ -439,21 +454,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
             $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
         }
-        $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
-        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
-        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
-        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
-        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
-        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
-        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
-        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
-        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
-        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
-        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
-        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
-        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
-        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
-        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         // MARKERS EOL
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'])) {

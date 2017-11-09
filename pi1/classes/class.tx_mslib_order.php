@@ -1357,7 +1357,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['status'] = $status['id'];
                 }
             }
-            $insertArray['customer_comments'] = $this->post['customer_comments'];
+            if ($this->post['customer_comments']) {
+                $insertArray['customer_comments'] = $this->post['customer_comments'];
+            } elseif ($address['customer_comments']) {
+                $insertArray['customer_comments'] = $address['customer_comments'];
+            }
             $insertArray['billing_company'] = $address['company'];
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];

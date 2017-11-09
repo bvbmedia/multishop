@@ -1461,6 +1461,7 @@ switch ($this->ms['page']) {
                                         $result['success'] = true;
                                         $result['error'] = false;
                                         $result['filename'] = $filename;
+                                        unlink($temp_file);
                                         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                         exit();
                                     }
