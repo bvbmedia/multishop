@@ -232,7 +232,7 @@ if ($this->ADMIN_USER) {
                     $prod['id'] = md5($category['name']);
                     $prod['text'] = $category['name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
-                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_cms&cmt_id=' . $category['id']) . '&action=edit_cms';
+                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $category['id']) . '&action=edit_cms';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
