@@ -1196,7 +1196,9 @@ jQuery(document).ready(function($) {
 </script>
 ';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'])) {
-    $params = array();
+    $params = array(
+        'content' => &$content
+    );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
     }
