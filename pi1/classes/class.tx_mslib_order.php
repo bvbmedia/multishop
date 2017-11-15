@@ -761,12 +761,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                     }
                 }
+                if (isset($order['language_id'])) {
+                    // Switch back to default language
+                    mslib_befe::resetSystemLanguage();
+                }
+                return 1;
+            } else {
+                return 0;
             }
-            if (isset($order['language_id'])) {
-                // Switch back to default language
-                mslib_befe::resetSystemLanguage();
-            }
-            return 1;
         }
     }
     function printOrderDetailsTable($order, $template_type = 'site') {
