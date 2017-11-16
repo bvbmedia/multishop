@@ -1297,11 +1297,15 @@ class mslib_fe {
                     $conf['additionalParams'] .= 'L=' . $this->get['L'];
                 }
             }
+            $url='';
+            if ($forceAbsoluteUrl) {
+                $url=$this->FULL_HTTP_URL;
+            }
             if (strstr($page_id, ',')) {
                 $array = explode(',', $page_id);
-                $url = 'index.php?id=' . $array[0] . '&type=' . $array[1] . $conf['additionalParams'];
+                $url .= 'index.php?id=' . $array[0] . '&type=' . $array[1] . $conf['additionalParams'];
             } else {
-                $url = 'index.php?id=' . $page_id . $conf['additionalParams'];
+                $url .= 'index.php?id=' . $page_id . $conf['additionalParams'];
             }
         } else {
             if ($forceAbsoluteUrl) {
