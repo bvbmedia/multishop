@@ -235,6 +235,17 @@ $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart = $mslib_cart->getCart();
 $data['htmlCartContents'] = $mslib_cart->getHtmlCartContents('ajaxGetMethodCosts');
+//hook to let other plugins further manipulate the replacers
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPostProc'])) {
+    $params = array(
+        'data' => &$data,
+        'available_sid' => &$available_sid,
+        'cart' => &$cart
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 $json = json_encode($data, ENT_NOQUOTES);
 echo $json;
 exit();
