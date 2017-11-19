@@ -66,6 +66,7 @@ plugin.tx_multishop_pi1 {
 	fe_searchadmin_usergroup = {$plugin.multishop.fe_searchadmin_usergroup}
 	fe_systemadmin_usergroup = {$plugin.multishop.fe_systemadmin_usergroup}
 	disableMetatags = {$plugin.multishop.disableMetatags}
+	disableMetatagsKeywords = {$plugin.multishop.disableMetatagsKeywords}
 	masterShop = {$plugin.multishop.masterShop}
 	login_pid = {$plugin.multishop.login_pid}
 	products_listing_tmpl = {$plugin.multishop.products_listing_tmpl}

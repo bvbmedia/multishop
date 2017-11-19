@@ -73,7 +73,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                 $output_array['meta']['description'] = '<meta name="description" content="' . $meta_description . '" />';
             }
             if ($meta_keywords) {
-                $output_array['meta']['keywords'] = '<meta name="keywords" content="' . htmlspecialchars($meta_keywords) . '" />';
+                if (!$this->conf['disableMetatagsKeywords']) {
+                    $output_array['meta']['keywords'] = '<meta name="keywords" content="' . htmlspecialchars($meta_keywords) . '" />';
+                }
             }
         }
         if (isset($current['search_engines_allow_indexing'])) {
