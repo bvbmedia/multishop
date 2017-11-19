@@ -260,6 +260,9 @@ if (is_numeric($this->get['orders_id'])) {
                                 if ($category_name) {
                                     $updateArray['categories_name'] = $category_name;
                                 }
+                                $updateArray['sku_code'] = $product_data['sku_code'];
+                                $updateArray['ean_code'] = $product_data['ean_code'];
+                                $updateArray['vendor_code'] = $product_data['vendor_code'];
                                 // get all cats
                                 $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                 $cats = array_reverse($cats);
@@ -411,6 +414,9 @@ if (is_numeric($this->get['orders_id'])) {
                                     if ($category_name) {
                                         $insertArray['categories_name'] = $category_name;
                                     }
+                                    $insertArray['sku_code'] = $product_data['sku_code'];
+                                    $insertArray['ean_code'] = $product_data['ean_code'];
+                                    $insertArray['vendor_code'] = $product_data['vendor_code'];
                                     // get all cats
                                     $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                     $cats = array_reverse($cats);
