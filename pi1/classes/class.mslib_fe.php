@@ -8639,6 +8639,7 @@ class mslib_fe {
                             $row['invoice_grand_total'] = '-' . $row['invoice_grand_total'];
                             $row['invoice_grand_total_excluding_vat'] = '-' . $row['invoice_grand_total_excluding_vat'];
                         }
+                        $row['date_mail_last_sent']='';
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         // update old invoice to paid so its gone from the unpaid list
