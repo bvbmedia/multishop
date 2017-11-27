@@ -7561,14 +7561,14 @@ class mslib_fe {
         }
         $pageinfo = $GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
         $userTitle = $GLOBALS['TSFE']->fe_user->user['username'];
-        if ($GLOBALS['TSFE']->fe_user->user['name']) {
+        /*if ($GLOBALS['TSFE']->fe_user->user['name']) {
             $userTitle = $GLOBALS['TSFE']->fe_user->user['name'] . ' (' . $GLOBALS['TSFE']->fe_user->user['username'] . ')';
-        }
+        }*/
         $ms_menu[$key]['ms_admin_user']['description'] = '
 			<div id="ms_admin_user">
 			<a href="' . mslib_fe::typolink($this->shop_pid, '') . '">
 			<i class="fa fa-user"></i>
-			<span class="menu_item">' . $this->pi_getLL('admin_user') . ': </span><strong>' . htmlspecialchars($userTitle) . '</strong></a>
+			<strong>' . htmlspecialchars($userTitle) . '</strong></a>
 			</div>
 		';
         // footer
