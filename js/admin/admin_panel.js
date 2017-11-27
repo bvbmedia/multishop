@@ -54,11 +54,11 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                         admin_content += '<span>';
                     }
                     if (tablevel1.class) {
-                        admin_content += '<i class="' + tablevel1.class + '"></i>';
+                        admin_content += '<i class="' + tablevel1.class + '"></i><span class="menu_item">';
                     }
                     admin_content += tablevel1.label;
                     if (tablevel1.link != null) {
-                        admin_content += '</a>';
+                        admin_content += '</span></a>';
                     } else {
                         admin_content += '</span>';
                     }
@@ -81,9 +81,9 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                             break;
                     }
                     if (tablevel1.class) {
-                        admin_content += '<i class="' + tablevel1.class + '"></i>';
+                        admin_content += '<i class="' + tablevel1.class + '"></i><span class="menu_item">';
                     }
-                    admin_content += tablevel1.label + '</a>';
+                    admin_content += tablevel1.label + '</span></a>';
                     switch(menuType) {
                         case 'collapse':
                             admin_content += '<ul id="subs' + tablevel1_key + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="subsA' + tablevel1_key + '">';
