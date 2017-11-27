@@ -272,9 +272,9 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > span,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > a,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > span,
-	#tx_multishop_admin_newheader_wrapper #ms_admin_user > a { font-size:1.2rem; padding-left:1.2rem; padding-right:1.2rem; }
+	#tx_multishop_admin_newheader_wrapper #ms_admin_user > a { font-size:1.2rem; padding-left:1.1rem; padding-right:1.1rem; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > a,
-	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > span { padding-right:1.2rem; }
+	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > span { padding-right:1.1rem; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_online_users > a > .fa,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_statistics > a > .fa,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_logout > a > .fa,
@@ -306,7 +306,7 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a > .fa,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > .fa { width:auto; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_has_subs > a,
-	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_has_subs > span { padding-right:1.2rem; }
+	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_has_subs > span { padding-right:1.1rem; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a > span.menu_item,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > span.menu_item { display:none; }
 }
