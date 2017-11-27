@@ -113,8 +113,7 @@ ul#ms_admin_maximize li a:focus { background:#000; text-decoration:none; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span { font-size:1.2rem; padding-left:1.2rem; padding-right:1.2rem; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
-	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa,
-	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a > .fa { display:none; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
 
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul,
