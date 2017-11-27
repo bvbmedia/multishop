@@ -282,8 +282,7 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > span > .fa,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > a > .fa,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > a > .fa,
-	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > span > .fa,
-	#tx_multishop_admin_newheader_wrapper #ms_admin_user .fa { display:none; }
+	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > span > .fa { display:none; }
 
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul { width:200px; }
