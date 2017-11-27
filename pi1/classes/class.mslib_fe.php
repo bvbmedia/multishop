@@ -7568,7 +7568,7 @@ class mslib_fe {
 			<div id="ms_admin_user">
 			<a href="' . mslib_fe::typolink($this->shop_pid, '') . '">
 			<i class="fa fa-user"></i>
-			' . $this->pi_getLL('admin_user') . ': <strong>' . htmlspecialchars($userTitle) . '</strong></a>
+			<span class="menu_item">' . $this->pi_getLL('admin_user') . ': </span><strong>' . htmlspecialchars($userTitle) . '</strong></a>
 			</div>
 		';
         // footer
