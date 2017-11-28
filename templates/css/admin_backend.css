@@ -949,6 +949,11 @@ td.print_r_value { word-break:break-word; }
 
 @media (max-width:1199px) {
 	body { background-position:-40px top; }
+	h1 { font-size:2rem; line-height:2.4rem; }
+	h2 { font-size:1.6remx; line-height:2rem; }
+	h3 { font-size:1.4rem; line-height:1.8rem; }
+	h4 { font-size:1.2rem; line-height:1.6rem; }
+	h5 { font-size:1rem; line-height:1.4rem; }
 	body,
 	.form-control,
 	.form-collapse a.advanceSearch,
