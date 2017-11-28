@@ -936,6 +936,8 @@ fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
 td.print_r_key { word-break:normal; }
 td.print_r_value { word-break:break-word; }
 
+.pagination > li > a,
+.pagination > li > span { padding:.6rem 1.05rem; }
 .pagination > li > a:hover,
 .pagination > li > span:hover,
 .pagination > li > a:focus,
@@ -984,10 +986,13 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver { background-image:url(../images/icons_pkg_silver.svg); }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { background-image:url(../images/icons_pkg_gold.svg); }
 
-	.pagination > li > a, .pagination > li > span { padding:.6rem 1rem; }
+	.btn,
+	.pagination > li > a, .pagination > li > span { padding:.6rem .85rem; }
 	.pagination > li > a .fa, .pagination > li > span .fa { line-height:1.42857143 }
 	.form-control,
 	.select2-container .select2-choice { height:31px; }
+
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.7rem; }
 }
 @media (max-width:991px) {
 	body { background-position:-70px top; }
@@ -1000,4 +1005,7 @@ td.print_r_value { word-break:break-word; }
 
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
+
+	.btn,
+	.pagination > li > a, .pagination > li > span { padding:.55rem .85rem; }
 }

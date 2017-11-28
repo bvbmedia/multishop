@@ -156,7 +156,8 @@
 .cellCheckbox .checkbox.checkbox-inline label { min-height:18px; padding-left:0; }
 .cellCheckbox .checkbox.checkbox-inline label::before,
 .cellCheckbox .checkbox.checkbox-inline label::after { margin-left:-17px; }
-.cellDate { white-space:nowrap; }
+.cellDate,
+th.cell_orders_id { white-space:nowrap; }
 .cellModel { min-width: 150px; }
 .cellID { text-align:right; }
 .cellName { width:90%; }
@@ -166,7 +167,8 @@
 td.cellPrice,
 td.cellSpecialPrice,
 .cellStatus,
-td.cellAction { white-space:nowrap; }
+td.cellAction,
+th.cell_orders_id { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
 .cellPrice,
