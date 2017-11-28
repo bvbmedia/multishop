@@ -957,7 +957,8 @@ td.print_r_value { word-break:break-word; }
 	body,
 	.form-control,
 	.form-collapse a.advanceSearch,
-	.btn { font-size:1.2rem; }
+	.btn,
+	.input-group-addon { font-size:1.2rem; }
 	#tx_multishop_admin_header_wrapper { width:180px; }
 	#tx_multishop_admin_newheader_wrapper,
 	#tx_multishop_admin_footer_wrapper { left:180px; }

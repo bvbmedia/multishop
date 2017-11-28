@@ -157,7 +157,9 @@
 .cellCheckbox .checkbox.checkbox-inline label::before,
 .cellCheckbox .checkbox.checkbox-inline label::after { margin-left:-17px; }
 .cellDate,
-th.cell_orders_id { white-space:nowrap; }
+th.cell_orders_id,
+.cellInvoiceNr { white-space:nowrap; }
+.cellInvoiceNr { text-align:left; }
 .cellModel { min-width: 150px; }
 .cellID { text-align:right; }
 .cellName { width:90%; }
