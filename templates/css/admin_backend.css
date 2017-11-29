@@ -1027,6 +1027,7 @@ td.print_r_value { word-break:break-word; }
 	.btn.btn-memo { line-height:1.42857143 !important; }
 
 	.admin_status_red, .admin_status_green { width:15px; height:15px; }
+	.form-collapse .input-group input[type="text"] { width:320px; }
 }
 @media (max-width:991px) {
 	body { background-position:-70px top; }
@@ -1039,4 +1040,6 @@ td.print_r_value { word-break:break-word; }
 
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
+
+	.form-collapse .input-group input[type="text"] { width:220px; }
 }
