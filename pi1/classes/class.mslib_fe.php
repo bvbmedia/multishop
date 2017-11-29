@@ -5302,6 +5302,11 @@ class mslib_fe {
             $where[] = 'p2c.categories_id=cd.categories_id';
             if ($categories_id) {
                 $where[] = 'p2c.categories_id=\'' . $categories_id . '\'';
+            } else {
+                if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+                    $where[] = 'p2c.is_deepest=1';
+                    $where[] = 'p2c.default_path=1';
+                }
             }
             $where[] = 'p2c.is_deepest=1';
         } else {
