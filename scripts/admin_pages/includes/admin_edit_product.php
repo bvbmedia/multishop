@@ -1886,7 +1886,7 @@ if ($this->post) {
         if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage'] > 0) {
             $this->post['specials_new_products_price'] = $this->post['products_price'] - (($this->post['products_price'] * $this->post['specials_price_percentage']) / 100);
         }
-        if ($this->post['specials_new_products_price']) {
+        if ($this->post['specials_new_products_price'] && $this->post['specials_new_products_price']>0) {
             $specials_start_date = 0;
             $specials_expired_date = 0;
             $current_tstamp = time();
