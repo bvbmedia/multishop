@@ -958,7 +958,7 @@ td.print_r_value { word-break:break-word; }
 	.form-control,
 	.form-collapse a.advanceSearch,
 	.btn,
-	.input-group-addon { font-size:1.2rem; }
+	.input-group-addon { font-size:1.1rem; }
 	#tx_multishop_admin_header_wrapper { width:180px; }
 	#tx_multishop_admin_newheader_wrapper,
 	#tx_multishop_admin_footer_wrapper { left:180px; }
@@ -992,13 +992,26 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver { background-image:url(../images/icons_pkg_silver.svg); }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { background-image:url(../images/icons_pkg_gold.svg); }
 
+	.fa { line-height:1.42857143; }
+	.fa-stack { width:1.2rem; height:1.2rem; line-height:1rem; vertical-align:top; }
+	.fa-stack .fa-stack-2x { font-size:1.5rem; line-height:1.5rem; }
+	.fa-stack .fa-stack-1x { font-size:.7rem; line-height:1.5rem; }
 	.btn,
-	.pagination > li > a, .pagination > li > span { padding:.6rem .85rem; }
-	.pagination > li > a .fa, .pagination > li > span .fa { line-height:1.42857143 }
+	.pagination > li > a, .pagination > li > span,
+	select.form-control { padding: 0.5rem .85rem; }
+	.pagination > li > a .fa, .pagination > li > span .fa,
+	.btn-sm, .btn-group-sm > .btn { line-height:1.42857143 }
 	.form-control,
-	.select2-container .select2-choice { height:31px; }
+	.select2-container .select2-choice { height:27px; }
+	.select2-container .select2-choice > .select2-chosen { line-height:27px; padding-top:0; }
+	.form-collapse .input-group > .fa { width:27px; height:27px; line-height:27px; }
+	.form-collapse .input-group input[type="text"] { padding-left:27px; }
 
-	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.7rem; }
+	.panel-heading,
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.5rem; }
+	.btn.btn-memo { line-height:1.42857143 !important; }
+
+	.admin_status_red, .admin_status_green { width:15px; height:15px; }
 }
 @media (max-width:991px) {
 	body { background-position:-70px top; }
