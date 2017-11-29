@@ -159,7 +159,7 @@
 .cellDate,
 th.cell_orders_id,
 .cellInvoiceNr { white-space:nowrap; }
-.cellInvoiceNr { text-align:left; }
+.cellInvoiceNr { text-align:right; }
 .cellModel { min-width: 150px; }
 .cellID { text-align:right; }
 .cellName { width:90%; }

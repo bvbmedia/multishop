@@ -951,14 +951,15 @@ td.print_r_value { word-break:break-word; }
 	body { background-position:-40px top; }
 	h1 { font-size:2rem; line-height:2.4rem; }
 	h2 { font-size:1.6remx; line-height:2rem; }
-	h3 { font-size:1.4rem; line-height:1.8rem; }
+	h3,
+	.panel-title { font-size:1.4rem; line-height:1.8rem; }
 	h4 { font-size:1.2rem; line-height:1.6rem; }
 	h5 { font-size:1rem; line-height:1.4rem; }
 	body,
 	.form-control,
 	.form-collapse a.advanceSearch,
 	.btn,
-	.input-group-addon { font-size:1.2rem; }
+	.input-group-addon { font-size:1.1rem; }
 	#tx_multishop_admin_header_wrapper { width:180px; }
 	#tx_multishop_admin_newheader_wrapper,
 	#tx_multishop_admin_footer_wrapper { left:180px; }
@@ -969,14 +970,28 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
-	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { font-size:1.3rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { font-size:1.2rem; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span,
-	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) { font-size:1.2rem; }
+	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) { font-size:1.1rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span { padding:.5rem 2rem .5rem 1.5rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > span:before { top:1.3rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > span:before { top:.9rem; }
 	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label),
 	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket { padding-left:1.1rem; padding-right:1.1rem; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
@@ -992,13 +1007,27 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver { background-image:url(../images/icons_pkg_silver.svg); }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { background-image:url(../images/icons_pkg_gold.svg); }
 
+	.fa { line-height:1.42857143; }
+	.fa-stack { width:1.2rem; height:1.2rem; line-height:1rem; vertical-align:top; }
+	.fa-stack .fa-stack-2x { font-size:1.5rem; line-height:1.5rem; }
+	.fa-stack .fa-stack-1x { font-size:.7rem; line-height:1.5rem; }
 	.btn,
-	.pagination > li > a, .pagination > li > span { padding:.6rem .85rem; }
-	.pagination > li > a .fa, .pagination > li > span .fa { line-height:1.42857143 }
+	.pagination > li > a, .pagination > li > span,
+	select.form-control { padding: .5rem .8rem; }
+	.pagination > li > a .fa, .pagination > li > span .fa,
+	.btn-sm, .btn-group-sm > .btn { line-height:1.42857143 }
 	.form-control,
-	.select2-container .select2-choice { height:31px; }
+	.select2-container .select2-choice { height:27px; }
+	.select2-container .select2-choice > .select2-chosen { line-height:27px; padding-top:0; }
+	.form-collapse .input-group > .fa { width:27px; height:27px; line-height:27px; }
+	.form-collapse .input-group input[type="text"] { padding-left:27px; }
 
-	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.7rem; }
+	.panel-heading,
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.5rem; }
+	.btn.btn-memo { line-height:1.42857143 !important; }
+
+	.admin_status_red, .admin_status_green { width:15px; height:15px; }
+	.form-collapse .input-group input[type="text"] { width:320px; }
 }
 @media (max-width:991px) {
 	body { background-position:-70px top; }
@@ -1012,6 +1041,5 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
 
-	.btn,
-	.pagination > li > a, .pagination > li > span { padding:.55rem .85rem; }
+	.form-collapse .input-group input[type="text"] { width:220px; }
 }
