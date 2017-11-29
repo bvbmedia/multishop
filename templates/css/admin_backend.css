@@ -951,7 +951,8 @@ td.print_r_value { word-break:break-word; }
 	body { background-position:-40px top; }
 	h1 { font-size:2rem; line-height:2.4rem; }
 	h2 { font-size:1.6remx; line-height:2rem; }
-	h3 { font-size:1.4rem; line-height:1.8rem; }
+	h3,
+	.panel-title { font-size:1.4rem; line-height:1.8rem; }
 	h4 { font-size:1.2rem; line-height:1.6rem; }
 	h5 { font-size:1rem; line-height:1.4rem; }
 	body,
@@ -969,14 +970,28 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
-	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { font-size:1.3rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { font-size:1.2rem; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span,
-	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) { font-size:1.2rem; }
+	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) { font-size:1.1rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span { padding:.5rem 2rem .5rem 1.5rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > span:before { top:1.3rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > span:before { top:.9rem; }
 	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label),
 	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket { padding-left:1.1rem; padding-right:1.1rem; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
@@ -998,7 +1013,7 @@ td.print_r_value { word-break:break-word; }
 	.fa-stack .fa-stack-1x { font-size:.7rem; line-height:1.5rem; }
 	.btn,
 	.pagination > li > a, .pagination > li > span,
-	select.form-control { padding: 0.5rem .85rem; }
+	select.form-control { padding: .5rem .8rem; }
 	.pagination > li > a .fa, .pagination > li > span .fa,
 	.btn-sm, .btn-group-sm > .btn { line-height:1.42857143 }
 	.form-control,
@@ -1024,7 +1039,4 @@ td.print_r_value { word-break:break-word; }
 
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
-
-	.btn,
-	.pagination > li > a, .pagination > li > span { padding:.55rem .85rem; }
 }
