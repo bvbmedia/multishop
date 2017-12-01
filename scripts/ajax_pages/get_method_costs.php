@@ -231,6 +231,7 @@ if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multi
 }
 $data['shipping_preselected_id'] = $this->post['tx_multishop_pi1']['sid'];
 $this->post['caller_segment'] = 'getHtmlCartContents';
+$this->post['caller_script'] = 'getHtmlCartContents';
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart = $mslib_cart->getCart();
