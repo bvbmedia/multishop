@@ -419,6 +419,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
             $markerArray['###INVOICE_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
+        $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
+        $markerArray['###STORE_EMAIL###'] = $this->ms['MODULES']['STORE_EMAIL'];
         $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
         $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
         $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
