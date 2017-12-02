@@ -3720,12 +3720,12 @@ if (is_numeric($this->get['orders_id'])) {
                     }).on("select2-selecting", function(e) {
                         if (e.object.id == e.object.text) {
                             if ($("#product_tax").length>0) {
-                                $("#product_tax").val("");
+                                //$("#product_tax").val("");
                                 $("#display_name_including_vat").val("0" + decimal_sep + "00");
                                 $("#display_name_excluding_vat").val("0" + decimal_sep + "00");
                                 $("#product_price").val("0" + decimal_sep + "00");
                             } else {
-                                $("#manual_product_tax").val("");
+                                //$("#manual_product_tax").val("");
                                 $("#display_manual_name_including_vat").val("0" + decimal_sep + "00");
                                 $("#display_manual_name_excluding_vat").val("0" + decimal_sep + "00");
                                 $("#manual_product_price").val("0" + decimal_sep + "00");
@@ -4618,7 +4618,6 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
             	if (e.keyCode!=9) {
                 	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
-
                 }
             });
             $("#manual_product_tax").change(function () {
