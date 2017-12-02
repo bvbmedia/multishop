@@ -110,6 +110,9 @@ $subpartArray['###LABEL_KEYWORD###'] = $this->pi_getLL('keyword');
 $subpartArray['###LABEL_PLACEHOLDER_KEYWORD###'] = $this->pi_getLL('keyword');
 $subpartArray['###LANGUAGE_UID###'] = $this->sys_language_uid;
 $subpartArray['###KEYWORD_VALUE###'] = htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
+if (isset($this->get['tx_multishop_pi1']['q']) && !empty($this->get['tx_multishop_pi1']['q'])) {
+    $subpartArray['###KEYWORD_VALUE###'] = htmlspecialchars(mslib_fe::RemoveXSS($this->get['tx_multishop_pi1']['q']));
+}
 $subpartArray['###LABEL_SUBMIT_BUTTON###'] = htmlspecialchars($this->pi_getLL('search'));
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/content_elements/searchform.php']['searchFormCEPostHook'])) {
