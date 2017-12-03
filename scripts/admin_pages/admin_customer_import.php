@@ -119,6 +119,7 @@ $coltypes['language_code_2char_iso'] = $this->pi_getLL('language_code', 'Languag
 $coltypes['tx_multishop_source_id'] = $this->pi_getLL('customer_id_external_id_for_reference');
 $coltypes['tx_multishop_payment_condition'] = $this->pi_getLL('payment_condition', 'payment condition');
 $coltypes['tx_multishop_customer_id'] = $this->pi_getLL('tx_multishop_customer_id_field', 'tx_multishop_customer_id field');
+$coltypes['foreign_customer_id'] = $this->pi_getLL('foreign_customer_id');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
     $params = array(
@@ -1151,6 +1152,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                         }
                         if ($item['email']) {
                             $user['email'] = $item['email'];
+                        }
+                        if ($item['foreign_customer_id']) {
+                            $user['foreign_customer_id'] = $item['foreign_customer_id'];
                         }
                         if ($item['password_hashed']) {
                             $user['password'] = $item['password_hashed'];

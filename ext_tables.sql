@@ -35,6 +35,7 @@ CREATE TABLE `fe_users` (
  `tx_multishop_language` varchar(127) default '',
  `department` varchar(127) default '',
  `contact_email` varchar(256) default '',
+ `foreign_customer_id` int(11) default '0',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
@@ -69,7 +70,8 @@ CREATE TABLE `fe_users` (
  KEY `tx_multishop_language` (`tx_multishop_language`),
  KEY `building` (`building`),
  KEY `region` (`region`),
- KEY `department` (`department`)
+ KEY `department` (`department`),
+ KEY `foreign_customer_id` (`foreign_customer_id`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (

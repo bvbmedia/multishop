@@ -234,6 +234,9 @@ if ($this->get['customers_export_hash']) {
                     case 'customer_tx_multishop_newsletter':
                         $excelCols[] = $row['tx_multishop_newsletter'];
                         break;
+                    case 'foreign_customer_id':
+                        $excelCols[] = $row['foreign_customer_id'];
+                        break;
                     default:
                         // custom page hook that can be controlled by third-party plugin
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_customers_export.php']['downloadCustomersExportIterateItemFieldProc'])) {

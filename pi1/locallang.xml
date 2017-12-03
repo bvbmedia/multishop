@@ -1420,6 +1420,7 @@
             <label index="contact_email">Contact e-mail</label>
             <label index="track_and_trace_link">Track and Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
+            <label index="foreign_customer_id">External customer ID</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2818,6 +2819,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
             <label index="track_and_trace_link">Track en Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
+            <label index="foreign_customer_id">Extern klantnummer</label>
         </languageKey>
     </data>
 </T3locallang>
