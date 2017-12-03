@@ -1291,6 +1291,19 @@ switch ($_REQUEST['action']) {
                 }
             }
             // custom page hook that can be controlled by third-party plugin eol
+            $userGroupMarkupArray = array();
+            $userGroupUids = explode(',', $user['usergroup']);
+            if (is_array($userGroupUids) && count($userGroupUids)) {
+                foreach ($userGroupUids as $userGroupUid) {
+                    $usergroup = mslib_fe::getUserGroup($userGroupUid);
+                    if (is_array($usergroup) && $usergroup['title']) {
+                        $userGroupMarkupArray[] = '<span class="badge">' . htmlspecialchars($usergroup['title']) . '</span>';
+                    }
+                }
+            }
+            if (count($userGroupMarkupArray)) {
+                $markerArray['BILLING_FULLNAME'] .= '<div class="group_badges">' . implode(' ', $userGroupMarkupArray) . '</div>';
+            }
             if (count($actionButtons)) {
                 $markerArray['BILLING_COMPANY_ACTION_NAV'] = '<div class="btn-group">';
                 foreach ($actionButtons as $actionButton) {
