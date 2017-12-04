@@ -578,10 +578,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['region_tax_rate'] = 0;
                         }
                         $price = 0;
-                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] == '1') {
-                            $price = 0;
-                            $this->post['shipping_costs_manual'] = 1;
-                        } else {
+                        if ($this->ms['MODULES']['ENABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] == '1') {
                             $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
                             if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
                                 $shipping_costs_price = $tmp_price['shipping_costs'];
@@ -592,6 +589,9 @@ if (is_numeric($this->get['orders_id'])) {
                             if ($shipping_costs_price === 0 || $shipping_costs_price > 0) {
                                 $price = $shipping_costs_price;
                             }
+                        } else {
+                            $price = 0;
+                            $this->post['shipping_costs_manual'] = 1;
                         }
                         //$order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
                         //if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
