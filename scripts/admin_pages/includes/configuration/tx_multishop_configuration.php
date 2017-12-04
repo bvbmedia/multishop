@@ -2650,10 +2650,10 @@ $records[] = array(
         'use_function' => ''
 );
 $records[] = array(
-        'configuration_title' => 'Disable auto shipping costs in edit order',
-        'configuration_key' => 'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER',
+        'configuration_title' => 'Enable auto shipping costs in edit order',
+        'configuration_key' => 'ENABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER',
         'configuration_value' => '0',
-        'description' => 'Disable auto shipping costs in edit order',
+        'description' => 'Enable auto shipping costs in edit order',
         'group_id' => '9',
         'use_function' => '',
         'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
