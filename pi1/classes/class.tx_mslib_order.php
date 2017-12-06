@@ -837,7 +837,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             // ITEM_NAME
             $tmp_item_name = array();
+            if (strpos($product['products_name'], ' [disabled]')!==false) {
+                $product['products_name']=str_replace(' [disabled]', '', $product['products_name']);
+            }
             $tmp_item_name['products_name'] = htmlspecialchars($product['products_name']);
+
             $tmp_item_name['products_model'] = '';
             if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS'] == '1' && !empty($product['products_model'])) {
                 $tmp_item_name['products_model'] = ' (' . htmlspecialchars($product['products_model']) . ') ';
