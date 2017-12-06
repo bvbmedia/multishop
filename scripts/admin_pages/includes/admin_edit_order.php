@@ -1239,7 +1239,7 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>';
                 $edit_billing_details['billing_building'] = '<div class="form-group">
-						<label class="control-label col-md-5 billing_account-building" for="billing_building">&nbsp;</label>
+						<label class="control-label col-md-5 billing_account-building" for="billing_building">' . ucfirst($this->pi_getLL('building')) . '</label>
 						<div class="col-md-7">
 							<input class="form-control" name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="' . $orders['billing_building'] . '" /><span class="error-space left-this"></span>
 						</div>
@@ -1474,7 +1474,7 @@ if (is_numeric($this->get['orders_id'])) {
                 	</div>
                 </div>';
                 $edit_delivery_details['delivery_building'] = '<div class="form-group">
-                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
+                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp' . ucfirst($this->pi_getLL('building')) . '</label>
                 	<div class="col-md-7">
                 		<input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="' . $orders['delivery_building'] . '" />
                 		<span class="error-space left-this"></span>
