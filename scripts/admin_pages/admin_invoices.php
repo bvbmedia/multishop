@@ -741,7 +741,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 				data: "tx_multishop_pi1[order_id]=" + order_id,
 				success: function(d) {
 					var tmp_confirm_content =\'' . addslashes(sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), '%invoice_nr%')) . '\';
-					var confirm_content = \'<div><h3 class="panel-title">\' + tmp_confirm_content . replace(\'%invoice_nr%\', invoice_nr) + \'</h3></div><div class="form-group" id="popup_order_wrapper_listing">\' + d.payment_method_date_purchased + \'</div>\';
+					var confirm_content = \'<div><h3>\' + tmp_confirm_content . replace(\'%invoice_nr%\', invoice_nr) + \'</h3></div><div class="form-group" id="popup_order_wrapper_listing">\' + d.payment_method_date_purchased + \'</div>\';
 					var confirm_box=jQuery.confirm({
 						title: \'\',
 						content: confirm_content,
