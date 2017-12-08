@@ -656,6 +656,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = mslib_befe::print_r(unserialize($row[$col]));
                             }
                             break;
+                        case 'pre':
+                            if (!empty($row[$col])) {
+                                $row[$col] = '<pre>'.htmlspecialchars($row[$col]).'</pre>';
+                            }
+                            break;
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['href']) {
