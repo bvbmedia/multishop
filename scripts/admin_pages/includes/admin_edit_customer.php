@@ -13,7 +13,8 @@ if ($this->post && $this->post['email']) {
                 // check if the emailaddress is not already in use
                 $usercheck = mslib_fe::getUser($this->post['email'], 'email');
                 if ($usercheck['uid']) {
-                    $erno[] = 'Email address is already in use by ' . $usercheck['name'] . ' (' . $usercheck['username'] . ')';
+                    $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                    $erno[] = 'Email address is already in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
                 }
             }
         }
@@ -21,7 +22,8 @@ if ($this->post && $this->post['email']) {
             // check if the emailaddress is not already in use
             $usercheck = mslib_fe::getUser($this->post['username'], 'username');
             if ($usercheck['uid']) {
-                $erno[] = 'Username is already in use by ' . $usercheck['name'] . ' (' . $usercheck['username'] . ')';
+                $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                $erno[] = 'Username '.$usercheck['username'].' is in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
             }
         }
     } else {
@@ -29,13 +31,15 @@ if ($this->post && $this->post['email']) {
             // check if the emailaddress is not already in use
             $usercheck = mslib_fe::getUser($this->post['email'], 'email');
             if ($usercheck['uid']) {
-                $erno[] = 'Email address is already in use by ' . $usercheck['name'] . ' (' . $usercheck['username'] . ')';
+                $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                $erno[] = 'Email address is already in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
             }
         }
         // check if the emailaddress is not already in use
         $usercheck = mslib_fe::getUser($this->post['username'], 'username');
         if ($usercheck['uid']) {
-            $erno[] = 'Username is already in use by ' . $usercheck['name'] . ' (' . $usercheck['username'] . ')';
+            $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+            $erno[] = 'Username '.$usercheck['username'].' is in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
         }
     }
     if (count($erno)) {
