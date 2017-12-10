@@ -1199,7 +1199,7 @@ switch ($_REQUEST['action']) {
             $subpartArray['###LABEL_PAYMENT_CONDITION###'] = ucfirst($this->pi_getLL('payment_condition'));
             $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
             $subpartArray['###LABEL_FOREIGN_CUSTOMER_ID###'] = ucfirst($this->pi_getLL('foreign_customer_id'));
-            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = htmlspecialchars($this->post['foreign_customer_id']);
+            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = ($this->post['foreign_customer_id']>0 ? htmlspecialchars($this->post['foreign_customer_id']) : '');
             $subpartArray['###CUSTOMER_GROUPS_INPUT###'] = $customer_groups_input;
             $subpartArray['###VALUE_CUSTOMER_ID###'] = $this->get['tx_multishop_pi1']['cid'];
             if ($_GET['action'] == 'edit_customer') {
