@@ -259,7 +259,8 @@ if ($this->post && $this->post['email']) {
                         $updateTTAddressArray['street_name'] = $this->post['delivery_street_name'];
                         $updateTTAddressArray['address_number'] = $this->post['delivery_address_number'];
                         $updateTTAddressArray['address_ext'] = $this->post['delivery_address_ext'];
-                        $updateTTAddressArray['address'] = $this->post['delivery_address'];
+                        $updateTTAddressArray['address'] = $updateTTAddressArray['street_name'] . ' ' . $updateTTAddressArray['address_number'] . ($insertArray['address_ext'] ? '-' . $updateTTAddressArray['address_ext'] : '');
+                        $updateTTAddressArray['address'] = preg_replace('/\s+/', ' ', $updateTTAddressArray['address']);
                     }
                     $updateTTAddressArray['zip'] = $this->post['delivery_zip'];
                     $updateTTAddressArray['phone'] = $this->post['delivery_telephone'];
