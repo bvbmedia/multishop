@@ -275,108 +275,122 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                         break;
                 }
             }
-            if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                $tbl = 'pf.';
-            } else {
-                $tbl = 'p2c.';
+            $doProductQuery=1;
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPreProc'])) {
+                $params = array(
+                    'doProductQuery' => &$doProductQuery,
+                    'current' => &$current,
+                    'content' => &$content
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
-            $filter = array();
-            $filter[] = $tbl . 'categories_id=' . $this->get['categories_id'];
-            $orderby = array();
-            $select = array();
-            $where = array();
-            $extra_from = array();
-            $extra_join = array();
-            if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb']) && isset($this->get['tx_multishop_pi1']['sortbysb']) && !empty($this->get['tx_multishop_pi1']['sortbysb'])) {
+            if ($doProductQuery) {
                 if ($this->ms['MODULES']['FLAT_DATABASE']) {
                     $tbl = 'pf.';
-                    $tbl_m = 'pf.';
                 } else {
-                    $tbl = 'p.';
-                    $tbl_m = 'm.';
+                    $tbl = 'p2c.';
                 }
-                switch ($this->cookie['sortbysb']) {
-                    case 'best_selling_asc':
-                        $select[] = 'SUM(op.qty) as order_total_qty';
-                        $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
-                        $orderby[] = "order_total_qty asc";
-                        break;
-                    case 'best_selling_desc':
-                        $select[] = 'SUM(op.qty) as order_total_qty';
-                        $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
-                        $orderby[] = "order_total_qty desc";
-                        break;
-                    case 'price_asc':
-                        $orderby[] = "final_price asc";
-                        break;
-                    case 'price_desc':
-                        $orderby[] = "final_price desc";
-                        break;
-                    case 'new_asc':
-                        $orderby[] = $tbl . "products_date_added desc";
-                        break;
-                    case 'new_desc':
-                        $orderby[] = $tbl . "products_date_added asc";
-                        break;
-                    case 'manufacturers_asc':
-                        $orderby[] = $tbl_m . "manufacturers_name asc";
-                        break;
-                    case 'manufacturers_desc':
-                        $orderby[] = $tbl_m . "manufacturers_name desc";
-                        break;
-                }
-            }
-            //$this->msDebug=true;
-            $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
-            //echo $this->msDebugInfo;
-            //die();
-            $products = $pageset['products'];
-            // load products listing
-            $products_compare = true;
-            if (!count($products)) {
-                if ($current['content'] and !$p) {
-                    $hide_no_products_message = 1;
-                    if ($current['content']) {
-                        $content .= mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
+                $filter = array();
+                $filter[] = $tbl . 'categories_id=' . $this->get['categories_id'];
+                $orderby = array();
+                $select = array();
+                $where = array();
+                $extra_from = array();
+                $extra_join = array();
+                if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb']) && isset($this->get['tx_multishop_pi1']['sortbysb']) && !empty($this->get['tx_multishop_pi1']['sortbysb'])) {
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $tbl = 'pf.';
+                        $tbl_m = 'pf.';
                     } else {
-                        $show_default_header = 1;
+                        $tbl = 'p.';
+                        $tbl_m = 'm.';
+                    }
+                    switch ($this->cookie['sortbysb']) {
+                        case 'best_selling_asc':
+                            $select[] = 'SUM(op.qty) as order_total_qty';
+                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            $orderby[] = "order_total_qty asc";
+                            break;
+                        case 'best_selling_desc':
+                            $select[] = 'SUM(op.qty) as order_total_qty';
+                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            $orderby[] = "order_total_qty desc";
+                            break;
+                        case 'price_asc':
+                            $orderby[] = "final_price asc";
+                            break;
+                        case 'price_desc':
+                            $orderby[] = "final_price desc";
+                            break;
+                        case 'new_asc':
+                            $orderby[] = $tbl . "products_date_added desc";
+                            break;
+                        case 'new_desc':
+                            $orderby[] = $tbl . "products_date_added asc";
+                            break;
+                        case 'manufacturers_asc':
+                            $orderby[] = $tbl_m . "manufacturers_name asc";
+                            break;
+                        case 'manufacturers_desc':
+                            $orderby[] = $tbl_m . "manufacturers_name desc";
+                            break;
                     }
                 }
-                if (!$hide_no_products_message) {
-                    $content .= '<div class="emptyContent">' . $this->pi_getLL('no_products_available') . '</div>';
-                }
-                if ($current['content_footer'] and !$p) {
-                    $hide_no_products_message = 1;
-                    if ($current['content_footer']) {
-                        $content .= mslib_fe::htmlBox($current['categories_name'], $current['content_footer'], 1);
-                    } else {
-                        $show_default_header = 1;
-                    }
-                }
-            } else {
-                if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
-                    die('error in PRODUCTS_LISTING_TYPE value');
-                } else {
-                    if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
-                        require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] . '.php');
-                    } else {
-                        if (!$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']) {
-                            $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] = 'default';
+                //$this->msDebug=true;
+                $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
+                //echo $this->msDebugInfo;
+                //die();
+                $products = $pageset['products'];
+                // load products listing
+                $products_compare = true;
+                if (!count($products)) {
+                    if ($current['content'] and !$p) {
+                        $hide_no_products_message = 1;
+                        if ($current['content']) {
+                            $content .= mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
+                        } else {
+                            $show_default_header = 1;
                         }
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing/' . $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] . '.php');
                     }
-                }
-                // pagination
-                if (!$this->hidePagination and ($pageset['total_rows'] > $limit_per_page)) {
-                    if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE'] == 'default') {
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing_pagination.php');
+                    if (!$hide_no_products_message) {
+                        $content .= '<div class="emptyContent">' . $this->pi_getLL('no_products_available') . '</div>';
+                    }
+                    if ($current['content_footer'] and !$p) {
+                        $hide_no_products_message = 1;
+                        if ($current['content_footer']) {
+                            $content .= mslib_fe::htmlBox($current['categories_name'], $current['content_footer'], 1);
+                        } else {
+                            $show_default_header = 1;
+                        }
+                    }
+                } else {
+                    if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
+                        die('error in PRODUCTS_LISTING_TYPE value');
                     } else {
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing_pagination_with_number.php');
+                        if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
+                            require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] . '.php');
+                        } else {
+                            if (!$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']) {
+                                $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] = 'default';
+                            }
+                            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing/' . $this->ms['MODULES']['PRODUCTS_LISTING_TYPE'] . '.php');
+                        }
                     }
+                    // pagination
+                    if (!$this->hidePagination and ($pageset['total_rows'] > $limit_per_page)) {
+                        if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE'] == 'default') {
+                            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing_pagination.php');
+                        } else {
+                            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/includes/products_listing_pagination_with_number.php');
+                        }
+                    }
+                    // pagination eof
                 }
-                // pagination eof
+                // load products listing eof
             }
-            // load products listing eof
         }
     }
     if ($this->ms['MODULES']['CACHE_FRONT_END']) {
