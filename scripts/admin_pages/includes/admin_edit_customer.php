@@ -232,7 +232,9 @@ if ($this->post && $this->post['email']) {
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
-                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        //$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
+                        //$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tt_address', 'tx_multishop_customer_id=\'' . $customer_id . '\' and tx_multishop_address_type=\'delivery\'');
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
                 } else {
