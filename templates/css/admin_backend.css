@@ -1051,6 +1051,8 @@ td.print_r_value { word-break:break-word; }
 
 .modal-preloader { position:fixed; left:0; top:0; bottom:0; right:0; background:rgba(0,0,0,.5); z-index:9999999; }
 .modal-preloader img { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
-
 .modal-backdrop { z-index:8888989; }
 .modal { z-index:8888990; }
+
+.update_customer_group_discount_status:hover,
+.update_customer_group_discount_status:focus { border-bottom:none; }
