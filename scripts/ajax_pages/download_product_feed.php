@@ -1119,14 +1119,16 @@ if ($this->get['feed_hash']) {
                         break;
                 }
                 // custom page hook that can be controlled by third-party plugin
+                $continue_stripping=true;
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
                     $output = $tmpcontent;
                     $params = array(
-                            'feed' => $feed,
-                            'mode' => $mode,
-                            'field' => $field,
-                            'row' => &$row,
-                            'output' => &$output
+                        'feed' => $feed,
+                        'mode' => $mode,
+                        'field' => $field,
+                        'row' => &$row,
+                        'output' => &$output,
+                        'continue_stripping' => &$continue_stripping
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1136,7 +1138,7 @@ if ($this->get['feed_hash']) {
                     }
                 }
                 // custom page hook that can be controlled by third-party plugin eof
-                if ($this->get['format'] != 'excel') {
+                if ($this->get['format'] != 'excel' && $continue_stripping) {
                     $tmpcontent = str_replace("\"", "", $tmpcontent);
                     if ($feed['plain_text'] == '1') {
                         $tmpcontent = strip_tags($tmpcontent);
@@ -1195,6 +1197,17 @@ if ($this->get['feed_hash']) {
                 $excelRows[] = $excelCols;
             }
         }
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'])) {
+            $output = $tmpcontent;
+            $params = array(
+                    'tmpcontent' => &$tmpcontent,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom page hook that can be controlled by third-party plugin eof
         if ($this->get['format'] == 'excel') {
             $paths = array();
             $paths[] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service') . 'Classes/Service/PHPExcel.php';

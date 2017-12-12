@@ -623,10 +623,29 @@ if ($this->ms['show_main']) {
                 $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&status=0') . '"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
                 $content .= '<span class="admin_status_green" alt="Enable"></span>';
             }
-            $content .= '</td>
+            $content .= '</td>';
+            $feeds_download_buttons=array();
+            $feeds_download_buttons['Download feed']=$feed['feed_link'];
+            $feeds_download_buttons['Download Excel feed']=$feed['feed_link_excel'];
+            // custom page hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['downloadProductFeedButtonPostProc'])) {
+                $output = $tmpcontent;
+                $params = array(
+                    'feeds_download_buttons' => &$feeds_download_buttons,
+                    'feed' => &$feed
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['downloadProductFeedButtonPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // custom page hook that can be controlled by third-party plugin eof
+            $feed_downloas_button_html=array();
+            foreach ($feeds_download_buttons as $button_label => $button_link) {
+                $feed_downloas_button_html[]='<a href="' . $button_link . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> '.$button_label.'</a>';
+            }
+            $content.='
 			<td class="cellDownload">
-				<a href="' . $feed['feed_link'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download feed</a>
-				<a href="' . $feed['feed_link_excel'] . '" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
+				'.implode("\n", $feed_downloas_button_html).'
 			</td>
 			<td class="cellAction">
 				<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&feed_id=' . $feed['id'] . '&section=edit') . '" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
