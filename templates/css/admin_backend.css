@@ -959,7 +959,8 @@ td.print_r_value { word-break:break-word; }
 	.form-control,
 	.form-collapse a.advanceSearch,
 	.btn,
-	.input-group-addon { font-size:1.1rem; }
+	.input-group-addon,
+	.label.label-md { font-size:1.1rem; }
 	#tx_multishop_admin_header_wrapper { width:180px; }
 	#tx_multishop_admin_newheader_wrapper,
 	#tx_multishop_admin_footer_wrapper { left:180px; }
@@ -1007,13 +1008,16 @@ td.print_r_value { word-break:break-word; }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver { background-image:url(../images/icons_pkg_silver.svg); }
 	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { background-image:url(../images/icons_pkg_gold.svg); }
 
-	.fa { line-height:1.42857143; }
+	.fa,
+	.label.label-md { line-height:1.42857143; }
 	.fa-stack { width:1.2rem; height:1.2rem; line-height:1rem; vertical-align:top; }
 	.fa-stack .fa-stack-2x { font-size:1.5rem; line-height:1.5rem; }
 	.fa-stack .fa-stack-1x { font-size:.7rem; line-height:1.5rem; }
 	.btn,
 	.pagination > li > a, .pagination > li > span,
-	select.form-control { padding: .5rem .8rem; }
+	.form-control,
+	select.form-control { padding:.5rem .8rem; }
+	.nav > li > a { padding:.5rem .4rem; }
 	.pagination > li > a .fa, .pagination > li > span .fa,
 	.btn-sm, .btn-group-sm > .btn { line-height:1.42857143 }
 	.form-control,
@@ -1024,6 +1028,7 @@ td.print_r_value { word-break:break-word; }
 
 	.panel-heading,
 	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.5rem; }
+	.panel-heading .btn .fa { display:none; }
 	.btn.btn-memo { line-height:1.42857143 !important; }
 
 	.admin_status_red, .admin_status_green { width:15px; height:15px; }
@@ -1043,3 +1048,11 @@ td.print_r_value { word-break:break-word; }
 
 	.form-collapse .input-group input[type="text"] { width:220px; }
 }
+
+.modal-preloader { position:fixed; left:0; top:0; bottom:0; right:0; background:rgba(0,0,0,.5); z-index:9999999; }
+.modal-preloader img { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.modal-backdrop { z-index:8888989; }
+.modal { z-index:8888990; }
+
+.update_customer_group_discount_status:hover,
+.update_customer_group_discount_status:focus { border-bottom:none; }

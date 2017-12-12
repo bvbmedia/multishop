@@ -735,8 +735,10 @@ switch ($this->ms['page']) {
         }
         //natsort($tmp_return_data);
         $categories_results_limit = 0; // 0 = unlimited
-        if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
-            $categories_results_limit = 15;
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+            if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
+                $categories_results_limit = 15;
+            }
         }
         $category_counter = 0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {

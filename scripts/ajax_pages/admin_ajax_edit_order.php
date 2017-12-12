@@ -299,6 +299,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        $limit='';
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+            $limit=15;
+        }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
                 implode(', ', $from), // FROM ...
                 implode(' and ', $where), // WHERE.

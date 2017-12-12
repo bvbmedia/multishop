@@ -121,7 +121,11 @@ if ($this->ADMIN_USER) {
             }
         }
     } else {
-        $products = mslib_fe::getProductsPageSet($filter, 0, 100, array($prefix . 'products_name asc'));
+        $limit=500;
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+            $limit=15;
+        }
+        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array($prefix . 'products_name asc'));
         $counter = 0;
         foreach ($products['products'] as $product) {
             if ($product['products_name'] && !empty($product['products_name'])) {
