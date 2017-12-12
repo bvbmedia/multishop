@@ -145,6 +145,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
+                    if ($output['link']) {
+                        $contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
+                    } else {
+                        $contentItemNoLink.=$this->cObj->substituteMarkerArray($subparts['item_no_link'], $markerArray, '###|###');
+                    }
                     $contentItem .= $this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
                 }
             }
