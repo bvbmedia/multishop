@@ -4754,7 +4754,11 @@ class mslib_fe {
                 } else {
                     $shipping_cost = $row3['price'];
                 }
-                $subtotal = mslib_fe::countCartTotalPrice(1, 0, $delivery_countries_id);
+                $count_cart_incl_vat = 0;
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $count_cart_incl_vat = 1;
+                }
+                $subtotal = mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $delivery_countries_id);
                 if (!empty($row3['override_shippingcosts'])) {
                     $old_shipping_costs = $shipping_cost;
                     $shipping_cost = $row3['override_shippingcosts'];
@@ -4767,6 +4771,10 @@ class mslib_fe {
                             // example setting: 0:6.95,50:0
                             $split = explode(":", $step);
                             if (is_numeric($split[0])) {
+                                if ($count_cart_incl_vat && $shipping_method['tax_rate']) {
+                                    $split_tax = mslib_fe::taxDecimalCrop($split[0] * ($shipping_method['tax_rate']));
+                                    $split[0]=$split[0]+$split_tax;
+                                }
                                 if ($subtotal > $split[0] and isset($split[1])) {
                                     $shipping_cost = $split[1];
                                     continue;
@@ -5663,7 +5671,11 @@ class mslib_fe {
             }
             //
             // calculate total costs
-            $subtotal = mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+            $count_cart_incl_vat = 0;
+            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $count_cart_incl_vat = 1;
+            }
+            $subtotal = mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $countries_id);
             if (strstr($subtotal, ",")) {
                 $subtotal = str_replace(',', '.', $subtotal);
             }
@@ -5681,6 +5693,10 @@ class mslib_fe {
                             // example setting: 0:6.95,50:0
                             $split = explode(":", $step);
                             if (is_numeric($split[0])) {
+                                if ($count_cart_incl_vat && $shipping_method['tax_rate']) {
+                                    $split_tax = mslib_fe::taxDecimalCrop($split[0] * ($shipping_method['tax_rate']));
+                                    $split[0]=$split[0]+$split_tax;
+                                }
                                 if ($subtotal > $split[0] and isset($split[1])) {
                                     $shipping_cost = $split[1];
                                     $shipping_cost_method_box = $split[1];
