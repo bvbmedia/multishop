@@ -707,6 +707,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .fa { line-height:20px; }
 .fa-stack .fa { line-height:inherit; }
 .fa-li { top:0; }
+.fa-stack .fa-stack-1x:before { font-size:12px; }
 
 .checkbox label::after { line-height:16px; }
 
@@ -807,6 +808,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .text-info { color:#337ab7; }
 .text-danger { color:#d9534f; }
 .text-orange { color:#f90;}
+.text-black { color:#000; }
 
 .table-borderless > thead > tr > th,
 .table-borderless > tbody > tr > th,
