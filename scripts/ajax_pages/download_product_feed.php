@@ -47,6 +47,7 @@ if ($this->get['feed_hash']) {
         $post_data = unserialize($feed['post_data']);
         $fields_headers = $post_data['fields_headers'];
         $fields_values = $post_data['fields_values'];
+        $global_output='';
         if ($feed['include_header']) {
             $total = count($fields);
             $rowCount = 0;
@@ -1128,6 +1129,7 @@ if ($this->get['feed_hash']) {
                         'field' => $field,
                         'row' => &$row,
                         'output' => &$output,
+                        'global_output' => &$global_output,
                         'continue_stripping' => &$continue_stripping
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
@@ -1135,6 +1137,7 @@ if ($this->get['feed_hash']) {
                     }
                     if ($output) {
                         $tmpcontent = $output;
+                        $global_output.=$output;
                     }
                 }
                 // custom page hook that can be controlled by third-party plugin eof
@@ -1199,9 +1202,8 @@ if ($this->get['feed_hash']) {
         }
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'])) {
-            $output = $tmpcontent;
             $params = array(
-                    'tmpcontent' => &$tmpcontent,
+                    'global_output' => &$global_output,
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
