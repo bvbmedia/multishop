@@ -5300,6 +5300,7 @@ class mslib_fe {
             $where = array();
             if (!$include_disabled_products) {
                 $where[] = 'p.products_status=1';
+                $where[] = 'c.status=1';
             }
             $where[] = 'p.products_id=\'' . $products_id . '\'';
             $where[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
