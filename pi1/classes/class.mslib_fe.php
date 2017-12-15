@@ -2416,7 +2416,8 @@ class mslib_fe {
                 continue;
             }
             $arr = parse_url($m[1]);
-            if ($arr['host'] == $this->HTTP_HOST and (!isset($arr['host']) || !isset($arr['path']))) {
+            if ($arr['host'] != $this->HTTP_HOST || !isset($arr['host']) || !isset($arr['path'])) {
+            //if ($arr['host'] == $this->HTTP_HOST and (!isset($arr['host']) || !isset($arr['path']))) {
                 continue;
             }
             // add
