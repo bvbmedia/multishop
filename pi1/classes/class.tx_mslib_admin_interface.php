@@ -358,6 +358,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($params['returnResultsSet']) {
             return $pageset;
         }
+        if ($params['settings']['contentAboveTable']) {
+            $tableContent .= $params['settings']['contentAboveTable'];
+        }
         //echo print_r($queryData);
         //die();
         $columnSorterData = array();
