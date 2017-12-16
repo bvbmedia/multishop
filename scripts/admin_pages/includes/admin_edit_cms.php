@@ -217,6 +217,9 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     }
     $tmpcontent .= '</select></div>
 		</div>';
+    $tmpcontent .= '<div class="form-group custom_type">
+			<div class="col-md-offset-2 col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="' . htmlspecialchars($cms[0]['type']) . '" class="text form-control" /></div>
+		</div>';
     if (count($active_shop) > 1) {
         if (is_numeric($this->get['cms_id']) && $this->get['cms_id'] > 0) {
             $tmpcontent .= '<div class="form-group">
@@ -248,10 +251,7 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     } else {
         $tmpcontent .= '<input type="hidden" name="related_shop_pid" value="' . $this->shop_pid . '">';
     }
-    $tmpcontent .= '<div class="form-group custom_type">
-			<div class="col-md-offset-2 col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="' . htmlspecialchars($cms[0]['type']) . '" class="text form-control" /></div>
-		</div>
-		<script type="text/javascript">
+    $tmpcontent .= '<script type="text/javascript">
 			function updateForm() {
 				var selected_type=$("#selected_type option:selected").val();
 				if (selected_type) {

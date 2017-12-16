@@ -30,9 +30,10 @@ if ($this->post) {
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     $users = mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
     if (is_array($users) && count($users)) {
+        $posted_users=explode(',', $this->post['tx_multishop_pi1']['users']);
         foreach ($users as $user) {
             // check if the user should be member or not
-            if (in_array($user['uid'], $this->post['tx_multishop_pi1']['users'])) {
+            if (in_array($user['uid'], $posted_users)) {
                 $add_array = array();
                 $remove_array = array();
                 $add_array[] = $this->post['customer_group_id'];
@@ -163,8 +164,8 @@ $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['members_option'] = $this->cObj->getSubpart($subparts['template'], '###MEMBERS_OPTION###');
 // now lets load the users
 $members_selected = array();
-if (is_numeric($_REQUEST['customer_group_id'])) {
-    $users = mslib_fe::getUsers($_REQUEST['customer_group_id'], 'name');
+if (is_numeric($this->get['customer_group_id'])) {
+    $users = mslib_fe::getUsers($this->get['customer_group_id'], 'name');
     if (is_array($users) && count($users)) {
         foreach ($users as $user) {
             $members_selected[] = $user['uid'];
