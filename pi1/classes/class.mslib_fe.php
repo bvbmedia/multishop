@@ -2190,7 +2190,10 @@ class mslib_fe {
             $mail->CharSet = 'UTF-8';
             $mail->Encoding = 'base64';
             $mail->XMailer = ' ';
-            if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'] == 'smtp') {
+            if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'] == 'sendmail') {
+                // Set PHPMailer to use the sendmail transport
+                $mail->isSendmail();
+            } elseif ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'] == 'smtp') {
                 $mail->IsSMTP();
                 if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'], ':')) {
                     // Hostname also has port number
