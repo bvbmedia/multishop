@@ -1709,7 +1709,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_building").val($("#edit_billing_building").val());
 
                 $("#edit_delivery_zip").val("");
-                $("#edit_delivery_zip").val($("#edit_billing_zip").val());
+                $("#edit_delivery_zip").val($("#edit_billing_zip").val().toUpperCase());
 
                 $("#edit_delivery_region").val("");
                 $("#edit_delivery_region").val($("#edit_billing_region").val());
@@ -1734,6 +1734,7 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
+                $("#edit_billing_zip").val($("#edit_billing_zip").val().toUpperCase());
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio:checked").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
@@ -1785,7 +1786,8 @@ if (is_numeric($this->get['orders_id'])) {
                         address_data_replace = address_data.replace(/\s\s+/g, " ");
                         delivery_details += address_data_replace + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_zip") {
-                        delivery_details += $(this).val() + " ";
+                        $("#edit_delivery_zip").val($("#edit_delivery_zip").val().toUpperCase());
+                        delivery_details += $(this).val().toUpperCase() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_city") {
                         delivery_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_region") {
