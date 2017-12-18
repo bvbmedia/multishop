@@ -213,6 +213,8 @@ switch ($this->get['tx_multishop_pi1']['order_by']) {
         $order_by = 'c.crdate';
         break;
     case 'id':
+        $order_by = 'c.id';
+        break;
     default:
         $order_by = 'c.type';
         break;
