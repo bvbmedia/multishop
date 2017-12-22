@@ -1394,6 +1394,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
         }
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'])) {
+            // hook
+            $params = array(
+                    'address' => &$address,
+                    'orders_id' => &$orders_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+            // hook oef
+        }
         /*
 		 * always use *_tax and *_total_tax_rate, unless need different calc for country/region
 		 * WARNING: *_country_* and *_region_* not always have value, depends on the tax ruleset

@@ -74,6 +74,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
                     }
                 }
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
+                    // hook
+                    $params = array(
+                            'row' => &$row,
+                            'orders_id' => &$orders_id
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                    // hook oef
+                }
                 // get shipping tax rate
                 $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
                 $tax_rate = mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
@@ -82,6 +93,23 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                     $tax_rate['total_tax_rate'] = 0;
+                    // fetch the 0% tax id
+                    $zero_percent_tax_id=0;
+                    $customer_country = mslib_fe::getCountryByName($row['billing_country']);
+                    $sql_tax_sb = $GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+                            'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+                            't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\'' . $customer_country['cn_iso_nr'] . '\'', // WHERE...
+                            'trg.rules_group_id', // GROUP BY...
+                            '', // ORDER BY...
+                            '' // LIMIT ...
+                    );
+                    $qry_tax_sb = $GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
+                    while ($rs_tx_sb = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
+                        $rs_tx_sb['rate']=(int)$rs_tx_sb['rate'];
+                        if ($rs_tx_sb['rate']=='0') {
+                            $zero_percent_tax_id=$rs_tx_sb['tax_id'];
+                        }
+                    }
                 }
                 $shipping_tax_rate = ($tax_rate['total_tax_rate'] / 100);
                 // get payment tax rate
@@ -130,6 +158,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $qry_prod = $GLOBALS['TYPO3_DB']->sql_query($sql_prod);
                 while ($row_prod = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_prod)) {
                     $tax_rate = $row_prod['products_tax'] / 100;
+                    if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                        $tax_rate = 0;
+                    }
                     $product_tax = unserialize($row_prod['products_tax_data']);
                     // attributes tax
                     $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row_prod['orders_id'];
@@ -205,7 +236,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $sub_total_excluding_vat += ($final_price) * $row_prod['qty'];
                     $grand_total += ($final_price + $tax) * $row_prod['qty'];
                     $serial_prod = serialize($product_tax_data);
-                    $sql_update = "update tx_multishop_orders_products set products_tax_data = '" . $serial_prod . "' where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row['orders_id'];
+                    $updateOrderProducts=array();
+                    $updateOrderProducts['products_tax_data']=$serial_prod;
+                    if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                        $updateOrderProducts['products_tax']=0;
+                        if ($zero_percent_tax_id>0) {
+                            $updateOrderProducts['products_tax_id']=$zero_percent_tax_id;
+                        }
+                    }
+                    $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\''.$row['orders_id'].'\'', $updateOrderProducts);
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
