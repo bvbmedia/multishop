@@ -56,18 +56,21 @@ switch ($this->ms['page']) {
             $pids[] = $product['products_id'];
         }
         $product_mappings = mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
-        //
-        $shipping_methods = mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
-        if (!count($product_mappings)) {
-            $product_mappings = $shipping_methods;
-        }
-        $return_data['shipping_methods'] = array();
-        foreach ($shipping_methods as $shipping_method) {
-            if (isset($product_mappings[$shipping_method['code']])) {
-                $return_data['shipping_methods'][] = $shipping_method;
+        if ($country_cn_iso_nr) {
+            $shipping_methods = mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
+            if (!count($product_mappings)) {
+                $product_mappings = $shipping_methods;
+            }
+            $return_data['shipping_methods'] = array();
+            if (is_array($shipping_methods) && count($shipping_methods)) {
+                foreach ($shipping_methods as $shipping_method) {
+                    if ($shipping_method['code'] && isset($product_mappings[$shipping_method['code']])) {
+                        $return_data['shipping_methods'][] = $shipping_method;
+                    }
+                }
+                echo json_encode($return_data);
             }
         }
-        echo json_encode($return_data);
         exit();
         break;
     case 'get_shoppingcart_shippingcost_overview':
