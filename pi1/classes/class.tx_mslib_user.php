@@ -200,10 +200,15 @@ class tx_mslib_user {
     }
     public function checkUserData() {
         $captcha_code = $this->getCaptcha_code();
-        $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_session');
+        $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_captcha');
         if (!$captcha_code or $session['captcha_code'] != md5($captcha_code)) {
             $erno['err_captcha_code'] = $this->ref->pi_getLL('captcha_code_is_invalid');
         }
+        // clear captcha session
+        $session_captcha=array();
+        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_captcha', $session_captcha);
+        $GLOBALS['TSFE']->storeSessionData();
+
         if (!$this->getGender() && $this->ref->ms['MODULES']['GENDER_INPUT_REQUIRED']) {
             $erno['err_gender'] = $this->ref->pi_getLL('please_select_your_salutation');
         }
