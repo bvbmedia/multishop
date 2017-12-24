@@ -570,23 +570,41 @@ if ($this->cookie['limit']) {
 } else {
     $this->post['limit'] = 10;
 }
+/*
+<label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
+<label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
+<label index="feed_exporter_fields_label_customer_delivery_city">Customer delivery city</label>
+<label index="feed_exporter_fields_label_customer_delivery_country">Customer delivery country</label>
+<label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
+<label index="feed_exporter_fields_label_customer_delivery_name">Customer delivery name</label>
+<label index="feed_exporter_fields_label_customer_delivery_telephone">Customer delivery telephone</label>
+<label index="feed_exporter_fields_label_customer_delivery_zip">Customer delivery zip</label>
+ */
 $this->ms['MODULES']['ORDERS_LISTING_LIMIT'] = $this->post['limit'];
 $option_search = array(
         "orders_id" => $this->pi_getLL('admin_order_id'),
         "customer_id" => $this->pi_getLL('admin_customer_id'),
         "billing_email" => $this->pi_getLL('admin_customer_email'),
         "name" => $this->pi_getLL('admin_customer_name'),
-    //"crdate" =>				$this->pi_getLL('admin_order_date'),
+        //"crdate" =>				$this->pi_getLL('admin_order_date'),
         "billing_zip" => $this->pi_getLL('admin_zip'),
         "billing_city" => $this->pi_getLL('admin_city'),
         "billing_address" => $this->pi_getLL('admin_address'),
         "billing_company" => $this->pi_getLL('admin_company'),
-    //"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-    //"payment_method"=>$this->pi_getLL('admin_payment_method'),
+        //"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
+        //"payment_method"=>$this->pi_getLL('admin_payment_method'),
         "order_products" => $this->pi_getLL('admin_ordered_product'),
-    /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
+        /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
         "billing_telephone" => $this->pi_getLL('telephone'),
-        "http_referer" => $this->pi_getLL('http_referer')
+        "http_referer" => $this->pi_getLL('http_referer'),
+        "delivery_email" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email'),
+        "delivery_name" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name'),
+        "delivery_zip" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_zip'),
+        "delivery_city" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_city'),
+        "delivery_address" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address'),
+        "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
+        "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
+
 );
 asort($option_search);
 $type_search = $this->post['type_search'];
@@ -665,6 +683,7 @@ if ($this->post['skeyword']) {
             unset($option_fields['all']);
             unset($option_fields['crdate']);
             unset($option_fields['name']);
+            unset($option_fields['delivery_name']);
             //print_r($option_fields);
             $items = array();
             foreach ($option_fields as $fields => $label) {
@@ -692,22 +711,42 @@ if ($this->post['skeyword']) {
         case 'billing_email':
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_email':
+            $filter[] = " delivery_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'name':
             $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
             $search_name=str_replace('%%', '%', $search_name);
-            $filter[] = " (billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
+            $filter[] = " (billing_name LIKE '%" . $search_name . "%')";
+            break;
+        case 'delivery_name':
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $filter[] = " (delivery_name LIKE '%" . $search_name . "%')";
             break;
         case 'billing_zip':
             $filter[] = " billing_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_zip':
+            $filter[] = " delivery_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'billing_city':
             $filter[] = " billing_city LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_city':
+            $filter[] = " delivery_city LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'billing_address':
             $filter[] = " billing_address LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_address':
+            $filter[] = " delivery_address LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'billing_company':
             $filter[] = " billing_company LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_company':
+            $filter[] = " delivery_company LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         /*case 'shipping_method':
             $filter[]=" (shipping_method_label '%".addslashes($this->post['skeyword'])."%' or shipping_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
@@ -731,6 +770,9 @@ if ($this->post['skeyword']) {
             break;*/
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_telephone':
+            $filter[] = " delivery_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'http_referer':
             $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
