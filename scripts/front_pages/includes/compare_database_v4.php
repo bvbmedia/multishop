@@ -277,10 +277,10 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-$required_indexes = array();
-$required_indexes[] = 'credit_order';
-$required_indexes[] = 'payed';
-$required_indexes[] = 'klanten_id';
+$indexesToDrop = array();
+$indexesToDrop[] = 'credit_order';
+$indexesToDrop[] = 'payed';
+$indexesToDrop[] = 'klanten_id';
 $indexes = array();
 $table_name = 'tx_multishop_orders';
 $str = "show indexes from `" . $table_name . "` ";
@@ -288,9 +288,9 @@ $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $indexes[] = $rs['Key_name'];
 }
-foreach ($required_indexes as $required_index) {
-    if (in_array($required_index, $indexes)) {
-        $str = "ALTER TABLE  `" . $table_name . "` DROP INDEX `" . $required_index . "`";
+foreach ($indexesToDrop as $indexToDrop) {
+    if (in_array($indexToDrop, $indexes)) {
+        $str = "ALTER TABLE  `" . $table_name . "` DROP INDEX `" . $indexToDrop . "`";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $messages[] = $str;
     }
@@ -591,4 +591,18 @@ if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_
     $messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
 }
 */
+
+$indexes = array();
+$table_name = 'tx_multishop_cart_contents';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+if (!in_array('session_id', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `session_id` (`session_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
 ?>

@@ -88,7 +88,8 @@ CREATE TABLE `tx_multishop_cart_contents` (
  KEY `crdate` (`crdate`),
  KEY `ip_address` (`ip_address`),
  KEY `is_checkout` (`is_checkout`),
- KEY `page_uid` (`page_uid`)
+ KEY `page_uid` (`page_uid`),
+ KEY `session_id` (`session_id`),
 );
 
 CREATE TABLE `tx_multishop_categories` (
