@@ -5604,6 +5604,13 @@ class mslib_fe {
         if (!is_numeric($shipping_method_id)) {
             return false;
         }
+        $product_detail_mode=false;
+        $product_id=0;
+        if ($this->get['tx_multishop_pi1']['page_section']=='products_detail') {
+            $product_detail_mode=true;
+            $product_id=$this->get['products_id'];
+            $product_data=mslib_fe::getProduct($product_id, '', '', 1);
+        }
         $str3 = $GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
                 'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
                 'sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c.shipping_method_id=\'' . $shipping_method_id . '\' and (sm.page_uid=0 or sm.page_uid=\'' . $this->shop_pid . '\') and c2z.cn_iso_nr=\'' . $countries_id . '\'', // WHERE...
@@ -5626,7 +5633,11 @@ class mslib_fe {
                 }
             }
             if ($row3['shipping_costs_type'] == 'weight') {
-                $total_weight = mslib_fe::countCartWeight();
+                if ($product_detail_mode) {
+                    $total_weight=$product_data['products_weight'];
+                } else {
+                    $total_weight = mslib_fe::countCartWeight();
+                }
                 $steps = explode(",", $row3['price']);
                 $current_price = '';
                 foreach ($steps as $step) {
@@ -5642,7 +5653,12 @@ class mslib_fe {
                 $shipping_cost = $current_price;
                 $shipping_cost_method_box = $current_price;
             } elseif ($row3['shipping_costs_type'] == 'quantity') {
-                $total_quantity = mslib_fe::countCartQuantity();
+                if ($product_detail_mode) {
+                    $total_quantity=1;
+                } else {
+                    $total_quantity = mslib_fe::countCartQuantity();
+                }
+
                 $steps = explode(",", $row3['price']);
                 $current_price = '';
                 foreach ($steps as $step) {
@@ -5680,9 +5696,13 @@ class mslib_fe {
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                 $count_cart_incl_vat = 1;
             }
-            $subtotal = mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $countries_id);
-            if (strstr($subtotal, ",")) {
-                $subtotal = str_replace(',', '.', $subtotal);
+            if ($product_detail_mode) {
+                $subtotal = mslib_fe::final_products_price($product_data);
+            } else {
+                $subtotal = mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $countries_id);
+                if (strstr($subtotal, ",")) {
+                    $subtotal = str_replace(',', '.', $subtotal);
+                }
             }
             //
             if (!empty($row3['override_shippingcosts'])) {
@@ -5872,7 +5892,11 @@ class mslib_fe {
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         $total_include_vat = 1;
                     }
-                    $subtotal = mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
+                    if ($product_detail_mode) {
+                        $subtotal = mslib_fe::final_products_price($product_data);
+                    } else {
+                        $subtotal = mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
+                    }
                     if ($subtotal) {
                         $handling_cost = ($subtotal / 100 * $tmp_handling_cost);
                         if ($total_include_vat && $shipping_method['tax_rate']) {
