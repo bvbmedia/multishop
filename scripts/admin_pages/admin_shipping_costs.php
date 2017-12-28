@@ -173,7 +173,7 @@ if (count($shipping_methods) > 0) {
         }
         $tax_list_data[] = 'product_tax_rate_js["' . $row['id'] . '"]="' . round(number_format($data['total_tax_rate'], 2), 2) . '";';
         //
-        $content .= '<div class="panel panel-default">';
+        $content .= '<div class="panel panel-info">';
         $content .= '<div class="panel-heading panel-heading-toggle' . ($row_index > 0 ? ' collapsed' : '') . '" data-toggle="collapse" data-target="#msAdminShippingCost' . $row['id'] . '">';
         $content .= '<h3 class="panel-title">';
         $content .= '<a role="button" data-toggle="collapse" href="#msAdminShippingCost' . $row['id'] . '">' . $this->pi_getLL('shipping_method') . ': ' . $row['name'] . '</a>';
