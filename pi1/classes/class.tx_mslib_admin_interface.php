@@ -784,8 +784,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             // pagination eof
         }
         $content = '';
-        $content .= '<div class="panel panel-default">';
-        $content .= '<div class="panel-heading">';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '<div class="panel panel-default">';
+            $content .= '<div class="panel-heading">';
+        }
         if ($params['interfaceTitle']) {
             $interfaceTitle = $params['interfaceTitle'];
         } else {
@@ -801,8 +803,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $content .= '</div>';
         }
-        $content .= '</div>';
-        $content .= '<div class="panel-body">';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '</div>';
+        }
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '<div class="panel-body">';
+        }
         if (!$params['settings']['skipTabMarkup']) {
             $GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs'] = '<script type="text/javascript">
 			jQuery(document).ready(function ($) {
@@ -886,8 +892,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if (!$params['settings']['skipFooterMarkup']) {
             $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $that->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div>';
         }
-        $content .= '</div>';
-        $content .= '</div>';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '</div>';
+            $content .= '</div>';
+        }
         if (is_array($columnSorterData) && $countColumnSorterData) {
             $sort_js = array();
             // only for non-sortable column
