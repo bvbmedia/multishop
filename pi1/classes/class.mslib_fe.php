@@ -5937,6 +5937,7 @@ class mslib_fe {
             $shipping_method['shipping_costs_method_box_including_vat'] = $shipping_cost_method_box + $shipping_method_box_tax;
             $shipping_method['shipping_costs'] = $shipping_cost;
             $shipping_method['shipping_costs_including_vat'] = $shipping_cost + $shipping_tax;
+            $shipping_method['shipping_costs_raw'] = $row3;
             return $shipping_method;
         } else {
             return false;
