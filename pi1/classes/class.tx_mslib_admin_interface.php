@@ -667,7 +667,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['prefixValue']) {
-                        $adjustedValue=$valArray['prefix'].$adjustedValue;
+                        $adjustedValue=$valArray['prefixValue'].$adjustedValue;
                     }
                     if ($valArray['suffixValue']) {
                         $adjustedValue.=$valArray['suffixValue'];
