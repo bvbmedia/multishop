@@ -666,6 +666,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                     }
                     $adjustedValue = $row[$col];
+                    if ($valArray['prefixValue']) {
+                        $adjustedValue=$valArray['prefix'].$adjustedValue;
+                    }
+                    if ($valArray['suffixValue']) {
+                        $adjustedValue.=$valArray['suffixValue'];
+                    }
                     if ($valArray['href']) {
                         foreach ($row as $tmpCol => $tmpVal) {
                             $valArray['href'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['href']);
