@@ -1039,6 +1039,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $cart['coupon_code'] = '';
                             $cart['discount'] = $discount_percentage;
                             $cart['discount_type'] = 'percentage';
+                            $cart['discount_from'] = 'user';
                         }
                     }
                 }
@@ -1287,6 +1288,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         break;
                 }
                 $return_total_price = $total_price - $discount_price;
+            }
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'])) {
+                $params = array(
+                    'subtract_discount' => &$subtract_discount,
+                    'country_id' => &$country_id,
+                    'include_vat' => &$include_vat,
+                    'cart' => &$cart,
+                    'total_price' => &$total_price,
+                    'return_total_price' => &$return_total_price
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
         }
         // to make sure the floatings numbers are not infinite
@@ -2583,6 +2597,21 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $discount_percentage = ($discount_amount / $orders_tax['sub_total_excluding_vat'] * 100);
                             }
                             break;
+                    }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersDiscountCalcPostProc'])) {
+                        // hook
+                        $params = array(
+                                'discount_percentage' => &$discount_percentage,
+                                'discount_amount' => &$discount_amount,
+                                'total_order_tax' => &$total_order_tax,
+                                'orders_tax' => &$orders_tax,
+                                'grand_total' => &$grand_total,
+                                'cart' => $cart
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersDiscountCalcPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook eof
                     }
                     if ($discount_amount) {
                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
