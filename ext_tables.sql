@@ -985,7 +985,7 @@ CREATE TABLE `tx_multishop_products_description` (
  `products_negative_keywords` varchar(255) default '',
  `promotext` varchar(255) default '',
  `products_meta_title` varchar(254) default NULL,
- `products_meta_description` varchar(254) default NULL,
+ `products_meta_description` text,
  `file_label` varchar(250) default '',
  `file_location` varchar(250) default '',
  `delivery_time` varchar(75) default '',
