@@ -483,6 +483,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     switch ($valArray['valueType']) {
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', $row[$col]), '0');
+                            if ($row[$col]=='0.') {
+                                $row[$col]=0;
+                            }
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_2_decimals':
@@ -732,6 +735,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
+                            if ($row[$col]=='0.') {
+                                $row[$col]=0;
+                            }
                             break;
                         default:
                             $row[$col] = $valArray['title'];
