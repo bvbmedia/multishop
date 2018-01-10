@@ -848,12 +848,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								<input type="submit" name="Search" class="btn btn-success" value="' . $that->pi_getLL('search') . '" />
 							</div>
 						</div>
-						<div class="col-sm-4 formfield-wrapper">
-							<div class="pull-right form-inline">
-								<label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
-								' . $limit_search_result_selectbox . '
-							</div>
-						</div>
+						';
+            if (!$params['settings']['hideLimitSelectbox']) {
+                $searchForm .= '
+                <div class="col-sm-4 formfield-wrapper">
+                    <div class="pull-right form-inline">
+                        <label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
+                        ' . $limit_search_result_selectbox . '
+                    </div>
+                </div>';
+            }
+						$searchForm .= '
 					</div>
 				</div>
 			</form>
