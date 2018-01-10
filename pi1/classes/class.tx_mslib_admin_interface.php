@@ -481,6 +481,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 foreach ($params['tableColumns'] as $col => $valArray) {
                     $originalValue = $row[$col];
                     switch ($valArray['valueType']) {
+                        case 'number_format_8_decimals':
+                            $row[$col] = rtrim(sprintf('%.8F', $row[$col]), '0');
+                            $summarize[$col] += $row[$col];
+                            break;
                         case 'number_format_2_decimals':
                             $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
                             $summarize[$col] += $row[$col];
