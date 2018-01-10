@@ -898,7 +898,7 @@ if ($this->post) {
 				<div class="col-md-10">
 				    <div class="input-group width-fw">
 				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
-				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
+				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
                     </div>
 				</div>
 			</div>';
@@ -919,7 +919,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(168-current_counter);
+                    var char_left=parseInt(320-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -933,7 +933,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(168-current_counter);
+                    var char_left=parseInt(320-current_counter);
                     $(counter_id).html(char_left);
                 });
             });
