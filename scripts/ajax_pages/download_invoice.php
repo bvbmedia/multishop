@@ -66,12 +66,24 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             }
         }
         // now parse all the objects in the tmpl file
+        $invoice_pdf_tmpl_path=$this->conf['admin_invoice_pdf_tmpl_path']
         if ($invoice['reversal_invoice'] && isset($this->conf['admin_credit_invoice_pdf_tmpl_path']) && $this->conf['admin_credit_invoice_pdf_tmpl_path'] != '') {
             // Use custom template for credit invoice
-            $this->conf['admin_invoice_pdf_tmpl_path'] = $this->conf['admin_credit_invoice_pdf_tmpl_path'];
+            $invoice_pdf_tmpl_path=$this->conf['admin_credit_invoice_pdf_tmpl_path'];
         }
-        if ($this->conf['admin_invoice_pdf_tmpl_path']) {
-            $template = $this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['configureInvoiceTemplatePreProc'])) {
+            $params = array(
+                    'invoice_pdf_tmpl_path' => &$invoice_pdf_tmpl_path,
+                    'order' => &$order,
+                    'invoice' => &$invoice
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['configureInvoiceTemplatePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if ($invoice_pdf_tmpl_path) {
+            $template = $this->cObj->fileResource($invoice_pdf_tmpl_path);
         } else {
             $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/admin_invoice_pdf.tmpl');
         }
