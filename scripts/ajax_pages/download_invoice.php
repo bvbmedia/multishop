@@ -182,10 +182,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_INVOICE_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
             $markerArray['###INVOICE_PAYMENT_METHOD###'] = $order['payment_method_label'];
         }
-        if ($invoice['reversal_invoice'] && !$order['paid']) {
-            // When debit order is not paid show: N/A
-            $markerArray['###INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('not_applicable_short');
-        }
         $markerArray['###INVOICE_ORDER_DETAILS###'] = mslib_befe::printInvoiceOrderDetailsTable($order, $invoice['invoice_id'], $prefix);
         $markerArray['###LABEL_YOUR_VAT_ID###'] = '';
         $markerArray['###YOUR_VAT_ID###'] = '';
@@ -435,9 +431,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
             $markerArray['###INVOICE_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
-        if ($invoice['reversal_invoice'] && !$order['paid']) {
-            // When debit order is not paid show: N/A
-            $markerArray['###INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('not_applicable_short');
+        if ($invoice['reversal_invoice']) {
+            // Get debit invoice
+            $filter=array();
+            $filter[]='orders_id='.$invoice['orders_id'];
+            $filter[]='reversal_invoice=0';
+            $debitInvoice = mslib_befe::getRecord('', 'tx_multishop_invoices','',$filter);
+            if (!$debitInvoice['paid']) {
+                // When debit order is not paid show: N/A
+                $markerArray['###INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('not_applicable_short');
+                $markerArray['###INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('not_applicable_short');
+            }
         }
         $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
         $markerArray['###STORE_EMAIL###'] = $this->ms['MODULES']['STORE_EMAIL'];
