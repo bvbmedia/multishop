@@ -538,6 +538,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = '';
                             }
                             break;
+                        case 'timestamp_to_day_date_time_no_seconds':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = strftime("%a. %x<br/>%H:%M", $row[$col]);
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
                         case 'timestamp_to_date':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%x", $row[$col]);
