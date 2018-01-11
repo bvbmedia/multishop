@@ -482,18 +482,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     $originalValue = $row[$col];
                     switch ($valArray['valueType']) {
                         case 'number_format_8_decimals':
-                            $row[$col] = rtrim(sprintf('%.8F', $row[$col]), '0');
+                            $row[$col] = rtrim(sprintf('%.8F', (float)$row[$col]), '0');
                             if ($row[$col]=='0.') {
                                 $row[$col]=0;
                             }
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_2_decimals':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_thousand_seperator':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             break;
                         case 'recordCounter':
                             $row[$col] = $recordCounter;
