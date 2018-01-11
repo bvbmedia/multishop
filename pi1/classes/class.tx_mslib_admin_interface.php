@@ -540,7 +540,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'timestamp_to_day_date_time_no_seconds':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
-                                $row[$col] = strftime("%a. %x<br/>%H:%M", $row[$col]);
+                                $row[$col] = strftime("%a. %x %H:%M", $row[$col]);
                             } else {
                                 $row[$col] = '';
                             }
@@ -742,8 +742,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
-                            if ($row[$col]=='0.') {
-                                $row[$col]=0;
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
                             }
                             break;
                         default:
