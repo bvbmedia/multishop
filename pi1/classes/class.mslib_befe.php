@@ -4747,6 +4747,16 @@ class mslib_befe {
         $subpartArray['###GRAND_TOTAL_EXCLUDING_VAT###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total_excluding_vat']), $customer_currency, $display_currency_symbol, 0);
         $subpartArray['###LABEL_GRAND_TOTAL###'] = $this->pi_getLL('total');
         $subpartArray['###GRAND_TOTAL###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
+            $params_internal = array(
+                    'subpartArray' => &$subpartArray,
+                    'order' => &$order
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
+        }
         $tmpcontent = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
         return $tmpcontent;
     }
