@@ -483,8 +483,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     switch ($valArray['valueType']) {
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', (float)$row[$col]), '0');
-                            if ($row[$col]=='0.') {
-                                $row[$col]=0;
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
                             }
                             $summarize[$col] += $row[$col];
                             break;
