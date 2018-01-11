@@ -1421,6 +1421,7 @@
             <label index="track_and_trace_link">Track and Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
             <label index="foreign_customer_id">External customer ID</label>
+            <label index="not_applicable_short">N/A</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2820,6 +2821,7 @@
             <label index="track_and_trace_link">Track en Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
             <label index="foreign_customer_id">Extern klantnummer</label>
+            <label index="not_applicable_short">N.V.T.</label>
         </languageKey>
     </data>
 </T3locallang>
