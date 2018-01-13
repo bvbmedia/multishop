@@ -481,12 +481,19 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 foreach ($params['tableColumns'] as $col => $valArray) {
                     $originalValue = $row[$col];
                     switch ($valArray['valueType']) {
+                        case 'number_format_8_decimals':
+                            $row[$col] = rtrim(sprintf('%.8F', (float)$row[$col]), '0');
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
+                            }
+                            $summarize[$col] += $row[$col];
+                            break;
                         case 'number_format_2_decimals':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_thousand_seperator':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             break;
                         case 'recordCounter':
                             $row[$col] = $recordCounter;
@@ -527,6 +534,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'timestamp_to_day_date_time':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%a. %x<br/>%X", $row[$col]);
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
+                        case 'timestamp_to_day_date_time_no_seconds':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = strftime("%a. %x %H:%M", $row[$col]);
                             } else {
                                 $row[$col] = '';
                             }
@@ -726,6 +740,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'number_format_2_decimals':
                             $row[$col] = round(number_format($summarize[$col], 2, '.', ''), 2);
                             break;
+                        case 'number_format_8_decimals':
+                            $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
+                            }
+                            break;
                         default:
                             $row[$col] = $valArray['title'];
                             break;
@@ -848,12 +868,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								<input type="submit" name="Search" class="btn btn-success" value="' . $that->pi_getLL('search') . '" />
 							</div>
 						</div>
-						<div class="col-sm-4 formfield-wrapper">
-							<div class="pull-right form-inline">
-								<label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
-								' . $limit_search_result_selectbox . '
-							</div>
-						</div>
+						';
+            if (!$params['settings']['hideLimitSelectbox']) {
+                $searchForm .= '
+                <div class="col-sm-4 formfield-wrapper">
+                    <div class="pull-right form-inline">
+                        <label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
+                        ' . $limit_search_result_selectbox . '
+                    </div>
+                </div>';
+            }
+						$searchForm .= '
 					</div>
 				</div>
 			</form>

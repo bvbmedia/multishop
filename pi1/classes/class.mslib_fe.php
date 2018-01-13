@@ -8675,7 +8675,6 @@ class mslib_fe {
                         $row['reversal_related_id'] = $id;
                         $row['reversal_invoice'] = 1;
                         $row['crdate'] = time();
-                        $row['paid'] = 1;
                         $row['invoice_id'] = $new_invoice_id;
                         $row['hash'] = md5(uniqid('', true));
                         if ($row['invoice_grand_total'] < 0) {
@@ -8686,16 +8685,35 @@ class mslib_fe {
                             $row['invoice_grand_total_excluding_vat'] = '-' . $row['invoice_grand_total_excluding_vat'];
                         }
                         $row['date_mail_last_sent']='';
+                        $setDebitInvoicePaidStatus=1;
+                        $setCreditInvoicePaidStatus=1;
+                        // hook
+                        $conf = array(
+                                'id' => &$id,
+                                'row' => &$row,
+                                'setDebitInvoicePaidStatus'=>&$setDebitInvoicePaidStatus,
+                                'setCreditInvoicePaidStatus'=>&$setCreditInvoicePaidStatus,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateReversalInvoiceIdPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
+                        if (isset($setCreditInvoiceToPaid) && $setCreditInvoiceToPaid != '') {
+                            // Update debit invoice to paid so its gone from the unpaid list
+                            $row['paid'] = $setCreditInvoiceToPaid;
+                        }
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
-                        // update old invoice to paid so its gone from the unpaid list
-                        $updateArray = array('paid' => 1);
-                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $id, $updateArray);
-                        $GLOBALS['TYPO3_DB']->sql_query($query);
+                        if (isset($setDebitInvoicePaidStatus) && $setDebitInvoicePaidStatus != '') {
+                            $updateArray = array('paid' => $setDebitInvoicePaidStatus);
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $id, $updateArray);
+                            $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
                         // update orders to paid
                         $updateArray = array();
                         $updateArray['orders_paid_timestamp'] = time();
-                        $updateArray['paid'] = 1;
+                        if (isset($setDebitInvoicePaidStatus) && $setDebitInvoicePaidStatus != '') {
+                            $updateArray['paid'] = $setDebitInvoicePaidStatus;
+                        }
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $row['orders_id'], $updateArray);
                         $GLOBALS['TYPO3_DB']->sql_query($query);
                         return 1;
