@@ -1736,6 +1736,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // ADD TT_ADDRESS RECORD EOF
             }
         } else {
+            //update fe_users newsletter value
+            $updateFEUsers=array();
+            if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
+                $updateFEUsers['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
+            } else {
+                $updateFEUsers['tx_multishop_newsletter'] = '';
+            }
+            $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
+            $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
             // insert tt_address for existing customer if no record found
             if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing')) {
                 // ADD TT_ADDRESS RECORD
