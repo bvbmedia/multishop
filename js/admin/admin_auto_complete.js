@@ -21,7 +21,7 @@ var adminPanelSearch = function () {
                         result_html += data.HTMLRES;
                     } else {
                         if (data.Link) {
-                            result_html += '<a href="' + data.Link + '" class="linkItem"><span>' + data.Title + '</span></a>';
+                            result_html += '<a href="' + data.Link + '"' + (data.Link_Target!='' ? ' target="_blank"' : '') + ' class="linkItem"><span>' + data.Title + '</span></a>';
                         }
                     }
                     result_html += '</div>';

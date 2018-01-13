@@ -233,6 +233,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $category['name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $category['id']) . '&action=edit_cms';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -297,6 +298,7 @@ if ($this->ADMIN_USER) {
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['text'] = $admin_settings['configuration_title'];
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_module&module_id=' . $admin_settings['id']) . '&action=edit_module';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -359,6 +361,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $order['orders_id'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id']) . '&action=edit_order';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -413,7 +416,8 @@ if ($this->ADMIN_USER) {
                     $prod['id'] = md5($invoice['invoice_id']);
                     $prod['text'] = $invoice['invoice_id'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
-                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
+                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
+                    $prod['Link_Target'] = '_blank';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -496,6 +500,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $customer['name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $customer['uid'] . '&action=edit_customer');
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -580,6 +585,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $category['categories_name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $category['categories_id'] . '&action=edit_category');
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
