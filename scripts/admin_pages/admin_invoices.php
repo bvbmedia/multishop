@@ -558,15 +558,17 @@ if (isset($this->get['shipping_method']) && $this->get['shipping_method'] != 'al
         $filter[] = "(o.shipping_method='" . addslashes($this->get['shipping_method']) . "')";
     }
 }
-if ($this->cookie['invoice_paid_status'] == 'paid') {
-    $filter[] = "(i.paid='1')";
-} else if ($this->cookie['invoice_paid_status'] == 'unpaid') {
-    $filter[] = "(i.paid='0')";
-}
-if ($this->cookie['invoice_type'] == 'credit') {
-    $filter[] = "(i.reversal_invoice='1')";
-} else if ($this->cookie['invoice_type'] == 'debit') {
-    $filter[] = "(i.reversal_invoice='0')";
+if ($this->get['Search']) {
+    if ($this->cookie['invoice_paid_status'] == 'paid') {
+        $filter[] = "(i.paid='1')";
+    } else if ($this->cookie['invoice_paid_status'] == 'unpaid') {
+        $filter[] = "(i.paid='0')";
+    }
+    if ($this->cookie['invoice_type'] == 'credit') {
+        $filter[] = "(i.reversal_invoice='1')";
+    } else if ($this->cookie['invoice_type'] == 'debit') {
+        $filter[] = "(i.reversal_invoice='0')";
+    }
 }
 if (isset($this->get['country']) && !empty($this->get['country'])) {
     $filter[] = "o.billing_country='" . addslashes($this->get['country']) . "'";
