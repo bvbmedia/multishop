@@ -8922,6 +8922,24 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            $customer_id= (int) $order['customer_id'];
+            if (!$customer_id) {
+                $customer_email=$order['billing_email'];
+                if (!$customer_id) {
+                    if (isset($customer_email) && !empty($customer_email)) {
+                        $filter=array();
+                        $orFilter=array();
+                        $orFilter[]='email=\''.addslashes($customer_email).'\'';
+                        $orFilter[]='contact_email=\''.addslashes($customer_email).'\'';
+                        $orFilter[]='username=\''.addslashes($customer_email).'\'';
+                        $filter[]='(' . implode(' OR ', $orFilter) . ')';
+                        $user=mslib_befe::getRecord('', 'fe_users', '', $filter);
+                        if ($user['uid']) {
+                            $customer_id = $user['uid'];
+                        }
+                    }
+                }
+            }
             if (!$allowZeroAmountInvoice && $order['total_amount'] == 0) {
                 // it does not make sense to create an invoice without an amount
                 return false;
@@ -8932,7 +8950,7 @@ class mslib_fe {
                     $hash = md5(uniqid('', true));
                     $insertArray = array();
                     $insertArray['invoice_id'] = $invoice_id;
-                    $insertArray['customer_id'] = $order['customer_id'];
+                    $insertArray['customer_id'] = $customer_id;
                     $insertArray['paid'] = $order['paid'];
                     $insertArray['orders_id'] = $orders_id;
                     $insertArray['crdate'] = time();
