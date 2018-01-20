@@ -1,18 +1,18 @@
 (function($R)
 {
-    $R.add('plugin', 'video', {
+    $R.add('plugin', 'widget', {
         translations: {
             en: {
-                "video": "Video",
-                "video-html-code": "Video Embed Code or Youtube/Vimeo Link"
+                "widget": "Widget",
+                "widget-html-code": "Widget HTML Code"
             }
         },
         modals: {
-            'video':
+            'widget':
                 '<form action=""> \
                     <div class="form-item"> \
-                        <label>## video-html-code ## <span class="req">*</span></label> \
-                        <textarea name="video" style="height: 160px;"></textarea> \
+                        <label>## widget-html-code ## <span class="req">*</span></label> \
+                        <textarea name="widget" style="height: 200px;"></textarea> \
                     </div> \
                 </form>'
         },
@@ -25,13 +25,21 @@
             this.component = app.component;
             this.insertion = app.insertion;
             this.inspector = app.inspector;
+            this.selection = app.selection;
         },
         // messages
         onmodal: {
-            video: {
+            widget: {
                 opened: function($modal, $form)
                 {
-                    $form.getField('video').focus();
+                    $form.getField('widget').focus();
+
+                    if (this.$currentItem)
+                    {
+                        var widgetData = this.$currentItem.getData();
+
+                        $form.getField('widget').val(widgetData.html);
+                    }
                 },
                 insert: function($modal, $form)
                 {
@@ -43,42 +51,48 @@
         oncontextbar: function(e, contextbar)
         {
             var data = this.inspector.parse(e.target)
-            if (data.isComponentType('video'))
+            if (!data.isFigcaption() && data.isComponentType('widget'))
             {
                 var node = data.getComponent();
                 var buttons = {
+                    "edit": {
+                        title: this.lang.get('edit'),
+                        api: 'plugin.widget.open',
+                        args: node
+                    },
                     "remove": {
                         title: this.lang.get('delete'),
-                        api: 'plugin.video.remove',
+                        api: 'plugin.widget.remove',
                         args: node
                     }
                 };
 
                 contextbar.set(e, node, buttons, 'bottom');
             }
-
         },
 
         // public
         start: function()
         {
             var obj = {
-                title: this.lang.get('video'),
-                api: 'plugin.video.open'
+                title: this.lang.get('widget'),
+                api: 'plugin.widget.open'
             };
 
-            var $button = this.toolbar.addButtonAfter('image', 'video', obj);
-            $button.setIcon('<i class="re-icon-video"></i>');
+            var $button = this.toolbar.addButton('widget', obj);
+            $button.setIcon('<i class="re-icon-widget"></i>');
         },
         open: function()
 		{
+            this.$currentItem = this._getCurrent();
+
             var options = {
-                title: this.lang.get('video'),
+                title: this.lang.get('widget'),
                 width: '600px',
-                name: 'video',
+                name: 'widget',
                 handle: 'insert',
                 commands: {
-                    insert: { title: this.lang.get('insert') },
+                    insert: { title: (this.$currentItem) ? this.lang.get('save') : this.lang.get('insert') },
                     cancel: { title: this.lang.get('cancel') }
                 }
             };
@@ -91,61 +105,33 @@
         },
 
         // private
+		_getCurrent: function()
+		{
+    		var current = this.selection.getCurrent();
+    		var data = this.inspector.parse(current);
+    		if (data.isComponentType('widget'))
+    		{
+        		return this.component.build(data.getComponent());
+    		}
+		},
 		_insert: function(data)
 		{
     		this.app.api('module.modal.close');
 
-    		if (data.video.trim() === '')
+    		if (data.widget.trim() === '')
     		{
         	    return;
     		}
 
-            // parsing
-            data.video = this._matchData(data.video);
+            var $component = this.component.create('widget', data.widget);
+    		this.insertion.insertHtml($component);
 
-            // inserting
-            if (this._isVideoIframe(data.video))
-            {
-                var $video = this.component.create('video', data.video);
-                this.insertion.insertHtml($video);
-            }
-		},
-
-		_isVideoIframe: function(data)
-		{
-            return (data.match(/<iframe|<video/gi) !== null);
-		},
-		_matchData: function(data)
-		{
-			var iframeStart = '<iframe style="width: 500px; height: 281px;" src="';
-			var iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
-            if (this._isVideoIframe(data))
-			{
-				var allowed = ['iframe', 'video'];
-				var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-
-			    data = data.replace(tags, function ($0, $1)
-			    {
-			        return (allowed.indexOf($1.toLowerCase()) === -1) ? '' : $0;
-			    });
-			}
-
-			if (data.match(this.opts.regex.youtube))
-			{
-				data = data.replace(this.opts.regex.youtube, iframeStart + '//www.youtube.com/embed/$1' + iframeEnd);
-			}
-			else if (data.match(this.opts.regex.vimeo))
-			{
-				data = data.replace(this.opts.regex.vimeo, iframeStart + '//player.vimeo.com/video/$2' + iframeEnd);
-			}
-
-			return data;
 		}
     });
 })(Redactor);
 (function($R)
 {
-    $R.add('class', 'video.component', {
+    $R.add('class', 'widget.component', {
         mixins: ['dom', 'component'],
         init: function(app, el)
         {
@@ -154,6 +140,12 @@
             // init
             return (el && el.cmnt !== undefined) ? el : this._init(el);
         },
+        getData: function()
+        {
+            return {
+                html: this._getHtml()
+            };
+        },
 
         // private
         _init: function(el)
@@ -161,15 +153,15 @@
             if (typeof el !== 'undefined')
             {
                 var $node = $R.dom(el);
-                var $wrapper = $node.closest('figure');
-                if ($wrapper.length !== 0)
+                var $figure = $node.closest('figure');
+                if ($figure.length !== 0)
                 {
-                    this.parse($wrapper);
+                    this.parse($figure);
                 }
                 else
                 {
                     this.parse('<figure>');
-                    this.append(el);
+                    this.html(el);
                 }
             }
             else
@@ -180,11 +172,19 @@
 
             this._initWrapper();
         },
+        _getHtml: function()
+        {
+            var $wrapper = $R.dom('<div>');
+            $wrapper.html(this.html());
+            $wrapper.find('.redactor-component-caret').remove();
+
+            return $wrapper.html();
+        },
         _initWrapper: function()
         {
             this.addClass('redactor-component');
             this.attr({
-                'data-redactor-type': 'video',
+                'data-redactor-type': 'widget',
                 'tabindex': '-1',
                 'contenteditable': false
             });

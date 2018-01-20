@@ -1,160 +1,153 @@
-(function($)
+(function($R)
 {
-	$.Redactor.prototype.fullscreen = function()
-	{
-		return {
-			langs: {
-				en: {
-					"fullscreen": "Fullscreen"
-				}
-			},
-			init: function()
-			{
-				this.fullscreen.isOpen = false;
+    $R.add('plugin', 'fullscreen', {
+        translations: {
+            en: {
+    			"fullscreen": "Fullscreen"
+    		}
+        },
+        init: function(app)
+        {
+            this.app = app;
+            this.opts = app.opts;
+            this.lang = app.lang;
+            this.$win = app.$win;
+            this.$doc = app.$doc;
+            this.$body = app.$body;
+            this.editor = app.editor;
+            this.toolbar = app.toolbar;
+            this.container = app.container;
+            this.selection = app.selection;
 
-				var button = this.button.add('fullscreen', this.lang.get('fullscreen'));
-				this.button.setIcon(button, '<i class="re-icon-expand"></i>');
-				this.button.addCallback(button, this.fullscreen.toggle);
+            // local
+            this.isOpen = false;
+        },
+        // public
+        start: function()
+        {
+            var data = {
+                title: this.lang.get('fullscreen'),
+                api: 'plugin.fullscreen.toggle'
+            };
 
-				if (this.opts.fullscreen)
-				{
-					this.fullscreen.toggle();
-				}
+            var button = this.toolbar.addButton('fullscreen', data);
+            button.setIcon('<i class="re-icon-expand"></i>');
 
-			},
-			enable: function()
-			{
-				this.fullscreen.isOpened = false;
-				this.button.changeIcon('fullscreen', 'retract');
-				this.fullscreen.isOpen = true;
+            this.isTarget = (this.opts.toolbarFixedTarget !== document);
+            this.$target = (this.isTarget) ? $R.dom(this.opts.toolbarFixedTarget) : this.$body;
 
-				if (!this.opts.fullscreen)
-				{
-					this.selection.save();
-				}
+			if (this.opts.fullscreen) this.toggle();
 
-				if (this.opts.toolbarExternal)
-				{
-					this.fullscreen.toolcss = {};
-					this.fullscreen.boxcss = {};
-					this.fullscreen.toolcss.width = this.$toolbar.css('width');
-					this.fullscreen.toolcss.top = this.$toolbar.css('top');
-					this.fullscreen.toolcss.position = this.$toolbar.css('position');
-					this.fullscreen.boxcss.top = this.$box.css('top');
-				}
+        },
+        toggle: function()
+		{
+			return (this.isOpen) ? this.close() : this.open();
+		},
+		open: function()
+		{
+            this._createPlacemarker();
+            this.selection.save();
 
-				this.fullscreen.height = this.core.editor().height();
+            var $container = this.container.getElement();
+            var $editor = this.editor.getElement();
+            var $html = (this.isTarget) ? $R.dom('body, html') : this.$target;
 
-				if (this.opts.maxHeight)
-				{
-					this.core.editor().css('max-height', '');
-				}
+            if (this.opts.toolbarExternal) this._buildInternalToolbar();
 
-				if (this.opts.minHeight)
-				{
-					this.core.editor().css('min-height', '');
-				}
+            this.$target.prepend($container);
+			this.$target.addClass('redactor-body-fullscreen');
 
-				if (!this.$fullscreenPlaceholder)
-				{
-					this.$fullscreenPlaceholder = $('<div/>');
-				}
+            $container.addClass('redactor-box-fullscreen');
+            if (this.isTarget) $container.addClass('redactor-box-fullscreen-target');
 
-				this.$fullscreenPlaceholder.insertAfter(this.$box);
+            $html.css('overflow', 'hidden');
 
-				this.core.box().appendTo(document.body);
-				this.core.box().addClass('redactor-box-fullscreen');
+            if (this.opts.maxHeight) $editor.css('max-height', '');
+            if (this.opts.minHeight) $editor.css('min-height', '');
 
-				$('body').addClass('redactor-body-fullscreen');
-				$('body, html').css('overflow', 'hidden');
+            this._resize();
+            this.$win.on('resize.redactor-plugin-fullscreen', this._resize.bind(this));
+			this.$doc.scrollTop(0);
 
-				this.fullscreen.resize();
+            var button = this.toolbar.getButton('fullscreen');
+            button.setIcon('<i class="re-icon-retract"></i>');
 
-				if (!this.opts.fullscreen)
-				{
-					this.selection.restore();
-				}
+            this.selection.restore();
+			this.isOpen = true;
+			this.opts.zindex = 1051;
+		},
+		close: function()
+		{
+    		this.isOpen = false;
+			this.opts.zindex = false;
+            this.selection.save();
 
-				this.toolbar.observeScrollDisable();
-				$(window).on('resize.redactor-plugin-fullscreen', $.proxy(this.fullscreen.resize, this));
-				$(document).scrollTop(0, 0);
+            var $container = this.container.getElement();
+            var $editor = this.editor.getElement();
+            var $html = $R.dom('body, html');
 
-				var self = this;
-				setTimeout(function()
-				{
-					self.fullscreen.isOpened = true;
-				}, 10);
+            if (this.opts.toolbarExternal) this._buildExternalToolbar();
 
-			},
-			disable: function()
-			{
-				this.button.changeIcon('fullscreen', 'expand');
-				this.fullscreen.isOpened = undefined;
-				this.fullscreen.isOpen = false;
-				this.selection.save();
+            this.$target.removeClass('redactor-body-fullscreen');
+    		this.$win.off('resize.redactor-plugin-fullscreen');
+            $html.css('overflow', '');
 
-				$(window).off('resize.redactor-plugin-fullscreen');
-				$('body, html').css('overflow', '');
+			$container.removeClass('redactor-box-fullscreen redactor-box-fullscreen-target');
+			$editor.css('height', 'auto');
 
-				this.core.box().insertBefore(this.$fullscreenPlaceholder);
-				this.$fullscreenPlaceholder.remove();
+			if (this.opts.minHeight) $editor.css('minHeight', this.opts.minHeight);
+			if (this.opts.maxHeight) $editor.css('maxHeight', this.opts.maxHeight);
 
-				this.core.box().removeClass('redactor-box-fullscreen').css({ width: 'auto', height: 'auto' });
-				this.core.box().removeClass('redactor-box-fullscreen');
+            var button = this.toolbar.getButton('fullscreen');
+            button.setIcon('<i class="re-icon-expand"></i>');
 
-				if (this.opts.toolbarExternal)
-				{
-					this.core.box().css('top', this.fullscreen.boxcss.top);
-					this.core.toolbar().css({
-						'width': this.fullscreen.toolcss.width,
-						'top': this.fullscreen.toolcss.top,
-						'position': this.fullscreen.toolcss.position
-					});
-				}
+    		this._removePlacemarker($container);
+            this.selection.restore();
 
-				if (this.opts.minHeight)
-				{
-					this.core.editor().css('minHeight', this.opts.minHeight);
-				}
+		},
 
-				if (this.opts.maxHeight)
-				{
-					this.core.editor().css('maxHeight', this.opts.maxHeight);
-				}
+		// private
+		_resize: function()
+		{
+            var $editor = this.editor.getElement();
+    		var height = this.$win.height();
 
-				this.core.editor().css('height', 'auto');
-				this.selection.restore();
-			},
-			toggle: function()
-			{
-				return (this.fullscreen.isOpen) ? this.fullscreen.disable() : this.fullscreen.enable();
-			},
-			resize: function()
-			{
-				if (!this.fullscreen.isOpen)
-				{
-					return;
-				}
+    		$editor.height(height);
+		},
+		_buildInternalToolbar: function()
+		{
+			var $wrapper = this.toolbar.getWrapper();
+			var $toolbar = this.toolbar.getElement();
 
-				var toolbarHeight = this.button.toolbar().height();
-				var padding = parseInt(this.core.editor().css('padding-top')) + parseInt(this.core.editor().css('padding-bottom'));
-				var height = $(window).height() - toolbarHeight - padding;
+			$wrapper.addClass('redactor-toolbar-wrapper');
+			$wrapper.append($toolbar);
 
-				this.core.box().width($(window).width()).height(height);
+			$toolbar.removeClass('redactor-toolbar-external');
+			$container.prepend($wrapper);
+		},
+		_buildExternalToolbar: function()
+		{
+			var $wrapper = this.toolbar.getWrapper();
+			var $toolbar = this.toolbar.getElement();
 
-				if (this.opts.toolbarExternal)
-				{
-					this.core.toolbar().css({
-						'top': '0px',
-						'position': 'absolute',
-						'width': '100%'
-					});
+            this.$external = $R.dom(this.opts.toolbarExternal);
 
-					this.core.box().css('top', toolbarHeight + 'px');
-				}
+            $toolbar.addClass('redactor-toolbar-external');
+            this.$external.append($toolbar);
 
-				this.core.editor().height(height);
-			}
-		};
-	};
-})(jQuery);
+            $wrapper.remove();
+		},
+		_createPlacemarker: function()
+		{
+    		var $container = this.container.getElement();
+
+    		this.$placemarker = $R.dom('<span />');
+    		$container.after(this.$placemarker);
+		},
+		_removePlacemarker: function($container)
+		{
+    		this.$placemarker.before($container);
+            this.$placemarker.remove();
+		}
+    });
+})(Redactor);

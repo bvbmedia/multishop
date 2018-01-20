@@ -1589,9 +1589,10 @@ switch ($this->ms['page']) {
                 }
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
-                    $result = array(
+                    $result['file'] = array(
                             'url' => $fileLocation,
-                            'name' => $filename
+                            'name' => $filename,
+                            'id' => $filename
                     );
                     echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                     exit();
