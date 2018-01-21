@@ -277,8 +277,7 @@ jQuery(document).ready(function($) {
 			var tabs_content_li="";
 			tabs_content_li+=buildCustomProductsDescriptionInput(' . $this->shop_pid . ', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
-
-			$(\'.mceEditor\').redactor({
+            $R(\'.mceEditor\', {
 			    imagePosition: true,
 	            imageResizable: true,
 			    toolbarFixedTopOffset: 38,
