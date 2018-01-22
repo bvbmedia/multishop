@@ -1058,3 +1058,7 @@ td.print_r_value { word-break:break-word; }
 
 .update_customer_group_discount_status:hover,
 .update_customer_group_discount_status:focus { border-bottom:none; }
+
+/* fix for redactor 3.0 b5 */
+.redactor-modal .form-item.form-item-target input[type="checkbox"] { margin-top:0; margin-bottom:1px; }
+.redactor-modal .form-item.form-item-target input[type="checkbox"] + label.checkbox { display:inline-block; margin:0; padding-left:0; }
