@@ -1422,6 +1422,8 @@
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
             <label index="foreign_customer_id">External customer ID</label>
             <label index="not_applicable_short">N/A</label>
+            <label index="personal_usage">Personal</label>
+            <label index="business_usage">Business</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2822,6 +2824,8 @@
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
             <label index="foreign_customer_id">Extern klantnummer</label>
             <label index="not_applicable_short">N.V.T.</label>
+            <label index="personal_usage">Particulier</label>
+            <label index="business_usage">Zakelijk</label>
         </languageKey>
     </data>
 </T3locallang>
