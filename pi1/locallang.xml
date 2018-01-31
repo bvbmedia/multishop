@@ -1424,6 +1424,7 @@
             <label index="not_applicable_short">N/A</label>
             <label index="personal_usage">Personal</label>
             <label index="business_usage">Business</label>
+            <label index="product_dont_have_required_attributes">Product %s require an attribute(s) to continue checkout</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
