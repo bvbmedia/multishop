@@ -853,6 +853,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $c = true;
         $orders_tax_data = $order['orders_tax_data'];
         foreach ($order['products'] as $product) {
+            $product_db=array();
             if ($product['products_id']) {
                 $product_db = mslib_fe::getProduct($product['products_id']);
             }
@@ -929,7 +930,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         'item_name' => &$tmp_item_name,
                         'order' => &$order,
                         'product' => &$product,
-                        'template_type' => &$template_type
+                        'template_type' => &$template_type,
+                        'product_db' => $product_db
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
