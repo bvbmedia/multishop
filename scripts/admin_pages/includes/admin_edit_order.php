@@ -839,7 +839,10 @@ if (is_numeric($this->get['orders_id'])) {
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
-                        $order_memo=strip_tags($this->post['order_memo']);
+                        $order_memo=$this->post['order_memo'];
+                        if ($order_memo=='<p></p>') {
+                            $order_memo='';
+                        }
                         $orders['order_memo']='';
                         if (!empty($order_memo)) {
                             $orders['order_memo'] = $this->post['order_memo'];
@@ -951,7 +954,10 @@ if (is_numeric($this->get['orders_id'])) {
             if (isset($this->post['track_and_trace_code'])) {
                 $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
             }
-            $order_memo=strip_tags($this->post['order_memo']);
+            $order_memo=$this->post['order_memo'];
+            if ($order_memo=='<p></p>') {
+                $order_memo='';
+            }
             if (!empty($order_memo)) {
                 $updateArray['order_memo'] = $this->post['order_memo'];
             }
@@ -980,7 +986,10 @@ if (is_numeric($this->get['orders_id'])) {
                 // first get current status
                 if ($this->post['order_status'] == $order['status']) {
                     // no new order status has been defined. only mail when the email text box is containing content
-                    $comments=strip_tags($this->post['comments']);
+                    $comments=$this->post['comments'];
+                    if ($comments=='<p></p>') {
+                        $comments='';
+                    }
                     if (!empty($comments)) {
                         $continue_update = 1;
                     } else {
