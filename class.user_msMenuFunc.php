@@ -1,6 +1,30 @@
 <?php
 // Example TypoScript (mixed tmenu with Multishop menu on specific menu item):
 /*
+# Example 1
+# Append Multishop tmenu children LI to the existing TYPO3 tmenu UL after LI page uid 28
+lib.msTopNavBottom.tmenu.1.NO.after.cObject=COA
+lib.msTopNavBottom.tmenu.1.NO.after.cObject {
+10=COA
+10 {
+  20 < lib.defaultMobileMenu
+  20.special = userfunction
+  20.special.userFunc =user_msMenuFunc->makeHmenuArray
+  20.special.userFunc.conf < plugin.tx_multishop_pi1
+  stdWrap.if.value.field = uid
+  stdWrap.if.equals = 28
+}
+if.value.field = uid
+if.equals = 28
+}
+# Remove ul of Multishop tmenu
+lib.msTopNavBottom.tmenu.1.NO.after.cObject.10.20.1.wrap >
+
+# Copy NO to CUR/ACT
+lib.msTopNavBottom.tmenu.1.CUR.after.cObject < lib.msTopNavBottom.tmenu.1.NO.after.cObject
+lib.msTopNavBottom.tmenu.1.ACT.after.cObject < lib.msTopNavBottom.tmenu.1.ACT.after.cObject
+
+# Example 2
 # Custom tmenu with multishop tmenu on Shop pid
 lib.msTopNavBottom.tmenu.1.NO.after.cObject=COA
 lib.msTopNavBottom.tmenu.1.NO.after.cObject {
@@ -82,7 +106,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     'menuArr' => &$menuArr,
                     'tel' => &$tel
                 );
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'] as $funcRef) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php'][' IteratorPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
