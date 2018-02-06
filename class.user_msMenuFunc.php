@@ -23,6 +23,8 @@ lib.msTopNavBottom.tmenu.1.NO.after.cObject.10.20.1.wrap >
 # Copy NO to CUR/ACT
 lib.msTopNavBottom.tmenu.1.CUR.after.cObject < lib.msTopNavBottom.tmenu.1.NO.after.cObject
 lib.msTopNavBottom.tmenu.1.ACT.after.cObject < lib.msTopNavBottom.tmenu.1.ACT.after.cObject
+lib.msTopNavBottom.tmenu.1.NO.wrapItemAndSub >
+lib.msTopNavBottom.tmenu.1.NO.wrapItemAndSub=<li>|</li>
 
 # Example 2
 # Custom tmenu with multishop tmenu on Shop pid
