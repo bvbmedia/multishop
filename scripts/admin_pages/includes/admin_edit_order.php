@@ -2219,7 +2219,7 @@ if (is_numeric($this->get['orders_id'])) {
 
                         $quantity_html = '<div class="quantity buttons_added">';
                         $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty">';
-                        $quantity_html .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+                        $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
                         $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="product_qty">';
                         $quantity_html .= '</div>';
 
@@ -2395,7 +2395,7 @@ if (is_numeric($this->get['orders_id'])) {
                             // get all cats to generate multilevel fake url eof
                         }
                         $row[0] = $order['products_id'];
-                        $row[1] = number_format($order['qty'], 2);
+                        $row[1] = number_format($order['qty'], 2, '.', '');
                         $row[2] = '';
                         if ($order['products_id'] > 0) {
                             if ($product['products_id']) {
@@ -3038,7 +3038,7 @@ if (is_numeric($this->get['orders_id'])) {
                 // qty
                 $quantity_html = '<div class="quantity buttons_added">';
                 $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="manual_product_qty">';
-                $quantity_html .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
                 $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="manual_product_qty">';
                 $quantity_html .= '</div>';
                 $order_products_body_data['products_qty']['value'] .= $quantity_html;
