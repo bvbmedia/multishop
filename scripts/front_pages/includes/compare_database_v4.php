@@ -584,13 +584,14 @@ if (!$qry) {
     $messages[] = $str;
 
     // Repair data
-    $str = "show id,http_referer from tx_multishop_sessions where http_referer != '' and http_referer is not null";
+    $str = "SELECT id,http_referer from tx_multishop_sessions where http_referer != '' and http_referer is not null";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $urlArray=parse_url($rs['http_referer']);
         $updateArray=array();
         $updateArray['http_host_referer'] = $urlArray['host'];
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_sessions', 'id='.$rs['id'], $updateArray);
+        error_log($query);
         $GLOBALS['TYPO3_DB']->sql_query($query);
     }
 }
