@@ -569,6 +569,14 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select foreign_source_name from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `fe_users` ADD `foreign_source_name` varchar(30) default '0', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
 // remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
 $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);

@@ -72,7 +72,8 @@ CREATE TABLE `fe_users` (
  KEY `building` (`building`),
  KEY `region` (`region`),
  KEY `department` (`department`),
- KEY `foreign_customer_id` (`foreign_customer_id`)
+ KEY `foreign_customer_id` (`foreign_customer_id`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
