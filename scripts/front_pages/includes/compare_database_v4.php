@@ -591,7 +591,6 @@ if (!$qry) {
         $updateArray=array();
         $updateArray['http_host_referer'] = $urlArray['host'];
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_sessions', 'id='.$rs['id'], $updateArray);
-        error_log($query);
         $GLOBALS['TYPO3_DB']->sql_query($query);
     }
 }
