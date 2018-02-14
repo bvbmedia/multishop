@@ -2320,6 +2320,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $product_detail_link = $this->FULL_HTTP_URL . mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                 $insertArray['product_link'] = $product_detail_link;
                             }
+                            $value['product_link']=$insertArray['product_link'];
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
@@ -2397,13 +2398,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 $array2[] = $value['qty'];
                                                 $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
                                                 $array2[] = $row['products_id'];
-                                                $array1[] = '###PRODUCT_ID###';
-                                                $array2[] = $row['products_quantity'];
+                                                $array1[] = '###PRODUCTS_ID###';
+                                                $array2[] = $value['products_id'];
                                                 $array1[] = '###PRODUCT_NAME###';
                                                 $array2[] = $value['products_name'];
                                                 $link_edit_prod = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $value['products_id'] . '&cid=' . $value['categories_id'] . '&action=edit_product');
+                                                $link_frontend_prod = $value['product_link'];
                                                 $array1[] = '###DIRECT_EDIT_PRODUCT_LINK###';
-                                                $array2[] = '<a href="' . $link_edit_prod . '" target="_blank">' . htmlspecialchars($this->pi_getLL('admin_edit_product')) . '</a>';
+                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
                                                 // now mail a copy to the merchant
                                                 $merchant = array();
                                                 $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
@@ -2457,11 +2459,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 $array2[] = $value['qty'];
                                                 $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
                                                 $array2[] = $row['products_quantity'];
+                                                $array1[] = '###PRODUCTS_ID###';
+                                                $array2[] = $value['products_id'];
                                                 $array1[] = '###PRODUCT_NAME###';
                                                 $array2[] = $value['products_name'];
                                                 $link_edit_prod = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $value['products_id'] . '&cid=' . $value['categories_id'] . '&action=edit_product');
+                                                $link_frontend_prod = $value['product_link'];
                                                 $array1[] = '###DIRECT_EDIT_PRODUCT_LINK###';
-                                                $array2[] = '<a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
+                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> | <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
                                                 // now mail a copy to the merchant
                                                 $merchant = array();
                                                 $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
