@@ -1645,6 +1645,7 @@ CREATE TABLE `tx_multishop_sessions` (
  `query_string` text,
  `http_user_agent` text,
  `http_referer` text,
+ `http_host_referer` varchar(75) default '',
  `url` text,
  `segment_type` varchar(50) default '',
  `segment_id` varchar(50) default '',
@@ -1655,6 +1656,7 @@ CREATE TABLE `tx_multishop_sessions` (
  KEY `session_id` (`session_id`),
  KEY `ip_address` (`ip_address`),
  KEY `http_host` (`http_host`),
+ KEY `http_host_referer` (`http_host_referer`),
  KEY `segment_type` (`segment_type`),
  KEY `segment_id` (`segment_id`)
 );
