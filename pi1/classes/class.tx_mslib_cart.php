@@ -2405,7 +2405,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 $link_edit_prod = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $value['products_id'] . '&cid=' . $value['categories_id'] . '&action=edit_product');
                                                 $link_frontend_prod = $value['product_link'];
                                                 $array1[] = '###DIRECT_EDIT_PRODUCT_LINK###';
-                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
+                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> | <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
                                                 // now mail a copy to the merchant
                                                 $merchant = array();
                                                 $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
