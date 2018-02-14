@@ -36,6 +36,7 @@ CREATE TABLE `fe_users` (
  `department` varchar(127) default '',
  `contact_email` varchar(256) default '',
  `foreign_customer_id` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
