@@ -950,10 +950,10 @@ if ($this->ms['show_main']) {
                     $vars = unserialize($payment_method['vars']);
                     if ($payment_method['checked']) {
                         $tmpcontent .= '<tr id="payment_zone_[' . $zone_id . ']_' . $payment_method['id'] . '" class="row_sortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $vars['name'][0] . '</label></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name']  . '</label></td>';
                     } else {
                         $tmpcontent .= '<tr class="row_unsortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $vars['name'][0] . '</label></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name'] . '</label></td>';
                     }
                     $tmpcontent .= '</tr>';
                 }
