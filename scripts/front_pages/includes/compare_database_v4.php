@@ -569,6 +569,33 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select foreign_source_name from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `fe_users` ADD `foreign_source_name` varchar(30) default '0', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select http_host_referer from tx_multishop_sessions limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_sessions` ADD `http_host_referer` varchar(75) default '', ADD KEY `http_host_referer` (`http_host_referer`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+
+    // Repair data
+    $str = "SELECT id,http_referer from tx_multishop_sessions where http_referer != '' and http_referer is not null";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $urlArray=parse_url($rs['http_referer']);
+        $updateArray=array();
+        $updateArray['http_host_referer'] = $urlArray['host'];
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_sessions', 'id='.$rs['id'], $updateArray);
+        $GLOBALS['TYPO3_DB']->sql_query($query);
+    }
+}
+
+
 // remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
 $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
