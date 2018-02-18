@@ -4305,6 +4305,13 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
             </div>';
         }
+        $order_status_tab_content['order_memo'] = '<div class="form-group">
+            <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
+            <div class="col-md-10">
+            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . htmlspecialchars($orders['order_memo']) . '</textarea>
+            ' . ($orders['memo_crdate'] > 0 ? '<span class="memo_last_modified">' . $this->pi_getLL('order_memo_last_modified') . ': ' . strftime("%a. %x %X", $orders['memo_crdate']) . '</span>' : '') . '
+            </div>
+        </div>';
         $order_status_tab_content['customer_notified'] = '<div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">' . $this->pi_getLL('send_email_to_customer') . '</label>
             <div class="col-md-10">
@@ -4314,13 +4321,6 @@ if (is_numeric($this->get['orders_id'])) {
 	            <div class="radio radio-success radio-inline">
 		            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">' . $this->pi_getLL('yes') . '</label>
 	            </div>
-            </div>
-        </div>';
-        $order_status_tab_content['order_memo'] = '<div class="form-group">
-            <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
-            <div class="col-md-10">
-            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . htmlspecialchars($orders['order_memo']) . '</textarea>
-            ' . ($orders['memo_crdate'] > 0 ? '<span class="memo_last_modified">' . $this->pi_getLL('order_memo_last_modified') . ': ' . strftime("%a. %x %X", $orders['memo_crdate']) . '</span>' : '') . '
             </div>
         </div>';
         $order_status_tab_content['comments'] = '<div class="form-group">
