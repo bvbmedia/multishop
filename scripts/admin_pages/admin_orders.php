@@ -967,7 +967,8 @@ if (is_array($groups) and count($groups)) {
 $customer_groups_input .= '</select>' . "\n";
 // payment method
 $payment_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
+$shop_title = array();
+$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
         ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'payment_method', // GROUP BY...
@@ -980,13 +981,23 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['payment_method'] = 'nopm';
         $row['payment_method_label'] = 'Empty payment method';
     }
+    if ($this->masterShop) {
+        if ($row['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        } else {
+            $shop_title = 'All';
+        }
+        $row['payment_method_label'] = $shop_title . ': ' . $row['payment_method_label'];
+    }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
+
 }
 $payment_method_input = '';
 $payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
 $payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
 if (is_array($payment_methods) and count($payment_methods)) {
     foreach ($payment_methods as $payment_method_code => $payment_method) {
+
         $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_method . '</option>' . "\n";
     }
 }
