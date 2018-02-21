@@ -151,8 +151,7 @@
 .width-fw { width:100%; }
 .padding-10 { padding:10px; }
 
-.cellCheckbox { vertical-align:middle; text-align:center; }
-.cellCheckbox .addInternalMemoPopoverWrapper { margin-top:5px; }
+.cellCheckbox { vertical-align:middle; }
 .cellCheckbox .checkbox.checkbox-inline { padding-left:17px; }
 .cellCheckbox .checkbox.checkbox-inline label { min-height:18px; padding-left:0; }
 .cellCheckbox .checkbox.checkbox-inline label::before,
