@@ -1004,7 +1004,7 @@ if (is_array($payment_methods) and count($payment_methods)) {
 $payment_method_input .= '</select>' . "\n";
 // shipping method
 $shipping_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
+$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
         ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'shipping_method', // GROUP BY...
@@ -1016,6 +1016,14 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
     if (empty($row['shipping_method_label'])) {
         $row['shipping_method'] = 'nosm';
         $row['shipping_method_label'] = 'Empty shipping method';
+    }
+    if ($this->masterShop) {
+        if ($row['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        } else {
+            $shop_title = 'All';
+        }
+        $row['shipping_method_label'] = $shop_title . ': ' . $row['shipping_method_label'];
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
 }
