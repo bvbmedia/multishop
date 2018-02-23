@@ -389,6 +389,8 @@ if ($this->ADMIN_USER) {
                 $p = 0;
                 $offset = $p * $limit;
             }
+            $from=array();
+            $extra_left_join='';
             $filter = $invoices_filter;
             $having = array();
             $match = array();
@@ -396,12 +398,28 @@ if ($this->ADMIN_USER) {
             $where = array();
             $orderby = array();
             $select = array();
+            $group_by='';
             if (!$this->masterShop) {
                 $filter[] = 'i.page_uid=' . $this->showCatalogFromPage;
             }
             $select[] = 'i.invoice_id,i.hash';
             $orderby[] = 'i.id desc';
-            $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
+            // hook to rewrite the whole methods
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'])) {
+                $params_internal = array(
+                    'filter' => &$filter,
+                    'having' => &$having,
+                    'orderby' => &$orderby,
+                    'select' => &$select,
+                    'from' => &$from,
+                    'extra_left_join' => &$extra_left_join,
+                    'group_by' => &$group_by
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                }
+            }
+            $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from, $extra_left_join, $group_by);
             $resultset['invoices'] = $pageset;
             if (count($resultset['invoices']['invoices'])) {
                 foreach ($resultset['invoices']['invoices'] as $invoice) {

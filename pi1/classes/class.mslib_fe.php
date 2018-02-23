@@ -9399,7 +9399,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
+    public function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $extra_left_join = '', $group_by = '') {
         if (!$limit) {
             $limit = 20;
         }
@@ -9412,7 +9412,7 @@ class mslib_fe {
         if (count($select) > 0) {
             $select_clause .= implode(',', $select);
         }
-        $from_clause = ' from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id';
+        $from_clause = ' from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id' . $extra_left_join;
         if (count($from) > 0) {
             $from_clause .= ', ';
             $from_clause .= implode(',', $from);
@@ -9433,6 +9433,10 @@ class mslib_fe {
                 $having_clause .= $item;
             }
         }
+        $group_by_clause='';
+        if ($group_by) {
+            $group_by_clause=' group by '.$group_by;
+        }
         if (is_array($orderby) and count($orderby) > 0) {
             $str_order_by = implode($orderby, ',');
         } else if ($orderby) {
@@ -9445,11 +9449,11 @@ class mslib_fe {
         }
         $limit_clause = ' LIMIT ' . $offset . ',' . $limit;
         $array = array();
-        $str = 'SELECT count(1) as total ' . $from_clause . $where_clause . $having_clause;
+        $str = 'SELECT count(1) as total ' . $from_clause . $where_clause . $having_clause . $group_by_clause;
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         $array['total_rows'] = $row['total'];
-        $str = $select_clause . $from_clause . $where_clause . $having_clause . $orderby_clause . $limit_clause;
+        $str = $select_clause . $from_clause . $where_clause . $having_clause . $group_by_clause . $orderby_clause . $limit_clause;
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($rows > 0) {
