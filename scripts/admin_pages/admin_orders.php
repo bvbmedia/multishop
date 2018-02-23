@@ -10,6 +10,16 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $content = '';
 $all_orders_status = mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingAllOrdersStatusPreHook'])) {
+    $params = array(
+        'all_orders_status' => &$all_orders_status
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingAllOrdersStatusPreHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// hook
 if ($this->post['tx_multishop_pi1']['edit_order'] == 1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
     $url = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $this->post['tx_multishop_pi1']['orders_id'] . '&action=edit_order');
     header('Location: ' . $url);
