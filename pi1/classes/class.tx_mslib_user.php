@@ -199,16 +199,17 @@ class tx_mslib_user {
         $this->region = trim($region);
     }
     public function checkUserData() {
-        $captcha_code = $this->getCaptcha_code();
-        $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_captcha');
-        if (!$captcha_code or $session['captcha_code'] != md5($captcha_code)) {
-            $erno['err_captcha_code'] = $this->ref->pi_getLL('captcha_code_is_invalid');
+        if ($this->ref->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT']=='0') {
+            $captcha_code = $this->getCaptcha_code();
+            $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_captcha');
+            if (!$captcha_code or $session['captcha_code'] != md5($captcha_code)) {
+                $erno['err_captcha_code'] = $this->ref->pi_getLL('captcha_code_is_invalid');
+            }
+            // clear captcha session
+            $session_captcha = array();
+            $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_captcha', $session_captcha);
+            $GLOBALS['TSFE']->storeSessionData();
         }
-        // clear captcha session
-        $session_captcha=array();
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_captcha', $session_captcha);
-        $GLOBALS['TSFE']->storeSessionData();
-
         if (!$this->getGender() && $this->ref->ms['MODULES']['GENDER_INPUT_REQUIRED']) {
             $erno['err_gender'] = $this->ref->pi_getLL('please_select_your_salutation');
         }
@@ -245,7 +246,7 @@ class tx_mslib_user {
         if ($this->getPassword() != $this->getConfirmation_password()) {
             $erno['err_password_repeat'] = $this->ref->pi_getLL('password_is_not_the_same_as_repeated_password');
         }
-        if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->getCompany()) {
+        if ($this->ref->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->getCompany()) {
             $erno['err_company'] = $this->ref->pi_getLL('company_is_required');
         }
         /*
