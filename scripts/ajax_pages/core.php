@@ -1535,8 +1535,11 @@ switch ($this->ms['page']) {
                     }
                     break;
                 case 'imageUpload':
-                    $_FILES['file']['type'][0] = strtolower($_FILES['file']['type'][0]);
-                    switch ($_FILES['file']['type'][0]) {
+                    $file_type=$_FILES['file']['type'];
+                    if (is_array($_FILES['file']['type'])) {
+                        $file_type = strtolower($_FILES['file']['type'][0]);
+                    }
+                    switch ($file_type) {
                         case 'image/png':
                         case 'image/jpg':
                         case 'image/gif':
@@ -1545,7 +1548,11 @@ switch ($this->ms['page']) {
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                            move_uploaded_file($_FILES['file']['tmp_name'][0], $temp_file);
+                            $file_tmp_name=$_FILES['file']['tmp_name'];
+                            if (is_array($_FILES['file']['tmp_name'])) {
+                                $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                            }
+                            move_uploaded_file($file_tmp_name, $temp_file);
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
                                 $imgtype = mslib_befe::exif_imagetype($temp_file);
@@ -1564,9 +1571,15 @@ switch ($this->ms['page']) {
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsfiles';
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                    move_uploaded_file($_FILES['file']['tmp_name'][0], $temp_file);
-                    $filename = $_FILES["file"]["name"][0];
-                    $path_parts = pathinfo($_FILES["file"]["name"][0]);
+                    $file_name=$_FILES['file']['name'];
+                    $file_tmp_name=$_FILES['file']['tmp_name'];
+                    if (is_array($_FILES['file']['tmp_name'])) {
+                        $file_name=$_FILES['file']['name'][0];
+                        $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                    }
+                    move_uploaded_file($file_tmp_name, $temp_file);
+                    $filename = $file_name;
+                    $path_parts = pathinfo($file_name);
                     $ext = $path_parts['extension'];
                     if ($ext) {
                         $continueUpload = 1;
