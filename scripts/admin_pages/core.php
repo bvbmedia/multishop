@@ -44,10 +44,10 @@ $(function() {
 		focus: false,
 		linkSize: 250,
 		pasteImages: true,
-		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl') . '\',
-		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload') . '\',
-		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload') . '\',
-		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson') . '\',
+		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl', 1) . '\',
+		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload', 1) . '\',
+		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload', 1) . '\',
+		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson', 1) . '\',
 		minHeight:\'400\',
 		plugins: ['.implode(',',$settings['plugins']).'],
 		callbacks: {
@@ -70,6 +70,18 @@ $(function() {
                         $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                     }
                     return false;
+                }
+            },
+            image: {
+                uploadError: function(response)
+                {
+                    console.log(response.message);
+                }
+            },
+            file: {
+                uploadError: function(response)
+                {
+                    console.log(response.message);
                 }
             }
         }

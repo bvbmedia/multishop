@@ -154,7 +154,7 @@
 			$el.on('click', function(e)
 			{
 				e.preventDefault();
-				self._remove(rule);
+				self.remove(rule);
 			});
 
 			$box.append($el);
@@ -178,7 +178,7 @@
 		},
 		_remove: function(rule)
 		{
-			this.inline.remove({ style: rule });
+			this.inline.removeStyle(rule);
 		}
     });
 })(Redactor);

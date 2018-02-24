@@ -121,7 +121,7 @@
             if ($component)
             {
                 var current = this.selection.getCurrent();
-                var $row = $component.addRowTo(current, 'before');
+                var $row = $component.addRow(current, 'before');
 
                 this.caret.setStart($row);
             }
@@ -204,9 +204,9 @@
 
                 $component.removeColumn(current);
 
-                if (nextCell) this.caret.setStart(nextCell);
+                if ($nextCell) this.caret.setStart(nextCell);
                 else if (prevCell) this.caret.setEnd(prevCell);
-                else this.deleteTable();
+                else this._deleteTable();
             }
         },
         deleteRow: function()
@@ -224,7 +224,7 @@
 
                 if (nextRow) this.caret.setStart(nextRow);
                 else if (prevRow) this.caret.setEnd(prevRow);
-                else this.deleteTable();
+                else this._deleteTable();
             }
         },
         deleteTable: function()

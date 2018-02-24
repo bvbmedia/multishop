@@ -259,18 +259,6 @@ h6:empty,
     border: none;
     background: rgba(0, 0, 0, 0.1); }
 
-.redactor-component {
-  position: relative; }
-
-.redactor-component[data-redactor-type="widget"]:before,
-.redactor-component[data-redactor-type="video"]:before {
-  width: 100%;
-  height: 100%;
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: 1; }
-
 .redactor-component[data-redactor-type=variable] {
   white-space: nowrap;
   background: rgba(0, 125, 255, 0.75);
@@ -378,9 +366,6 @@ h6:empty,
   padding: 10px 18px 20px 18px;
   line-height: 1.5;
   resize: vertical; }
-
-.redactor-box[dir="rtl"] .redactor-source {
-  direction: ltr; }
 
 .redactor-placeholder:before {
   position: absolute;
@@ -605,22 +590,6 @@ h6:empty,
     padding-left: 0;
     border-left: none; }
 
-.redactor-context-toolbar[dir="rtl"] a {
-  padding: 2px 12px 1px 0; }
-
-.redactor-context-toolbar[dir="rtl"] a:first-child {
-  padding-right: 0; }
-
-.redactor-context-toolbar[dir="rtl"] a:before {
-  padding-left: 0px;
-  padding-right: 10px;
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
-  border-left: none; }
-
-.redactor-context-toolbar[dir="rtl"] a:first-child:before {
-  padding-right: 0;
-  border-right: none; }
-
 .redactor-dropdown {
   font-family: "Trebuchet MS", "Helvetica Neue", Helvetica, Tahoma, sans-serif;
   display: none;
@@ -658,17 +627,15 @@ h6:empty,
       color: rgba(0, 0, 0, 0.4);
       background: #fff; }
 
-.redactor-dropdown-cells {
-  margin: 10px auto; }
-  .redactor-dropdown-cells a,
-  .redactor-dropdown-cells span {
-    float: left;
-    cursor: pointer;
-    box-sizing: border-box;
-    text-align: center;
-    padding: 0;
-    margin: 0;
-    font-size: 14px; }
+.redactor-dropdown-cells a,
+.redactor-dropdown-cells span {
+  float: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 14px; }
 
 .redactor-dropdown-selector {
   display: flex;
@@ -967,18 +934,6 @@ h6:empty,
     float: left;
     width: 66%; }
 
-.redactor-modal[dir="rtl"] .redactor-close {
-  left: 12px;
-  right: auto; }
-
-.redactor-modal[dir="rtl"] textarea {
-  direction: ltr;
-  text-align: left; }
-
-.redactor-modal[dir="rtl"] .redactor-modal-footer button.redactor-button-unstyled {
-  float: left;
-  margin-left: 0; }
-
 .redactor-modal-header {
   padding: 20px;
   font-size: 18px;
@@ -1050,8 +1005,6 @@ h6:empty,
     .redactor-styles[dir="rtl"] ul ol,
     .redactor-styles[dir="rtl"] ol ul {
       margin: 0 1.5em 0 0; }
-    .redactor-styles[dir="rtl"] figcaption {
-      text-align: right; }
   .redactor-styles a,
   .redactor-styles a:hover {
     color: #3397ff; }
@@ -1067,15 +1020,12 @@ h6:empty,
     margin: 0;
     margin-bottom: 1em; }
   .redactor-styles ul,
-  .redactor-styles ol {
-    padding: 0; }
-    .redactor-styles ul,
-    .redactor-styles ul ul,
-    .redactor-styles ul ol,
-    .redactor-styles ol,
-    .redactor-styles ol ul,
-    .redactor-styles ol ol {
-      margin: 0 0 0 1.5em; }
+  .redactor-styles ol,
+  .redactor-styles ul ul,
+  .redactor-styles ol ol,
+  .redactor-styles ul ol,
+  .redactor-styles ol ul {
+    margin: 0 0 0 1.5em; }
   .redactor-styles ul li,
   .redactor-styles ol li {
     text-align: left; }
@@ -1119,7 +1069,7 @@ h6:empty,
     border: none; }
   .redactor-styles table {
     width: 100%; }
-  .redactor-styles time, .redactor-styles small, .redactor-styles var, .redactor-styles code, .redactor-styles kbd, .redactor-styles mark {
+  .redactor-styles time, .redactor-styles small, .redactor-styles figcaption, .redactor-styles var, .redactor-styles code, .redactor-styles kbd, .redactor-styles mark {
     display: inline-block;
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
     font-size: 87.5%;
@@ -1203,7 +1153,7 @@ h6:empty,
   .redactor-styles video,
   .redactor-styles embed,
   .redactor-styles object {
-    height: auto !important; }
+    height: auto; }
   .redactor-styles embed,
   .redactor-styles object {
     height: 100%; }
@@ -1211,7 +1161,6 @@ h6:empty,
     vertical-align: middle;
     -ms-interpolation-mode: bicubic; }
   .redactor-styles figcaption {
-    display: block;
     opacity: .6;
     font-size: 12px;
     font-style: italic;

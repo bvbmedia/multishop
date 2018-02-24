@@ -11,8 +11,8 @@
             'widget':
                 '<form action=""> \
                     <div class="form-item"> \
-                        <label for="modal-widget-input">## widget-html-code ## <span class="req">*</span></label> \
-                        <textarea id="modal-widget-input" name="widget" style="height: 200px;"></textarea> \
+                        <label>## widget-html-code ## <span class="req">*</span></label> \
+                        <textarea name="widget" style="height: 200px;"></textarea> \
                     </div> \
                 </form>'
         },
@@ -36,8 +36,9 @@
 
                     if (this.$currentItem)
                     {
-                        var code = decodeURI(this.$currentItem.attr('data-widget-code'));
-                        $form.getField('widget').val(code);
+                        var widgetData = this.$currentItem.getData();
+
+                        $form.getField('widget').val(widgetData.html);
                     }
                 },
                 insert: function($modal, $form)
@@ -69,22 +70,13 @@
                 contextbar.set(e, node, buttons, 'bottom');
             }
         },
-        onbutton: {
-            widget: {
-                observe: function(button)
-                {
-                    this._observeButton(button);
-                }
-            }
-        },
 
         // public
         start: function()
         {
             var obj = {
                 title: this.lang.get('widget'),
-                api: 'plugin.widget.open',
-                observe: 'widget'
+                api: 'plugin.widget.open'
             };
 
             var $button = this.toolbar.addButton('widget', obj);
@@ -131,23 +123,9 @@
         	    return;
     		}
 
-    		var html = (this._isHtmlString(data.widget)) ? data.widget : document.createTextNode(data.widget);
-            var $component = this.component.create('widget', html);
-            $component.attr('data-widget-code', encodeURI(data.widget.trim()));
+            var $component = this.component.create('widget', data.widget);
     		this.insertion.insertHtml($component);
 
-		},
-        _isHtmlString: function(html)
-        {
-            return !(typeof html === 'string' && !/^\s*<(\w+|!)[^>]*>/.test(html));
-        },
-		_observeButton: function(button)
-		{
-    		var current = this.selection.getCurrent();
-    		var data = this.inspector.parse(current);
-
-    		if (data.isComponentType('table')) button.disable();
-    		else button.enable();
 		}
     });
 })(Redactor);

@@ -11,8 +11,8 @@
             'video':
                 '<form action=""> \
                     <div class="form-item"> \
-                        <label for="modal-video-input">## video-html-code ## <span class="req">*</span></label> \
-                        <textarea id="modal-video-input" name="video" style="height: 160px;"></textarea> \
+                        <label>## video-html-code ## <span class="req">*</span></label> \
+                        <textarea name="video" style="height: 160px;"></textarea> \
                     </div> \
                 </form>'
         },

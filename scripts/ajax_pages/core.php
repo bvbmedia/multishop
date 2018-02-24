@@ -1535,8 +1535,8 @@ switch ($this->ms['page']) {
                     }
                     break;
                 case 'imageUpload':
-                    $_FILES['file']['type'] = strtolower($_FILES['file']['type']);
-                    switch ($_FILES['file']['type']) {
+                    $_FILES['file']['type'][0] = strtolower($_FILES['file']['type'][0]);
+                    switch ($_FILES['file']['type'][0]) {
                         case 'image/png':
                         case 'image/jpg':
                         case 'image/gif':
@@ -1545,7 +1545,7 @@ switch ($this->ms['page']) {
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                            move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
+                            move_uploaded_file($_FILES['file']['tmp_name'][0], $temp_file);
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
                                 $imgtype = mslib_befe::exif_imagetype($temp_file);
@@ -1564,9 +1564,9 @@ switch ($this->ms['page']) {
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsfiles';
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                    move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
-                    $filename = $_FILES["file"]["name"];
-                    $path_parts = pathinfo($_FILES["file"]["name"]);
+                    move_uploaded_file($_FILES['file']['tmp_name'][0], $temp_file);
+                    $filename = $_FILES["file"]["name"][0];
+                    $path_parts = pathinfo($_FILES["file"]["name"][0]);
                     $ext = $path_parts['extension'];
                     if ($ext) {
                         $continueUpload = 1;
