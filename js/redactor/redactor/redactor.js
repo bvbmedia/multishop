@@ -12154,12 +12154,7 @@ $R.add('module', 'link', {
         //if (!this.opts.linkNewTab) $modal.find('.form-item-target').hide();
         //if (!this.opts.linkTitle) $modal.find('.form-item-title').hide();
         $(document).on('change', '#predefined-class', function(){
-            var link_class_val=$('#modal-link-class').val();
-            if (link_class_val!='') {
-                link_class_val = link_class_val + ' ' + $(this).val();
-            } else {
-                link_class_val = $(this).val();
-            }
+            var link_class_val = $(this).val();
             $('#modal-link-class').val(link_class_val);
         });
 
