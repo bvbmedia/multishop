@@ -281,7 +281,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                 $params = array(
                     'doProductQuery' => &$doProductQuery,
                     'current' => &$current,
-                    'content' => &$content
+                    'content' => &$content,
+                    'limit_per_page' => &$limit_per_page
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

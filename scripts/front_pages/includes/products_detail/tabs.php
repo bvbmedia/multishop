@@ -465,6 +465,7 @@ if (!$product['products_id']) {
                 'markerArray' => &$markerArray,
                 'product' => &$product,
                 'output' => &$output,
+                'output_array' => &$output_array,
                 'plugins_extra_content' => &$plugins_extra_content,
                 'js_detail_page_triggers' => &$js_detail_page_triggers
         );
