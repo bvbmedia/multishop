@@ -306,11 +306,8 @@ if ($count_product > 0) {
         $formats[] = '200';
         $formats[] = '300';
         foreach ($formats as $format) {
+            $key = 'PRODUCTS_IMAGE_' . $format;
             if ($product['products_image']) {
-                $key = 'image_' . $format;
-                if ($this->imageWidth == $format) {
-                    $key = 'image';
-                }
                 $imagePath = mslib_befe::getImagePath($product['products_image'], 'products', $format);
                 $markerArray[$key] = '<img src="' . $imagePath . '" alt="' . htmlspecialchars($product['products_name']) . '" />';
             } else {
