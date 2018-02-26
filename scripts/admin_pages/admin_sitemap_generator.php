@@ -88,6 +88,9 @@ if (!$this->get['skip_categories']) {
             $where .= '&';
         }
         $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
+        if (trim($categories['categories_external_url']) != '') {
+            $link=$categories['categories_external_url'];
+        }
         // TXT
         if ($logs_lines_reg==$max_lines_per_file) {
             $logs_file_reg++;
