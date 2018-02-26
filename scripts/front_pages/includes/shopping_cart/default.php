@@ -307,8 +307,8 @@ if ($count_product > 0) {
         $formats[] = '300';
         foreach ($formats as $format) {
             $key = 'PRODUCT_IMAGE_' . $format;
-            if ($product['products_image']) {
-                $imagePath = mslib_befe::getImagePath($product['products_image'], 'products', $format);
+            if ($product_info['products_image']) {
+                $imagePath = mslib_befe::getImagePath($product_info['products_image'], 'products', $format);
                 $markerArray[$key] = '<img src="' . $imagePath . '" alt="' . htmlspecialchars($product['products_name']) . '" />';
             } else {
                 $markerArray[$key] = '<div class="no_image"></div>';
