@@ -1,5 +1,5 @@
 CREATE TABLE `fe_groups` (
- `tx_multishop_discount` int(2) default '0',
+ `tx_multishop_discount` int(3) default '0',
  PRIMARY KEY (`uid`),
  KEY `parent` (`pid`),
  KEY `hidden` (`hidden`),
@@ -14,7 +14,7 @@ CREATE TABLE `fe_users` (
  `address_number` varchar(150) default '',
  `mobile` varchar(150) default '',
  `gender` varchar(1) default '',
- `tx_multishop_discount` int(2) default '0',
+ `tx_multishop_discount` int(3) default '0',
  `tx_multishop_newsletter` tinyint(1) default '0',
  `tx_multishop_code` varchar(50) default '',
  `tx_multishop_optin_ip` varchar(50) default '',

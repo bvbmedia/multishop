@@ -301,6 +301,19 @@ if ($count_product > 0) {
         $markerArray = array();
         $markerArray['PRODUCT_ROW_TYPE'] = $output['product_row_type'];
         $markerArray['PRODUCT_IMAGE'] = $output['product_image'];
+        $formats = array();
+        $formats[] = '100';
+        $formats[] = '200';
+        $formats[] = '300';
+        foreach ($formats as $format) {
+            $key = 'PRODUCT_IMAGE_' . $format;
+            if ($product_info['products_image']) {
+                $imagePath = mslib_befe::getImagePath($product_info['products_image'], 'products', $format);
+                $markerArray[$key] = '<img src="' . $imagePath . '" alt="' . htmlspecialchars($product['products_name']) . '" />';
+            } else {
+                $markerArray[$key] = '<div class="no_image"></div>';
+            }
+        }
         $markerArray['PRODUCT_LINK'] = $output['product_link'];
         $markerArray['PRODUCT_NAME'] = $output['product_name'];
         $markerArray['PRODUCT_SHORTDESCRIPTION'] = $product['product_shortdescription_raw'];
