@@ -10486,8 +10486,8 @@ class mslib_fe {
         $insertArray['http_user_agent'] = $this->server['HTTP_USER_AGENT'];
         $insertArray['http_referer'] = $this->server['HTTP_REFERER'];
         if ($insertArray['http_referer']) {
-            $urlArray=parse_url($insertArray['host']);
-            $insertArray['http_host_referer'] = $urlArray[''];
+            $urlArray=parse_url($insertArray['http_referer']);
+            $insertArray['http_host_referer'] = $urlArray['host'];
         }
         $insertArray['url'] = (isset($_SERVER['HTTPS']) ? "https://" : "http://") . $this->HTTP_HOST . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
         $insertArray['segment_type'] = '';
