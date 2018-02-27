@@ -11727,10 +11727,10 @@ $R.add('module', 'link', {
                     <input type="text" id="modal-link-title" name="title"> \
                 </div> \
                 <div class="form-item form-item-class form-inline "> \
-                    <div class="col-md-8" style="padding-left: 0px">\
+                    <div class="col-md-8" style="padding-left: 0px"> \
                         <label for="modal-link-class">Class</label> \
                         <input type="text" id="modal-link-class" name="link_class"> \
-                    </div>\
+                    </div> \
                     <div class="col-md-4" style="padding-right: 0px">\
                         <label for="modal-link-pre-class">Predefined class</label> \
                         <select id="predefined-class">\
