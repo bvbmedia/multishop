@@ -1340,7 +1340,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (!$customer_id) {
             // add new account
             $insertArray = array();
-            $insertArray['page_uid'] = $this->shop_pid;
+            if (is_numeric($address['shop_pid'])) {
+                $insertArray['page_uid'] = $address['shop_pid'];
+            } else {
+                $insertArray['page_uid'] = $this->shop_pid;
+            }
             $insertArray['company'] = $address['company'];
             $insertArray['name'] = $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name'];
             $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
