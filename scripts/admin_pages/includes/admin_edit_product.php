@@ -1839,6 +1839,14 @@ if ($this->post) {
                     }
                 }
                 // EXTRA TAB CONTENT EOF
+                // clean up the
+                if (count($updateArray)) {
+                    foreach ($updateArray as $update_key => $upd_value) {
+                        if ($upd_value=='<p></p>') {
+                            $updateArray[$update_key]='';
+                        }
+                    }
+                }
                 if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
                     $str = "select 1 from tx_multishop_products_description where products_id='" . $prodid . "' and (page_uid=0 OR page_uid='" . $this->shop_pid . "') and (layered_categories_id='" . $this->post['local_primary_product_categories'] . "' or layered_categories_id='0') and language_id='" . $key . "'";
                 } else {
