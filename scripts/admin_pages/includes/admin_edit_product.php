@@ -1839,7 +1839,7 @@ if ($this->post) {
                     }
                 }
                 // EXTRA TAB CONTENT EOF
-                // clean up the
+                // clean up the product description value
                 if (count($updateArray)) {
                     foreach ($updateArray as $update_key => $upd_value) {
                         if ($upd_value=='<p></p>') {
