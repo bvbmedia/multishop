@@ -1730,3 +1730,18 @@ CREATE TABLE `tx_multishop_customers_export` (
  PRIMARY KEY (`id`),
  KEY `code` (`code`)
 );
+
+CREATE TABLE `tx_multishop_orders_products_qty_delivered` (
+ `orders_products_qty_delivered_id` int(11) NOT NULL auto_increment,
+ `orders_products_id` int(11) default '0',
+ `orders_id` int(11) default '0',
+ `products_id` int(11) default '0',
+ `qty_delivered` int(4) default '0',
+ `crdate` int(11) default '0',
+ PRIMARY KEY (`orders_products_id`),
+ KEY `orders_products_id` (`orders_products_id`),
+ KEY `orders_id` (`orders_id`),
+ KEY `products_id` (`products_id`),
+ KEY `qty_delivered` (`qty_delivered`),
+ KEY `crdate` (`crdate`)
+);

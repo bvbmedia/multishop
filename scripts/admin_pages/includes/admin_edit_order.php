@@ -247,7 +247,30 @@ if (is_numeric($this->get['orders_id'])) {
                         if (is_numeric($this->post['orders_products_id']) > 0) {
                             if ($this->post['product_name']) {
                                 $this->post['product_qty'] = str_replace(',', '.', $this->post['product_qty']);
-                                $this->post['product_qty_delivered'] = str_replace(',', '.', $this->post['product_qty_delivered']);
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    $current_qty_delivered=0;
+                                    $updated_qty_delivered=0;
+                                    $this->post['product_qty_delivered'] = str_replace(',', '.', $this->post['product_qty_delivered']);
+                                    if ($this->post['product_qty_delivered'] > 0) {
+                                        if ($this->post['product_qty_delivered']>$this->post['product_qty']) {
+                                            $this->post['product_qty_delivered']=$this->post['product_qty'];
+                                        }
+                                        $filterOProduct=array();
+                                        $filterOProduct[]='orders_id=' . $this->get['orders_id'];
+                                        $filterOProduct[]='products_id=' . $this->post['products_id'];
+                                        $current_order_product_rec=mslib_befe::getRecord($this->post['orders_products_id'], 'tx_multishop_orders_products', 'orders_products_id', $filterOProduct, 'qty_delivered');
+                                        if (is_array($current_order_product_rec)) {
+                                            $current_qty_delivered=$current_order_product_rec['qty_delivered'];
+                                            if ($this->post['product_qty_delivered']>$current_qty_delivered) {
+                                                $updated_qty_delivered = $this->post['product_qty_delivered'] - $current_qty_delivered;
+                                            } else {
+                                                $updated_qty_delivered = $current_qty_delivered;
+                                            }
+                                        }
+                                    } else {
+                                        $this->post['product_qty_delivered'] = 0;
+                                    }
+                                }
                                 if (empty($this->post['product_price'])) {
                                     $this->post['product_price'] = '0';
                                 }
@@ -277,7 +300,10 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 // get all cats eof
                                 $updateArray['qty'] = $this->post['product_qty'];
-                                $updateArray['qty_delivered'] = $this->post['product_qty_delivered'];
+                                $updateArray['qty_delivered']=0;
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $this->post['product_qty_delivered']) {
+                                    $updateArray['qty_delivered'] = $this->post['product_qty_delivered'];
+                                }
                                 if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
                                     $updateArray['products_name'] = $this->post['custom_manual_product_name'];
                                 } else {
@@ -332,6 +358,19 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \'' . (int)$this->get['orders_id'] . '\' and orders_products_id = \'' . (int)$this->post['orders_products_id'] . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                // update the orders product qty delivered record
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    if ($updated_qty_delivered > $current_qty_delivered) {
+                                        $insertOPQtyDeliveredArray=array();
+                                        $insertOPQtyDeliveredArray['orders_products_id']=$this->post['orders_products_id'];
+                                        $insertOPQtyDeliveredArray['orders_id']=$this->get['orders_id'];
+                                        $insertOPQtyDeliveredArray['products_id']=$this->post['products_id'];
+                                        $insertOPQtyDeliveredArray['qty_delivered']=$updated_qty_delivered;
+                                        $insertOPQtyDeliveredArray['crdate']=time();
+                                        $queryInsertOPQtyDelivered = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_delivered', $insertOPQtyDeliveredArray);
+                                        $GLOBALS['TYPO3_DB']->sql_query($queryInsertOPQtyDelivered);
+                                    }
+                                }
                                 // hook for adding new items to details fieldset
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'])) {
                                     // hook
@@ -2235,9 +2274,15 @@ if (is_numeric($this->get['orders_id'])) {
                             $order_products_body_data['products_qty_delivered']['align'] = 'right';
                             $order_products_body_data['products_qty_delivered']['class'] = 'cellQty';
                             $quantity_html = '<div class="quantity buttons_added">';
-                            $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty_delivered">';
-                            $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty_delivered" name="product_qty_delivered" value="' . round($order['qty_delivered'], 13) . '" />';
-                            $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="product_qty_delivered">';
+
+                            if ($order['qty_delivered']==$order['qty']) {
+                                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty_delivered" name="product_qty_delivered" value="' . round($order['qty_delivered'], 13) . '" readonly="readonly" />';
+                            } else {
+                                $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty_delivered">';
+                                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty_delivered" name="product_qty_delivered" value="' . round($order['qty_delivered'], 13) . '" />';
+                                $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="'.$order['qty'].'" class="qty_plus" rel="product_qty_delivered">';
+                            }
+
                             $quantity_html .= '</div>';
                             $order_products_body_data['products_qty_delivered']['value'] .= $quantity_html;
                         }
