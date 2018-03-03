@@ -5597,7 +5597,7 @@ class mslib_fe {
             return $allmethods;
         }
     }
-    public function getShippingCosts($countries_id, $shipping_method_id) {
+    public function getShippingCosts($countries_id, $shipping_method_id, $overide_costs = true) {
         if (!is_numeric($countries_id)) {
             return false;
         }
@@ -5705,7 +5705,7 @@ class mslib_fe {
                 }
             }
             //
-            if (!empty($row3['override_shippingcosts'])) {
+            if (!empty($row3['override_shippingcosts']) && $overide_costs) {
                 $old_shipping_costs = $shipping_cost;
                 $shipping_cost = $row3['override_shippingcosts'];
                 // custom code to change the shipping costs based on cart amount
