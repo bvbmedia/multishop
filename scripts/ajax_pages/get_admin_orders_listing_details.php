@@ -117,6 +117,7 @@ if ($this->ADMIN_USER) {
 				<tr>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('products_id') . '</th>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('qty') . '</th>
+				'.($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<th class="cellFixed cellNoWrap">' . $this->pi_getLL('order_product_qty_delivered') . '</th>' : '').'
 				<th class="cellFluid">' . $this->pi_getLL('products_name') . '</th>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('price') . '</th>
 				' . ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT'] > 0 ? '<th>' . $this->pi_getLL('discount') . '</th>' : '') . '
@@ -162,6 +163,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '<tr class="' . $tr_subtype . '">
 					<td class="cellFixed cellNoWrap text-right"><a href="' . $productLink . '" target="_blank">' . $product['products_id'] . '</a></td>
 					<td class="cellFixed cellNoWrap text-right">' . round($product['qty'], 13) . '</td>
+					'.($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<td class="cellFixed cellNoWrap text-right">' . round($product['qty_delivered'], 13) . '</td>' : '').'
 					<td class="cellFluid">' . $productsName . '</td>';
                     $normal_price = $product['final_price'];
                     if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
