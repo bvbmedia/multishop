@@ -809,7 +809,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .text-danger { color:#d9534f; }
 .text-orange { color:#f90;}
 .text-black { color:#000; }
-.text-gray { color:#ccc; }
+.text-gray { color:#999; }
 .text-pink { color:#f691b2; }
 
 .table-borderless > thead > tr > th,
