@@ -648,6 +648,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `products_tax_id` int(11) default '0',
  `page_uid` int(11) default '0',
  `product_link` varchar(255) default '',
+ `stock_subtracted` tinyint(1) default '0',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -664,7 +665,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `products_tax_id` (`products_tax_id`),
  KEY `product_capital_price` (`product_capital_price`),
  KEY `page_uid` (`page_uid`),
- KEY `product_link` (`product_link`)
+ KEY `product_link` (`product_link`),
+ KEY `stock_subtracted` (`stock_subtracted`)
 ) COMMENT='Orderregels';
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
@@ -1738,7 +1740,7 @@ CREATE TABLE `tx_multishop_orders_products_qty_delivered` (
  `products_id` int(11) default '0',
  `qty_delivered` int(4) default '0',
  `crdate` int(11) default '0',
- PRIMARY KEY (`orders_products_id`),
+ PRIMARY KEY (`orders_products_qty_delivered_id`),
  KEY `orders_products_id` (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `products_id` (`products_id`),

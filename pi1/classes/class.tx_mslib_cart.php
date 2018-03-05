@@ -2334,7 +2334,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $updateOrderProductsSortOrder['sort_order'] = $orders_products_id;
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $orders_products_id . '\'', $updateOrderProductsSortOrder);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
+                            if ($this->ms['MODULES']['SUBTRACT_STOCK'] && $this->ms['MODULES']['SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID']=='0') {
                                 $continue_update_stock = true;
                                 // hook to manipulate the continuity of update stock
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'])) {
