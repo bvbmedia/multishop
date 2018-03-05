@@ -1153,7 +1153,16 @@ switch ($this->ms['page']) {
         break;
     case 'getAdminOrdersListingDetails':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_orders_listing_details.php');
+            if (strstr($this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'], "..")) {
+                die('error in GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE value');
+            } else {
+                if (strstr($this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'], "/")) {
+                    // relative mode
+                    require($this->DOCUMENT_ROOT . $this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'] . '.php');
+                } else {
+                    require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_orders_listing_details.php');
+                }
+            }
         }
         exit();
         break;
