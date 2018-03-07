@@ -972,6 +972,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
                 $item['ITEM_PRODUCT_STATUS'] = htmlspecialchars(mslib_fe::getOrderStatusName($product['status']));
             }
+            if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+                $item['ITEM_QUANTITY_DELIVERED'] = $product['qty_delivered'];
+            }
             $item['ITEM_VAT_RATE'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
             // GRAND TOTAL CALCULATIONS
             $subtotal = ($subtotal + $price);
@@ -1025,6 +1028,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###'] = '';
             $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
         }
+        if (!$this->ms['MODULES']['SHOW_QTY_DELIVERED'] || $template_type != 'order_history_site') {
+            $subProductDeliveredPart = array();
+            $subProductDeliveredPart['ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###');
+            $subProductDelivered = array();
+            $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
+            $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
+
+            $subProductDeliveredPart = array();
+            $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
+            $subProductDelivered = array();
+            $subProductDelivered['###ITEM_QUANTITY_DELIVERED_WRAPPER###'] = '';
+            $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductDelivered);
+        }
         $subpartArray = array();
         //ITEMS_HEADER_WRAPPER
         $markerArray = array();
@@ -1042,6 +1058,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $markerArray['HEADING_VAT_RATE'] = $this->pi_getLL('vat');
         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
             $markerArray['HEADING_PRODUCT_STATUS'] = $this->pi_getLL('order_product_status');
+        }
+        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+            $markerArray['HEADING_QUANTITY_DELIVERED'] = $this->pi_getLL('order_product_qty_delivered');
         }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableHeaderPostProc'])) {
@@ -1068,6 +1087,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $keys[] = 'ITEM_PRICE_SINGLE';
         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
             $keys[] = 'ITEM_PRODUCT_STATUS';
+        }
+        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+            $keys[] = 'ITEM_QUANTITY_DELIVERED';
         }
         foreach ($itemsWrapper as $item) {
             $markerArray = array();

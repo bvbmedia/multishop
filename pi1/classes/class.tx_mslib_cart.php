@@ -3211,6 +3211,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###'] = '';
                 $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
             }
+            if (!$this->ms['MODULES']['SHOW_QTY_DELIVERED'] || $sectionTemplateType != 'order_history_site') {
+                $subProductDeliveredPart = array();
+                $subProductDeliveredPart['ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###');
+                $subProductDelivered = array();
+                $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
+                $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
+
+                $subProductDeliveredPart = array();
+                $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
+                $subProductDelivered = array();
+                $subProductDelivered['###ITEM_QUANTITY_DELIVERED_WRAPPER###'] = '';
+                $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductDelivered);
+            }
             // end of remove
             $subpartArray = array();
             //ITEMS_HEADER_WRAPPER
