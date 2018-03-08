@@ -1034,6 +1034,14 @@ if ($this->post and $_FILES) {
     }
 }
 if ($this->post) {
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveProductPreHook'])) {
+        $params = array();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveProductPreHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // custom hook that can be controlled by third-party plugin eof
     // updating products table
     $updateArray = array();
     $updateArray['vendor_code'] = '';
