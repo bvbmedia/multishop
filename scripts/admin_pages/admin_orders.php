@@ -614,6 +614,7 @@ $option_search = array(
         "delivery_address" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address'),
         "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
         "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
+        "foreign_orders_id" => $this->pi_getLL('feed_exporter_fields_label_foreign_orders_id'),
 
 );
 asort($option_search);
@@ -786,6 +787,9 @@ if ($this->post['skeyword']) {
             break;
         case 'http_referer':
             $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'foreign_orders_id':
+            $filter[] = "o.foreign_orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
     }
 }
