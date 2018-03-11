@@ -3015,7 +3015,7 @@ if ($this->post) {
 				<input name="ajax_products_image' . $i . '" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
             $images_tab_block .= '<div id="image_action' . $i . '" class="image_action">';
             if ($_REQUEST['action'] == 'edit_product' && $product['products_image' . $i]) {
-                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '" />';
+                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?'.time().'" />';
                 $images_tab_block .= '<div class="image_tools">';
                 if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
                     $images_tab_block .= ' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="' . $product['products_image' . $i] . '"><i class="fa fa-crop"></i></a> ';
@@ -3039,6 +3039,7 @@ if ($this->post) {
 				element: document.getElementById(\'products_image' . $i . '\'),
 				action: \'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images') . '\',
 				params: {
+					image_index: \''.($x+1).'\',
 					products_name: products_name,
 					file_type: \'products_image' . $i . '\',
 					old_image: $("#ajax_products_image' . $i . '").val()
@@ -3049,9 +3050,26 @@ if ($this->post) {
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul' . $i . '"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
+				    var uploadList= \'#qq-upload-list-ul' . $i . '\';
 					var filenameServer = responseJSON[\'filename\'];
+					var fileOriginal = responseJSON[\'fileOriginal\'];
 					var filenameLocationServer = responseJSON[\'fileLocation\'];
-					$("#ajax_products_image' . $i . '").val(filenameServer);
+					if (parseInt($(uploadList).find(\'li\').length) > 1) {
+					    $.each($(uploadList).find(\'li\'), function(idx, obj_li) {
+					        var current_filename=$(obj_li).find(\'span.qq-upload-file\').html();
+					        if (fileOriginal==current_filename) {
+					            var el_idx=idx;
+					            if (el_idx==\'0\') {
+					                el_idx=\'\';
+					            }
+                                var ajax_products_image_id=\'#ajax_products_image\' + el_idx;
+                                $(ajax_products_image_id).val(filenameServer);
+                                return false;   					                
+					        }
+					    });
+					} else {
+					    $("#ajax_products_image' . $i . '").val(filenameServer);
+					}
 					uploader' . $i . '.setParams({
 					   products_name: products_name,
 					   file_type: \'products_image\',
@@ -3070,7 +3088,10 @@ if ($this->post) {
 					$("#image_action' . $i . '").html(new_image);
 					' : '') . '
 				},
-				debug: false
+				'.($x>0 ? '
+				multiple: false,
+				' : '').'
+				debug: true
 			});';
         }
         $images_tab_block .= '
