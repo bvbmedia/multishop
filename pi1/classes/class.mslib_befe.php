@@ -4232,7 +4232,7 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_QTY'] = ucfirst($this->pi_getLL('qty'));
         $markerArray['LABEL_HEADER_PRODUCT_NAME'] = $this->pi_getLL('products_name');
         $markerArray['LABEL_HEADER_SKU'] = $this->pi_getLL('sku_number', 'SKU');
-        $markerArray['LABEL_HEADER__QUANTITY'] = $this->pi_getLL('qty');
+        $markerArray['LABEL_HEADER_QUANTITY'] = $this->pi_getLL('qty');
         $markerArray['LABEL_HEADER_TOTAL'] = $this->pi_getLL('total');
         $markerArray['LABEL_HEADER_PRICE'] = $this->pi_getLL('price');
         //hook to let other plugins further manipulate the replacers
