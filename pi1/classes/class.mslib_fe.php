@@ -6215,6 +6215,7 @@ class mslib_fe {
             );
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+
             if (is_array($row)) {
                 if ($countries_id > 0) {
                     $tax_ruleset = self::taxRuleSet($row['tax_id'], 0, $countries_id, 0);
