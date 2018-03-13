@@ -5464,12 +5464,12 @@ class mslib_befe {
             return $content;
         }
     }
-    function bootstrapGrids($gridCols, $columns = 3) {
+    function bootstrapGrids($gridCols, $columns = 3, $gridClass='') {
         if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
             $array = array_chunk($gridCols, ceil(count($gridCols) / $columns));
             $content .= '<div class="row">';
             foreach ($array as $col => $colArray) {
-                $content .= '<div class="col-md-' . ceil((12 / $columns)) . '">';
+                $content .= '<div class="col-md-' . ceil((12 / $columns)) . (!empty($gridClass) ? ' ' . $gridClass : '') . '">';
                 $content .= implode('', $colArray);
                 $content .= '</div>';
             }

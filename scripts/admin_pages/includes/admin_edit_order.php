@@ -2559,17 +2559,28 @@ if (is_numeric($this->get['orders_id'])) {
                         $order_products_body_data['products_name']['class'] = 'cellName';
                         $order_products_body_data['products_name']['value'] = $row[2];
                         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0) {
-                            // products status col
-                            $order_products_body_data['products_status']['align'] = 'center';
-                            $order_products_body_data['products_status']['class'] = 'cellStatus';
-                            $order_products_body_data['products_status']['value'] = '<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="' . $order['orders_products_id'] . '" id="orders_' . $order['orders_products_id'] . '">
+                            if ($this->ms['MODULES']['ORDER_EDIT'] > 0) {
+                                // products status col
+                                $order_products_body_data['products_status']['align'] = 'center';
+                                $order_products_body_data['products_status']['class'] = 'cellStatus';
+                                $order_products_body_data['products_status']['value'] = '<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="' . $order['orders_products_id'] . '" id="orders_' . $order['orders_products_id'] . '">
                             <option value="">' . $this->pi_getLL('choose') . '</option>';
-                            if (is_array($all_orders_status)) {
-                                foreach ($all_orders_status as $item) {
-                                    $order_products_body_data['products_status']['value'] .= '<option value="' . $item['id'] . '"' . ($item['id'] == $order['status'] ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                if (is_array($all_orders_status)) {
+                                    foreach ($all_orders_status as $item) {
+                                        $order_products_body_data['products_status']['value'] .= '<option value="' . $item['id'] . '"' . ($item['id'] == $order['status'] ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                    }
+                                }
+                                $order_products_body_data['products_status']['value'] .= '</select>';
+                            } else {
+                                if (is_array($all_orders_status)) {
+                                    foreach ($all_orders_status as $item) {
+                                        if ($item['id'] == $order['status']) {
+                                            $order_products_body_data['products_status']['value'] = $item['name'];
+                                            break;
+                                        }
+                                    }
                                 }
                             }
-                            $order_products_body_data['products_status']['value'] .= '</select>';
                         }
                         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS'] > 0) {
                             // products status col
@@ -3111,6 +3122,9 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
                     $colspan += 1;
                 }
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                    $colspan += 1;
+                }
                 $order_products_body_data = array();
                 // products id col
                 $order_products_body_data['products_id']['th'] = true;
@@ -3375,6 +3389,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $colspan += 1;
                 }
                 if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                    $colspan += 1;
+                }
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
                     $colspan += 1;
                 }
             }

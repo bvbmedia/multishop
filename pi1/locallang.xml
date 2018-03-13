@@ -1426,6 +1426,7 @@
             <label index="business_usage">Business</label>
             <label index="product_dont_have_required_attributes">Product %s require an attribute(s) to continue checkout</label>
             <label index="order_product_qty_delivered">Qty delivered</label>
+            <label index="feed_exporter_fields_label_foreign_orders_id">External orders id</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

@@ -1852,7 +1852,7 @@ switch ($this->ms['page']) {
                                                     $folder .= '/';
                                                     $target = $this->DOCUMENT_ROOT . $this->ms['image_paths']['products']['original'] . '/' . $folder . $filename;
                                                     $i++;
-                                                } while (file_exists($target));
+                                                } while (file_exists($target) || $filename==$this->get['old_image']);
                                             }
                                             if (copy($temp_file, $target)) {
                                                 $filename = mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
@@ -1862,6 +1862,7 @@ switch ($this->ms['page']) {
                                                 $result['error'] = false;
                                                 $result['filename'] = $filename;
                                                 $result['fileLocation'] = $fileLocation . '?' . time();
+                                                $result['fileOriginal'] = $this->get['qqfile'];
                                                 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                                 exit();
                                             }
