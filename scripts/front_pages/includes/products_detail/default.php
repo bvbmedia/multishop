@@ -418,7 +418,7 @@ if (!$product['products_id']) {
     $markerArray['###MANUFACTURERS_NAME###'] = $product['manufacturers_name'];
     $markerArray['MANUFACTURERS_IMAGE'] = '';
     if ($product['manufacturers_image']) {
-        $markerArray['MANUFACTURERS_IMAGE'] = '<img src="' . mslib_befe::getImagePath($product['manufacturers_image'], 'manufacturers', 'normal') . '">';
+        $markerArray['###MANUFACTURERS_IMAGE###'] = '<img src="' . mslib_befe::getImagePath($product['manufacturers_image'], 'manufacturers', 'normal') . '">';
     }
     $markerArray['###MANUFACTURERS_IMAGE###'] = $product['manufacturers_image'];
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
