@@ -531,6 +531,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $insertArray['products_tax'] = $this->post['manual_product_tax'];
                                 $insertArray['sort_order'] = $new_sort_order;
+                                $insertArray['crdate'] = time();
                                 // hook for adding new items to details fieldset
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
                                     // hook

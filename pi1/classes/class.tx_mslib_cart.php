@@ -2320,6 +2320,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $product_detail_link = $this->FULL_HTTP_URL . mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                 $insertArray['product_link'] = $product_detail_link;
                             }
+                            $insertArray['crdate'] = time();
                             $value['product_link']=$insertArray['product_link'];
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
