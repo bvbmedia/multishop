@@ -1943,6 +1943,28 @@ if (is_numeric($this->get['orders_id'])) {
 				';
                 }
             }
+            $paid_status = '';
+            if (!$order['paid']) {
+                $paid_status .= '<span class="admin_status_red" alt="' . $this->pi_getLL('has_not_been_paid') . '" title="' . $this->pi_getLL('has_not_been_paid') . '"></span> ';
+                $paid_status .= '<span class="admin_status_green disabled" alt="' . $this->pi_getLL('change_to_paid') . '" title="' . $this->pi_getLL('change_to_paid') . '"></span>';
+            } else {
+                $paid_status .= '<span class="admin_status_red disabled" alt="' . $this->pi_getLL('change_to_not_paid') . '" title="' . $this->pi_getLL('change_to_not_paid') . '"></span> ';
+                $paid_status .= '<span class="admin_status_green" alt="' . $this->pi_getLL('has_been_paid') . '" title="' . $this->pi_getLL('has_been_paid') . '"></span>';
+            }
+            $orderDetails[] = '
+            <div class="form-group">
+                <label class="control-label col-md-3">' . $this->pi_getLL('admin_paid') . '</label>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><p class="form-control-static">' . $paid_status . '</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
             $orderDetails[] = '<hr>';
             $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod" id="msAdminEditOrderShippingMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('shipping_method') . '</label>';
@@ -2083,6 +2105,24 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>';
                 $orderDetails[] = $orderDetailsItem;
             }
+
+            $extraDetails = array();
+            if ($order['cruser_id']) {
+                $user = mslib_fe::getUser($order['cruser_id']);
+                if ($user['username']) {
+                    $customer_edit_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $user['uid'] . '&action=edit_customer');
+                    $extraDetails[$this->pi_getLL('ordered_by')] = '<a href="' . $customer_edit_link . '">' . $user['username'] . '</a></strong>';
+                }
+            }
+            if ($order['ip_address']) {
+                $extraDetails[$this->pi_getLL('ip_address', 'IP address')] = $order['ip_address'];
+            }
+            if ($order['http_referer']) {
+                $domain = parse_url($order['http_referer']);
+                if ($domain['host']) {
+                    $extraDetails[$this->pi_getLL('referrer', 'Referrer')] = '<a href="' . $order['http_referer'] . '" target="_blank" rel="noreferrer">' . $domain['host'] . '</a>';
+                }
+            }
             // hook for adding new items to details fieldset
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
                 // hook
@@ -2094,6 +2134,40 @@ if (is_numeric($this->get['orders_id'])) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
                 // hook oef
+            }
+            $extraDetailsData=array();
+            if (count($extraDetails)) {
+                $ed_counter=0;
+                $main_label='';
+                foreach ($extraDetails as $ed_label => $ed_value) {
+                    if ($ed_counter=='0') {
+                        $main_label=$ed_label;
+                        $extraDetailsData[]='<div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12"><p class="form-control-static">' . $ed_value . '</p></div>
+                            </div>
+                        </div>';
+                    } else {
+                        $extraDetailsData[]='<div class="col-md-5">
+                            <div class="row">
+                                <label class="control-label col-md-7">' . $ed_label . '</label><div class="col-md-5"><p class="form-control-static">' . $ed_value . '</p></div>
+                            </div>
+                        </div>';
+                    }
+
+                    $ed_counter++;
+                }
+                $orderDetails[] = '
+                    <hr/>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">' . $main_label . '</label>
+                        <div class="col-md-9">
+                            <div class="row">
+                                '.implode('', $extraDetailsData).'
+                            </div>
+                        </div>
+                    </div>
+                ';
             }
             $tmpcontent .= '
             </div><div class="col-md-6">
