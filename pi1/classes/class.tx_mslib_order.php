@@ -1648,6 +1648,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if ($orders_id) {
             $insertArray['orders_id'] = $orders_id;
             $insertArray['crdate'] = time();
+            if ($insertArray['manufacturers_id']) {
+                $manufacturer=mslib_fe::getManufacturer($insertArray['manufacturers_id']);
+                $insertArray['manufacturers_name'] = $manufacturer['manufacturers_name'];
+            }
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPreProc'])) {
                 $params = array(

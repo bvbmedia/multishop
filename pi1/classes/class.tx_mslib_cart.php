@@ -2321,6 +2321,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $insertArray['product_link'] = $product_detail_link;
                             }
                             $insertArray['crdate'] = time();
+                            $insertArray['manufacturers_name'] = $value['manufacturers_name'];
                             $value['product_link']=$insertArray['product_link'];
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
