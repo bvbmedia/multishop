@@ -365,8 +365,8 @@ $str = "describe `tx_multishop_cart_contents`";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     if ($row['Field'] == 'contents') {
-        if ($row['Type'] == 'text') {
-            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` LONGTEXT DEFAULT NULL;";
+        if ($row['Type'] == 'longtext') {
+            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` BLOB DEFAULT NULL;";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             $messages[] = $str2;
         }

@@ -78,7 +78,7 @@ CREATE TABLE `fe_users` (
 
 CREATE TABLE `tx_multishop_cart_contents` (
  `id` int(11) NOT NULL auto_increment ,
- `contents` longtext,
+ `contents` blob,
  `customer_id` int(11) default '0',
  `is_checkout` tinyint(1) default '0',
  `crdate` int(11) default '0',
