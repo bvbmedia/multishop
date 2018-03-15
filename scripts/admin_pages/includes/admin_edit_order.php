@@ -2627,7 +2627,11 @@ if (is_numeric($this->get['orders_id'])) {
                             // products qty delivered col
                             $order_products_body_data['products_qty_delivered']['align'] = 'right';
                             $order_products_body_data['products_qty_delivered']['class'] = 'cellQty';
-                            $order_products_body_data['products_qty_delivered']['value'] = round($row[8], 13);
+                            if ($row[8]>0) {
+                                $order_products_body_data['products_qty_delivered']['value'] = round($row[8], 13);
+                            } else {
+                                $order_products_body_data['products_qty_delivered']['value'] = '0';
+                            }
                         }
                         // products name col
                         $order_products_body_data['products_name']['align'] = 'left';
@@ -3575,7 +3579,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 if (isset($body_col['colspan'])) {
                                     $col_span = ' colspan="' . $body_col['colspan'] . '"';
                                 }
-                                if (empty($body_col['value'])) {
+                                if ($body_col['value']=='') {
                                     $body_col['value'] = '&nbsp;';
                                 }
                                 $col_type = 'td';
