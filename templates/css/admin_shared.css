@@ -1,3 +1,5 @@
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a > span { width:147px; }
+
 #ms_admin_top_search .select2-container { float:left; }
 #ms_admin_top_search .select2-container .select2-choice { height:38px; border:none; background:#444; border-radius:0; box-shadow:none; padding-left:30px; }
 #ms_admin_top_search .select2-container .select2-choice:before { position:absolute; left:10px; top:5px; font-family:"FontAwesome"; content:"\f002"; }
