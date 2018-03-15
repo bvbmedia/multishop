@@ -1349,11 +1349,10 @@ class mslib_befe {
         if ($this->msDebug) {
             return $query;
         }
+        //error_log($query);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-            while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
-                return $row;
-            }
+            return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         }
     }
     // method for adding a product to the flat table for maximum speed
