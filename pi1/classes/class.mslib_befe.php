@@ -5467,9 +5467,13 @@ class mslib_befe {
     function bootstrapGrids($gridCols, $columns = 3, $gridClass='') {
         if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
             $array = array_chunk($gridCols, ceil(count($gridCols) / $columns));
+            $col_size=ceil((12 / $columns));
+            if ($columns>=12) {
+                $col_size=2;
+            }
             $content .= '<div class="row">';
             foreach ($array as $col => $colArray) {
-                $content .= '<div class="col-md-' . ceil((12 / $columns)) . (!empty($gridClass) ? ' ' . $gridClass : '') . '">';
+                $content .= '<div class="col-md-' . $col_size . (!empty($gridClass) ? ' ' . $gridClass : '') . '">';
                 $content .= implode('', $colArray);
                 $content .= '</div>';
             }
