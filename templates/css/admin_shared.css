@@ -259,6 +259,7 @@ th.cellContentWithoutSpace { word-break:normal; }
 .btn { transition:background .25s, color .25s; }
 .btn .fa-stack .fa-circle { color:rgba(255,255,255,.2); }
 
+.redactor-box { font-size:16px; line-height:24px; }
 .redactor-modal-tab .checkbox { line-height:24px; padding:0; }
 .redactor-modal-tab .checkbox:after { clear:both; display:table; content:""; }
 .redactor-modal-tab .checkbox input[type="checkbox"] { position:static; float:left; line-height:0; margin:5px 5px 0 0; opacity:1; }
