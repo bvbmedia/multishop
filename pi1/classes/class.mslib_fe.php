@@ -10211,8 +10211,6 @@ class mslib_fe {
                 }
             }
         }
-        // Sleep for a half second
-        usleep(500000);
         return round(($amount * $currencyArray[$from_Currency][$to_Currency]), 3);
     }
     public function setCookie($name, $value, $lifetime, $path = '/', $domain = '', $secure = 0) {
