@@ -10164,6 +10164,8 @@ class mslib_fe {
             $amount = urlencode($amount);
             $from_Currency = urlencode($from_Currency);
             $to_Currency = urlencode($to_Currency);
+            // Google Finance is down or no longer supported
+            /*
             $url = 'http://finance.google.com/finance/converter?a=1&from=' . mslib_befe::strtoupper($from_Currency) . '&to=' . mslib_befe::strtoupper($to_Currency);
             $ch = curl_init();
             $timeout = 0;
@@ -10180,6 +10182,34 @@ class mslib_fe {
                 $rate = str_replace(' ' . mslib_befe::strtoupper($to_Currency), '', $matches[1][0]);
             }
             $currencyArray[$from_Currency][$to_Currency] = $rate;
+            */
+            // As a workaround lets use cryptonator
+            $url='https://api.cryptonator.com/api/ticker/'.mslib_befe::strtoupper($from_Currency).'-'.mslib_befe::strtoupper($to_Currency);
+            $options = array(
+                    'http' => array(
+                            'follow_location' => false,
+                            'method' => "GET",
+                            'header' => "Accept-language: en\r\n" .
+                                    "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n" // i.e. An iPad
+                    )
+            );
+            $context = stream_context_create($options);
+            $jsonString = file_get_contents($url, false, $context);
+            if (strstr($jsonString,'Temporary Redirect')) {
+                // Force to save as cache to prevent flooding
+                return 0;
+            } else {
+                $jsonArray = json_decode($jsonString, true);
+                if (!is_array($jsonArray)) {
+                    // Fallback
+                    return 0;
+                } else {
+                    if (!isset($jsonArray['ticker']['price'])) {
+                        return 0;
+                    }
+                    $currencyArray[$from_Currency][$to_Currency] = (float)$jsonArray['ticker']['price'];
+                }
+            }
         }
         return round(($amount * $currencyArray[$from_Currency][$to_Currency]), 3);
     }
