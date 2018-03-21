@@ -424,14 +424,14 @@ if (isset($this->get['product_condition']) && !empty($this->get['product_conditi
     }
     $filter[]=$prefix . 'products_condition=' . addslashes($this->get['product_condition']);
 }
-if (isset($this->get['order_unit_id']) && !empty($this->get['order_unit_id']) && $this->get['order_unit_id']!='all') {
+if (isset($this->get['order_unit_id']) && $this->get['order_unit_id']!='' && $this->get['order_unit_id']!='all') {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
     }
     $filter[]=$prefix . 'order_unit_id=' . (int)$this->get['order_unit_id'];
 }
-if (isset($this->get['tax_id']) && !empty($this->get['tax_id']) && $this->get['tax_id']!='all') {
+if (isset($this->get['tax_id']) && $this->get['tax_id']!='' && $this->get['tax_id']!='all') {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
@@ -1033,7 +1033,7 @@ $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multish
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $order_unit_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>';
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-    $order_unit_selectbox .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $product['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+    $order_unit_selectbox .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $this->get['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
 }
 $order_unit_selectbox .= '</select>';
 $subpartArray['###LABEL_ORDER_UNIT###'] = $this->pi_getLL('admin_order_units');
