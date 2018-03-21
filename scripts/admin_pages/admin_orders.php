@@ -839,14 +839,14 @@ if ($this->post['search_by_telephone_orders']) {
 if ($this->post['orders_status_search']) {
     $filter[] = "(o.status='" . addslashes($this->post['orders_status_search']) . "')";
 }
-if (isset($this->post['payment_method']) && $this->post['payment_method'] != 'all') {
+if (isset($this->post['payment_method']) && $this->post['payment_method'] != '' && $this->post['payment_method'] != 'all') {
     if ($this->post['payment_method'] == 'nopm') {
         $filter[] = "(o.payment_method is null)";
     } else {
         $filter[] = "(o.payment_method='" . addslashes($this->post['payment_method']) . "')";
     }
 }
-if (isset($this->post['shipping_method']) && $this->post['shipping_method'] != 'all') {
+if (isset($this->post['shipping_method']) && $this->post['shipping_method'] != '' && $this->post['shipping_method'] != 'all') {
     if ($this->post['shipping_method'] == 'nosm') {
         $filter[] = "(o.shipping_method is null)";
     } else {
