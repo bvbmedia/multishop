@@ -592,7 +592,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `billing_department` (`billing_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_orders_id` (`foreign_orders_id`),
-) COMMENT='Ordersysteem';
+);
 
 CREATE TABLE `tx_multishop_orders_products` (
  `orders_products_id` int(11) NOT NULL auto_increment,
@@ -671,7 +671,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `stock_subtracted` (`stock_subtracted`),
  KEY `crdate` (`crdate`),
  KEY `manufacturers_name` (`manufacturers_name`)
-) COMMENT='Orderregels';
+);
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
  `orders_products_attributes_id` int(11) NOT NULL auto_increment,
@@ -710,7 +710,7 @@ CREATE TABLE `tx_multishop_orders_status` (
  PRIMARY KEY (`id`),
  KEY `default_status` (`default_status`),
  KEY `page_uid` (`page_uid`)
-) COMMENT='Order Statussen';
+);
 
 CREATE TABLE `tx_multishop_orders_status_description` (
  `id` int(11) NOT NULL auto_increment,
