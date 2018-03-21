@@ -1065,7 +1065,7 @@ $subpartArray['###VALUE_DATE_TO###'] = $this->get['product_date_till'];
 $subpartArray['###LABEL_FILTER_DATE_ADDED###'] = $this->pi_getLL('date_added');
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('modified');
 $subpartArray['###LABEL_FILTER_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');
-$subpartArray['###LABEL_FILTER_DATE_VISIBLE###'] = $this->pi_getLL('products_date_visible');
+$subpartArray['###LABEL_FILTER_DATE_VISIBLE###'] = $this->pi_getLL('products_visible');
 $subpartArray['###FILTER_BY_DATE_ADDED_CHECKED###'] = (!isset($this->get['search_by_product_date']) || $this->get['search_by_product_date']=='products_date_added' ? ' checked="checked"' : '');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###'] = ($this->get['search_by_product_date']=='products_last_modified' ? ' checked="checked"' : '');
 $subpartArray['###FILTER_BY_DATE_AVAILABLE_CHECKED###'] = ($this->get['search_by_product_date']=='products_date_available' ? ' checked="checked"' : '');
