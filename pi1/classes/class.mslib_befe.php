@@ -3352,7 +3352,8 @@ class mslib_befe {
                     $params = array(
                             'array1' => &$array1,
                             'array2' => &$array2,
-                            'order' => &$order
+                            'order' => &$order,
+                            'action_call' => &$action_call
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3405,7 +3406,8 @@ class mslib_befe {
                             $params = array(
                                     'keys' => &$keys,
                                     'orders_status' => $orders_status,
-                                    'order' => $order
+                                    'order' => $order,
+                                    'action_call' => &$action_call
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3419,7 +3421,8 @@ class mslib_befe {
                                     $params = array(
                                             'array1' => &$array1,
                                             'array2' => &$array2,
-                                            'page' => &$page
+                                            'page' => &$page,
+                                            'action_call' => &$action_call
                                     );
                                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3454,7 +3457,8 @@ class mslib_befe {
                             'mail_customer' => &$mail_customer,
                             'order' => &$order,
                             'array1' => &$array1,
-                            'array2' => &$array2
+                            'array2' => &$array2,
+                            'action_call' => &$action_call
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
