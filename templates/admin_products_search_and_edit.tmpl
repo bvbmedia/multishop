@@ -1,20 +1,15 @@
 <!-- ###TEMPLATE### begin -->
 ###POST_MESSAGE###
 <div class="panel panel-default">
-<div class="panel-heading">
-    <h3>###PAGE_HEADER###</h3>
-    ###INTERFACE_HEADER_BUTTONS###
-</div>
-<div class="panel-body">
-    <!-- <div class="well"> -->
-        <form name="search" method="get" action="index.php">
-            <input name="id" type="hidden" value="###SHOP_PID###" />
-            <input name="type" type="hidden" value="2003" />
-            <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
-            <input type="hidden" name="search" class="btn btn-success" value="1" />
-            <div id="pricelist_search_form" class="form-inline">
-				<div class="panel panel-default">
-					<div class="panel-heading">
+	<div class="panel-heading">
+		<h3>###PAGE_HEADER###</h3>
+		###INTERFACE_HEADER_BUTTONS###
+	</div>
+	<div class="panel-body">
+		<form name="search" method="get" action="index.php">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="form-inline">
 						<div class="form-group">
 							<label>###LABEL_SEARCH_KEYWORD###</label>
 							<input type="text" class="form-control skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
@@ -29,148 +24,266 @@
 						</div>
 						<input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
 						<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">###LABEL_ADVANCED_SEARCH###</a>
-						<div class="form-group pull-right">
-							<label>###LABEL_SEARCH_LIMIT###</label>
-							###SEARCH_LIMIT###
-						</div>
 					</div>
-					<div id="msAdminInterfaceSearch" class="panel-collapse collapse###UNFOLD_SEARCH_BOX###">
-						<div class="panel-body">
-							<div id="search-orders" class="well no-mb">
-								<div class="row formfield-container-wrapper">
-									<div class="col-sm-4 formfield-wrapper">
-										<label class="control-label" for="type_search">###LABEL_STOCK###</label>
-										<div class="form-group">
-											<div class="form-inline">
-												<label class="control-label" for="stock_from">###LABEL_STOCK_FROM###</label>
-												<input class="form-control" type="text" name="stock_from" id="stock_from" value="###VALUE_STOCK_FROM###">
-												<label for="stock_till" class="labelInbetween">###LABEL_STOCK_TO###</label>
-												<input class="form-control" type="text" name="stock_till" id="stock_till" value="###VALUE_STOCK_TO###">
+					<div class="form-group pull-right">
+						<label>###LABEL_SEARCH_LIMIT###</label>
+						###SEARCH_LIMIT###
+					</div>
+				</div>
+				<div id="msAdminInterfaceSearch" class="panel-collapse collapse###UNFOLD_SEARCH_BOX###">
+					<div class="panel-body">
+						<div id="search-orders" class="well no-mb">
+							<input name="id" type="hidden" value="###SHOP_PID###" />
+							<input name="type" type="hidden" value="2003" />
+							<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
+							<input type="hidden" name="search" class="btn btn-success" value="1" />
+							<div class="row formfield-container-wrapper">
+								<div class="col-sm-3 formfield-wrapper">
+									<div class="form-group">
+										<label for="manufacturers" class="control-label">###LABEL_MANUFACTURERS###</label>
+										<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2" value="###VALUE_MANUFACTURERS###" />
+									</div>
+									<div class="form-group">
+										<label for="product_condition" class="labelInbetween control-label">###LABEL_PRODUCT_CONDITION###</label>
+										<select name="product_condition" id="product_condition" class="form-control">
+											<option value="all" ###CONDITION_ALL_SELECTED###>###LABEL_CONDITION_ALL###</option>
+											<option value="new" ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
+											<option value="used" ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
+											<option value="refurbished" ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="order_unit" class="control-label">###LABEL_ORDER_UNIT###</label>
+										###ORDER_UNIT_SELECTBOX###
+									</div>
+									<div class="form-group">
+										<label class="control-label" for="tax_rate">###LABEL_TAX_RATE###</label>
+										###TAX_RATE_SELECTBOX###
+									</div>
+								</div>
+								<div class="col-sm-3 formfield-wrapper">
+									<label class="control-label" for="type_search">###LABEL_PRICE###</label>
+									<div class="form-group">
+										<div class="form-inline">
+											<label class="control-label" for="product_price_from">###LABEL_PRICE_FROM###</label>
+											<input class="form-control" type="text" name="product_price_from" id="product_price_from" value="###VALUE_PRICE_FROM###">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="form-inline">
+											<label for="product_date_till" class="labelInbetween">###LABEL_PRICE_TO###</label>
+											<input class="form-control" type="text" name="product_price_till" id="product_price_till" value="###VALUE_PRICE_TO###">
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_products_price" name="search_by_product_price" value="products_price" ###FILTER_BY_PRODUCTS_PRICE_CHECKED### >
+												<label for="search_by_products_price">###LABEL_FILTER_PRODUCTS_PRICE###</label>
 											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_specials_new_products_price" name="search_by_product_date" value="specials_new_products_price" ###FILTER_BY_PRODUCTS_SPECIALS_PRICE_CHECKED### >
+												<label for="search_by_specials_new_products_price">###LABEL_FILTER_SPECIALS_PRICE###</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_product_capital_price" name="search_by_product_price" value="product_capital_price" ###FILTER_BY_PRODUCTS_CAPITAL_PRICE_CHECKED### >
+												<label for="search_by_product_capital_price">###LABEL_FILTER_PRODUCTS_CAPITAL_PRICE###</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="product_status" class="control-label">###LABEL_PRODUCT_STATUS###</label>
+										###PRODUCT_STATUS_SELECTBOX###
+									</div>
+								</div>
+								<div class="col-sm-3 formfield-wrapper">
+									<label class="control-label" for="type_search">###LABEL_DATE###</label>
+									<div class="form-group">
+										<div class="form-inline">
+											<label class="control-label" for="product_date_from">###LABEL_DATE_FROM###</label>
+											<input class="form-control" type="text" name="product_date_from" id="product_date_from" value="###VALUE_DATE_FROM###">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="form-inline">
+											<label for="product_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
+											<input class="form-control" type="text" name="product_date_till" id="product_date_till" value="###VALUE_DATE_TO###">
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_products_date_added" name="search_by_product_date" value="products_date_added" ###FILTER_BY_DATE_ADDED_CHECKED### >
+												<label for="search_by_products_date_added">###LABEL_FILTER_DATE_ADDED###</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_products_last_modified" name="search_by_product_date" value="products_last_modified" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
+												<label for="search_by_products_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_products_date_available" name="search_by_product_date" value="products_date_available" ###FILTER_BY_DATE_AVAILABLE_CHECKED### >
+												<label for="search_by_products_date_available">###LABEL_FILTER_DATE_AVAILABLE###</label>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="radio radio radio">
+												<input type="radio" id="search_by_products_date_visible" name="search_by_product_date" value="products_date_visible" ###FILTER_BY_DATE_VISIBLE_CHECKED### >
+												<label for="search_by_products_date_visible">###LABEL_FILTER_DATE_VISIBLE###</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="product_status" class="control-label">###LABEL_SEARCH_ENGINE_INDEXING###</label>
+										###SEARCH_ENGINE_INDEXING_SELECTBOX###
+									</div>
+								</div>
+								<div class="col-sm-3 formfield-wrapper">
+									<label class="control-label" for="type_search">###LABEL_STOCK###</label>
+									<div class="form-group">
+										<div class="form-inline">
+											<label class="control-label" for="stock_from">###LABEL_STOCK_FROM###</label>
+											<input class="form-control" type="text" name="stock_from" id="stock_from" value="###VALUE_STOCK_FROM###">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="form-inline">
+											<label for="stock_till" class="labelInbetween">###LABEL_STOCK_TO###</label>
+											<input class="form-control" type="text" name="stock_till" id="stock_till" value="###VALUE_STOCK_TO###">
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="panel-footer clearfix">
-							<button type="button" id="reset-advanced-search" class="btn btn-warning pull-right">###LABEL_RESET_ADVANCED_SEARCH_FILTER###</button>
+							<div class="row formfield-container-wrapper">
+								<div class="col-sm-12 formfield-wrapper">
+
+								</div>
+							</div>
 						</div>
 					</div>
+					<div class="panel-footer clearfix">
+						<button type="button" id="reset-advanced-search" class="btn btn-warning pull-right">###LABEL_RESET_ADVANCED_SEARCH_FILTER###</button>
+					</div>
 				</div>
-            </div>
-        </form>
-    <!-- </div> -->
-
-<!-- ###RESULTS### begin -->
-<form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" class="blockSubmitForm">
-
-<div class="table-responsive">
-<table width="100%" cellpadding="0" cellspacing="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
-<thead>
-	<tr>
-		<th class="cellCheckbox">
-			<div class="checkbox checkbox-success checkbox-inline">
-				<input type="checkbox" id="check_all_1">
-				<label for="check_all_1"></label>
 			</div>
-		</th>
-		<th class="cellID">###LABEL_HEADER_CELL_NUMBER###</th>
-		<th class="cellName"><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
-        <th class="cellModel"><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>
-        <th class="cellStatus"><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
-		<th class="cellCategory"><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
-		<th class="cellPrice"><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
-		<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
-		<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_HEADER_CAPITAL_PRICE###</a></th>
-		<th class="cellStock"><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
-		<th class="cellAction">###LABEL_HEADER_ACTION###</th>
-    </tr>
-</thead>
-<tbody>
-    <!-- ###PRODUCTS_ITEM### begin -->
-    <tr class="###ROW_TYPE###">
-        <td class="cellCheckbox">
-        	<div class="checkbox checkbox-success checkbox-inline">
-				<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
-				<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
+		</form>
+		<!-- ###RESULTS### begin -->
+		<form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" class="blockSubmitForm">
+
+			<div class="table-responsive">
+				<table width="100%" cellpadding="0" cellspacing="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
+					<thead>
+					<tr>
+						<th class="cellCheckbox">
+							<div class="checkbox checkbox-success checkbox-inline">
+								<input type="checkbox" id="check_all_1">
+								<label for="check_all_1"></label>
+							</div>
+						</th>
+						<th class="cellID">###LABEL_HEADER_CELL_NUMBER###</th>
+						<th class="cellName"><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
+						<th class="cellModel"><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>
+						<th class="cellStatus"><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
+						<th class="cellCategory"><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
+						<th class="cellPrice"><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
+						<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
+						<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_HEADER_CAPITAL_PRICE###</a></th>
+						<th class="cellStock"><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
+						<th class="cellAction">###LABEL_HEADER_ACTION###</th>
+					</tr>
+					</thead>
+					<tbody>
+					<!-- ###PRODUCTS_ITEM### begin -->
+					<tr class="###ROW_TYPE###">
+						<td class="cellCheckbox">
+							<div class="checkbox checkbox-success checkbox-inline">
+								<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+								<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
+							</div>
+						</td>
+						<td class="cellID">###CELL_NUMBER###</td>
+						<td class="cellName">
+							<a href="###EDIT_PRODUCT_LINK0###">###PRODUCT_NAME###</a>
+							###PRODUCT_CATEGORIES_CRUMBAR###
+						</td>
+						<td class="cellModel">###PRODUCT_MODEL###</td>
+						<td class="cellStatus">
+							###PRODUCT_STATUS###
+						</td>
+						<td class="cellCategory">
+							<a href="###LINK_EDIT_CAT###">###CATEGORY_NAME###</a>
+						</td>
+
+						<td class="cellPrice">
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY0###</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><span class="input-group-addon">###SUFFIX_PRICE_EXCL_VAT###</span></div></div>
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY1###</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><span class="input-group-addon">###SUFFIX_PRICE_INCL_VAT###</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" class="priceInputReal" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
+							<input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
+						</td>
+
+						<td class="cellSpecialPrice">
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY2###</span><input type="text" id="display_name" name="display_name" class="form-control msSpecialsPriceExcludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_EXCL_VAT###</span></div></div>
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY3###</span><input type="text" name="display_name" id="display_name" class="form-control msSpecialsPriceIncludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_INCL_VAT###</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" class="priceInputReal" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
+						</td>
+
+						<td class="cellSpecialPrice">
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY4###</span><input type="text" id="display_name" name="display_name" class="form-control msCapitalPriceExcludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_EXCL_VAT###" rel="###PID9###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_EXCL_VAT###</span></div></div>
+							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY5###</span><input type="text" name="display_name" id="display_name" class="form-control msCapitalPriceIncludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_INCL_VAT###" rel="###PID10###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_INCL_VAT###</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="up[capital_price][###PID11###]" class="priceInputReal" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" style="text-align:right;" size="10px" /></div>
+						</td>
+
+						<td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control width-auto" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" /></td>
+						<td class="cellAction">
+							<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
+							<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
+							<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
+						</td>
+					</tr>
+					<!-- ###PRODUCTS_ITEM### end -->
+					</tbody>
+					<tfoot>
+					<tr>
+						<th class="cellCheckbox">&nbsp;</th>
+						<th class="cellID">###LABEL_FOOTER_CELL_NUMBER###</th>
+						<th class="cellName"><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
+						<th class="cellModel"><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>
+						<th class="cellStatus"><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
+						<th class="cellCategory"><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
+						<th class="cellPrice"><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
+						<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
+						<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_FOOTER_CAPITAL_PRICE###</a></th>
+						<th class="cellStock"><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
+						<th class="cellAction">###LABEL_FOOTER_ACTION###</th>
+					</tr>
+					</tfoot>
+				</table>
 			</div>
-		</td>
-		<td class="cellID">###CELL_NUMBER###</td>
-		<td class="cellName">
-			<a href="###EDIT_PRODUCT_LINK0###">###PRODUCT_NAME###</a>
-			###PRODUCT_CATEGORIES_CRUMBAR###
-		</td>
-		<td class="cellModel">###PRODUCT_MODEL###</td>
-		<td class="cellStatus">
-			###PRODUCT_STATUS###
-		</td>
-		<td class="cellCategory">
-			<a href="###LINK_EDIT_CAT###">###CATEGORY_NAME###</a>
-		</td>
-
-        <td class="cellPrice">
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY0###</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><span class="input-group-addon">###SUFFIX_PRICE_EXCL_VAT###</span></div></div>
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY1###</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat priceInputDisplay" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><span class="input-group-addon">###SUFFIX_PRICE_INCL_VAT###</span></div></div>
-			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" class="priceInputReal" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
-            <input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
-		</td>
-
-        <td class="cellSpecialPrice">
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY2###</span><input type="text" id="display_name" name="display_name" class="form-control msSpecialsPriceExcludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_EXCL_VAT###</span></div></div>
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY3###</span><input type="text" name="display_name" id="display_name" class="form-control msSpecialsPriceIncludingVat priceInputDisplay" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><span class="input-group-addon">###SUFFIX_SPECIAL_PRICE_INCL_VAT###</span></div></div>
-			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" class="priceInputReal" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
-		</td>
-
-		<td class="cellSpecialPrice">
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY4###</span><input type="text" id="display_name" name="display_name" class="form-control msCapitalPriceExcludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_EXCL_VAT###" rel="###PID9###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_EXCL_VAT###</span></div></div>
-			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY5###</span><input type="text" name="display_name" id="display_name" class="form-control msCapitalPriceIncludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_INCL_VAT###" rel="###PID10###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_INCL_VAT###</span></div></div>
-			<div class="msAttributesField hidden"><input type="hidden" name="up[capital_price][###PID11###]" class="priceInputReal" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" style="text-align:right;" size="10px" /></div>
-		</td>
-
-        <td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control width-auto" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" /></td>
-		<td class="cellAction">
-				<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
-				<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
-				<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
-        </td>
-    </tr>
-	<!-- ###PRODUCTS_ITEM### end -->
-    </tbody>
-	<tfoot>
-	<tr>
-		<th class="cellCheckbox">&nbsp;</th>
-		<th class="cellID">###LABEL_FOOTER_CELL_NUMBER###</th>
-		<th class="cellName"><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
-        <th class="cellModel"><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>
-        <th class="cellStatus"><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
-		<th class="cellCategory"><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
-		<th class="cellPrice"><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
-		<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
-		<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_FOOTER_CAPITAL_PRICE###</a></th>
-		<th class="cellStock"><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
-		<th class="cellAction">###LABEL_FOOTER_ACTION###</th>
-	</tr>
-	</tfoot>
-	</table>
-</div>
-	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
-	<div class="text-right mb10"><input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" /> <input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" /></div>
-<hr>
-		<div class="form-group">
-		###INPUT_ACTION_SELECTBOX###
-		</div>
-		<div class="form-group">
-			###INPUT_CATEGORIES_SELECTBOX###
+			<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
+			<div class="text-right mb10"><input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" /> <input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" /></div>
+			<hr>
+			<div class="form-group">
+				###INPUT_ACTION_SELECTBOX###
 			</div>
 			<div class="form-group">
-			<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
-		</div>
-</form>
+				###INPUT_CATEGORIES_SELECTBOX###
+			</div>
+			<div class="form-group">
+				<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
+			</div>
+		</form>
 
-<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
-	<input type="hidden" name="cid" value="###CATEGORY_ID2###" />
-				###PRODUCTS_PAGINATION###
-				<hr>
+		<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
+			<input type="hidden" name="cid" value="###CATEGORY_ID2###" />
+			###PRODUCTS_PAGINATION###
+			<hr>
 			<div class="form-group">
 				<label class="col-md-2 control-label">###LABEL_UPLOAD_EXCEL_FILE###</label>
 				<div class="col-md-10">
@@ -186,184 +299,197 @@
 			<div class="clearfix">
 				<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
 			</div>
-</form>
-<!-- ###RESULTS### end -->
-<!-- ###NORESULTS### begin -->
+		</form>
+		<!-- ###RESULTS### end -->
+		<!-- ###NORESULTS### begin -->
 
-###LABEL_NO_RESULT###
+		###LABEL_NO_RESULT###
 
-			<div class="clearfix">
-				<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
-			</div>
+		<div class="clearfix">
+			<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+		</div>
 
-<!-- ###NORESULTS### end -->
-</div></div>
+		<!-- ###NORESULTS### end -->
+	</div></div>
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-	$('.categories_select2_top').select2({
-		 dropdownCssClass: "", // apply css that makes the dropdown taller
-		 minimumInputLength: 0,
-		 multiple: false,
-		 //allowClear: true,
-		 query: function (query) {
-			 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
-				 data: {
-					 q: query.term
-				 },
-				 dataType: "json"
-			 }).done(function (data) {
-				 //categoriesIdSearchTerm[query.term]=data;
-				 query.callback({results: data});
-			 });
-		 },
-		 initSelection: function (element, callback) {
-			 var id = $(element).val();
-			 if (id !== "") {
-				 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###', {
+    jQuery(document).ready(function($) {
+        $('#product_date_from').datetimepicker({
+			 dateFormat: 'dd/mm/yy',
+			 showSecond: true,
+			 timeFormat: 'HH:mm:ss'
+		 });
+        $('#product_date_till').datetimepicker({
+			 dateFormat: 'dd/mm/yy',
+			 showSecond: true,
+			 timeFormat: 'HH:mm:ss',
+			 hour: 23,
+			 minute: 59,
+			 second: 59
+		 });
+        $('.categories_select2_top').select2({
+			 dropdownCssClass: "", // apply css that makes the dropdown taller
+			 minimumInputLength: 0,
+			 multiple: false,
+			 //allowClear: true,
+			 query: function (query) {
+				 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
 					 data: {
-						 preselected_id: id
+						 q: query.term
 					 },
 					 dataType: "json"
 				 }).done(function (data) {
-					 callback(data);
+					 //categoriesIdSearchTerm[query.term]=data;
+					 query.callback({results: data});
 				 });
+			 },
+			 initSelection: function (element, callback) {
+				 var id = $(element).val();
+				 if (id !== "") {
+					 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###', {
+						 data: {
+							 preselected_id: id
+						 },
+						 dataType: "json"
+					 }).done(function (data) {
+						 callback(data);
+					 });
+				 }
+			 },
+			 formatResult: function (data) {
+				 if (data.text === undefined) {
+					 $.each(data, function (i, val) {
+						 return val.text;
+					 });
+				 } else {
+					 return data.text;
+				 }
+			 },
+			 formatSelection: function (data) {
+				 if (data.text === undefined) {
+					 return data[0].text;
+				 } else {
+					 return data.text;
+				 }
+			 },
+			 escapeMarkup: function (m) {
+				 return m;
 			 }
-		 },
-		 formatResult: function (data) {
-			 if (data.text === undefined) {
-				 $.each(data, function (i, val) {
-					 return val.text;
-				 });
-			 } else {
-				 return data.text;
-			 }
-		 },
-		 formatSelection: function (data) {
-			 if (data.text === undefined) {
-				 return data[0].text;
-			 } else {
-				 return data.text;
-			 }
-		 },
-		 escapeMarkup: function (m) {
-			 return m;
-		 }
-	});
-	$('.categories_select2').select2({
-		 dropdownCssClass: "", // apply css that makes the dropdown taller
-		 minimumInputLength: 0,
-		 multiple: false,
-		 //allowClear: true,
-		 query: function (query) {
-			 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL1###', {
-				 data: {
-					 q: query.term
-				 },
-				 dataType: "json"
-			 }).done(function (data) {
-				 //categoriesIdSearchTerm[query.term]=data;
-				 query.callback({results: data});
-			 });
-		 },
-		 initSelection: function (element, callback) {
-			 var id = $(element).val();
-			 if (id !== "") {
-				 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###', {
+		 });
+        $('.categories_select2').select2({
+			 dropdownCssClass: "", // apply css that makes the dropdown taller
+			 minimumInputLength: 0,
+			 multiple: false,
+			 //allowClear: true,
+			 query: function (query) {
+				 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL1###', {
 					 data: {
-						 preselected_id: id
+						 q: query.term
 					 },
 					 dataType: "json"
 				 }).done(function (data) {
-					 callback(data);
+					 //categoriesIdSearchTerm[query.term]=data;
+					 query.callback({results: data});
 				 });
+			 },
+			 initSelection: function (element, callback) {
+				 var id = $(element).val();
+				 if (id !== "") {
+					 $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###', {
+						 data: {
+							 preselected_id: id
+						 },
+						 dataType: "json"
+					 }).done(function (data) {
+						 callback(data);
+					 });
+				 }
+			 },
+			 formatResult: function (data) {
+				 if (data.text === undefined) {
+					 $.each(data, function (i, val) {
+						 return val.text;
+					 });
+				 } else {
+					 return data.text;
+				 }
+			 },
+			 formatSelection: function (data) {
+				 if (data.text === undefined) {
+					 return data[0].text;
+				 } else {
+					 return data.text;
+				 }
+			 },
+			 escapeMarkup: function (m) {
+				 return m;
 			 }
-		 },
-		 formatResult: function (data) {
-			 if (data.text === undefined) {
-				 $.each(data, function (i, val) {
-					 return val.text;
-				 });
-			 } else {
-				 return data.text;
-			 }
-		 },
-		 formatSelection: function (data) {
-			 if (data.text === undefined) {
-				 return data[0].text;
-			 } else {
-				 return data.text;
-			 }
-		 },
-		 escapeMarkup: function (m) {
-			 return m;
-		 }
-	});
-	$('#check_all_1').click(function () {
-		$('input:checkbox').prop('checked', this.checked);
-	});
-	$('#products_search_action').change(function() {
-		if ($(this).val()=='move') {
-			$("#target_categories_id").show();
-		} else if ($(this).val()=='duplicate') {
-			$("#target_categories_id").show();
-		} else {
-			$("#target_categories_id").hide();
-		}
-	});
-	$("#target_categories_id").hide();
-	//
-	$(document).on("click", ".update_product_status", function(e) {
-		e.preventDefault();
-		var products_id=$(this).attr("rel");
-		var enabled_label='###LABEL_ADMIN_YES###';
-		var disabled_label='###LABEL_ADMIN_NO###';
-		var tthis=$(this).parent();
-		$.ajax({
-		   type:   "POST",
-		   url:    "###AJAX_UPDATE_PRODUCT_STATUS_URL###",
-		   dataType: 'json',
-		   data:   "products_id="+products_id,
-		   success: function(msg) {
-			   if (msg.html == '0') {
-				   var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
-			   } else if (msg.html==1) {
-				   var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
-			   }
-			   tthis.html(return_string);
-		   }
-		});
-	});
-	$(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(true, this);
-		}
-	});
-	$(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(false, this);
-		}
-	});
-	$(document).on("keyup", ".msSpecialsPriceExcludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(true, this);
-		}
-	});
-	$(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(false, this);
-		}
-	});
-	$(document).on("keyup", ".msCapitalPriceExcludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(true, this);
-		}
-	});
-	$(document).on("keyup", ".msCapitalPriceIncludingVat", function(e) {
-		if (e.keyCode!=9) {
-			priceEditRealtimeCalc(false, this);
-		}
-	});
-});
+		 });
+        $('#check_all_1').click(function () {
+            $('input:checkbox').prop('checked', this.checked);
+        });
+        $('#products_search_action').change(function() {
+            if ($(this).val()=='move') {
+                $("#target_categories_id").show();
+            } else if ($(this).val()=='duplicate') {
+                $("#target_categories_id").show();
+            } else {
+                $("#target_categories_id").hide();
+            }
+        });
+        $("#target_categories_id").hide();
+        //
+        $(document).on("click", ".update_product_status", function(e) {
+            e.preventDefault();
+            var products_id=$(this).attr("rel");
+            var enabled_label='###LABEL_ADMIN_YES###';
+            var disabled_label='###LABEL_ADMIN_NO###';
+            var tthis=$(this).parent();
+            $.ajax({
+                       type:   "POST",
+                       url:    "###AJAX_UPDATE_PRODUCT_STATUS_URL###",
+                       dataType: 'json',
+                       data:   "products_id="+products_id,
+                       success: function(msg) {
+                           if (msg.html == '0') {
+                               var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
+                           } else if (msg.html==1) {
+                               var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
+                           }
+                           tthis.html(return_string);
+                       }
+                   });
+        });
+        $(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(true, this);
+            }
+        });
+        $(document).on("keyup", ".msProductsPriceIncludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(false, this);
+            }
+        });
+        $(document).on("keyup", ".msSpecialsPriceExcludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(true, this);
+            }
+        });
+        $(document).on("keyup", ".msSpecialsPriceIncludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(false, this);
+            }
+        });
+        $(document).on("keyup", ".msCapitalPriceExcludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(true, this);
+            }
+        });
+        $(document).on("keyup", ".msCapitalPriceIncludingVat", function(e) {
+            if (e.keyCode!=9) {
+                priceEditRealtimeCalc(false, this);
+            }
+        });
+    });
 </script>
 
 <!-- ###TEMPLATE### end -->

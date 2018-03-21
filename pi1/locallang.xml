@@ -1427,6 +1427,9 @@
             <label index="product_dont_have_required_attributes">Product %s require an attribute(s) to continue checkout</label>
             <label index="order_product_qty_delivered">Qty delivered</label>
             <label index="feed_exporter_fields_label_foreign_orders_id">External orders id</label>
+            <label index="admin_foreign_products_id">Foreign products id</label>
+            <label index="products_date_visible">Products visible</label>
+            <label index="search_by">zoek op</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2830,6 +2833,7 @@
             <label index="personal_usage">Particulier</label>
             <label index="business_usage">Zakelijk</label>
             <label index="order_product_qty_delivered">Aantal geleverd</label>
+            <label index="admin_foreign_products_id">Refererend artikelnummer</label>
         </languageKey>
     </data>
 </T3locallang>
