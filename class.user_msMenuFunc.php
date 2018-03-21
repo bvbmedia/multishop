@@ -112,7 +112,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     'menuArr' => &$menuArr,
                     'tel' => &$tel
                 );
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php'][' IteratorPostProc'] as $funcRef) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
