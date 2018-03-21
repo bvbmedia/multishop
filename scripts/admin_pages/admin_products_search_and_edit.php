@@ -438,7 +438,7 @@ if (isset($this->get['tax_id']) && !empty($this->get['tax_id']) && $this->get['t
     }
     $filter[]=$prefix . 'tax_id=' . (int)$this->get['tax_id'];
 }
-if (isset($this->get['product_price_from']) && !empty($this->get['product_price_from']) && isset($this->get['product_price_till']) && !empty($this->get['product_price_till'])) {
+if (isset($this->get['product_price_from']) && $this->get['product_price_from']!='' && isset($this->get['product_price_till']) && $this->get['product_price_till']!='') {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
