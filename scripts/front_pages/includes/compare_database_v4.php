@@ -674,4 +674,11 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str="select related_to_orders_products_id from tx_multishop_orders_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders_products` ADD related_to_orders_products_id int(11) default '0', ADD KEY `related_to_orders_products_id` (`related_to_orders_products_id`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>

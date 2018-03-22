@@ -651,6 +651,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `stock_subtracted` tinyint(1) default '0',
  `crdate` int(11) default '0',
  `manufacturers_name` varchar(127) default '',
+ `related_to_orders_products_id ` int(11) default '0',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -670,7 +671,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `product_link` (`product_link`),
  KEY `stock_subtracted` (`stock_subtracted`),
  KEY `crdate` (`crdate`),
- KEY `manufacturers_name` (`manufacturers_name`)
+ KEY `manufacturers_name` (`manufacturers_name`),
+ KEY `related_to_orders_products_id` (`related_to_orders_products_id`)
 );
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
