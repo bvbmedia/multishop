@@ -208,7 +208,10 @@ if ($this->ADMIN_USER) {
                 }
                 $colspan = 4;
                 if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
-                    $colspan = 5;
+                    $colspan += 1;
+                }
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED']) {
+                    $colspan += 1;
                 }
                 $jsonData_content .= '
                 <tr class="removeTableCellBorder msAdminSubtotalRow">
