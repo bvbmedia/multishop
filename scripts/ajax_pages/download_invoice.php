@@ -251,11 +251,23 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // CMS FOOTER
         $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = '';
+        $prefixTemplate='pdf_invoice_footer_message';
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPrefixTemplatePreProc'])) {
+            $params = array(
+                    'prefixTemplate' => &$prefixTemplate,
+                    'order' => &$order,
+                    'invoice' => &$invoice,
+                    'markerArray' => &$markerArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPrefixTemplatePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $cmsKeys = array();
         if ($order['payment_method']) {
-            $cmsKeys[] = 'pdf_invoice_footer_message_' . $order['payment_method'];
+            $cmsKeys[] = $prefixTemplate.'_' . $order['payment_method'];
         }
-        $cmsKeys[] = 'pdf_invoice_footer_message';
+        $cmsKeys[] = $prefixTemplate;
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'])) {
             $params = array(
