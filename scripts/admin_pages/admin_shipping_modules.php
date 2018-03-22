@@ -22,7 +22,7 @@ if ($this->post) {
                 }
             }
         }
-        header('Location: /' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings');
+        header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings');
         exit();
     }
     if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
@@ -44,7 +44,7 @@ if ($this->post) {
                 }
             }
         }
-        header('Location: /' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings');
+        header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings');
         exit();
     }
     if ($this->post['sub'] == 'update_shipping_method' && $this->post['shipping_method_id']) {
@@ -83,7 +83,7 @@ if ($this->post) {
                 }
             }
             $this->ms['show_main'] = 1;
-            header('Location: /' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
+            header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
             exit();
         }
     } else if ($this->post['sub'] == 'add_shipping_method' && $this->post['shipping_method_code']) {
@@ -129,7 +129,7 @@ if ($this->post) {
                     }
                 }
                 $this->ms['show_main'] = 1;
-                header('Location: /' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
+                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
                 exit();
             }
         }
