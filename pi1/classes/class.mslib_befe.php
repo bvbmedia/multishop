@@ -5542,24 +5542,30 @@ class mslib_befe {
             }
         }
     }
-    function mailDev($subject,$body) {
+    function mailDev($subject,$body,$overrideUsers=array()) {
         $sendEmail=1;
         //hook to let other plugins further manipulate the settings
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'])) {
             $params = array(
                     'subject' => &$subject,
                     'body' => &$body,
-                    'sendEmail' =>&$sendEmail
+                    'sendEmail' =>&$sendEmail,
+                    'overrideUsers'=>&$overrideUsers
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        if ($sendEmail && $this->conf['developer_email']) {
+        $mailTo=array();
+        if (is_array($overrideUsers) && count($overrideUsers)) {
+            $mailTo=$overrideUsers;
+        } elseif($this->conf['developer_email']) {
             $user = array();
             $user['name'] = $this->conf['developer_email'];
             $user['email'] = $this->conf['developer_email'];
             $mailTo[] = $user;
+        }
+        if ($sendEmail && count($mailTo)) {
             $subject = $subject;
             foreach ($mailTo as $mailuser) {
                 mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
