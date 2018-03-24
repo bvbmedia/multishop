@@ -365,10 +365,10 @@ if (is_numeric($this->get['orders_id'])) {
                                         $insertArray['orders_products_id']=$this->post['orders_products_id'];
                                         $insertArray['orders_id']=$this->get['orders_id'];
                                         $insertArray['products_id']=$this->post['products_id'];
-                                        $insertArray['qty_delivered']=$updated_qty_delivered;
+                                        $insertArray['qty']=$updated_qty_delivered;
                                         //$insertArray['status']=0;
                                         $insertArray['crdate']=time();
-                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_delivered', $insertArray);
+                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_shipped', $insertArray);
                                         $res=$GLOBALS['TYPO3_DB']->sql_query($query);
                                     }
                                 }

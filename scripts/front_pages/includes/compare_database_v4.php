@@ -631,23 +631,25 @@ if (!in_array('session_id', $indexes)) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-$str = "select orders_products_qty_delivered_id from tx_multishop_orders_products_qty_delivered";
+$str = "select orders_products_qty_shipped_id from tx_multishop_orders_products_qty_shipped";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-    $str = "CREATE TABLE IF NOT EXISTS `tx_multishop_orders_products_qty_delivered` (
-        `orders_products_qty_delivered_id` int(11) NULL AUTO_INCREMENT,
-        `orders_products_id` int(11) DEFAULT '0',
-        `orders_id` int(11) DEFAULT '0',
-        `products_id` int(11) DEFAULT '0',
-        `qty_delivered` int(4) DEFAULT '0',
-        `crdate` int(11) DEFAULT '0',
-        PRIMARY KEY (`orders_products_qty_delivered_id`),
-        KEY `orders_products_id` (`orders_products_id`),
-        KEY `orders_id` (`orders_id`),
-        KEY `products_id` (`products_id`),
-        KEY `qty_delivered` (`qty_delivered`),
-        KEY `crdate` (`crdate`)
-    )";
+    $str = "CREATE TABLE `tx_multishop_orders_products_qty_shipped` (
+ `orders_products_qty_shipped_id` int(11) NOT NULL auto_increment,
+ `orders_products_id` int(11) default '0',
+ `orders_id` int(11) default '0',
+ `products_id` int(11) default '0',
+ `qty` decimal(8,2),
+ `status` int(3) default '0',
+ `crdate` int(11) default '0',
+ PRIMARY KEY (`orders_products_qty_shipped_id`),
+ KEY `orders_products_id` (`orders_products_id`),
+ KEY `orders_id` (`orders_id`),
+ KEY `products_id` (`products_id`),
+ KEY `qty` (`qty`),
+ KEY `status` (`status`),
+ KEY `crdate` (`crdate`)
+);";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
