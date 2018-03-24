@@ -2607,6 +2607,43 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'productImagesSort':
+        if ($this->ADMIN_USER) {
+            $product_id=$this->get['tx_multishop_pi1']['pID'];
+            if (is_numeric($product_id) && $product_id> 0) {
+                $product_images_col_keys = array();
+                for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+                    $i = $x;
+                    if (!$i) {
+                        $i = '';
+                    }
+                    $product_images_col_keys[] = 'products_image' . $i;
+                }
+                if (isset($this->post['msEditProductInputImage'])) {
+                    $images_records = mslib_befe::getRecord($product_id, 'tx_multishop_products', 'products_id', array(), implode(', ', $product_images_col_keys));
+                    $updateArray=array();
+                    foreach ($this->post['msEditProductInputImage'] as $arr_index => $col_index) {
+                        $internal_col_index=$arr_index;
+                        if (!$internal_col_index) {
+                            $internal_col_index='';
+                        }
+                        $external_col_index=$col_index;
+                        if (!$external_col_index) {
+                            $external_col_index='';
+                        }
+                        $image_value=$images_records['products_image' .$external_col_index];
+                        if (!$image_value) {
+                            $image_value='';
+                        }
+                        $updateArray['products_image' . $internal_col_index]=$image_value;
+                    }
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $product_id", $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
+            }
+        }
+        exit();
+        break;
     case 'product_specials':
         if ($this->ADMIN_USER) {
             // custom page hook that can be controlled by third-party plugin

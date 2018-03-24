@@ -2997,14 +2997,14 @@ if ($this->post) {
         /*
 		 * images tab
 		 */
-        $images_tab_block = '';
+        $images_tab_block = '<div class="product_images_wrapper">';
         for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
             $i = $x;
             if ($i == 0) {
                 $i = '';
             }
             $images_tab_block .= '
-			<div class="form-group" id="msEditProductInputImage_' . $i . '">
+			<div class="form-group" id="msEditProductInputImage_' . $x . '">
 				<label for="products_image' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' ' . ($i + 1) . '</label>
 				<div class="col-md-10">
 				<div id="products_image' . $i . '" class="products_image">
@@ -3026,7 +3026,8 @@ if ($this->post) {
             $images_tab_block .= '</div>';
             $images_tab_block .= '</div></div>';
         }
-        $images_tab_block .= '<script>
+        $images_tab_block .= '</div>
+        <script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {';
         for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
             $i = $x;
@@ -3109,6 +3110,23 @@ if ($this->post) {
 					});';
         }
         $images_tab_block .= '
+			});
+			var result = jQuery("div.product_images_wrapper").sortable({
+				cursor:     "move",
+				//axis:       "y",
+				update: function(e, ui) {
+					href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[pID]='.$product['products_id'].'&tx_multishop_pi1[page_section]=productImagesSort') . '";
+					jQuery(this).sortable("refresh");
+					sorted = jQuery(this).sortable("serialize", "id");
+					jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+					});
+				}
 			});
 		});
 		</script>';
