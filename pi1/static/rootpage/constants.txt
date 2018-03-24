@@ -279,4 +279,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - main/enable; type=boolean; label= Enable admin statistics ticker: Enable admin statistics ticker.
 	enableAdminTicker=1
+
+	# cat=plugin.multishop - optional/email; type=string; label= Email address of the developer: Email address of the developer.
+	developer_email=
 }

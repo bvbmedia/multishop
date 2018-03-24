@@ -5542,6 +5542,30 @@ class mslib_befe {
             }
         }
     }
+    function mailDev($subject,$body) {
+        $sendEmail=1;
+        //hook to let other plugins further manipulate the settings
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'])) {
+            $params = array(
+                    'subject' => &$subject,
+                    'body' => &$body,
+                    'sendEmail' =>&$sendEmail
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if ($sendEmail && $this->conf['developer_email']) {
+            $user = array();
+            $user['name'] = $this->conf['developer_email'];
+            $user['email'] = $this->conf['developer_email'];
+            $mailTo[] = $user;
+            $subject = $subject;
+            foreach ($mailTo as $mailuser) {
+                mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+            }
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
