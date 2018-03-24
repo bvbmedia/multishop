@@ -361,14 +361,15 @@ if (is_numeric($this->get['orders_id'])) {
                                 // update the orders product qty delivered record
                                 if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
                                     if ($updated_qty_delivered > $current_qty_delivered) {
-                                        $insertOPQtyDeliveredArray=array();
-                                        $insertOPQtyDeliveredArray['orders_products_id']=$this->post['orders_products_id'];
-                                        $insertOPQtyDeliveredArray['orders_id']=$this->get['orders_id'];
-                                        $insertOPQtyDeliveredArray['products_id']=$this->post['products_id'];
-                                        $insertOPQtyDeliveredArray['qty_delivered']=$updated_qty_delivered;
-                                        $insertOPQtyDeliveredArray['crdate']=time();
-                                        $queryInsertOPQtyDelivered = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_delivered', $insertOPQtyDeliveredArray);
-                                        $GLOBALS['TYPO3_DB']->sql_query($queryInsertOPQtyDelivered);
+                                        $insertArray=array();
+                                        $insertArray['orders_products_id']=$this->post['orders_products_id'];
+                                        $insertArray['orders_id']=$this->get['orders_id'];
+                                        $insertArray['products_id']=$this->post['products_id'];
+                                        $insertArray['qty_delivered']=$updated_qty_delivered;
+                                        //$insertArray['status']=0;
+                                        $insertArray['crdate']=time();
+                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_delivered', $insertArray);
+                                        $res=$GLOBALS['TYPO3_DB']->sql_query($query);
                                     }
                                 }
                                 // hook for adding new items to details fieldset
