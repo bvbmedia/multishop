@@ -303,7 +303,8 @@ switch ($_REQUEST['action']) {
 	tx_multishop_orders
 	tx_multishop_orders_products
 	tx_multishop_orders_products_attributes
-	tx_multishop_orders_status_history
+	tx_multishop_orders_status_history	
+	tx_multishop_orders_products_qty_shipped
 	tx_multishop_payment_methods
 	tx_multishop_payment_shipping_mappings
 	tx_multishop_products
@@ -1099,6 +1100,7 @@ switch ($_REQUEST['action']) {
                                 }
                                 break;
                             case 'tx_multishop_orders_status_history':
+                            case 'tx_multishop_orders_products_qty_shipped':
                                 foreach ($records as $record) {
                                     $record['orders_id'] = $tx_multishop_orders_ids[$record['orders_id']];
                                     $record['crdate'] = strtotime($record['orders_id']);
@@ -1312,6 +1314,7 @@ switch ($_REQUEST['action']) {
                     $tables[] = 'tx_multishop_orders_products_attributes';
                     $tables[] = 'tx_multishop_orders_status';
                     $tables[] = 'tx_multishop_orders_status_history';
+                    $tables[] = 'tx_multishop_orders_products_qty_shipped';
                 }
                 if (in_array('methods', $_GET['tx_multishop_pi']['selected_tables'])) {
                     $tables[] = 'tx_multishop_payment_methods';

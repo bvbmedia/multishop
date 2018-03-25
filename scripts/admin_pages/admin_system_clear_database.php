@@ -59,16 +59,19 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
     foreach ($this->post['tx_multishop_pi1']['items'] as $item) {
         switch ($item) {
             case 'orders':
-                $tables = 'tx_multishop_orders
+                $tables = '
+                tx_multishop_invoices
+                tx_multishop_orders
 				tx_multishop_orders_products
 				tx_multishop_orders_products_attributes
+				tx_multishop_orders_products_downloads
+				tx_multishop_orders_products_qty_shipped				
 				tx_multishop_orders_status_history
-				tx_multishop_invoices
 				';
                 $tableArray = explode("\n", $tables);
                 foreach ($tableArray as $table) {
+                    $table = trim($table);
                     if ($table) {
-                        $table = trim($table);
                         $qry = $GLOBALS['TYPO3_DB']->sql_query('TRUNCATE ' . $table);
                     }
                 }
