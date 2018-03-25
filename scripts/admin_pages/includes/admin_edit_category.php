@@ -677,6 +677,10 @@ if ($this->post) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        // clear the multishop cache
+        if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+            mslib_befe::cacheLite('delete_all');
+        }
         // custom hook that can be controlled by third-party plugin eof
         if (isset($this->post['SaveClose'])) {
             if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_category') === false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_category') === false && $this->post['tx_multishop_pi1']['referrer']) {

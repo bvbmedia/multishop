@@ -2393,6 +2393,10 @@ if ($this->post) {
             // if the flat database module is enabled we have to sync the changes to the flat table
             mslib_befe::convertProductToFlat($prodid);
         }
+        // clear the multishop cache
+        if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+            mslib_befe::cacheLite('delete_all');
+        }
         if (isset($this->post['SaveClose']) || isset($this->post['save_as_new'])) {
             if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product') === false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_product') === false && $this->post['tx_multishop_pi1']['referrer']) {
                 header("Location: " . $this->post['tx_multishop_pi1']['referrer']);

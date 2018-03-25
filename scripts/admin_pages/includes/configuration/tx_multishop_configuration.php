@@ -15,6 +15,7 @@ if (!defined('TYPO3_MODE')) {
 // 10 Products Stock Settings
 // 11 Admin Settings
 // 12 Invoice Settings
+// 14 Performance Settings
 $records = array();
 $records[] = array(
         'configuration_title' => 'Automatically convert uploaded images to PNG format',
@@ -2769,6 +2770,17 @@ $records[] = array(
     'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
     'depend_on_configuration_key' => '',
     'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Automatically clear Multishop cache on catalog changes',
+        'configuration_key' => 'AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES',
+        'configuration_value' => '1',
+        'description' => 'Automatically clear Multishop cache on catalog changes',
+        'group_id' => '14',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
 );
 
 // custom hook that can be controlled by third-party plugin

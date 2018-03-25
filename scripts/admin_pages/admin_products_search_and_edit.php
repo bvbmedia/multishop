@@ -107,6 +107,7 @@ if ($this->post['submit']) {
         }
     }
     foreach ($this->post['up']['special_price'] as $pid => $price) {
+        $data_update[$pid]['special_price'] = $price;
         if (strstr($price, ",")) {
             $price = str_replace(",", ".", $price);
         }
@@ -143,6 +144,12 @@ if ($this->post['submit']) {
                 // if the flat database module is enabled we have to sync the changes to the flat table
                 mslib_befe::convertProductToFlat($prodid);
             }
+        }
+    }
+    // clear the multishop cache
+    if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+        if (count($data_update)) {
+            mslib_befe::cacheLite('delete_all');
         }
     }
     // custom page hook that can be controlled by third-party plugin
