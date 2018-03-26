@@ -12,6 +12,7 @@ $tables['tx_multishop_categories_description'] = 'categories_id';
 $tables['tx_multishop_products_description'] = 'products_id';
 $tables['tx_multishop_manufacturers_cms'] = 'manufacturers_id';
 $tables['tx_multishop_manufacturers_info'] = 'manufacturers_id';
+$tables['tx_multishop_attributes_options_groups'] = 'attributes_options_groups_id';
 $tables['tx_multishop_products_options'] = 'products_options_id';
 $tables['tx_multishop_products_options_values'] = 'products_options_values_id';
 $tables['tx_multishop_products_options_values_extra'] = 'products_options_values_extra_id';
