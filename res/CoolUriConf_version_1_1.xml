@@ -4,7 +4,7 @@
     <cache>
         <usecache>1</usecache>
         <params2cool>
-            <checkforchangeevery>1</checkforchangeevery>
+            <checkforchangeevery>0</checkforchangeevery>
         </params2cool>
         <cool2params>
             <translateifnotfound>0</translateifnotfound>
