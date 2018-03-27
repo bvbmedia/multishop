@@ -941,7 +941,7 @@ if ($this->post and $_FILES) {
             $i = '';
         }
         if ($this->post['ajax_products_image' . $i]) {
-            $update_product_images['products_image' . $i] = $this->post['ajax_products_image' . $i];
+            $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
         }
     }
     if (is_array($_FILES) and count($_FILES)) {
@@ -3016,7 +3016,7 @@ if ($this->post) {
 						<input name="products_image' . $i . '" type="file" />
 					</noscript>
 				</div>
-				<input name="ajax_products_image' . $i . '" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
+				<input name="ajax_products_image[]" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
             $images_tab_block .= '<div id="image_action' . $i . '" class="image_action">';
             if ($_REQUEST['action'] == 'edit_product' && $product['products_image' . $i]) {
                 $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?'.time().'" />';
