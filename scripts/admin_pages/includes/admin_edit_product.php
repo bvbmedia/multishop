@@ -1089,6 +1089,10 @@ if ($this->post) {
     $updateArray['custom_settings'] = $this->post['custom_settings'];
     $updateArray['products_model'] = $this->post['products_model'];
     $updateArray['products_quantity'] = $this->post['products_quantity'];
+    $updateArray['ignore_stock_level']=0;
+    if (isset($this->post['ignore_stock_level'])) {
+        $updateArray['ignore_stock_level'] = $this->post['ignore_stock_level'];
+    }
     $updateArray['product_capital_price'] = $this->post['product_capital_price'];
     $updateArray['products_condition'] = $this->post['products_condition'];
     $updateArray['sku_code'] = $this->post['sku_code'];
@@ -4516,6 +4520,10 @@ if ($this->post) {
         $subpartArray['###VALUE_STOCK###'] = $product['products_quantity'];
         $subpartArray['###LABEL_THRESHOLD_QTY###'] = $this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold');
         $subpartArray['###VALUE_THRESHOLD_QTY###'] = $product['alert_quantity_threshold'];
+
+        $subpartArray['###LABEL_IGNORE_STOCK_LEVEL###'] = $this->pi_getLL('admin_ignore_stock_level');
+        $subpartArray['###IGNORE_STOCK_LEVEL_CHECKED###'] = ($product['ignore_stock_level']>0 ? ' checked="checked"' : '');
+
         $subpartArray['###LABEL_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');
         if ($product['products_date_available'] == 0 || empty($product['products_date_available'])) {
             $product['products_date_available_sys'] = '';

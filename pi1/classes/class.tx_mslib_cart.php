@@ -37,36 +37,34 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         mslib_fe::init($ref);
     }
     function updateCart() {
-        if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-            $product_id = $this->post['products_id'];
-            $categories_id = $this->post['categories_id'];
-            if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
-                $product_id = $this->get['products_id'];
-            }
-            if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
-                $categories_id = $this->get['categories_id'];
-            }
-            if (is_numeric($product_id)) {
-                $product = mslib_fe::getProduct($product_id, $categories_id);
-                if ($product['products_quantity'] < 1 && !$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-                    if ($product['categories_id']) {
-                        // get all cats to generate multilevel fake url
-                        $level = 0;
-                        $cats = mslib_fe::Crumbar($product['categories_id']);
-                        $cats = array_reverse($cats);
-                        $where = '';
-                        if (count($cats) > 0) {
-                            foreach ($cats as $cat) {
-                                $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-                                $level++;
-                            }
-                            $where = substr($where, 0, (strlen($where) - 1));
+        $product_id = $this->post['products_id'];
+        $categories_id = $this->post['categories_id'];
+        if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
+            $product_id = $this->get['products_id'];
+        }
+        if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
+            $categories_id = $this->get['categories_id'];
+        }
+        if (is_numeric($product_id)) {
+            $product = mslib_fe::getProduct($product_id, $categories_id);
+            if ($product['products_quantity'] < 1 && (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level'])) {
+                if ($product['categories_id']) {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                    $cats = array_reverse($cats);
+                    $where = '';
+                    if (count($cats) > 0) {
+                        foreach ($cats as $cat) {
+                            $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                            $level++;
                         }
+                        $where = substr($where, 0, (strlen($where) - 1));
                     }
-                    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product_id . '&tx_multishop_pi1[page_section]=products_detail');
-                    header("Location: " . $this->FULL_HTTP_URL . $link);
-                    exit;
                 }
+                $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product_id . '&tx_multishop_pi1[page_section]=products_detail');
+                header("Location: " . $this->FULL_HTTP_URL . $link);
+                exit;
             }
         }
         // hook
@@ -850,7 +848,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     foreach ($cart['products'] as $key => &$product) {
                         if ($this->get['tx_multishop_pi1']['page_section'] == 'checkout') {
                             //$product_db = mslib_fe::getProduct($product['products_id']);
-                            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+                            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level']) {
                                 if ($product['products_quantity'] < 1) {
                                     $redirect_to_cart_page = true;
                                 } else if ($product['qty'] > $product['products_quantity']) {
@@ -2386,7 +2384,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2438,7 +2436,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 }
                                             }
                                         }
-                                        if ($row['products_quantity'] < 1) {
+                                        if ($row['products_quantity'] < 1 && !$row['ignore_stock_level']) {
                                             // stock is negative or zero. lets disable the product
                                             $str = "update tx_multishop_products set products_status=0 where products_id='" . $value['products_id'] . "'";
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2447,7 +2445,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         // now decrease the stocklevel
                                         $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2501,7 +2499,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         if ($row['products_quantity'] < 1) {
                                             if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
-                                                if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+                                                if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$row['ignore_stock_level']) {
                                                     // stock is negative or zero. lets turn off the product
                                                     mslib_befe::disableProduct($value['products_id']);
                                                 }

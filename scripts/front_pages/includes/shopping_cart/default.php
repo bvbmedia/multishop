@@ -257,7 +257,7 @@ if ($count_product > 0) {
             $quantity_html .= '<input class="qty_input" name="qty[' . $shopping_cart_item . ']" type="text" id="qty_' . $shopping_cart_item . '" value="' . $value['qty'] . '" size="4" maxlength="4" />';
             $quantity_html .= '<input type="button" value="+" data-stepSize="' . ($product['products_multiplication'] != '0.00' ? $product['products_multiplication'] : '1') . '" data-minQty="' . ($product['minimum_quantity'] != '0.00' ? $product['minimum_quantity'] : '1') . '" data-maxQty="' . ($product['maximum_quantity'] != '0.00' ? $product['maximum_quantity'] : '0') . '" class="qty_plus" rel="qty_' . $shopping_cart_item . '"></div>';
             // show selectbox by products multiplication or show default input eof
-            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && $value['ignore_stock_level']) {
                 if ($value['qty'] > $value['products_quantity']) {
                     $disable_checkout = true;
                 }
