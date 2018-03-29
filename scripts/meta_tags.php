@@ -280,15 +280,15 @@ if ($this->ADMIN_USER) {
 					e.preventDefault();
 					$("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2("close");
 					$.cookie("hide_admin_panel", "1", { expires: 7, path: \'/\', domain: \'' . $this->server['HTTP_HOST'] . '\'});
-					$("#tx_multishop_admin_header_bg").slideToggle("slow");
-					$("#tx_multishop_admin_footer_wrapper").slideToggle("slow");
+					$("#tx_multishop_admin_header_bg").slideToggle(\'200\',\'easeOutBounce\');
+					$("#tx_multishop_admin_footer_wrapper").slideToggle(\'200\',\'easeOutBounce\');
 					$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">' . $this->pi_getLL('maximize') . '</a></li></ul>\');
 				});
 				$(document).on("click", ".ms_admin_maximize", function(e) {
 					e.preventDefault();
 					$.cookie("hide_admin_panel", "0", { expires: 7, path: \'/\', domain: \'' . $this->server['HTTP_HOST'] . '\'});
-					$("#tx_multishop_admin_header_bg").slideToggle("slow");
-					$("#tx_multishop_admin_footer_wrapper").slideToggle("slow");
+					$("#tx_multishop_admin_header_bg").slideToggle(\'200\',\'easeOutBounce\');
+					$("#tx_multishop_admin_footer_wrapper").slideToggle(\'200\',\'easeOutBounce\');
 					$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">' . $this->pi_getLL('minimize') . '</a></li></ul>\');
 				});
 				$(document).on("change", "#ms_admin_simulate_language", function() {
