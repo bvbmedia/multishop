@@ -1055,7 +1055,38 @@ if ($this->get['feed_hash']) {
                                     }
                                 }
                             } else {
-                                if (strpos($field, 'product_payment_methods_') !== false) {
+                                if (strpos($field, 'products_description_') !== false) {
+                                    $descriptionKeys=array();
+                                    for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
+                                        $descriptionKeys['products_description_tab_title_' . $i]='products_description_tab_title_' . $i;
+                                        $descriptionKeys['products_description_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_encoded_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_strip_tags_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                    }
+                                    if (count($descriptionKeys) && isset($descriptionKeys[$field])) {
+                                        if (strpos($field, 'products_description_encoded_') !== false) {
+                                            $string = $row[$descriptionKeys[$field]];
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                            $string = htmlentities($string);
+                                        } else if (strpos($field, 'products_description_strip_tags_') !== false) {
+                                            $string = strip_tags($row[$descriptionKeys[$field]]);
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                        } else {
+                                            $string = $row[$descriptionKeys[$field]];
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                        }
+                                        if ($string) {
+                                            $string = preg_replace('/\s+/', ' ', $string);
+                                            $tmpcontent = $string;
+                                        }
+                                    }
+                                } else if (strpos($field, 'product_payment_methods_') !== false) {
                                     if ($row['products_id']) {
                                         $method_mappings = mslib_befe::getMethodsByProduct($row['products_id']);
                                     }

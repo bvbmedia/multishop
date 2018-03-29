@@ -8908,7 +8908,7 @@ class mslib_fe {
                             }
                             $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                            $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                            $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                             if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -8960,7 +8960,7 @@ class mslib_fe {
                                     }
                                 }
                             }
-                            if ($row['products_quantity'] < 1) {
+                            if ($row['products_quantity'] < 1 && !$row['ignore_stock_level']) {
                                 // stock is negative or zero. lets disable the product
                                 $str = "update tx_multishop_products set products_status=0 where products_id='" . $value['products_id'] . "'";
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -8969,7 +8969,7 @@ class mslib_fe {
                             // now decrease the stocklevel
                             $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                            $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                            $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                             if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -9023,7 +9023,7 @@ class mslib_fe {
                             }
                             if ($row['products_quantity'] < 1) {
                                 if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
-                                    if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+                                    if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$row['ignore_stock_level']) {
                                         // stock is negative or zero. lets turn off the product
                                         mslib_befe::disableProduct($value['products_id']);
                                     }

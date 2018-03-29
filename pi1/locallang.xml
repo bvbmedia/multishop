@@ -1431,6 +1431,11 @@
             <label index="products_date_visible">Products visible</label>
             <label index="search_by">zoek op</label>
             <label index="products_visible">Visible date</label>
+            <label index="feed_exporter_fields_label_products_description_tab_title_x">Products description title Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_x">Products description content Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Products description content Tab: %d (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2836,6 +2841,11 @@
             <label index="order_product_qty_delivered">Aantal geleverd</label>
             <label index="admin_foreign_products_id">Refererend artikelnummer</label>
             <label index="products_visible">Zichtbaarheidsdatum</label>
+            <label index="feed_exporter_fields_label_products_description_tab_title_x">Productbeschrijving title Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_x">Productbeschrijving inhoud Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Productbeschrijving inhoud Tab: %d (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
         </languageKey>
     </data>
 </T3locallang>

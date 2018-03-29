@@ -88,6 +88,15 @@ $array['products_shortdescription'] = $this->pi_getLL('feed_exporter_fields_labe
 $array['products_description'] = $this->pi_getLL('feed_exporter_fields_label_products_description');
 $array['products_description_encoded'] = $this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
 $array['products_description_strip_tags'] = $this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
+if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
+    for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
+        $array['products_description_tab_title_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_products_description_tab_title_x'), $i);
+        $array['products_description_tab_content_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_products_description_tab_content_x'), $i);
+        $array['products_description_encoded_tab_content_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_products_description_tab_content_html_encoded_x'), $i);
+        $array['products_description_strip_tags_tab_content_' . $i] = sprintf($this->pi_getLL('feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x'), $i);
+    }
+}
+
 for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
     if (!$x) {
         $s = '';
