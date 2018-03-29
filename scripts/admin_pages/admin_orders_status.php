@@ -53,6 +53,7 @@ if ($this->post) {
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                    $this->post['tx_multishop_pi1']['orders_status_id']=$id;
                     if ($id) {
                         foreach ($this->post['tx_multishop_pi1']['order_status_name'] as $key => $value) {
                             $insertArray = array();
@@ -114,6 +115,16 @@ foreach ($this->languages as $key => $language) {
 		';
 }
 $content .= $tmpcontent;
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusInputField'])) {
+    $params = array(
+        'content' => &$content
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusInputField'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// hook oef
 if (count($active_shop) > 1) {
     if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
         $str_status = "SELECT o.page_uid from tx_multishop_orders_status o where o.id = " . $this->get['tx_multishop_pi1']['orders_status_id'];
@@ -161,58 +172,89 @@ if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $content .= '<input type="hidden" name="tx_multishop_pi1[action]" value="update_status" />';
 }
 $content .= '</form>';
-$str = "SELECT o.id, o.page_uid, o.default_status, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.id desc";
+$str = "SELECT o.*, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.id desc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $zones = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $statusses[] = $row;
 }
 if (count($statusses)) {
-    $content .= '<table class="table table-striped table-bordered msadmin_border">
-		<thead><th class="cellID">' . $this->pi_getLL('id') . '</th>
-        <th class="cellName">' . $this->pi_getLL('name') . '</th>';
+    $content .= '<table class="table table-striped table-bordered msadmin_border">';
+    // table headers
+    $table_headers=array();
+    $table_headers['status_id']='<th class="cellID">' . $this->pi_getLL('id') . '</th>';
+    $table_headers['status_name']='<th class="cellName">' . $this->pi_getLL('name') . '</th>';
     if (count($active_shop) > 1) {
-        $content .= '<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
+        $table_headers['shop'] = '<th class="cellStatus">' . $this->pi_getLL('shop', 'Shop') . '</th>';
     }
-    $content .= '<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
-		<th class="cellAction">' . $this->pi_getLL('action') . '</th></thead><tbody>';
+    $table_headers['is_default']='<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>';
+    $table_headers['action']='<th class="cellAction">' . $this->pi_getLL('action') . '</th>';
+    // hook
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableHeaders'])) {
+        $params = array(
+                'table_headers' => &$table_headers
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableHeaders'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    $content.='<thead>'.implode("\n", $table_headers).'</thead>
+    <tbody>';
+    // hook oef
     foreach ($statusses as $status) {
         if (!$tr_type or $tr_type == 'even') {
             $tr_type = 'odd';
         } else {
             $tr_type = 'even';
         }
-        $content .= '<tr class="' . $tr_type . '">
-		<td class="cellID">
+        $status_id = '<td class="cellID">
 			' . $status['id'] . '
 		</td>
 		';
-        $content .= '<td class="cellName">' . $status['name'] . '</td>';
+        $status_name = '<td class="cellName">' . $status['name'] . '</td>';
         if (count($active_shop) > 1) {
-            $content .= '<td class="cellStatus">';
+            $shop_title = '<td class="cellStatus">';
             if ($status['page_uid'] > 0) {
-                $content .= '<strong>' . mslib_fe::getShopNameByPageUid($status['page_uid']) . '</strong>';
+                $shop_title .= '<strong>' . mslib_fe::getShopNameByPageUid($status['page_uid']) . '</strong>';
             } else {
-                $content .= '<strong>All</strong>';
+                $shop_title .= '<strong>All</strong>';
             }
-            $content .= '</td>';
+            $shop_title .= '</td>';
         }
-        $content .= '
+        $status_html = '
 		<td class="cellStatus">';
         if (!$status['default_status']) {
-            $content .= '';
-            $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[status]=1') . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
+            $status_html .= '';
+            $status_html .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[status]=1') . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
         } else {
-            $content .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
-            $content .= '';
+            $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
+            $status_html .= '';
         }
-        $content .= '
-		</td>
-		<td class="cellAction">
+        $status_html .= '
+		</td>';
+
+        $rows_content=array();
+        $rows_content['status_id']=$status_id;
+        $rows_content['status_name']=$status_name;
+        if (count($active_shop) > 1) {
+            $rows_content['shop'] = $shop_title;
+        }
+        $rows_content['is_default']=$status_html;
+        $rows_content['action']='<td class="cellAction">
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[action]=edit') . '" class="btn btn-primary btn-sm admin_menu_edit" alt="' . $this->pi_getLL('edit') . '"><i class="fa fa-pencil"></i></a>
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[action]=delete') . '" onclick="return confirm(\'' . $this->pi_getLL('are_you_sure') . '?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="' . $this->pi_getLL('delete') . '"><i class="fa fa-trash-o"></i></a>
 		</td>';
-        $content .= '</tr>';
+        // hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableData'])) {
+            $params = array(
+                    'rows_content' => &$rows_content,
+                    'status' => $status
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableData'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $content .= '<tr class="' . $tr_type . '">'.implode("\n", $rows_content).'</tr>';
     }
     $content .= '</tbody></table>';
 }

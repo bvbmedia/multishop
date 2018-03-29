@@ -15,6 +15,7 @@ if (!defined('TYPO3_MODE')) {
 // 10 Products Stock Settings
 // 11 Admin Settings
 // 12 Invoice Settings
+// 14 Performance Settings
 $records = array();
 $records[] = array(
         'configuration_title' => 'Automatically convert uploaded images to PNG format',
@@ -2650,10 +2651,10 @@ $records[] = array(
         'use_function' => ''
 );
 $records[] = array(
-        'configuration_title' => 'Disable auto shipping costs in edit order',
-        'configuration_key' => 'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER',
+        'configuration_title' => 'Enable auto shipping costs in edit order',
+        'configuration_key' => 'ENABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER',
         'configuration_value' => '0',
-        'description' => 'Disable auto shipping costs in edit order',
+        'description' => 'Enable auto shipping costs in edit order',
         'group_id' => '9',
         'use_function' => '',
         'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
@@ -2704,6 +2705,84 @@ $records[] = array(
     'depend_on_configuration_key' => '',
     'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Limit initialization catalog (categories and products) select2 results',
+        'configuration_key' => 'LIMIT_CATALOG_SELECT2_INIT_RESULTS',
+        'configuration_value' => '0',
+        'description' => 'Limit initialization catalog (categories and products) select2 results ',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Auto checked mail for paid status change',
+    'configuration_key' => 'AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE',
+    'configuration_value' => '1',
+    'description' => 'Auto checked mail for paid status change',
+    'group_id' => '9',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Disable captcha in create account',
+    'configuration_key' => 'DISABLE_CAPTCHA_IN_CREATE_ACCOUNT',
+    'configuration_value' => '0',
+    'description' => 'Disable captcha in create account',
+    'group_id' => '3',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Show Qty Delivered',
+    'configuration_key' => 'SHOW_QTY_DELIVERED',
+    'configuration_value' => '0',
+    'description' => 'Show Qty Delivered',
+    'group_id' => '9',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Custom ajax get admin orders listing processor',
+        'configuration_key' => 'GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE',
+        'configuration_value' => '',
+        'description' => 'Custom ajax get admin orders listing processor',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+    'configuration_title' => 'Subtract product stock when order is paid',
+    'configuration_key' => 'SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID',
+    'configuration_value' => '0',
+    'description' => 'Subtract product stock when order is paid',
+    'group_id' => '10',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Automatically clear Multishop cache on catalog changes',
+        'configuration_key' => 'AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES',
+        'configuration_value' => '1',
+        'description' => 'Automatically clear Multishop cache on catalog changes',
+        'group_id' => '14',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

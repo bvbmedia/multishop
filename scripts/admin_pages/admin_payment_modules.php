@@ -765,7 +765,7 @@ if ($this->ms['show_main']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $tr_type = 'even';
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-        $tmpcontent .= '<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
+        $tmpcontent .= '<div class="table-responsive"><table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
         $tmpcontent .= '<thead><tr>';
         if (count($active_shop) > 1) {
             $tmpcontent .= '<th>' . $this->pi_getLL('shop', 'Shop') . '</th>';
@@ -810,7 +810,7 @@ if ($this->ms['show_main']) {
 			</td>
 			</tr>';
         }
-        $tmpcontent .= '</tbody></table>';
+        $tmpcontent .= '</tbody></table></div>';
     } else {
         $tmpcontent .= $this->pi_getLL('currently_there_are_no_payment_methods_defined') . '.';
     }
@@ -910,7 +910,7 @@ if ($this->ms['show_main']) {
         if (count($payment_methods)) {
             $tmpcontent .= '<form method="post" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '">';
             $tmpcontent .= '<input type="hidden" name="payment_to_zone_mappings" value="1" />';
-            $tmpcontent .= '<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
+            $tmpcontent .= '<div class="table-responsive"><table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
             $tmpcontent .= '<thead><tr>';
             // zone header
             $zone_cols = array();
@@ -950,10 +950,10 @@ if ($this->ms['show_main']) {
                     $vars = unserialize($payment_method['vars']);
                     if ($payment_method['checked']) {
                         $tmpcontent .= '<tr id="payment_zone_[' . $zone_id . ']_' . $payment_method['id'] . '" class="row_sortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $vars['name'][0] . '</label></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name']  . '</label></td>';
                     } else {
                         $tmpcontent .= '<tr class="row_unsortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $vars['name'][0] . '</label></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name'] . '</label></td>';
                     }
                     $tmpcontent .= '</tr>';
                 }
@@ -961,7 +961,7 @@ if ($this->ms['show_main']) {
                 $tmpcontent .= '</td>';
             }
             $tmpcontent .= '</tr>';
-            $tmpcontent .= '</table>';
+            $tmpcontent .= '</table></div>';
             $tmpcontent .= '<input name="param" type="hidden" value="update_mapping" />';
             $tmpcontent .= '</form>';
         } else {
@@ -984,7 +984,7 @@ if ($this->ms['show_main']) {
         $tr_type = 'even';
         if (count($shipping_methods)) {
             $tmpcontent .= '<form method="post" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '">';
-            $tmpcontent .= '<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
+            $tmpcontent .= '<div class="table-responsive"><table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
             $tmpcontent .= '<thead><tr><th>&nbsp;</th>';
             foreach ($shipping_methods as $shipping_method) {
                 $tmpcontent .= '<th class="cellName">' . $shipping_method['name'] . '</th>';
@@ -1011,7 +1011,7 @@ if ($this->ms['show_main']) {
                 }
                 $tmpcontent .= '</tr>';
             }
-            $tmpcontent .= '</table>';
+            $tmpcontent .= '</table></div>';
             $tmpcontent .= '<input name="param" type="hidden" value="update_mapping" /></form>';
         } else {
             $tmpcontent .= $this->pi_getLL('admin_label_currently_no_payment_method_defined');

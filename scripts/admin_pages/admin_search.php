@@ -460,7 +460,7 @@ if ($this->ADMIN_USER) {
             $tmp_listing .= '<li class="ui-category"><span id="admin_ajax_res_header">' . $this->pi_getLL('admin_label_invoices') . '</span></li>';
             foreach ($resultset['invoices']['invoices'] as $invoice) {
                 $tmp_listing .= '<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="' . substr($invoice['invoice_id'], 0, 50) . '" class="ui-corner-all" tabindex="-1" href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash'], 1) . '">
+					<a alt="' . substr($invoice['invoice_id'], 0, 50) . '" class="ui-corner-all" tabindex="-1" href="' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash'], 1) . '">
 						<div class="single_row">' . substr($invoice['invoice_id'], 0, 50) . '</div>
 					</a>
 				</li>';

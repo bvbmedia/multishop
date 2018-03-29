@@ -358,6 +358,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($params['returnResultsSet']) {
             return $pageset;
         }
+        if ($params['settings']['contentAboveTable']) {
+            $tableContent .= $params['settings']['contentAboveTable'];
+        }
         //echo print_r($queryData);
         //die();
         $columnSorterData = array();
@@ -478,12 +481,20 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 foreach ($params['tableColumns'] as $col => $valArray) {
                     $originalValue = $row[$col];
                     switch ($valArray['valueType']) {
+                        case 'number_format_8_decimals':
+                            $row[$col] = rtrim(sprintf('%.8F', (float)$row[$col]), '0');
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
+                            }
+                            $summarize[$col] += $row[$col];
+                            break;
                         case 'number_format_2_decimals':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_thousand_seperator':
-                            $row[$col] = round(number_format($row[$col], 2, '.', ''), 2);
+                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
+                            $summarize[$col] += $row[$col];
                             break;
                         case 'recordCounter':
                             $row[$col] = $recordCounter;
@@ -524,6 +535,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'timestamp_to_day_date_time':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%a. %x<br/>%X", $row[$col]);
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
+                        case 'timestamp_to_day_date_time_no_seconds':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = strftime("%a. %x %H:%M", $row[$col]);
                             } else {
                                 $row[$col] = '';
                             }
@@ -656,8 +674,19 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = mslib_befe::print_r(unserialize($row[$col]));
                             }
                             break;
+                        case 'pre':
+                            if (!empty($row[$col])) {
+                                $row[$col] = '<pre>'.htmlspecialchars($row[$col]).'</pre>';
+                            }
+                            break;
                     }
                     $adjustedValue = $row[$col];
+                    if ($valArray['prefixValue']) {
+                        $adjustedValue=$valArray['prefixValue'].$adjustedValue;
+                    }
+                    if ($valArray['suffixValue']) {
+                        $adjustedValue.=$valArray['suffixValue'];
+                    }
                     if ($valArray['href']) {
                         foreach ($row as $tmpCol => $tmpVal) {
                             $valArray['href'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['href']);
@@ -710,7 +739,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = mslib_fe::amount2Cents($summarize[$col], 0);
                             break;
                         case 'number_format_2_decimals':
+                        case 'number_format_thousand_seperator':
                             $row[$col] = round(number_format($summarize[$col], 2, '.', ''), 2);
+                            break;
+                        case 'number_format_8_decimals':
+                            $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
+                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
+                                $row[$col]=substr($row[$col],0,-1);
+                            }
                             break;
                         default:
                             $row[$col] = $valArray['title'];
@@ -776,8 +812,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             // pagination eof
         }
         $content = '';
-        $content .= '<div class="panel panel-default">';
-        $content .= '<div class="panel-heading">';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '<div class="panel panel-default">';
+            $content .= '<div class="panel-heading">';
+        }
         if ($params['interfaceTitle']) {
             $interfaceTitle = $params['interfaceTitle'];
         } else {
@@ -793,8 +831,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $content .= '</div>';
         }
-        $content .= '</div>';
-        $content .= '<div class="panel-body">';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '</div>';
+        }
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '<div class="panel-body">';
+        }
         if (!$params['settings']['skipTabMarkup']) {
             $GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs'] = '<script type="text/javascript">
 			jQuery(document).ready(function ($) {
@@ -828,12 +870,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								<input type="submit" name="Search" class="btn btn-success" value="' . $that->pi_getLL('search') . '" />
 							</div>
 						</div>
-						<div class="col-sm-4 formfield-wrapper">
-							<div class="pull-right form-inline">
-								<label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
-								' . $limit_search_result_selectbox . '
-							</div>
-						</div>
+						';
+            if (!$params['settings']['hideLimitSelectbox']) {
+                $searchForm .= '
+                <div class="col-sm-4 formfield-wrapper">
+                    <div class="pull-right form-inline">
+                        <label class="control-label">' . $that->pi_getLL('limit_number_of_records_to') . '</label>
+                        ' . $limit_search_result_selectbox . '
+                    </div>
+                </div>';
+            }
+						$searchForm .= '
 					</div>
 				</div>
 			</form>
@@ -878,8 +925,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if (!$params['settings']['skipFooterMarkup']) {
             $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $that->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div>';
         }
-        $content .= '</div>';
-        $content .= '</div>';
+        if (!$params['settings']['skipPanelMarkup']) {
+            $content .= '</div>';
+            $content .= '</div>';
+        }
         if (is_array($columnSorterData) && $countColumnSorterData) {
             $sort_js = array();
             // only for non-sortable column

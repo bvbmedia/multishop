@@ -57,12 +57,16 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     /*} else {
                         $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
                     }*/
+                    $auto_check_mail_sent=' checked="checked"';
+                    if ($this->ms['MODULES']['AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE']=='0') {
+                        $auto_check_mail_sent='';
+                    }
                     $orderDetailsItem .= '</div>';
                     $orderDetailsItem .= '<div class="form-group row">
                         <label class="control-label col-md-3">&nbsp;</label>
                         <div class="col-md-9">
                             <div class="checkbox checkbox-inline checkbox-success">
-                                <input type="checkbox" id="send_payment_received_email" value="1">
+                                <input type="checkbox" id="send_payment_received_email" value="1"'.$auto_check_mail_sent.'>
                                 <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
                             </div>
                         </div>
@@ -129,6 +133,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         $return_data['status'] = 'NOTOK';
                         if ($res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                             $return_data['status'] = 'OK';
+                            // Set invoice to unpaid
+                            $updateArray = array('paid' => 0);
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'orders_id=' . $order_id, $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         }
                         //hook to let other plugins further manipulate the replacers
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['updateOrderPaidStatusToUnpaidPostProc'])) {
@@ -294,6 +302,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsFilterPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
+        }
+        $limit='';
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+            $limit=15;
         }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
                 implode(', ', $from), // FROM ...

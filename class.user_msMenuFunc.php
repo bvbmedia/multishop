@@ -1,6 +1,32 @@
 <?php
 // Example TypoScript (mixed tmenu with Multishop menu on specific menu item):
 /*
+# Example 1
+# Append Multishop tmenu children LI to the existing TYPO3 tmenu UL after LI page uid 28
+lib.msTopNavBottom.tmenu.1.NO.after.cObject=COA
+lib.msTopNavBottom.tmenu.1.NO.after.cObject {
+10=COA
+10 {
+  20 < lib.defaultMobileMenu
+  20.special = userfunction
+  20.special.userFunc =user_msMenuFunc->makeHmenuArray
+  20.special.userFunc.conf < plugin.tx_multishop_pi1
+  stdWrap.if.value.field = uid
+  stdWrap.if.equals = 28
+}
+if.value.field = uid
+if.equals = 28
+}
+# Remove ul of Multishop tmenu
+lib.msTopNavBottom.tmenu.1.NO.after.cObject.10.20.1.wrap >
+
+# Copy NO to CUR/ACT
+lib.msTopNavBottom.tmenu.1.CUR.after.cObject < lib.msTopNavBottom.tmenu.1.NO.after.cObject
+lib.msTopNavBottom.tmenu.1.ACT.after.cObject < lib.msTopNavBottom.tmenu.1.ACT.after.cObject
+lib.msTopNavBottom.tmenu.1.NO.wrapItemAndSub >
+lib.msTopNavBottom.tmenu.1.NO.wrapItemAndSub=<li>|</li>
+
+# Example 2
 # Custom tmenu with multishop tmenu on Shop pid
 lib.msTopNavBottom.tmenu.1.NO.after.cObject=COA
 lib.msTopNavBottom.tmenu.1.NO.after.cObject {
@@ -51,19 +77,23 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             $menuArr[$tel]['title'] = $cat['categories_name'];
             $menuArr[$tel]['uid'] = '9999' . $cat['categories_id'];
-            // get all cats to generate multilevel fake url
-            $level = 0;
-            $cats = mslib_fe::Crumbar($cat['categories_id']);
-            $cats = array_reverse($cats);
-            $where = '';
-            if (count($cats) > 0) {
-                foreach ($cats as $tmp) {
-                    $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                    $level++;
+            if ($cat['categories_external_url']) {
+                $link = $cat['categories_external_url'];
+            } else {
+                // get all cats to generate multilevel fake url
+                $level = 0;
+                $cats = mslib_fe::Crumbar($cat['categories_id']);
+                $cats = array_reverse($cats);
+                $where = '';
+                if (count($cats) > 0) {
+                    foreach ($cats as $tmp) {
+                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
+                        $level++;
+                    }
+                    $where = substr($where, 0, (strlen($where) - 1));
                 }
-                $where = substr($where, 0, (strlen($where) - 1));
+                $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
             }
-            $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
             $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
                 $GLOBALS['TT']->setTSlogMessage($error, 3);
@@ -103,19 +133,23 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if ($item['categories_image']) {
                     $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
                 }
-                // get all cats to generate multilevel fake url
-                $level = 0;
-                $cats = mslib_fe::Crumbar($item['categories_id']);
-                $cats = array_reverse($cats);
-                $where = '';
-                if (count($cats) > 0) {
-                    foreach ($cats as $tmp) {
-                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                        $level++;
+                if ($item['categories_external_url']) {
+                    $link = $item['categories_external_url'];
+                } else {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($item['categories_id']);
+                    $cats = array_reverse($cats);
+                    $where = '';
+                    if (count($cats) > 0) {
+                        foreach ($cats as $tmp) {
+                            $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
+                            $level++;
+                        }
+                        $where = substr($where, 0, (strlen($where) - 1));
                     }
-                    $where = substr($where, 0, (strlen($where) - 1));
+                    $link = mslib_fe::typolink($this->conf['shop_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
                 }
-                $link = mslib_fe::typolink($this->conf['shop_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
                 $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
                 $sub_content = $this->subMenuArray($item);
                 if ($sub_content) {
@@ -227,19 +261,23 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($cat['categories_image']) {
                 $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($cat['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($cat['categories_name']) . '">';
             }
-            // get all cats to generate multilevel fake url
-            $level = 0;
-            $cats = mslib_fe::Crumbar($cat['categories_id']);
-            $cats = array_reverse($cats);
-            $where = '';
-            if (count($cats) > 0) {
-                foreach ($cats as $tmp) {
-                    $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                    $level++;
+            if ($cat['categories_external_url']) {
+                $link = $cat['categories_external_url'];
+            } else {
+                // get all cats to generate multilevel fake url
+                $level = 0;
+                $cats = mslib_fe::Crumbar($cat['categories_id']);
+                $cats = array_reverse($cats);
+                $where = '';
+                if (count($cats) > 0) {
+                    foreach ($cats as $tmp) {
+                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
+                        $level++;
+                    }
+                    $where = substr($where, 0, (strlen($where) - 1));
                 }
-                $where = substr($where, 0, (strlen($where) - 1));
+                $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
             }
-            $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
             $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
                 $GLOBALS['TT']->setTSlogMessage($error, 3);

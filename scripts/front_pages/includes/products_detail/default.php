@@ -333,7 +333,7 @@ if (!$product['products_id']) {
         $order_now_button .= '<input id="multishop_add_to_cart" class="disabled" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
     } else {
         if ($product['products_quantity'] < 1) {
-            if ($this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+            if ($this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] || $product['ignore_stock_level']) {
                 $order_now_button .= '<input id="multishop_add_to_cart" name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('add_to_basket')) . '" />';
             } else {
                 $order_now_button .= '<input id="multishop_add_to_cart" class="disabled" name="Submit" type="button" value="' . htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')) . '" />';
@@ -416,6 +416,11 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_ID###'] = $product['products_id'];
     $markerArray['###ORDER_UNIT_NAME###'] = $product['order_unit_name'];
     $markerArray['###MANUFACTURERS_NAME###'] = $product['manufacturers_name'];
+    $markerArray['MANUFACTURERS_IMAGE'] = '';
+    if ($product['manufacturers_image']) {
+        $markerArray['###MANUFACTURERS_IMAGE###'] = '<img src="' . mslib_befe::getImagePath($product['manufacturers_image'], 'manufacturers', 'normal') . '">';
+    }
+    $markerArray['###MANUFACTURERS_IMAGE###'] = $product['manufacturers_image'];
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
     $markerArray['###PRODUCTS_NAME_MARKER###'] = $output['products_name_marker'];
     $markerArray['###CATEGORIES_NAME###'] = $product['categories_name'];

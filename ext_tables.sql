@@ -1,5 +1,5 @@
 CREATE TABLE `fe_groups` (
- `tx_multishop_discount` int(2) default '0',
+ `tx_multishop_discount` int(3) default '0',
  PRIMARY KEY (`uid`),
  KEY `parent` (`pid`),
  KEY `hidden` (`hidden`),
@@ -14,7 +14,7 @@ CREATE TABLE `fe_users` (
  `address_number` varchar(150) default '',
  `mobile` varchar(150) default '',
  `gender` varchar(1) default '',
- `tx_multishop_discount` int(2) default '0',
+ `tx_multishop_discount` int(3) default '0',
  `tx_multishop_newsletter` tinyint(1) default '0',
  `tx_multishop_code` varchar(50) default '',
  `tx_multishop_optin_ip` varchar(50) default '',
@@ -35,6 +35,8 @@ CREATE TABLE `fe_users` (
  `tx_multishop_language` varchar(127) default '',
  `department` varchar(127) default '',
  `contact_email` varchar(256) default '',
+ `foreign_customer_id` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
@@ -69,12 +71,14 @@ CREATE TABLE `fe_users` (
  KEY `tx_multishop_language` (`tx_multishop_language`),
  KEY `building` (`building`),
  KEY `region` (`region`),
- KEY `department` (`department`)
+ KEY `department` (`department`),
+ KEY `foreign_customer_id` (`foreign_customer_id`),
+ KEY `foreign_source_name` (`foreign_source_name`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
  `id` int(11) NOT NULL auto_increment ,
- `contents` longtext,
+ `contents` blob,
  `customer_id` int(11) default '0',
  `is_checkout` tinyint(1) default '0',
  `crdate` int(11) default '0',
@@ -86,7 +90,8 @@ CREATE TABLE `tx_multishop_cart_contents` (
  KEY `crdate` (`crdate`),
  KEY `ip_address` (`ip_address`),
  KEY `is_checkout` (`is_checkout`),
- KEY `page_uid` (`page_uid`)
+ KEY `page_uid` (`page_uid`),
+ KEY `session_id` (`session_id`),
 );
 
 CREATE TABLE `tx_multishop_categories` (
@@ -587,7 +592,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `billing_department` (`billing_department`),
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_orders_id` (`foreign_orders_id`),
-) COMMENT='Ordersysteem';
+);
 
 CREATE TABLE `tx_multishop_orders_products` (
  `orders_products_id` int(11) NOT NULL auto_increment,
@@ -643,6 +648,10 @@ CREATE TABLE `tx_multishop_orders_products` (
  `products_tax_id` int(11) default '0',
  `page_uid` int(11) default '0',
  `product_link` varchar(255) default '',
+ `stock_subtracted` tinyint(1) default '0',
+ `crdate` int(11) default '0',
+ `manufacturers_name` varchar(127) default '',
+ `related_to_orders_products_id ` int(11) default '0',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -659,8 +668,12 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `products_tax_id` (`products_tax_id`),
  KEY `product_capital_price` (`product_capital_price`),
  KEY `page_uid` (`page_uid`),
- KEY `product_link` (`product_link`)
-) COMMENT='Orderregels';
+ KEY `product_link` (`product_link`),
+ KEY `stock_subtracted` (`stock_subtracted`),
+ KEY `crdate` (`crdate`),
+ KEY `manufacturers_name` (`manufacturers_name`),
+ KEY `related_to_orders_products_id` (`related_to_orders_products_id`)
+);
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
  `orders_products_attributes_id` int(11) NOT NULL auto_increment,
@@ -699,7 +712,7 @@ CREATE TABLE `tx_multishop_orders_status` (
  PRIMARY KEY (`id`),
  KEY `default_status` (`default_status`),
  KEY `page_uid` (`page_uid`)
-) COMMENT='Order Statussen';
+);
 
 CREATE TABLE `tx_multishop_orders_status_description` (
  `id` int(11) NOT NULL auto_increment,
@@ -903,6 +916,7 @@ CREATE TABLE `tx_multishop_products` (
  `manufacturers_advice_price` decimal(24,14) default '0.00000000000000',
  `import_notes` varchar(250) default '',
  `is_hidden` tinyint(1) default '0',
+ `ignore_stock_level` tinyint(1) default '0',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -932,7 +946,8 @@ CREATE TABLE `tx_multishop_products` (
  KEY `foreign_source_name` (`foreign_source_name`),
  KEY `foreign_products_id` (`foreign_products_id`),
  KEY `specials_price_percentage` (`specials_price_percentage`),
- KEY `manufacturers_advice_price` (`manufacturers_advice_price`)
+ KEY `manufacturers_advice_price` (`manufacturers_advice_price`),
+ KEY `ignore_stock_level` (`ignore_stock_level`)
 ) ;
 
 
@@ -982,7 +997,7 @@ CREATE TABLE `tx_multishop_products_description` (
  `products_negative_keywords` varchar(255) default '',
  `promotext` varchar(255) default '',
  `products_meta_title` varchar(254) default NULL,
- `products_meta_description` varchar(254) default NULL,
+ `products_meta_description` text,
  `file_label` varchar(250) default '',
  `file_location` varchar(250) default '',
  `delivery_time` varchar(75) default '',
@@ -1640,6 +1655,7 @@ CREATE TABLE `tx_multishop_sessions` (
  `query_string` text,
  `http_user_agent` text,
  `http_referer` text,
+ `http_host_referer` varchar(75) default '',
  `url` text,
  `segment_type` varchar(50) default '',
  `segment_id` varchar(50) default '',
@@ -1650,6 +1666,7 @@ CREATE TABLE `tx_multishop_sessions` (
  KEY `session_id` (`session_id`),
  KEY `ip_address` (`ip_address`),
  KEY `http_host` (`http_host`),
+ KEY `http_host_referer` (`http_host_referer`),
  KEY `segment_type` (`segment_type`),
  KEY `segment_id` (`segment_id`)
 );
@@ -1722,4 +1739,23 @@ CREATE TABLE `tx_multishop_customers_export` (
  `status` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  KEY `code` (`code`)
+);
+
+CREATE TABLE `tx_multishop_orders_products_qty_shipped` (
+ `orders_products_qty_shipped_id` int(11) NOT NULL auto_increment,
+ `orders_products_id` int(11) default '0',
+ `orders_id` int(11) default '0',
+ `products_id` int(11) default '0',
+ `qty` decimal(8,2),
+ `status` int(3) default '0',
+ `track_and_trace_code` varchar(50) default '',
+ `track_and_trace_link` varchar(255) default '',
+ `crdate` int(11) default '0',
+ PRIMARY KEY (`orders_products_qty_shipped_id`),
+ KEY `orders_products_id` (`orders_products_id`),
+ KEY `orders_id` (`orders_id`),
+ KEY `products_id` (`products_id`),
+ KEY `qty` (`qty`),
+ KEY `status` (`status`),
+ KEY `crdate` (`crdate`)
 );

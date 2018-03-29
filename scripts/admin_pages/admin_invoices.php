@@ -558,15 +558,17 @@ if (isset($this->get['shipping_method']) && $this->get['shipping_method'] != 'al
         $filter[] = "(o.shipping_method='" . addslashes($this->get['shipping_method']) . "')";
     }
 }
-if ($this->cookie['invoice_paid_status'] == 'paid') {
-    $filter[] = "(i.paid='1')";
-} else if ($this->cookie['invoice_paid_status'] == 'unpaid') {
-    $filter[] = "(i.paid='0')";
-}
-if ($this->cookie['invoice_type'] == 'credit') {
-    $filter[] = "(i.reversal_invoice='1')";
-} else if ($this->cookie['invoice_type'] == 'debit') {
-    $filter[] = "(i.reversal_invoice='0')";
+if ($this->get['Search']) {
+    if ($this->cookie['invoice_paid_status'] == 'paid') {
+        $filter[] = "(i.paid='1')";
+    } else if ($this->cookie['invoice_paid_status'] == 'unpaid') {
+        $filter[] = "(i.paid='0')";
+    }
+    if ($this->cookie['invoice_type'] == 'credit') {
+        $filter[] = "(i.reversal_invoice='1')";
+    } else if ($this->cookie['invoice_type'] == 'debit') {
+        $filter[] = "(i.reversal_invoice='0')";
+    }
 }
 if (isset($this->get['country']) && !empty($this->get['country'])) {
     $filter[] = "o.billing_country='" . addslashes($this->get['country']) . "'";
@@ -741,7 +743,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 				data: "tx_multishop_pi1[order_id]=" + order_id,
 				success: function(d) {
 					var tmp_confirm_content =\'' . addslashes(sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), '%invoice_nr%')) . '\';
-					var confirm_content = \'<div><h3 class="panel-title">\' + tmp_confirm_content . replace(\'%invoice_nr%\', invoice_nr) + \'</h3></div><div class="form-group" id="popup_order_wrapper_listing">\' + d.payment_method_date_purchased + \'</div>\';
+					var confirm_content = \'<div><h3>\' + tmp_confirm_content . replace(\'%invoice_nr%\', invoice_nr) + \'</h3></div><div class="form-group" id="popup_order_wrapper_listing">\' + d.payment_method_date_purchased + \'</div>\';
 					var confirm_box=jQuery.confirm({
 						title: \'\',
 						content: confirm_content,

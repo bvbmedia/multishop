@@ -455,8 +455,16 @@ if (mslib_fe::loggedin()) {
             }
             $markerArray['###USERNAME_INPUT###'] = $create_account_username_block;
             //
-            $markerArray['###CREATE_ACCOUNT_CAPTCHA_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=captcha');
-            $markerArray['###LABEL_CAPTCHA_PLACEHOLDER###'] = $this->pi_getLL('captcha_code_placeholder');
+            $captcha_placeholder='';
+            if ($this->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT']=='0') {
+                $captcha_placeholder = '<div class="account-field security">
+                    <img src="' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=captcha') . '">
+                    <input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" placeholder="' . $this->pi_getLL('captcha_code_placeholder') . '" />
+                </div>
+                ';
+            }
+            $markerArray['###CAPTCHA_PLACEHOLDER###'] = $captcha_placeholder;
+
             $markerArray['###LABEL_BACK###'] = $this->pi_getLL('back');
             $markerArray['###LABEL_REGISTER###'] = $this->pi_getLL('register');
             //

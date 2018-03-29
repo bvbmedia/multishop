@@ -277,10 +277,10 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-$required_indexes = array();
-$required_indexes[] = 'credit_order';
-$required_indexes[] = 'payed';
-$required_indexes[] = 'klanten_id';
+$indexesToDrop = array();
+$indexesToDrop[] = 'credit_order';
+$indexesToDrop[] = 'payed';
+$indexesToDrop[] = 'klanten_id';
 $indexes = array();
 $table_name = 'tx_multishop_orders';
 $str = "show indexes from `" . $table_name . "` ";
@@ -288,9 +288,9 @@ $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $indexes[] = $rs['Key_name'];
 }
-foreach ($required_indexes as $required_index) {
-    if (in_array($required_index, $indexes)) {
-        $str = "ALTER TABLE  `" . $table_name . "` DROP INDEX `" . $required_index . "`";
+foreach ($indexesToDrop as $indexToDrop) {
+    if (in_array($indexToDrop, $indexes)) {
+        $str = "ALTER TABLE  `" . $table_name . "` DROP INDEX `" . $indexToDrop . "`";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $messages[] = $str;
     }
@@ -365,8 +365,8 @@ $str = "describe `tx_multishop_cart_contents`";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     if ($row['Field'] == 'contents') {
-        if ($row['Type'] == 'text') {
-            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` LONGTEXT DEFAULT NULL;";
+        if ($row['Type'] == 'longtext') {
+            $str2 = "ALTER TABLE  `tx_multishop_cart_contents` CHANGE  `contents`  `contents` BLOB DEFAULT NULL;";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             $messages[] = $str2;
         }
@@ -562,6 +562,132 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select foreign_customer_id from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `fe_users` ADD `foreign_customer_id` int(11) default '0', ADD KEY `foreign_customer_id` (`foreign_customer_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select foreign_source_name from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `fe_users` ADD `foreign_source_name` varchar(30) default '0', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select http_host_referer from tx_multishop_sessions limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_sessions` ADD `http_host_referer` varchar(75) default '', ADD KEY `http_host_referer` (`http_host_referer`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
 
-tx_multishop_orders_status_history
+    // Repair data
+    $str = "SELECT id,http_referer from tx_multishop_sessions where http_referer != '' and http_referer is not null";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $urlArray=parse_url($rs['http_referer']);
+        $updateArray=array();
+        $updateArray['http_host_referer'] = $urlArray['host'];
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_sessions', 'id='.$rs['id'], $updateArray);
+        $GLOBALS['TYPO3_DB']->sql_query($query);
+    }
+}
+
+
+// remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
+$query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
+$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+$messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
+/*
+$auto_shipping_costs=mslib_befe::getRecord('DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER', 'tx_multishop_configuration', 'configuration_key');
+if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_value'])) {
+    $current_value=$auto_shipping_costs['configuration_value'];
+    $new_value='0';
+    if ($current_value=='0') {
+        $new_value='1';
+    }
+    $updateArray=array();
+    $updateArray['configuration_value']=$new_value;
+    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_configuration', 'configuration_key=\'ENABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'', $updateArray);
+    $GLOBALS['TYPO3_DB']->sql_query($query);
+
+    $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
+    $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+    $messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
+}
+*/
+
+$indexes = array();
+$table_name = 'tx_multishop_cart_contents';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+if (!in_array('session_id', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `session_id` (`session_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select orders_products_qty_shipped_id from tx_multishop_orders_products_qty_shipped";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "CREATE TABLE `tx_multishop_orders_products_qty_shipped` (
+ `orders_products_qty_shipped_id` int(11) NOT NULL auto_increment,
+ `orders_products_id` int(11) default '0',
+ `orders_id` int(11) default '0',
+ `products_id` int(11) default '0',
+ `qty` decimal(8,2),
+ `status` int(3) default '0',
+ `crdate` int(11) default '0',
+ PRIMARY KEY (`orders_products_qty_shipped_id`),
+ KEY `orders_products_id` (`orders_products_id`),
+ KEY `orders_id` (`orders_id`),
+ KEY `products_id` (`products_id`),
+ KEY `qty` (`qty`),
+ KEY `status` (`status`),
+ KEY `crdate` (`crdate`)
+);";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+$str = "select stock_subtracted from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `stock_subtracted` tinyint(1) default '0', ADD KEY `stock_subtracted` (`stock_subtracted`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+$str = "select crdate from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `crdate` int(11) default '0', ADD KEY `crdate` (`crdate`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select manufacturers_name from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `manufacturers_name` varchar(127) default '', ADD KEY `manufacturers_name` (`manufacturers_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str="select related_to_orders_products_id from tx_multishop_orders_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_orders_products` ADD related_to_orders_products_id int(11) default '0', ADD KEY `related_to_orders_products_id` (`related_to_orders_products_id`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
+$str="select ignore_stock_level from tx_multishop_products limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_products` ADD ignore_stock_level tinyint(1) default '0', ADD KEY `ignore_stock_level` (`ignore_stock_level`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>

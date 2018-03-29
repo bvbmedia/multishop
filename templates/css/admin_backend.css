@@ -308,6 +308,7 @@ ul.qq-upload-list.qq-vertical-list li { padding-top:5px; padding-left:0; padding
 .searchLimit { text-align:right; }
 .searchLimit .form-inline .form-control { margin-right:0; }
 .form-collapse .input-group input[type="text"] { width:400px; text-align:left; padding-left:34px; }
+.form-collapse .input-group input#advance-skeyword { margin-right:7px; border-top-right-radius:4px; border-bottom-right-radius:4px; }
 .form-collapse .input-group > .fa { position:absolute; left:0; top:0; width:34px; height:34px; line-height:34px; text-align:center; z-index:10; }
 .form-collapse a.advanceSearch { display:inline-block; font-size:14px; line-height:20px; vertical-align:middle; }
 .form-collapse a.advanceSearch:hover,
@@ -707,6 +708,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .fa { line-height:20px; }
 .fa-stack .fa { line-height:inherit; }
 .fa-li { top:0; }
+.fa-stack .fa-stack-1x:before { font-size:12px; }
 
 .checkbox label::after { line-height:16px; }
 
@@ -761,7 +763,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 .redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
 .redactor-editor, .redactor-box, .redactor-box textarea { }
-.redactor-box-fullscreen { z-index:8888890; }
+.redactor-box-fullscreen { z-index:8889990; }
 #msadmin_content .redactor-toolbar.toolbar-fixed-box { position:fixed !important; left:auto !important; top:38px !important; }
 
 /* select2 overrule */
@@ -807,6 +809,9 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .text-info { color:#337ab7; }
 .text-danger { color:#d9534f; }
 .text-orange { color:#f90;}
+.text-black { color:#000; }
+.text-gray { color:#999; }
+.text-pink { color:#f691b2; }
 
 .table-borderless > thead > tr > th,
 .table-borderless > tbody > tr > th,
@@ -936,6 +941,8 @@ fieldset[disabled] .btn-default.active { background-color:#e5e5e5; }
 td.print_r_key { word-break:normal; }
 td.print_r_value { word-break:break-word; }
 
+.pagination > li > a,
+.pagination > li > span { padding:.6rem 1.05rem; }
 .pagination > li > a:hover,
 .pagination > li > span:hover,
 .pagination > li > a:focus,
@@ -944,3 +951,117 @@ td.print_r_value { word-break:break-word; }
 .pagination > li.disabled > span:hover,
 .pagination > li.disabled > a:focus,
 .pagination > li.disabled > span:focus { z-index:0; }
+
+@media (max-width:1199px) {
+	body { background-position:-40px top; }
+	h1 { font-size:2rem; line-height:2.4rem; }
+	h2 { font-size:1.6remx; line-height:2rem; }
+	h3,
+	.panel-title { font-size:1.4rem; line-height:1.8rem; }
+	h4 { font-size:1.2rem; line-height:1.6rem; }
+	h5 { font-size:1rem; line-height:1.4rem; }
+	body,
+	.form-control,
+	.form-collapse a.advanceSearch,
+	.btn,
+	.input-group-addon,
+	.label.label-md { font-size:1.1rem; }
+	#tx_multishop_admin_header_wrapper { width:180px; }
+	#tx_multishop_admin_newheader_wrapper,
+	#tx_multishop_admin_footer_wrapper { left:180px; }
+	#msadmin_wrapper { padding-left:180px; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > ul { left:180px; }
+
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { font-size:1.2rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span,
+	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) { font-size:1.1rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_package,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > span,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > a,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li > span { padding:.5rem 2rem .5rem 1.5rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > span:before { top:1.3rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > a:before,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > span:before { top:.9rem; }
+	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label),
+	#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket { padding-left:1.1rem; padding-right:1.1rem; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > ul,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul { width:200px; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:hover > ul,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li.msAdminPanelMenuHover > ul { left:200px; }
+
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_bronze,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { overflow:hidden; display:inline-block; width:22px; height:22px; background-position:center center; background-repeat:no-repeat; padding-top:16px; vertical-align:middle; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_bronze { background-image:url(../images/icons_pkg_bronze.svg); }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_silver { background-image:url(../images/icons_pkg_silver.svg); }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr span.package_gold { background-image:url(../images/icons_pkg_gold.svg); }
+
+	.fa,
+	.label.label-md { line-height:1.42857143; }
+	.fa-stack { width:1.2rem; height:1.2rem; line-height:1rem; vertical-align:top; }
+	.fa-stack .fa-stack-2x { font-size:1.5rem; line-height:1.5rem; }
+	.fa-stack .fa-stack-1x { font-size:.7rem; line-height:1.5rem; }
+	.btn,
+	.pagination > li > a, .pagination > li > span,
+	.form-control,
+	select.form-control { padding:.5rem .8rem; }
+	.nav > li > a { padding:.5rem .4rem; }
+	.pagination > li > a .fa, .pagination > li > span .fa,
+	.btn-sm, .btn-group-sm > .btn { line-height:1.42857143 }
+	.form-control,
+	.select2-container .select2-choice { height:27px; }
+	.select2-container .select2-choice > .select2-chosen { line-height:27px; padding-top:0; }
+	.form-collapse .input-group > .fa { width:27px; height:27px; line-height:27px; }
+	.form-collapse .input-group input[type="text"] { padding-left:27px; }
+
+	.panel-heading,
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td { padding:.5rem; }
+	.panel-heading .btn .fa { display:none; }
+	.btn.btn-memo { line-height:1.42857143 !important; }
+
+	.admin_status_red, .admin_status_green { width:15px; height:15px; }
+	.form-collapse .input-group input[type="text"] { width:320px; }
+}
+@media (max-width:991px) {
+	body { background-position:-70px top; }
+	#tx_multishop_admin_header_wrapper { width:150px; }
+	#tx_multishop_admin_newheader_wrapper,
+	#tx_multishop_admin_footer_wrapper { left:150px; }
+	#msadmin_wrapper { padding-left:150px; }
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li:hover > ul,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li.msAdminPanelMenuHover > ul { left:150px; }
+
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > a > .fa,
+	#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li > span > .fa { display:none; }
+
+	.form-collapse .input-group input[type="text"] { width:220px; }
+}
+
+.modal-preloader { position:fixed; left:0; top:0; bottom:0; right:0; background:rgba(0,0,0,.5); z-index:9999999; }
+.modal-preloader img { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.modal-backdrop { z-index:8888989; }
+.modal { z-index:8888990; }
+
+.update_customer_group_discount_status:hover,
+.update_customer_group_discount_status:focus { border-bottom:none; }
+
+/* fix for redactor 3.0 b5 */
+.redactor-modal .form-item.form-item-target input[type="checkbox"] { margin-top:0; margin-bottom:1px; }
+.redactor-modal .form-item.form-item-target input[type="checkbox"] + label.checkbox { display:inline-block; margin:0; padding-left:0; }

@@ -52,9 +52,13 @@ if ($this->ms['MODULES']['COUPONS']) {
 			data: "code=" + value + extra_post_params,
 			success:
 				function(t) {
-					jQuery("#span_discount").html(t.discount_percentage);
-					jQuery("#korting").val(t.discount_percentage);
-
+			        if (t.discount_percentage!="0%") {
+			            jQuery("#shoppingcart_discount_display").show();
+					    jQuery("#span_discount").html(t.discount_percentage);
+					    jQuery("#korting").val(t.discount_percentage);
+					} else {
+			            jQuery("#shoppingcart_discount_display").hide();
+					}
 					jQuery(".shoppingcart-totaal-price").empty();
 					jQuery(".shoppingcart-totaal-price").html(t.shopping_cart_total_price);
 				},
@@ -253,7 +257,7 @@ if ($count_product > 0) {
             $quantity_html .= '<input class="qty_input" name="qty[' . $shopping_cart_item . ']" type="text" id="qty_' . $shopping_cart_item . '" value="' . $value['qty'] . '" size="4" maxlength="4" />';
             $quantity_html .= '<input type="button" value="+" data-stepSize="' . ($product['products_multiplication'] != '0.00' ? $product['products_multiplication'] : '1') . '" data-minQty="' . ($product['minimum_quantity'] != '0.00' ? $product['minimum_quantity'] : '1') . '" data-maxQty="' . ($product['maximum_quantity'] != '0.00' ? $product['maximum_quantity'] : '0') . '" class="qty_plus" rel="qty_' . $shopping_cart_item . '"></div>';
             // show selectbox by products multiplication or show default input eof
-            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && $value['ignore_stock_level']) {
                 if ($value['qty'] > $value['products_quantity']) {
                     $disable_checkout = true;
                 }
@@ -301,6 +305,19 @@ if ($count_product > 0) {
         $markerArray = array();
         $markerArray['PRODUCT_ROW_TYPE'] = $output['product_row_type'];
         $markerArray['PRODUCT_IMAGE'] = $output['product_image'];
+        $formats = array();
+        $formats[] = '100';
+        $formats[] = '200';
+        $formats[] = '300';
+        foreach ($formats as $format) {
+            $key = 'PRODUCT_IMAGE_' . $format;
+            if ($product_info['products_image']) {
+                $imagePath = mslib_befe::getImagePath($product_info['products_image'], 'products', $format);
+                $markerArray[$key] = '<img src="' . $imagePath . '" alt="' . htmlspecialchars($product['products_name']) . '" />';
+            } else {
+                $markerArray[$key] = '<div class="no_image"></div>';
+            }
+        }
         $markerArray['PRODUCT_LINK'] = $output['product_link'];
         $markerArray['PRODUCT_NAME'] = $output['product_name'];
         $markerArray['PRODUCT_SHORTDESCRIPTION'] = $product['product_shortdescription_raw'];

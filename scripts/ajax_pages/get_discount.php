@@ -27,6 +27,7 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid'] || ($cart['user']['email'] || $this->
             $cart['coupon_code'] = '';
             $cart['discount'] = $discount_percentage;
             $cart['discount_type'] = 'percentage';
+            $cart['discount_from'] = 'user';
             //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
             //$GLOBALS['TSFE']->fe_user->storeSessionData();
             tx_mslib_cart::storeCart($cart);
@@ -72,6 +73,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
             $cart['coupon_code'] = $code;
             $cart['discount'] = $row['discount'];
             $cart['discount_type'] = $row['discount_type'];
+            $cart['discount_from'] = 'coupon';
             //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
             //$GLOBALS['TSFE']->fe_user->storeSessionData();
             tx_mslib_cart::storeCart($cart);
@@ -85,6 +87,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
         $cart['discount'] = '';
         $cart['discount_type'] = '';
         $cart['discount_amount'] = '';
+        $cart['discount_from']='';
         //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
         //$GLOBALS['TSFE']->fe_user->storeSessionData();
         tx_mslib_cart::storeCart($cart);
@@ -100,6 +103,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
         $cart['discount'] = '';
         $cart['discount_type'] = '';
         $cart['discount_amount'] = '';
+        $cart['discount_from']='';
         //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
         //$GLOBALS['TSFE']->fe_user->storeSessionData();
         tx_mslib_cart::storeCart($cart);
@@ -128,6 +132,9 @@ if ($cart['discount'] > 0) {
             break;
     }
     tx_mslib_cart::storeCart($cart);
+}
+if (!$cart['discount'] && (!empty($return_data['discount_percentage']) || $return_data['discount_percentage']!='0%')) {
+    $return_data['discount_percentage']='0%';
 }
 // hook oef
 //

@@ -157,6 +157,15 @@ if (is_array($rel_products) && count($rel_products)) {
         $markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION'] = $rel_rs['products_shortdescription'];
         $markerArray['PRODUCTS_SHORT_DESCRIPTION'] = $rel_rs['products_shortdescription'];
         $markerArray['ITEM_PRODUCTS_PRICE'] = mslib_fe::amount2Cents($final_price);
+        if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($rel_rs['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+            $old_price = $rel_rs['products_price'] * (1 + $rel_rs['tax_rate']);
+        } else {
+            $old_price = $rel_rs['products_price'];
+        }
+        $markerArray['ITEM_PRODUCTS_OLD_PRICE'] = mslib_fe::amount2Cents($old_price);
+        if ($markerArray['ITEM_PRODUCTS_OLD_PRICE']==$markerArray['ITEM_PRODUCTS_PRICE']) {
+            $markerArray['ITEM_PRODUCTS_OLD_PRICE'] ='';
+        }
         $quantity_html = '<div class="quantity buttons_added">';
         $quantity_html .= '<input type="button" value="-" data-stepSize="' . ($rel_rs['products_multiplication'] != '0.00' ? $rel_rs['products_multiplication'] : '1') . '" data-minQty="' . ($rel_rs['minimum_quantity'] != '0.00' ? $rel_rs['minimum_quantity'] : '1') . '" data-maxQty="' . ($rel_rs['maximum_quantity'] != '0.00' ? $rel_rs['maximum_quantity'] : '0') . '" class="rel_qty_minus" rel="relation_cart_quantity_' . $i . '">';
         $quantity_html .= '<input class="qty_input" name="relation_cart_quantity[' . $i . ']" type="text" id="relation_cart_quantity_' . $i . '" value="1" size="4" maxlength="4" />';
@@ -177,6 +186,7 @@ if (is_array($rel_products) && count($rel_products)) {
         $markerArray['ITEM_PRODUCTS_EAN'] = $rel_rs['ean_code'];
         $markerArray['ITEM_HEADER_NAME'] = htmlspecialchars(ucfirst($this->pi_getLL('products_name')));
         $markerArray['ITEM_HEADER_PRICE'] = htmlspecialchars(ucfirst($this->pi_getLL('price')));
+        $markerArray['ITEM_HEADER_OLD_PRICE'] = htmlspecialchars(ucfirst($this->pi_getLL('old_price')));
         $markerArray['ITEM_HEADER_QUANTITY'] = htmlspecialchars(ucfirst($this->pi_getLL('qty')));
         $markerArray['ITEM_HEADER_BUY_NOW'] = htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
         $markerArray['ITEM_HEADER_STOCK'] = htmlspecialchars(ucfirst($this->pi_getLL('stock')));

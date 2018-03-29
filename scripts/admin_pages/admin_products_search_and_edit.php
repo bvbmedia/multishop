@@ -107,6 +107,7 @@ if ($this->post['submit']) {
         }
     }
     foreach ($this->post['up']['special_price'] as $pid => $price) {
+        $data_update[$pid]['special_price'] = $price;
         if (strstr($price, ",")) {
             $price = str_replace(",", ".", $price);
         }
@@ -143,6 +144,12 @@ if ($this->post['submit']) {
                 // if the flat database module is enabled we have to sync the changes to the flat table
                 mslib_befe::convertProductToFlat($prodid);
             }
+        }
+    }
+    // clear the multishop cache
+    if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+        if (count($data_update)) {
+            mslib_befe::cacheLite('delete_all');
         }
     }
     // custom page hook that can be controlled by third-party plugin
@@ -211,14 +218,18 @@ $fields = array();
 $fields['products_name'] = $this->pi_getLL('products_name');
 $fields['products_model'] = $this->pi_getLL('products_model');
 $fields['products_description'] = $this->pi_getLL('products_description');
-$fields['products_price'] = $this->pi_getLL('admin_price');
-$fields['specials_price'] = ucfirst($this->pi_getLL('admin_specials_price'));
-$fields['capital_price'] = $this->pi_getLL('capital_price');
+//$fields['products_price'] = $this->pi_getLL('admin_price');
+//$fields['specials_price'] = ucfirst($this->pi_getLL('admin_specials_price'));
+//$fields['capital_price'] = $this->pi_getLL('capital_price');
 $fields['products_id'] = $this->pi_getLL('products_id');
 $fields['categories_name'] = $this->pi_getLL('admin_category');
-$fields['products_quantity'] = $this->pi_getLL('admin_stock');
+//$fields['products_quantity'] = $this->pi_getLL('admin_stock');
 $fields['products_weight'] = $this->pi_getLL('admin_weight');
 $fields['manufacturers_name'] = $this->pi_getLL('manufacturer');
+$fields['ean_code'] = $this->pi_getLL('admin_ean_code');
+$fields['sku_code'] = $this->pi_getLL('admin_sku_code');
+$fields['foreign_products_id'] = $this->pi_getLL('admin_foreign_products_id');
+$fields['vendor_code'] = $this->pi_getLL('admin_manufacturers_products_id');
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilter'])) {
     $params = array(
@@ -364,6 +375,34 @@ if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
             }
             $filter[] = "(" . $prefix . "products_name like '%" . addslashes($this->get['keyword']) . "%')";
             break;
+        case 'ean_code':
+            $prefix = 'p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[] = "(" . $prefix . "ean_code like '%" . addslashes($this->get['keyword']) . "%')";
+            break;
+        case 'sku_code':
+            $prefix = 'p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[] = "(" . $prefix . "sku_code like '%" . addslashes($this->get['keyword']) . "%')";
+            break;
+        case 'foreign_products_id':
+            $prefix = 'p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[] = "(" . $prefix . "foreign_products_id like '%" . addslashes($this->get['keyword']) . "%')";
+            break;
+        case 'vendor_code':
+            $prefix = 'p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[] = "(" . $prefix . "vendor_code like '%" . addslashes($this->get['keyword']) . "%')";
+            break;
         default:
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionSearchByFilterQuery'])) {
@@ -377,6 +416,97 @@ if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
             }
             break;
     }
+}
+if (isset($this->get['manufacturers_id']) && !empty($this->get['manufacturers_id']) && $this->get['manufacturers_id']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'manufacturers_id=' . (int) $this->get['manufacturers_id'];
+}
+if (isset($this->get['product_condition']) && !empty($this->get['product_condition']) && $this->get['product_condition']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'products_condition=' . addslashes($this->get['product_condition']);
+}
+if (isset($this->get['order_unit_id']) && $this->get['order_unit_id']!='' && $this->get['order_unit_id']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'order_unit_id=' . (int)$this->get['order_unit_id'];
+}
+if (isset($this->get['tax_id']) && $this->get['tax_id']!='' && $this->get['tax_id']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'tax_id=' . (int)$this->get['tax_id'];
+}
+if (isset($this->get['product_price_from']) && $this->get['product_price_from']!='' && isset($this->get['product_price_till']) && $this->get['product_price_till']!='') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    switch ($this->get['search_by_product_price']) {
+        case 'products_price':
+            $filter[]=$prefix . 'products_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            break;
+        case 'product_capital_price':
+            $filter[]=$prefix . 'product_capital_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            break;
+        case 'specials_new_products_price':
+            $prefix = 's.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
+            $filter[]=$prefix . 'specials_new_products_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            break;
+    }
+}
+if (isset($this->get['product_status']) && !empty($this->get['product_status']) && $this->get['product_status']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'products_status=' . addslashes($this->get['product_status']);
+}
+if (isset($this->get['product_date_from']) && !empty($this->get['product_date_from']) && isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $dates_from=explode(' ', $this->get['product_date_from']);
+    list($d, $m, $y)=explode('/', $dates_from[0]);
+    $date_from=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_from[1]);
+
+    $dates_till=explode(' ', $this->get['product_date_till']);
+    list($d, $m, $y)=explode('/', $dates_till[0]);
+    $date_till=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_till[1]);
+
+    switch ($this->get['search_by_product_date']) {
+        case 'products_date_added':
+            $filter[]=$prefix . 'products_date_added BETWEEN ' . $date_from . ' AND ' . $date_till;
+            break;
+        case 'products_last_modified':
+            $filter[]=$prefix . 'products_last_modified BETWEEN ' . $date_from . ' AND ' . $date_till;
+            break;
+        case 'products_date_available':
+            $filter[]=$prefix . 'products_date_available BETWEEN ' . $date_from . ' AND ' . $date_till;
+            break;
+        case 'products_date_visible':
+            $filter[]=$prefix . 'products_date_visible BETWEEN ' . $date_from . ' AND ' . $date_till;
+            break;
+    }
+}
+if (isset($this->get['search_engine']) && !empty($this->get['search_engine']) && $this->get['search_engine']!='all') {
+    $prefix = 'p.';
+    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix = 'pf.';
+    }
+    $filter[]=$prefix . 'search_engines_allow_indexing=' . addslashes($this->get['search_engine']);
 }
 switch ($this->get['tx_multishop_pi1']['order_by']) {
     case 'products_status':
@@ -857,8 +987,19 @@ if ($postMessageArray) {
 }
 $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
+
 if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
-        (isset($this->get['stock_till']) && !empty($this->get['stock_till']))
+    (isset($this->get['stock_till']) && !empty($this->get['stock_till'])) ||
+    (isset($this->get['manufacturers_id']) && !empty($this->get['manufacturers_id']) && $this->get['manufacturers_id']!='0') ||
+    (isset($this->get['product_condition']) && !empty($this->get['product_condition']) && $this->get['product_condition']!='all') ||
+    (isset($this->get['order_unit_id']) && !empty($this->get['order_unit_id']) && $this->get['order_unit_id']!='all') ||
+    (isset($this->get['tax_id']) && $this->get['tax_id']!='' && $this->get['tax_id']!='all') ||
+    (isset($this->get['product_price_from']) && !empty($this->get['product_price_from'])) ||
+    (isset($this->get['product_price_till']) && !empty($this->get['product_price_till'])) ||
+    (isset($this->get['product_status']) && !empty($this->get['product_status']) && $this->get['product_status']!='all') ||
+    (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) ||
+    (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) ||
+    (isset($this->get['search_engine']) && !empty($this->get['search_engine']) && $this->get['search_engine']!='all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -870,15 +1011,103 @@ $subpartArray['###VALUE_STOCK_TO###'] = $this->get['stock_till'];
 $subpartArray['###PAGE_HEADER###'] = $this->pi_getLL('products');
 $subpartArray['###LABEL_SEARCH_KEYWORD###'] = $this->pi_getLL('admin_search_for');
 $subpartArray['###VALUE_SEARCH_KEYWORD###'] = ((isset($this->get['keyword'])) ? htmlspecialchars($this->get['keyword']) : '');
-$subpartArray['###LABEL_SEARCH_BY###'] = $this->pi_getLL('by');
+$subpartArray['###LABEL_SEARCH_BY###'] = $this->pi_getLL('search_by');
 $subpartArray['###SEARCH_BY_SELECTBOX###'] = $searchby_selectbox;
-$subpartArray['###LABEL_SEARCH_IN###'] = $this->pi_getLL('in');
+$subpartArray['###LABEL_SEARCH_IN###'] = ucfirst($this->pi_getLL('in'));
 $subpartArray['###SEACRH_IN_CATEGORY_TREE_SELECTBOX###'] = $search_category_selectbox;
 $subpartArray['###LABEL_SEARCH_LIMIT###'] = $this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###SEARCH_LIMIT###'] = $search_limit;
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
 $subpartArray['###LABEL_SEARCH###'] = $this->pi_getLL('search');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
+// advanced search label
+$subpartArray['###LABEL_MANUFACTURERS###'] = $this->pi_getLL('manufacturers');
+$subpartArray['###VALUE_MANUFACTURERS###'] = $this->get['manufacturers_id'];
+
+$subpartArray['###LABEL_PRODUCT_CONDITION###'] = $this->pi_getLL('feed_exporter_fields_label_products_condition');
+$subpartArray['###PRODUCT_CONDITION_SELECTBOX###'] = $product_condition_selectbox;
+$subpartArray['###CONDITION_NEW_SELECTED###'] = ($this->get['product_condition'] == 'new' ? ' selected' : '');
+$subpartArray['###CONDITION_USED_SELECTED###'] = ($this->get['product_condition'] == 'used' ? ' selected' : '');
+$subpartArray['###CONDITION_REFURBISHED_SELECTED###'] = ($this->get['product_condition'] == 'refurbished' ? ' selected' : '');
+$subpartArray['###LABEL_CONDITION_NEW###'] = $this->pi_getLL('new');
+$subpartArray['###LABEL_CONDITION_USED###'] = $this->pi_getLL('used');
+$subpartArray['###LABEL_CONDITION_REFURBISHED###'] = $this->pi_getLL('refurbished');
+$subpartArray['###LABEL_CONDITION_ALL###'] = $this->pi_getLL('all');
+
+// order unit
+$order_unit_selectbox = '<select name="order_unit_id" class="form-control">';
+$str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+$order_unit_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>';
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $order_unit_selectbox .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $this->get['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+}
+$order_unit_selectbox .= '</select>';
+$subpartArray['###LABEL_ORDER_UNIT###'] = $this->pi_getLL('admin_order_units');
+$subpartArray['###ORDER_UNIT_SELECTBOX###'] = $order_unit_selectbox;
+
+// tax rate
+$tax_rate_selectbox = '<select name="tax_id" id="tax_id" class="form-control">';
+$str = "SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+$product_tax_rate = 0;
+$data = mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
+$product_tax_rate = $data['total_tax_rate'];
+$tax_list_data = array();
+$tax_rate_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
+<option value="0"'.($this->get['tax_id']=='0' ? ' selected' : '').'>' . $this->pi_getLL('admin_no_tax') . '</option>
+';
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $tax_rate_selectbox .= '<option value="' . $row['rules_group_id'] . '" ' . (($row['rules_group_id'] == $this->get['tax_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+}
+$tax_rate_selectbox .= '</select>';
+$subpartArray['###LABEL_TAX_RATE###'] = $this->pi_getLL('admin_taxes');
+$subpartArray['###TAX_RATE_SELECTBOX###'] = $tax_rate_selectbox;
+// product date filter
+$subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
+$subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
+$subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
+$subpartArray['###VALUE_DATE_FROM###'] = $this->get['product_date_from'];
+$subpartArray['###VALUE_DATE_TO###'] = $this->get['product_date_till'];
+$subpartArray['###LABEL_FILTER_DATE_ADDED###'] = $this->pi_getLL('date_added');
+$subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('modified');
+$subpartArray['###LABEL_FILTER_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');
+$subpartArray['###LABEL_FILTER_DATE_VISIBLE###'] = $this->pi_getLL('products_visible');
+$subpartArray['###FILTER_BY_DATE_ADDED_CHECKED###'] = (!isset($this->get['search_by_product_date']) || $this->get['search_by_product_date']=='products_date_added' ? ' checked="checked"' : '');
+$subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###'] = ($this->get['search_by_product_date']=='products_last_modified' ? ' checked="checked"' : '');
+$subpartArray['###FILTER_BY_DATE_AVAILABLE_CHECKED###'] = ($this->get['search_by_product_date']=='products_date_available' ? ' checked="checked"' : '');
+$subpartArray['###FILTER_BY_DATE_VISIBLE_CHECKED###'] = ($this->get['search_by_product_date']=='products_date_visible' ? ' checked="checked"' : '');
+// product price filter
+$subpartArray['###LABEL_PRICE###'] = $this->pi_getLL('price');
+$subpartArray['###LABEL_PRICE_FROM###'] = $this->pi_getLL('from');
+$subpartArray['###LABEL_PRICE_TO###'] = $this->pi_getLL('to');
+$subpartArray['###VALUE_PRICE_FROM###'] = $this->get['product_price_from'];
+$subpartArray['###VALUE_PRICE_TO###'] = $this->get['product_price_till'];
+$subpartArray['###LABEL_FILTER_PRODUCTS_PRICE###'] = $this->pi_getLL('admin_price');
+$subpartArray['###LABEL_FILTER_SPECIALS_PRICE###'] = $this->pi_getLL('admin_specials_price');
+$subpartArray['###LABEL_FILTER_PRODUCTS_CAPITAL_PRICE###'] = $this->pi_getLL('capital_price');
+$subpartArray['###FILTER_BY_PRODUCTS_PRICE_CHECKED###'] = (!isset($this->get['search_by_product_price']) || $this->get['search_by_product_price']=='products_price' ? ' checked="checked"' : '');
+$subpartArray['###FILTER_BY_PRODUCTS_SPECIALS_PRICE_CHECKED###'] = ($this->get['search_by_product_price']=='specials_new_products_price' ? ' checked="checked"' : '');
+$subpartArray['###FILTER_BY_PRODUCTS_CAPITAL_PRICE_CHECKED###'] = ($this->get['search_by_product_price']=='product_capital_price' ? ' checked="checked"' : '');
+
+// product_status
+$product_status_selectbox = '<select name="product_status" id="product_status" class="form-control">';
+$product_status_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
+<option value="1">' . $this->pi_getLL('enabled') . '</option>
+<option value="0">' . $this->pi_getLL('disabled') . '</option>
+';
+$product_status_selectbox .= '</select>';
+$subpartArray['###LABEL_PRODUCT_STATUS###'] = $this->pi_getLL('admin_visible');
+$subpartArray['###PRODUCT_STATUS_SELECTBOX###'] = $product_status_selectbox;
+// search_engine indexing
+$search_engine_selectbox = '<select name="search_engine" id="search_engine" class="form-control">';
+$search_engine_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
+<option value="1">' . $this->pi_getLL('admin_yes') . '</option>
+<option value="0">' . $this->pi_getLL('admin_no') . '</option>
+';
+$search_engine_selectbox .= '</select>';
+$subpartArray['###LABEL_SEARCH_ENGINE_INDEXING###'] = $this->pi_getLL('search_engine_indexing');
+$subpartArray['###SEARCH_ENGINE_INDEXING_SELECTBOX###'] = $search_engine_selectbox;
 //
 $subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=update_products_status');
 $subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL0###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[includeDisabledCats]=1');
@@ -925,6 +1154,61 @@ $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], arra
 $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shadowBox($content) . '</div>';
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function(){
+    $(\'#manufacturers_id_s2\').select2({
+		placeholder: \'' . $this->pi_getLL('admin_choose_manufacturer') . '\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=') . '";
     });    

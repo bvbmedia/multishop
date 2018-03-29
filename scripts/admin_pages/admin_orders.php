@@ -10,6 +10,16 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $content = '';
 $all_orders_status = mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingAllOrdersStatusPreHook'])) {
+    $params = array(
+        'all_orders_status' => &$all_orders_status
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingAllOrdersStatusPreHook'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// hook
 if ($this->post['tx_multishop_pi1']['edit_order'] == 1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
     $url = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $this->post['tx_multishop_pi1']['orders_id'] . '&action=edit_order');
     header('Location: ' . $url);
@@ -570,23 +580,42 @@ if ($this->cookie['limit']) {
 } else {
     $this->post['limit'] = 10;
 }
+/*
+<label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
+<label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
+<label index="feed_exporter_fields_label_customer_delivery_city">Customer delivery city</label>
+<label index="feed_exporter_fields_label_customer_delivery_country">Customer delivery country</label>
+<label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
+<label index="feed_exporter_fields_label_customer_delivery_name">Customer delivery name</label>
+<label index="feed_exporter_fields_label_customer_delivery_telephone">Customer delivery telephone</label>
+<label index="feed_exporter_fields_label_customer_delivery_zip">Customer delivery zip</label>
+ */
 $this->ms['MODULES']['ORDERS_LISTING_LIMIT'] = $this->post['limit'];
 $option_search = array(
         "orders_id" => $this->pi_getLL('admin_order_id'),
         "customer_id" => $this->pi_getLL('admin_customer_id'),
         "billing_email" => $this->pi_getLL('admin_customer_email'),
         "name" => $this->pi_getLL('admin_customer_name'),
-    //"crdate" =>				$this->pi_getLL('admin_order_date'),
+        //"crdate" =>				$this->pi_getLL('admin_order_date'),
         "billing_zip" => $this->pi_getLL('admin_zip'),
         "billing_city" => $this->pi_getLL('admin_city'),
         "billing_address" => $this->pi_getLL('admin_address'),
         "billing_company" => $this->pi_getLL('admin_company'),
-    //"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-    //"payment_method"=>$this->pi_getLL('admin_payment_method'),
+        //"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
+        //"payment_method"=>$this->pi_getLL('admin_payment_method'),
         "order_products" => $this->pi_getLL('admin_ordered_product'),
-    /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
+        /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
         "billing_telephone" => $this->pi_getLL('telephone'),
-        "http_referer" => $this->pi_getLL('http_referer')
+        "http_referer" => $this->pi_getLL('http_referer'),
+        "delivery_email" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email'),
+        "delivery_name" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name'),
+        "delivery_zip" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_zip'),
+        "delivery_city" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_city'),
+        "delivery_address" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address'),
+        "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
+        "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
+        "foreign_orders_id" => $this->pi_getLL('feed_exporter_fields_label_foreign_orders_id'),
+
 );
 asort($option_search);
 $type_search = $this->post['type_search'];
@@ -665,6 +694,7 @@ if ($this->post['skeyword']) {
             unset($option_fields['all']);
             unset($option_fields['crdate']);
             unset($option_fields['name']);
+            unset($option_fields['delivery_name']);
             //print_r($option_fields);
             $items = array();
             foreach ($option_fields as $fields => $label) {
@@ -692,22 +722,42 @@ if ($this->post['skeyword']) {
         case 'billing_email':
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_email':
+            $filter[] = " delivery_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'name':
             $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
             $search_name=str_replace('%%', '%', $search_name);
-            $filter[] = " (billing_name LIKE '%" . $search_name . "%' or delivery_name LIKE '%" . $search_name . "%')";
+            $filter[] = " (billing_name LIKE '%" . $search_name . "%')";
+            break;
+        case 'delivery_name':
+            $search_name=str_replace(' ', '%', addslashes($this->post['skeyword']));
+            $search_name=str_replace('%%', '%', $search_name);
+            $filter[] = " (delivery_name LIKE '%" . $search_name . "%')";
             break;
         case 'billing_zip':
             $filter[] = " billing_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_zip':
+            $filter[] = " delivery_zip LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'billing_city':
             $filter[] = " billing_city LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_city':
+            $filter[] = " delivery_city LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'billing_address':
             $filter[] = " billing_address LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_address':
+            $filter[] = " delivery_address LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'billing_company':
             $filter[] = " billing_company LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_company':
+            $filter[] = " delivery_company LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         /*case 'shipping_method':
             $filter[]=" (shipping_method_label '%".addslashes($this->post['skeyword'])."%' or shipping_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
@@ -732,8 +782,14 @@ if ($this->post['skeyword']) {
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'delivery_telephone':
+            $filter[] = " delivery_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'http_referer':
             $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'foreign_orders_id':
+            $filter[] = "o.foreign_orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
     }
 }
@@ -783,14 +839,14 @@ if ($this->post['search_by_telephone_orders']) {
 if ($this->post['orders_status_search']) {
     $filter[] = "(o.status='" . addslashes($this->post['orders_status_search']) . "')";
 }
-if (isset($this->post['payment_method']) && $this->post['payment_method'] != 'all') {
+if (isset($this->post['payment_method']) && $this->post['payment_method'] != '' && $this->post['payment_method'] != 'all') {
     if ($this->post['payment_method'] == 'nopm') {
         $filter[] = "(o.payment_method is null)";
     } else {
         $filter[] = "(o.payment_method='" . addslashes($this->post['payment_method']) . "')";
     }
 }
-if (isset($this->post['shipping_method']) && $this->post['shipping_method'] != 'all') {
+if (isset($this->post['shipping_method']) && $this->post['shipping_method'] != '' && $this->post['shipping_method'] != 'all') {
     if ($this->post['shipping_method'] == 'nosm') {
         $filter[] = "(o.shipping_method is null)";
     } else {
@@ -925,7 +981,8 @@ if (is_array($groups) and count($groups)) {
 $customer_groups_input .= '</select>' . "\n";
 // payment method
 $payment_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
+$shop_title = array();
+$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
         ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'payment_method', // GROUP BY...
@@ -938,20 +995,30 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['payment_method'] = 'nopm';
         $row['payment_method_label'] = 'Empty payment method';
     }
+    if ($this->masterShop) {
+        if ($row['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        } else {
+            $shop_title = 'All';
+        }
+        $row['payment_method_label'] = $shop_title . ': ' . $row['payment_method_label'];
+    }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
+
 }
 $payment_method_input = '';
 $payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
 $payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
 if (is_array($payment_methods) and count($payment_methods)) {
     foreach ($payment_methods as $payment_method_code => $payment_method) {
+
         $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_method . '</option>' . "\n";
     }
 }
 $payment_method_input .= '</select>' . "\n";
 // shipping method
 $shipping_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
+$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
         ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'shipping_method', // GROUP BY...
@@ -963,6 +1030,14 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
     if (empty($row['shipping_method_label'])) {
         $row['shipping_method'] = 'nosm';
         $row['shipping_method_label'] = 'Empty shipping method';
+    }
+    if ($this->masterShop) {
+        if ($row['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        } else {
+            $shop_title = 'All';
+        }
+        $row['shipping_method_label'] = $shop_title . ': ' . $row['shipping_method_label'];
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
 }
@@ -1196,7 +1271,9 @@ jQuery(document).ready(function($) {
 </script>
 ';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'])) {
-    $params = array();
+    $params = array(
+        'content' => &$content
+    );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainPostProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
     }

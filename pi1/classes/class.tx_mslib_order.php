@@ -74,6 +74,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
                     }
                 }
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
+                    // hook
+                    $params = array(
+                            'row' => &$row,
+                            'orders_id' => &$orders_id
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                    // hook oef
+                }
                 // get shipping tax rate
                 $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
                 $tax_rate = mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
@@ -82,6 +93,23 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                     $tax_rate['total_tax_rate'] = 0;
+                    // fetch the 0% tax id
+                    $zero_percent_tax_id=0;
+                    $customer_country = mslib_fe::getCountryByName($row['billing_country']);
+                    $sql_tax_sb = $GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+                            'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+                            't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\'' . $customer_country['cn_iso_nr'] . '\'', // WHERE...
+                            'trg.rules_group_id', // GROUP BY...
+                            '', // ORDER BY...
+                            '' // LIMIT ...
+                    );
+                    $qry_tax_sb = $GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
+                    while ($rs_tx_sb = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
+                        $rs_tx_sb['rate']=(int)$rs_tx_sb['rate'];
+                        if ($rs_tx_sb['rate']=='0') {
+                            $zero_percent_tax_id=$rs_tx_sb['tax_id'];
+                        }
+                    }
                 }
                 $shipping_tax_rate = ($tax_rate['total_tax_rate'] / 100);
                 // get payment tax rate
@@ -130,6 +158,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $qry_prod = $GLOBALS['TYPO3_DB']->sql_query($sql_prod);
                 while ($row_prod = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_prod)) {
                     $tax_rate = $row_prod['products_tax'] / 100;
+                    if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                        $tax_rate = 0;
+                    }
                     $product_tax = unserialize($row_prod['products_tax_data']);
                     // attributes tax
                     $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row_prod['orders_id'];
@@ -205,7 +236,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $sub_total_excluding_vat += ($final_price) * $row_prod['qty'];
                     $grand_total += ($final_price + $tax) * $row_prod['qty'];
                     $serial_prod = serialize($product_tax_data);
-                    $sql_update = "update tx_multishop_orders_products set products_tax_data = '" . $serial_prod . "' where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row['orders_id'];
+                    $updateOrderProducts=array();
+                    $updateOrderProducts['products_tax_data']=$serial_prod;
+                    if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                        $updateOrderProducts['products_tax']=0;
+                        if ($zero_percent_tax_id>0) {
+                            $updateOrderProducts['products_tax_id']=$zero_percent_tax_id;
+                        }
+                    }
+                    $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\''.$row['orders_id'].'\'', $updateOrderProducts);
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
@@ -761,12 +800,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                     }
                 }
+                if (isset($order['language_id'])) {
+                    // Switch back to default language
+                    mslib_befe::resetSystemLanguage();
+                }
+                return 1;
+            } else {
+                return 0;
             }
-            if (isset($order['language_id'])) {
-                // Switch back to default language
-                mslib_befe::resetSystemLanguage();
-            }
-            return 1;
         }
     }
     function printOrderDetailsTable($order, $template_type = 'site') {
@@ -812,6 +853,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $c = true;
         $orders_tax_data = $order['orders_tax_data'];
         foreach ($order['products'] as $product) {
+            $product_db=array();
             if ($product['products_id']) {
                 $product_db = mslib_fe::getProduct($product['products_id']);
             }
@@ -835,7 +877,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             // ITEM_NAME
             $tmp_item_name = array();
+            if (strpos($product['products_name'], ' [disabled]')!==false) {
+                $product['products_name']=str_replace(' [disabled]', '', $product['products_name']);
+            }
             $tmp_item_name['products_name'] = htmlspecialchars($product['products_name']);
+
             $tmp_item_name['products_model'] = '';
             if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS'] == '1' && !empty($product['products_model'])) {
                 $tmp_item_name['products_model'] = ' (' . htmlspecialchars($product['products_model']) . ') ';
@@ -884,7 +930,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         'item_name' => &$tmp_item_name,
                         'order' => &$order,
                         'product' => &$product,
-                        'template_type' => &$template_type
+                        'template_type' => &$template_type,
+                        'product_db' => $product_db
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemNamePreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -924,6 +971,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $item['ITEM_TOTAL'] = mslib_fe::amount2Cents($final_price) . $subprices;
             if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
                 $item['ITEM_PRODUCT_STATUS'] = htmlspecialchars(mslib_fe::getOrderStatusName($product['status']));
+            }
+            if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+                $item['ITEM_QUANTITY_DELIVERED'] = $product['qty_delivered'];
             }
             $item['ITEM_VAT_RATE'] = str_replace('.00', '', number_format($product['products_tax'], 2)) . '%';
             // GRAND TOTAL CALCULATIONS
@@ -978,6 +1028,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###'] = '';
             $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
         }
+        if (!$this->ms['MODULES']['SHOW_QTY_DELIVERED'] || $template_type != 'order_history_site') {
+            $subProductDeliveredPart = array();
+            $subProductDeliveredPart['ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###');
+            $subProductDelivered = array();
+            $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
+            $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
+
+            $subProductDeliveredPart = array();
+            $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
+            $subProductDelivered = array();
+            $subProductDelivered['###ITEM_QUANTITY_DELIVERED_WRAPPER###'] = '';
+            $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductDelivered);
+        }
         $subpartArray = array();
         //ITEMS_HEADER_WRAPPER
         $markerArray = array();
@@ -995,6 +1058,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $markerArray['HEADING_VAT_RATE'] = $this->pi_getLL('vat');
         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
             $markerArray['HEADING_PRODUCT_STATUS'] = $this->pi_getLL('order_product_status');
+        }
+        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+            $markerArray['HEADING_QUANTITY_DELIVERED'] = $this->pi_getLL('order_product_qty_delivered');
         }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableHeaderPostProc'])) {
@@ -1021,6 +1087,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $keys[] = 'ITEM_PRICE_SINGLE';
         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0 && $template_type == 'order_history_site') {
             $keys[] = 'ITEM_PRODUCT_STATUS';
+        }
+        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $template_type == 'order_history_site') {
+            $keys[] = 'ITEM_QUANTITY_DELIVERED';
         }
         foreach ($itemsWrapper as $item) {
             $markerArray = array();
@@ -1105,6 +1174,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         } else {
             $markerArray['GRAND_TOTAL_COSTS_LABEL'] = ucfirst($this->pi_getLL('total'));
         }
+        $markerArray['GRAND_TOTAL_COSTS_LABEL_TOTAL'] = ucfirst($this->pi_getLL('total'));
 //		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
         $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
         $subpartArray['###' . $key . '###'] = $this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
@@ -1292,7 +1362,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (!$customer_id) {
             // add new account
             $insertArray = array();
-            $insertArray['page_uid'] = $this->shop_pid;
+            if (is_numeric($address['shop_pid'])) {
+                $insertArray['page_uid'] = $address['shop_pid'];
+            } else {
+                $insertArray['page_uid'] = $this->shop_pid;
+            }
             $insertArray['company'] = $address['company'];
             $insertArray['name'] = $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name'];
             $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
@@ -1357,7 +1431,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['status'] = $status['id'];
                 }
             }
-            $insertArray['customer_comments'] = $this->post['customer_comments'];
+            if ($this->post['customer_comments']) {
+                $insertArray['customer_comments'] = $this->post['customer_comments'];
+            } elseif ($address['customer_comments']) {
+                $insertArray['customer_comments'] = $address['customer_comments'];
+            }
             $insertArray['billing_company'] = $address['company'];
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];
@@ -1569,6 +1647,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function createOrdersProduct($orders_id, $insertArray = array()) {
         if ($orders_id) {
             $insertArray['orders_id'] = $orders_id;
+            $insertArray['crdate'] = time();
+            if ($insertArray['manufacturers_id']) {
+                $manufacturer=mslib_fe::getManufacturer($insertArray['manufacturers_id']);
+                $insertArray['manufacturers_name'] = $manufacturer['manufacturers_name'];
+            }
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPreProc'])) {
                 $params = array(

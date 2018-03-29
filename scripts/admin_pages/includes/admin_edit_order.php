@@ -247,6 +247,30 @@ if (is_numeric($this->get['orders_id'])) {
                         if (is_numeric($this->post['orders_products_id']) > 0) {
                             if ($this->post['product_name']) {
                                 $this->post['product_qty'] = str_replace(',', '.', $this->post['product_qty']);
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    $current_qty_delivered=0;
+                                    $updated_qty_delivered=0;
+                                    $this->post['product_qty_delivered'] = str_replace(',', '.', $this->post['product_qty_delivered']);
+                                    if ($this->post['product_qty_delivered'] > 0) {
+                                        if ($this->post['product_qty_delivered']>$this->post['product_qty']) {
+                                            $this->post['product_qty_delivered']=$this->post['product_qty'];
+                                        }
+                                        $filterOProduct=array();
+                                        $filterOProduct[]='orders_id=' . $this->get['orders_id'];
+                                        $filterOProduct[]='products_id=' . $this->post['products_id'];
+                                        $current_order_product_rec=mslib_befe::getRecord($this->post['orders_products_id'], 'tx_multishop_orders_products', 'orders_products_id', $filterOProduct, 'qty_delivered');
+                                        if (is_array($current_order_product_rec)) {
+                                            $current_qty_delivered=$current_order_product_rec['qty_delivered'];
+                                            if ($this->post['product_qty_delivered']>$current_qty_delivered) {
+                                                $updated_qty_delivered = $this->post['product_qty_delivered'] - $current_qty_delivered;
+                                            } else {
+                                                $updated_qty_delivered = $current_qty_delivered;
+                                            }
+                                        }
+                                    } else {
+                                        $this->post['product_qty_delivered'] = 0;
+                                    }
+                                }
                                 if (empty($this->post['product_price'])) {
                                     $this->post['product_price'] = '0';
                                 }
@@ -260,6 +284,9 @@ if (is_numeric($this->get['orders_id'])) {
                                 if ($category_name) {
                                     $updateArray['categories_name'] = $category_name;
                                 }
+                                $updateArray['sku_code'] = $product_data['sku_code'];
+                                $updateArray['ean_code'] = $product_data['ean_code'];
+                                $updateArray['vendor_code'] = $product_data['vendor_code'];
                                 // get all cats
                                 $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                 $cats = array_reverse($cats);
@@ -273,6 +300,10 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 // get all cats eof
                                 $updateArray['qty'] = $this->post['product_qty'];
+                                $updateArray['qty_delivered']=0;
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 && $this->post['product_qty_delivered']) {
+                                    $updateArray['qty_delivered'] = $this->post['product_qty_delivered'];
+                                }
                                 if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
                                     $updateArray['products_name'] = $this->post['custom_manual_product_name'];
                                 } else {
@@ -327,6 +358,20 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \'' . (int)$this->get['orders_id'] . '\' and orders_products_id = \'' . (int)$this->post['orders_products_id'] . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                // update the orders product qty delivered record
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    if ($updated_qty_delivered > $current_qty_delivered) {
+                                        $insertArray=array();
+                                        $insertArray['orders_products_id']=$this->post['orders_products_id'];
+                                        $insertArray['orders_id']=$this->get['orders_id'];
+                                        $insertArray['products_id']=$this->post['products_id'];
+                                        $insertArray['qty']=$updated_qty_delivered;
+                                        //$insertArray['status']=0;
+                                        $insertArray['crdate']=time();
+                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_qty_shipped', $insertArray);
+                                        $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                                    }
+                                }
                                 // hook for adding new items to details fieldset
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostUpdateOrderProducts'])) {
                                     // hook
@@ -411,6 +456,9 @@ if (is_numeric($this->get['orders_id'])) {
                                     if ($category_name) {
                                         $insertArray['categories_name'] = $category_name;
                                     }
+                                    $insertArray['sku_code'] = $product_data['sku_code'];
+                                    $insertArray['ean_code'] = $product_data['ean_code'];
+                                    $insertArray['vendor_code'] = $product_data['vendor_code'];
                                     // get all cats
                                     $cats = mslib_fe::Crumbar($product_data['categories_id']);
                                     $cats = array_reverse($cats);
@@ -484,6 +532,8 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                                 $insertArray['products_tax'] = $this->post['manual_product_tax'];
                                 $insertArray['sort_order'] = $new_sort_order;
+                                $insertArray['crdate'] = time();
+                                $insertArray['manufacturers_name'] = $product_data['manufacturers_name'];
                                 // hook for adding new items to details fieldset
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
                                     // hook
@@ -572,10 +622,7 @@ if (is_numeric($this->get['orders_id'])) {
                             $shipping_method['region_tax_rate'] = 0;
                         }
                         $price = 0;
-                        if ($this->ms['MODULES']['DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] == '1') {
-                            $price = 0;
-                            $this->post['shipping_costs_manual'] = 1;
-                        } else {
+                        if ($this->ms['MODULES']['ENABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER'] == '1') {
                             $tmp_price = mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
                             if (is_array($tmp_price) && isset($tmp_price['shipping_costs'])) {
                                 $shipping_costs_price = $tmp_price['shipping_costs'];
@@ -586,6 +633,9 @@ if (is_numeric($this->get['orders_id'])) {
                             if ($shipping_costs_price === 0 || $shipping_costs_price > 0) {
                                 $price = $shipping_costs_price;
                             }
+                        } else {
+                            $price = 0;
+                            $this->post['shipping_costs_manual'] = 1;
                         }
                         //$order_shipping_method=mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'shipping_method');
                         //if ($this->post['tx_multishop_pi1']['shipping_method_costs']>0 && $shipping_method['code']==$order_shipping_method['shipping_method']) {
@@ -833,7 +883,14 @@ if (is_numeric($this->get['orders_id'])) {
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
-                        $orders['order_memo'] = $this->post['order_memo'];
+                        $order_memo=$this->post['order_memo'];
+                        if ($order_memo=='<p></p>') {
+                            $order_memo='';
+                        }
+                        $orders['order_memo']='';
+                        if (!empty($order_memo)) {
+                            $orders['order_memo'] = $this->post['order_memo'];
+                        }
                         // repair tax stuff
                         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
@@ -941,11 +998,15 @@ if (is_numeric($this->get['orders_id'])) {
             if (isset($this->post['track_and_trace_code'])) {
                 $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
             }
-            if ($this->post['order_memo']) {
+            $order_memo=$this->post['order_memo'];
+            if ($order_memo=='<p></p>') {
+                $order_memo='';
+            }
+            if (!empty($order_memo)) {
                 $updateArray['order_memo'] = $this->post['order_memo'];
             }
             $order_memo_rec = mslib_befe::getRecord($this->get['orders_id'], 'tx_multishop_orders', 'orders_id', array(), 'order_memo');
-            if ($this->post['order_memo']) {
+            if (!empty($order_memo)) {
                 if ($order_memo_rec['order_memo'] != $this->post['order_memo']) {
                     $updateArray['memo_crdate'] = time();
                 }
@@ -960,14 +1021,23 @@ if (is_numeric($this->get['orders_id'])) {
                     $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                 }
                 $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
-                $orders['order_memo'] = $this->post['order_memo'];
+                $orders['order_memo']='';
+                if (!empty($order_memo)) {
+                    $orders['order_memo'] = $this->post['order_memo'];
+                }
             }
             if ($this->post['order_status']) {
                 // first get current status
                 if ($this->post['order_status'] == $order['status']) {
                     // no new order status has been defined. only mail when the email text box is containing content
-                    if (!empty($this->post['comments'])) {
+                    $comments=$this->post['comments'];
+                    if ($comments=='<p></p>') {
+                        $comments='';
+                    }
+                    if (!empty($comments)) {
                         $continue_update = 1;
+                    } else {
+                        $this->post['comments']='';
                     }
                 } else {
                     $continue_update = 1;
@@ -1233,7 +1303,7 @@ if (is_numeric($this->get['orders_id'])) {
 						</div>
 					</div>';
                 $edit_billing_details['billing_building'] = '<div class="form-group">
-						<label class="control-label col-md-5 billing_account-building" for="billing_building">&nbsp;</label>
+						<label class="control-label col-md-5 billing_account-building" for="billing_building">' . ucfirst($this->pi_getLL('building')) . '</label>
 						<div class="col-md-7">
 							<input class="form-control" name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="' . $orders['billing_building'] . '" /><span class="error-space left-this"></span>
 						</div>
@@ -1468,7 +1538,7 @@ if (is_numeric($this->get['orders_id'])) {
                 	</div>
                 </div>';
                 $edit_delivery_details['delivery_building'] = '<div class="form-group">
-                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp;</label>
+                	<label class="control-label col-md-5 delivery_account-building" for="delivery_building">&nbsp' . ucfirst($this->pi_getLL('building')) . '</label>
                 	<div class="col-md-7">
                 		<input class="form-control" name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="' . $orders['delivery_building'] . '" />
                 		<span class="error-space left-this"></span>
@@ -1703,7 +1773,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $("#edit_delivery_building").val($("#edit_billing_building").val());
 
                 $("#edit_delivery_zip").val("");
-                $("#edit_delivery_zip").val($("#edit_billing_zip").val());
+                $("#edit_delivery_zip").val($("#edit_billing_zip").val().toUpperCase());
 
                 $("#edit_delivery_region").val("");
                 $("#edit_delivery_region").val($("#edit_billing_region").val());
@@ -1728,6 +1798,7 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
+                $("#edit_billing_zip").val($("#edit_billing_zip").val().toUpperCase());
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize() + "&tx_multishop_pi1[billing_gender]=" + $(".account-gender-radio:checked").val());
             });
             $(document).on("click", "#edit_delivery_info", function(e) {
@@ -1779,7 +1850,8 @@ if (is_numeric($this->get['orders_id'])) {
                         address_data_replace = address_data.replace(/\s\s+/g, " ");
                         delivery_details += address_data_replace + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_zip") {
-                        delivery_details += $(this).val() + " ";
+                        $("#edit_delivery_zip").val($("#edit_delivery_zip").val().toUpperCase());
+                        delivery_details += $(this).val().toUpperCase() + " ";
                     } else if ($(this).attr("id") == "edit_delivery_city") {
                         delivery_details += $(this).val() + "<br/>";
                     } else if ($(this).attr("id") == "edit_delivery_region") {
@@ -1874,6 +1946,28 @@ if (is_numeric($this->get['orders_id'])) {
 				';
                 }
             }
+            $paid_status = '';
+            if (!$order['paid']) {
+                $paid_status .= '<span class="admin_status_red" alt="' . $this->pi_getLL('has_not_been_paid') . '" title="' . $this->pi_getLL('has_not_been_paid') . '"></span> ';
+                $paid_status .= '<span class="admin_status_green disabled" alt="' . $this->pi_getLL('change_to_paid') . '" title="' . $this->pi_getLL('change_to_paid') . '"></span>';
+            } else {
+                $paid_status .= '<span class="admin_status_red disabled" alt="' . $this->pi_getLL('change_to_not_paid') . '" title="' . $this->pi_getLL('change_to_not_paid') . '"></span> ';
+                $paid_status .= '<span class="admin_status_green" alt="' . $this->pi_getLL('has_been_paid') . '" title="' . $this->pi_getLL('has_been_paid') . '"></span>';
+            }
+            $orderDetails[] = '
+            <div class="form-group">
+                <label class="control-label col-md-3">' . $this->pi_getLL('admin_paid') . '</label>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><p class="form-control-static">' . $paid_status . '</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
             $orderDetails[] = '<hr>';
             $orderDetailsItem = '<div class="form-group msAdminEditOrderShippingMethod" id="msAdminEditOrderShippingMethod">';
             $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('shipping_method') . '</label>';
@@ -2014,6 +2108,24 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>';
                 $orderDetails[] = $orderDetailsItem;
             }
+
+            $extraDetails = array();
+            if ($order['cruser_id']) {
+                $user = mslib_fe::getUser($order['cruser_id']);
+                if ($user['username']) {
+                    $customer_edit_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $user['uid'] . '&action=edit_customer');
+                    $extraDetails[$this->pi_getLL('ordered_by')] = '<a href="' . $customer_edit_link . '">' . $user['username'] . '</a></strong>';
+                }
+            }
+            if ($order['ip_address']) {
+                $extraDetails[$this->pi_getLL('ip_address', 'IP address')] = $order['ip_address'];
+            }
+            if ($order['http_referer']) {
+                $domain = parse_url($order['http_referer']);
+                if ($domain['host']) {
+                    $extraDetails[$this->pi_getLL('referrer', 'Referrer')] = '<a href="' . $order['http_referer'] . '" target="_blank" rel="noreferrer">' . $domain['host'] . '</a>';
+                }
+            }
             // hook for adding new items to details fieldset
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
                 // hook
@@ -2025,6 +2137,40 @@ if (is_numeric($this->get['orders_id'])) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
                 // hook oef
+            }
+            $extraDetailsData=array();
+            if (count($extraDetails)) {
+                $ed_counter=0;
+                $main_label='';
+                foreach ($extraDetails as $ed_label => $ed_value) {
+                    if ($ed_counter=='0') {
+                        $main_label=$ed_label;
+                        $extraDetailsData[]='<div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12"><p class="form-control-static">' . $ed_value . '</p></div>
+                            </div>
+                        </div>';
+                    } else {
+                        $extraDetailsData[]='<div class="col-md-5">
+                            <div class="row">
+                                <label class="control-label col-md-7">' . $ed_label . '</label><div class="col-md-5"><p class="form-control-static">' . $ed_value . '</p></div>
+                            </div>
+                        </div>';
+                    }
+
+                    $ed_counter++;
+                }
+                $orderDetails[] = '
+                    <hr/>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">' . $main_label . '</label>
+                        <div class="col-md-9">
+                            <div class="row">
+                                '.implode('', $extraDetailsData).'
+                            </div>
+                        </div>
+                    </div>
+                ';
             }
             $tmpcontent .= '
             </div><div class="col-md-6">
@@ -2071,6 +2217,11 @@ if (is_numeric($this->get['orders_id'])) {
             // products qty header col
             $order_products_header_data['products_qty']['class'] = 'cellQty';
             $order_products_header_data['products_qty']['value'] = $this->pi_getLL('qty');
+            if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                // products qty delivered header col
+                $order_products_header_data['products_qty_delivered']['class'] = 'cellQty';
+                $order_products_header_data['products_qty_delivered']['value'] = $this->pi_getLL('order_product_qty_delivered');
+            }
             // products name header col
             $order_products_header_data['products_name']['class'] = 'cellName';
             $order_products_header_data['products_name']['value'] = $this->pi_getLL('products_name');
@@ -2187,16 +2338,31 @@ if (is_numeric($this->get['orders_id'])) {
                         $order_products_body_data['products_qty']['value'] = '<input type="hidden" name="product_name" id="product_name" value="' . htmlspecialchars($order['products_name']) . '">';
                         $order_products_body_data['products_qty']['value'] .= '<input type="hidden" name="orders_products_id" value="' . $order['orders_products_id'] . '">';
 
-
-
                         $quantity_html = '<div class="quantity buttons_added">';
                         $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty">';
-                        $quantity_html .= '<input class="form-control text" style="width:50px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
+                        $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty" name="product_qty" value="' . round($order['qty'], 13) . '" />';
                         $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="product_qty">';
                         $quantity_html .= '</div>';
 
-
                         $order_products_body_data['products_qty']['value'] .= $quantity_html;
+
+                        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                            // products qty delivered col
+                            $order_products_body_data['products_qty_delivered']['align'] = 'right';
+                            $order_products_body_data['products_qty_delivered']['class'] = 'cellQty';
+                            $quantity_html = '<div class="quantity buttons_added">';
+
+                            if ($order['qty_delivered']==$order['qty']) {
+                                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty_delivered" name="product_qty_delivered" value="' . round($order['qty_delivered'], 13) . '" readonly="readonly" />';
+                            } else {
+                                $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="product_qty_delivered">';
+                                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" id="product_qty_delivered" name="product_qty_delivered" value="' . round($order['qty_delivered'], 13) . '" />';
+                                $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="'.$order['qty'].'" class="qty_plus" rel="product_qty_delivered">';
+                            }
+
+                            $quantity_html .= '</div>';
+                            $order_products_body_data['products_qty_delivered']['value'] .= $quantity_html;
+                        }
 
                         // products name col
                         $order_products_body_data['products_name']['align'] = 'left';
@@ -2367,7 +2533,7 @@ if (is_numeric($this->get['orders_id'])) {
                             // get all cats to generate multilevel fake url eof
                         }
                         $row[0] = $order['products_id'];
-                        $row[1] = number_format($order['qty'], 2);
+                        $row[1] = number_format($order['qty'], 2, '.', '');
                         $row[2] = '';
                         if ($order['products_id'] > 0) {
                             if ($product['products_id']) {
@@ -2432,6 +2598,9 @@ if (is_numeric($this->get['orders_id'])) {
                                 $row[7] = mslib_fe::amount2Cents($order['product_capital_price'] + ($order['product_capital_price'] * $order_products_tax_data['total_tax_rate']), 0);
                             }
                         }
+                        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                            $row[8]=$order['qty_delivered'];
+                        }
                         // custom hook that can be controlled by third-party plugin
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'])) {
                             $params = array(
@@ -2456,22 +2625,43 @@ if (is_numeric($this->get['orders_id'])) {
                         $order_products_body_data['products_qty']['align'] = 'right';
                         $order_products_body_data['products_qty']['class'] = 'cellQty';
                         $order_products_body_data['products_qty']['value'] = round($row[1], 13);
+                        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                            // products qty delivered col
+                            $order_products_body_data['products_qty_delivered']['align'] = 'right';
+                            $order_products_body_data['products_qty_delivered']['class'] = 'cellQty';
+                            if ($row[8]>0) {
+                                $order_products_body_data['products_qty_delivered']['value'] = round($row[8], 13);
+                            } else {
+                                $order_products_body_data['products_qty_delivered']['value'] = '0';
+                            }
+                        }
                         // products name col
                         $order_products_body_data['products_name']['align'] = 'left';
                         $order_products_body_data['products_name']['class'] = 'cellName';
                         $order_products_body_data['products_name']['value'] = $row[2];
                         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0) {
-                            // products status col
-                            $order_products_body_data['products_status']['align'] = 'center';
-                            $order_products_body_data['products_status']['class'] = 'cellStatus';
-                            $order_products_body_data['products_status']['value'] = '<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="' . $order['orders_products_id'] . '" id="orders_' . $order['orders_products_id'] . '">
+                            if ($this->ms['MODULES']['ORDER_EDIT'] > 0) {
+                                // products status col
+                                $order_products_body_data['products_status']['align'] = 'center';
+                                $order_products_body_data['products_status']['class'] = 'cellStatus';
+                                $order_products_body_data['products_status']['value'] = '<select name="order_product_status" class="width-auto form-control change_order_product_status" rel="' . $order['orders_products_id'] . '" id="orders_' . $order['orders_products_id'] . '">
                             <option value="">' . $this->pi_getLL('choose') . '</option>';
-                            if (is_array($all_orders_status)) {
-                                foreach ($all_orders_status as $item) {
-                                    $order_products_body_data['products_status']['value'] .= '<option value="' . $item['id'] . '"' . ($item['id'] == $order['status'] ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                if (is_array($all_orders_status)) {
+                                    foreach ($all_orders_status as $item) {
+                                        $order_products_body_data['products_status']['value'] .= '<option value="' . $item['id'] . '"' . ($item['id'] == $order['status'] ? ' selected' : '') . '>' . $item['name'] . '</option>' . "\n";
+                                    }
+                                }
+                                $order_products_body_data['products_status']['value'] .= '</select>';
+                            } else {
+                                if (is_array($all_orders_status)) {
+                                    foreach ($all_orders_status as $item) {
+                                        if ($item['id'] == $order['status']) {
+                                            $order_products_body_data['products_status']['value'] = $item['name'];
+                                            break;
+                                        }
+                                    }
                                 }
                             }
-                            $order_products_body_data['products_status']['value'] .= '</select>';
                         }
                         if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS'] > 0) {
                             // products status col
@@ -2537,6 +2727,10 @@ if (is_numeric($this->get['orders_id'])) {
                             $order_products_body_data['products_id']['value'] = '';
                             // products qty col
                             $order_products_body_data['products_qty']['value'] = '';
+                            if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                // products qty delivered col
+                                $order_products_body_data['products_qty_delivered']['value'] = '';
+                            }
                             // products name col
                             $order_products_body_data['products_name']['value'] = '<label for="order_products_description">' . $this->pi_getLL('admin_edit_order_products_description') . ':</label><br/>
                             <textarea rows="8" id="order_products_description" class="form-control" name="order_products_description">' . $order['products_description'] . '</textarea>';
@@ -2585,6 +2779,10 @@ if (is_numeric($this->get['orders_id'])) {
                             $order_products_body_data['products_id']['value'] = '';
                             // products qty col
                             $order_products_body_data['products_qty']['value'] = '';
+                            if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                // products qty delivered col
+                                $order_products_body_data['products_qty_delivered']['value'] = '';
+                            }
                             // products name col
                             $order_products_body_data['products_name']['value'] .= nl2br($order['products_description']);
                             if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0) {
@@ -2659,6 +2857,10 @@ if (is_numeric($this->get['orders_id'])) {
                                     $order_products_body_data['products_id']['value'] = '';
                                     // products qty col
                                     $order_products_body_data['products_qty']['value'] = '';
+                                    if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                        // products qty delivered col
+                                        $order_products_body_data['products_qty_delivered']['value'] = '';
+                                    }
                                     // products name col
                                     $order_products_body_data['products_name']['align'] = 'left';
                                     $order_products_body_data['products_name']['value'] = '<div class="product_attributes_wrapper">';
@@ -2750,6 +2952,10 @@ if (is_numeric($this->get['orders_id'])) {
                                 $order_products_body_data['products_id']['value'] = '';
                                 // products qty col
                                 $order_products_body_data['products_qty']['value'] = '';
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    // products qty delivered col
+                                    $order_products_body_data['products_qty_delivered']['value'] = '';
+                                }
                                 // products name col
                                 $order_products_body_data['products_name']['align'] = 'left';
                                 if ($rowCheck['listtype'] == 'file') {
@@ -2857,6 +3063,10 @@ if (is_numeric($this->get['orders_id'])) {
                                 $order_products_body_data['products_id']['value'] = '';
                                 // products qty col
                                 $order_products_body_data['products_qty']['value'] = '';
+                                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                                    // products qty delivered col
+                                    $order_products_body_data['products_qty_delivered']['value'] = '';
+                                }
                                 // products name col
                                 $order_products_body_data['products_name']['align'] = 'left';
                                 $order_products_body_data['products_name']['value'] .= '<label>' . $rs_option['products_options_name'] . ':</label>';
@@ -2913,6 +3123,11 @@ if (is_numeric($this->get['orders_id'])) {
                         // products qty col
                         $order_products_body_data['products_qty']['class'] = 'last_edit_product_row_pqty_col';
                         $order_products_body_data['products_qty']['value'] = '';
+                        if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                            // products qty delivered col
+                            $order_products_body_data['products_qty_delivered']['class'] = 'last_edit_product_row_pqty_delivered_col';
+                            $order_products_body_data['products_qty_delivered']['value'] = '';
+                        }
                         // products name col
                         $order_products_body_data['products_name']['class'] = 'last_edit_product_row_pname_col';
                         $order_products_body_data['products_name']['align'] = 'left';
@@ -2988,6 +3203,9 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
                     $colspan += 1;
                 }
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                    $colspan += 1;
+                }
                 $order_products_body_data = array();
                 // products id col
                 $order_products_body_data['products_id']['th'] = true;
@@ -3010,11 +3228,18 @@ if (is_numeric($this->get['orders_id'])) {
                 // qty
                 $quantity_html = '<div class="quantity buttons_added">';
                 $quantity_html .= '<input type="button" value="-" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_minus" rel="manual_product_qty">';
-                $quantity_html .= '<input class="form-control text" style="width:50px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
+                $quantity_html .= '<input class="form-control text" style="width:70px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
                 $quantity_html .= '<input type="button" value="+" data-stepSize="1" data-minQty="1" data-maxQty="0" class="qty_plus" rel="manual_product_qty">';
                 $quantity_html .= '</div>';
                 $order_products_body_data['products_qty']['value'] .= $quantity_html;
                 $order_products_body_data['products_qty']['class'] = 'cellQty';
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                    // products qty delivered col
+                    $order_products_body_data['products_qty_delivered']['align'] = 'right';
+                    $order_products_body_data['products_qty_delivered']['valign'] = 'top';
+                    $order_products_body_data['products_qty_delivered']['value'] = '';
+                    $order_products_body_data['products_qty_delivered']['class'] = 'cellQty';
+                }
                 // products name col
                 $order_products_body_data['products_name']['align'] = 'left';
                 $order_products_body_data['products_name']['valign'] = 'top';
@@ -3123,6 +3348,10 @@ if (is_numeric($this->get['orders_id'])) {
                     $order_products_body_data['products_id']['value'] = '';
                     // products qty col
                     $order_products_body_data['products_qty']['value'] = '';
+                    if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                        // products qty delivered col
+                        $order_products_body_data['products_qty_delivered']['value'] = '';
+                    }
                     // products name col
                     $order_products_body_data['products_name']['value'] = '<label for="order_products_description">' . $this->pi_getLL('admin_edit_order_products_description') . ':</label><br/>';
                     $order_products_body_data['products_name']['value'] .= '<textarea rows="8" cols="75" class="form-control" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
@@ -3168,6 +3397,11 @@ if (is_numeric($this->get['orders_id'])) {
                 // products qty col
                 $order_products_body_data['products_qty']['class'] = 'last_edit_product_row_pqty_col';
                 $order_products_body_data['products_qty']['value'] = '';
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
+                    // products qty delivered col
+                    $order_products_body_data['products_qty_delivered']['class'] = 'last_edit_product_row_pqty_delivered_col';
+                    $order_products_body_data['products_qty_delivered']['value'] = '';
+                }
                 // products name col
                 $order_products_body_data['products_name']['class'] = 'last_edit_product_row_pname_col';
                 $order_products_body_data['products_name']['style'] = 'border:0px solid #fff';
@@ -3236,6 +3470,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $colspan += 1;
                 }
                 if ($this->ms['MODULES']['ENABLE_CAPITAL_PRICE_ON_EDIT_ORDER_PRODUCT']) {
+                    $colspan += 1;
+                }
+                if ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0) {
                     $colspan += 1;
                 }
             }
@@ -3344,7 +3581,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 if (isset($body_col['colspan'])) {
                                     $col_span = ' colspan="' . $body_col['colspan'] . '"';
                                 }
-                                if (empty($body_col['value'])) {
+                                if ($body_col['value']=='') {
                                     $body_col['value'] = '&nbsp;';
                                 }
                                 $col_type = 'td';
@@ -3714,12 +3951,12 @@ if (is_numeric($this->get['orders_id'])) {
                     }).on("select2-selecting", function(e) {
                         if (e.object.id == e.object.text) {
                             if ($("#product_tax").length>0) {
-                                $("#product_tax").val("");
+                                //$("#product_tax").val("");
                                 $("#display_name_including_vat").val("0" + decimal_sep + "00");
                                 $("#display_name_excluding_vat").val("0" + decimal_sep + "00");
                                 $("#product_price").val("0" + decimal_sep + "00");
                             } else {
-                                $("#manual_product_tax").val("");
+                                //$("#manual_product_tax").val("");
                                 $("#display_manual_name_including_vat").val("0" + decimal_sep + "00");
                                 $("#display_manual_name_excluding_vat").val("0" + decimal_sep + "00");
                                 $("#manual_product_price").val("0" + decimal_sep + "00");
@@ -4277,6 +4514,13 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
             </div>';
         }
+        $order_status_tab_content['order_memo'] = '<div class="form-group">
+            <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
+            <div class="col-md-10">
+            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . htmlspecialchars($orders['order_memo']) . '</textarea>
+            ' . ($orders['memo_crdate'] > 0 ? '<span class="memo_last_modified">' . $this->pi_getLL('order_memo_last_modified') . ': ' . strftime("%a. %x %X", $orders['memo_crdate']) . '</span>' : '') . '
+            </div>
+        </div>';
         $order_status_tab_content['customer_notified'] = '<div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">' . $this->pi_getLL('send_email_to_customer') . '</label>
             <div class="col-md-10">
@@ -4286,13 +4530,6 @@ if (is_numeric($this->get['orders_id'])) {
 	            <div class="radio radio-success radio-inline">
 		            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">' . $this->pi_getLL('yes') . '</label>
 	            </div>
-            </div>
-        </div>';
-        $order_status_tab_content['order_memo'] = '<div class="form-group">
-            <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
-            <div class="col-md-10">
-            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . htmlspecialchars($orders['order_memo']) . '</textarea>
-            ' . ($orders['memo_crdate'] > 0 ? '<span class="memo_last_modified">' . $this->pi_getLL('order_memo_last_modified') . ': ' . strftime("%a. %x %X", $orders['memo_crdate']) . '</span>' : '') . '
             </div>
         </div>';
         $order_status_tab_content['comments'] = '<div class="form-group">
@@ -4612,7 +4849,6 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
             	if (e.keyCode!=9) {
                 	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
-
                 }
             });
             $("#manual_product_tax").change(function () {

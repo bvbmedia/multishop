@@ -93,6 +93,7 @@ $array['customer_coc_id'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL
 $array['customer_contact_email'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('contact_email');
 $array['customer_payment_condition'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('payment_condition');
 $array['customer_usergroups'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('usergroup');
+$array['foreign_customer_id'] = $this->pi_getLL('customers') . ' ' . $this->pi_getLL('foreign_customer_id');
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_customers.php']['adminExportCustomersColtypesHook'])) {
     $params = array(

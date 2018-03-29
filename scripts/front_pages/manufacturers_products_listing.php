@@ -34,9 +34,10 @@ if (is_numeric($this->get['manufacturers_id'])) {
         $Cache_Lite = new Cache_Lite($options);
         $string = $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
     }
-    if ((!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content = $Cache_Lite->get($string)) && is_numeric($this->get['manufacturers_id'])) {
+    $output_array = array();
+    if ((!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->get($string)) && is_numeric($this->get['manufacturers_id'])) {
         // current manufacturer
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('mc.content,mc.content_footer,m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('mc.content, mc.content_footer, mc.meta_title, mc.meta_keywords, mc.meta_description, m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
                 'tx_multishop_manufacturers m, tx_multishop_manufacturers_cms mc', // FROM ...
                 'm.status=1 and m.manufacturers_id=\'' . addslashes($this->get['manufacturers_id']) . '\' and mc.language_id=\'' . $this->sys_language_uid . '\' and m.manufacturers_id=mc.manufacturers_id', // WHERE...
                 '', // GROUP BY...
@@ -52,9 +53,36 @@ if (is_numeric($this->get['manufacturers_id'])) {
         } else {
             $extrameta = '';
         }
-        if (!$this->conf['disableMetatags']) {
-            $GLOBALS['TSFE']->additionalHeaderData['title'] = '<title>' . htmlspecialchars($current['manufacturers_name']) . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'] . '</title>';
+
+        if ($current['meta_title']) {
+            $meta_title = $current['meta_title'];
+        } else {
+            $meta_title = htmlspecialchars($current['manufacturers_name']) . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'];
         }
+        if ($current['meta_description']) {
+            $meta_description = $current['meta_description'];
+        } else {
+            $meta_description = '';
+        }
+        if ($current['meta_keywords']) {
+            $meta_keywords = $current['meta_keywords'];
+        } else {
+            $meta_keywords = '';
+        }
+        if (!$this->conf['disableMetatags']) {
+            $output_array['meta']['title'] = '<title>' . htmlspecialchars($meta_title) . '</title>';
+            if ($meta_description) {
+                $output_array['meta']['description'] = '<meta name="description" content="' . $meta_description . '" />';
+            }
+            if ($meta_keywords) {
+                if (!$this->conf['disableMetatagsKeywords']) {
+                    $output_array['meta']['keywords'] = '<meta name="keywords" content="' . htmlspecialchars($meta_keywords) . '" />';
+                }
+            }
+        }
+        //if (!$this->conf['disableMetatags']) {
+        //    $GLOBALS['TSFE']->additionalHeaderData['title'] = '<title>' . htmlspecialchars($current['manufacturers_name']) . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'] . '</title>';
+        //}
         if ($this->productsLimit) {
             $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'] = $this->productsLimit;
         }
@@ -211,8 +239,16 @@ if (is_numeric($this->get['manufacturers_id'])) {
             }
         }
         if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-            $Cache_Lite->save($content);
+            $output_array['content'] = $content;
+            $Cache_Lite->save(serialize($output_array));
         }
+    } elseif ($output_array) {
+        $output_array = unserialize($output_array);
+        $content = $output_array['content'];
+    }
+    if (is_array($output_array['meta'])) {
+        $GLOBALS['TSFE']->additionalHeaderData = array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
+        unset($output_array);
     }
 }
 ?>

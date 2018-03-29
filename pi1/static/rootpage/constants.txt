@@ -112,6 +112,9 @@ plugin.multishop {
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable inclusion of internal meta tags: Disable inclusion of internal meta tags.
 	disableMetatags = 0
 
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable inclusion of internal meta tags keywords: Disable inclusion of internal meta tags keywords.
+	disableMetatagsKeywords = 0
+
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Act as master shop: Load complete database and don't care about sub shops.
 	masterShop = 0
 
@@ -276,4 +279,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - main/enable; type=boolean; label= Enable admin statistics ticker: Enable admin statistics ticker.
 	enableAdminTicker=1
+
+	# cat=plugin.multishop - optional/email; type=string; label= Email address of the developer: Email address of the developer.
+	developer_email=
 }

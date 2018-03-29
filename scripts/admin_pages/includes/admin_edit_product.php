@@ -277,11 +277,11 @@ jQuery(document).ready(function($) {
 			var tabs_content_li="";
 			tabs_content_li+=buildCustomProductsDescriptionInput(' . $this->shop_pid . ', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
-
-			$(\'.mceEditor\').redactor({
+            $R(\'.mceEditor\', {
 			    imagePosition: true,
 	            imageResizable: true,
 			    toolbarFixedTopOffset: 38,
+			    toolbarFixed: false,
 				focus: false,
 				linkSize: 250,
 				clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl') . '\',
@@ -941,7 +941,7 @@ if ($this->post and $_FILES) {
             $i = '';
         }
         if ($this->post['ajax_products_image' . $i]) {
-            $update_product_images['products_image' . $i] = $this->post['ajax_products_image' . $i];
+            $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
         }
     }
     if (is_array($_FILES) and count($_FILES)) {
@@ -1034,6 +1034,14 @@ if ($this->post and $_FILES) {
     }
 }
 if ($this->post) {
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveProductPreHook'])) {
+        $params = array();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveProductPreHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // custom hook that can be controlled by third-party plugin eof
     // updating products table
     $updateArray = array();
     $updateArray['vendor_code'] = '';
@@ -1081,6 +1089,10 @@ if ($this->post) {
     $updateArray['custom_settings'] = $this->post['custom_settings'];
     $updateArray['products_model'] = $this->post['products_model'];
     $updateArray['products_quantity'] = $this->post['products_quantity'];
+    $updateArray['ignore_stock_level']=0;
+    if (isset($this->post['ignore_stock_level'])) {
+        $updateArray['ignore_stock_level'] = $this->post['ignore_stock_level'];
+    }
     $updateArray['product_capital_price'] = $this->post['product_capital_price'];
     $updateArray['products_condition'] = $this->post['products_condition'];
     $updateArray['sku_code'] = $this->post['sku_code'];
@@ -1839,6 +1851,14 @@ if ($this->post) {
                     }
                 }
                 // EXTRA TAB CONTENT EOF
+                // clean up the product description value
+                if (count($updateArray)) {
+                    foreach ($updateArray as $update_key => $upd_value) {
+                        if ($upd_value=='<p></p>') {
+                            $updateArray[$update_key]='';
+                        }
+                    }
+                }
                 if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
                     $str = "select 1 from tx_multishop_products_description where products_id='" . $prodid . "' and (page_uid=0 OR page_uid='" . $this->shop_pid . "') and (layered_categories_id='" . $this->post['local_primary_product_categories'] . "' or layered_categories_id='0') and language_id='" . $key . "'";
                 } else {
@@ -1886,7 +1906,7 @@ if ($this->post) {
         if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage'] > 0) {
             $this->post['specials_new_products_price'] = $this->post['products_price'] - (($this->post['products_price'] * $this->post['specials_price_percentage']) / 100);
         }
-        if ($this->post['specials_new_products_price']) {
+        if ($this->post['specials_new_products_price'] && $this->post['specials_new_products_price']>0) {
             $specials_start_date = 0;
             $specials_expired_date = 0;
             $current_tstamp = time();
@@ -2376,6 +2396,10 @@ if ($this->post) {
         if ($this->ms['MODULES']['FLAT_DATABASE']) {
             // if the flat database module is enabled we have to sync the changes to the flat table
             mslib_befe::convertProductToFlat($prodid);
+        }
+        // clear the multishop cache
+        if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+            mslib_befe::cacheLite('delete_all');
         }
         if (isset($this->post['SaveClose']) || isset($this->post['save_as_new'])) {
             if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product') === false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_product') === false && $this->post['tx_multishop_pi1']['referrer']) {
@@ -2981,14 +3005,14 @@ if ($this->post) {
         /*
 		 * images tab
 		 */
-        $images_tab_block = '';
+        $images_tab_block = '<div class="product_images_wrapper">';
         for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
             $i = $x;
             if ($i == 0) {
                 $i = '';
             }
             $images_tab_block .= '
-			<div class="form-group" id="msEditProductInputImage_' . $i . '">
+			<div class="form-group" id="msEditProductInputImage_' . $x . '">
 				<label for="products_image' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' ' . ($i + 1) . '</label>
 				<div class="col-md-10">
 				<div id="products_image' . $i . '" class="products_image">
@@ -2996,10 +3020,10 @@ if ($this->post) {
 						<input name="products_image' . $i . '" type="file" />
 					</noscript>
 				</div>
-				<input name="ajax_products_image' . $i . '" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
+				<input name="ajax_products_image[]" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
             $images_tab_block .= '<div id="image_action' . $i . '" class="image_action">';
             if ($_REQUEST['action'] == 'edit_product' && $product['products_image' . $i]) {
-                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '" />';
+                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?'.time().'" />';
                 $images_tab_block .= '<div class="image_tools">';
                 if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
                     $images_tab_block .= ' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="' . $product['products_image' . $i] . '"><i class="fa fa-crop"></i></a> ';
@@ -3010,7 +3034,8 @@ if ($this->post) {
             $images_tab_block .= '</div>';
             $images_tab_block .= '</div></div>';
         }
-        $images_tab_block .= '<script>
+        $images_tab_block .= '</div>
+        <script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {';
         for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
             $i = $x;
@@ -3023,6 +3048,7 @@ if ($this->post) {
 				element: document.getElementById(\'products_image' . $i . '\'),
 				action: \'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images') . '\',
 				params: {
+					image_index: \''.($x+1).'\',
 					products_name: products_name,
 					file_type: \'products_image' . $i . '\',
 					old_image: $("#ajax_products_image' . $i . '").val()
@@ -3033,9 +3059,26 @@ if ($this->post) {
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul' . $i . '"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
+				    var uploadList= \'#qq-upload-list-ul' . $i . '\';
 					var filenameServer = responseJSON[\'filename\'];
+					var fileOriginal = responseJSON[\'fileOriginal\'];
 					var filenameLocationServer = responseJSON[\'fileLocation\'];
-					$("#ajax_products_image' . $i . '").val(filenameServer);
+					if (parseInt($(uploadList).find(\'li\').length) > 1) {
+					    $.each($(uploadList).find(\'li\'), function(idx, obj_li) {
+					        var current_filename=$(obj_li).find(\'span.qq-upload-file\').html();
+					        if (fileOriginal==current_filename) {
+					            var el_idx=idx;
+					            if (el_idx==\'0\') {
+					                el_idx=\'\';
+					            }
+                                var ajax_products_image_id=\'#ajax_products_image\' + el_idx;
+                                $(ajax_products_image_id).val(filenameServer);
+                                return false;   					                
+					        }
+					    });
+					} else {
+					    $("#ajax_products_image' . $i . '").val(filenameServer);
+					}
 					uploader' . $i . '.setParams({
 					   products_name: products_name,
 					   file_type: \'products_image\',
@@ -3054,7 +3097,10 @@ if ($this->post) {
 					$("#image_action' . $i . '").html(new_image);
 					' : '') . '
 				},
-				debug: false
+				'.($x>0 ? '
+				multiple: false,
+				' : '').'
+				debug: true
 			});';
         }
         $images_tab_block .= '
@@ -3072,6 +3118,23 @@ if ($this->post) {
 					});';
         }
         $images_tab_block .= '
+			});
+			var result = jQuery("div.product_images_wrapper").sortable({
+				cursor:     "move",
+				//axis:       "y",
+				update: function(e, ui) {
+					href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[pID]='.$product['products_id'].'&tx_multishop_pi1[page_section]=productImagesSort') . '";
+					jQuery(this).sortable("refresh");
+					sorted = jQuery(this).sortable("serialize", "id");
+					jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+					});
+				}
 			});
 		});
 		</script>';
@@ -3109,7 +3172,7 @@ if ($this->post) {
 				<div class="col-md-10">
                     <div class="input-group width-fw">
                         <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="168">
-                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">168</span></div>
+                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
                     </div>    
 				</div>
 			</div>
@@ -3133,7 +3196,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(168-current_counter);
+                    var char_left=parseInt(320-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -3147,7 +3210,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(168-current_counter);
+                    var char_left=parseInt(320-current_counter);
                     $(counter_id).html(char_left);
                 });
             });
@@ -4457,6 +4520,10 @@ if ($this->post) {
         $subpartArray['###VALUE_STOCK###'] = $product['products_quantity'];
         $subpartArray['###LABEL_THRESHOLD_QTY###'] = $this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold');
         $subpartArray['###VALUE_THRESHOLD_QTY###'] = $product['alert_quantity_threshold'];
+
+        $subpartArray['###LABEL_IGNORE_STOCK_LEVEL###'] = $this->pi_getLL('admin_ignore_stock_level');
+        $subpartArray['###IGNORE_STOCK_LEVEL_CHECKED###'] = ($product['ignore_stock_level']>0 ? ' checked="checked"' : '');
+
         $subpartArray['###LABEL_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');
         if ($product['products_date_available'] == 0 || empty($product['products_date_available'])) {
             $product['products_date_available_sys'] = '';

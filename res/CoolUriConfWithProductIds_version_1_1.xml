@@ -4,7 +4,7 @@
     <cache>
         <usecache>1</usecache>
         <params2cool>
-            <checkforchangeevery>1</checkforchangeevery>
+            <checkforchangeevery>0</checkforchangeevery>
         </params2cool>
         <cool2params>
             <translateifnotfound>0</translateifnotfound>
@@ -453,6 +453,7 @@
         <param>p9</param>
         <param>p10</param>
         <param>tx_multishop_pi1[page_section]</param>
+        <param>manufacturers_id</param>
         <param>categories_id[0]</param>
         <param>categories_id[1]</param>
         <param>categories_id[2]</param>

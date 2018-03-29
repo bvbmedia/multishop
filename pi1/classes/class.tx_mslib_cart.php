@@ -37,36 +37,34 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         mslib_fe::init($ref);
     }
     function updateCart() {
-        if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-            $product_id = $this->post['products_id'];
-            $categories_id = $this->post['categories_id'];
-            if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
-                $product_id = $this->get['products_id'];
-            }
-            if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
-                $categories_id = $this->get['categories_id'];
-            }
-            if (is_numeric($product_id)) {
-                $product = mslib_fe::getProduct($product_id, $categories_id);
-                if ($product['products_quantity'] < 1 && !$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-                    if ($product['categories_id']) {
-                        // get all cats to generate multilevel fake url
-                        $level = 0;
-                        $cats = mslib_fe::Crumbar($product['categories_id']);
-                        $cats = array_reverse($cats);
-                        $where = '';
-                        if (count($cats) > 0) {
-                            foreach ($cats as $cat) {
-                                $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-                                $level++;
-                            }
-                            $where = substr($where, 0, (strlen($where) - 1));
+        $product_id = $this->post['products_id'];
+        $categories_id = $this->post['categories_id'];
+        if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
+            $product_id = $this->get['products_id'];
+        }
+        if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
+            $categories_id = $this->get['categories_id'];
+        }
+        if (is_numeric($product_id)) {
+            $product = mslib_fe::getProduct($product_id, $categories_id);
+            if ($product['products_quantity'] < 1 && (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level'])) {
+                if ($product['categories_id']) {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                    $cats = array_reverse($cats);
+                    $where = '';
+                    if (count($cats) > 0) {
+                        foreach ($cats as $cat) {
+                            $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                            $level++;
                         }
+                        $where = substr($where, 0, (strlen($where) - 1));
                     }
-                    $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product_id . '&tx_multishop_pi1[page_section]=products_detail');
-                    header("Location: " . $this->FULL_HTTP_URL . $link);
-                    exit;
                 }
+                $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product_id . '&tx_multishop_pi1[page_section]=products_detail');
+                header("Location: " . $this->FULL_HTTP_URL . $link);
+                exit;
             }
         }
         // hook
@@ -850,7 +848,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     foreach ($cart['products'] as $key => &$product) {
                         if ($this->get['tx_multishop_pi1']['page_section'] == 'checkout') {
                             //$product_db = mslib_fe::getProduct($product['products_id']);
-                            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+                            if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level']) {
                                 if ($product['products_quantity'] < 1) {
                                     $redirect_to_cart_page = true;
                                 } else if ($product['qty'] > $product['products_quantity']) {
@@ -1039,6 +1037,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $cart['coupon_code'] = '';
                             $cart['discount'] = $discount_percentage;
                             $cart['discount_type'] = 'percentage';
+                            $cart['discount_from'] = 'user';
                         }
                     }
                 }
@@ -1288,6 +1287,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 $return_total_price = $total_price - $discount_price;
             }
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'])) {
+                $params = array(
+                    'subtract_discount' => &$subtract_discount,
+                    'country_id' => &$country_id,
+                    'include_vat' => &$include_vat,
+                    'cart' => &$cart,
+                    'total_price' => &$total_price,
+                    'return_total_price' => &$return_total_price
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
         }
         // to make sure the floatings numbers are not infinite
         $return_total_price = number_format($return_total_price, 14, '.', '');
@@ -1393,6 +1405,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (strtolower($address['country']) != strtolower($this->tta_shop_info['country'])) {
                 $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
+        }
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'])) {
+            // hook
+            $params = array(
+                    'address' => &$address,
+                    'orders_id' => &$orders_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+            // hook oef
         }
         /*
 		 * always use *_tax and *_total_tax_rate, unless need different calc for country/region
@@ -1711,6 +1734,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // ADD TT_ADDRESS RECORD EOF
             }
         } else {
+            //update fe_users newsletter value
+            $updateFEUsers=array();
+            if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
+                $updateFEUsers['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
+            } else {
+                $updateFEUsers['tx_multishop_newsletter'] = '';
+            }
+            $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
+            $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
             // insert tt_address for existing customer if no record found
             if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing')) {
                 // ADD TT_ADDRESS RECORD
@@ -2286,6 +2318,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $product_detail_link = $this->FULL_HTTP_URL . mslib_fe::typolink($value['page_uid'], $where . '&products_id=' . $value['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                 $insertArray['product_link'] = $product_detail_link;
                             }
+                            $insertArray['crdate'] = time();
+                            $insertArray['manufacturers_name'] = $value['manufacturers_name'];
+                            $value['product_link']=$insertArray['product_link'];
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
@@ -2299,7 +2334,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $updateOrderProductsSortOrder['sort_order'] = $orders_products_id;
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $orders_products_id . '\'', $updateOrderProductsSortOrder);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
+                            if ($this->ms['MODULES']['SUBTRACT_STOCK'] && $this->ms['MODULES']['SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID']=='0') {
                                 $continue_update_stock = true;
                                 // hook to manipulate the continuity of update stock
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'])) {
@@ -2349,7 +2384,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2363,13 +2398,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 $array2[] = $value['qty'];
                                                 $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
                                                 $array2[] = $row['products_id'];
-                                                $array1[] = '###PRODUCT_ID###';
-                                                $array2[] = $row['products_quantity'];
+                                                $array1[] = '###PRODUCTS_ID###';
+                                                $array2[] = $value['products_id'];
                                                 $array1[] = '###PRODUCT_NAME###';
                                                 $array2[] = $value['products_name'];
                                                 $link_edit_prod = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $value['products_id'] . '&cid=' . $value['categories_id'] . '&action=edit_product');
+                                                $link_frontend_prod = $value['product_link'];
                                                 $array1[] = '###DIRECT_EDIT_PRODUCT_LINK###';
-                                                $array2[] = '<a href="' . $link_edit_prod . '" target="_blank">' . htmlspecialchars($this->pi_getLL('admin_edit_product')) . '</a>';
+                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> | <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
                                                 // now mail a copy to the merchant
                                                 $merchant = array();
                                                 $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
@@ -2400,7 +2436,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 }
                                             }
                                         }
-                                        if ($row['products_quantity'] < 1) {
+                                        if ($row['products_quantity'] < 1 && !$row['ignore_stock_level']) {
                                             // stock is negative or zero. lets disable the product
                                             $str = "update tx_multishop_products set products_status=0 where products_id='" . $value['products_id'] . "'";
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2409,7 +2445,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         // now decrease the stocklevel
                                         $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2423,11 +2459,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                                 $array2[] = $value['qty'];
                                                 $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
                                                 $array2[] = $row['products_quantity'];
+                                                $array1[] = '###PRODUCTS_ID###';
+                                                $array2[] = $value['products_id'];
                                                 $array1[] = '###PRODUCT_NAME###';
                                                 $array2[] = $value['products_name'];
                                                 $link_edit_prod = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_product&pid=' . $value['products_id'] . '&cid=' . $value['categories_id'] . '&action=edit_product');
+                                                $link_frontend_prod = $value['product_link'];
                                                 $array1[] = '###DIRECT_EDIT_PRODUCT_LINK###';
-                                                $array2[] = '<a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
+                                                $array2[] = '<a href="' . $link_frontend_prod . '" target="_blank">frontend view</a> | <a href="' . $link_edit_prod . '" target="_blank">edit product stock</a>';
                                                 // now mail a copy to the merchant
                                                 $merchant = array();
                                                 $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
@@ -2460,7 +2499,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         if ($row['products_quantity'] < 1) {
                                             if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
-                                                if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+                                                if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$row['ignore_stock_level']) {
                                                     // stock is negative or zero. lets turn off the product
                                                     mslib_befe::disableProduct($value['products_id']);
                                                 }
@@ -2572,6 +2611,21 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $discount_percentage = ($discount_amount / $orders_tax['sub_total_excluding_vat'] * 100);
                             }
                             break;
+                    }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersDiscountCalcPostProc'])) {
+                        // hook
+                        $params = array(
+                                'discount_percentage' => &$discount_percentage,
+                                'discount_amount' => &$discount_amount,
+                                'total_order_tax' => &$total_order_tax,
+                                'orders_tax' => &$orders_tax,
+                                'grand_total' => &$grand_total,
+                                'cart' => $cart
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersDiscountCalcPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook eof
                     }
                     if ($discount_amount) {
                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
@@ -3157,6 +3211,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###'] = '';
                 $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
             }
+            if (!$this->ms['MODULES']['SHOW_QTY_DELIVERED'] || $sectionTemplateType != 'order_history_site') {
+                $subProductDeliveredPart = array();
+                $subProductDeliveredPart['ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###');
+                $subProductDelivered = array();
+                $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
+                $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
+
+                $subProductDeliveredPart = array();
+                $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
+                $subProductDelivered = array();
+                $subProductDelivered['###ITEM_QUANTITY_DELIVERED_WRAPPER###'] = '';
+                $subparts['ITEMS_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductDelivered);
+            }
             // end of remove
             $subpartArray = array();
             //ITEMS_HEADER_WRAPPER
@@ -3274,6 +3341,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             // $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
             $markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($this->cart['summarize']['grand_total']);
+            $markerArray['GRAND_TOTAL_COSTS_LABEL_TOTAL'] = ucfirst($this->pi_getLL('total'));
             $subpartArray['###' . $key . '###'] = $this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
             //GRAND_TOTAL_WRAPPER EOF
             /*

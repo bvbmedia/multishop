@@ -13,6 +13,7 @@ if ($this->conf['crumbar_tmpl_path']) {
 $subparts = array();
 $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item'] = $this->cObj->getSubpart($subparts['template'], '###ITEM###');
+$subparts['item_no_link']=$this->cObj->getSubpart($subparts['template'], '###ITEM_NO_LINK###');
 $lifetime = 3600;
 $string = 'crumbar_' . $this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$tmp = mslib_befe::cacheLite('get', $string, $lifetime, 1))) {
@@ -145,7 +146,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
-                    $contentItem .= $this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
+                    if ($output['link']) {
+                        $contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
+                    } else {
+                        $contentItemNoLink.=$this->cObj->substituteMarkerArray($subparts['item_no_link'], $markerArray, '###|###');
+                    }
                 }
             }
             if (!empty($product['products_name'])) {
@@ -158,6 +163,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
         $subpartArray['###HOMEPAGE_TITLE###'] = $output['homepage_title'];
         $subpartArray['###PRODUCT_NAME###'] = $output['product_name'];
         $subpartArray['###ITEM###'] = $contentItem;
+        $subpartArray['###ITEM_NO_LINK###']=$contentItemNoLink;
         $crum = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
         // completed the template expansion by replacing the "item" marker in the template
     }

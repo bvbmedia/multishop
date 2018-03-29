@@ -786,7 +786,7 @@
             <label index="file_exists">File exists</label>
             <label index="filter_by">Filter by</label>
             <label index="filter_by_date_status_last_modified">Filter by date status last modified</label>
-            <label index="final_price_ex_vat">Final price (excl. VAT)</label>
+            <label index="final_price_ex_vat">Total price (excl. VAT)</label>
             <label index="final_price_inc_vat">Total price (incl. VAT)</label>
             <label index="first">first</label>
             <label index="first_name">first name</label>
@@ -1420,6 +1420,22 @@
             <label index="contact_email">Contact e-mail</label>
             <label index="track_and_trace_link">Track and Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
+            <label index="foreign_customer_id">External customer ID</label>
+            <label index="not_applicable_short">N/A</label>
+            <label index="personal_usage">Personal</label>
+            <label index="business_usage">Business</label>
+            <label index="product_dont_have_required_attributes">Product %s require an attribute(s) to continue checkout</label>
+            <label index="order_product_qty_delivered">Qty delivered</label>
+            <label index="feed_exporter_fields_label_foreign_orders_id">External orders id</label>
+            <label index="admin_foreign_products_id">Foreign products id</label>
+            <label index="products_date_visible">Products visible</label>
+            <label index="search_by">zoek op</label>
+            <label index="products_visible">Visible date</label>
+            <label index="feed_exporter_fields_label_products_description_tab_title_x">Products description title Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_x">Products description content Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Products description content Tab: %d (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2818,6 +2834,18 @@
             <label index="feed_exporter_fields_label_customer_delivery_company">Debiteur (aflever) bedrijfsnaam</label>
             <label index="track_and_trace_link">Track en Trace Link</label>
             <label index="feed_exporter_fields_label_generated_date">Feed generated date</label>
+            <label index="foreign_customer_id">Extern klantnummer</label>
+            <label index="not_applicable_short">N.V.T.</label>
+            <label index="personal_usage">Particulier</label>
+            <label index="business_usage">Zakelijk</label>
+            <label index="order_product_qty_delivered">Aantal geleverd</label>
+            <label index="admin_foreign_products_id">Refererend artikelnummer</label>
+            <label index="products_visible">Zichtbaarheidsdatum</label>
+            <label index="feed_exporter_fields_label_products_description_tab_title_x">Productbeschrijving title Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_x">Productbeschrijving inhoud Tab: %d</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Productbeschrijving inhoud Tab: %d (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
         </languageKey>
     </data>
 </T3locallang>

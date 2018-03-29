@@ -56,18 +56,21 @@ switch ($this->ms['page']) {
             $pids[] = $product['products_id'];
         }
         $product_mappings = mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
-        //
-        $shipping_methods = mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
-        if (!count($product_mappings)) {
-            $product_mappings = $shipping_methods;
-        }
-        $return_data['shipping_methods'] = array();
-        foreach ($shipping_methods as $shipping_method) {
-            if (isset($product_mappings[$shipping_method['code']])) {
-                $return_data['shipping_methods'][] = $shipping_method;
+        if ($country_cn_iso_nr) {
+            $shipping_methods = mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
+            if (!count($product_mappings)) {
+                $product_mappings = $shipping_methods;
+            }
+            $return_data['shipping_methods'] = array();
+            if (is_array($shipping_methods) && count($shipping_methods)) {
+                foreach ($shipping_methods as $shipping_method) {
+                    if ($shipping_method['code'] && isset($product_mappings[$shipping_method['code']])) {
+                        $return_data['shipping_methods'][] = $shipping_method;
+                    }
+                }
+                echo json_encode($return_data);
             }
         }
-        echo json_encode($return_data);
         exit();
         break;
     case 'get_shoppingcart_shippingcost_overview':
@@ -735,8 +738,10 @@ switch ($this->ms['page']) {
         }
         //natsort($tmp_return_data);
         $categories_results_limit = 0; // 0 = unlimited
-        if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
-            $categories_results_limit = 15;
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+            if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
+                $categories_results_limit = 15;
+            }
         }
         $category_counter = 0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {
@@ -1148,7 +1153,16 @@ switch ($this->ms['page']) {
         break;
     case 'getAdminOrdersListingDetails':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_orders_listing_details.php');
+            if (strstr($this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'], "..")) {
+                die('error in GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE value');
+            } else {
+                if (strstr($this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'], "/")) {
+                    // relative mode
+                    require($this->DOCUMENT_ROOT . $this->ms['MODULES']['GET_ADMIN_ORDERS_LISTING_DETAILS_TYPE'] . '.php');
+                } else {
+                    require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_admin_orders_listing_details.php');
+                }
+            }
         }
         exit();
         break;
@@ -1461,6 +1475,7 @@ switch ($this->ms['page']) {
                                         $result['success'] = true;
                                         $result['error'] = false;
                                         $result['filename'] = $filename;
+                                        unlink($temp_file);
                                         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                         exit();
                                     }
@@ -1529,8 +1544,11 @@ switch ($this->ms['page']) {
                     }
                     break;
                 case 'imageUpload':
-                    $_FILES['file']['type'] = strtolower($_FILES['file']['type']);
-                    switch ($_FILES['file']['type']) {
+                    $file_type=$_FILES['file']['type'];
+                    if (is_array($_FILES['file']['type'])) {
+                        $file_type = strtolower($_FILES['file']['type'][0]);
+                    }
+                    switch ($file_type) {
                         case 'image/png':
                         case 'image/jpg':
                         case 'image/gif':
@@ -1539,7 +1557,11 @@ switch ($this->ms['page']) {
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                            move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
+                            $file_tmp_name=$_FILES['file']['tmp_name'];
+                            if (is_array($_FILES['file']['tmp_name'])) {
+                                $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                            }
+                            move_uploaded_file($file_tmp_name, $temp_file);
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
                                 $imgtype = mslib_befe::exif_imagetype($temp_file);
@@ -1558,9 +1580,15 @@ switch ($this->ms['page']) {
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsfiles';
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                    move_uploaded_file($_FILES['file']['tmp_name'], $temp_file);
-                    $filename = $_FILES["file"]["name"];
-                    $path_parts = pathinfo($_FILES["file"]["name"]);
+                    $file_name=$_FILES['file']['name'];
+                    $file_tmp_name=$_FILES['file']['tmp_name'];
+                    if (is_array($_FILES['file']['tmp_name'])) {
+                        $file_name=$_FILES['file']['name'][0];
+                        $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                    }
+                    move_uploaded_file($file_tmp_name, $temp_file);
+                    $filename = $file_name;
+                    $path_parts = pathinfo($file_name);
                     $ext = $path_parts['extension'];
                     if ($ext) {
                         $continueUpload = 1;
@@ -1583,9 +1611,10 @@ switch ($this->ms['page']) {
                 }
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
-                    $result = array(
+                    $result['file'] = array(
                             'url' => $fileLocation,
-                            'name' => $filename
+                            'name' => $filename,
+                            'id' => $filename
                     );
                     echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                     exit();
@@ -1823,7 +1852,7 @@ switch ($this->ms['page']) {
                                                     $folder .= '/';
                                                     $target = $this->DOCUMENT_ROOT . $this->ms['image_paths']['products']['original'] . '/' . $folder . $filename;
                                                     $i++;
-                                                } while (file_exists($target));
+                                                } while (file_exists($target) || $filename==$this->get['old_image']);
                                             }
                                             if (copy($temp_file, $target)) {
                                                 $filename = mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
@@ -1833,6 +1862,7 @@ switch ($this->ms['page']) {
                                                 $result['error'] = false;
                                                 $result['filename'] = $filename;
                                                 $result['fileLocation'] = $fileLocation . '?' . time();
+                                                $result['fileOriginal'] = $this->get['qqfile'];
                                                 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                                 exit();
                                             }
@@ -2572,6 +2602,43 @@ switch ($this->ms['page']) {
                             $no++;
                         }
                     }
+                }
+            }
+        }
+        exit();
+        break;
+    case 'productImagesSort':
+        if ($this->ADMIN_USER) {
+            $product_id=$this->get['tx_multishop_pi1']['pID'];
+            if (is_numeric($product_id) && $product_id> 0) {
+                $product_images_col_keys = array();
+                for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+                    $i = $x;
+                    if (!$i) {
+                        $i = '';
+                    }
+                    $product_images_col_keys[] = 'products_image' . $i;
+                }
+                if (isset($this->post['msEditProductInputImage'])) {
+                    $images_records = mslib_befe::getRecord($product_id, 'tx_multishop_products', 'products_id', array(), implode(', ', $product_images_col_keys));
+                    $updateArray=array();
+                    foreach ($this->post['msEditProductInputImage'] as $arr_index => $col_index) {
+                        $internal_col_index=$arr_index;
+                        if (!$internal_col_index) {
+                            $internal_col_index='';
+                        }
+                        $external_col_index=$col_index;
+                        if (!$external_col_index) {
+                            $external_col_index='';
+                        }
+                        $image_value=$images_records['products_image' .$external_col_index];
+                        if (!$image_value) {
+                            $image_value='';
+                        }
+                        $updateArray['products_image' . $internal_col_index]=$image_value;
+                    }
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $product_id", $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
             }
         }

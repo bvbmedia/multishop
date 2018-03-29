@@ -3352,7 +3352,8 @@ class mslib_befe {
                     $params = array(
                             'array1' => &$array1,
                             'array2' => &$array2,
-                            'order' => &$order
+                            'order' => &$order,
+                            'action_call' => &$action_call
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3405,7 +3406,8 @@ class mslib_befe {
                             $params = array(
                                     'keys' => &$keys,
                                     'orders_status' => $orders_status,
-                                    'order' => $order
+                                    'order' => $order,
+                                    'action_call' => &$action_call
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3419,7 +3421,8 @@ class mslib_befe {
                                     $params = array(
                                             'array1' => &$array1,
                                             'array2' => &$array2,
-                                            'page' => &$page
+                                            'page' => &$page,
+                                            'action_call' => &$action_call
                                     );
                                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMarkerReplacerPostProc'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3454,7 +3457,8 @@ class mslib_befe {
                             'mail_customer' => &$mail_customer,
                             'order' => &$order,
                             'array1' => &$array1,
-                            'array2' => &$array2
+                            'array2' => &$array2,
+                            'action_call' => &$action_call
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4232,7 +4236,7 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_QTY'] = ucfirst($this->pi_getLL('qty'));
         $markerArray['LABEL_HEADER_PRODUCT_NAME'] = $this->pi_getLL('products_name');
         $markerArray['LABEL_HEADER_SKU'] = $this->pi_getLL('sku_number', 'SKU');
-        $markerArray['LABEL_HEADER__QUANTITY'] = $this->pi_getLL('qty');
+        $markerArray['LABEL_HEADER_QUANTITY'] = $this->pi_getLL('qty');
         $markerArray['LABEL_HEADER_TOTAL'] = $this->pi_getLL('total');
         $markerArray['LABEL_HEADER_PRICE'] = $this->pi_getLL('price');
         //hook to let other plugins further manipulate the replacers
@@ -4747,6 +4751,16 @@ class mslib_befe {
         $subpartArray['###GRAND_TOTAL_EXCLUDING_VAT###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total_excluding_vat']), $customer_currency, $display_currency_symbol, 0);
         $subpartArray['###LABEL_GRAND_TOTAL###'] = $this->pi_getLL('total');
         $subpartArray['###GRAND_TOTAL###'] = mslib_fe::amount2Cents($prefix . ($order['orders_tax_data']['grand_total']), $customer_currency, $display_currency_symbol, 0);
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
+            $params_internal = array(
+                    'subpartArray' => &$subpartArray,
+                    'order' => &$order
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
+        }
         $tmpcontent = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
         return $tmpcontent;
     }
@@ -5454,12 +5468,16 @@ class mslib_befe {
             return $content;
         }
     }
-    function bootstrapGrids($gridCols, $columns = 3) {
+    function bootstrapGrids($gridCols, $columns = 3, $gridClass='') {
         if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
             $array = array_chunk($gridCols, ceil(count($gridCols) / $columns));
+            $col_size=ceil((12 / $columns));
+            if ($columns>=12) {
+                $col_size=2;
+            }
             $content .= '<div class="row">';
             foreach ($array as $col => $colArray) {
-                $content .= '<div class="col-md-' . ceil((12 / $columns)) . '">';
+                $content .= '<div class="col-md-' . $col_size . (!empty($gridClass) ? ' ' . $gridClass : '') . '">';
                 $content .= implode('', $colArray);
                 $content .= '</div>';
             }
@@ -5521,6 +5539,36 @@ class mslib_befe {
                     }
                 }
                 return implode(' > ',$items);
+            }
+        }
+    }
+    function mailDev($subject,$body,$overrideUsers=array()) {
+        $sendEmail=1;
+        //hook to let other plugins further manipulate the settings
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'])) {
+            $params = array(
+                    'subject' => &$subject,
+                    'body' => &$body,
+                    'sendEmail' =>&$sendEmail,
+                    'overrideUsers'=>&$overrideUsers
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $mailTo=array();
+        if (is_array($overrideUsers) && count($overrideUsers)) {
+            $mailTo=$overrideUsers;
+        } elseif($this->conf['developer_email']) {
+            $user = array();
+            $user['name'] = $this->conf['developer_email'];
+            $user['email'] = $this->conf['developer_email'];
+            $mailTo[] = $user;
+        }
+        if ($sendEmail && count($mailTo)) {
+            $subject = $subject;
+            foreach ($mailTo as $mailuser) {
+                mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
             }
         }
     }

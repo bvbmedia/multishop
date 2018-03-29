@@ -47,6 +47,7 @@ if ($this->get['feed_hash']) {
         $post_data = unserialize($feed['post_data']);
         $fields_headers = $post_data['fields_headers'];
         $fields_values = $post_data['fields_values'];
+        $global_output=array();
         if ($feed['include_header']) {
             $total = count($fields);
             $rowCount = 0;
@@ -1054,7 +1055,38 @@ if ($this->get['feed_hash']) {
                                     }
                                 }
                             } else {
-                                if (strpos($field, 'product_payment_methods_') !== false) {
+                                if (strpos($field, 'products_description_') !== false) {
+                                    $descriptionKeys=array();
+                                    for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
+                                        $descriptionKeys['products_description_tab_title_' . $i]='products_description_tab_title_' . $i;
+                                        $descriptionKeys['products_description_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_encoded_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_strip_tags_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                    }
+                                    if (count($descriptionKeys) && isset($descriptionKeys[$field])) {
+                                        if (strpos($field, 'products_description_encoded_') !== false) {
+                                            $string = $row[$descriptionKeys[$field]];
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                            $string = htmlentities($string);
+                                        } else if (strpos($field, 'products_description_strip_tags_') !== false) {
+                                            $string = strip_tags($row[$descriptionKeys[$field]]);
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                        } else {
+                                            $string = $row[$descriptionKeys[$field]];
+                                            if (!$this->get['format'] == 'excel') {
+                                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                            }
+                                        }
+                                        if ($string) {
+                                            $string = preg_replace('/\s+/', ' ', $string);
+                                            $tmpcontent = $string;
+                                        }
+                                    }
+                                } else if (strpos($field, 'product_payment_methods_') !== false) {
                                     if ($row['products_id']) {
                                         $method_mappings = mslib_befe::getMethodsByProduct($row['products_id']);
                                     }
@@ -1089,12 +1121,18 @@ if ($this->get['feed_hash']) {
                                     list($zone_id, $cn_iso_nr) = explode('_', $zone_cn_id);
                                     $product_id = $row['products_id'];
                                     $shipping_method_id = $post_data['shipping_costs_per_product'];
-                                    $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
-                                    $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
-                                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                        $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                    if ($shipping_method_id>0) {
+                                        $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
+                                        $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
+                                        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                            $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                        } else {
+                                            if ($priceArray['shipping_costs']) {
+                                                $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                            }
+                                        }
                                     } else {
-                                        $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                        $tmpcontent .= '';
                                     }
                                 } else if ($attributes[$field]) {
                                     // print it from flat table
@@ -1113,24 +1151,27 @@ if ($this->get['feed_hash']) {
                         break;
                 }
                 // custom page hook that can be controlled by third-party plugin
+                $continue_stripping=true;
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
                     $output = $tmpcontent;
                     $params = array(
-                            'feed' => $feed,
-                            'mode' => $mode,
-                            'field' => $field,
-                            'row' => &$row,
-                            'output' => &$output
+                        'feed' => $feed,
+                        'mode' => $mode,
+                        'field' => $field,
+                        'row' => &$row,
+                        'output' => &$output,
+                        'continue_stripping' => &$continue_stripping
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                     if ($output) {
                         $tmpcontent = $output;
+                        $global_output[$row['products_id']][]=$output;
                     }
                 }
                 // custom page hook that can be controlled by third-party plugin eof
-                if ($this->get['format'] != 'excel') {
+                if ($this->get['format'] != 'excel' && $continue_stripping) {
                     $tmpcontent = str_replace("\"", "", $tmpcontent);
                     if ($feed['plain_text'] == '1') {
                         $tmpcontent = strip_tags($tmpcontent);
@@ -1189,6 +1230,16 @@ if ($this->get['feed_hash']) {
                 $excelRows[] = $excelCols;
             }
         }
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'])) {
+            $params = array(
+                    'global_output' => &$global_output,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['downloadProductFeedPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom page hook that can be controlled by third-party plugin eof
         if ($this->get['format'] == 'excel') {
             $paths = array();
             $paths[] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service') . 'Classes/Service/PHPExcel.php';

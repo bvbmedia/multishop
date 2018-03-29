@@ -66,12 +66,24 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             }
         }
         // now parse all the objects in the tmpl file
+        $invoice_pdf_tmpl_path=$this->conf['admin_invoice_pdf_tmpl_path'];
         if ($invoice['reversal_invoice'] && isset($this->conf['admin_credit_invoice_pdf_tmpl_path']) && $this->conf['admin_credit_invoice_pdf_tmpl_path'] != '') {
             // Use custom template for credit invoice
-            $this->conf['admin_invoice_pdf_tmpl_path'] = $this->conf['admin_credit_invoice_pdf_tmpl_path'];
+            $invoice_pdf_tmpl_path=$this->conf['admin_credit_invoice_pdf_tmpl_path'];
         }
-        if ($this->conf['admin_invoice_pdf_tmpl_path']) {
-            $template = $this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['configureInvoiceTemplatePreProc'])) {
+            $params = array(
+                    'invoice_pdf_tmpl_path' => &$invoice_pdf_tmpl_path,
+                    'order' => &$order,
+                    'invoice' => &$invoice
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['configureInvoiceTemplatePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if ($invoice_pdf_tmpl_path) {
+            $template = $this->cObj->fileResource($invoice_pdf_tmpl_path);
         } else {
             $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/admin_invoice_pdf.tmpl');
         }
@@ -239,11 +251,23 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // CMS FOOTER
         $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = '';
+        $prefixTemplate='pdf_invoice_footer_message';
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPrefixTemplatePreProc'])) {
+            $params = array(
+                    'prefixTemplate' => &$prefixTemplate,
+                    'order' => &$order,
+                    'invoice' => &$invoice,
+                    'markerArray' => &$markerArray
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPrefixTemplatePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $cmsKeys = array();
         if ($order['payment_method']) {
-            $cmsKeys[] = 'pdf_invoice_footer_message_' . $order['payment_method'];
+            $cmsKeys[] = $prefixTemplate.'_' . $order['payment_method'];
         }
-        $cmsKeys[] = 'pdf_invoice_footer_message';
+        $cmsKeys[] = $prefixTemplate;
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'])) {
             $params = array(
@@ -419,6 +443,35 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###'] = $this->pi_getLL('payment_condition');
             $markerArray['###INVOICE_PAYMENT_CONDITION###'] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
         }
+        if ($invoice['reversal_invoice']) {
+            // Get debit invoice
+            $filter=array();
+            $filter[]='orders_id='.$invoice['orders_id'];
+            $filter[]='reversal_invoice=0';
+            $debitInvoice = mslib_befe::getRecord('', 'tx_multishop_invoices','',$filter);
+            if (!$debitInvoice['paid']) {
+                // When debit order is not paid show: N/A
+                $markerArray['###INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('not_applicable_short');
+                $markerArray['###INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('not_applicable_short');
+            }
+        }
+        $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
+        $markerArray['###STORE_EMAIL###'] = $this->ms['MODULES']['STORE_EMAIL'];
+        $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
+        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
+        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
+        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
+        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
+        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
+        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
+        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
+        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
+        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
+        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
+        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
+        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
+        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
+        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
             $params = array(
@@ -439,21 +492,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
             $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
         }
-        $markerArray['###STORE_URL###'] = $this->FULL_HTTP_URL;
-        $markerArray['###STORE_DOMAIN###'] = $this->server['HTTP_HOST'];
-        $markerArray['###STORE_TELEPHONE###'] = $this->tta_shop_info['phone'];
-        $markerArray['###STORE_COMPANY###'] = $this->tta_shop_info['company'];
-        $markerArray['###STORE_ADDRESS###'] = $this->tta_shop_info['address'];
-        $markerArray['###STORE_ZIP###'] = $this->tta_shop_info['zip'];
-        $markerArray['###STORE_CITY###'] = $this->tta_shop_info['city'];
-        $markerArray['###STORE_COUNTRY###'] = $this->tta_shop_info['country'];
-        $markerArray['###STORE_LOCALIZED_COUNTRY###'] = mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $this->tta_shop_info['country']);
-        $markerArray['###STORE_BANK_NAME###'] = $this->tta_shop_info['tx_multishop_bank_name'];
-        $markerArray['###STORE_BANK_IBAN###'] = $this->tta_shop_info['tx_multishop_iban'];
-        $markerArray['###STORE_BANK_BIC###'] = $this->tta_shop_info['tx_multishop_bic'];
-        $markerArray['###STORE_VAT_ID###'] = $this->tta_shop_info['tx_multishop_vat_id'];
-        $markerArray['###STORE_COC_ID###'] = $this->tta_shop_info['tx_multishop_coc_id'];
-        $markerArray['###STORE_ADMINISTRATION_EMAIL###'] = $this->tta_shop_info['email'];
         // MARKERS EOL
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceTemplateMarkerPreProc'])) {

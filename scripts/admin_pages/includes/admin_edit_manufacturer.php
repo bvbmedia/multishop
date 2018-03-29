@@ -159,6 +159,10 @@ if ($this->post) {
             }
         }
         if (!count($postErno)) {
+            // clear the multishop cache
+            if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
+                mslib_befe::cacheLite('delete_all');
+            }
             if (isset($this->post['SaveClose'])) {
                 if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_manufacturer') === false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_manufacturer') === false && $this->post['tx_multishop_pi1']['referrer']) {
                     header("Location: " . $this->post['tx_multishop_pi1']['referrer']);

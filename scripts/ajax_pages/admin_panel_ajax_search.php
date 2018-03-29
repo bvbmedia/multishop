@@ -232,7 +232,8 @@ if ($this->ADMIN_USER) {
                     $prod['id'] = md5($category['name']);
                     $prod['text'] = $category['name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
-                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_cms&cmt_id=' . $category['id']) . '&action=edit_cms';
+                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $category['id']) . '&action=edit_cms';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -297,6 +298,7 @@ if ($this->ADMIN_USER) {
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['text'] = $admin_settings['configuration_title'];
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_module&module_id=' . $admin_settings['id']) . '&action=edit_module';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -359,6 +361,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $order['orders_id'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id']) . '&action=edit_order';
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -386,6 +389,8 @@ if ($this->ADMIN_USER) {
                 $p = 0;
                 $offset = $p * $limit;
             }
+            $from=array();
+            $extra_left_join='';
             $filter = $invoices_filter;
             $having = array();
             $match = array();
@@ -393,12 +398,28 @@ if ($this->ADMIN_USER) {
             $where = array();
             $orderby = array();
             $select = array();
+            $group_by='';
             if (!$this->masterShop) {
                 $filter[] = 'i.page_uid=' . $this->showCatalogFromPage;
             }
             $select[] = 'i.invoice_id,i.hash';
             $orderby[] = 'i.id desc';
-            $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
+            // hook to rewrite the whole methods
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'])) {
+                $params_internal = array(
+                    'filter' => &$filter,
+                    'having' => &$having,
+                    'orderby' => &$orderby,
+                    'select' => &$select,
+                    'from' => &$from,
+                    'extra_left_join' => &$extra_left_join,
+                    'group_by' => &$group_by
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                }
+            }
+            $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from, $extra_left_join, $group_by);
             $resultset['invoices'] = $pageset;
             if (count($resultset['invoices']['invoices'])) {
                 foreach ($resultset['invoices']['invoices'] as $invoice) {
@@ -413,7 +434,8 @@ if ($this->ADMIN_USER) {
                     $prod['id'] = md5($invoice['invoice_id']);
                     $prod['text'] = $invoice['invoice_id'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
-                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
+                    $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
+                    $prod['Link_Target'] = '_blank';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -496,6 +518,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $customer['name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $customer['uid'] . '&action=edit_customer');
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
@@ -580,6 +603,7 @@ if ($this->ADMIN_USER) {
                     $prod['text'] = $category['categories_name'];
                     $prod['Title'] = str_highlight($prod['Name'], $this->get['q']);
                     $prod['Link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $category['categories_id'] . '&action=edit_category');
+                    $prod['Link_Target'] = '';
                     $prod['Image'] = '';
                     $prod['Desc'] = '';
                     $prod['Price'] = '';
