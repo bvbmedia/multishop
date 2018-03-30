@@ -40,7 +40,7 @@ if (count($shopPids)) {
                             $catpath[] = $cat['name'];
                         }
                         if (count($catpath) > 0) {
-                            $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $shopPid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . implode(' > ', $catpath) . '"};';
+                            $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $shopPid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . addslashes(implode(' > ', $catpath)) . '"};';
                         }
                     }
                 }
@@ -60,7 +60,7 @@ if (count($shopPids)) {
                 $catpath[] = $cat['name'];
             }
             if (count($catpath) > 0) {
-                $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $this->shop_pid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . implode(' > ', $catpath) . '"};';
+                $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $this->shop_pid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . addslashes(implode(' > ', $catpath)) . '"};';
             }
         }
     }
