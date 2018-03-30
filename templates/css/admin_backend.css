@@ -761,7 +761,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
 .redactor-editor, .redactor-box, .redactor-box textarea { z-index:8888890; } */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
-.redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
+/* .redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; } */
 .redactor-editor, .redactor-box, .redactor-box textarea { }
 .redactor-box-fullscreen { z-index:8889990; }
 #msadmin_content .redactor-toolbar.toolbar-fixed-box { position:fixed !important; left:auto !important; top:38px !important; }
