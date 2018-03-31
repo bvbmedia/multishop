@@ -1060,6 +1060,31 @@ if ($this->post) {
     if ($this->post['specials_new_products_price'] and strstr($this->post['specials_new_products_price'], ",")) {
         $this->post['specials_new_products_price'] = str_replace(",", ".", $this->post['specials_new_products_price']);
     }
+    if ($this->post['tax_id']) {
+        $tax_rate=mslib_fe::getTaxRuleSet($this->post['tax_id']);
+        $total_tax_rate=$tax_rate['total_tax_rate'];
+    }
+    if ($this->post['product_capital_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['product_capital_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['product_capital_price']=$product_price_excl_vat;
+    }
+    if ($this->post['products_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['products_price']=$product_price_excl_vat;
+    }
+    if ($this->post['specials_new_products_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['specials_new_products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['specials_new_products_price']=$product_price_excl_vat;
+    }
     if ($this->post['products_date_available']) {
         $updateArray['products_date_available'] = strtotime($this->post['products_date_available']);
     } else {
@@ -1145,6 +1170,14 @@ if ($this->post) {
                     $col_vals[1] = 99999;
                 }
                 $col_val = implode('-', $col_vals);
+                // get excl vat price accurately
+                if ($this->post['staffel_price'][$row_idx] && $total_tax_rate) {
+                    $product_price_incl_vat = number_format($this->post['staffel_price'][$row_idx] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+                    $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+                    $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+                    $this->post['staffel_price'][$row_idx] = $product_price_excl_vat;
+                }
                 $sprice = $this->post['staffel_price'][$row_idx];
                 $staffel_price_data[$row_idx] = $col_val . ':' . $sprice;
             }
