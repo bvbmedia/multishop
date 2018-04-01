@@ -8051,7 +8051,8 @@ class mslib_fe {
             //admin_system_update_catalog_languages
             // footer eof
         } // end if enableAdminPanelSystem
-        if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
+        if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) {
+        //if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label'] = $this->pi_getLL('admin_multishop_settings');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class'] = 'fa fa-cog';
