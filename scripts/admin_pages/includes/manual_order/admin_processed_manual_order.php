@@ -99,9 +99,23 @@ if ($this->post['proceed_order']) {
                 $billing_gender = 'f';
             }
         }
+        $order_language_id=0;
+        if (!$user) {
+            $user = mslib_fe::getUser($customer_id);
+        }
+        if ($user['tx_multishop_language']) {
+            foreach ($this->languages as $key => $language) {
+                $language['lg_iso_2'] = strtolower($language['lg_iso_2']);
+                if (strtolower($user['tx_multishop_language']) == $language['lg_iso_2']) {
+                    $order_language_id = $language['uid'];
+                    break;
+                }
+            }
+        }
         // now add the order
         $insertArray = array();
         $insertArray['customer_id'] = $customer_id;
+        $insertArray['language_id'] = $order_language_id;
         $insertArray['page_uid'] = $this->shop_pid;
         $insertArray['status'] = 1;
         $insertArray['billing_company'] = $this->post['company'];
