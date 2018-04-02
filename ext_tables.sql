@@ -735,10 +735,12 @@ CREATE TABLE `tx_multishop_orders_status_history` (
  `comments` text,
  `requester_ip_addr` varchar(127) default '',
  `action_call` varchar(256) default '',
+ `cruser_id` int(11) default '0',
  PRIMARY KEY (`orders_status_history_id`),
  KEY `orders_id` (`orders_id`),
  KEY `crdate` (`crdate`),
- KEY `crdate_2` (`crdate`)
+ KEY `crdate_2` (`crdate`),
+ KEY `cruser_id` (`cruser_id`)
 );
 
 CREATE TABLE `tx_multishop_order_units` (

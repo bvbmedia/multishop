@@ -4584,6 +4584,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <th>' . $this->pi_getLL('old_status') . '</th>
                 <th>' . $this->pi_getLL('date') . '</th>
                 <th>' . $this->pi_getLL('customer_notified') . '</th>
+                <th>' . $this->pi_getLL('updated_by') . '</th>
                 <th>' . $this->pi_getLL('requester_ip_address') . '</th>
             </tr>
             </thead>
@@ -4594,6 +4595,18 @@ if (is_numeric($this->get['orders_id'])) {
                     $tr_type = 'odd';
                 } else {
                     $tr_type = 'even';
+                }
+                $cr_user=mslib_fe::getUser($row['cruser_id']);
+                $username=array();
+                if ($cr_user['username']) {
+                    $username[] = $cr_user['username'];
+                }
+                if ($cr_user['email'] && $cr_user['email']!=$cr_user['username']) {
+                    if (count($username)) {
+                        $username[]='('.$cr_user['email'] . ')';
+                    } else {
+                        $username[]=$cr_user['email'];
+                    }
                 }
                 $old_status_name = $all_orders_status[$row['old_value']]['name'];
                 if (!$old_status_name) {
@@ -4608,6 +4621,7 @@ if (is_numeric($this->get['orders_id'])) {
                     <td>' . $old_status_name . '</td>
                     <td>' . strftime("%a. %x %X", $row['crdate']) . '</td>
                     <td align="center">' . ($row['customer_notified'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')) . '</td>
+                    <td align="center">' . implode(' ', $username) . '</td>
                     <td align="center">' . $row['requester_ip_addr'] . '</td>
                 </tr>
                 ';

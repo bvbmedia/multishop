@@ -3372,6 +3372,10 @@ class mslib_befe {
                 $updateArray['new_value'] = $orders_status;
                 $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
                 $updateArray['action_call'] = $action_call;
+                $updateArray['cruser_id']=0;
+                if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+                    $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                }
                 $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
