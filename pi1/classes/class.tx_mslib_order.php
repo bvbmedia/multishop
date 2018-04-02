@@ -69,9 +69,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $iso_customer['country'] = $iso_customer['cn_short_en'];
                 // if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
                 //$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
-                if (!$this->ms['MODULES']['DISABLE_VAT_RATE'] && $this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
-                    if (strtolower($row['billing_country']) != strtolower($this->tta_shop_info['country'])) {
-                        $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+                if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID']) {
+                    if ($row['billing_vat_id']) {
+                        if (!$this->ms['MODULES']['DISABLE_VAT_RATE']) {
+                            if (strtolower($row['billing_country']) != strtolower($this->tta_shop_info['country'])) {
+                                $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+                            }
+                        } else {
+                            if (strtolower($row['billing_country']) == strtolower($this->tta_shop_info['country'])) {
+                                $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
+                            }
+                        }
+                    } else {
+                        $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
                     }
                 }
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {

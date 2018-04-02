@@ -36,7 +36,7 @@ if (!$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM'] && !$this-
 $contentItem = '';
 $itemCounter = 0;
 if (is_array($products) && count($products)) {
-    foreach ($products as $current_product) {
+    foreach ($products as $product_index => $current_product) {
         $itemCounter++;
         $markerKey = 'ITEM';
         if ($oddEvenMarker) {
@@ -318,7 +318,8 @@ if (is_array($products) && count($products)) {
                     'products_compare' => &$products_compare,
                     'plugins_item_extra_content' => &$plugins_item_extra_content,
                     'limit_per_page' => &$limit_per_page,
-                    'p' => &$p
+                    'p' => &$p,
+                    'product_index' => &$product_index
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
