@@ -2370,23 +2370,28 @@ if ($this->post) {
                 $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
             }
         }
-        if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && is_numeric($this->get['pid']) && $this->get['pid'] > 0 && isset($this->post['default_path_categories_id'])) {
+        if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && isset($this->post['default_path_categories_id'])) {
+            if (isset($this->post['save_as_new']) && $prodid>0) {
+                $pid=$prodid;
+            } else if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid=$this->get['pid'];
+            }
             $updatePreviousValue = array();
             $updatePreviousValue['default_path'] = 0;
-            $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\'' . $this->get['pid'] . '\'', $updatePreviousValue);
+            $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\'' . $pid . '\'', $updatePreviousValue);
             $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             // update the new one
             if (is_numeric($this->post['default_path_categories_id'])) {
-                $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
+                $product_path = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
                 if (!is_array($product_path)) {
-                    $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
+                    $product_path = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
                     if (is_array($product_path) && count($product_path)) {
                         $this->post['default_path_categories_id']=$product_path['node_id'];
                     }
                 }
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
-                $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $this->get['pid'] . '\'', $updateArray);
+                $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $pid . '\'', $updateArray);
                 $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             }
         }
