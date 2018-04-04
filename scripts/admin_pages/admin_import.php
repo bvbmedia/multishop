@@ -70,6 +70,7 @@ if (is_array($this->languages) && count($this->languages)) {
         $coltypes['products_description_encoded' . $suffix] = 'Products description (encoded) (' . $langTitle['title'] . ')';
         $coltypes['products_shortdescription' . $suffix] = 'Products description (short description) (' . $langTitle['title'] . ')';
         $coltypes['products_meta_keywords' . $suffix] = 'Products meta keywords (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
+        $coltypes['products_negative_keywords' . $suffix] = 'Products negative keywords (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
         $coltypes['products_deeplink' . $suffix] = 'Products deeplink (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
         $coltypes['file_remote_location' . $suffix] = 'Products - virtual product remote location (' . $langTitle['title'] . ') (' . $langTitle['title'] . ')';
         for ($x = 1; $x <= $max_category_level; $x++) {
@@ -89,6 +90,7 @@ if (is_array($this->languages) && count($this->languages)) {
         $coltypes['products_meta_title' . $suffix] = 'Products meta title (' . $langTitle['title'] . ')';
         $coltypes['products_meta_description' . $suffix] = 'Products meta description (' . $langTitle['title'] . ')';
         $coltypes['products_meta_keywords' . $suffix] = 'Products meta keywords (' . $langTitle['title'] . ')';
+        $coltypes['products_negative_keywords' . $suffix] = 'Products negative keywords (' . $langTitle['title'] . ')';
         $coltypes['products_delivery_time' . $suffix] = 'Products delivery time (' . $langTitle['title'] . ')';
         $coltypes['products_condition' . $suffix] = 'Products condition (' . $langTitle['title'] . ')';
         $coltypes['category_group' . $suffix] = 'Category group (' . $langTitle['title'] . ')';
@@ -1388,6 +1390,11 @@ if ($this->post['action'] == 'category-insert') {
                             $item[$this->post['select'][$i]] .= $char . $tmpitem[$i];
                             $item[$this->post['select'][$i]] = preg_replace("/^" . $char . "|" . $char . "$/is", '', $item[$this->post['select'][$i]]);
                             break;
+                        case 'products_negative_keywords':
+                            $char = ",";
+                            $item[$this->post['select'][$i]] .= $char . $tmpitem[$i];
+                            $item[$this->post['select'][$i]] = preg_replace("/^" . $char . "|" . $char . "$/is", '', $item[$this->post['select'][$i]]);
+                            break;
                         case 'attribute_option_value':
                         case 'attribute_option_value_including_vat':
                             // attribute option value (with aux as option)
@@ -2435,6 +2442,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_meta_keywords'])) {
                                 $updateArray['products_meta_keywords'] = $item['products_meta_keywords'];
                             }
+                            if (isset($item['products_negative_keywords'])) {
+                                $updateArray['products_negative_keywords'] = $item['products_negative_keywords'];
+                            }
                             if (isset($item['products_name']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_name', $importedProductsLockedFields))))) {
                                 $updateArray['products_name'] = $item['products_name'];
                             }
@@ -2825,6 +2835,7 @@ if ($this->post['action'] == 'category-insert') {
                             $updateArray['products_meta_title'] = $item['products_meta_title'];
                             $updateArray['products_meta_description'] = $item['products_meta_description'];
                             $updateArray['products_meta_keywords'] = $item['products_meta_keywords'];
+                            $updateArray['products_negative_keywords'] = $item['products_negative_keywords'];
                             $updateArray['products_name'] = $item['products_name'];
                             $updateArray['products_description'] = $item['products_description'];
                             if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
