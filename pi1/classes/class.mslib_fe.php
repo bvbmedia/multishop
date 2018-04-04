@@ -6755,10 +6755,6 @@ class mslib_fe {
             $language_id = $GLOBALS['TSFE']->sys_language_uid;
         }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'o.id=\'' . $id . '\' and od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->shop_pid . '\' or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.id=od.orders_status_id', '', '', '');
-
-        echo 'LANG ID: ';
-        var_dump($language_id);
-
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
