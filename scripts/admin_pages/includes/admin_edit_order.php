@@ -93,7 +93,6 @@ if (is_numeric($this->get['orders_id'])) {
             $address['delivery_vat_id'] = $order['delivery_vat_id'];
             $address['by_phone'] = 1;
             $address['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPostProc'])) {
                 // hook
                 $params = array(
@@ -104,8 +103,17 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 // hook oef
             }
-
             $new_order_id=mslib_fe::createOrder($address);
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPreRedirect'])) {
+                // hook
+                $params = array(
+                        'new_order_id' => &$new_order_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPreRedirect'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
             if (is_numeric($new_order_id) && $new_order_id>0) {
                 header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $new_order_id . '&action=edit_order'));
                 exit();
