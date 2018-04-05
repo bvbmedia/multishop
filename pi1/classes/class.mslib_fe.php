@@ -8912,7 +8912,7 @@ class mslib_fe {
                             $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-                            if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
+                            if (($value['qty']>1 && $row['products_quantity'] <= $row['alert_quantity_threshold']) || ($row['products_quantity'] == $row['alert_quantity_threshold'])) {
                                 $page = mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
                                 if ($page[0]['content']) {
                                     // loading the email confirmation letter eof
@@ -8922,7 +8922,7 @@ class mslib_fe {
                                     $array1[] = '###ORDERED_QTY###';
                                     $array2[] = $value['qty'];
                                     $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
-                                    $array2[] = $row['products_id'];
+                                    $array2[] = $row['products_quantity'];
                                     $array1[] = '###PRODUCTS_ID###';
                                     $array2[] = $value['products_id'];
                                     $array1[] = '###PRODUCT_NAME###';
@@ -8973,7 +8973,7 @@ class mslib_fe {
                             $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-                            if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
+                            if (($value['qty']>1 && $row['products_quantity'] <= $row['alert_quantity_threshold']) || ($row['products_quantity'] == $row['alert_quantity_threshold'])) {
                                 $page = mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
                                 if ($page[0]['content']) {
                                     // loading the email confirmation letter eof
