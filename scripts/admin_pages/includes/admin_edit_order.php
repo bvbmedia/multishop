@@ -2151,6 +2151,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $ed_counter=0;
                 $main_label='';
                 foreach ($extraDetails as $ed_label => $ed_value) {
+                    /*
                     if ($ed_counter=='0') {
                         $main_label=$ed_label;
                         $extraDetailsData[]='<div class="col-md-2">
@@ -2159,24 +2160,19 @@ if (is_numeric($this->get['orders_id'])) {
                             </div>
                         </div>';
                     } else {
-                        $extraDetailsData[]='<div class="col-md-5">
-                            <div class="row">
-                                <label class="control-label col-md-7">' . $ed_label . '</label><div class="col-md-5"><p class="form-control-static">' . $ed_value . '</p></div>
-                            </div>
+                    */
+                        $extraDetailsData[]='<div class="col-md-4">
+                            <label class="control-label">' . $ed_label . '</label>
+                            <p class="form-control-static">' . $ed_value . '</p>
                         </div>';
-                    }
+                    //}
 
                     $ed_counter++;
                 }
                 $orderDetails[] = '
                     <hr/>
-                    <div class="form-group">
-                        <label class="control-label col-md-3">' . $main_label . '</label>
-                        <div class="col-md-9">
-                            <div class="row">
-                                '.implode('', $extraDetailsData).'
-                            </div>
-                        </div>
+                    <div class="form-group edit-order-info">
+                        '.implode('', $extraDetailsData).'
                     </div>
                 ';
             }
