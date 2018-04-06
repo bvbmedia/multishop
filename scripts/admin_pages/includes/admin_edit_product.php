@@ -940,7 +940,7 @@ if ($this->post and $_FILES) {
         if ($i == 0) {
             $i = '';
         }
-        if ($this->post['ajax_products_image' . $i]) {
+        if ($this->post['ajax_products_image'][$x]) {
             $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
         }
     }
@@ -1039,6 +1039,22 @@ if ($this->post) {
         $params = array();
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveProductPreHook'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    if (count($this->post['ajax_products_image']) && !count($update_product_images)) {
+        $update_product_images = array();
+        if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
+            $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES'] = 5;
+        }
+        for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+            // hidden filename that is retrieved from the ajax upload
+            $i = $x;
+            if ($i == 0) {
+                $i = '';
+            }
+            if ($this->post['ajax_products_image'][$x]) {
+                $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
+            }
         }
     }
     // custom hook that can be controlled by third-party plugin eof
