@@ -10921,7 +10921,7 @@ class mslib_fe {
         if (!is_numeric($customer_id)) {
             return false;
         }
-        $page = mslib_fe::getCMScontent('email_create_account_click_confirmation', $GLOBALS['TSFE']->sys_language_uid);
+        $page = mslib_fe::getCMScontent('email_create_account_completed', $GLOBALS['TSFE']->sys_language_uid);
         if ($page[0]['content']) {
             $newCustomer = mslib_fe::getUser($customer_id);
             // loading the email confirmation letter eof

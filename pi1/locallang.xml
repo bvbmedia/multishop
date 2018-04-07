@@ -1437,7 +1437,7 @@
             <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d  (platte tekst / stripped tags)</label>
             <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
             <label index="updated_by">Updated by</label>
-            <label index="email_create_account_click_confirmation">E-mail create account after confirmation</label>
+            <label index="email_create_account_completed">E-mail create account completed</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2849,7 +2849,7 @@
             <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d  (platte tekst / stripped tags)</label>
             <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
             <label index="updated_by">Geactualiseerd door</label>
-            <label index="email_create_account_click_confirmation">E-mail create account after confirmation</label>
+            <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>
         </languageKey>
     </data>
 </T3locallang>
