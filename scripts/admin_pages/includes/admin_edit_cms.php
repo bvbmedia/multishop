@@ -197,6 +197,7 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
     $types['checkout_message'] = $this->pi_getLL('checkout_message');
     $types['notes_on_the_conclusion_of_the_contract'] = $this->pi_getLL('notes_on_the_conclusion_of_the_contract');
     $types['impressum'] = $this->pi_getLL('impressum');
+    $types['email_create_account_click_confirmation'] = $this->pi_getLL('email_create_account_click_confirmation');
     // extra cms type
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
         $params = array(

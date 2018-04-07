@@ -10917,6 +10917,81 @@ class mslib_fe {
             return true;
         }
     }
+    function sendCreateAccountClickConfirmationLetter($customer_id) {
+        if (!is_numeric($customer_id)) {
+            return false;
+        }
+        $page = mslib_fe::getCMScontent('email_create_account_click_confirmation', $GLOBALS['TSFE']->sys_language_uid);
+        if ($page[0]['content']) {
+            $newCustomer = mslib_fe::getUser($customer_id);
+            // loading the email confirmation letter eof
+            // replacing the variables with dynamic values
+            $array1 = array();
+            $array2 = array();
+            $array1[] = '###GENDER_SALUTATION###';
+            $array2[] = mslib_fe::genderSalutation($newCustomer['gender']);
+            $array1[] = '###BILLING_COMPANY###';
+            $array2[] = $newCustomer['company'];
+            $array1[] = '###FULL_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FULL_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FIRST_NAME###';
+            $array2[] = $newCustomer['first_name'];
+            $array1[] = '###BILLING_LAST_NAME###';
+            $last_name = $newCustomer['last_name'];
+            if ($newCustomer['middle_name']) {
+                $last_name = $newCustomer['middle_name'] . ' ' . $last_name;
+            }
+            $array2[] = $last_name;
+            $array1[] = '###CUSTOMER_EMAIL###';
+            $array2[] = $newCustomer['email'];
+            $array1[] = '###BILLING_EMAIL###';
+            $array2[] = $newCustomer['email'];
+            $array1[] = '###BILLING_ADDRESS###';
+            $array2[] = $newCustomer['address'];
+            $array1[] = '###BILLING_TELEPHONE###';
+            $array2[] = $newCustomer['telephone'];
+            $array1[] = '###BILLING_MOBILE###';
+            $array2[] = $newCustomer['mobile'];
+            $array1[] = '###LONG_DATE###'; // ie woensdag 23 juni, 2010
+            $long_date = strftime($this->pi_getLL('full_date_format'));
+            $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+            $long_date = strftime($this->pi_getLL('full_date_format'));
+            $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+            $array2[] = strftime("%x");
+            $array1[] = '###STORE_NAME###';
+            $array2[] = $this->ms['MODULES']['STORE_NAME'];
+            $array1[] = '###CUSTOMER_ID###';
+            $array2[] = $customer_id;
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountClickConfirmationLetter'])) {
+                $params = array(
+                        'array1' => &$array1,
+                        'array2' => &$array2,
+                        'user' => $newCustomer
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountClickConfirmationLetter'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($page[0]['content']) {
+                $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
+            }
+            if ($page[0]['name']) {
+                $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+            }
+            $user = array();
+            $user['name'] = $newCustomer['first_name'];
+            $user['email'] = $newCustomer['email'];
+            mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+            return true;
+        }
+    }
     public function genderSalutation($gender, $custom_salutation='') {
         switch ($gender) {
             case '0':
