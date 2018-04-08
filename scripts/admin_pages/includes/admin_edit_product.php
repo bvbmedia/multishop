@@ -4261,7 +4261,7 @@ if ($this->post) {
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="sub_block_panel" style="display: none">';
             $product_relatives_block .= '        <div class="panel-heading">';
-            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_upsell', 'Up-sell :') . '</h4>';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_upsell', 'Up-sell') . '</h4>';
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '        <div class="panel-body">';
             $product_relatives_block .= '            <div id="sub_related_product_placeholder"></div>';
@@ -4273,7 +4273,7 @@ if ($this->post) {
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="both_block_panel" style="display: none">';
             $product_relatives_block .= '        <div class="panel-heading">';
-            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_crosssell', 'Cross-sell :') . '</h4>';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_crosssell', 'Cross-sell') . '</h4>';
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '        <div class="panel-body">';
             $product_relatives_block .= '            <div id="both_related_product_placeholder"></div>';
@@ -4285,7 +4285,7 @@ if ($this->post) {
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="main_block_panel" style="display: none">';
             $product_relatives_block .= '        <div class="panel-heading">';
-            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_opposite_upsell', 'Opposite up-sell:') . '</h4>';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_opposite_upsell', 'Opposite up-sell') . '</h4>';
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '       <div class="panel-body">';
             $product_relatives_block .= '            <div id="main_related_product_placeholder"></div>';
