@@ -2,7 +2,7 @@
 <!-- ###JS_HEADER### begin -->
 <script type="text/javascript">
     function populateRelatedProduct(data) {
-        var relations_type=['main','sub','search'];
+        var relations_type=['main','sub','both','search'];
         if (data.related_product!=undefined) {
             $("#search_related_product_placeholder").empty();
             //$('.cekbox:not(:checked)').parent().parent().remove();
@@ -358,13 +358,16 @@
             } else if (relation_type=='sub') {
                 var main_pid=$(this).attr('data-current-pid');
                 var sub_pid=$(this).attr('data-relation-pid');
+            } else if (relation_type=='both') {
+                var main_pid=$(this).attr('data-current-pid');
+                var sub_pid=$(this).attr('data-relation-pid');
             }
             $.ajax({
                 type: "POST",
                 url: url_relatives,
                 dataType: "json",
                 data: {
-                    req: "delete", mpid: main_pid, spid: sub_pid
+                    req: "delete", reltype: relation_type, mpid: main_pid, spid: sub_pid
                 },
                 success: function (data) {
                     if (data.deleted=='OK') {
@@ -457,7 +460,7 @@
         // add the active product as
         $(document).on('click', '.add_relation_as_both', function(e){
             e.preventDefault();
-            var relations_type=['main', 'sub'];
+            var relations_type=['both'];
             var relation_type=$(this).attr('data-relation-type');
             var main_pid=$(this).attr('data-current-pid');
             var sub_pid=$(this).attr('data-relation-pid');
@@ -482,15 +485,9 @@
                                html_elem += '</ul></div>';
                                $('#' + relation_type + '_related_product_placeholder').append(html_elem);
                            }
-                           if (relation_type=='main') {
-                               var product_element_id='#product_sr_' + sub_pid;
-                               var clone_a_product=$(product_element_id).clone();
-                               $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + main_pid + '" data-current-pid="' + sub_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
-                           } else {
-                               var product_element_id='#product_sr_' + sub_pid;
-                               var clone_a_product=$(product_element_id).clone();
-                               $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + sub_pid + '" data-current-pid="' + main_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
-                           }
+                           var product_element_id='#product_sr_' + sub_pid;
+                           var clone_a_product=$(product_element_id).clone();
+                           $($('<li/>').append($(clone_a_product).removeAttr('id')).append('<a href="#" class="btn btn-xs remove_related_product" data-relation-type="' + relation_type + '" data-relation-pid="' + sub_pid + '" data-current-pid="' + main_pid + '"><i class="fa fa-remove"></i></a>')).insertBefore(last_line);
                            if (!$(ul_element_id).is(':visible')) {
                                $(ul_element_id).parent().show();
                                $(ul_element_id).show();

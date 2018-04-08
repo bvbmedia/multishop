@@ -4256,31 +4256,44 @@ if ($this->post) {
             $product_relatives_block .= '</div>';
 
             $product_relatives_block .= '<div class="row" id="block_panel_wrapper" style="display: none">';
-            $product_relatives_block .= '<div class="col-md-6">';
-            // main block
-            $product_relatives_block .= '<div class="panel panel-default" id="main_block_panel" style="display: none">';
-            $product_relatives_block .= '<div class="panel-heading">';
-            $product_relatives_block .= '<h4>' . $this->pi_getLL('these_products_related_to_this_product', 'Main related products:') . '</h4>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
-            $product_relatives_block .= '</div>';
+
+            // Up-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="sub_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_upsell', 'Up-sell :') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '        <div class="panel-body">';
+            $product_relatives_block .= '            <div id="sub_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
 
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="col-md-6">';
-            // sub block
-            $product_relatives_block .= '<div class="panel panel-default" id="sub_block_panel" style="display: none">';
-            $product_relatives_block .= '<div class="panel-heading">';
-            $product_relatives_block .= '<h4>' . $this->pi_getLL('this_product_related_to_these_products', 'Sub related products:') . '</h4>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
-            $product_relatives_block .= '</div>';
+            // Cross-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="both_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_crosssell', 'Cross-sell :') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '        <div class="panel-body">';
+            $product_relatives_block .= '            <div id="both_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
 
+            // Opposite Up-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="main_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_opposite_upsell', 'Opposite up-sell:') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '       <div class="panel-body">';
+            $product_relatives_block .= '            <div id="main_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
+
+            $product_relatives_block .= '</div>'; // #block_panel_wrapper
         }
         /*
 		 * layout page
