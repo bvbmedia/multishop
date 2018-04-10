@@ -9,6 +9,16 @@ $order = array();
 if ($this->get['tx_multishop_pi1']['order_id'] && $this->ADMIN_USER) {
     $order_id = $this->get['tx_multishop_pi1']['order_id'];
     $order = mslib_fe::getOrder($order_id);
+    if (empty($order['hash'])) {
+        $hashcode = md5($order_id + time());
+        $updateArray = array();
+        $updateArray['hash'] = $hashcode;
+        $updateArray['orders_last_modified'] = time();
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $order_id, $updateArray);
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+        $order['hash']=$hashcode;
+    }
 } elseif ($this->get['tx_multishop_pi1']['order_hash']) {
     $order_hash = $this->get['tx_multishop_pi1']['order_hash'];
     $order = mslib_fe::getOrder($order_hash, 'hash');
