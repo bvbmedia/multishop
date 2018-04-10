@@ -359,7 +359,7 @@ if (mslib_fe::loggedin()) {
             $markerArray['###LABEL_LOGIN_DETAILS_DESCRIPTION###'] = $this->pi_getLL('login_details_description');
             $markerArray['###LABEL_EMAIL###'] = $this->pi_getLL('e-mail_address') . '<span class="text-danger">*</span>';
             $markerArray['###VALUE_EMAIL###'] = htmlspecialchars($this->post['email']);
-            $markerArray['###LABEL_EMAIL_CONFIRM###'] = $this->pi_getLL('confirm_email_address') . '<span class="text-danger">*</span>';
+            $markerArray['###LABEL_EMAIL_CONFIRM###'] = $this->pi_getLL('verify_email_address') . '<span class="text-danger">*</span>';
             $markerArray['###VALUE_EMAIL_CONFIRM###'] = htmlspecialchars($this->post['email_confirm']);
             $markerArray['###LABEL_PASSWORD###'] = $this->pi_getLL('password') . '<span class="text-danger">*</span>';
             $markerArray['###VALUE_PASSWORD###'] = htmlspecialchars($this->post['password']);
