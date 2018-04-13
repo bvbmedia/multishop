@@ -34,13 +34,7 @@ if (strpos($current_price, ':') !== false) {
         $current_price = str_replace(",", ".", $current_price);
     }
     $data = mslib_fe::getTaxRuleSet($tax_group_id, $current_price, $to_tax_include);
-    if ($to_tax_include) {
-        $data['price_including_tax_raw']=$data['price_including_tax'];
-        $data['price_including_tax'] = mslib_fe::taxDecimalCrop($data['price_including_tax'], 2, false);
-    }
     $data['price_excluding_tax'] = str_replace(',', '', $data['price_excluding_tax']);
-    $data['price_excluding_tax_raw']=$data['price_excluding_tax'];
-    $data['price_excluding_tax']=mslib_fe::taxDecimalCrop($data['price_excluding_tax'], 2, false);
 }
 $json_data = json_encode($data, ENT_NOQUOTES);
 echo $json_data;
