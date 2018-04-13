@@ -53,7 +53,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
             if (to_include_vat) {
                 if (tax_rate > 0) {
                     var priceIncludeVat = parseFloat(current_value + (current_value * (tax_rate / 100)));
-                    var incl_tax_crop = decimalCrop(priceIncludeVat);
+                    var incl_tax_crop = decimalCrop(priceIncludeVat, 2, true);
                     $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(incl_tax_crop);
                 } else {
                     $(o).parentsUntil('.msAttributesField').parent().next().children().find('input.form-control').val(original_val);
@@ -63,7 +63,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
             } else {
                 if (tax_rate > 0) {
                     var priceExcludeVat = parseFloat((current_value / (100 + tax_rate)) * 100);
-                    var excl_tax_crop = decimalCrop(priceExcludeVat);
+                    var excl_tax_crop = msDecimalCrop(priceExcludeVat, 2, true);
                     // update the excl. vat
                     $(o).parentsUntil('.msAttributesField').parent().prev().children().find('input.form-control').val(excl_tax_crop);
                     // update the hidden excl vat
@@ -90,7 +90,7 @@ function priceEditRealtimeCalc(to_include_vat, o, type, trigger_element) {
         }
     }
 }
-function decimalCrop(float, precision, enable) {
+function msDecimalCrop(float, precision, enable) {
     enable = typeof enable !== 'undefined' ? enable : false;
     precision = typeof precision !== 'undefined' ? precision : 2;
     if (enable) {
@@ -106,6 +106,9 @@ function decimalCrop(float, precision, enable) {
     } else {
         return float;
     }
+}
+function decimalCrop(float, precision, enable) {
+    return msDecimalCrop(float, precision, enable)
 }
 function CONFIRM(label) {
     if (confirm(label)) {
