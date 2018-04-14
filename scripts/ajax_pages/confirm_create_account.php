@@ -10,6 +10,8 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
     $updateArray['tx_multishop_optin_ip'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $user['uid'], $updateArray);
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+    // send e-mail
+    $send_email_click_confirmation = mslib_fe::sendCreateAccountClickConfirmationLetter($user['uid']);
     // auto login the user
     $loginData = array(
             'uname' => $user['username'],

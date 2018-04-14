@@ -136,6 +136,7 @@ if ($this->post['req'] == 'init') {
                         while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
                             $have_main_relation_type=false;
                             $have_sub_relation_type=false;
+                            $have_both_relation_type=false;
                             if (in_array($row2['products_id'], $main_relations_data)) {
                                 $have_main_relation_type=true;
                                 $relation_type='main';
@@ -144,15 +145,25 @@ if ($this->post['req'] == 'init') {
                                 $have_sub_relation_type=true;
                                 $relation_type='sub';
                             }
+                            if ($have_main_relation_type && $have_sub_relation_type) {
+                                $have_main_relation_type=false;
+                                $have_sub_relation_type=false;
+                                $have_both_relation_type=true;
+                                $relation_type='both';
+                            }
                             $relation_type_list=array();
                             $relation_type_list[]='main';
                             $relation_type_list[]='sub';
+                            $relation_type_list[]='both';
                             foreach ($relation_type_list as $rtype) {
                                 if (!in_array($row2['products_id'], $pid_regs[$rtype])) {
                                     if ($rtype=='main' && !$have_main_relation_type) {
                                         continue;
                                     }
                                     if ($rtype=='sub' && !$have_sub_relation_type) {
+                                        continue;
+                                    }
+                                    if ($rtype=='both' && !$have_both_relation_type) {
                                         continue;
                                     }
                                     $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['id'] = $row2['products_id'];
@@ -188,6 +199,7 @@ if ($this->post['req'] == 'init') {
                 if (isset($json_data['related_product'][$row['categories_id']])) {
                     $json_data['related_product'][$row['categories_id']]['have_main_relation_type']=$have_main_relation_type;
                     $json_data['related_product'][$row['categories_id']]['have_sub_relation_type']=$have_sub_relation_type;
+                    $json_data['related_product'][$row['categories_id']]['have_both_relation_type']=$have_both_relation_type;
                 }
             }
         }
@@ -392,6 +404,11 @@ if ($this->post['req'] == 'init') {
             $where_relatives = 'products_id = ' . $this->post['mpid'] . ' AND relative_product_id = ' . $this->post['spid'] . ' AND relation_types=\'cross-sell\'';
             $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_relative_products', $where_relatives);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            if ($this->post['reltype']=='both') {
+                $where_relatives = 'products_id = ' . $this->post['spid'] . ' AND relative_product_id = ' . $this->post['mpid'] . ' AND relation_types=\'cross-sell\'';
+                $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_relative_products', $where_relatives);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
             if ($res) {
                 $json_data['deleted'] = "OK";
             }
@@ -457,7 +474,7 @@ if ($this->post['req'] == 'init') {
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     if ($res) {
-                        $status[$relation_type] = "OK";
+                        $status['both'] = "OK";
                     }
                 }
             }

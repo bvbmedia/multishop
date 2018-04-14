@@ -6751,7 +6751,7 @@ class mslib_fe {
         }
     }
     public function getOrderStatusName($id, $language_id = 0) {
-        if ($language_id == '') {
+        if (!is_numeric($language_id)) {
             $language_id = $GLOBALS['TSFE']->sys_language_uid;
         }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'o.id=\'' . $id . '\' and od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->shop_pid . '\' or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.id=od.orders_status_id', '', '', '');
@@ -8051,7 +8051,8 @@ class mslib_fe {
             //admin_system_update_catalog_languages
             // footer eof
         } // end if enableAdminPanelSystem
-        if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
+        if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) {
+        //if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label'] = $this->pi_getLL('admin_multishop_settings');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_modules');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class'] = 'fa fa-cog';
@@ -8911,7 +8912,7 @@ class mslib_fe {
                             $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-                            if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
+                            if (($value['qty']>1 && $row['products_quantity'] <= $row['alert_quantity_threshold']) || ($row['products_quantity'] == $row['alert_quantity_threshold'])) {
                                 $page = mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
                                 if ($page[0]['content']) {
                                     // loading the email confirmation letter eof
@@ -8921,7 +8922,7 @@ class mslib_fe {
                                     $array1[] = '###ORDERED_QTY###';
                                     $array2[] = $value['qty'];
                                     $array1[] = '###CURRENT_PRODUCT_QUANTITY###';
-                                    $array2[] = $row['products_id'];
+                                    $array2[] = $row['products_quantity'];
                                     $array1[] = '###PRODUCTS_ID###';
                                     $array2[] = $value['products_id'];
                                     $array1[] = '###PRODUCT_NAME###';
@@ -8972,7 +8973,7 @@ class mslib_fe {
                             $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-                            if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
+                            if (($value['qty']>1 && $row['products_quantity'] <= $row['alert_quantity_threshold']) || ($row['products_quantity'] == $row['alert_quantity_threshold'])) {
                                 $page = mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
                                 if ($page[0]['content']) {
                                     // loading the email confirmation letter eof
@@ -10900,6 +10901,81 @@ class mslib_fe {
                     'user' => $newCustomer
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountConfirmationLetter'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($page[0]['content']) {
+                $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
+            }
+            if ($page[0]['name']) {
+                $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+            }
+            $user = array();
+            $user['name'] = $newCustomer['first_name'];
+            $user['email'] = $newCustomer['email'];
+            mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+            return true;
+        }
+    }
+    function sendCreateAccountClickConfirmationLetter($customer_id) {
+        if (!is_numeric($customer_id)) {
+            return false;
+        }
+        $page = mslib_fe::getCMScontent('email_create_account_completed', $GLOBALS['TSFE']->sys_language_uid);
+        if ($page[0]['content']) {
+            $newCustomer = mslib_fe::getUser($customer_id);
+            // loading the email confirmation letter eof
+            // replacing the variables with dynamic values
+            $array1 = array();
+            $array2 = array();
+            $array1[] = '###GENDER_SALUTATION###';
+            $array2[] = mslib_fe::genderSalutation($newCustomer['gender']);
+            $array1[] = '###BILLING_COMPANY###';
+            $array2[] = $newCustomer['company'];
+            $array1[] = '###FULL_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FULL_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_NAME###';
+            $array2[] = $newCustomer['name'];
+            $array1[] = '###BILLING_FIRST_NAME###';
+            $array2[] = $newCustomer['first_name'];
+            $array1[] = '###BILLING_LAST_NAME###';
+            $last_name = $newCustomer['last_name'];
+            if ($newCustomer['middle_name']) {
+                $last_name = $newCustomer['middle_name'] . ' ' . $last_name;
+            }
+            $array2[] = $last_name;
+            $array1[] = '###CUSTOMER_EMAIL###';
+            $array2[] = $newCustomer['email'];
+            $array1[] = '###BILLING_EMAIL###';
+            $array2[] = $newCustomer['email'];
+            $array1[] = '###BILLING_ADDRESS###';
+            $array2[] = $newCustomer['address'];
+            $array1[] = '###BILLING_TELEPHONE###';
+            $array2[] = $newCustomer['telephone'];
+            $array1[] = '###BILLING_MOBILE###';
+            $array2[] = $newCustomer['mobile'];
+            $array1[] = '###LONG_DATE###'; // ie woensdag 23 juni, 2010
+            $long_date = strftime($this->pi_getLL('full_date_format'));
+            $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+            $long_date = strftime($this->pi_getLL('full_date_format'));
+            $array2[] = $long_date;
+            $array1[] = '###CURRENT_DATE###'; // 21-12-2010 in localized format
+            $array2[] = strftime("%x");
+            $array1[] = '###STORE_NAME###';
+            $array2[] = $this->ms['MODULES']['STORE_NAME'];
+            $array1[] = '###CUSTOMER_ID###';
+            $array2[] = $customer_id;
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountClickConfirmationLetter'])) {
+                $params = array(
+                        'array1' => &$array1,
+                        'array2' => &$array2,
+                        'user' => $newCustomer
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['sendCreateAccountClickConfirmationLetter'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }

@@ -40,7 +40,7 @@ if (count($shopPids)) {
                             $catpath[] = $cat['name'];
                         }
                         if (count($catpath) > 0) {
-                            $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $shopPid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . implode(' > ', $catpath) . '"};';
+                            $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $shopPid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . addslashes(implode(' > ', $catpath)) . '"};';
                         }
                     }
                 }
@@ -60,7 +60,7 @@ if (count($shopPids)) {
                 $catpath[] = $cat['name'];
             }
             if (count($catpath) > 0) {
-                $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $this->shop_pid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . implode(' > ', $catpath) . '"};';
+                $jsSelect2InitialValue[] = 'categoriesIdTerm[' . $this->shop_pid . '][' . $category_id . ']={id:"' . $category_id . '", text:"' . addslashes(implode(' > ', $catpath)) . '"};';
             }
         }
     }
@@ -940,7 +940,7 @@ if ($this->post and $_FILES) {
         if ($i == 0) {
             $i = '';
         }
-        if ($this->post['ajax_products_image' . $i]) {
+        if ($this->post['ajax_products_image'][$x]) {
             $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
         }
     }
@@ -1041,6 +1041,22 @@ if ($this->post) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
     }
+    if (count($this->post['ajax_products_image']) && !count($update_product_images)) {
+        $update_product_images = array();
+        if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
+            $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES'] = 5;
+        }
+        for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+            // hidden filename that is retrieved from the ajax upload
+            $i = $x;
+            if ($i == 0) {
+                $i = '';
+            }
+            if ($this->post['ajax_products_image'][$x]) {
+                $update_product_images['products_image' . $i] = $this->post['ajax_products_image'][$x];
+            }
+        }
+    }
     // custom hook that can be controlled by third-party plugin eof
     // updating products table
     $updateArray = array();
@@ -1059,6 +1075,31 @@ if ($this->post) {
     }
     if ($this->post['specials_new_products_price'] and strstr($this->post['specials_new_products_price'], ",")) {
         $this->post['specials_new_products_price'] = str_replace(",", ".", $this->post['specials_new_products_price']);
+    }
+    if ($this->post['tax_id']) {
+        $tax_rate=mslib_fe::getTaxRuleSet($this->post['tax_id']);
+        $total_tax_rate=$tax_rate['total_tax_rate'];
+    }
+    if ($this->post['product_capital_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['product_capital_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['product_capital_price']=$product_price_excl_vat;
+    }
+    if ($this->post['products_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['products_price']=$product_price_excl_vat;
+    }
+    if ($this->post['specials_new_products_price'] && $total_tax_rate) {
+        $product_price_incl_vat = number_format($this->post['specials_new_products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+        $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
+        $this->post['specials_new_products_price']=$product_price_excl_vat;
     }
     if ($this->post['products_date_available']) {
         $updateArray['products_date_available'] = strtotime($this->post['products_date_available']);
@@ -1145,6 +1186,14 @@ if ($this->post) {
                     $col_vals[1] = 99999;
                 }
                 $col_val = implode('-', $col_vals);
+                // get excl vat price accurately
+                if ($this->post['staffel_price'][$row_idx] && $total_tax_rate) {
+                    $product_price_incl_vat = number_format($this->post['staffel_price'][$row_idx] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+                    $product_price_incl_vat = round($product_price_incl_vat, 2);
+
+                    $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+                    $this->post['staffel_price'][$row_idx] = $product_price_excl_vat;
+                }
                 $sprice = $this->post['staffel_price'][$row_idx];
                 $staffel_price_data[$row_idx] = $col_val . ':' . $sprice;
             }
@@ -2337,23 +2386,28 @@ if ($this->post) {
                 $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
             }
         }
-        if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && is_numeric($this->get['pid']) && $this->get['pid'] > 0 && isset($this->post['default_path_categories_id'])) {
+        if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && isset($this->post['default_path_categories_id'])) {
+            if (isset($this->post['save_as_new']) && $prodid>0) {
+                $pid=$prodid;
+            } else if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid=$this->get['pid'];
+            }
             $updatePreviousValue = array();
             $updatePreviousValue['default_path'] = 0;
-            $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\'' . $this->get['pid'] . '\'', $updatePreviousValue);
+            $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\'' . $pid . '\'', $updatePreviousValue);
             $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             // update the new one
             if (is_numeric($this->post['default_path_categories_id'])) {
-                $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
+                $product_path = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories', 'products_id', array('categories_id=' . $this->post['default_path_categories_id']));
                 if (!is_array($product_path)) {
-                    $product_path = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
+                    $product_path = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
                     if (is_array($product_path) && count($product_path)) {
                         $this->post['default_path_categories_id']=$product_path['node_id'];
                     }
                 }
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
-                $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $this->get['pid'] . '\'', $updateArray);
+                $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $pid . '\'', $updateArray);
                 $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             }
         }
@@ -4202,31 +4256,44 @@ if ($this->post) {
             $product_relatives_block .= '</div>';
 
             $product_relatives_block .= '<div class="row" id="block_panel_wrapper" style="display: none">';
-            $product_relatives_block .= '<div class="col-md-6">';
-            // main block
-            $product_relatives_block .= '<div class="panel panel-default" id="main_block_panel" style="display: none">';
-            $product_relatives_block .= '<div class="panel-heading">';
-            $product_relatives_block .= '<h4>' . $this->pi_getLL('these_products_related_to_this_product', 'Main related products:') . '</h4>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
-            $product_relatives_block .= '</div>';
+
+            // Up-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="sub_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_upsell', 'Up-sell') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '        <div class="panel-body">';
+            $product_relatives_block .= '            <div id="sub_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
 
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="col-md-6">';
-            // sub block
-            $product_relatives_block .= '<div class="panel panel-default" id="sub_block_panel" style="display: none">';
-            $product_relatives_block .= '<div class="panel-heading">';
-            $product_relatives_block .= '<h4>' . $this->pi_getLL('this_product_related_to_these_products', 'Sub related products:') . '</h4>';
-            $product_relatives_block .= '</div>';
-            $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
-            $product_relatives_block .= '</div>';
+            // Cross-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="both_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_crosssell', 'Cross-sell') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '        <div class="panel-body">';
+            $product_relatives_block .= '            <div id="both_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
 
+            // Opposite Up-sell block
+            $product_relatives_block .= '<div class="col-md-4">';
+            $product_relatives_block .= '    <div class="panel panel-default" id="main_block_panel" style="display: none">';
+            $product_relatives_block .= '        <div class="panel-heading">';
+            $product_relatives_block .= '            <h4>' . $this->pi_getLL('admin_related_products_opposite_upsell', 'Opposite up-sell') . '</h4>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '       <div class="panel-body">';
+            $product_relatives_block .= '            <div id="main_related_product_placeholder"></div>';
+            $product_relatives_block .= '        </div>';
+            $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
-            $product_relatives_block .= '</div>';
+
+            $product_relatives_block .= '</div>'; // #block_panel_wrapper
         }
         /*
 		 * layout page

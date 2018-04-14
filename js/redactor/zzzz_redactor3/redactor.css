@@ -3,7 +3,7 @@
 
     http://imperavi.com/redactor/
 
-    Copyright (c) 2009-2018, Imperavi LLC.
+    Copyright (c) 2009-2017, Imperavi LLC.
     License: http://imperavi.com/redactor/license/
 */
 @keyframes fadeIn {
@@ -214,9 +214,6 @@
   .redactor-in:focus {
     outline: none; }
 
-.redactor-inline .redactor-in {
-  overflow: hidden; }
-
 .redactor-in *,
 .redactor-read-only * {
   outline: none !important; }
@@ -273,9 +270,6 @@ h6:empty,
   display: block;
   position: absolute;
   z-index: 1; }
-
-.redactor-component[data-redactor-type=image] {
-  clear: both; }
 
 .redactor-component[data-redactor-type=variable] {
   white-space: nowrap;
@@ -807,14 +801,6 @@ h6:empty,
     margin-bottom: 20px; }
   .redactor-modal .form-item:last-child {
     margin-bottom: 0; }
-  .redactor-modal fieldset {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-    padding: 16px;
-    padding-bottom: 20px;
-    margin-bottom: 20px; }
-    .redactor-modal fieldset .form-item {
-      margin-bottom: 12px; }
   .redactor-modal label {
     display: block;
     color: #555;
@@ -949,12 +935,17 @@ h6:empty,
     .redactor-modal button.redactor-button-secondary:hover {
       color: rgba(42, 46, 52, 0.6);
       border-color: rgba(42, 46, 52, 0.5); }
-  .redactor-modal button.redactor-button-danger,
+  .redactor-modal button.redactor-button-danger {
+    margin-left: 8px;
+    border-color: #ff3265;
+    color: #ff3265; }
+    .redactor-modal button.redactor-button-danger:hover {
+      color: rgba(255, 50, 101, 0.6);
+      border-color: rgba(255, 50, 101, 0.5); }
   .redactor-modal button.redactor-button-unstyled {
     background: none;
     border-color: transparent;
     color: rgba(42, 46, 52, 0.6); }
-    .redactor-modal button.redactor-button-danger:hover,
     .redactor-modal button.redactor-button-unstyled:hover {
       background: none;
       border-color: transparent;
