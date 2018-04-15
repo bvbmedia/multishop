@@ -811,6 +811,19 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                     if (isset($this->post['order_payment_condition'])) {
                         $updateArray['payment_condition'] = $this->post['order_payment_condition'];
+                        if ($this->get['orders_id'] && $this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+                            $filter = array();
+                            $filter[] = 'orders_id=' . $this->get['orders_id'];
+                            $invoices = mslib_befe::getRecords('', 'tx_multishop_invoices', '', $filter, '', 'id desc');
+                            if (is_array($invoices) && count($invoices)) {
+                                foreach ($invoices as $invoice) {
+                                    $updateInvoiceArray=array();
+                                    $updateInvoiceArray['payment_condition']=$this->post['order_payment_condition'];
+                                    $queryUpdInvoice = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\'' . $invoice['id'] . '\'', $updateInvoiceArray);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdInvoice);
+                                }
+                            }
+                        }
                     }
                     //
                     $billing_name = '';
