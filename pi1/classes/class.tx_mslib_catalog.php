@@ -24,10 +24,12 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_catalog {
-    function getCategoryByName($categories_name = '', $parent_id='') {
+    function getCategoryByName($categories_name = '', $parent_id='', $enabled_category_only=true) {
         $filter = array();
         $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
-        $filter[] = 'c.status = \'1\'';
+        if ($enabled_category_only) {
+            $filter[] = 'c.status = \'1\'';
+        }
         if($parent_id !='' && is_numeric($parent_id)) {
             $filter[] = 'c.parent_id=\'' . addslashes($parent_id) . '\'';
         }
@@ -1075,6 +1077,60 @@ class tx_mslib_catalog {
                 }
             }
             //return true;
+        }
+    }
+    function moveProductToCrum($product_id, $crum_paths=array(), $force=0) {
+        if (!is_numeric($product_id)) {
+            return false;
+        }
+        if (!is_array($crum_paths)) {
+            return false;
+        }
+        $path_count=count($crum_paths);
+        if (is_array($crum_paths) && !$path_count) {
+            return false;
+        }
+        $parent_id=0;
+        $create_category=false;
+        $cat_ids=array();
+        foreach ($crum_paths as $idx => $crum_path) {
+            $category=tx_mslib_catalog::getCategoryByName($crum_path, $parent_id, false);
+            if ($category['categories_id']) {
+                $cat_ids[]=$category['categories_id'];
+                $parent_id=$category['categories_id'];
+            } else {
+                $create_category=true;
+                if ($force) {
+                    $data = array();
+                    $data['parent_id'] = $parent_id;
+                    $data['categories_name'] = $crum_path;
+                    $data['language_id'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+                    $new_category_id = tx_mslib_catalog::createCategory($data);
+                    if ($new_category_id) {
+                        $cat_ids[]=$new_category_id;
+                        $parent_id=$new_category_id;
+                    }
+                }
+            }
+        }
+
+        if ($create_category && !$force) {
+            return false;
+        }
+        $count_cat_ids=count($cat_ids);
+        if ($count_cat_ids==$path_count) {
+            // remove the linking from previous cat
+            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $product_id);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            // insert new linking
+            $deepest_cat=$cat_ids[$count_cat_ids-1];
+            $insertArray = array();
+            $insertArray['products_id'] = $product_id;
+            $insertArray['categories_id'] = $deepest_cat;
+            $insertArray['sort_order'] = time();
+            // create categories tree linking
+            tx_mslib_catalog::linkCategoriesTreeToProduct($product_id, $deepest_cat, $insertArray);
+            return true;
         }
     }
 }
