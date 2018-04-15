@@ -462,7 +462,11 @@ if ($this->get['orders_export_hash']) {
                         $excelCols[] = strftime('%x', $row['orders_last_modified']);
                         break;
                     case 'order_expected_delivery_date':
-                        $excelCols[] = strftime('%x', $row['expected_delivery_date']);
+                        if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                            $array2[] = strftime("%x %T", $order['expected_delivery_date']);
+                        } else {
+                            $excelCols[] = strftime('%x', $row['expected_delivery_date']);
+                        }
                         break;
                     case 'order_by_phone':
                         $excelCols[] = ($row['by_phone'] > 0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));

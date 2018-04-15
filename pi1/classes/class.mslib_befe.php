@@ -3304,13 +3304,21 @@ class mslib_befe {
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
                 if ($order['expected_delivery_date'] > 0) {
-                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                        $array2[] = strftime("%x %T", $order['expected_delivery_date']);
+                    } else {
+                        $array2[] = strftime("%x", $order['expected_delivery_date']);
+                    }
                 } else {
                     $array2[] = '';
                 }
                 $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
                 if ($order['expected_delivery_date'] > 0) {
-                    $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                        $array2[] = strftime("%x %T", $order['expected_delivery_date']);
+                    } else {
+                        $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                    }
                 } else {
                     $array2[] = '';
                 }
