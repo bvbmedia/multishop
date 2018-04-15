@@ -24,14 +24,17 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_catalog {
-    function getCategoryByName($categories_name = '') {
+    function getCategoryByName($categories_name = '', $parent_id='') {
         $filter = array();
         $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
         $filter[] = 'c.status = \'1\'';
+        if($parent_id !='' && is_numeric($parent_id)) {
+            $filter[] = 'c.parent_id=\'' . addslashes($parent_id) . '\'';
+        }
+        $filter[] = 'cd.language_id=' . $this->sys_language_uid . '';
         if ($categories_name) {
             $filter[] = 'cd.categories_name=\'' . addslashes($categories_name) . '\'';
         }
-        $filter[] = 'cd.language_id=' . $this->sys_language_uid . '';
         $filter[] = 'c.categories_id=cd.categories_id';
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
                 'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
