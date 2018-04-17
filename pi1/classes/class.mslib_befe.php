@@ -5381,6 +5381,7 @@ class mslib_befe {
                     if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                         $classes[] = $settings['cellClasses'][$cellCounter];
                     }
+                    $classes[] = 'cell' . ($cellCounter + 1);
                     $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colName . '</th>';
                     $cellCounter++;
                 }
@@ -5398,6 +5399,7 @@ class mslib_befe {
                     if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                         $classes[] = $settings['cellClasses'][$cellCounter];
                     }
+                    $classes[] = 'cell' . ($cellCounter + 1);
                     $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
