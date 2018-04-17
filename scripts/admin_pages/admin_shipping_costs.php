@@ -128,6 +128,16 @@ if ($this->post) {
         $update_shipping['shipping_costs_type'] = $shipping_type;
         $query_update_shipping = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', "id = " . $shipping_id, $update_shipping);
         $res_update_ship = $GLOBALS['TYPO3_DB']->sql_query($query_update_shipping);
+        // hook to add shipping cost type
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateShippingCost'])) {
+            $params = array(
+                'shipping_id' => &$shipping_id,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateShippingCost'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+// hook to add shipping cost type eof
     } // end for POST
 } //end if post
 $str = "SELECT * from tx_multishop_zones order by name";
@@ -266,6 +276,19 @@ if (count($shipping_methods) > 0) {
 							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value[' . $zone_pid . ']" class="priceInputReal" value="' . $free_shippingcosts . '"></div>
 						</div>
 					</div>';
+                // hook to process custom visual shipping cost type
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeFlat'])) {
+                    $params = array(
+                            'row' => &$row,
+                            'row3' => &$row3,
+                            'zone' => &$zone,
+                            'content' => &$content
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeFlat'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                // hook to process custom visual shipping cost type eof
                 $content .= '</div></div>';
                 //
                 $zone_index++;
@@ -411,6 +434,19 @@ if (count($shipping_methods) > 0) {
 							</div>
 						</div>
 					';
+                    // hook to process custom visual shipping cost type
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeWeight'])) {
+                        $params = array(
+                            'row' => &$row,
+                            'row3' => &$row3,
+                            'zone' => &$zone,
+                            'content' => &$content
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeWeight'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
+                    // hook to process custom visual shipping cost type eof
                     $content .= '</div>';
                     $content .= '<script type="text/javascript">';
                     $content .= "</script>";

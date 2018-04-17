@@ -1438,6 +1438,7 @@
             <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
             <label index="updated_by">Updated by</label>
             <label index="email_create_account_completed">E-mail create account completed</label>
+            <label index="basket_contain_unorderable_free_products">Basket contains free products. These are not orderable.</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2850,6 +2851,7 @@
             <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
             <label index="updated_by">Geactualiseerd door</label>
             <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>
+            <label index="basket_contain_unorderable_free_products">Winkelwagen bevat gratis producten. Deze zijn niet te bestellen.</label>
         </languageKey>
     </data>
 </T3locallang>

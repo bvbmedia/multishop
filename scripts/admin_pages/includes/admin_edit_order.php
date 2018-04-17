@@ -811,6 +811,19 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                     if (isset($this->post['order_payment_condition'])) {
                         $updateArray['payment_condition'] = $this->post['order_payment_condition'];
+                        if ($this->get['orders_id'] && $this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+                            $filter = array();
+                            $filter[] = 'orders_id=' . $this->get['orders_id'];
+                            $invoices = mslib_befe::getRecords('', 'tx_multishop_invoices', '', $filter, '', 'id desc');
+                            if (is_array($invoices) && count($invoices)) {
+                                foreach ($invoices as $invoice) {
+                                    $updateInvoiceArray=array();
+                                    $updateInvoiceArray['payment_condition']=$this->post['order_payment_condition'];
+                                    $queryUpdInvoice = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\'' . $invoice['id'] . '\'', $updateInvoiceArray);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdInvoice);
+                                }
+                            }
+                        }
                     }
                     //
                     $billing_name = '';
@@ -2105,13 +2118,13 @@ if (is_numeric($this->get['orders_id'])) {
                     } else {
                         $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . htmlspecialchars($orders['payment_condition'] . ' ' . $this->pi_getLL('days')) . '</p></div>';
                     }
-                    $orderDetailsItem .= '</div><hr>';
+                    $orderDetailsItem .= '</div>';
                     $orderDetails[] = $orderDetailsItem;
                 }
             }
             $orderDetailsItem = '';
             if ($orders['customer_comments']) {
-                $orderDetailsItem = '<div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
+                $orderDetailsItem = '<hr><div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
                     <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">' . nl2br($orders['customer_comments']) . '</div></div></div>
                 </div>';
                 $orderDetails[] = $orderDetailsItem;
@@ -4493,8 +4506,14 @@ if (is_numeric($this->get['orders_id'])) {
             $order_status_input .= '</select></div>';
         }
         if ($orders['expected_delivery_date']) {
-            $expected_delivery_date_local = date("d-m-Y", $orders['expected_delivery_date']);
-            $expected_date = date("Y-m-d", $orders['expected_delivery_date']);
+            $format_locale=date("d-m-Y", $orders['expected_delivery_date']);
+            $format_intl=date("Y-m-d", $orders['expected_delivery_date']);
+            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                $format_locale=date("d-m-Y H:i:s", $orders['expected_delivery_date']);
+                $format_intl=date("Y-m-d H:i:s", $orders['expected_delivery_date']);
+            }
+            $expected_delivery_date_local = $format_locale;
+            $expected_date = $format_intl;
         }
         $order_status_tab_content['order_status'] = '<div class="form-group"><label for="order_status" class="control-label col-md-2">' . $this->pi_getLL('order_status') . '</label>' . $order_status_input . '</div>';
         $order_status_tab_content['expected_delivery_date'] = '<div class="form-group">
@@ -4548,6 +4567,20 @@ if (is_numeric($this->get['orders_id'])) {
                 $(document).on("keydown keyup", "#shipping_method_costs", function(){
                     $("#shipping_costs_manual").val("1"); 
                 });
+                '.($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1' ? '
+                $("#expected_delivery_date_local").datetimepicker({
+                    dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'dd/mm/yy') . '",
+                    altField: "#expected_delivery_date",
+                    altFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    showOtherMonths: true,
+                    yearRange: "' . (date("Y")) . ':' . (date("Y") + 2) . '",
+                    timeFormat: \'HH:mm:ss\',
+                    altFieldTimeOnly: false,
+                    altTimeFormat: "HH:mm:ss"
+                });
+                ' : '
                 $("#expected_delivery_date_local").datepicker({
                     dateFormat: "dd-mm-yy",
                     minDate: 0,
@@ -4558,6 +4591,7 @@ if (is_numeric($this->get['orders_id'])) {
                     showOtherMonths: true,
                     yearRange: "' . (date("Y")) . ':' . (date("Y") + 2) . '"
                 });
+                ').'
             });
          </script>
          ';

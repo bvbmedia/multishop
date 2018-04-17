@@ -58,7 +58,6 @@ $logs_xml_file_reg=1;
 // links line counter
 $logs_xml_lines_reg=0;
 $prefix_domain = $this->FULL_HTTP_URL;
-
 $log_xml_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_xml_file_reg_cache';
 $previous_xml_log_file_reg_cache=file_get_contents($log_xml_file_reg_cache);
 if ($previous_xml_log_file_reg_cache>1) {
@@ -90,7 +89,6 @@ $link = $prefix_domain . mslib_fe::typolink($this->shop_pid);
 $tmpContent = $link . "\n";
 file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
 $logs_lines_reg++;
-
 // XML
 $tmpXMLContentHeader[] = '<url>' . "\n";
 $tmpXMLContentHeader[] = "\t" . '<loc>' . $link . '</loc>' . "\n";
@@ -99,7 +97,6 @@ $tmpXMLContentHeader[] = "\t" . '<changefreq>daily</changefreq>' . "\n";
 $tmpXMLContentHeader[] = "\t" . '<priority>0.5</priority>' . "\n";
 $tmpXMLContentHeader[] = '</url>' . "\n";
 //file_put_contents($log_xml_file, $tmpContent, FILE_APPEND | LOCK_EX);
-
 $tmpContent = '';
 if (!$this->get['skip_categories']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id=cd.categories_id and c.status=1 and c.page_uid='" . $this->showCatalogFromPage . "' and cd.language_id=" . $this->sys_language_uid);
@@ -254,8 +251,6 @@ if (!$this->get['skip_manufacturers']) {
 $tmpXMLContentFooter=array();
 $tmpXMLContentFooter[] ='</urlset>';
 //file_put_contents($log_xml_file, $tmpContent, FILE_APPEND | LOCK_EX);
-
-
 $tmpContent = '';
 if ($logs_file_reg>1) {
     $sitemap_file_web_path_list=array();
@@ -306,15 +301,20 @@ if ($logs_xml_file_reg>1) {
     }
 } else {
     @unlink($sitemap_xml_file);
-    @copy($log_xml_file, $sitemap_xml_file);
+    $log_xml_file_iterate=file_get_contents($log_xml_file);
+    // append & prepend XML Header and Footer
+    $XMLContent=implode('', $tmpXMLContentHeader);
+    $XMLContent.=$log_xml_file_iterate;
+    $XMLContent.=implode('', $tmpXMLContentFooter);
+    // write content
+    file_put_contents($sitemap_xml_file, $XMLContent, LOCK_EX);
 }
-
+// txt cache file
 @unlink($log_file_reg_cache);
 file_put_contents($log_file_reg_cache, $logs_file_reg, FILE_APPEND | LOCK_EX);
-
+// xml cache file
 @unlink($log_xml_file_reg_cache);
 file_put_contents($log_xml_file_reg_cache, $logs_xml_file_reg, FILE_APPEND | LOCK_EX);
-
 $content .= '<div class="main-heading"><h1>' . $this->pi_getLL('admin_label_sitemap_creator') . '</h1></div>';
 $content .= '<p>' . $this->pi_getLL('admin_label_your_sitemap_has_been_created') . '</p>' . $this->pi_getLL('admin_label_you_can_download_it_here') . ':<br/>';
 if (is_array($sitemap_file_web_path_list) && count($sitemap_file_web_path_list)>0) {

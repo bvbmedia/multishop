@@ -7,6 +7,58 @@ require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multis
 $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart = $mslib_cart->getCart();
+if ($this->ms['MODULES']['DISABLE_VAT_RATE_WHEN_CROSS_BORDERS']) {
+    // if store country is different than customer country change VAT rate to zero
+    if ($cart['user']['country']) {
+        $iso_customer = mslib_fe::getCountryByName($cart['user']['country']);
+        if ($iso_customer['cn_iso_nr'] != $this->ms['MODULES']['COUNTRY_ISO_NR']) {
+            $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+        }
+    }
+    // if store country is different than customer country change VAT rate to zero eof
+}
+if ($this->ms['MODULES']['VALIDATE_CHECKOUT_ON_DISABLED_PRODUCTS'] > 0) {
+    $no_products = array();
+    foreach ($cart['products'] as $product) {
+        $product_status = mslib_fe::checkoutValidateProductStatus($product['products_id']);
+        if (!$product_status) {
+            $no_products[] = '<li>' . $product['products_name'] . '</li>';
+        }
+    }
+    if (count($no_products)) {
+        $erno[] = '<div>' . $this->pi_getLL('the_following_products_are_no_longer_available') . ':
+            <ul class="removed_products_list">
+                ' . implode("\n", $no_products) . '                
+            </ul>
+            <span>' . sprintf($this->pi_getLL('please_goto_shoppingcart_to_remove_the_products'), '<a href="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart') . '">' . $this->pi_getLL('shopping_cart') . '</a>') . '</span>
+        </div>';
+    }
+}
+if ($this->ms['MODULES']['ALLOW_PURCHASE_FREE_PRODUCTS']=='0') {
+    $no_products = array();
+    $cart_products = $cart['products'];
+    foreach ($cart_products as $shopping_cart_item => $product) {
+        $staffel_price=0;
+        if ($product['staffel_price']) {
+            $staffel_price = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $product['qty']) / $product['qty']);
+        }
+        if ($product['products_price'] < 0.1 && $product['specials_new_products_price'] < 0.1 && !$staffel_price) {
+            $no_products[] = '<li>' . $product['products_name'] . '</li>';
+            // remove the products with id 0
+            //unset($cart['products'][$shopping_cart_item]);
+            //tx_mslib_cart::storeCart($cart);
+            //$cart = $mslib_cart->getCart();
+        }
+    }
+    if (count($no_products)) {
+        $erno[] = '<div>' . $this->pi_getLL('basket_contain_unorderable_free_products') . ':
+            <ul class="removed_products_list">
+                ' . implode("\n", $no_products) . '                
+            </ul>
+            <span>' . sprintf($this->pi_getLL('please_goto_shoppingcart_to_remove_the_products'), '<a href="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart') . '">' . $this->pi_getLL('shopping_cart') . '</a>') . '</span>
+        </div>';
+    }
+}
 if (count($cart['products']) < 1) {
     $content .= '<div class="noitems_message">' . $this->pi_getLL('there_are_no_products_in_your_cart') . '</div>';
 } else {

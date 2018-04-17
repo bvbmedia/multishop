@@ -2782,6 +2782,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Add Hours details to expected delivery date in edit order',
+        'configuration_key' => 'ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE',
+        'configuration_value' => '0',
+        'description' => 'Add Hours details to expected delivery date in edit order',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Allow purchase free products',
+        'configuration_key' => 'ALLOW_PURCHASE_FREE_PRODUCTS',
+        'configuration_value' => '0',
+        'description' => 'Allow purchase free products',
+        'group_id' => '8',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {

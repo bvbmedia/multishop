@@ -637,6 +637,16 @@ if (isset($this->get['stock_from']) && $this->get['stock_from']!='' && isset($th
     $prefix = 'p.';
     $filter[] = "(" . $prefix . "products_quantity between " . $this->get['stock_from'] . " and " . $this->get['stock_till'] . ")";
 }
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'])) {
+    $params = array(
+        'filter' => &$filter,
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// custom page hook that can be controlled by third-party plugin eof
 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
 $products = $pageset['products'];
 $product_tax_rate_js = array();
@@ -1034,6 +1044,8 @@ $subpartArray['###LABEL_CONDITION_USED###'] = $this->pi_getLL('used');
 $subpartArray['###LABEL_CONDITION_REFURBISHED###'] = $this->pi_getLL('refurbished');
 $subpartArray['###LABEL_CONDITION_ALL###'] = $this->pi_getLL('all');
 
+
+
 // order unit
 $order_unit_selectbox = '<select name="order_unit_id" class="form-control">';
 $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
@@ -1150,6 +1162,24 @@ $objRef->setHeaderButtons($headerButtons);
 $interfaceHeaderButtons = $objRef->renderHeaderButtons();
 // Get header buttons through interface class so we can render them
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
+// extra input
+$extra_advanced_search_input=array();
+$extra_advanced_search_input_new_row=array();
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionMarkerPostProc'])) {
+    $params = array(
+        'subpartArray' => &$subpartArray,
+        'extra_advanced_search_input' => &$extra_advanced_search_input,
+        'extra_advanced_search_input_new_row' => &$extra_advanced_search_input_new_row
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionMarkerPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// custom page hook that can be controlled by third-party plugin eof
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT###'] = implode('', $extra_advanced_search_input);
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_NEW_ROW###'] = implode('', $extra_advanced_search_input_new_row);
+
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shadowBox($content) . '</div>';
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">

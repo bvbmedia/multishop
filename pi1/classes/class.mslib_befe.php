@@ -3304,13 +3304,21 @@ class mslib_befe {
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
                 if ($order['expected_delivery_date'] > 0) {
-                    $array2[] = strftime("%x", $order['expected_delivery_date']);
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                        $array2[] = strftime("%x %T", $order['expected_delivery_date']);
+                    } else {
+                        $array2[] = strftime("%x", $order['expected_delivery_date']);
+                    }
                 } else {
                     $array2[] = '';
                 }
                 $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
                 if ($order['expected_delivery_date'] > 0) {
-                    $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                        $array2[] = strftime("%x %T", $order['expected_delivery_date']);
+                    } else {
+                        $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
+                    }
                 } else {
                     $array2[] = '';
                 }
@@ -5369,7 +5377,12 @@ class mslib_befe {
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
                         $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
-                    $content .= '<th' . $inlineStyle . '>' . $colName . '</th>';
+                    $classes = array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[] = $settings['cellClasses'][$cellCounter];
+                    }
+                    $classes[] = 'cell' . ($cellCounter + 1);
+                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
@@ -5382,7 +5395,12 @@ class mslib_befe {
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
                         $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
-                    $content .= '<th' . $inlineStyle . '>' . $colVal . '</th>';
+                    $classes = array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[] = $settings['cellClasses'][$cellCounter];
+                    }
+                    $classes[] = 'cell' . ($cellCounter + 1);
+                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
