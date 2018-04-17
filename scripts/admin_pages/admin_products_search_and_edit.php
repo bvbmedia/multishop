@@ -637,6 +637,16 @@ if (isset($this->get['stock_from']) && $this->get['stock_from']!='' && isset($th
     $prefix = 'p.';
     $filter[] = "(" . $prefix . "products_quantity between " . $this->get['stock_from'] . " and " . $this->get['stock_till'] . ")";
 }
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'])) {
+    $params = array(
+        'filter' => &$filter,
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// custom page hook that can be controlled by third-party plugin eof
 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
 $products = $pageset['products'];
 $product_tax_rate_js = array();
@@ -1158,6 +1168,7 @@ $extra_advanced_search_input_new_row=array();
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionMarkerPostProc'])) {
     $params = array(
+        'subpartArray' => &$subpartArray,
         'extra_advanced_search_input' => &$extra_advanced_search_input,
         'extra_advanced_search_input_new_row' => &$extra_advanced_search_input_new_row
     );
