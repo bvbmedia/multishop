@@ -2118,13 +2118,13 @@ if (is_numeric($this->get['orders_id'])) {
                     } else {
                         $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . htmlspecialchars($orders['payment_condition'] . ' ' . $this->pi_getLL('days')) . '</p></div>';
                     }
-                    $orderDetailsItem .= '</div><hr>';
+                    $orderDetailsItem .= '</div>';
                     $orderDetails[] = $orderDetailsItem;
                 }
             }
             $orderDetailsItem = '';
             if ($orders['customer_comments']) {
-                $orderDetailsItem = '<div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
+                $orderDetailsItem = '<hr><div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
                     <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">' . nl2br($orders['customer_comments']) . '</div></div></div>
                 </div>';
                 $orderDetails[] = $orderDetailsItem;
