@@ -460,7 +460,21 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
                     $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
                 }
-                $tableContent .= '<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
+                $tr_tag='<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'])) {
+                    $conf = array(
+                        'row' => &$row,
+                        'rowKey' => &$rowKey,
+                        'interfaceKey' => $this->interfaceKey,
+                        'tr_type' => &$tr_type,
+                        'tr_tag' => &$tr_tag,
+                        'row_sortable_id' => &$row_sortable_id
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
+                    }
+                }
+                $tableContent .= $tr_tag;
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
                     $headerData = '';
                     $headerData .= '
