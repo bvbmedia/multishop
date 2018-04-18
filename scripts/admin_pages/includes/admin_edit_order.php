@@ -1919,17 +1919,17 @@ if (is_numeric($this->get['orders_id'])) {
 					<label class="control-label col-md-3">' . $this->pi_getLL('orders_id') . '</label>
 					<div class="col-md-9">
 						<div class="row">
-							<div class="col-md-2">
+							<div class="col-md-4">
 								<div class="row">
 									<div class="col-md-12"><p class="form-control-static">' . $orders['orders_id'] . '</p></div>
 								</div>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="row">
 								<label class="control-label col-md-7">' . $this->pi_getLL('admin_customer_id') . '</label><div class="col-md-5"><p class="form-control-static">' . $orders['customer_id'] . '</p></div>
 								</div>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="row">
 								<label class="control-label col-md-7">' . $this->pi_getLL('order_date') . '</label><div class="col-md-5"><p class="form-control-static">' . $order_date . '</p></div>
 								</div>
@@ -1938,6 +1938,16 @@ if (is_numeric($this->get['orders_id'])) {
 					</div>
 				</div>
             ';
+            $admin_lg_iso_2=strtolower($this->languages[$this->sys_language_uid]['lg_iso_2']);
+            $lg_iso_2=strtolower($this->languages[$order['language_id']]['lg_iso_2']);
+            $get_order_language=mslib_befe::getLanguageRecordByIsoString($lg_iso_2);
+            $language_used=$get_order_language['lg_name_' .$admin_lg_iso_2];
+            $invoice_label='';
+            $invoice_number='';
+            $invoice_dl_lang_params='';
+            if ($lg_iso_2!='nl') {
+                $invoice_dl_lang_params='&lang=' . $lg_iso_2;
+            }
             if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
                 $filter = array();
                 $filter[] = 'orders_id=' . $orders['orders_id'];
@@ -1946,27 +1956,39 @@ if (is_numeric($this->get['orders_id'])) {
                 $invoiceArray = array();
                 if (count($invoices)) {
                     foreach ($invoices as $invoice) {
-                        $link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
-                        $invoiceArray[] = '<a href="' . $link . '" target="_blank" rel="nofollow">' . $invoice['invoice_id'] . '</a>';
+                        $link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash'] . $invoice_dl_lang_params);
+                        $invoiceArray[] = '<a href="' . $link . '" target="_blank" rel="nofollow"><i class="fa fa-file-pdf-o"></i></a> <a href="' . $link . '" target="_blank" rel="nofollow">' . $invoice['invoice_id'] . '</a>';
                     }
                 }
                 if (count($invoiceArray)) {
-                    $orderDetails[] = '
-					<div class="form-group">
-						<label class="control-label col-md-3">' . $this->pi_getLL('admin_invoice_number') . '</label>
-						<div class="col-md-9">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-md-12"><p class="form-control-static">' . implode(', ', $invoiceArray) . '</p></div>
-									</div>
+                    $invoice_label=$this->pi_getLL('admin_invoice_number');
+                    $invoice_number=implode(', ', $invoiceArray);
+                }
+            }
+            $orderDetails[] = '
+            	<div class="form-group">
+					<label class="control-label col-md-3">' . $invoice_label . '</label>
+					<div class="col-md-9">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="row">
+									<div class="col-md-12"><p class="form-control-static">' . $invoice_number . '</p></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="row">
+								<label class="control-label col-md-7">' . $this->pi_getLL('language') . '</label><div class="col-md-5"><p class="form-control-static">' . $language_used . '</p></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="row">
+								<label class="control-label col-md-7"></div>
 								</div>
 							</div>
 						</div>
 					</div>
-				';
-                }
-            }
+				</div>
+            ';
             $paid_status = '';
             if (!$order['paid']) {
                 $paid_status .= '<span class="admin_status_red" alt="' . $this->pi_getLL('has_not_been_paid') . '" title="' . $this->pi_getLL('has_not_been_paid') . '"></span> ';

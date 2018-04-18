@@ -4860,6 +4860,14 @@ class mslib_befe {
         $array = array_reverse($array, true);
         return count($array);
     }
+    function getLanguageRecordByIsoString($twoChars) {
+        if ($twoChars) {
+            $record = mslib_befe::getRecord(strtoupper($twoChars), 'static_languages', 'lg_iso_2');
+            if (is_array($record) && $record['uid']) {
+                return $record;
+            }
+        }
+    }
     function getSysLanguageUidByIsoString($twoChars) {
         switch (strtolower($twoChars)) {
             case 'en':
