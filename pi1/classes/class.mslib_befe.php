@@ -5385,7 +5385,12 @@ class mslib_befe {
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
                         $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
-                    $content .= '<th' . $inlineStyle . '>' . $colName . '</th>';
+                    $classes = array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[] = $settings['cellClasses'][$cellCounter];
+                    }
+                    $classes[] = 'cell' . ($cellCounter + 1);
+                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
@@ -5398,7 +5403,12 @@ class mslib_befe {
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
                         $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
-                    $content .= '<th' . $inlineStyle . '>' . $colVal . '</th>';
+                    $classes = array();
+                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                        $classes[] = $settings['cellClasses'][$cellCounter];
+                    }
+                    $classes[] = 'cell' . ($cellCounter + 1);
+                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
