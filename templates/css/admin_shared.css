@@ -319,3 +319,4 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a > span.menu_item,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > span.menu_item { display:none; }
 }
+.highlighted-important { color: red; }
