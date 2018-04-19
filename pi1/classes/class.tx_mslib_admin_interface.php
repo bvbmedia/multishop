@@ -378,9 +378,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<div class="table-responsive">';
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
-                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle tablesorter" id="msAdminTableInterface'.$tableId.'">';
             } else {
-                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle" id="msAdminTableInterface'.$tableId.'">';
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
