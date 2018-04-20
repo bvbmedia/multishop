@@ -146,14 +146,14 @@ foreach ($tmporders as $order) {
     $markerArray['LABEL_LOADING'] = htmlspecialchars($this->pi_getLL('loading'));
     //$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
     $markerArray['ORDER_CUSTOMER_NAME'] = implode('<br/>', $customerNameArray);
-    $markerArray['ORDER_CREATE_DATE'] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-primary btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $order['crdate'])) . '" data-original-title="" title="">' . strftime("%x", $order['crdate']) . '</a>';
+    $markerArray['ORDER_CREATE_DATE'] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $order['crdate'])) . '" data-original-title="" title="">' . strftime("%x", $order['crdate']) . '</a>';
     $markerArray['ORDER_GRAND_TOTAL'] = mslib_fe::amount2Cents($order[$grandTotalColumnName], 0);
     $markerArray['ORDER_SHIPPING_METHOD'] = $order['shipping_method_label'];
     $markerArray['ORDER_PAYMENT_METHOD'] = $order['payment_method_label'];
     $markerArray['ORDER_STATUS'] = $order_status_selectbox;
     $markerArray['ORDER_LAST_MODIFIED'] = '';
     if ($order['status_last_modified']) {
-        $markerArray['ORDER_LAST_MODIFIED'] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-primary btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $order['status_last_modified'])) . '" data-original-title="" title="">' . strftime("%x", $order['status_last_modified']) . '</a>';
+        $markerArray['ORDER_LAST_MODIFIED'] = '<a href="#" data-toggle="tooltip" class="btn-memo btn btn-default btn" data-title="' . htmlspecialchars(strftime("%a. %x<br/>%X", $order['status_last_modified'])) . '" data-original-title="" title="">' . strftime("%x", $order['status_last_modified']) . '</a>';
     }
     $markerArray['ORDER_PAID_STATUS'] = $paid_status;
     $markerArray['PRINT_ORDER_LIST_BUTTON'] = $order_list_button_extra;
