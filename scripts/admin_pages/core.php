@@ -40,7 +40,7 @@ $(function() {
 	    imagePosition: true,
 	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
-		toolbarFixed: false,
+		toolbarFixed: true,
 		focus: false,
 		linkSize: 250,
 		pasteImages: true,
