@@ -711,7 +711,7 @@ class PHPMailer
      *
      * @var int
      */
-    const STD_LINE_LENGTH = 78;
+    const STD_LINE_LENGTH = 76;
 
     /**
      * Constructor.
