@@ -899,6 +899,7 @@ ul.normal-listing li { background-image:url(../images/bullet_gray.png); backgrou
 
 .select2-results .select2-highlighted a { color:#fff !important; text-decoration:none !important; }
 
+.btn { margin-left:4px; margin-right:4px; }
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn { opacity:0.5; }
 .btn-default.disabled,
 .btn-default[disabled],
