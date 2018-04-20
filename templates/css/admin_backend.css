@@ -1067,6 +1067,8 @@ td.print_r_value { word-break:break-word; }
 .redactor-modal .form-item.form-item-target input[type="checkbox"] + label.checkbox { display:inline-block; margin:0; padding-left:0; }
 
 .table-valign-middle > thead > tr > th,
+.table-valign-middle > tbody > tr > th,
 .table-valign-middle > tfoot > tr > th,
+.table-valign-middle > thead > tr > td,
 .table-valign-middle > tbody > tr > td,
 .table-valign-middle > tfoot > tr > td { vertical-align:middle; }
