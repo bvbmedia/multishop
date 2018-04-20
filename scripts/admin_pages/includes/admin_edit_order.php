@@ -1972,17 +1972,22 @@ if (is_numeric($this->get['orders_id'])) {
 						<div class="row">
 							<div class="col-md-4">
 								<div class="row">
-									<div class="col-md-12"><p class="form-control-static">' . $invoice_number . '</p></div>
+									<div class="col-md-12">
+									    <p class="form-control-static">' . $invoice_number . '</p>
+									</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7">' . $this->pi_getLL('language') . '</label><div class="col-md-5"><p class="form-control-static">' . $language_used . '</p></div>
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('language') . '</label>
+                                    <div class="col-md-5">
+                                        <p class="form-control-static">' . $language_used . '</p>
+                                    </div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7"></div>
+								    <label class="control-label col-md-7"></div>
 								</div>
 							</div>
 						</div>
@@ -2212,15 +2217,16 @@ if (is_numeric($this->get['orders_id'])) {
                 ';
             }
             $tmpcontent .= '
-            </div><div class="col-md-6">
-    <div class="panel panel-default" id="order_properties">
-	<div class="panel-heading"><h3>Details</h3></div>
-    <div class="panel-body">';
-            $tmpcontent .= implode("", $orderDetails);
-            $tmpcontent .= '
-    </div>
-    </div>
-    </div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default" id="order_properties">
+	                <div class="panel-heading"><h3>Details</h3></div>
+                    <div class="panel-body">';
+                        $tmpcontent .= implode("", $orderDetails);
+                        $tmpcontent .= '
+                    </div>
+                </div>
+            </div>
     ';
             // order products
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
@@ -2238,9 +2244,9 @@ if (is_numeric($this->get['orders_id'])) {
                     var attributesValues=[];' . "\n";
             }
             $tmpcontent .= '
-    <div class="panel panel-default" id="product_details">
-    <div class="panel-heading"><h3>' . $this->pi_getLL('product_details') . '</h3></div>
-    <div class="panel-body">';
+            <div class="panel panel-default" id="product_details">
+                <div class="panel-heading"><h3>' . $this->pi_getLL('product_details') . '</h3></div>
+                <div class="panel-body">';
             // initiate the array for holding rows data
             $order_products_table = array();
             $order_products_header_data = array();
@@ -4496,8 +4502,8 @@ if (is_numeric($this->get['orders_id'])) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'])) {
             // hook
             $params = array(
-                    'editOrderFormFieldset' => &$editOrderFormFieldset,
-                    'orders' => &$orders
+                'editOrderFormFieldset' => &$editOrderFormFieldset,
+                'orders' => &$orders
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
