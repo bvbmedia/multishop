@@ -4869,7 +4869,7 @@ if (is_numeric($this->get['orders_id'])) {
             var url_relatives = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives') . '";
             var url = document.location.toString();
             if (url.match("#")) {
-                $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+                $(\'.nav-tabs a[href="#\' + url.split("#")[1] + \'"]\').tab("show");
             } else {
                 $(".nav-tabs a:first").tab("show");
             }

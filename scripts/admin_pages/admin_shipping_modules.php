@@ -1023,7 +1023,7 @@ jQuery(document).ready(function($) {
 	// tabs js
 var url = document.location.toString();
 if (url.match("#")) {
-    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+    $(\'.nav-tabs a[href="#\' + url.split("#")[1] + \'"]\').tab("show");
 } else {
 	$(".nav-tabs a:first").tab("show");
 }
