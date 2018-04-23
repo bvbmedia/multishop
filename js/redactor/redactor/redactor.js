@@ -5558,12 +5558,12 @@ $R.add('service', 'cleaner', {
 
         // converting entity
         html = html.replace(/&amp;/g, '&');
-        //todo: BVBMEDIA REDACTOR HACK:
+        //todo: BVBMEDIA: do not render: <p><br/></p> as default body
         compareMarkup = html.replace(/\n/g, '');
         if (compareMarkup=='<p><br></p>') {
             html='';
         }
-        //BVBMEDIA REDACTOR HACK
+        //BVBMEDIA REDACTOR HACK EOL
         return html;
     },
     paste: function(html)
