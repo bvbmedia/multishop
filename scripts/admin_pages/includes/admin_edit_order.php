@@ -905,7 +905,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
                         $order_memo=$this->post['order_memo'];
-                        if ($order_memo=='<p></p>') {
+                        if ($order_memo=='<p></p>' || $order_memo=="<p><br></p>\r\n") {
                             $order_memo='';
                         }
                         $orders['order_memo']='';
@@ -1052,7 +1052,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->post['order_status'] == $order['status']) {
                     // no new order status has been defined. only mail when the email text box is containing content
                     $comments=$this->post['comments'];
-                    if ($comments=='<p></p>') {
+                    if ($comments=='<p></p>' || $comments=="<p><br></p>\r\n") {
                         $comments='';
                     }
                     if (!empty($comments)) {

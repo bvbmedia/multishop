@@ -550,7 +550,7 @@ multishop_ajax_server {
 
 		# TimePicker EOL
 		# Redactor
-		includeJS.msRedactor = EXT:multishop/js/redactor/redactor/redactor.min.js
+		includeJS.msRedactor = EXT:multishop/js/redactor/redactor/redactor.js
 		includeJS.msRedactor.compress = 1
 		includeCSS.msRedactorCore = EXT:multishop/js/redactor/redactor/redactor.css
 		includeCSS.msRedactorCore {
