@@ -1872,11 +1872,11 @@ if ($this->post) {
                 $updateArray['products_name'] = $this->post['products_name'][$key];
                 $updateArray['delivery_time'] = $this->post['delivery_time'][$key];
                 $updateArray['products_shortdescription'] = $this->post['products_shortdescription'][$key];
-                if ($updateArray['products_shortdescription']=='<p><br></p>') {
+                if ($updateArray['products_shortdescription']=="<p><br></p>\r\n") {
                     $updateArray['products_shortdescription']='';
                 }
                 $updateArray['products_description'] = $this->post['products_description'][$key];
-                if ($updateArray['products_description']=='<p><br></p>') {
+                if ($updateArray['products_description']=="<p><br></p>\r\n") {
                     $updateArray['products_description']='';
                 }
                 $updateArray['products_meta_keywords'] = $this->post['products_meta_keywords'][$key];
@@ -1903,7 +1903,7 @@ if ($this->post) {
                     for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
                         $updateArray['products_description_tab_title_' . $i] = $this->post['products_description_tab_title_' . $i][$key];
                         $updateArray['products_description_tab_content_' . $i] = $this->post['products_description_tab_content_' . $i][$key];
-                        if ($updateArray['products_description_tab_content_' . $i]=='<p><br></p>') {
+                        if ($updateArray['products_description_tab_content_' . $i]=="<p><br></p>\r\n") {
                             $updateArray['products_description_tab_content_' . $i]='';
                         }
                     }

@@ -135,11 +135,11 @@ if ($this->post) {
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
             $updateArray = array();
             $updateArray['content'] = $this->post['content'][$key];
-            if ($updateArray['content']=='<p><br></p>') {
+            if ($updateArray['content']=="<p><br></p>\r\n") {
                 $updateArray['content']='';
             }
             $updateArray['content_footer'] = $this->post['content_footer'][$key];
-            if ($updateArray['content_footer']=='<p><br></p>') {
+            if ($updateArray['content_footer']=="<p><br></p>\r\n") {
                 $updateArray['content_footer']='';
             }
             $updateArray['shortdescription'] = $this->post['shortdescription'][$key];

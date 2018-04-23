@@ -444,11 +444,11 @@ if ($this->post) {
                 $updateArray['meta_keywords'] = $this->post['meta_keywords'][$key];
                 $updateArray['meta_description'] = $this->post['meta_description'][$key];
                 $updateArray['content'] = $this->post['content'][$key];
-                if ($updateArray['content']=='<p><br></p>') {
+                if ($updateArray['content']=="<p><br></p>\r\n") {
                     $updateArray['content']='';
                 }
                 $updateArray['content_footer'] = $this->post['content_footer'][$key];
-                if ($updateArray['content_footer']=='<p><br></p>') {
+                if ($updateArray['content_footer']=="<p><br></p>\r\n") {
                     $updateArray['content_footer']='';
                 }
                 $updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
