@@ -1052,7 +1052,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->post['order_status'] == $order['status']) {
                     // no new order status has been defined. only mail when the email text box is containing content
                     $comments=$this->post['comments'];
-                    if ($comments=='<p></p>') {
+                    if ($comments=='<p></p>' || $comments=="<p><br></p>\r\n") {
                         $comments='';
                     }
                     if (!empty($comments)) {
