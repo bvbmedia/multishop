@@ -154,6 +154,7 @@
 .width-auto { width:auto; }
 .width-fw { width:100%; }
 .padding-10 { padding:10px; }
+.w-30 { width:30px; }
 
 .cellCheckbox { vertical-align:middle; }
 .cellCheckbox .checkbox.checkbox-inline { padding-left:17px; }
