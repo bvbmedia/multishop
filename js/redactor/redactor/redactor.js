@@ -5559,8 +5559,8 @@ $R.add('service', 'cleaner', {
         // converting entity
         html = html.replace(/&amp;/g, '&');
         //todo: BVBMEDIA REDACTOR HACK:
-        replaced = html.replace(/\n/g, '');
-        if (replaced=='<p><br></p>') {
+        compareMarkup = html.replace(/\n/g, '');
+        if (compareMarkup=='<p><br></p>') {
             html='';
         }
         //BVBMEDIA REDACTOR HACK
