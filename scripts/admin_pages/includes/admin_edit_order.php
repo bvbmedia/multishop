@@ -1926,12 +1926,14 @@ if (is_numeric($this->get['orders_id'])) {
 							</div>
 							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7">' . $this->pi_getLL('admin_customer_id') . '</label><div class="col-md-5"><p class="form-control-static">' . $orders['customer_id'] . '</p></div>
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('admin_customer_id') . '</label>
+                                    <div class="col-md-5"><p class="form-control-static">' . $orders['customer_id'] . '</p></div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7">' . $this->pi_getLL('order_date') . '</label><div class="col-md-5"><p class="form-control-static">' . $order_date . '</p></div>
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('order_date') . '</label>
+                                    <div class="col-md-5"><p class="form-control-static">' . $order_date . '</p></div>
 								</div>
 							</div>
 						</div>
@@ -1987,7 +1989,7 @@ if (is_numeric($this->get['orders_id'])) {
 							</div>
 							<div class="col-md-4">
 								<div class="row">
-								    <label class="control-label col-md-7"></div>
+								    <label class="control-label col-md-7"></label>
 								</div>
 							</div>
 						</div>
@@ -2217,13 +2219,14 @@ if (is_numeric($this->get['orders_id'])) {
                 ';
             }
             $tmpcontent .= '
-            </div>
-            <div class="col-md-6">
-                <div class="panel panel-default" id="order_properties">
-	                <div class="panel-heading"><h3>Details</h3></div>
-                    <div class="panel-body">';
-                        $tmpcontent .= implode("", $orderDetails);
-                        $tmpcontent .= '
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="order_properties">
+                        <div class="panel-heading"><h3>Details</h3></div>
+                        <div class="panel-body">';
+                            $tmpcontent .= implode("", $orderDetails);
+                            $tmpcontent .= '
+                        </div>
                     </div>
                 </div>
             </div>
