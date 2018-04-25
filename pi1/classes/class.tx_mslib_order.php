@@ -40,7 +40,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($orders_id)) {
             $this->conf['order_id'] = (int)$orders_id;
             $tax_separation = array();
-            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
+            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                 $sub_total_tax = 0;
@@ -87,6 +87,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
                     // hook
                     $params = array(
+                            'MODULES'=>&$this->ms['MODULES'],
                             'row' => &$row,
                             'orders_id' => &$orders_id
                     );
