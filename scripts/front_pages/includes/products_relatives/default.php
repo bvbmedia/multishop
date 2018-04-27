@@ -198,20 +198,21 @@ if (is_array($rel_products) && count($rel_products)) {
             </div>';
         }
         $markerArray['RELATIVE_ADMIN_ICONS'] = $admin_icons;
-        $i++;
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
             $params = array(
-                    'markerArray' => &$markerArray,
-                    'product' => &$rel_rs,
-                    'output' => &$output,
-                    'plugins_item_extra_content' => &$plugins_item_extra_content,
-                    'products_compare' => &$products_compare
+                'markerArray' => &$markerArray,
+                'product' => &$rel_rs,
+                'output' => &$output,
+                'plugins_item_extra_content' => &$plugins_item_extra_content,
+                'products_compare' => &$products_compare,
+                'count'=>&$i
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+        $i++;
         $markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT'] = '';
         if (count($plugins_item_extra_content)) {
             $markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT'] = implode("\n", $plugins_item_extra_content);
