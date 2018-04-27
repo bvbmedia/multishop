@@ -2804,6 +2804,17 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+    'configuration_title' => 'Automatically checked subscribe newsletter in create account',
+    'configuration_key' => 'AUTOMATICALLY_CHECKED_NEWSLETTER_SUBSCRIBE',
+    'configuration_value' => '0',
+    'description' => 'Automatically checked subscribe newsletter in create account',
+    'group_id' => '3',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
 
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
