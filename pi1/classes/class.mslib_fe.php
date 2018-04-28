@@ -464,6 +464,9 @@ class mslib_fe {
             }
             if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
                 $where_clause = ' 1 ';
+                if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS']=='1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+                    $where_clause = ' p.products_status=1 AND c.status=1 ';
+                }
             } else {
                 $where_clause = ' p.products_status=1 AND c.status=1 ';
             }

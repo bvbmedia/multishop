@@ -2815,6 +2815,17 @@ $records[] = array(
     'depend_on_configuration_key' => '',
     'use_function' => ''
 );
+$records[] = array(
+    'configuration_title' => 'Always hide disabled products',
+    'configuration_key' => 'ALWAYS_HIDE_DISABLED_PRODUCTS',
+    'configuration_value' => '0',
+    'description' => 'Always hide disabled products',
+    'group_id' => '6',
+    'use_function' => '',
+    'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
 
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
