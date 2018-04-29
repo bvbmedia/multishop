@@ -820,7 +820,7 @@ if ($this->post) {
 				<input spellcheck="true" type="text" class="form-control text" name="categories_name[' . $language['uid'] . ']" id="categories_name_' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['categories_name']) . '"' . ($key === 0 ? ' required="required"' : '') . '>
 				</div>
 			</div>
-			<div class="form-group" id="msEditCategoryInputExternalUrl">
+			<div class="form-group" id="msEditCategoryInputExternalUrl' . $language['uid'] . '">
 				<label class="control-label col-md-2" for="categories_external_url_' . $language['uid'] . '">' . $this->pi_getLL('admin_external_url') . '</label>
 				<div class="col-md-10">
 				<input type="text" class="form-control text" name="categories_external_url[' . $language['uid'] . ']" id="categories_external_url_' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['categories_external_url']) . '">
@@ -859,7 +859,8 @@ if ($this->post) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'])) {
             $params = array(
                     'tmpcontent' => &$tmpcontent,
-                    'category' => &$category
+                    'category' => &$category,
+                    'lngcat' => &$lngcat
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
