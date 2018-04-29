@@ -2689,12 +2689,6 @@ if ($this->post['action'] == 'category-insert') {
                             if (!isset($item['products_quantity'])) {
                                 $item['products_quantity'] = 999;
                             }
-                            if (!$item['products_shortdescription'] && $item['products_description']) {
-                                $item['products_shortdescription'] = $item['products_description'];
-                                if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
-                                    $item['products_shortdescription'] = strip_tags($item['products_shortdescription']);
-                                }
-                            }
                             if (!$item['products_description']) {
                                 $item['products_description'] = nl2br($item['products_shortdescription']);
                             }
