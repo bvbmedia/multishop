@@ -2953,10 +2953,16 @@ if ($this->post) {
 		*/
         //
         $order_unit = '<select name="order_unit_id" class="form-control"><option value="">' . $this->pi_getLL('default') . '</option>';
-        $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
+        $str = "SELECT o.id, o.is_default, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-            $order_unit .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $product['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+            $selected='';
+            if ($this->get['pid'] && $product['order_unit_id'] > 0 && $row['id'] == $product['order_unit_id']) {
+                $selected=' selected="selected"';
+            } else if ($row['is_default']) {
+                $selected=' selected="selected"';
+            }
+            $order_unit .= '<option value="' . $row['id'] . '"' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
         }
         $order_unit .= '</select>';
         $options_tab_virtual_product = '';

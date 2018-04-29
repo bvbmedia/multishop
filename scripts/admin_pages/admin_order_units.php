@@ -4,6 +4,18 @@ if (!defined('TYPO3_MODE')) {
 }
 if ($this->get['tx_multishop_pi1']['action']) {
     switch ($this->get['tx_multishop_pi1']['action']) {
+        case 'update_default_unit':
+            if (intval($this->get['tx_multishop_pi1']['orders_unit_id'])) {
+                $updateArray = array();
+                $updateArray['is_default'] = 1;
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                $updateArray = array();
+                $updateArray['is_default'] = 0;
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id <> \'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+            break;
         case 'delete':
             if (intval($this->get['tx_multishop_pi1']['order_unit_id'])) {
                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_order_units', 'id=\'' . $this->get['tx_multishop_pi1']['order_unit_id'] . '\'');
@@ -144,7 +156,7 @@ $content .= $tmpcontent . '
 </div>
 </form>
 ';
-$str = "SELECT o.id, o.page_uid, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
+$str = "SELECT o.id, o.is_default, o.page_uid, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $zones = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -162,6 +174,7 @@ if (count($order_units)) {
     $content .= '
 		<th class="cellCode">' . $this->pi_getLL('code') . '</th>
 		<th class="cellName">' . $this->pi_getLL('name') . '</th>
+		<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>
 		<th class="cellAction">' . $this->pi_getLL('action') . '</th></tr></thead>';
     foreach ($order_units as $status) {
         if (!$tr_type or $tr_type == 'even') {
@@ -187,9 +200,19 @@ if (count($order_units)) {
         }
         $content .= '
 		<td class="cellCode">' . $status['code'] . '</td>
-		<td class="cellName">' . $status['name'] . '</td>
+		<td class="cellName">' . $status['name'] . '</td>';
+        $content.='<td class="cellStatus">';
+        $status_html='';
+        if (!$status['is_default']) {
+            $status_html .= '';
+            $status_html .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[action]=update_default_unit&tx_multishop_pi1[orders_unit_id]=' . $status['id'] . '&tx_multishop_pi1[status]=1') . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
+        } else {
+            $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
+            $status_html .= '';
+        }
+        $content.=$status_html . '</td>';
 
-		<td  class="cellAction msAdminProductsSearchCellActionIcons">
+		$content.='<td  class="cellAction msAdminProductsSearchCellActionIcons">
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[order_unit_id]=' . $status['id'] . '&tx_multishop_pi1[action]=edit') . '" class="btn btn-primary btn-sm admin_menu_edit" alt="' . $this->pi_getLL('edit') . '"><i class="fa fa-pencil"></i></a>
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[order_unit_id]=' . $status['id'] . '&tx_multishop_pi1[action]=delete') . '" onclick="return confirm(\'' . $this->pi_getLL('are_you_sure') . '?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="' . $this->pi_getLL('delete') . '"><i class="fa fa-trash-o"></i></a>
 		</td>';
