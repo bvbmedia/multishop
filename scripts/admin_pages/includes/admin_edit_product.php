@@ -2957,9 +2957,11 @@ if ($this->post) {
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
             $selected='';
-            if ($this->get['pid'] && $product['order_unit_id'] > 0 && $row['id'] == $product['order_unit_id']) {
-                $selected=' selected="selected"';
-            } else if ($row['is_default']) {
+            if ($product['order_unit_id'] > 0) {
+                if ($row['id'] == $product['order_unit_id']) {
+                    $selected=' selected="selected"';
+                }
+            } else if ($row['is_default']>0) {
                 $selected=' selected="selected"';
             }
             $order_unit .= '<option value="' . $row['id'] . '"' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
