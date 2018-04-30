@@ -33,7 +33,7 @@ if ($this->post) {
         $order_unit_id = (int)$this->post['tx_multishop_pi1']['order_unit_id'];
         if ($order_unit_id) {
             $updateArray = array();
-            $updateArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'][0];
+            $updateArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
             $updateArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $order_unit_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -43,7 +43,6 @@ if ($this->post) {
                 if (is_array($check_record)) {
                     $updateArray = array();
                     $updateArray['name'] = $value;
-                    $updateArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units_description', 'order_unit_id=\'' . $order_unit_id . '\' and language_id = ' . $key, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 } else {
@@ -51,7 +50,6 @@ if ($this->post) {
                     $insertArray['name'] = $value;
                     $insertArray['language_id'] = $key;
                     $insertArray['order_unit_id'] = $order_unit_id;
-                    $insertArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units_description', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -76,7 +74,6 @@ if ($this->post) {
                         $insertArray['name'] = $value;
                         $insertArray['language_id'] = $key;
                         $insertArray['order_unit_id'] = $id;
-                        $insertArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units_description', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
@@ -90,7 +87,7 @@ if ($this->post) {
 }
 $active_shop = mslib_fe::getActiveShop();
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
-    $str = "SELECT o.id, o.page_uid, o.code, od.name, od.order_unit_code, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
+    $str = "SELECT o.id, o.page_uid, o.code, od.name, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $lngstatus = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -103,6 +100,12 @@ $content .= '<div class="panel-body">
 <form class="form-horizontal" action="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=' . $this->ms['page']) . '" method="post">
 <div class="panel panel-default"><div class="panel-heading"><h3>' . $this->pi_getLL('add') . '</h3></div>
 <div class="panel-body">
+<div class="form-group">
+    <label class="control-label col-md-2" for="order_unit_code">' . $this->pi_getLL('code') . '</label>
+    <div class="col-md-10">
+    <input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code]" id="order_unit_code" value="' . htmlspecialchars($lngstatus[0]['code']) . '">
+    </div>
+</div>
 ';
 foreach ($this->languages as $key => $language) {
     $flag_path = '';
@@ -127,12 +130,6 @@ foreach ($this->languages as $key => $language) {
 						<label class="control-label col-md-2" for="order_unit_name_' . $language['uid'] . '">' . $this->pi_getLL('admin_name') . '</label>
 						<div class="col-md-10">
 						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_name][' . $language['uid'] . ']" id="order_unit_name_' . $language['uid'] . '" value="' . htmlspecialchars($lngstatus[$language['uid']]['name']) . '">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-2" for="order_unit_code">' . $this->pi_getLL('code') . '</label>
-						<div class="col-md-10">
-						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code][' . $language['uid'] . ']" id="order_unit_code_' . $language['uid'] . '" value="' . htmlspecialchars($lngstatus[$language['uid']]['order_unit_code']) . '">
 						</div>
 					</div>
 				</div>
