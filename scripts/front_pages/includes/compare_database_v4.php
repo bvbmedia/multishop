@@ -697,4 +697,11 @@ if (!$qry) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+$str="select order_unit_code from tx_multishop_order_units_description limit 1";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str="ALTER TABLE `tx_multishop_order_units_description` ADD order_unit_code varchar(15) default '', ADD KEY `order_unit_code` (`order_unit_code`)";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}
 ?>

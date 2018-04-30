@@ -33,16 +33,28 @@ if ($this->post) {
         $order_unit_id = (int)$this->post['tx_multishop_pi1']['order_unit_id'];
         if ($order_unit_id) {
             $updateArray = array();
-            $updateArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
+            $updateArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'][0];
             $updateArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $order_unit_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // order unit name
             foreach ($this->post['tx_multishop_pi1']['order_unit_name'] as $key => $value) {
-                $updateArray = array();
-                $updateArray['name'] = $value;
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units_description', 'order_unit_id=\'' . $order_unit_id . '\' and language_id = ' . $key, $updateArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                $check_record=mslib_befe::getRecord($order_unit_id, 'tx_multishop_order_units_description', 'order_unit_id', array('language_id=' . $key));
+                if (is_array($check_record)) {
+                    $updateArray = array();
+                    $updateArray['name'] = $value;
+                    $updateArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units_description', 'order_unit_id=\'' . $order_unit_id . '\' and language_id = ' . $key, $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                } else {
+                    $insertArray = array();
+                    $insertArray['name'] = $value;
+                    $insertArray['language_id'] = $key;
+                    $insertArray['order_unit_id'] = $order_unit_id;
+                    $insertArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
+                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units_description', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
             header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
             exit();
@@ -52,7 +64,7 @@ if ($this->post) {
         if (count($this->post['tx_multishop_pi1']['order_unit_name'])) {
             if ($this->post['tx_multishop_pi1']['order_unit_name'][0]) {
                 $insertArray = array();
-                $insertArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
+                $insertArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'][0];
                 $insertArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
                 $insertArray['crdate'] = time();
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units', $insertArray);
@@ -64,6 +76,7 @@ if ($this->post) {
                         $insertArray['name'] = $value;
                         $insertArray['language_id'] = $key;
                         $insertArray['order_unit_id'] = $id;
+                        $insertArray['order_unit_code'] = $this->post['tx_multishop_pi1']['order_unit_code'][$key];
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units_description', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
@@ -77,7 +90,7 @@ if ($this->post) {
 }
 $active_shop = mslib_fe::getActiveShop();
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
-    $str = "SELECT o.id, o.page_uid, o.code, od.name, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
+    $str = "SELECT o.id, o.page_uid, o.code, od.name, od.order_unit_code, od.language_id from tx_multishop_order_units o, tx_multishop_order_units_description od where o.id=od.order_unit_id and od.order_unit_id = " . $this->get['tx_multishop_pi1']['order_unit_id'] . " order by o.id desc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $lngstatus = array();
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -119,7 +132,7 @@ foreach ($this->languages as $key => $language) {
 					<div class="form-group">
 						<label class="control-label col-md-2" for="order_unit_code">' . $this->pi_getLL('code') . '</label>
 						<div class="col-md-10">
-						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code]" value="' . htmlspecialchars($lngstatus[$language['uid']]['code']) . '">
+						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code][' . $language['uid'] . ']" id="order_unit_code_' . $language['uid'] . '" value="' . htmlspecialchars($lngstatus[$language['uid']]['order_unit_code']) . '">
 						</div>
 					</div>
 				</div>

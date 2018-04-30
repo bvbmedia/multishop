@@ -758,10 +758,12 @@ CREATE TABLE `tx_multishop_order_units_description` (
  `order_unit_id` int(11) default '0',
  `language_id` int(11) NOT NULL default '0',
  `name` varchar(50) default '',
+ `order_unit_code` varchar(15) default '',
  PRIMARY KEY (`id`),
  KEY `order_unit_id` (`order_unit_id`),
  KEY `name` (`name`),
- KEY `language_id` (`language_id`)
+ KEY `language_id` (`language_id`),
+ KEY `order_unit_code` (`order_unit_code`)
 );
 
 CREATE TABLE `tx_multishop_orphan_files` (
