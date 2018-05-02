@@ -235,6 +235,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         } else {
                             $quantity = $cart['products'][$shopping_cart_item]['qty'];
                         }
+                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                            $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                        }
                         $product['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
                     }
 
@@ -507,6 +510,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     }
                                     // chk if the product has staffel price
                                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
+                                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                                            $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                                        }
                                         $product['final_price'] = mslib_fe::calculateStaffelPrice($product['staffel_price'], 1);
                                     }
                                     if ($product['products_id']) {
@@ -660,6 +666,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         // custom hook that can be controlled by third-party plugin eof
                         // chk if the product has staffel price
                         if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
+                            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                                $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                            }
                             $cart['products'][$shopping_cart_item]['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
                         }
                         $cart['products'][$shopping_cart_item]['qty'] = $qty;

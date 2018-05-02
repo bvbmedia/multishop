@@ -2817,9 +2817,14 @@ if ($this->post) {
 							//alert(counter_data);
 							if (counter_data == 0) {
 								counter_data = counter_data + 1;
+                                '.(($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') ? '
+                                    var readonly=\'\';
+                                ' : '
+                                    var readonly=\' readonly="readonly"\';
+                                ').'
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_from')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" /></div>\';
+								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_from')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1"\' + readonly + \' value="1" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_till2')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
@@ -2924,9 +2929,15 @@ if ($this->post) {
                     $staffel_tax = mslib_fe::taxDecimalCrop(($sp_price * $product_tax_rate) / 100);
                     $sp_price_display = mslib_fe::taxDecimalCrop($sp_price, 2, false);
                     $staffel_price_display_incl = mslib_fe::taxDecimalCrop($sp_price + $staffel_tax, 2, false);
+                    $readonly=' readonly="readonly"';
+                    if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                        if ($sp_idx=='1') {
+                            $readonly='';
+                        }
+                    }
                     $staffel_price_block .= '
 						<tr id="sp_' . $sp_idx . '">
-							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1" readonly="readonly" value="' . $sp_col_1 . '" /></span></td>
+							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1"'.$readonly.' value="' . $sp_col_1 . '" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_till2') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_2" value="' . $sp_col_2 . '" /></span></td>
 							<td>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="' . htmlspecialchars($sp_price_display) . '" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>

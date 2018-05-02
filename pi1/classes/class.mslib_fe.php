@@ -1323,6 +1323,21 @@ class mslib_fe {
         return $url;
     }
     ////
+    public function rebuildStaffelPrice($staffel_price_list, $product_price) {
+        if (empty($staffel_price_list)) {
+            return false;
+        }
+        $sdata = explode(';', $staffel_price_list);
+        list($first_level_sdata,)=explode(':', $sdata[0]);
+        list($first_step_sdata,)=explode('-', $first_level_sdata);
+        $prepend_staffel_price='';
+        if ($first_step_sdata>1) {
+            $prepend_staffel_price='1-' . ($first_step_sdata-1) . ':' . $product_price;
+            $staffel_price_list = $prepend_staffel_price . ';' . $staffel_price_list;
+        }
+
+        return $staffel_price_list;
+    }
     // Return all HTTP GET variables, except those passed as a parameter
     public function final_products_price($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
         if (!$ignore_minimum_quantity) {
@@ -1348,6 +1363,9 @@ class mslib_fe {
         }
         // hook eof
         if ($product['staffel_price']) {
+            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+            }
             $final_price = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
             $product[$priceColumn] = $final_price;
         } else {
