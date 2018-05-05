@@ -322,6 +322,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateArray['orders_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $row['orders_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                $invoice = mslib_fe::getInvoice($row['orders_id'], 'orders_id');
+                if ($invoice['id']) {
+                    $updateInvoicesArray = array();
+                    $updateInvoicesArray['grand_total'] = round($order_tax_data['grand_total'], 2);
+                    $updateInvoicesArray['grand_total_excluding_vat'] = round($order_tax_data['grand_total_excluding_vat'], 2);
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\'' . $invoice['id'] . '\'', $updateInvoicesArray);
+                    $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
                 //$sql_update="update tx_multishop_orders set grand_total='".round($order_tax_data['grand_total'], 2)."', orders_tax_data = '".$serial_orders."' where orders_id = ".$row['orders_id'];
                 //$GLOBALS['TYPO3_DB']->sql_query($sql_update);
             }
