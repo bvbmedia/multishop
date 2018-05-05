@@ -482,6 +482,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                         $user = array();
                         $user['name'] = $full_customer_name;
                         $user['email'] = $tmpArray['billing_email'];
+                        $user['customer_id'] = $tmpArray['customer_id'];
                         if ($user['email']) {
                             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
                             $postErno[] = array(

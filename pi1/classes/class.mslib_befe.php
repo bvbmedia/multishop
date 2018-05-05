@@ -3449,6 +3449,7 @@ class mslib_befe {
                                 $user = array();
                                 $user['email'] = $order['billing_email'];
                                 $user['name'] = $order['billing_name'];
+                                $user['customer_id'] = $order['customer_id'];
                                 if ($user['email']) {
                                     mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
                                 }

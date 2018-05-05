@@ -704,6 +704,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $user = array();
                 $user['name'] = $full_customer_name;
                 $user['email'] = $custom_email_address;
+                $user['customer_id'] = $order['customer_id'];
                 //hook
                 $send_mail = 1;
                 $mail_attachment = array();

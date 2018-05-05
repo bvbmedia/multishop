@@ -2183,9 +2183,10 @@ class mslib_fe {
         if (!is_numeric($group_id)) {
             return false;
         }
-        $users = mslib_befe::getUsersByGroup($group_id);
+        $users = mslib_fe::getUsersByGroup($group_id);
         if (is_array($users) and count($users)) {
             foreach ($users as $user) {
+                $user['customer_id'] = $user['uid'];
                 mslib_fe::mailUser($user, $subject, $body, $from_address, $from_name);
             }
         }
@@ -10943,6 +10944,7 @@ class mslib_fe {
             $user = array();
             $user['name'] = $newCustomer['first_name'];
             $user['email'] = $newCustomer['email'];
+            $user['customer_id'] = $customer_id;
             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
             return true;
         }
@@ -11018,6 +11020,7 @@ class mslib_fe {
             $user = array();
             $user['name'] = $newCustomer['first_name'];
             $user['email'] = $newCustomer['email'];
+            $user['customer_id'] = $customer_id;
             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
             return true;
         }
