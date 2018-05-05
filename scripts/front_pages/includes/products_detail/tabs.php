@@ -339,6 +339,13 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE###'] = $output['products_image'];
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($old_price);
+    $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($final_price);
+    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($old_price, 2, ',', '.');
+    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($final_price, 2, ',', '.');
+    $markerArray['###OLD_PRICE_RAW###'] = number_format($old_price, 2, '.', '');
+    $markerArray['###FINAL_PRICE_RAW###'] = number_format($final_price, 2, '.', '');
     $markerArray['###PRODUCTS_SPECIAL_PRICE###'] = $output['special_price'];
     $markerArray['###OTHER_CUSTOMERS_BOUGHT###'] = $output['customers_also_bought'];
     // new
