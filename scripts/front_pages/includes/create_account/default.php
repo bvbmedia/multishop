@@ -368,6 +368,14 @@ if (mslib_fe::loggedin()) {
             //
             $newsletter_subscribe = '';
             if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
+                $newsletter_checked=false;
+                if (!isset($this->post['tx_multishop_newsletter']) && $this->ms['MODULES']['AUTOMATICALLY_CHECKED_NEWSLETTER_SUBSCRIBE']) {
+                    $newsletter_checked=true;
+                } else {
+                    if (isset($this->post['tx_multishop_newsletter'])) {
+                        $newsletter_checked=true;
+                    }
+                }
                 $newsletter_subscribe .= '<div class="account-field newsletter_checkbox">
 					<div class="account-heading">
 						<h2>' . $this->pi_getLL('newsletter') . '</h2>
@@ -376,7 +384,7 @@ if (mslib_fe::loggedin()) {
 				</div>
 				<div class="checkboxAgreement newsletter_checkbox_message">
 					<div class="checkbox checkbox-success">
-						<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"' . (!isset($this->post['tx_multishop_newsletter']) || $this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '') . ' />
+						<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"' . ($newsletter_checked ? ' checked="checked"' : '') . ' />
 						<label class="account-value" for="tx_multishop_newsletter">' . $this->pi_getLL('subscribe_to_our_newsletter') . '</label>
 					</div>
 				</div>';

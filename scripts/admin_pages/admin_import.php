@@ -2130,12 +2130,6 @@ if ($this->post['action'] == 'category-insert') {
                                 if (!isset($item['products_quantity'])) {
                                     $item['products_quantity'] = 999;
                                 }
-                                if (!$item['products_shortdescription'] && $item['products_description']) {
-                                    $item['products_shortdescription'] = $item['products_description'];
-                                    if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
-                                        $item['products_shortdescription'] = strip_tags($item['products_shortdescription']);
-                                    }
-                                }
                             }
                         }
                         if ($item['products_order_unit_id']) {
@@ -2688,12 +2682,6 @@ if ($this->post['action'] == 'category-insert') {
                             // if quantity is not defined put it to 999
                             if (!isset($item['products_quantity'])) {
                                 $item['products_quantity'] = 999;
-                            }
-                            if (!$item['products_shortdescription'] && $item['products_description']) {
-                                $item['products_shortdescription'] = $item['products_description'];
-                                if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
-                                    $item['products_shortdescription'] = strip_tags($item['products_shortdescription']);
-                                }
                             }
                             if (!$item['products_description']) {
                                 $item['products_description'] = nl2br($item['products_shortdescription']);
@@ -3713,7 +3701,7 @@ if ($this->post['action'] != 'product-import-preview' && $this->get['action'] !=
 		jQuery(document).ready(function($) {
 var url = document.location.toString();
 if (url.match("#")) {
-    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+    $(\'.nav-tabs a[href="#\' + url.split("#")[1] + \'"]\').tab("show");
 } else {
 		$(".nav-tabs a:first").tab("show");
 	}

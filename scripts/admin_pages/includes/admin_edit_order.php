@@ -905,7 +905,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
                         $order_memo=$this->post['order_memo'];
-                        if ($order_memo=='<p></p>') {
+                        if ($order_memo=='<p></p>' || $order_memo=="<p><br></p>\r\n") {
                             $order_memo='';
                         }
                         $orders['order_memo']='';
@@ -1052,7 +1052,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->post['order_status'] == $order['status']) {
                     // no new order status has been defined. only mail when the email text box is containing content
                     $comments=$this->post['comments'];
-                    if ($comments=='<p></p>') {
+                    if ($comments=='<p></p>' || $comments=="<p><br></p>\r\n") {
                         $comments='';
                     }
                     if (!empty($comments)) {
@@ -1919,25 +1919,37 @@ if (is_numeric($this->get['orders_id'])) {
 					<label class="control-label col-md-3">' . $this->pi_getLL('orders_id') . '</label>
 					<div class="col-md-9">
 						<div class="row">
-							<div class="col-md-2">
+							<div class="col-md-4">
 								<div class="row">
 									<div class="col-md-12"><p class="form-control-static">' . $orders['orders_id'] . '</p></div>
 								</div>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7">' . $this->pi_getLL('admin_customer_id') . '</label><div class="col-md-5"><p class="form-control-static">' . $orders['customer_id'] . '</p></div>
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('admin_customer_id') . '</label>
+                                    <div class="col-md-5"><p class="form-control-static">' . $orders['customer_id'] . '</p></div>
 								</div>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="row">
-								<label class="control-label col-md-7">' . $this->pi_getLL('order_date') . '</label><div class="col-md-5"><p class="form-control-static">' . $order_date . '</p></div>
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('order_date') . '</label>
+                                    <div class="col-md-5"><p class="form-control-static">' . $order_date . '</p></div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
             ';
+            $admin_lg_iso_2=strtolower($this->languages[$this->sys_language_uid]['lg_iso_2']);
+            $lg_iso_2=strtolower($this->languages[$order['language_id']]['lg_iso_2']);
+            $get_order_language=mslib_befe::getLanguageRecordByIsoString($lg_iso_2);
+            $language_used=$get_order_language['lg_name_' .$admin_lg_iso_2];
+            $invoice_label='';
+            $invoice_number='';
+            $invoice_dl_lang_params='';
+            if ($lg_iso_2!='nl') {
+                $invoice_dl_lang_params='&lang=' . $lg_iso_2;
+            }
             if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
                 $filter = array();
                 $filter[] = 'orders_id=' . $orders['orders_id'];
@@ -1946,27 +1958,44 @@ if (is_numeric($this->get['orders_id'])) {
                 $invoiceArray = array();
                 if (count($invoices)) {
                     foreach ($invoices as $invoice) {
-                        $link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']);
-                        $invoiceArray[] = '<a href="' . $link . '" target="_blank" rel="nofollow">' . $invoice['invoice_id'] . '</a>';
+                        $link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash'] . $invoice_dl_lang_params);
+                        $invoiceArray[] = '<a href="' . $link . '" target="_blank" rel="nofollow"><i class="fa fa-file-pdf-o"></i></a> <a href="' . $link . '" target="_blank" rel="nofollow">' . $invoice['invoice_id'] . '</a>';
                     }
                 }
                 if (count($invoiceArray)) {
-                    $orderDetails[] = '
-					<div class="form-group">
-						<label class="control-label col-md-3">' . $this->pi_getLL('admin_invoice_number') . '</label>
-						<div class="col-md-9">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-md-12"><p class="form-control-static">' . implode(', ', $invoiceArray) . '</p></div>
+                    $invoice_label=$this->pi_getLL('admin_invoice_number');
+                    $invoice_number=implode(', ', $invoiceArray);
+                }
+            }
+            $orderDetails[] = '
+            	<div class="form-group">
+					<label class="control-label col-md-3">' . $invoice_label . '</label>
+					<div class="col-md-9">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="row">
+									<div class="col-md-12">
+									    <p class="form-control-static">' . $invoice_number . '</p>
 									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="row">
+                                    <label class="control-label col-md-7">' . $this->pi_getLL('language') . '</label>
+                                    <div class="col-md-5">
+                                        <p class="form-control-static">' . $language_used . '</p>
+                                    </div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="row">
+								    <label class="control-label col-md-7"></label>
 								</div>
 							</div>
 						</div>
 					</div>
-				';
-                }
-            }
+				</div>
+            ';
             $paid_status = '';
             if (!$order['paid']) {
                 $paid_status .= '<span class="admin_status_red" alt="' . $this->pi_getLL('has_not_been_paid') . '" title="' . $this->pi_getLL('has_not_been_paid') . '"></span> ';
@@ -2190,15 +2219,17 @@ if (is_numeric($this->get['orders_id'])) {
                 ';
             }
             $tmpcontent .= '
-            </div><div class="col-md-6">
-    <div class="panel panel-default" id="order_properties">
-	<div class="panel-heading"><h3>Details</h3></div>
-    <div class="panel-body">';
-            $tmpcontent .= implode("", $orderDetails);
-            $tmpcontent .= '
-    </div>
-    </div>
-    </div></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="order_properties">
+                        <div class="panel-heading"><h3>Details</h3></div>
+                        <div class="panel-body">';
+                            $tmpcontent .= implode("", $orderDetails);
+                            $tmpcontent .= '
+                        </div>
+                    </div>
+                </div>
+            </div>
     ';
             // order products
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
@@ -2216,9 +2247,9 @@ if (is_numeric($this->get['orders_id'])) {
                     var attributesValues=[];' . "\n";
             }
             $tmpcontent .= '
-    <div class="panel panel-default" id="product_details">
-    <div class="panel-heading"><h3>' . $this->pi_getLL('product_details') . '</h3></div>
-    <div class="panel-body">';
+            <div class="panel panel-default" id="product_details">
+                <div class="panel-heading"><h3>' . $this->pi_getLL('product_details') . '</h3></div>
+                <div class="panel-body">';
             // initiate the array for holding rows data
             $order_products_table = array();
             $order_products_header_data = array();
@@ -4474,8 +4505,8 @@ if (is_numeric($this->get['orders_id'])) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'])) {
             // hook
             $params = array(
-                    'editOrderFormFieldset' => &$editOrderFormFieldset,
-                    'orders' => &$orders
+                'editOrderFormFieldset' => &$editOrderFormFieldset,
+                'orders' => &$orders
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -4841,7 +4872,7 @@ if (is_numeric($this->get['orders_id'])) {
             var url_relatives = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives') . '";
             var url = document.location.toString();
             if (url.match("#")) {
-                $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+                $(\'.nav-tabs a[href="#\' + url.split("#")[1] + \'"]\').tab("show");
             } else {
                 $(".nav-tabs a:first").tab("show");
             }

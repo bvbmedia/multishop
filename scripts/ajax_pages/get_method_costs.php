@@ -11,10 +11,12 @@ require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multis
 $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart = $mslib_cart->getCart();
+$vat_id_validate_country=$this->post['b_cc'];
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'])) {
     $params = array(
-            'cart' => &$cart
+            'cart' => &$cart,
+            'vat_id_validate_country'=>&$vat_id_validate_country
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -27,8 +29,8 @@ $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart = $mslib_cart->getCart();
 // disable tax if the country is different and vat id is valid (NL & BE only)
-if (isset($this->post['b_cc']) && !empty($this->post['b_cc']) && $this->post['tx_multishop_vat_id']) {
-    $iso_customer = mslib_fe::getCountryByName($this->post['b_cc']);
+if (isset($vat_id_validate_country) && !empty($vat_id_validate_country) && $this->post['tx_multishop_vat_id']) {
+    $iso_customer = mslib_fe::getCountryByName($vat_id_validate_country);
     $iso_customer['country'] = $iso_customer['cn_short_en'];
     $vat_id = $this->post['tx_multishop_vat_id'];
 }

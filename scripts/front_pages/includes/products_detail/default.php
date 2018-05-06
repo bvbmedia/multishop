@@ -156,6 +156,9 @@ if (!$product['products_id']) {
         $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
             if ($product['staffel_price'] > 0) {
+                if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                    $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                }
                 $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
             } else {
                 $price_excl_vat = $product['final_price'];

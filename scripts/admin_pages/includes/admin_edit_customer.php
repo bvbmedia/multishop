@@ -394,176 +394,179 @@ if ($this->post && $this->post['email']) {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'])) {
                 $params = array(
                         'uid' => $this->post['tx_multishop_pi1']['cid'],
-                        'updateArray' => &$updateArray
+                        'updateArray' => &$updateArray,
+                        'erno' => &$erno
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            // custom hook that can be controlled by third-party plugin eof
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $updateArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            if (!$res) {
-                $erno[] = $GLOBALS['TYPO3_DB']->sql_error();
-            } else {
-                $customer_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-                // ADD TT_ADDRESS RECORD
-                $insertArray = array();
-                $insertArray['tstamp'] = time();
-                $insertArray['company'] = $updateArray['company'];
-                $insertArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
-                $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
-                $insertArray['first_name'] = $updateArray['first_name'];
-                $insertArray['middle_name'] = $updateArray['middle_name'];
-                $insertArray['last_name'] = $updateArray['last_name'];
-                $insertArray['email'] = $updateArray['email'];
-                if (!$updateArray['street_name']) {
-                    // fallback for old custom checkouts
-                    $insertArray['building'] = $updateArray['building'];
-                    $insertArray['street_name'] = $updateArray['address'];
-                    $insertArray['address_number'] = $updateArray['address_number'];
-                    $insertArray['address_ext'] = $updateArray['address_ext'];
-                    $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
-                    $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
-                } else {
-                    $insertArray['building'] = $updateArray['building'];
-                    $insertArray['street_name'] = $updateArray['street_name'];
-                    $insertArray['address_number'] = $updateArray['address_number'];
-                    $insertArray['address_ext'] = $updateArray['address_ext'];
-                    $insertArray['address'] = $updateArray['address'];
-                }
-                $insertArray['zip'] = $updateArray['zip'];
-                $insertArray['phone'] = $updateArray['telephone'];
-                $insertArray['mobile'] = $updateArray['mobile'];
-                $insertArray['city'] = $updateArray['city'];
-                $insertArray['country'] = $updateArray['country'];
-                if ($updateArray['gender']=='0' || $updateArray['gender']=='1') {
-                    $insertArray['gender'] = ($updateArray['gender']=='0' ? 'm' : 'f');
-                } else {
-                    $insertArray['gender'] = $updateArray['gender'];
-                }
-                $insertArray['birthday'] = strtotime($updateArray['birthday']);
-                if ($insertArray['gender'] == 'm') {
-                    $insertArray['title'] = 'Mr.';
-                } else {
-                    if ($insertArray['gender'] == 'f') {
-                        $insertArray['title'] = 'Mrs.';
-                    }
-                }
-                $insertArray['region'] = $updateArray['state'];
-                $insertArray['pid'] = $this->conf['fe_customer_pid'];
-                $insertArray['page_uid'] = $this->shop_pid;
-                $insertArray['tstamp'] = time();
-                $insertArray['tx_multishop_address_type'] = 'billing';
-                $insertArray['tx_multishop_default'] = 1;
-                $insertArray['tx_multishop_customer_id'] = $customer_id;
-                if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
-                    if (isset($this->post['department'])) {
-                        $insertArray['department'] = $this->post['department'];
-                    }
-                }
-                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+            if (!count($erno)) {
+                // custom hook that can be controlled by third-party plugin eof
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                if (!$this->post['different_delivery_address']) {
-                    $insertArray['tx_multishop_address_type'] = 'delivery';
-                    $insertArray['tx_multishop_default'] = 0;
-                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (!$res) {
+                    $erno[] = $GLOBALS['TYPO3_DB']->sql_error();
                 } else {
+                    $customer_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
                     // ADD TT_ADDRESS RECORD
                     $insertArray = array();
                     $insertArray['tstamp'] = time();
-                    $insertArray['company'] = $this->post['delivery_company'];
-                    $insertArray['name'] = $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name'];
+                    $insertArray['company'] = $updateArray['company'];
+                    $insertArray['name'] = $updateArray['first_name'] . ' ' . $updateArray['middle_name'] . ' ' . $updateArray['last_name'];
                     $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
-                    $insertArray['first_name'] = $this->post['delivery_first_name'];
-                    $insertArray['middle_name'] = $this->post['delivery_middle_name'];
-                    $insertArray['last_name'] = $this->post['delivery_last_name'];
-                    $insertArray['email'] = $this->post['delivery_email'];
-                    if (!$this->post['delivery_street_name']) {
+                    $insertArray['first_name'] = $updateArray['first_name'];
+                    $insertArray['middle_name'] = $updateArray['middle_name'];
+                    $insertArray['last_name'] = $updateArray['last_name'];
+                    $insertArray['email'] = $updateArray['email'];
+                    if (!$updateArray['street_name']) {
                         // fallback for old custom checkouts
-                        $insertArray['building'] = $this->post['delivery_building'];
-                        $insertArray['street_name'] = $this->post['delivery_address'];
-                        $insertArray['address_number'] = $this->post['delivery_address_number'];
-                        $insertArray['address_ext'] = $this->post['delivery_address_ext'];
+                        $insertArray['building'] = $updateArray['building'];
+                        $insertArray['street_name'] = $updateArray['address'];
+                        $insertArray['address_number'] = $updateArray['address_number'];
+                        $insertArray['address_ext'] = $updateArray['address_ext'];
                         $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
                         $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
                     } else {
-                        $insertArray['building'] = $this->post['delivery_building'];
-                        $insertArray['street_name'] = $this->post['delivery_street_name'];
-                        $insertArray['address_number'] = $this->post['delivery_address_number'];
-                        $insertArray['address_ext'] = $this->post['delivery_address_ext'];
-                        $insertArray['address'] = $this->post['delivery_address'];
+                        $insertArray['building'] = $updateArray['building'];
+                        $insertArray['street_name'] = $updateArray['street_name'];
+                        $insertArray['address_number'] = $updateArray['address_number'];
+                        $insertArray['address_ext'] = $updateArray['address_ext'];
+                        $insertArray['address'] = $updateArray['address'];
                     }
-                    $insertArray['zip'] = $this->post['delivery_zip'];
-                    $insertArray['phone'] = $this->post['delivery_telephone'];
-                    $insertArray['mobile'] = $this->post['delivery_mobile'];
-                    $insertArray['city'] = $this->post['delivery_city'];
-                    $insertArray['country'] = $this->post['delivery_country'];
-                    if ($this->post['delivery_gender']=='0' || $this->post['delivery_gender']=='1') {
-                        $insertArray['gender'] = ($this->post['delivery_gender']=='0' ? 'm' : 'f');
+                    $insertArray['zip'] = $updateArray['zip'];
+                    $insertArray['phone'] = $updateArray['telephone'];
+                    $insertArray['mobile'] = $updateArray['mobile'];
+                    $insertArray['city'] = $updateArray['city'];
+                    $insertArray['country'] = $updateArray['country'];
+                    if ($updateArray['gender'] == '0' || $updateArray['gender'] == '1') {
+                        $insertArray['gender'] = ($updateArray['gender'] == '0' ? 'm' : 'f');
                     } else {
-                        $insertArray['gender'] = $this->post['delivery_gender'];
+                        $insertArray['gender'] = $updateArray['gender'];
                     }
-                    $insertArray['birthday'] = strtotime($this->post['delivery_birthday']);
-                    if ($this->post['delivery_gender'] == 'm') {
+                    $insertArray['birthday'] = strtotime($updateArray['birthday']);
+                    if ($insertArray['gender'] == 'm') {
                         $insertArray['title'] = 'Mr.';
                     } else {
-                        if ($this->post['delivery_gender'] == 'f') {
+                        if ($insertArray['gender'] == 'f') {
                             $insertArray['title'] = 'Mrs.';
                         }
                     }
-                    $insertArray['region'] = $this->post['delivery_state'];
+                    $insertArray['region'] = $updateArray['state'];
                     $insertArray['pid'] = $this->conf['fe_customer_pid'];
                     $insertArray['page_uid'] = $this->shop_pid;
                     $insertArray['tstamp'] = time();
-                    $insertArray['tx_multishop_address_type'] = 'delivery';
-                    $insertArray['tx_multishop_default'] = 0;
+                    $insertArray['tx_multishop_address_type'] = 'billing';
+                    $insertArray['tx_multishop_default'] = 1;
                     $insertArray['tx_multishop_customer_id'] = $customer_id;
                     if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
-                        if (isset($this->post['delivery_department'])) {
-                            $insertArray['department'] = $this->post['delivery_department'];
+                        if (isset($this->post['department'])) {
+                            $insertArray['department'] = $this->post['department'];
                         }
                     }
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                }
-                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
-                    $params = array(
-                            'uid' => $customer_id
-                    );
-                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    if (!$this->post['different_delivery_address']) {
+                        $insertArray['tx_multishop_address_type'] = 'delivery';
+                        $insertArray['tx_multishop_default'] = 0;
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        // ADD TT_ADDRESS RECORD
+                        $insertArray = array();
+                        $insertArray['tstamp'] = time();
+                        $insertArray['company'] = $this->post['delivery_company'];
+                        $insertArray['name'] = $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name'];
+                        $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+                        $insertArray['first_name'] = $this->post['delivery_first_name'];
+                        $insertArray['middle_name'] = $this->post['delivery_middle_name'];
+                        $insertArray['last_name'] = $this->post['delivery_last_name'];
+                        $insertArray['email'] = $this->post['delivery_email'];
+                        if (!$this->post['delivery_street_name']) {
+                            // fallback for old custom checkouts
+                            $insertArray['building'] = $this->post['delivery_building'];
+                            $insertArray['street_name'] = $this->post['delivery_address'];
+                            $insertArray['address_number'] = $this->post['delivery_address_number'];
+                            $insertArray['address_ext'] = $this->post['delivery_address_ext'];
+                            $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
+                            $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
+                        } else {
+                            $insertArray['building'] = $this->post['delivery_building'];
+                            $insertArray['street_name'] = $this->post['delivery_street_name'];
+                            $insertArray['address_number'] = $this->post['delivery_address_number'];
+                            $insertArray['address_ext'] = $this->post['delivery_address_ext'];
+                            $insertArray['address'] = $this->post['delivery_address'];
+                        }
+                        $insertArray['zip'] = $this->post['delivery_zip'];
+                        $insertArray['phone'] = $this->post['delivery_telephone'];
+                        $insertArray['mobile'] = $this->post['delivery_mobile'];
+                        $insertArray['city'] = $this->post['delivery_city'];
+                        $insertArray['country'] = $this->post['delivery_country'];
+                        if ($this->post['delivery_gender'] == '0' || $this->post['delivery_gender'] == '1') {
+                            $insertArray['gender'] = ($this->post['delivery_gender'] == '0' ? 'm' : 'f');
+                        } else {
+                            $insertArray['gender'] = $this->post['delivery_gender'];
+                        }
+                        $insertArray['birthday'] = strtotime($this->post['delivery_birthday']);
+                        if ($this->post['delivery_gender'] == 'm') {
+                            $insertArray['title'] = 'Mr.';
+                        } else {
+                            if ($this->post['delivery_gender'] == 'f') {
+                                $insertArray['title'] = 'Mrs.';
+                            }
+                        }
+                        $insertArray['region'] = $this->post['delivery_state'];
+                        $insertArray['pid'] = $this->conf['fe_customer_pid'];
+                        $insertArray['page_uid'] = $this->shop_pid;
+                        $insertArray['tstamp'] = time();
+                        $insertArray['tx_multishop_address_type'] = 'delivery';
+                        $insertArray['tx_multishop_default'] = 0;
+                        $insertArray['tx_multishop_customer_id'] = $customer_id;
+                        if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
+                            if (isset($this->post['delivery_department'])) {
+                                $insertArray['department'] = $this->post['delivery_department'];
+                            }
+                        }
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
-                }
-                // customer shipping/payment method mapping
-                if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
-                    // shipping/payment methods
-                    $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\'' . $customer_id . '\'');
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                    if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-                        foreach ($this->post['payment_method'] as $payment_method_id => $value) {
-                            $updateArray = array();
-                            $updateArray['customers_id'] = $customer_id;
-                            $updateArray['method_id'] = $payment_method_id;
-                            $updateArray['type'] = 'payment';
-                            $updateArray['negate'] = $value;
-                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
+                        $params = array(
+                                'uid' => $customer_id
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
-                    if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-                        foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
-                            $updateArray = array();
-                            $updateArray['customers_id'] = $customer_id;
-                            $updateArray['method_id'] = $shipping_method_id;
-                            $updateArray['type'] = 'shipping';
-                            $updateArray['negate'] = $value;
-                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    // customer shipping/payment method mapping
+                    if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+                        // shipping/payment methods
+                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\'' . $customer_id . '\'');
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
+                            foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+                                $updateArray = array();
+                                $updateArray['customers_id'] = $customer_id;
+                                $updateArray['method_id'] = $payment_method_id;
+                                $updateArray['type'] = 'payment';
+                                $updateArray['negate'] = $value;
+                                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            }
                         }
+                        if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
+                            foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+                                $updateArray = array();
+                                $updateArray['customers_id'] = $customer_id;
+                                $updateArray['method_id'] = $shipping_method_id;
+                                $updateArray['type'] = 'shipping';
+                                $updateArray['negate'] = $value;
+                                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            }
+                        }
+                        // shipping/payment methods eof
                     }
-                    // shipping/payment methods eof
                 }
             }
         }

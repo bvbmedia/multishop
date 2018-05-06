@@ -1439,6 +1439,7 @@
             <label index="updated_by">Updated by</label>
             <label index="email_create_account_completed">E-mail create account completed</label>
             <label index="basket_contain_unorderable_free_products">Basket contains free products. These are not orderable.</label>
+            <label index="feed_exporter_fields_label_ordered_by">Ordered by</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2852,6 +2853,7 @@
             <label index="updated_by">Geactualiseerd door</label>
             <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>
             <label index="basket_contain_unorderable_free_products">Winkelwagen bevat gratis producten. Deze zijn niet te bestellen.</label>
+            <label index="feed_exporter_fields_label_ordered_by">Besteld door</label>
         </languageKey>
     </data>
 </T3locallang>

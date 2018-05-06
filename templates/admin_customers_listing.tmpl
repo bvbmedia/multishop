@@ -1,7 +1,7 @@
 <!-- ###TEMPLATE### begin -->
 <form action="###FORM_ACTION_URL_CUSTOMERS_BULK_ACTION###" name="customers_listing" id="customers_listing" method="post">
     <div class="table-responsive">
-            <table width="100%" border="0" class="table table-striped table-bordered" id="msAdminCustomersListing">
+            <table width="100%" border="0" class="table table-striped table-bordered table-valign-middle" id="msAdminCustomersListing">
                 <thead>
                 <tr>
                     <th class="cellCheckbox">
@@ -28,12 +28,12 @@
                 <tbody>
                 <!-- ###CUSTOMERS### begin -->
                 <tr class="###ROW_TYPE###">
-                    <th class="cellCheckbox">
+                    <td class="cellCheckbox">
                         <div class="checkbox checkbox-success checkbox-inline">
                         <input type="checkbox" name="selected_customers[]" class="selected_customers_cb" id="checkbox_###CUSTOMERS_UID###" value="###CUSTOMERS_UID###">
                         <label for="checkbox_###CUSTOMERS_UID###"></label>
                         </div>
-                    </th>
+                    </td>
                     <td align="right"><a href="###CUSTOMERS_EDIT_LINK###" class="popover-link" title="###LABEL_LOADING###" rel="###CUSTOMERS_UID###">###CUSTOMERS_UID###</a></td>
                     ###MASTER_SHOP###
                     ###CUSTOM_MARKER_0_BODY###
@@ -46,7 +46,7 @@
                     <td align="right" nowrap>###CUSTOMERS_TURN_OVER_THIS_YEAR###</td>
                     <td align="center" nowrap><a href="###CUSTOMERS_LOGINAS_LINK###">###CUSTOMERS_LOGINAS###</a></td>
                     <td align="center" nowrap>###CUSTOMERS_STATUS###</td>
-                    <td align="center" nowrap><a href="###CUSTOMERS_DELETE_LINK###" onclick="###CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS###" class="text-danger admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"><i class="fa fa-trash-o fa-lg"></i></a></td>
+                    <td align="center" nowrap>###CUSTOMERS_DELETE_ICON###</td>
                 </tr>
                 <!-- ###CUSTOMERS### end -->
                 </tbody>

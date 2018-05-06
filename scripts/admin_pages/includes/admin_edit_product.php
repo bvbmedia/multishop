@@ -1872,7 +1872,13 @@ if ($this->post) {
                 $updateArray['products_name'] = $this->post['products_name'][$key];
                 $updateArray['delivery_time'] = $this->post['delivery_time'][$key];
                 $updateArray['products_shortdescription'] = $this->post['products_shortdescription'][$key];
+                if ($updateArray['products_shortdescription']=="<p><br></p>\r\n") {
+                    $updateArray['products_shortdescription']='';
+                }
                 $updateArray['products_description'] = $this->post['products_description'][$key];
+                if ($updateArray['products_description']=="<p><br></p>\r\n") {
+                    $updateArray['products_description']='';
+                }
                 $updateArray['products_meta_keywords'] = $this->post['products_meta_keywords'][$key];
                 $updateArray['products_meta_title'] = $this->post['products_meta_title'][$key];
                 $updateArray['products_meta_keywords'] = $this->post['products_meta_keywords'][$key];
@@ -1897,6 +1903,9 @@ if ($this->post) {
                     for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
                         $updateArray['products_description_tab_title_' . $i] = $this->post['products_description_tab_title_' . $i][$key];
                         $updateArray['products_description_tab_content_' . $i] = $this->post['products_description_tab_content_' . $i][$key];
+                        if ($updateArray['products_description_tab_content_' . $i]=="<p><br></p>\r\n") {
+                            $updateArray['products_description_tab_content_' . $i]='';
+                        }
                     }
                 }
                 // EXTRA TAB CONTENT EOF
@@ -2808,9 +2817,14 @@ if ($this->post) {
 							//alert(counter_data);
 							if (counter_data == 0) {
 								counter_data = counter_data + 1;
+                                '.(($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') ? '
+                                    var readonly=\'\';
+                                ' : '
+                                    var readonly=\' readonly="readonly"\';
+                                ').'
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_from')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" /></div>\';
+								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_from')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1"\' + readonly + \' value="1" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_till2')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
@@ -2915,9 +2929,15 @@ if ($this->post) {
                     $staffel_tax = mslib_fe::taxDecimalCrop(($sp_price * $product_tax_rate) / 100);
                     $sp_price_display = mslib_fe::taxDecimalCrop($sp_price, 2, false);
                     $staffel_price_display_incl = mslib_fe::taxDecimalCrop($sp_price + $staffel_tax, 2, false);
+                    $readonly=' readonly="readonly"';
+                    if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                        if ($sp_idx=='1') {
+                            $readonly='';
+                        }
+                    }
                     $staffel_price_block .= '
 						<tr id="sp_' . $sp_idx . '">
-							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1" readonly="readonly" value="' . $sp_col_1 . '" /></span></td>
+							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1"'.$readonly.' value="' . $sp_col_1 . '" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_till2') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_2" value="' . $sp_col_2 . '" /></span></td>
 							<td>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="' . htmlspecialchars($sp_price_display) . '" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>
@@ -2944,10 +2964,18 @@ if ($this->post) {
 		*/
         //
         $order_unit = '<select name="order_unit_id" class="form-control"><option value="">' . $this->pi_getLL('default') . '</option>';
-        $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
+        $str = "SELECT o.id, o.is_default, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-            $order_unit .= '<option value="' . $row['id'] . '" ' . (($row['id'] == $product['order_unit_id']) ? 'selected' : '') . '>' . htmlspecialchars($row['name']) . '</option>';
+            $selected='';
+            if ($product['order_unit_id'] > 0) {
+                if ($row['id'] == $product['order_unit_id']) {
+                    $selected=' selected="selected"';
+                }
+            } else if ($row['is_default']>0) {
+                $selected=' selected="selected"';
+            }
+            $order_unit .= '<option value="' . $row['id'] . '"' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
         }
         $order_unit .= '</select>';
         $options_tab_virtual_product = '';

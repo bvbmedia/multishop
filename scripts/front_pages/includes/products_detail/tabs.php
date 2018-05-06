@@ -134,6 +134,9 @@ if (!$product['products_id']) {
         $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
             if ($product['staffel_price'] > 0) {
+                if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                    $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                }
                 $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
             } else {
                 $price_excl_vat = $product['final_price'];
@@ -336,6 +339,13 @@ if (!$product['products_id']) {
     $markerArray['###PRODUCTS_IMAGE###'] = $output['products_image'];
     $markerArray['###PRODUCTS_IMAGE_MORE###'] = $output['products_image_more'];
     $markerArray['###PRODUCTS_PRICE###'] = $output['products_price'];
+    $markerArray['###OLD_PRICE###'] = mslib_fe::amount2Cents($old_price);
+    $markerArray['###OLD_PRICE_WITH_CONTAINER###'] = $output['old_price_with_container'];
+    $markerArray['###FINAL_PRICE###'] = mslib_fe::amount2Cents($final_price);
+    $markerArray['###OLD_PRICE_PLAIN###'] = number_format($old_price, 2, ',', '.');
+    $markerArray['###FINAL_PRICE_PLAIN###'] = number_format($final_price, 2, ',', '.');
+    $markerArray['###OLD_PRICE_RAW###'] = number_format($old_price, 2, '.', '');
+    $markerArray['###FINAL_PRICE_RAW###'] = number_format($final_price, 2, '.', '');
     $markerArray['###PRODUCTS_SPECIAL_PRICE###'] = $output['special_price'];
     $markerArray['###OTHER_CUSTOMERS_BOUGHT###'] = $output['customers_also_bought'];
     // new

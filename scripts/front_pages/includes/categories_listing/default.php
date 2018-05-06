@@ -22,6 +22,7 @@ if (is_array($current) && $current['categories_name']) {
 if ($current['categories_id'] == $this->conf['categoriesStartingPoint'] and $this->hideHeader) {
     $output['categories_header'] = '';
 }
+$output_array=array();
 if (is_array($categories) && count($categories)) {
     // load optional cms content and show the current category name eof
     $counter = 0;
@@ -112,11 +113,16 @@ if (is_array($categories) && count($categories)) {
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingPagePostHook'])) {
         $params = array(
                 'subpartArray' => &$subpartArray,
-                'current' => &$current
+                'current' => &$current,
+                'output_array' => &$output_array
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingPagePostHook'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
+    }
+    if (is_array($output_array['meta'])) {
+        $GLOBALS['TSFE']->additionalHeaderData = array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
+        unset($output_array);
     }
     // custom hook that can be controlled by third-party plugin eof
     $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);

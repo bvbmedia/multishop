@@ -40,7 +40,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($orders_id)) {
             $this->conf['order_id'] = (int)$orders_id;
             $tax_separation = array();
-            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
+            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                 $sub_total_tax = 0;
@@ -87,6 +87,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
                     // hook
                     $params = array(
+                            'MODULES'=>&$this->ms['MODULES'],
                             'row' => &$row,
                             'orders_id' => &$orders_id
                     );
@@ -321,6 +322,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateArray['orders_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $row['orders_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                $invoice = mslib_fe::getInvoice($row['orders_id'], 'orders_id');
+                if ($invoice['id']) {
+                    $updateInvoicesArray = array();
+                    $updateInvoicesArray['grand_total'] = round($order_tax_data['grand_total'], 2);
+                    $updateInvoicesArray['grand_total_excluding_vat'] = round($order_tax_data['grand_total_excluding_vat'], 2);
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\'' . $invoice['id'] . '\'', $updateInvoicesArray);
+                    $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
                 //$sql_update="update tx_multishop_orders set grand_total='".round($order_tax_data['grand_total'], 2)."', orders_tax_data = '".$serial_orders."' where orders_id = ".$row['orders_id'];
                 //$GLOBALS['TYPO3_DB']->sql_query($sql_update);
             }
@@ -703,6 +713,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $user = array();
                 $user['name'] = $full_customer_name;
                 $user['email'] = $custom_email_address;
+                $user['customer_id'] = $order['customer_id'];
                 //hook
                 $send_mail = 1;
                 $mail_attachment = array();

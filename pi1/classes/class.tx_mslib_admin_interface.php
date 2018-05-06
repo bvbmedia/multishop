@@ -378,9 +378,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<div class="table-responsive">';
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
-                $tableContent .= '<table class="table table-striped table-bordered tablesorter" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle tablesorter" id="msAdminTableInterface'.$tableId.'">';
             } else {
-                $tableContent .= '<table class="table table-striped table-bordered" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle" id="msAdminTableInterface'.$tableId.'">';
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
@@ -460,7 +460,21 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
                     $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
                 }
-                $tableContent .= '<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
+                $tr_tag='<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'])) {
+                    $conf = array(
+                        'row' => &$row,
+                        'rowKey' => &$rowKey,
+                        'interfaceKey' => $this->interfaceKey,
+                        'tr_type' => &$tr_type,
+                        'tr_tag' => &$tr_tag,
+                        'row_sortable_id' => &$row_sortable_id
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
+                    }
+                }
+                $tableContent .= $tr_tag;
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
                     $headerData = '';
                     $headerData .= '
@@ -530,6 +544,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'timestamp':
                             if (is_numeric($row[$col]) && $row[$col] > 0) {
                                 $row[$col] = strftime("%x %X", $row[$col]);
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
+                        case 'timestamp_no_seconds':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = strftime("%x %H:%M", $row[$col]);
                             } else {
                                 $row[$col] = '';
                             }
@@ -918,14 +939,18 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($params['settings']['skipTotalCount'] || ($params['settings']['skipTotalCountWhenZeroResults'] && !$params['summarizeData']['totalRecordsInTable'])) {
             $skipTotalCount = 1;
         }
+        $recordCountMarkup='';
         if (!$skipRecordCount) {
-            $content .= '<p class="text-center">' . $this->pi_getLL('found_records') . ': <strong>' . number_format($pageset['total_rows'], 0, '', '.') . '</strong></p>';
+            $recordCountMarkup.= $this->pi_getLL('found_records') . ': <strong>' . number_format($pageset['total_rows'], 0, '', '.') . '</strong><br/>';
         }
         if (!$skipTotalCount && isset($params['summarizeData']['totalRecordsInTable'])) {
-            $content .= '<p class="text-center">' . $this->pi_getLL('total_records_in_database') . ': <strong>' . number_format($params['summarizeData']['totalRecordsInTable'], 0, '', '.') . '</strong></p>';
+            $recordCountMarkup.= $this->pi_getLL('total_records_in_database') . ': <strong>' . number_format($params['summarizeData']['totalRecordsInTable'], 0, '', '.') . '</strong><br/>';
+        }
+        if ($recordCountMarkup) {
+            $content .= '<p class="mt-10 text-center">'.$recordCountMarkup.'</p>';
         }
         if (!$params['settings']['skipFooterMarkup']) {
-            $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $that->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div>';
+            //$content .= '<div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $that->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div>';
         }
         if (!$params['settings']['skipPanelMarkup']) {
             $content .= '</div>';

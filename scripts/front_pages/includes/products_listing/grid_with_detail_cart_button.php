@@ -48,7 +48,7 @@ foreach ($products as $current_product) {
     $content .= '<li id="productlisting_' . $current_product['products_id'] . '">
 		<form action="' . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id=' . $current_product['products_id']) . '" method="post">
 		<h2><a href="' . $link . '" class="ajax_link">' . $current_product['products_name'] . '</a></h2>
-		<div class="image"><a href="' . $link . '" title="' . htmlspecialchars($current_product['products_name']) . '" class="ajax_link">' . $image . '</a></div>
+		<div class="image"><a href="' . $link . '" class="ajax_link">' . $image . '</a></div>
 		<div class="description">' . $current_product['products_shortdescription'] . '</div>
 		<div class="category"><a href="' . $catlink . '" class="ajax_link">' . $current_product['categories_name'] . '</a></div>
 		<div class="link_detail"><a href="' . $link . '" class="ajax_link"></a></div>

@@ -154,6 +154,7 @@
 .width-auto { width:auto; }
 .width-fw { width:100%; }
 .padding-10 { padding:10px; }
+.w-30 { width:30px; }
 
 .cellCheckbox { vertical-align:middle; }
 .cellCheckbox .checkbox.checkbox-inline { padding-left:17px; }
@@ -319,3 +320,4 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a > span.menu_item,
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > span.menu_item { display:none; }
 }
+.highlighted-important { color: red; }

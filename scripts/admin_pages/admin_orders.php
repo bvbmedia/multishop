@@ -482,6 +482,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                         $user = array();
                         $user['name'] = $full_customer_name;
                         $user['email'] = $tmpArray['billing_email'];
+                        $user['customer_id'] = $tmpArray['customer_id'];
                         if ($user['email']) {
                             mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
                             $postErno[] = array(
@@ -615,6 +616,7 @@ $option_search = array(
         "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
         "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
         "foreign_orders_id" => $this->pi_getLL('feed_exporter_fields_label_foreign_orders_id'),
+        "cruser_id" => $this->pi_getLL('feed_exporter_fields_label_ordered_by'),
 
 );
 asort($option_search);
@@ -706,6 +708,16 @@ if ($this->post['skeyword']) {
                         //$items[]="(op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
                         $items[] = " orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.products_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or op.products_description LIKE '%" . addslashes($this->post['skeyword']) . "%')";
                         break;
+                    case 'cruser_id':
+                        $subFilter=array();
+                        $subFilter[]='fe.name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $subFilter[]='fe.first_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $subFilter[]='fe.middle_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $subFilter[]='fe.last_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $subFilter[]='fe.email LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $subFilter[]='fe.username LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+                        $items[] = "o.cruser_id in (select fe.uid from fe_users fe where (".implode(' OR ', $subFilter)."))";
+                        break;
                     default:
                         $items[] = $fields . " LIKE '%" . addslashes($this->post['skeyword']) . "%'";
                         break;
@@ -790,6 +802,16 @@ if ($this->post['skeyword']) {
             break;
         case 'foreign_orders_id':
             $filter[] = "o.foreign_orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'cruser_id':
+            $subFilter=array();
+            $subFilter[]='fe.name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $subFilter[]='fe.first_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $subFilter[]='fe.middle_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $subFilter[]='fe.last_name LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $subFilter[]='fe.email LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $subFilter[]='fe.username LIKE \'%'.addslashes($this->post['skeyword']).'%\'';
+            $filter[] = "o.cruser_id in (select uid from fe_users fe where (".implode(' OR ', $subFilter)."))";
             break;
     }
 }

@@ -249,7 +249,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	jQuery(document).ready(function($) {
 		var url = document.location.toString();
         if (url.match("#")) {
-            $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+            $(\'.nav-tabs a[href="#\' + url.split("#")[1] + \'"]\').tab("show");
         } else {
             $(".nav-tabs a:first").tab("show");
         }

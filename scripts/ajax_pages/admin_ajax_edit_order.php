@@ -188,14 +188,21 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                     //
                     if ($this->post['tx_multishop_pi1']['action'] == 'update_selected_invoices_to_paid') {
-                        if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
-                            /*
-                            $return_data['info']=array(
-                                'status'=>'info',
-                                'message'=>'Invoice '.$invoice['invoice_id'].' has been updated to paid.'
-                            );
-                            */
+                        if ($invoice['reversal_invoice']>0) {
+                            $updateArray = array('paid' => 1);
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $invoice['id'], $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             $return_data['status'] = 'OK';
+                        } else {
+                            if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
+                                /*
+                                $return_data['info']=array(
+                                    'status'=>'info',
+                                    'message'=>'Invoice '.$invoice['invoice_id'].' has been updated to paid.'
+                                );
+                                */
+                                $return_data['status'] = 'OK';
+                            }
                         }
                     } else {
                         // Update to unpaid
@@ -210,10 +217,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                             }
                         }
                         if ($continue) {
-                            $updateArray = array('paid' => 0);
-                            $updateArray['orders_last_modified'] = time();
-                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $order['orders_id'], $updateArray);
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            if (!$invoice['reversal_invoice']) {
+                                $updateArray = array('paid' => 0);
+                                $updateArray['orders_last_modified'] = time();
+                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $order['orders_id'], $updateArray);
+                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            }
                             $updateArray = array('paid' => 0);
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $invoice['id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);

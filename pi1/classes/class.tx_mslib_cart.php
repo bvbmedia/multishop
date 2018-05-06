@@ -235,6 +235,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         } else {
                             $quantity = $cart['products'][$shopping_cart_item]['qty'];
                         }
+                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                            $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                        }
                         $product['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
                     }
 
@@ -507,6 +510,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     }
                                     // chk if the product has staffel price
                                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
+                                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                                            $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                                        }
                                         $product['final_price'] = mslib_fe::calculateStaffelPrice($product['staffel_price'], 1);
                                     }
                                     if ($product['products_id']) {
@@ -660,6 +666,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         // custom hook that can be controlled by third-party plugin eof
                         // chk if the product has staffel price
                         if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
+                            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                                $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
+                            }
                             $cart['products'][$shopping_cart_item]['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
                         }
                         $cart['products'][$shopping_cart_item]['qty'] = $qty;
@@ -796,10 +805,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         // custom hook that can be controlled by third-party plugin
         $no_discount=false;
+        $vat_id_validate_country=$this->post['b_cc'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
             $params = array(
                     'cart' => &$cart,
                     'no_discount' => &$no_discount,
+                    'vat_id_validate_country'=>&$vat_id_validate_country
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -826,8 +837,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         }
         $vat_id = $cart['user']['tx_multishop_vat_id'];
         // accomodate the submission through onestep checkout for realtime cart preview
-        if (isset($this->post['b_cc']) && !empty($this->post['b_cc']) && $this->post['tx_multishop_vat_id']) {
-            $iso_customer = mslib_fe::getCountryByName($this->post['b_cc']);
+        if (isset($vat_id_validate_country) && !empty($vat_id_validate_country) && $this->post['tx_multishop_vat_id']) {
+            $iso_customer = mslib_fe::getCountryByName($vat_id_validate_country);
             $iso_customer['country'] = $iso_customer['cn_short_en'];
             $vat_id = $this->post['tx_multishop_vat_id'];
         }
@@ -1368,12 +1379,16 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function convertCartToOrder($cart) {
         $return_orders_id=false;
         $orders_id=0;
+        $address = $cart['user'];
+        $vat_id_validate_country=$this->post['b_cc'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'])) {
             // hook
             $params = array(
+                'address' => &$address,
                 'cart' => &$cart,
                 'orders_id' => &$orders_id,
-                'return_orders_id' => &$return_orders_id
+                'return_orders_id' => &$return_orders_id,
+                'vat_id_validate_country'=>&$vat_id_validate_country
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1387,7 +1402,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $tax_separation = array();
         $total_price = 0;
         $order = array();
-        $address = $cart['user'];
         // check for NULL, convert to empty string - typo3 v6.x related bug
         if (is_array($address) && count($address)) {
             foreach ($address as $key => $val) {
@@ -1402,7 +1416,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         // if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
         if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $address['tx_multishop_vat_id']) {
-            if (strtolower($address['country']) != strtolower($this->tta_shop_info['country'])) {
+            if (strtolower($vat_id_validate_country) != strtolower($this->tta_shop_info['country'])) {
                 $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
         }

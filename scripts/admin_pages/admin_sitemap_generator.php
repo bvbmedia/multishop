@@ -91,7 +91,7 @@ file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
 $logs_lines_reg++;
 // XML
 $tmpXMLContentHeader[] = '<url>' . "\n";
-$tmpXMLContentHeader[] = "\t" . '<loc>' . $link . '</loc>' . "\n";
+$tmpXMLContentHeader[] = "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
 $tmpXMLContentHeader[] = "\t" . '<lastmod>' . date('c') . '</lastmod>' . "\n";
 $tmpXMLContentHeader[] = "\t" . '<changefreq>daily</changefreq>' . "\n";
 $tmpXMLContentHeader[] = "\t" . '<priority>0.5</priority>' . "\n";
@@ -129,7 +129,7 @@ if (!$this->get['skip_categories']) {
 
         // XML
         $tmpContent = '<url>' . "\n";
-        $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
+        $tmpContent .= "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
         if ($categories['last_modified']) {
             $tmpContent .= "\t" . '<lastmod>' . ($categories['last_modified'] > 0 ? date('c', $categories['last_modified']) : '') . '</lastmod>' . "\n";
         }
@@ -194,7 +194,7 @@ if (!$this->get['skip_products']) {
 
             // XML
             $tmpContent = '<url>' . "\n";
-            $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
+            $tmpContent .= "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
             if ($product['products_last_modified']) {
                 $tmpContent .= "\t" . '<lastmod>' . ($product['products_last_modified'] > 0 ? date('c', $product['products_last_modified']) : '') . '</lastmod>' . "\n";
             }
@@ -230,7 +230,7 @@ if (!$this->get['skip_manufacturers']) {
 
             // XML
             $tmpContent = '<url>' . "\n";
-            $tmpContent .= "\t" . '<loc>' . $link . '</loc>' . "\n";
+            $tmpContent .= "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
             if ($row['last_modified']) {
                 $tmpContent .= "\t" . '<lastmod>' . ($row['last_modified'] > 0 ? date('c', $row['last_modified']) : '') . '</lastmod>' . "\n";
             }
