@@ -24,7 +24,7 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class mslib_fe {
-    public function init($ref) {
+    public static function init($ref) {
         $this->ref = $ref;
         $this->DOCUMENT_ROOT = $ref->DOCUMENT_ROOT;
         $this->HTTP_HOST = $ref->HTTP_HOST;
@@ -79,7 +79,7 @@ class mslib_fe {
      * @param type of the menu $type
      * @return string
      */
-    public function createAdminPanel($ms_menu, $type = 'header') {
+    public static function createAdminPanel($ms_menu, $type = 'header') {
         $admin_content = '';
         $total_tabs = count($ms_menu);
         $tab_counter = 0;
@@ -154,7 +154,7 @@ class mslib_fe {
         }
         return $admin_content;
     }
-    public function getProductRelativesBox($product, $type = 'relatives', $limit = 20) {
+    public static function getProductRelativesBox($product, $type = 'relatives', $limit = 20) {
         $product['products_id'] = (int)$product['products_id'];
         $product['categories_id'] = (int)$product['categories_id'];
         $filter = array();
@@ -343,7 +343,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getProductsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $redirect_if_one_product = 0, $extra_from = array(), $groupby = array(), $search_section = 'products_search', $select_total_count = '', $returnTotalCountOnly = 0, $enableFetchTaxRate = 1, $extra_join = array(), $includeDisabled = 0, $skipIsDeepest = 0) {
+    public static function getProductsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $redirect_if_one_product = 0, $extra_from = array(), $groupby = array(), $search_section = 'products_search', $select_total_count = '', $returnTotalCountOnly = 0, $enableFetchTaxRate = 1, $extra_join = array(), $includeDisabled = 0, $skipIsDeepest = 0) {
         if (!is_array($filter) and $filter) {
             $filter = array($filter);
         }
@@ -892,7 +892,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function Crumbar($c, $languages_id = '', $output = array(), $page_uid = '') {
+    public static function Crumbar($c, $languages_id = '', $output = array(), $page_uid = '') {
         if (!$this->masterShop && !is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -985,7 +985,7 @@ class mslib_fe {
         }
         return $output;
     }
-    public function rewritenamein($input, $id = '', $replaceDashByUnderscore = 0) {
+    public static function rewritenamein($input, $id = '', $replaceDashByUnderscore = 0) {
         $input = self::normaliza($input);
         if (mb_detect_encoding($input, 'UTF-8', true) == 'UTF-8') {
             $input = utf8_decode($input);
@@ -1020,7 +1020,7 @@ class mslib_fe {
         }
         return urlencode($final_file);
     }
-    public function normaliza($string) {
+    public static function normaliza($string) {
         $normalizeChars = array(
                 'Š' => 'S',
                 'š' => 's',
@@ -1104,7 +1104,7 @@ class mslib_fe {
         $string = strtr($string, $normalizeChars);
         return $string;
     }
-    public function getTaxRuleSet($tax_group_id, $current_price, $to_tax_include = 'true') {
+    public static function getTaxRuleSet($tax_group_id, $current_price, $to_tax_include = 'true') {
         if (is_numeric($tax_group_id)) {
             if ($this->tta_user_info) {
                 if (!isset($this->tta_user_info['default'])) {
@@ -1231,7 +1231,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function taxDecimalCrop($float, $precision = 2, $disable = true, $use_cu_decimal_point = true) {
+    public static function taxDecimalCrop($float, $precision = 2, $disable = true, $use_cu_decimal_point = true) {
         if ($disable) {
             return $float;
         }
@@ -1254,7 +1254,7 @@ class mslib_fe {
     ////
     // wrapper to in_array() for PHP3 compatibility
     // Checks if the lookup value exists in the lookup array
-    public function typolink($page_id = '', $vars = '', $manual_link = 0, $forceAbsoluteUrl = 0) {
+    public static function typolink($page_id = '', $vars = '', $manual_link = 0, $forceAbsoluteUrl = 0) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'])) {
             $params = array(
                     'page_id' => &$page_id,
@@ -1323,7 +1323,7 @@ class mslib_fe {
         return $url;
     }
     ////
-    public function rebuildStaffelPrice($staffel_price_list, $product_price) {
+    public static function rebuildStaffelPrice($staffel_price_list, $product_price) {
         if (empty($staffel_price_list)) {
             return false;
         }
@@ -1339,7 +1339,7 @@ class mslib_fe {
         return $staffel_price_list;
     }
     // Return all HTTP GET variables, except those passed as a parameter
-    public function final_products_price($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
+    public static function final_products_price($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
         if (!$ignore_minimum_quantity) {
             if ($quantity and $product['minimum_quantity'] > $quantity) {
                 // check if the product has a minimum quantity
@@ -1408,7 +1408,7 @@ class mslib_fe {
             return $final_price;
         }
     }
-    public function calculateStaffelPrice($staffel_price, $product_qty) {
+    public static function calculateStaffelPrice($staffel_price, $product_qty) {
         switch ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
             case 'yes_with_stepping':
                 $mode = 'stepping';
@@ -1508,11 +1508,11 @@ class mslib_fe {
         $final_price = $total;
         return $final_price;
     }
-    public function amount2Cents2($money) {
+    public static function amount2Cents2($money) {
         $money = number_format($money, 2, '.', '');
         return $money;
     }
-    public function final_attributes_price($product, $attributes, $quantity = 1, $add_currency = 0, $ignore_minimum_quantity = 0, $page_uid = '') {
+    public static function final_attributes_price($product, $attributes, $quantity = 1, $add_currency = 0, $ignore_minimum_quantity = 0, $page_uid = '') {
         $final_price = 0;
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
@@ -1548,7 +1548,7 @@ class mslib_fe {
             return $final_price;
         }
     }
-    public function url_exists($url) {
+    public static function url_exists($url) {
         $handle = curl_init($url);
         if (false === $handle) {
             return false;
@@ -1561,7 +1561,7 @@ class mslib_fe {
         curl_close($handle);
         return $connectable;
     }
-    public function xml2array($contents, $get_attributes = 0) {
+    public static function xml2array($contents, $get_attributes = 0) {
         if (!$contents) {
             return array();
         }
@@ -1653,7 +1653,7 @@ class mslib_fe {
         }
         return ($xml_array);
     }
-    public function String2Array($var) {
+    public static function String2Array($var) {
         $ms = array();
         if ($var) {
             $records = explode("\n", trim($var));
@@ -1684,7 +1684,7 @@ class mslib_fe {
         }
         return $this->ms['parameters'];
     }
-    public function image_type_to_extension($imagetype, $include_dot = false) {
+    public static function image_type_to_extension($imagetype, $include_dot = false) {
         if (empty($imagetype)) {
             return false;
         }
@@ -1760,7 +1760,7 @@ class mslib_fe {
                 return false;
         }
     }
-    public function tep_get_all_get_params($exclude_array = '', $hidden_fields = 0) {
+    public static function tep_get_all_get_params($exclude_array = '', $hidden_fields = 0) {
         if ($exclude_array == '') {
             $exclude_array = array();
         }
@@ -1828,7 +1828,7 @@ class mslib_fe {
         }
         return $get_url;
     }
-    public function tep_in_array($lookup_value, $lookup_array) {
+    public static function tep_in_array($lookup_value, $lookup_array) {
         if (function_exists('in_array')) {
             if (in_array($lookup_value, $lookup_array)) {
                 return true;
@@ -1843,7 +1843,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function getManufacturer($value, $type = 'manufacturers_id') {
+    public static function getManufacturer($value, $type = 'manufacturers_id') {
         if ($value) {
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                     'tx_multishop_manufacturers', // FROM ...
@@ -1862,7 +1862,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getManufacturers() {
+    public static function getManufacturers() {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_manufacturers', // FROM ...
                 '', // WHERE...
@@ -1880,7 +1880,7 @@ class mslib_fe {
             return $rows;
         }
     }
-    public function getUsers($groupid, $orderby = 'company', $include_disabled = 0) {
+    public static function getUsers($groupid, $orderby = 'company', $include_disabled = 0) {
         if (is_numeric($groupid) and $groupid > 0) {
             $filter = array();
             if (!$this->masterShop) {
@@ -1914,7 +1914,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function ifRootAdmin($uid, $usergroup) {
+    public static function ifRootAdmin($uid, $usergroup) {
         if (is_numeric($usergroup)) {
             $admin_group = $usergroup;
         } else {
@@ -1937,11 +1937,11 @@ class mslib_fe {
             return 0;
         }
     }
-    public function SqlDate($sqldatetime) {
+    public static function SqlDate($sqldatetime) {
         $user_date = date('Y-m-d', strtotime($sqldatetime));
         return $user_date;
     }
-    public function orderhasitems($orders_id) {
+    public static function orderhasitems($orders_id) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'orders_products', // FROM ...
                 'orders_id=\'' . $orders_id . '\'', // WHERE...
@@ -1956,7 +1956,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function Money2DutchString($input, $add_currency = 1) {
+    public static function Money2DutchString($input, $add_currency = 1) {
         $content = '';
         if (is_numeric($input)) {
             if ($add_currency) {
@@ -1966,7 +1966,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function Money2PDFDutchString($input, $add_currency = 1) {
+    public static function Money2PDFDutchString($input, $add_currency = 1) {
         $content = '';
         if (is_numeric($input)) {
             if ($add_currency) {
@@ -1981,7 +1981,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function Datetime2Time($indate) {
+    public static function Datetime2Time($indate) {
         //YYYY-MM-DD HH:mm:ss.splits
         $indate = explode(" ", $indate);
         $dateArr = explode("-", $indate[0]);
@@ -1990,38 +1990,38 @@ class mslib_fe {
         $outdate = mktime($timeArr[0], $timeArr[1], $timeArr[2], $dateArr[1], $dateArr[2], $dateArr[0]);
         return $outdate;
     }
-    public function Date2Time($indate) {
+    public static function Date2Time($indate) {
         //YYYY-MM-DD HH:mm:ss.splits
         $indate = explode(" ", $indate);
         $dateArr = explode("-", $indate[0]);
         $outdate = mktime('0', '0', '0', $dateArr[1], $dateArr[2], $dateArr[0]);
         return $outdate;
     }
-    public function Time2Datetime($sqldatetime) {
+    public static function Time2Datetime($sqldatetime) {
         $user_date = date($this->pi_getLL('date_format') . ' H:i:s', $sqldatetime);
         return $user_date;
     }
-    public function Time2DutchDate($sqldatetime) {
+    public static function Time2DutchDate($sqldatetime) {
         $user_date = strftime('%x %X', $sqldatetime);
         return $user_date;
     }
-    public function Time2Date($sqldatetime) {
+    public static function Time2Date($sqldatetime) {
         $user_date = strftime('%x %X', $sqldatetime);
         return $user_date;
     }
-    public function Time2DutchDatetime($sqldatetime) {
+    public static function Time2DutchDatetime($sqldatetime) {
         $user_date = date($this->pi_getLL('date_format') . ' H:i:s', $sqldatetime);
         return $user_date;
     }
-    public function DutchDate($sqldatetime) {
+    public static function DutchDate($sqldatetime) {
         $user_date = strftime('%x %X', strtotime($sqldatetime));
         return $user_date;
     }
-    public function DutchTime($sqldatetime) {
+    public static function DutchTime($sqldatetime) {
         $user_date = strtotime($sqldatetime);
         return $user_date;
     }
-    public function getTaxGroupByName($string) {
+    public static function getTaxGroupByName($string) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_tax_rule_groups', // FROM ...
                 'name=\'' . addslashes($string) . '\'', // WHERE...
@@ -2035,7 +2035,7 @@ class mslib_fe {
             return $row;
         }
     }
-    public function getTaxGroupById($string) {
+    public static function getTaxGroupById($string) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_tax_rule_groups', // FROM ...
                 'rules_group_id=\'' . addslashes($string) . '\'', // WHERE...
@@ -2049,7 +2049,7 @@ class mslib_fe {
             return $row;
         }
     }
-    public function getCountryByName($english_name) {
+    public static function getCountryByName($english_name) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
                 'cn_short_en=\'' . addslashes($english_name) . '\'', // WHERE...
@@ -2069,7 +2069,7 @@ class mslib_fe {
 		Deutschland (if static_info_tables_de is configured properly)
 		Fallback output: Germany (if static_info_tables_de is not installed)
 	*/
-    public function getCountryCnIsoByEnglishName($english_name) {
+    public static function getCountryCnIsoByEnglishName($english_name) {
         // returns NL, BE, DE etc
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('cn_iso_2', // SELECT ...
                 'static_countries', // FROM ...
@@ -2082,7 +2082,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row['cn_iso_2'];
     }
-    public function getCountryName($cn_iso_nr) {
+    public static function getCountryName($cn_iso_nr) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('cn_iso_2', // SELECT ...
                 'static_countries', // FROM ...
                 'cn_iso_nr=\'' . addslashes($cn_iso_nr) . '\'', // WHERE...
@@ -2094,7 +2094,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row['cn_iso_2'];
     }
-    public function getCountryByCode($cn_iso_2) {
+    public static function getCountryByCode($cn_iso_2) {
         //cn_iso_2
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
@@ -2107,7 +2107,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         return $row['cn_short_en'];
     }
-    public function getEnglishCountryNameByTranslatedName($language_code, $translated_name) {
+    public static function getEnglishCountryNameByTranslatedName($language_code, $translated_name) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
                 'cn_short_' . $language_code . '=\'' . addslashes($translated_name) . '\'', // WHERE...
@@ -2119,7 +2119,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row['cn_short_en'];
     }
-    public function getCityName($id) {
+    public static function getCityName($id) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'plaatsen', // FROM ...
                 'id=\'' . $id . '\'', // WHERE...
@@ -2131,7 +2131,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row['naam'];
     }
-    public function getCityId($name) {
+    public static function getCityId($name) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'plaatsen', // FROM ...
                 'naam=\'' . addslashes($name) . '\'', // WHERE...
@@ -2143,11 +2143,11 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row['id'];
     }
-    public function replace_uri($str) {
+    public static function replace_uri($str) {
         $pattern = '#(^|[^\"=]{1})(http://|ftp://|mailto:|news:)([^\s<>]+)([\s\n<>]|$)#sm';
         return preg_replace($pattern, "\\1<a href=\"\\2\\3\" target=\"_blank\"><u>\\2\\3</u></a>\\4", $str);
     }
-    public function getTypoContent($pid = '', $uid = '') {
+    public static function getTypoContent($pid = '', $uid = '') {
         $filter = array();
         if (is_numeric($uid)) {
             $filter[] = 't.uid=\'' . $uid . '\'';
@@ -2162,16 +2162,16 @@ class mslib_fe {
         //	return $this->div->parseFunc($row['title'], $this->cObj, $this->conf['label.']['parse']); // return title
         return mslib_fe::renderTypoContent($row['bodytext']);
     }
-    public function renderTypoContent($content) {
+    public static function renderTypoContent($content) {
         $parseHTML = new t3lib_parsehtml_proc();
         $message = $parseHTML->TS_links_rte($this->pi_RTEcssText($content));
         return $message;
     }
-    public function string2url($input) {
+    public static function string2url($input) {
         $input = preg_replace("`((http)+(s)?:(//)|(www\.))((\w|\.|\-|_)+)(/)?(\S+)?`i", "<a href=\"http\\3://\\5\\6\\8\\9\" target=\"_blank\" title=\"\\0\">\\5\\6</a>", $input);
         return $input;
     }
-    public function getUsersByGroup($group_id) {
+    public static function getUsersByGroup($group_id) {
         if (is_numeric($group_id)) {
             $additional_where = array();
             $additional_where[] = 'FIND_IN_SET(\'' . $group_id . '\',usergroup) > 0';
@@ -2179,7 +2179,7 @@ class mslib_fe {
             return $users;
         }
     }
-    public function mailFeGroup($group_id, $subject, $body, $from_address = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop') {
+    public static function mailFeGroup($group_id, $subject, $body, $from_address = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop') {
         if (!is_numeric($group_id)) {
             return false;
         }
@@ -2191,7 +2191,7 @@ class mslib_fe {
             }
         }
     }
-    public function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
+    public static function mailUser($user, $subject, $body, $from_email = 'noreply@mysite.com', $from_name = 'TYPO3 Multishop', $attachments = array(), $options = array()) {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserBodyTemplate'])) {
             $params = array(
                     'user' => &$user,
@@ -2408,7 +2408,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getTranslatedCountryNameByEnglishName($language_code, $english_name) {
+    public static function getTranslatedCountryNameByEnglishName($language_code, $english_name) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
                 'cn_short_en=\'' . addslashes($english_name) . '\'', // WHERE...
@@ -2424,7 +2424,7 @@ class mslib_fe {
             return $row['cn_short_en'];
         }
     }
-    public function MsgHTMLwithEmbedImages(&$mail, $body) {
+    public static function MsgHTMLwithEmbedImages(&$mail, $body) {
         // get all img tags
         preg_match_all('/<img.*?>/', $body, $matches);
         if (!isset($matches[0])) {
@@ -2451,14 +2451,14 @@ class mslib_fe {
         }
         $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
     }
-    public function mailFeUser($user, $subject, $content, $from_address = 'noreply@typo3multishop.com', $from_name = 'TYPO3 Multishop') {
+    public static function mailFeUser($user, $subject, $content, $from_address = 'noreply@typo3multishop.com', $from_name = 'TYPO3 Multishop') {
         return mslib_fe::mailUser($user, $subject, $content, $from_address, $from_name);
     }
-    public function convertTime($dformat, $sformat, $ts) {
+    public static function convertTime($dformat, $sformat, $ts) {
         extract(strptime($ts, $sformat));
         return strftime($dformat, mktime(intval($tm_hour), intval($tm_min), intval($tm_sec), intval($tm_mon) + 1, intval($tm_mday), intval($tm_year) + 1900));
     }
-    public function ifMobile($USER_AGENT) {
+    public static function ifMobile($USER_AGENT) {
         $types = array();
         $types[] = 'DoCoMo';
         $types[] = 'J-PHONE';
@@ -2474,7 +2474,7 @@ class mslib_fe {
             }
         }
     }
-    public function globalCrumbarTree($c, $languages_id = '', $output = array()) {
+    public static function globalCrumbarTree($c, $languages_id = '', $output = array()) {
         if (is_numeric($c)) {
             if ($this->ms['MODULES']['CACHE_FRONT_END'] || $this->ms['MODULES']['FORCE_CACHE_FRONT_END']) {
                 if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
@@ -2542,7 +2542,7 @@ class mslib_fe {
         }
         return $output;
     }
-    public function showAttributes($products_id, $add_tax_rate = '', $sessionData = array(), $readonly = 0, $hide_prices = 0, $returnAsArray = 0, $skipHiddenInCartAttributes = 0) {
+    public static function showAttributes($products_id, $add_tax_rate = '', $sessionData = array(), $readonly = 0, $hide_prices = 0, $returnAsArray = 0, $skipHiddenInCartAttributes = 0) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -3003,7 +3003,7 @@ class mslib_fe {
         }
         return $output;
     }
-    public function currency($html = 1, $customer_currency = 0) {
+    public static function currency($html = 1, $customer_currency = 0) {
         //$currency_symbol=$this->ms['MODULES']['CURRENCY'];
         $currency_symbol = $this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
         if ($this->cookie['currency_rate'] and $customer_currency) {
@@ -3012,7 +3012,7 @@ class mslib_fe {
         }
         return $currency_symbol;
     }
-    public function ProductHasAttributes($products_id, $page_uid = '') {
+    public static function ProductHasAttributes($products_id, $page_uid = '') {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -3043,7 +3043,7 @@ class mslib_fe {
 			return false;
 		}
     }
-    public function categoryHasSubs($categories_id) {
+    public static function categoryHasSubs($categories_id) {
         if (is_numeric($categories_id)) {
             $str = $GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
                     'tx_multishop_categories', // FROM ...
@@ -3060,7 +3060,7 @@ class mslib_fe {
             }
         }
     }
-    public function getCategory($categories_id, $include_disabled_category = 0, $page_uid = '') {
+    public static function getCategory($categories_id, $include_disabled_category = 0, $page_uid = '') {
         if (!is_numeric($categories_id)) {
             return false;
         }
@@ -3088,7 +3088,7 @@ class mslib_fe {
             }
         }
     }
-    public function getProductName($pid) {
+    public static function getProductName($pid) {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -3103,7 +3103,7 @@ class mslib_fe {
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $rs['products_name'];
     }
-    public function getOrdersProductData($order_id, $pid=0) {
+    public static function getOrdersProductData($order_id, $pid=0) {
         if (!is_numeric($order_id)) {
             return false;
         }
@@ -3126,7 +3126,7 @@ class mslib_fe {
         }
         return $order_products;
     }
-    public function getOrdersProductName($pid) {
+    public static function getOrdersProductName($pid) {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -3141,7 +3141,7 @@ class mslib_fe {
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $rs['products_name'];
     }
-    public function getNextPreviousProduct($products_id, $categories_id = '') {
+    public static function getNextPreviousProduct($products_id, $categories_id = '') {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -3250,7 +3250,7 @@ class mslib_fe {
         $pagination_items['total'] = $total;
         return $pagination_items;
     }
-    public function getOptionsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getOptionsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
         if (!is_numeric($offset)) {
             $offset = 0;
         }
@@ -3291,7 +3291,7 @@ class mslib_fe {
 		string example: p2c.categories_id=12
 		array example:  $filter[]='p2c.categories_id=12'
 	*/
-    public function getOptionsValuesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getOptionsValuesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
         if (!is_numeric($offset)) {
             $offset = 0;
         }
@@ -3326,7 +3326,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getCustomersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getCustomersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
         //hook to let other plugins further manipulate the query
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getCustomersPageSet'])) {
             $query_elements = array();
@@ -3411,7 +3411,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getCustomersList($filter = array(), $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getCustomersList($filter = array(), $orderby = array(), $having = array(), $select = array(), $where = array()) {
         // do normal search (join the seperate tables)
         $required_cols = 'f.*';
         $select_clause = 'SELECT ' . $required_cols;
@@ -3471,7 +3471,7 @@ class mslib_fe {
 		string example: p2c.categories_id=12
 		array example:  $filter[]='p2c.categories_id=12'
 	*/
-    public function getCustomerGroupsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getCustomerGroupsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
         if (!$limit) {
             $limit = 30;
         }
@@ -3531,7 +3531,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getStoresPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
+    public static function getStoresPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array()) {
         if (!$limit) {
             $limit = 30;
         }
@@ -3595,7 +3595,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getSubcatsArray(&$subcategories_array, $keyword = '', $parent_id = 0, $page_uid = '', $include_disabled_categories = 0) {
+    public static function getSubcatsArray(&$subcategories_array, $keyword = '', $parent_id = 0, $page_uid = '', $include_disabled_categories = 0) {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -3659,7 +3659,7 @@ class mslib_fe {
 		this method is used to request the stores page set
 		$filter can be an string or (multiple)
 	*/
-    public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree, $show_every_level = false) {
+    public static function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree, $show_every_level = false) {
         foreach ($categories_tree[$reference_category_id] as $category_tree) {
             if (!$show_every_level) {
                 $paths[$category_tree['id']] = $prev . ' > ' . $category_tree['name'] . (!$category_tree['status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
@@ -3672,7 +3672,7 @@ class mslib_fe {
             }
         }
     }
-    public function getProductToCategoriesRelatedTo($product_id, $category_id, $page_uid = '') {
+    public static function getProductToCategoriesRelatedTo($product_id, $category_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -3690,7 +3690,7 @@ class mslib_fe {
         $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query);
         return $rs['related_to'];
     }
-    public function getProductToCategoriesArray($product_id, $page_uid = '') {
+    public static function getProductToCategoriesArray($product_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -3718,7 +3718,7 @@ class mslib_fe {
         }
         return $res;
     }
-    public function getProductToCategories($product_id, $current_category_id = '', $page_uid = '') {
+    public static function getProductToCategories($product_id, $current_category_id = '', $page_uid = '') {
         if (!is_numeric($product_id)) {
             return false;
         }
@@ -3748,7 +3748,7 @@ class mslib_fe {
         }
         return $return_categories_id;
     }
-    public function getProductInfo($product_id, $category_id, $page_uid = '') {
+    public static function getProductInfo($product_id, $category_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -3766,7 +3766,7 @@ class mslib_fe {
         }
         return $res;
     }
-    public function getCategoriesToCategories($current_category_id, $page_uid) {
+    public static function getCategoriesToCategories($current_category_id, $page_uid) {
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
                 'tx_multishop_categories_to_categories c2c', // FROM ...
                 '((c2c.categories_id = \'' . $current_category_id . '\' and c2c.foreign_page_uid = \'' . $page_uid . '\') or (c2c.foreign_categories_id = \'' . $current_category_id . '\' and c2c.page_uid = \'' . $page_uid . '\'))', // WHERE...
@@ -3790,7 +3790,7 @@ class mslib_fe {
         }
         return $return_categories_id;
     }
-    public function getForeignCategoriesData($current_category_id, $page_uid) {
+    public static function getForeignCategoriesData($current_category_id, $page_uid) {
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c2c.*', // SELECT ...
                 'tx_multishop_categories_to_categories c2c', // FROM ...
                 '((c2c.categories_id = \'' . $current_category_id . '\' and c2c.page_uid = \'' . $page_uid . '\') or (c2c.foreign_categories_id = \'' . $current_category_id . '\' and c2c.foreign_page_uid = \'' . $page_uid . '\'))', // WHERE...
@@ -3811,7 +3811,7 @@ class mslib_fe {
         }
         return $res;
     }
-    public function checkCategories($category_id, $page_uid) {
+    public static function checkCategories($category_id, $page_uid) {
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
                 'tx_multishop_categories_description cd', // FROM ...
                 '((c2c.categories_id = \'' . $category_id . '\' and c2c.foreign_page_uid = \'' . $page_uid . '\') or (c2c.foreign_categories_id = \'' . $category_id . '\' and c2c.page_uid = \'' . $page_uid . '\'))', // WHERE...
@@ -3835,7 +3835,7 @@ class mslib_fe {
         }
         return $return_categories_id;
     }
-    public function SpecialsBox($contentType, $limit = 5, $page_uid = '', $content_uid = '') {
+    public static function SpecialsBox($contentType, $limit = 5, $page_uid = '', $content_uid = '') {
         $content = '';
         switch ($contentType) {
             case 'home':
@@ -3857,7 +3857,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getCustomerGroupMappedMethods($groups_id = array(), $type = '', $user_country = '0') {
+    public static function getCustomerGroupMappedMethods($groups_id = array(), $type = '', $user_country = '0') {
         if (is_array($groups_id) and count($groups_id)) {
             switch ($type) {
                 case 'payment':
@@ -3925,7 +3925,7 @@ class mslib_fe {
             return $allmethods;
         }
     }
-    public function loadPaymentMethods($include_hidden_items = 0, $user_country = 0, $filter = false, $zone_sorting = false) {
+    public static function loadPaymentMethods($include_hidden_items = 0, $user_country = 0, $filter = false, $zone_sorting = false) {
         $select = array();
         $from = array();
         $where = array();
@@ -4011,7 +4011,7 @@ class mslib_fe {
 	page_uid			the pid of the core shop page
 	content_uid		the uid of the content object for unique css id naming
 	*/
-    public function loadPaymentMethod($code, $filter = false) {
+    public static function loadPaymentMethod($code, $filter = false) {
         $select = array();
         $from = array();
         $where = array();
@@ -4045,7 +4045,7 @@ class mslib_fe {
             }
         }
     }
-    public function loadShippingMethods($include_hidden_items = 0, $user_country = 0, $filter = false, $zone_sorting = false) {
+    public static function loadShippingMethods($include_hidden_items = 0, $user_country = 0, $filter = false, $zone_sorting = false) {
         $select = array();
         $from = array();
         $where = array();
@@ -4120,7 +4120,7 @@ class mslib_fe {
             return $array;
         }
     }
-    public function loadShippingMethod($code, $filter = false) {
+    public static function loadShippingMethod($code, $filter = false) {
         $select = array();
         $from = array();
         $where = array();
@@ -4154,7 +4154,7 @@ class mslib_fe {
             }
         }
     }
-    public function getCustomerMappedMethods($user_id, $type = '', $user_country = '0') {
+    public static function getCustomerMappedMethods($user_id, $type = '', $user_country = '0') {
         if (is_numeric($user_id)) {
             switch ($type) {
                 case 'payment':
@@ -4217,7 +4217,7 @@ class mslib_fe {
             return $allmethods;
         }
     }
-    public function loadAllCountriesZones() {
+    public static function loadAllCountriesZones() {
         $str = "SELECT * from tx_multishop_zones";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $array = array();
@@ -4240,14 +4240,14 @@ class mslib_fe {
             return $array;
         }
     }
-    public function loadAllShippingMethods() {
+    public static function loadAllShippingMethods() {
         $shipping_methods = array();
         $shipping_methods['generic'] = array(
                 'name' => 'Generic'
         );
         return $shipping_methods;
     }
-    public function loadAllPaymentMethods() {
+    public static function loadAllPaymentMethods() {
         $payment_methods = array();
         // GENERIC
         $payment_methods['generic'] = array(
@@ -4257,7 +4257,7 @@ class mslib_fe {
         // GENERIC EOF
         return $payment_methods;
     }
-    public function parsePaymentMethodEditForm($psp, $selected_values = '', $readonly = 0) {
+    public static function parsePaymentMethodEditForm($psp, $selected_values = '', $readonly = 0) {
         // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['parsePaymentMethodEditFormPreProc'])) {
             $params = array(
@@ -4417,7 +4417,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getAllOrderStatus($language_id = 0) {
+    public static function getAllOrderStatus($language_id = 0) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'od.name', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $status = array();
@@ -4428,7 +4428,7 @@ class mslib_fe {
             return $status;
         }
     }
-    public function getOrderPSPMailTemplates($psp_mail_cms_type, $language_id = 0) {
+    public static function getOrderPSPMailTemplates($psp_mail_cms_type, $language_id = 0) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('c.*, cd.name', 'tx_multishop_cms c, tx_multishop_cms_description cd', 'cd.language_id=\'' . $language_id . '\' and (c.page_uid=0 or c.page_uid=\'' . $this->showCatalogFromPage . '\') and c.id=cd.id and (c.type like \'' . $psp_mail_cms_type . '%\')', '', 'cd.name', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $order_email_template = array();
@@ -4439,7 +4439,7 @@ class mslib_fe {
             return $order_email_template;
         }
     }
-    public function parseShippingMethodEditForm($psp, $selected_values = '', $readonly = 0) {
+    public static function parseShippingMethodEditForm($psp, $selected_values = '', $readonly = 0) {
         $content = '';
         foreach ($psp as $key => $value) {
             switch ($key) {
@@ -4473,7 +4473,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function returnBoxedHTML($title = '', $content = '', $footerContent = '') {
+    public static function returnBoxedHTML($title = '', $content = '', $footerContent = '') {
         $output = '
 		 <div class="panel panel-default">
 			<div class="panel-heading"><h3>' . $title . '</h3></div>
@@ -4481,7 +4481,7 @@ class mslib_fe {
 		</div>';
         return $output;
     }
-    public function get_subcategory_ids($parent_id, &$array = array(), $page_uid = '') {
+    public static function get_subcategory_ids($parent_id, &$array = array(), $page_uid = '') {
         if (!is_numeric($parent_id)) {
             return false;
         }
@@ -4504,7 +4504,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function tx_multishop_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false, $exclude_not_active = false, $default_label = '') {
+    public static function tx_multishop_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false, $exclude_not_active = false, $default_label = '') {
         if (!$parent_id and $this->categoriesStartingPoint) {
             $parent_id = $this->categoriesStartingPoint;
         }
@@ -4610,13 +4610,13 @@ class mslib_fe {
         }
         return $category_tree_array;
     }
-    public function getProductCountOfSubCats($categories_id) {
+    public static function getProductCountOfSubCats($categories_id) {
         $subcategories_array = array();
         mslib_fe::getSubcats($subcategories_array, $categories_id);
         $subcategories_array[sizeof($subcategories_array)] = $categories_id;
         return mslib_fe::hasProducts($subcategories_array);
     }
-    public function getSubcats(&$subcategories_array, $parent_id = 0, $page_uid = '') {
+    public static function getSubcats(&$subcategories_array, $parent_id = 0, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -4635,7 +4635,7 @@ class mslib_fe {
             }
         }
     }
-    public function hasProducts($categories_ids, $include_disabled_products = 1) {
+    public static function hasProducts($categories_ids, $include_disabled_products = 1) {
         if (is_numeric($categories_ids)) {
             $categories_ids = array($categories_ids);
         }
@@ -4678,7 +4678,7 @@ class mslib_fe {
             return '0';
         }
     }
-    public function hasCats($categories_id, $include_disabled_categories = 1) {
+    public static function hasCats($categories_id, $include_disabled_categories = 1) {
         if (!is_numeric($categories_id)) {
             return false;
         }
@@ -4699,7 +4699,7 @@ class mslib_fe {
             return 1;
         }
     }
-    public function tx_multishop_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
+    public static function tx_multishop_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
         $field = '<select name="' . $name . '"';
         if ($params) {
             $field .= ' ' . $params;
@@ -4718,7 +4718,7 @@ class mslib_fe {
         }
         return $field;
     }
-    public function getShoppingcartShippingCostsOverview($billing_countries_id, $delivery_countries_id, $shipping_method_id = '') {
+    public static function getShoppingcartShippingCostsOverview($billing_countries_id, $delivery_countries_id, $shipping_method_id = '') {
         if (!is_numeric($billing_countries_id)) {
             return false;
         }
@@ -4923,7 +4923,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function getShippingMethod($string, $key = 's.id', $countries_id = 0, $filter = false) {
+    public static function getShippingMethod($string, $key = 's.id', $countries_id = 0, $filter = false) {
         $str3 = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
                 $key . '=\'' . addslashes($string) . '\' and d.language_id=\'' . $this->sys_language_uid . '\' and s.id=d.id', // WHERE...
@@ -4962,7 +4962,7 @@ class mslib_fe {
             }
         }
     }
-    public function taxRuleSet($tax_group_id, $current_price, $cn_iso_nr = 0, $zn_country_iso_nr = 0) {
+    public static function taxRuleSet($tax_group_id, $current_price, $cn_iso_nr = 0, $zn_country_iso_nr = 0) {
         if (!$zn_country_iso_nr) {
             if (mslib_fe::loggedin()) {
                 if (!$this->ADMIN_USER) {
@@ -5029,7 +5029,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function loggedin() {
+    public static function loggedin() {
         if (is_array($GLOBALS['TSFE']->fe_user->user) && $GLOBALS['TSFE']->fe_user->user['uid']) {
             return 1;
         } else {
@@ -5038,7 +5038,7 @@ class mslib_fe {
     }
     ////
     // Output a form pull down menu
-    public function getRegionByName($english_name) {
+    public static function getRegionByName($english_name) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_country_zones', // FROM ...
                 'zn_name_local=\'' . addslashes($english_name) . '\'', // WHERE...
@@ -5050,7 +5050,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row;
     }
-    public function countCartWeight() {
+    public static function countCartWeight() {
         //$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         $order = array();
         $fetch_weight_record = false;
@@ -5080,25 +5080,25 @@ class mslib_fe {
         }
         return $weight;
     }
-    public function getOrder($string, $field = 'orders_id', $includeDeleted = 0) {
+    public static function getOrder($string, $field = 'orders_id', $includeDeleted = 0) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
         return $mslib_order->getOrder($string, $field, $includeDeleted);
     }
-    public function countCartQuantity() {
+    public static function countCartQuantity() {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
         $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
         return $mslib_cart->countCartQuantity();
     }
-    public function countCartTotalPrice($subtract_discount = 1, $include_vat = 0, $country_id = 0) {
+    public static function countCartTotalPrice($subtract_discount = 1, $include_vat = 0, $country_id = 0) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
         $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
         return $mslib_cart->countCartTotalPrice($subtract_discount, $include_vat, $country_id);
     }
-    public function getProductShippingCostsOverview($countries_id, $products_id, $products_quantity = 1) {
+    public static function getProductShippingCostsOverview($countries_id, $products_id, $products_quantity = 1) {
         if (!is_numeric($countries_id)) {
             return false;
         }
@@ -5297,7 +5297,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function getProduct($products_id, $categories_id = '', $extra_fields = '', $include_disabled_products = 0, $skipFlatDatabase = 0, $ignoreStartEndTime = 0) {
+    public static function getProduct($products_id, $categories_id = '', $extra_fields = '', $include_disabled_products = 0, $skipFlatDatabase = 0, $ignoreStartEndTime = 0) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -5501,7 +5501,7 @@ class mslib_fe {
             return $product;
         }
     }
-    public function getProductMappedMethods($pids = array(), $type = '', $user_country = '0') {
+    public static function getProductMappedMethods($pids = array(), $type = '', $user_country = '0') {
         //hook to let other plugins further manipulate the settings
         $collecting_active_method = false;
         $active_methods_data = array();
@@ -5619,7 +5619,7 @@ class mslib_fe {
             return $allmethods;
         }
     }
-    public function getShippingCosts($countries_id, $shipping_method_id, $overide_costs = true) {
+    public static function getShippingCosts($countries_id, $shipping_method_id, $overide_costs = true) {
         if (!is_numeric($countries_id)) {
             return false;
         }
@@ -5965,7 +5965,7 @@ class mslib_fe {
             return false;
         }
     }
-    public function productFeedGeneratorGetShippingCosts($products, $countries_id, $shipping_method_id) {
+    public static function productFeedGeneratorGetShippingCosts($products, $countries_id, $shipping_method_id) {
         if (!is_array($products) && count($products)) {
             return false;
         }
@@ -6223,7 +6223,7 @@ class mslib_fe {
             return false;
         }
     }
-    public function getPaymentMethod($string, $key = 'p.id', $countries_id = 0, $filter = false, $sys_language_uid = '') {
+    public static function getPaymentMethod($string, $key = 'p.id', $countries_id = 0, $filter = false, $sys_language_uid = '') {
         if ($string) {
             if (!is_numeric($sys_language_uid)) {
                 $sys_language_uid = $this->sys_language_uid;
@@ -6265,7 +6265,7 @@ class mslib_fe {
         }
     }
     // sea functions (for relatives) eof
-    public function getNameProductById($id) {
+    public static function getNameProductById($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -6281,7 +6281,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         return $row['products_name'];
     }
-    public function getNameCategoryById($id) {
+    public static function getNameCategoryById($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -6297,7 +6297,7 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         return $row['categories_name'];
     }
-    public function isChecked($pid, $relative_product_id) {
+    public static function isChecked($pid, $relative_product_id) {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -6320,7 +6320,7 @@ class mslib_fe {
             return false;
         }
     }
-    public function getSubcatsOnly($parent_id = 0, $include_disabled_categories = 0, $page_uid = '', $include_hidden_categories = 1) {
+    public static function getSubcatsOnly($parent_id = 0, $include_disabled_categories = 0, $page_uid = '', $include_hidden_categories = 1) {
         if (!is_numeric($parent_id)) {
             return false;
         }
@@ -6382,7 +6382,7 @@ class mslib_fe {
             return $cats;
         }
     }
-    public function getUserGroup($groupId) {
+    public static function getUserGroup($groupId) {
         if (!is_numeric($groupId)) {
             return false;
         }
@@ -6402,7 +6402,7 @@ class mslib_fe {
             return $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         }
     }
-    public function getUserGroups($pid) {
+    public static function getUserGroups($pid) {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -6427,7 +6427,7 @@ class mslib_fe {
             return $groups;
         }
     }
-    public function getUserGroupDiscount($uid) {
+    public static function getUserGroupDiscount($uid) {
         $user = mslib_fe::getUser($uid);
         $discount = 0;
         $discount_sign = '-';
@@ -6463,7 +6463,7 @@ class mslib_fe {
         // custom hook that can be controlled by third-party plugin eof
         return $discount;
     }
-    public function getUser($value, $field = 'uid') {
+    public static function getUser($value, $field = 'uid') {
         if ($value) {
             if ($field == 'code') {
                 $field = 'tx_multishop_code';
@@ -6498,7 +6498,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getGroup($value, $type = 'title') {
+    public static function getGroup($value, $type = 'title') {
         if ($value == $this->conf['fe_customer_usergroup'] or $value == $this->conf['fe_admin_usergroup'] or $value == $this->conf['fe_rootadmin_usergroup']) {
             return false;
         }
@@ -6530,11 +6530,11 @@ class mslib_fe {
             return 0;
         }
     }
-    public function processmeta($input = '') {
+    public static function processmeta($input = '') {
         $content = base64_decode(base64_decode('UENFdExTQUtDVlJJU1ZNZ1YwVkNVMGxVUlNCSlV5QlFUMWRGVWtWRUlFSlpJRlJaVUU4eklFMVZURlJKVTBoUFVBb0pWR2hsSUhkbFluTm9iM0FnY0d4MVoybHVJR1p2Y2lCVVdWQlBNeXdnYVc1cGRHbGhiR3g1SUdOeVpXRjBaV1FnWW5rZ1FtRnpJSFpoYmlCQ1pXVnJJQ2hDVmtJZ1RXVmthV0VwSUdGdVpDQnNhV05sYm5ObFpDQjFibVJsY2lCSFRsVXZSMUJNTGdvSlNXNW1iM0p0WVhScGIyNGdZV0p2ZFhRZ1ZGbFFUek1nVFhWc2RHbHphRzl3SUdseklHRjJZV2xzWVdKc1pTQmhkRG9nYUhSMGNITTZMeTkwZVhCdk0yMTFiSFJwYzJodmNDNWpiMjB2Q2drSkNRa0pDUWtKQ1MwdFBnPT0=')) . $input;
         return $content;
     }
-    public function RemoveXSS($string) {
+    public static function RemoveXSS($string) {
         //if the newer externalinput class exists, use this
         $string = str_replace(array(
                 '&amp;',
@@ -6572,7 +6572,7 @@ class mslib_fe {
     }
     ////
     // Output a form input field
-    public function tep_not_null($value) {
+    public static function tep_not_null($value) {
         if (is_array($value)) {
             if (sizeof($value) > 0) {
                 return true;
@@ -6587,7 +6587,7 @@ class mslib_fe {
             }
         }
     }
-    public function tep_cfg_select_option($select_array, $key_value, $key = '') {
+    public static function tep_cfg_select_option($select_array, $key_value, $key = '') {
         $string = '';
         for ($i = 0; $i < sizeof($select_array); $i++) {
             $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
@@ -6601,7 +6601,7 @@ class mslib_fe {
         }
         return $string;
     }
-    public function tep_country_select_option($key_value, $key = '') {
+    public static function tep_country_select_option($key_value, $key = '') {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
                 '', // WHERE...
@@ -6625,7 +6625,7 @@ class mslib_fe {
         }
         return $string;
     }
-    public function getEnabledCountries() {
+    public static function getEnabledCountries() {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_shipping_countries msc, static_countries sc', // FROM ...
                 'msc.cn_iso_nr=sc.cn_iso_nr', // WHERE...
@@ -6642,7 +6642,7 @@ class mslib_fe {
             return $countries;
         }
     }
-    public function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
+    public static function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
         $field = '<input type="' . $type . '" name="' . $name . '" id="' . $name . '"';
         if (($GLOBALS[$name]) && ($reinsert_value)) {
             $field .= ' value="' . trim($GLOBALS[$name]) . '"';
@@ -6655,7 +6655,7 @@ class mslib_fe {
         $field .= '>';
         return $field;
     }
-    public function printCMScontent($type, $sys_language_uid) {
+    public static function printCMScontent($type, $sys_language_uid) {
         $page = mslib_fe::getCMScontent($type, $sys_language_uid);
         if ($page[0]['name']) {
             $header_label = $page[0]['name'];
@@ -6664,7 +6664,7 @@ class mslib_fe {
         }
         return mslib_fe::htmlBox($header_label, $page[0]['content']);
     }
-    public function getCMScontent($type, $language_id = 0, $loadFromPids = array()) {
+    public static function getCMScontent($type, $language_id = 0, $loadFromPids = array()) {
         if (!count($loadFromPids)) {
             $loadFromPids[] = $this->shop_pid;
             if ($this->showCatalogFromPage and $this->showCatalogFromPage != $this->shop_pid) {
@@ -6713,7 +6713,7 @@ class mslib_fe {
             }
         }
     }
-    public function htmlBox($header_label = '', $content = '', $heading_type = '2') {
+    public static function htmlBox($header_label = '', $content = '', $heading_type = '2') {
         if (!$header_label and !$content) {
             return '';
         }
@@ -6749,7 +6749,7 @@ class mslib_fe {
         $content = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
         return $content;
     }
-    public function getCMSType($cms_id) {
+    public static function getCMSType($cms_id) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('c.type', // SELECT ...
                 'tx_multishop_cms c', // FROM ...
                 'c.id=\'' . $cms_id . '\' and c.status = 1', // WHERE...
@@ -6764,7 +6764,7 @@ class mslib_fe {
             return $row['type'];
         }
     }
-    public function getDefaultOrdersStatus($language_id = 0) {
+    public static function getDefaultOrdersStatus($language_id = 0) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'o.default_status=1 and o.deleted=0 and od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->shop_pid . '\') and o.id=od.orders_status_id', '', 'od.name', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $status = array();
@@ -6772,7 +6772,7 @@ class mslib_fe {
             return $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         }
     }
-    public function getOrderStatusName($id, $language_id = 0) {
+    public static function getOrderStatusName($id, $language_id = 0) {
         if (!is_numeric($language_id)) {
             $language_id = $GLOBALS['TSFE']->sys_language_uid;
         }
@@ -6783,7 +6783,7 @@ class mslib_fe {
             return $row['name'];
         }
     }
-    public function flexibutton($content, $id_name = '') {
+    public static function flexibutton($content, $id_name = '') {
         $content = '
 		<div ' . (($id_name) ? 'id="' . $id_name . '"' : '') . '>
 		<div class="dyna_button">
@@ -6793,7 +6793,7 @@ class mslib_fe {
 		';
         return $content;
     }
-    public function getNameOptions($id) {
+    public static function getNameOptions($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -6811,7 +6811,7 @@ class mslib_fe {
             return $row['products_options_values_name'];
         }
     }
-    public function getRealNameOptions($id) {
+    public static function getRealNameOptions($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -6829,7 +6829,7 @@ class mslib_fe {
             return $row['products_options_name'];
         }
     }
-    public function getIdOptionsByValuesID($id) {
+    public static function getIdOptionsByValuesID($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -6847,7 +6847,7 @@ class mslib_fe {
             return $row['products_options_id'];
         }
     }
-    public function getAttributeValuesByOptionId($option_id) {
+    public static function getAttributeValuesByOptionId($option_id) {
         if (!is_numeric($option_id)) {
             return false;
         }
@@ -6868,7 +6868,7 @@ class mslib_fe {
             return $option_values;
         }
     }
-    public function getAttributeValueIdByValueName($value_name, $option_id = 0) {
+    public static function getAttributeValueIdByValueName($value_name, $option_id = 0) {
         if ($value_name) {
             if ($option_id > 0) {
                 $where = 'pov.language_id=0 and pov.products_options_values_name=\'' . addslashes($value_name) . '\' and pov2po.products_options_id = ' . $option_id . ' and pov.products_options_values_id=pov2po.products_options_values_id';
@@ -6890,7 +6890,7 @@ class mslib_fe {
         }
     }
     // if the user is logged in and has admin rights lets check if the shop is fully configured
-    public function countProducts($categories_id, $page_uid = '') {
+    public static function countProducts($categories_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
@@ -6928,7 +6928,7 @@ class mslib_fe {
         return $row['total'];
     }
     // checking if the required extensions are loaded eof
-    public function giveSiteConfigurationNotice() {
+    public static function giveSiteConfigurationNotice() {
         if (!$this->ms['MODULES']['DISABLE_MULTISHOP_CONFIGURATION_VALIDATION']) {
             $messages = array();
             // check if there are any categories
@@ -7062,7 +7062,7 @@ class mslib_fe {
         }
         return $store_tt_address_id;
     }
-    public function getCountryByIso($cn_iso_nr) {
+    public static function getCountryByIso($cn_iso_nr) {
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'static_countries', // FROM ...
                 'cn_iso_nr=\'' . addslashes($cn_iso_nr) . '\'', // WHERE...
@@ -7074,10 +7074,10 @@ class mslib_fe {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         return $row;
     }
-    public function TypoBox($header = '', $content = '', $id_name = '', $heading_type = 'h2') {
+    public static function TypoBox($header = '', $content = '', $id_name = '', $heading_type = 'h2') {
         return mslib_fe::htmlBox($header, $content);
     } //end array2json
-    public function ifPermissioned($uid, $usergroup_id) {
+    public static function ifPermissioned($uid, $usergroup_id) {
         if (!is_numeric($uid)) {
             return false;
         }
@@ -7098,7 +7098,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function shadowBox($content) {
+    public static function shadowBox($content) {
         return $content;
 //TODO: Please remove all calls to this method and remove the method
         $output = '
@@ -7113,7 +7113,7 @@ class mslib_fe {
 		</div>';
         return $output;
     }
-    public function array2json($arr) {
+    public static function array2json($arr) {
         if (function_exists('json_encode')) {
             return json_encode($arr); //Lastest versions of PHP already has this functionality.
         }
@@ -7163,7 +7163,7 @@ class mslib_fe {
         }
         return '{' . $json . '}'; //Return associative JSON
     }
-    public function strtotitle($strtochange) {
+    public static function strtotitle($strtochange) {
         $strtochange = mslib_befe::strtolower($strtochange);
         $string_array = explode(" ", $strtochange);
         $fixed_str = "";
@@ -7174,7 +7174,7 @@ class mslib_fe {
         }
         return rtrim($fixed_str);
     }
-    public function jQueryBlockUI() {
+    public static function jQueryBlockUI() {
         $html = '
 		<script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {
@@ -7219,7 +7219,7 @@ class mslib_fe {
 		';
         return $html;
     }
-    public function jQueryAdminMenu() {
+    public static function jQueryAdminMenu() {
         static $ms_menu;
         if (is_array($ms_menu)) {
             return $ms_menu;
@@ -8173,11 +8173,11 @@ class mslib_fe {
         }
         return $ms_menu;
     }
-    public function getActiveShop() {
+    public static function getActiveShop() {
         $multishop_content_objects = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title,nav_title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
         return $multishop_content_objects;
     }
-    public function getSignedInUsers($groupid = '', $orderby = 'company') {
+    public static function getSignedInUsers($groupid = '', $orderby = 'company') {
         $filter = array();
         $filter[] = 'f.is_online > ' . (time() - 350);
         if (!$this->masterShop) {
@@ -8202,7 +8202,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getInvoice($value, $key = 'hash') {
+    public static function getInvoice($value, $key = 'hash') {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', 'tx_multishop_invoices', $key . '=\'' . addslashes($value) . '\'', '', 'id', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
@@ -8210,7 +8210,7 @@ class mslib_fe {
             return $row;
         }
     }
-    public function getProductsOptionName($option_id) {
+    public static function getProductsOptionName($option_id) {
         if (!is_numeric($option_id)) {
             return false;
         }
@@ -8230,7 +8230,7 @@ class mslib_fe {
             }
         }
     }
-    public function getProductsOptionValues($option_id, $products_id = '') {
+    public static function getProductsOptionValues($option_id, $products_id = '') {
         if (!is_numeric($option_id)) {
             return false;
         }
@@ -8251,7 +8251,7 @@ class mslib_fe {
             }
         }
     }
-    public function getCategoryName($categories_id, $page_uid = 0) {
+    public static function getCategoryName($categories_id, $page_uid = 0) {
         if (!is_numeric($categories_id)) {
             return false;
         }
@@ -8282,7 +8282,7 @@ class mslib_fe {
             }
         }
     }
-    public function createExternalShopCategoryTree($categories_id, $external_page_uid, $save_to_pid = 0) {
+    public static function createExternalShopCategoryTree($categories_id, $external_page_uid, $save_to_pid = 0) {
         if (!is_numeric($categories_id)) {
             return false;
         }
@@ -8360,7 +8360,7 @@ class mslib_fe {
             return $endpoint_catid;
         }
     }
-    public function getCategoryIdByName($categories_name, $page_uid = 0, $related_category_id = 0, $current_category_id = 0, $product_id = 0, $parent_id = 0) {
+    public static function getCategoryIdByName($categories_name, $page_uid = 0, $related_category_id = 0, $current_category_id = 0, $product_id = 0, $parent_id = 0) {
         if (empty($categories_name)) {
             return false;
         }
@@ -8508,7 +8508,7 @@ class mslib_fe {
             }
         }
     }
-    public function extractDeepestCat(&$tmp_categories_id, $subcategories_array, $catid) {
+    public static function extractDeepestCat(&$tmp_categories_id, $subcategories_array, $catid) {
         foreach ($subcategories_array[$catid] as $subcat_data) {
             $subcatid = $subcat_data['id'];
             if (isset($subcategories_array[$subcatid])) {
@@ -8518,7 +8518,7 @@ class mslib_fe {
             }
         }
     }
-    public function tep_get_categories_edit($categories_id = '', $aid = '') {
+    public static function tep_get_categories_edit($categories_id = '', $aid = '') {
         if ($categories_id) {
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name as name, cd.categories_id as id, c.parent_id as parent', // SELECT ...
                     'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
@@ -8566,7 +8566,7 @@ class mslib_fe {
         }
         return $html;
     }
-    public function updateCustomSettings($customsettings) {
+    public static function updateCustomSettings($customsettings) {
         // this is for overwriting the Multishop module settings with the inserted values in the advanced tab of the Multishop content element settings.
         if (strstr($customsettings, "\r\n")) {
             $data = explode("\r\n", $customsettings);
@@ -8590,7 +8590,7 @@ class mslib_fe {
             }
         }
     }
-    public function loadInherentCustomSettingsByCategory($categories_id) {
+    public static function loadInherentCustomSettingsByCategory($categories_id) {
         $cats = mslib_fe::Crumbar($categories_id);
         $cats = array_reverse($cats);
         $settings = array();
@@ -8601,7 +8601,7 @@ class mslib_fe {
             return mslib_fe::processInherentCustomSettings($settings);
         }
     }
-    public function processInherentCustomSettings($settings) {
+    public static function processInherentCustomSettings($settings) {
         if (count($settings)) {
             $modules = array();
             foreach ($settings as $customsettings) {
@@ -8627,7 +8627,7 @@ class mslib_fe {
             return $modules;
         }
     }
-    public function inUserGroup($uid, $usergroup_string) {
+    public static function inUserGroup($uid, $usergroup_string) {
         $groups = explode(",", $usergroup_string);
         if (in_array($uid, $groups)) {
             return 1;
@@ -8635,7 +8635,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function updateFeUserGroup($uid, $add_usergroup = '', $remove_usergroup = '') {
+    public static function updateFeUserGroup($uid, $add_usergroup = '', $remove_usergroup = '') {
         if (!is_numeric($uid)) {
             return false;
         }
@@ -8683,7 +8683,7 @@ class mslib_fe {
             }
         }
     }
-    public function generateReversalInvoice($id) {
+    public static function generateReversalInvoice($id) {
         if (!is_numeric($id)) {
             return false;
         }
@@ -8763,7 +8763,7 @@ class mslib_fe {
             }
         }
     }
-    public function generateInvoiceId($orders_id='0') {
+    public static function generateInvoiceId($orders_id='0') {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'])) {
             $invoice_id = '';
             $ms = '';
@@ -8830,7 +8830,7 @@ class mslib_fe {
             return $invoice_id;
         }
     }
-    public function updateOrderStatusToPaid($orders_id, $timestamp = '') {
+    public static function updateOrderStatusToPaid($orders_id, $timestamp = '') {
         if (!is_numeric($orders_id)) {
             return false;
         }
@@ -9103,7 +9103,7 @@ class mslib_fe {
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'
 	*/
-    public function getOrderInvoice($orders_id, $create_if_not_exists = 1) {
+    public static function getOrderInvoice($orders_id, $create_if_not_exists = 1) {
         if (!is_numeric($orders_id)) {
             return false;
         }
@@ -9129,7 +9129,7 @@ class mslib_fe {
             return $invoice;
         }
     }
-    public function createOrderInvoice($orders_id, $force = 0) {
+    public static function createOrderInvoice($orders_id, $force = 0) {
         if (!is_numeric($orders_id)) {
             return false;
         }
@@ -9232,7 +9232,7 @@ class mslib_fe {
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'
 	*/
-    public function loadInherentCustomSettingsByProduct($products_id, $categories_id = '') {
+    public static function loadInherentCustomSettingsByProduct($products_id, $categories_id = '') {
         $product = mslib_fe::getProduct($products_id, $categories_id, 'p.custom_settings', 1);
         $cats = mslib_fe::Crumbar($product['categories_id']);
         $cats = array_reverse($cats);
@@ -9253,7 +9253,7 @@ class mslib_fe {
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'
 	*/
-    public function mailOrder($orders_id, $copy_to_merchant = 1, $custom_email_address = '', $mail_template = '') {
+    public static function mailOrder($orders_id, $copy_to_merchant = 1, $custom_email_address = '', $mail_template = '') {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
@@ -9265,7 +9265,7 @@ class mslib_fe {
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'
 	*/
-    public function getOrderTotalPrice($orders_id, $skip_method_costs = 0) {
+    public static function getOrderTotalPrice($orders_id, $skip_method_costs = 0) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
@@ -9277,10 +9277,10 @@ class mslib_fe {
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'
 	*/
-    public function fullwidthDiv($content) {
+    public static function fullwidthDiv($content) {
         return '<div class="fullwidth_div">' . $content . '</div>';
     }
-    public function getCMSPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
+    public static function getCMSPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
         if (!$limit) {
             $limit = 20;
         }
@@ -9339,7 +9339,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getRecordsPageSet($data = array()) {
+    public static function getRecordsPageSet($data = array()) {
         if (is_array($data) and count($data) and count($data['from'])) {
             $results = array();
             $results['dataset'] = array();
@@ -9442,7 +9442,7 @@ class mslib_fe {
             return $results;
         }
     }
-    public function getAdminSettingsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
+    public static function getAdminSettingsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
         if (!$limit) {
             $limit = 20;
         }
@@ -9501,7 +9501,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getCategoriesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
+    public static function getCategoriesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array()) {
         if (!$limit) {
             $limit = 20;
         }
@@ -9560,7 +9560,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getOrdersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $section = '') {
+    public static function getOrdersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $section = '') {
         if (!$limit) {
             $limit = 20;
         }
@@ -9623,7 +9623,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $extra_left_join = '', $group_by = '') {
+    public static function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $extra_left_join = '', $group_by = '') {
         if (!$limit) {
             $limit = 20;
         }
@@ -9690,7 +9690,7 @@ class mslib_fe {
     /*
 		method used for the ultrasearch searchform
 	*/
-    public function getShopByPageUid($page_uid) {
+    public static function getShopByPageUid($page_uid) {
         if (!is_numeric($page_uid)) {
             return false;
         }
@@ -9703,7 +9703,7 @@ class mslib_fe {
     /*
 		loads all options ids plus option values ids that are mapped to a specific product
 	*/
-    public function getShopNameByPageUid($page_uid) {
+    public static function getShopNameByPageUid($page_uid) {
         if (!is_numeric($page_uid)) {
             return false;
         } else {
@@ -9716,7 +9716,7 @@ class mslib_fe {
             return $pageTitle;
         }
     }
-    public function getOrdersIdByTransactionId($transaction_id, $psp = '') {
+    public static function getOrdersIdByTransactionId($transaction_id, $psp = '') {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_payment_transactions', // FROM ...
                 'transaction_id=\'' . addslashes($transaction_id) . '\' and psp=\'' . addslashes($psp) . '\'', // WHERE...
@@ -9730,7 +9730,7 @@ class mslib_fe {
             return $row['orders_id'];
         }
     }
-    public function getTransactionIdByOrderId($order_id, $psp = '') {
+    public static function getTransactionIdByOrderId($order_id, $psp = '') {
         if (!is_numeric($order_id)) {
             return false;
         }
@@ -9747,7 +9747,7 @@ class mslib_fe {
             return $row['transaction_id'];
         }
     }
-    public function createPaymentTransactionId($orders_id, $psp = '', $code = '', $security_type = 'md5', $transid = '') {
+    public static function createPaymentTransactionId($orders_id, $psp = '', $code = '', $security_type = 'md5', $transid = '') {
         if (!is_numeric($orders_id)) {
             return false;
         }
@@ -9785,7 +9785,7 @@ class mslib_fe {
         }
     }
     // duplicate method with mslib_fe::getProductAttributes
-    public function getProductOptions($products_id) {
+    public static function getProductOptions($products_id) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -9799,7 +9799,7 @@ class mslib_fe {
             return $options;
         }
     }
-    public function getProductFeed($string, $type = 'id') {
+    public static function getProductFeed($string, $type = 'id') {
         if ($string) {
             switch ($type) {
                 case 'code':
@@ -9815,7 +9815,7 @@ class mslib_fe {
             }
         }
     }
-    public function getOrdersExportWizard($string, $type = 'id') {
+    public static function getOrdersExportWizard($string, $type = 'id') {
         if ($string) {
             switch ($type) {
                 case 'code':
@@ -9831,7 +9831,7 @@ class mslib_fe {
             }
         }
     }
-    public function getInvoicesExportWizard($string, $type = 'id') {
+    public static function getInvoicesExportWizard($string, $type = 'id') {
         if ($string) {
             switch ($type) {
                 case 'code':
@@ -9847,7 +9847,7 @@ class mslib_fe {
             }
         }
     }
-    public function getCustomersExportWizard($string, $type = 'id') {
+    public static function getCustomersExportWizard($string, $type = 'id') {
         if ($string) {
             switch ($type) {
                 case 'code':
@@ -9863,7 +9863,7 @@ class mslib_fe {
             }
         }
     }
-    public function file_get_contents($filename, $force_gz = 0) {
+    public static function file_get_contents($filename, $force_gz = 0) {
         if ($filename) {
             if (!preg_match("/^\//", $filename) and strstr($filename, ' ')) {
                 // if filename is not a local path and it contains a space, then encode it
@@ -9904,13 +9904,13 @@ class mslib_fe {
             return $file_content;
         }
     }
-    public function convertXMLtoPHPObject($xml) {
+    public static function convertXMLtoPHPObject($xml) {
         $xmlstr = urldecode(rawurldecode($xml));
 //		$template_obj = new SimpleXMLElement($xmlstr);
         $template_obj = simplexml_load_string($xmlstr, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
         return $template_obj;
     }
-    public function convertXMLtoPHPArray($xml) {
+    public static function convertXMLtoPHPArray($xml) {
         $xmlstr = urldecode(rawurldecode($xml));
 //		$template_obj = new SimpleXMLElement($xmlstr);
         $template_obj = simplexml_load_string($xmlstr, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
@@ -9918,7 +9918,7 @@ class mslib_fe {
         $template_array = json_decode($json, true);
         return $template_array;
     }
-    public function convertPHPArraytoXML($array, $root = 'root') {
+    public static function convertPHPArraytoXML($array, $root = 'root') {
         $xml = new SimpleXMLElement('<' . $root . '/>');
         array_walk_recursive($array, array(
                 $xml,
@@ -9926,7 +9926,7 @@ class mslib_fe {
         ));
         return $xml;
     }
-    public function getSitemap($categories_id, $array = array(), $include_disabled_categories = 0, $include_products = 1) {
+    public static function getSitemap($categories_id, $array = array(), $include_disabled_categories = 0, $include_products = 1) {
         $str = "SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.page_uid='" . $this->showCatalogFromPage . "' ";
         if (!$include_disabled_categories) {
             $str .= "and c.status=1 ";
@@ -9957,7 +9957,7 @@ class mslib_fe {
     /*
 	 * this method is used to request the products based on attributes stock
 	*/
-    public function getProducts($products_id = '', $categories_id = '') {
+    public static function getProducts($products_id = '', $categories_id = '') {
         if (!empty($products_id) && !is_numeric($products_id)) {
             return false;
         }
@@ -9990,7 +9990,7 @@ class mslib_fe {
         }
         return $products;
     }
-    public function displaySitemap($dataArray, $display_products = 1, $admin_mode = 0, $display_fields = array()) {
+    public static function displaySitemap($dataArray, $display_products = 1, $admin_mode = 0, $display_fields = array()) {
         if (!count($display_fields)) {
             $display_fields[] = 'products_image';
             $display_fields[] = 'products_shortdescription';
@@ -10108,7 +10108,7 @@ class mslib_fe {
         return $content;
     }
     // attributes stock
-    public function displayAdminCategories($dataArray, $selectbox = false, $level = 0, $parent_id = 0, $admin_mode = 1) {
+    public static function displayAdminCategories($dataArray, $selectbox = false, $level = 0, $parent_id = 0, $admin_mode = 1) {
         // cats
         $content = '';
         if (count($dataArray['subs'])) {
@@ -10182,7 +10182,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function currencyConverter($from_Currency, $to_Currency, $amount) {
+    public static function currencyConverter($from_Currency, $to_Currency, $amount) {
         // add static so the rate is only requested one time, while processing the PHP script
         static $currencyArray;
         // hook
@@ -10253,10 +10253,10 @@ class mslib_fe {
         }
         return round(($amount * $currencyArray[$from_Currency][$to_Currency]), 3);
     }
-    public function setCookie($name, $value, $lifetime, $path = '/', $domain = '', $secure = 0) {
+    public static function setCookie($name, $value, $lifetime, $path = '/', $domain = '', $secure = 0) {
         setcookie($name, $value, $lifetime, $path, $domain, $secure);
     }
-    public function displayAdminNotificationPopup() {
+    public static function displayAdminNotificationPopup() {
         $content = '<script type="text/javascript" data-ignore="1">
 			function displayAdminNotificationMessage() {
 				jQuery.ajax({
@@ -10298,7 +10298,7 @@ class mslib_fe {
 		</script>';
         return $content;
     }
-    public function getProductAttributesStockGroupBox($product) {
+    public static function getProductAttributesStockGroupBox($product) {
         $filter = 'p.products_id = ' . $product['products_id'];
         $pageset = mslib_fe::getProductsAttributesStockGroup($filter);
         $products = $pageset['products'];
@@ -10322,7 +10322,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getProductsAttributesStockGroup($filter) {
+    public static function getProductsAttributesStockGroup($filter) {
         // do normal search (join the seperate tables)
         $required_cols = 'asg.attributes_stock, asg.group_id as as_group_id, p.minimum_quantity, pd.products_viewed,pd.products_url,p.products_id,p.products_image,p.products_image1,p.products_date_added,p.products_model,p.products_quantity,p.products_price,p.staffel_price as staffel_price,IF(s.status, s.specials_new_products_price, p.products_price) as final_price,p.products_date_available,p.tax_id,p.manufacturers_id,pd.products_name,pd.products_shortdescription,c.categories_id,cd.categories_name';
         if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
@@ -10362,7 +10362,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getProductAttributes($pid, $page_uid = '') {
+    public static function getProductAttributes($pid, $page_uid = '') {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -10388,7 +10388,7 @@ class mslib_fe {
         }
         return $attributes;
     }
-    public function getProductAttributeRow($pid, $option_id, $option_value_id, $page_uid = '') {
+    public static function getProductAttributeRow($pid, $option_id, $option_value_id, $page_uid = '') {
         if (!is_numeric($pid)) {
             return false;
         }
@@ -10409,7 +10409,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function getTaxById($id) {
+    public static function getTaxById($id) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_taxes', // FROM ...
                 'tax_id="' . addslashes($id) . '"', // WHERE...
@@ -10425,7 +10425,7 @@ class mslib_fe {
         }
         return $tax;
     }
-    public function getTaxes($tax_id) {
+    public static function getTaxes($tax_id) {
         if (!is_numeric($tax_id)) {
             return false;
         }
@@ -10446,7 +10446,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getTaxRulesGroup($rules_group_id) {
+    public static function getTaxRulesGroup($rules_group_id) {
         if (!is_numeric($rules_group_id)) {
             return false;
         }
@@ -10467,7 +10467,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getTaxRule($rule_id) {
+    public static function getTaxRule($rule_id) {
         if (!is_numeric($rule_id)) {
             return false;
         }
@@ -10488,7 +10488,7 @@ class mslib_fe {
             return 0;
         }
     }
-    public function getAddressInfo($type = 'shop', $customer_id = 0) {
+    public static function getAddressInfo($type = 'shop', $customer_id = 0) {
         $data = array();
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAddressInfoPreProc'])) {
             $params = array(
@@ -10579,14 +10579,14 @@ class mslib_fe {
         }
         return false;
     }
-    public function getAddressUidInfo($uid) {
+    public static function getAddressUidInfo($uid) {
         if (is_numeric($uid)) {
             $sql_tt_address = "select * from tt_address where uid='" . $uid . "'";
             $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
             return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
         }
     }
-    public function getFeUserTTaddressDetails($customer_id, $tx_multishop_address_type = 'billing') {
+    public static function getFeUserTTaddressDetails($customer_id, $tx_multishop_address_type = 'billing') {
         if (is_numeric($customer_id)) {
             $sql_tt_address = "select * from tt_address where deleted=0 and hidden=0 and tx_multishop_address_type = '" . $tx_multishop_address_type . "' and tx_multishop_customer_id=" . $customer_id . " and page_uid='" . $this->showCatalogFromPage . "' and pid='" . $this->conf ['fe_customer_pid'] . "'";
 //			$sql_tt_address = "select * from tt_address where tx_multishop_address_type = '" . $tx_multishop_address_type . "' and tx_multishop_customer_id=" . $customer_id . " and pid='" . $this->conf ['fe_customer_pid'] . "'";
@@ -10598,7 +10598,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function loadEnabledCountries() {
+    public static function loadEnabledCountries() {
         // load enabled countries to array
         $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
         //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
@@ -10609,7 +10609,7 @@ class mslib_fe {
         }
         return $enabled_countries;
     }
-    public function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
+    public static function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
             $str = "SELECT * from tx_multishop_attributes_options_groups";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -10712,7 +10712,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function logPageView() {
+    public static function logPageView() {
         $insertArray = array();
         $continue = 1;
         //hook to let other plugins further manipulate the query
@@ -10777,10 +10777,10 @@ class mslib_fe {
             }
         }
     }
-    public function Money2Cents($amount, $customer_currency = 1) {
+    public static function Money2Cents($amount, $customer_currency = 1) {
         return mslib_fe::amount2Cents($amount, $customer_currency);
     }
-    public function amount2Cents($amount, $customer_currency = 1, $include_currency_symbol = 1, $cropZeroDecimals = 1) {
+    public static function amount2Cents($amount, $customer_currency = 1, $include_currency_symbol = 1, $cropZeroDecimals = 1) {
         $currency_rate = $this->cookie['currency_rate'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'])) {
             $params = array(
@@ -11025,7 +11025,7 @@ class mslib_fe {
             return true;
         }
     }
-    public function genderSalutation($gender, $custom_salutation='') {
+    public static function genderSalutation($gender, $custom_salutation='') {
         switch ($gender) {
             case '0':
             case 'm':
@@ -11057,38 +11057,38 @@ class mslib_fe {
         }
         return $salutation;
     }
-    public function checkoutValidateProductStatus($product_id) {
+    public static function checkoutValidateProductStatus($product_id) {
         $product = mslib_fe::getProduct($product_id, '', '', 1, 1);
         if (!$product || !$product['products_status']) {
             return false;
         }
         return true;
     }
-    public function updateCart() {
+    public static function updateCart() {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
         $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
         $mslib_cart->updateCart();
     }
-    public function countCartTotalTax($country_id = 0) {
+    public static function countCartTotalTax($country_id = 0) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_cart.php');
         $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
         $mslib_cart->init($this);
         return $mslib_cart->countCartTotalTax($country_id);
     }
-    public function createOrder($address) {
+    public static function createOrder($address) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
         return $mslib_order->createOrder($address);
     }
-    public function createOrdersProduct($orders_id, $orders_product = array()) {
+    public static function createOrdersProduct($orders_id, $orders_product = array()) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
         return $mslib_order->createOrdersProduct($orders_id, $orders_product);
     }
-    public function printOrderDetailsTable($order, $template_type = 'site') {
+    public static function printOrderDetailsTable($order, $template_type = 'site') {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
         $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
         $mslib_order->init($this);
