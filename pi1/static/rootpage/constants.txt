@@ -284,5 +284,5 @@ plugin.multishop {
 	developer_email=
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Load old redactor version (v2.4).
-	loadOldRedactorVersion = 0
+	loadOldRedactorVersion = 1
 }
