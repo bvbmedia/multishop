@@ -4697,7 +4697,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($row['comments']) {
                     $order_status_tab_content['order_history_table'] .= '
                     <tr class="even">
-                        <td colspan="5">' . $row['comments'] . '</td>
+                        <td colspan="6">' . $row['comments'] . '</td>
                     </tr>
                     ';
                 }
