@@ -531,7 +531,7 @@ jQuery(document).ready(function($) {
     });
 	jQuery(\'#check_all_1\').click(function() {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
-		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+		$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
 	var originalLeave = $.fn.popover.Constructor.prototype.leave;
 	$.fn.popover.Constructor.prototype.leave = function(obj){
