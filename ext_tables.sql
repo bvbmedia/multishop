@@ -748,6 +748,7 @@ CREATE TABLE `tx_multishop_order_units` (
  `code` varchar(15) default '',
  `crdate` int(11) default '0',
  `page_uid` int(11) default '0',
+ `is_default` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  KEY `code` (`code`),
  KEY `page_uid` (`page_uid`)
