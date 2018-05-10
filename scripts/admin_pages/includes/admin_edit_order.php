@@ -3843,12 +3843,13 @@ if (is_numeric($this->get['orders_id'])) {
                     var new_val = 0;
                     var qty_id = "#" + $(this).attr("rel");
                     var qty = parseFloat($(qty_id).val());
-                    if (qty > minQty) {
-                        new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
-                    }
-                    if (parseFloat(new_val)==0) {
-                        new_val=minQty;
-                    }
+                    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //if (qty > minQty) {
+                    //    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //}
+                    //if (parseFloat(new_val)==0) {
+                    //    new_val=minQty;
+                    //}
                     $(qty_id).val(new_val);
                 });
                 $(".qty_plus").click(function () {
