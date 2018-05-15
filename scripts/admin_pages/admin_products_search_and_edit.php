@@ -466,7 +466,7 @@ if (isset($this->get['product_price_from']) && $this->get['product_price_from']!
             break;
     }
 }
-if (isset($this->get['product_status']) && !empty($this->get['product_status']) && $this->get['product_status']!='all') {
+if (isset($this->get['product_status']) && $this->get['product_status']!='all') {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
@@ -501,7 +501,7 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
             break;
     }
 }
-if (isset($this->get['search_engine']) && !empty($this->get['search_engine']) && $this->get['search_engine']!='all') {
+if (isset($this->get['search_engine']) && $this->get['search_engine']!='all') {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
@@ -1006,10 +1006,10 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
     (isset($this->get['tax_id']) && $this->get['tax_id']!='' && $this->get['tax_id']!='all') ||
     (isset($this->get['product_price_from']) && !empty($this->get['product_price_from'])) ||
     (isset($this->get['product_price_till']) && !empty($this->get['product_price_till'])) ||
-    (isset($this->get['product_status']) && !empty($this->get['product_status']) && $this->get['product_status']!='all') ||
+    (isset($this->get['product_status']) && $this->get['product_status']!='all') ||
     (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) ||
     (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) ||
-    (isset($this->get['search_engine']) && !empty($this->get['search_engine']) && $this->get['search_engine']!='all')
+    (isset($this->get['search_engine']) && $this->get['search_engine']!='all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -1105,8 +1105,8 @@ $subpartArray['###FILTER_BY_PRODUCTS_CAPITAL_PRICE_CHECKED###'] = ($this->get['s
 // product_status
 $product_status_selectbox = '<select name="product_status" id="product_status" class="form-control">';
 $product_status_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
-<option value="1">' . $this->pi_getLL('enabled') . '</option>
-<option value="0">' . $this->pi_getLL('disabled') . '</option>
+<option value="1"' . ($this->get['product_status']=='1' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('enabled') . '</option>
+<option value="0"' . ($this->get['product_status']=='0' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('disabled') . '</option>
 ';
 $product_status_selectbox .= '</select>';
 $subpartArray['###LABEL_PRODUCT_STATUS###'] = $this->pi_getLL('admin_visible');
@@ -1114,8 +1114,8 @@ $subpartArray['###PRODUCT_STATUS_SELECTBOX###'] = $product_status_selectbox;
 // search_engine indexing
 $search_engine_selectbox = '<select name="search_engine" id="search_engine" class="form-control">';
 $search_engine_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
-<option value="1">' . $this->pi_getLL('admin_yes') . '</option>
-<option value="0">' . $this->pi_getLL('admin_no') . '</option>
+<option value="1"' . ($this->get['search_engine']=='1' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('admin_yes') . '</option>
+<option value="0"' . ($this->get['search_engine']=='0' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('admin_no') . '</option>
 ';
 $search_engine_selectbox .= '</select>';
 $subpartArray['###LABEL_SEARCH_ENGINE_INDEXING###'] = $this->pi_getLL('search_engine_indexing');
