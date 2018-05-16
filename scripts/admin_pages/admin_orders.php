@@ -1021,17 +1021,21 @@ $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_meth
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+    $payment_method =array();
+    if ($row['payment_method']) {
+        $payment_method = mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', 0, false);
+    }
     if (empty($row['payment_method_label'])) {
         $row['payment_method'] = 'nopm';
         $row['payment_method_label'] = 'Empty payment method';
     }
     if ($this->masterShop) {
-        if ($row['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        if ($payment_method['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($payment_method['page_uid']);
         } else {
             $shop_title = 'All';
         }
-        $row['payment_method_label'] = $shop_title . ': ' . $row['payment_method_label'];
+        $row['payment_method_label'] = $row['payment_method_label'] . ' (' . $shop_title . ')';
     }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
 
@@ -1057,17 +1061,21 @@ $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_me
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+    $shipping_method =array();
+    if ($row['shipping_method']) {
+        $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', 0, false);
+    }
     if (empty($row['shipping_method_label'])) {
         $row['shipping_method'] = 'nosm';
         $row['shipping_method_label'] = 'Empty shipping method';
     }
     if ($this->masterShop) {
-        if ($row['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
+        if ($shipping_method['page_uid']>0) {
+            $shop_title = mslib_fe::getShopNameByPageUid($shipping_method['page_uid']);
         } else {
             $shop_title = 'All';
         }
-        $row['shipping_method_label'] = $shop_title . ': ' . $row['shipping_method_label'];
+        $row['shipping_method_label'] = $row['shipping_method_label'] . ' ('.$shop_title.')';
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
 }

@@ -9713,6 +9713,16 @@ class mslib_fe {
             if ($shop[0]['nav_title']) {
                 $pageTitle = $shop[0]['nav_title'];
             }
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShopNameByPageUidPostProc'])) {
+                $params = array(
+                    'pageTitle' => &$pageTitle
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShopNameByPageUidPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // hook eof
             return $pageTitle;
         }
     }
