@@ -147,6 +147,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         $updateCookie = 0;
+        $that->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');
         if (!isset($params['settings']['limit'])) {
             if ((isset($that->get['Search']) || isset($that->get['submit'])) and (is_numeric($that->get['limit']) && $that->get['limit']>0 && $that->get['limit'] != $that->cookie['limit'])) {
                 $that->cookie['limit'] = $that->get['limit'];
