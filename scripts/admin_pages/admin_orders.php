@@ -607,6 +607,7 @@ $option_search = array(
         "order_products" => $this->pi_getLL('admin_ordered_product'),
         /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
         "billing_telephone" => $this->pi_getLL('telephone'),
+        "billing_mobile" => $this->pi_getLL('mobile'),
         "http_referer" => $this->pi_getLL('http_referer'),
         "delivery_email" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email'),
         "delivery_name" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name'),
@@ -615,6 +616,7 @@ $option_search = array(
         "delivery_address" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address'),
         "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
         "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
+        "delivery_mobile" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_mobile'),
         "foreign_orders_id" => $this->pi_getLL('feed_exporter_fields_label_foreign_orders_id'),
         "cruser_id" => $this->pi_getLL('feed_exporter_fields_label_ordered_by'),
 
@@ -794,8 +796,14 @@ if ($this->post['skeyword']) {
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'billing_mobile':
+            $filter[] = " billing_mobile LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'delivery_telephone':
             $filter[] = " delivery_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_mobile':
+            $filter[] = " delivery_mobile LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'http_referer':
             $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";

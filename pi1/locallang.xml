@@ -710,6 +710,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
             <label index="feed_exporter_fields_label_customer_delivery_name">Customer delivery name</label>
             <label index="feed_exporter_fields_label_customer_delivery_telephone">Customer delivery telephone</label>
+            <label index="feed_exporter_fields_label_customer_delivery_mobile">Customer delivery mobile</label>
             <label index="feed_exporter_fields_label_customer_delivery_zip">Customer delivery zip</label>
             <label index="feed_exporter_fields_label_customer_id">Customer ID</label>
             <label index="feed_exporter_fields_label_delivery_time">Delivery Time</label>
@@ -2145,6 +2146,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_email">Debiteur (aflever) e-mailadres</label>
             <label index="feed_exporter_fields_label_customer_delivery_name">Debiteur (aflever) naam</label>
             <label index="feed_exporter_fields_label_customer_delivery_telephone">Debiteur (aflever) telefoonnummer</label>
+            <label index="feed_exporter_fields_label_customer_delivery_mobile">Debiteur (aflever) mobielnummer</label>
             <label index="feed_exporter_fields_label_customer_delivery_zip">Debiteur (aflever) postcode</label>
             <label index="feed_exporter_fields_label_customer_id">Klantnummer</label>
             <label index="feed_exporter_fields_label_delivery_time">Levertijd</label>
