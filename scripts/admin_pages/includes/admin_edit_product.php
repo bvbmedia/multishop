@@ -2468,7 +2468,7 @@ if ($this->post) {
         if ($this->ms['MODULES']['AUTOMATICALLY_CLEAR_MULTISHOP_CACHE_ON_CATALOG_CHANGES']) {
             mslib_befe::cacheLite('delete_all');
         }
-        if (isset($this->post['SaveClose']) || isset($this->post['save_as_new'])) {
+        if (isset($this->post['SaveClose'])) {
             if (strpos($this->post['tx_multishop_pi1']['referrer'], 'action=edit_product') === false && strpos($this->post['tx_multishop_pi1']['referrer'], 'action=add_product') === false && $this->post['tx_multishop_pi1']['referrer']) {
                 header("Location: " . $this->post['tx_multishop_pi1']['referrer']);
                 exit();
@@ -2476,7 +2476,7 @@ if ($this->post) {
                 header("Location: " . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
                 exit();
             }
-        } else if (isset($this->post['Submit'])) {
+        } else if (isset($this->post['Submit']) || isset($this->post['save_as_new'])) {
             $redirect_cid = $this->get['cid'];
             if (!$redirect_cid) {
                 $product_data = mslib_fe::getProduct($prodid, '', '', 1);
