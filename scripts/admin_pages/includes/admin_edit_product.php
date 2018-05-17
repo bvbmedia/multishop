@@ -3984,12 +3984,25 @@ if ($this->post) {
                     $attributes_data = array();
                     $attribute_values_class_id = array();
                     while (($row = $GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa)) != false) {
-                        $row['options_values_name'] = mslib_fe::getNameOptions($row['options_values_id']);
-                        $options_data[$row['products_options_id']] = $row['products_options_name'];
-                        $attributes_data[$row['products_options_id']][] = $row;
-                        // js cache
-                        $js_select2_cache_options[$row['products_options_id']] = 'attributesOptions[' . $row['products_options_id'] . ']={id:"' . $row['products_options_id'] . '", text:"' . htmlentities($row['products_options_name'], ENT_QUOTES) . '"}';
-                        $js_select2_cache_values[$row['options_values_id']] = 'attributesValues[' . $row['options_values_id'] . ']={id:"' . $row['options_values_id'] . '", text:"' . htmlentities($row['options_values_name'], ENT_QUOTES) . '"}';
+                        $add_to_list=true;
+                        // custom hook that can be controlled by third-party plugin
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesDataCollector'])) {
+                            $params = array(
+                                    'row' => &$row,
+                                    'add_to_list' => &$add_to_list
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesDataCollector'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
+                        if ($add_to_list) {
+                            $row['options_values_name'] = mslib_fe::getNameOptions($row['options_values_id']);
+                            $options_data[$row['products_options_id']] = $row['products_options_name'];
+                            $attributes_data[$row['products_options_id']][] = $row;
+                            // js cache
+                            $js_select2_cache_options[$row['products_options_id']] = 'attributesOptions[' . $row['products_options_id'] . ']={id:"' . $row['products_options_id'] . '", text:"' . htmlentities($row['products_options_name'], ENT_QUOTES) . '"}';
+                            $js_select2_cache_values[$row['options_values_id']] = 'attributesValues[' . $row['options_values_id'] . ']={id:"' . $row['options_values_id'] . '", text:"' . htmlentities($row['options_values_name'], ENT_QUOTES) . '"}';
+                        }
                     }
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
