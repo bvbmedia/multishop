@@ -2319,9 +2319,12 @@ class mslib_fe {
             }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
-            if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
-                $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+            if (isset($options['reply_to_email'])) {
+                $mail->AddReplyTo($options['reply_to_email']);
             }
+            /*if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
+                $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+            }*/
             if (count($attachments)) {
                 foreach ($attachments as $path) {
                     if ($path and is_file($path)) {
@@ -11035,7 +11038,7 @@ class mslib_fe {
             return true;
         }
     }
-    public function genderSalutation($gender, $custom_salutation='') {
+    public function genderSalutation($gender='', $custom_salutation='') {
         switch ($gender) {
             case '0':
             case 'm':
