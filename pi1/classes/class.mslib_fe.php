@@ -2320,11 +2320,14 @@ class mslib_fe {
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
             if (isset($options['reply_to_email'])) {
-                $mail->AddReplyTo($options['reply_to_email']);
+                if ($options['reply_to_email'] !='') {
+                    $mail->AddReplyTo($options['reply_to_email']);
+                }
+            } else {
+                if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
+                    $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+                }
             }
-            /*if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
-                $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
-            }*/
             if (count($attachments)) {
                 foreach ($attachments as $path) {
                     if ($path and is_file($path)) {
