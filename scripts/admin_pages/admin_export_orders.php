@@ -113,6 +113,13 @@ $array['turnover_per_main_category_excl_vat'] = $this->pi_getLL('feed_exporter_f
 $array['bought_products_per_main_category'] = $this->pi_getLL('feed_exporter_fields_label_bought_products_per_main_category');
 $array['ordered_by'] = $this->pi_getLL('ordered_by');
 $array['discount'] = $this->pi_getLL('discount');
+// get orders vat rate
+$str = "SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $array['order_tax_total_' . $row['name']] = sprintf($this->pi_getLL('feed_exporter_fields_label_order_tax_total'), $row['name']);
+}
+
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';

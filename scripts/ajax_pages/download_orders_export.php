@@ -616,6 +616,17 @@ if ($this->get['orders_export_hash']) {
                             $excelCols[] = '';
                         }
                         break;
+                    default:
+                        if (strpos($field, 'order_tax_total')!==false) {
+                            $tmp_tax_str=explode('_', $field);
+                            $tax_rate=str_replace('%', '', $tmp_tax_str[3]);
+                            if (isset($order_tax_data['tax_separation'][$tax_rate])) {
+                                $excelCols[] = number_format($order_tax_data['tax_separation'][$tax_rate]['products_total_tax'], 2, ',', '.');
+                            } else {
+                                $excelCols[] = '';
+                            }
+                        }
+                        break;
                 }
                 //hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'])) {
