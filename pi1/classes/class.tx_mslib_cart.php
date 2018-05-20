@@ -1049,6 +1049,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $cart['discount'] = $discount_percentage;
                             $cart['discount_type'] = 'percentage';
                             $cart['discount_from'] = 'user';
+                        } else {
+                            $cart['coupon_code'] = '';
+                            $cart['discount'] = 0;
+                            $cart['discount_type'] = '';
+                            $cart['discount_from'] = '';
                         }
                     }
                 }

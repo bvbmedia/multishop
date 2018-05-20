@@ -6453,6 +6453,7 @@ class mslib_fe {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getUserGroupDiscount'])) {
             $params = array(
+                    'user' => $user,
                     'discount' => &$discount,
                     'discount_sign' => &$discount_sign,
             );
