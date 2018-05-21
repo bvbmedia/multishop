@@ -156,6 +156,9 @@ if ($this->post['req'] == 'init') {
                             $relation_type_list[]='sub';
                             $relation_type_list[]='both';
                             foreach ($relation_type_list as $rtype) {
+                                if (!is_array($pid_regs[$rtype])) {
+                                    $pid_regs[$rtype]=array();
+                                }
                                 if (!in_array($row2['products_id'], $pid_regs[$rtype])) {
                                     if ($rtype=='main' && !$have_main_relation_type) {
                                         continue;
@@ -232,10 +235,12 @@ if ($this->post['req'] == 'init') {
             if ($this->post['s_cid'] > 0) {
                 $subcats = mslib_fe::get_subcategory_ids($this->post['s_cid'], $subcats);
                 $subcat_queries[] = 'p2c.categories_id = ' . (int)$this->post['s_cid'];
-                foreach ($subcats as $subcat_id) {
-                    $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
+                if (is_array($subcats)) {
+                    foreach ($subcats as $subcat_id) {
+                        $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
+                    }
+                    $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
                 }
-                $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
                 $filter[] = $subcat_query;
             }
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {

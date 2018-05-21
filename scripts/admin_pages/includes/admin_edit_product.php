@@ -1081,7 +1081,7 @@ if ($this->post) {
         $this->post['specials_new_products_price'] = str_replace(",", ".", $this->post['specials_new_products_price']);
     }
     if ($this->post['tax_id']) {
-        $tax_rate=mslib_fe::getTaxRuleSet($this->post['tax_id']);
+        $tax_rate=mslib_fe::getTaxRuleSet($this->post['tax_id'], 0);
         $total_tax_rate=$tax_rate['total_tax_rate'];
     }
     if ($this->post['product_capital_price'] && $total_tax_rate) {
