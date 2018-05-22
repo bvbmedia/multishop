@@ -239,8 +239,8 @@ if ($this->post['req'] == 'init') {
                     foreach ($subcats as $subcat_id) {
                         $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
                     }
-                    $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
                 }
+                $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
                 $filter[] = $subcat_query;
             }
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
