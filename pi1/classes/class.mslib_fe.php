@@ -7788,6 +7788,14 @@ class mslib_fe {
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_stats_user_agent' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_stats_user_agent') {
                 $ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_user_agent']['active'] = 1;
             }
+            // admin users overview
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['label'] = htmlspecialchars($this->pi_getLL('admin_users','Admin users'));
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['description'] = '';
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_users_overview');
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['class'] = 'fa fa-user';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_users_overview' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_users_overview') {
+                $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['active'] = 1;
+            }
         }
         $ms_menu['footer']['ms_admin_logout']['label'] = $this->pi_getLL('admin_log_out');
         $ms_menu['footer']['ms_admin_logout']['link'] = mslib_fe::typolink($this->conf['logout_pid'], '&logintype=logout');
