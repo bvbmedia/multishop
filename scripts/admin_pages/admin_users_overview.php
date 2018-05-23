@@ -4,7 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 $users = mslib_fe::getUsersByGroup($this->conf['fe_admin_usergroup']);
 if (is_array($users)) {
-    // grab all usergroups
+    // Collect all usergroups
     $usergroupUids = array();
     foreach ($users as $user) {
         $array = explode(',', $user['usergroup']);
@@ -14,6 +14,7 @@ if (is_array($users)) {
             }
         }
     }
+    // Collect table heading row
     $tblRows = array();
     $tblRow[] = 'User';
     $sortedUsergroups = array();
@@ -35,6 +36,7 @@ if (is_array($users)) {
         }
     }
     $tblRows[] = $tblRow;
+    // Collect table body rows
     foreach ($users as $user) {
         $tblRow = array();
         $tblRow[] = $user['username'];
@@ -48,6 +50,7 @@ if (is_array($users)) {
         }
         $tblRows[] = $tblRow;
     }
+    // Render array to table
     $idName = 'admin_users_overview';
     $settings = array();
     $settings['keyNameAsHeadingTitle'] = 0;
