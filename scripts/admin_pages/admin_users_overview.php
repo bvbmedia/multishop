@@ -37,7 +37,7 @@ if (is_array($users)) {
         $tblRow[] = $user['username'];
         $usergroupUids = explode(',', $user['usergroup']);
         foreach ($sortedUsergroups as $uid => $sortedUsergroup) {
-            $value = '<span class="fa-stack"><i class="fa fa-times fa-stack-1x"></i></span>';
+            $value = '';
             if (is_array($usergroupUids) && in_array($uid, $usergroupUids)) {
                 $value = '<span class="fa-stack"><i class="fa fa-check fa-stack-1x"></i></span>';
             }
