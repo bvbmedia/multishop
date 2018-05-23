@@ -1031,11 +1031,11 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
     }
     if ($this->masterShop) {
         if ($payment_method['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($payment_method['page_uid']);
+            $shop_title = ' ('.mslib_fe::getShopNameByPageUid($payment_method['page_uid']) . ')';
         } else {
-            $shop_title = 'All';
+            $shop_title = '';
         }
-        $row['payment_method_label'] = $row['payment_method_label'] . ' (' . $shop_title . ')';
+        $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
     }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
 
