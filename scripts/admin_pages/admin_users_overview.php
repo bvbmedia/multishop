@@ -20,7 +20,10 @@ if (is_array($users)) {
     if (is_array($usergroupUids)) {
         foreach ($usergroupUids as $usergroupUid) {
             if ($usergroupUid != $this->conf['fe_customer_usergroup']) {
-                $usergroup = mslib_befe::getRecord($usergroupUid, 'fe_groups', 'uid');
+                $filter=array();
+                $filter[]='deleted=0';
+                $filter[]='hidden=0';
+                $usergroup = mslib_befe::getRecord($usergroupUid, 'fe_groups', 'uid',$filter);
                 if (is_array($usergroup)) {
                     $sortedUsergroups[$usergroup['uid']] = $usergroup['title'];
                 }
