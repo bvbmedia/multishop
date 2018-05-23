@@ -50,7 +50,7 @@ if (is_array($users)) {
     $settings['keyNameAsHeadingTitle'] = 0;
     $settings['sumTr'] = 0;
     // Pass through class names
-    $settings['cellClasses'][] = 'text-right';
+    $settings['cellClasses'][] = '';
     foreach ($sortedUsergroups as $uid => $sortedUsergroup) {
         $settings['cellClasses'][] = 'text-center';
     }
