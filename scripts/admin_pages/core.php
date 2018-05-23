@@ -758,6 +758,11 @@ switch ($this->ms['page']) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
         }
         break;
+    case 'admin_users_overview':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_users_overview.php');
+        }
+        break;
     /*
      * TODO: can be removed soon, because I can't seeing it being used
     case 'admin_shipping_options':
