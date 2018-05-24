@@ -1385,7 +1385,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $return_orders_id=false;
         $orders_id=0;
         $address = $cart['user'];
-        $vat_id_validate_country=$this->post['b_cc'];
+        $vat_id_validate_country=$address['country'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'])) {
             // hook
             $params = array(
@@ -1422,7 +1422,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
         if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $address['tx_multishop_vat_id']) {
             if (strtolower($vat_id_validate_country) != strtolower($this->tta_shop_info['country'])) {
-                $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+               $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
         }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'])) {
