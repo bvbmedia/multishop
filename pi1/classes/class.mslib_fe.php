@@ -2174,8 +2174,10 @@ class mslib_fe {
     public function getUsersByGroup($group_id) {
         if (is_numeric($group_id)) {
             $additional_where = array();
+            $additional_where[] = 'deleted=0';
+            $additional_where[] = 'disable=0';
             $additional_where[] = 'FIND_IN_SET(\'' . $group_id . '\',usergroup) > 0';
-            $users = mslib_befe::getRecords(0, 'fe_users', 'disable', $additional_where);
+            $users = mslib_befe::getRecords('', 'fe_users', '', $additional_where);
             return $users;
         }
     }
