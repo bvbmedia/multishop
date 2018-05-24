@@ -462,13 +462,17 @@ class mslib_fe {
                 $from_clause .= ", ";
                 $from_clause .= implode(",", $extra_from);
             }
-            if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
-                $where_clause = ' 1 ';
-                if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS']=='1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+            if ($search_section!='admin_products_search') {
+                if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+                    $where_clause = ' 1 ';
+                    if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS'] == '1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+                        $where_clause = ' p.products_status=1 AND c.status=1 ';
+                    }
+                } else {
                     $where_clause = ' p.products_status=1 AND c.status=1 ';
                 }
             } else {
-                $where_clause = ' p.products_status=1 AND c.status=1 ';
+                $where_clause = ' c.status=1 ';
             }
             if (!$this->masterShop) {
                 $p2c_is_deepest = ' AND p2c.is_deepest=1';
