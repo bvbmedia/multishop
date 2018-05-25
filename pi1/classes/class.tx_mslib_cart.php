@@ -2705,16 +2705,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                     // hook oef
                 }
-                if ($cart['discount']) {
-                    if ($cart['discount']) {
-                        if ($cart['coupon_code']) {
-                            $str = "update tx_multishop_coupons set times_used=(times_used+1) where code='" . addslashes($cart['coupon_code']) . "'";
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                            $cart['coupon_code'] = '';
-                        }
-                        $cart['discount'] = '';
-                        $cart['discount_type'] = '';
-                    }
+                if (isset($cart['coupon_code']) && !empty($cart['coupon_code'])) {
+                    $str = "update tx_multishop_coupons set times_used=(times_used+1) where code='" . addslashes($cart['coupon_code']) . "'";
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                 }
                 mslib_befe::storeCustomerCartContent($cart, $customer_id, 1);
                 // debug
@@ -2740,6 +2733,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     unset($cart['user']);
                 }
                 //unset($cart['user']);
+                unset($cart['coupon_code']);
+                unset($cart['discount']);
+                unset($cart['discount_type']);
                 unset($cart['discount_type']);
                 unset($cart['discount_amount']);
                 //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
