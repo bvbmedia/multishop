@@ -14,7 +14,49 @@ while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
     $enabled_countries[] = $row2;
 }
 // load enabled countries to array eof
+$show_edit_account=0;
+$erno=array();
 if ($this->post) {
+    // now verify the posted values
+    if (!$this->post['email']) {
+        $erno[] = ucfirst($this->pi_getLL('no_email_address_has_been_specified'));
+    }
+    if (!$this->post['street_name']) {
+        $erno[] = ucfirst($this->pi_getLL('street_address_is_required'));
+    }
+    if (!$this->post['address_number']) {
+        $erno[] = ucfirst($this->pi_getLL('street_number_is_required'));
+    }
+    if (!$this->post['first_name']) {
+        $erno[] = ucfirst($this->pi_getLL('first_name_required'));
+    }
+    if (!$this->post['last_name']) {
+        $erno[] = ucfirst($this->pi_getLL('surname_is_required'));
+    }
+    if (!$this->post['zip']) {
+        $erno[] = ucfirst($this->pi_getLL('zip_is_required'));
+    }
+    if (!$this->post['city']) {
+        $erno[] = ucfirst($this->pi_getLL('city_is_required'));
+    }
+    if (!$this->post['delivery_street_name']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_street_address_is_required'));
+    }
+    if (!$this->post['delivery_address_number']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_street_number_is_required'));
+    }
+    if (!$this->post['delivery_first_name']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_first_name_required'));
+    }
+    if (!$this->post['delivery_last_name']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_surname_is_required'));
+    }
+    if (!$this->post['delivery_zip']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_zip_is_required'));
+    }
+    if (!$this->post['delivery_city']) {
+        $erno[] = ucfirst($this->pi_getLL('delivery_city_is_required'));
+    }
     // billing details
     $user['email'] = $this->post['email'];
     $user['company'] = $this->post['company'];
@@ -161,201 +203,206 @@ if ($this->post) {
             $user['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
         }
     }
-    if ($this->post) {
-//		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-        $address = $user;
-        $insertArray = array();
-        $insertArray['company'] = $address['company'];
-        $insertArray['name'] = $address['name'];
-        $insertArray['first_name'] = $address['first_name'];
-        $insertArray['middle_name'] = $address['middle_name'];
-        $insertArray['last_name'] = $address['last_name'];
-        $insertArray['email'] = $address['email'];
-        $insertArray['building'] = $address['building'];
-        $insertArray['street_name'] = $address['street_name'];
-        $insertArray['address_number'] = $address['address_number'];
-        $insertArray['address_ext'] = $address['address_ext'];
-        $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ' ' . $insertArray['address_ext']);
-        $insertArray['mobile'] = $address['mobile'];
-        $insertArray['zip'] = $address['zip'];
-        $insertArray['telephone'] = $address['telephone'];
-        $insertArray['city'] = $address['city'];
-        $insertArray['country'] = $address['country'];
-        if ($this->post['password'] and ($this->post['repassword'] == $this->post['repassword'])) {
-            $insertArray['password'] = mslib_befe::getHashedPassword($this->post['password']);
-        }
-        $insertArray['gender'] = $address['gender'];
-        $insertArray['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
-        $insertArray['tx_multishop_vat_id'] = $address['tx_multishop_vat_id'];
-        $insertArray['tx_multishop_coc_id'] = $address['tx_multishop_coc_id'];
-        $insertArray['www'] = $address['www'];
-        $insertArray['date_of_birth'] = $address['date_of_birth'];
-        if ($_FILES['tx_multishop_pi1']['error']['image'] == 0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
-            $name = $address['company'];
-            if (!$name) {
-                $name = $address['name'];
+    if (!count($erno)) {
+        if ($this->post) {
+            //		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
+            $address = $user;
+            $insertArray = array();
+            $insertArray['company'] = $address['company'];
+            $insertArray['name'] = $address['name'];
+            $insertArray['first_name'] = $address['first_name'];
+            $insertArray['middle_name'] = $address['middle_name'];
+            $insertArray['last_name'] = $address['last_name'];
+            $insertArray['email'] = $address['email'];
+            $insertArray['building'] = $address['building'];
+            $insertArray['street_name'] = $address['street_name'];
+            $insertArray['address_number'] = $address['address_number'];
+            $insertArray['address_ext'] = $address['address_ext'];
+            $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ' ' . $insertArray['address_ext']);
+            $insertArray['mobile'] = $address['mobile'];
+            $insertArray['zip'] = $address['zip'];
+            $insertArray['telephone'] = $address['telephone'];
+            $insertArray['city'] = $address['city'];
+            $insertArray['country'] = $address['country'];
+            if ($this->post['password'] and ($this->post['repassword'] == $this->post['repassword'])) {
+                $insertArray['password'] = mslib_befe::getHashedPassword($this->post['password']);
             }
-            $imgtype = exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['image']);
-            if ($imgtype) {
-                // valid image
-                $ext = image_type_to_extension($imgtype, false);
-                if ($ext) {
-                    $i = 0;
-                    $filename = mslib_fe::rewritenamein($name) . '.' . $ext;
-                    $target = $this->DOCUMENT_ROOT . 'uploads/pics/' . $filename;
-                    if (file_exists($target)) {
-                        while (file_exists($target)) {
-                            $filename = mslib_fe::rewritenamein($name) . ($i > 0 ? '-' . $i : '') . '.' . $ext;
-                            $target = $this->DOCUMENT_ROOT . 'uploads/pics/' . $filename;
-                            $i++;
+            $insertArray['gender'] = $address['gender'];
+            $insertArray['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
+            $insertArray['tx_multishop_vat_id'] = $address['tx_multishop_vat_id'];
+            $insertArray['tx_multishop_coc_id'] = $address['tx_multishop_coc_id'];
+            $insertArray['www'] = $address['www'];
+            $insertArray['date_of_birth'] = $address['date_of_birth'];
+            if ($_FILES['tx_multishop_pi1']['error']['image'] == 0 && $_FILES['tx_multishop_pi1']['tmp_name']['image']) {
+                $name = $address['company'];
+                if (!$name) {
+                    $name = $address['name'];
+                }
+                $imgtype = exif_imagetype($_FILES['tx_multishop_pi1']['tmp_name']['image']);
+                if ($imgtype) {
+                    // valid image
+                    $ext = image_type_to_extension($imgtype, false);
+                    if ($ext) {
+                        $i = 0;
+                        $filename = mslib_fe::rewritenamein($name) . '.' . $ext;
+                        $target = $this->DOCUMENT_ROOT . 'uploads/pics/' . $filename;
+                        if (file_exists($target)) {
+                            while (file_exists($target)) {
+                                $filename = mslib_fe::rewritenamein($name) . ($i > 0 ? '-' . $i : '') . '.' . $ext;
+                                $target = $this->DOCUMENT_ROOT . 'uploads/pics/' . $filename;
+                                $i++;
+                            }
                         }
-                    }
-                    if (move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['image'], $target)) {
-                        $insertArray['image'] = $filename;
+                        if (move_uploaded_file($_FILES['tx_multishop_pi1']['tmp_name']['image'], $target)) {
+                            $insertArray['image'] = $filename;
+                        }
                     }
                 }
             }
-        }
-        // custom hook that can be controlled by third-party plugin
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
-            $params = array(
-                    'insertArray' => &$insertArray,
-                    'uid' => &$GLOBALS["TSFE"]->fe_user->user['uid']
-            );
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'] as $funcRef) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
+                $params = array(
+                        'insertArray' => &$insertArray,
+                        'uid' => &$GLOBALS["TSFE"]->fe_user->user['uid']
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
-        }
-        // custom hook that can be controlled by third-party plugin eof
-        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = ' . $GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
-        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        // custom hook that can be controlled by third-party plugin
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'])) {
-            $params = array(
-                    'insertArray' => &$insertArray,
-                    'uid' => &$GLOBALS["TSFE"]->fe_user->user['uid']
-            );
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'] as $funcRef) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            // custom hook that can be controlled by third-party plugin eof
+            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = ' . $GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            // custom hook that can be controlled by third-party plugin
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'])) {
+                $params = array(
+                        'insertArray' => &$insertArray,
+                        'uid' => &$GLOBALS["TSFE"]->fe_user->user['uid']
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
+            // custom hook that can be controlled by third-party plugin eof
+            // add / update billing tt_address
+            $insertTTArray = array();
+            $insertTTArray['company'] = $address['company'];
+            $insertTTArray['name'] = $address['name'];
+            $insertTTArray['gender'] = $address['gender'];
+            // fe user table holds integer as value: 0 is male, 1 is female
+            // but in tt_address its varchar: m is male, f is female
+            switch ($insertTTArray['gender']) {
+                case '0':
+                case 'm':
+                    $insertTTArray['gender'] = 'm';
+                    break;
+                case '1':
+                case 'f':
+                    $insertTTArray['gender'] = 'f';
+                    break;
+                case '2':
+                case 'c':
+                    $insertTTArray['gender'] = 'c';
+                    break;
+            }
+            $insertTTArray['first_name'] = $address['first_name'];
+            $insertTTArray['middle_name'] = $address['middle_name'];
+            $insertTTArray['last_name'] = $address['last_name'];
+            $insertTTArray['birthday'] = $address['date_of_birth'];
+            $insertTTArray['email'] = $address['email'];
+            $insertTTArray['phone'] = $address['telephone'];
+            $insertTTArray['mobile'] = $address['mobile'];
+            $insertTTArray['zip'] = $address['zip'];
+            $insertTTArray['city'] = $address['city'];
+            $insertTTArray['country'] = $address['country'];
+            $insertTTArray['building'] = $address['building'];
+            $insertTTArray['street_name'] = $address['street_name'];
+            $insertTTArray['address'] = $address['address'];
+            $insertTTArray['address_number'] = $address['address_number'];
+            $insertTTArray['address_ext'] = $address['address_ext'];
+            $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='billing' and deleted=0";
+            $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+            $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+            if ($rows_tt_address) {
+                $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
+                $tt_address_id = $row_tt_address['uid'];
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = ' . $tt_address_id, $insertTTArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            } else {
+                $insertTTArray['tstamp'] = time();
+                $insertTTArray['tx_multishop_customer_id'] = $GLOBALS["TSFE"]->fe_user->user['uid'];
+                $insertTTArray['pid'] = $this->conf['fe_customer_pid'];
+                $insertTTArray['page_uid'] = $this->shop_pid;
+                $insertTTArray['tx_multishop_default'] = '1';
+                $insertTTArray['tx_multishop_address_type'] = 'billing';
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+            // add / update billing tt_address eof
+            // add / update delivery tt_address
+            $insertTTArray = array();
+            $insertTTArray['company'] = $address['delivery_company'];
+            $insertTTArray['name'] = $address['delivery_name'];
+            $insertTTArray['gender'] = $address['delivery_gender'];
+            // fe user table holds integer as value: 0 is male, 1 is female
+            // but in tt_address its varchar: m is male, f is female
+            switch ($insertTTArray['gender']) {
+                case '0':
+                case 'm':
+                    $insertTTArray['gender'] = 'm';
+                    break;
+                case '1':
+                case 'f':
+                    $insertTTArray['gender'] = 'f';
+                    break;
+                case '2':
+                case 'c':
+                    $insertTTArray['gender'] = 'c';
+                    break;
+            }
+            $insertTTArray['first_name'] = $address['delivery_first_name'];
+            $insertTTArray['middle_name'] = $address['delivery_middle_name'];
+            $insertTTArray['last_name'] = $address['delivery_last_name'];
+            $insertTTArray['birthday'] = $address['delivery_birthday'];
+            $insertTTArray['email'] = $address['delivery_email'];
+            $insertTTArray['phone'] = $address['delivery_telephone'];
+            $insertTTArray['mobile'] = $address['delivery_mobile'];
+            $insertTTArray['zip'] = $address['delivery_zip'];
+            $insertTTArray['city'] = $address['delivery_city'];
+            $insertTTArray['country'] = $address['delivery_country'];
+            $insertTTArray['building'] = $address['delivery_building'];
+            $insertTTArray['street_name'] = $address['delivery_street_name'];
+            $insertTTArray['address'] = $address['delivery_address'];
+            $insertTTArray['address_number'] = $address['delivery_address_number'];
+            $insertTTArray['address_ext'] = $address['delivery_address_ext'];
+            $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
+            $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+            $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+            if ($rows_tt_address) {
+                $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
+                $tt_address_id = $row_tt_address['uid'];
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = ' . $tt_address_id, $insertTTArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            } else {
+                $insertTTArray['tstamp'] = time();
+                $insertTTArray['tx_multishop_customer_id'] = $GLOBALS["TSFE"]->fe_user->user['uid'];
+                $insertTTArray['pid'] = $this->conf['fe_customer_pid'];
+                $insertTTArray['page_uid'] = $this->shop_pid;
+                $insertTTArray['tx_multishop_address_type'] = 'delivery';
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+            // add / update delivery tt_address eof
+            $content .= $this->pi_getLL('your_details_has_been_saved') . '.';
+            //echo $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery;
         }
-        // custom hook that can be controlled by third-party plugin eof
-        // add / update billing tt_address
-        $insertTTArray = array();
-        $insertTTArray['company'] = $address['company'];
-        $insertTTArray['name'] = $address['name'];
-        $insertTTArray['gender'] = $address['gender'];
-        // fe user table holds integer as value: 0 is male, 1 is female
-        // but in tt_address its varchar: m is male, f is female
-        switch ($insertTTArray['gender']) {
-            case '0':
-            case 'm':
-                $insertTTArray['gender'] = 'm';
-                break;
-            case '1':
-            case 'f':
-                $insertTTArray['gender'] = 'f';
-                break;
-            case '2':
-            case 'c':
-                $insertTTArray['gender'] = 'c';
-                break;
-        }
-        $insertTTArray['first_name'] = $address['first_name'];
-        $insertTTArray['middle_name'] = $address['middle_name'];
-        $insertTTArray['last_name'] = $address['last_name'];
-        $insertTTArray['birthday'] = $address['date_of_birth'];
-        $insertTTArray['email'] = $address['email'];
-        $insertTTArray['phone'] = $address['telephone'];
-        $insertTTArray['mobile'] = $address['mobile'];
-        $insertTTArray['zip'] = $address['zip'];
-        $insertTTArray['city'] = $address['city'];
-        $insertTTArray['country'] = $address['country'];
-        $insertTTArray['building'] = $address['building'];
-        $insertTTArray['street_name'] = $address['street_name'];
-        $insertTTArray['address'] = $address['address'];
-        $insertTTArray['address_number'] = $address['address_number'];
-        $insertTTArray['address_ext'] = $address['address_ext'];
-        $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='billing' and deleted=0";
-        $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-        $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
-        if ($rows_tt_address) {
-            $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
-            $tt_address_id = $row_tt_address['uid'];
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = ' . $tt_address_id, $insertTTArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        } else {
-            $insertTTArray['tstamp'] = time();
-            $insertTTArray['tx_multishop_customer_id'] = $GLOBALS["TSFE"]->fe_user->user['uid'];
-            $insertTTArray['pid'] = $this->conf['fe_customer_pid'];
-            $insertTTArray['page_uid'] = $this->shop_pid;
-            $insertTTArray['tx_multishop_default'] = '1';
-            $insertTTArray['tx_multishop_address_type'] = 'billing';
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        }
-        // add / update billing tt_address eof
-        // add / update delivery tt_address
-        $insertTTArray = array();
-        $insertTTArray['company'] = $address['delivery_company'];
-        $insertTTArray['name'] = $address['delivery_name'];
-        $insertTTArray['gender'] = $address['delivery_gender'];
-        // fe user table holds integer as value: 0 is male, 1 is female
-        // but in tt_address its varchar: m is male, f is female
-        switch ($insertTTArray['gender']) {
-            case '0':
-            case 'm':
-                $insertTTArray['gender'] = 'm';
-                break;
-            case '1':
-            case 'f':
-                $insertTTArray['gender'] = 'f';
-                break;
-            case '2':
-            case 'c':
-                $insertTTArray['gender'] = 'c';
-                break;
-        }
-        $insertTTArray['first_name'] = $address['delivery_first_name'];
-        $insertTTArray['middle_name'] = $address['delivery_middle_name'];
-        $insertTTArray['last_name'] = $address['delivery_last_name'];
-        $insertTTArray['birthday'] = $address['delivery_birthday'];
-        $insertTTArray['email'] = $address['delivery_email'];
-        $insertTTArray['phone'] = $address['delivery_telephone'];
-        $insertTTArray['mobile'] = $address['delivery_mobile'];
-        $insertTTArray['zip'] = $address['delivery_zip'];
-        $insertTTArray['city'] = $address['delivery_city'];
-        $insertTTArray['country'] = $address['delivery_country'];
-        $insertTTArray['building'] = $address['delivery_building'];
-        $insertTTArray['street_name'] = $address['delivery_street_name'];
-        $insertTTArray['address'] = $address['delivery_address'];
-        $insertTTArray['address_number'] = $address['delivery_address_number'];
-        $insertTTArray['address_ext'] = $address['delivery_address_ext'];
-        $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
-        $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-        $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
-        if ($rows_tt_address) {
-            $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
-            $tt_address_id = $row_tt_address['uid'];
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = ' . $tt_address_id, $insertTTArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        } else {
-            $insertTTArray['tstamp'] = time();
-            $insertTTArray['tx_multishop_customer_id'] = $GLOBALS["TSFE"]->fe_user->user['uid'];
-            $insertTTArray['pid'] = $this->conf['fe_customer_pid'];
-            $insertTTArray['page_uid'] = $this->shop_pid;
-            $insertTTArray['tx_multishop_address_type'] = 'delivery';
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        }
-        // add / update delivery tt_address eof
-        $content .= $this->pi_getLL('your_details_has_been_saved') . '.';
-        //echo $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery;
     }
 } else {
+    $show_edit_account=1;
+}
+if (count($erno) || $show_edit_account) {
     // begin form
     // load enabled countries to array
-    if (mslib_fe::loggedin()) {
+    if (!count($erno) && mslib_fe::loggedin()) {
         $user = array();
         foreach ($GLOBALS["TSFE"]->fe_user->user as $key => $val) {
             $user[$key] = $val;
@@ -405,6 +452,8 @@ if ($this->post) {
             $user['delivery_country'] = $user['country'];
         }
     }
+    $user['gender'] = $user['gender'] == 0 ? 'm' : 'f';
+    $user['delivery_gender'] = $user['delivery_gender'] == 0 ? 'm' : 'f';
     //print_r($user);
     // load enabled countries to array eof
     $regex = "/^[^\\\W][a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\@[a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\.[a-zA-Z]{2,4}$/";
@@ -413,7 +462,9 @@ if ($this->post) {
     $GLOBALS['TSFE']->additionalHeaderData[] = '
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
-				jQuery(\'#checkout\').h5Validate();
+				if (jQuery(\'#checkout\').length>0) {
+			        jQuery(\'#checkout\').h5Validate();
+			    }
 				' . ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
 				jQuery("#date_of_birth_visual").datepicker({
 					dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'm/d/Y') . '",
@@ -425,42 +476,44 @@ if ($this->post) {
 					yearRange: "' . (date("Y") - 150) . ':' . date("Y") . '"
 				});
 				' : '') . '
-				// set the h5validate attributes for required delivery data
-				$(\'#delivery_radio\').attr(\'required\', \'required\');
-				$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-				$(\'#delivery_radio\').attr(\'title\', \'' . $this->pi_getLL('gender_is_required', 'Title is required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_first_name\').attr(\'required\', \'required\');
-				$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-				$(\'#delivery_first_name\').attr(\'title\', \'' . $this->pi_getLL('first_name_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_last_name\').attr(\'required\', \'required\');
-				$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-				$(\'#delivery_last_name\').attr(\'title\', \'' . $this->pi_getLL('surname_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_address\').attr(\'required\', \'required\');
-				$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-				$(\'#delivery_address\').attr(\'title\', \'' . $this->pi_getLL('street_address_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_address_number\').attr(\'required\', \'required\');
-				$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-				$(\'#delivery_address_number\').attr(\'title\', \'' . $this->pi_getLL('street_number_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_zip\').attr(\'required\', \'required\');
-				$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-				$(\'#delivery_zip\').attr(\'title\', \'' . $this->pi_getLL('zip_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_city\').attr(\'required\', \'required\');
-				$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-				$(\'#delivery_city\').attr(\'title\', \'' . $this->pi_getLL('city_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_country\').attr(\'required\', \'required\');
-				$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-				$(\'#delivery_country\').attr(\'title\', \'' . $this->pi_getLL('country_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
-
-				$(\'#delivery_telephone\').attr(\'required\', \'required\');
-				$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-				$(\'#delivery_telephone\').attr(\'title\', \'' . $this->pi_getLL('telephone_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+				if (jQuery(\'#checkout\').length>0) {
+                    // set the h5validate attributes for required delivery data
+                    $(\'#delivery_radio\').attr(\'required\', \'required\');
+                    $(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
+                    $(\'#delivery_radio\').attr(\'title\', \'' . $this->pi_getLL('gender_is_required', 'Title is required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_first_name\').attr(\'required\', \'required\');
+                    $(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
+                    $(\'#delivery_first_name\').attr(\'title\', \'' . $this->pi_getLL('first_name_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_last_name\').attr(\'required\', \'required\');
+                    $(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
+                    $(\'#delivery_last_name\').attr(\'title\', \'' . $this->pi_getLL('surname_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_address\').attr(\'required\', \'required\');
+                    $(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
+                    $(\'#delivery_address\').attr(\'title\', \'' . $this->pi_getLL('street_address_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_address_number\').attr(\'required\', \'required\');
+                    $(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
+                    $(\'#delivery_address_number\').attr(\'title\', \'' . $this->pi_getLL('street_number_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_zip\').attr(\'required\', \'required\');
+                    $(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
+                    $(\'#delivery_zip\').attr(\'title\', \'' . $this->pi_getLL('zip_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_city\').attr(\'required\', \'required\');
+                    $(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
+                    $(\'#delivery_city\').attr(\'title\', \'' . $this->pi_getLL('city_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_country\').attr(\'required\', \'required\');
+                    $(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
+                    $(\'#delivery_country\').attr(\'title\', \'' . $this->pi_getLL('country_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+    
+                    $(\'#delivery_telephone\').attr(\'required\', \'required\');
+                    $(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
+                    $(\'#delivery_telephone\').attr(\'title\', \'' . $this->pi_getLL('telephone_is_required') . ' (' . mslib_befe::strtolower($this->pi_getLL('delivery_address')) . ')\');
+				}
 			}); //end of first load
 		</script>';
     $content .= '<div class="alert alert-danger" style="display:none">';
@@ -469,6 +522,24 @@ if ($this->post) {
     $content .= '</ul></div>';
     //
     $markerArray = array();
+    $error_block = '';
+    if (is_array($erno) and count($erno) > 0) {
+        // php errors
+        $error_block .= '<div class="error_msg">';
+        $error_block .= '<h3>' . $this->pi_getLL('the_following_errors_occurred') . '</h3><ul class="ul-display-error">';
+        foreach ($erno as $item) {
+            $error_block .= '<li>' . $item . '</li>';
+        }
+        $error_block .= '</ul>';
+        $error_block .= '</div>';
+    } else {
+        // no php errors, just print container for js
+        $error_block .= '<div class="error_msg" style="display:none">';
+        $error_block .= '<h3>' . $this->pi_getLL('the_following_errors_occurred') . '</h3><ul class="ul-display-error">';
+        $error_block .= '<li class="item-error" style="display:none"></li>';
+        $error_block .= '</ul></div>';
+    }
+    $markerArray['###ERROR_DISPLAYER###'] = $error_block;
     $markerArray['###DISABLE_AUTOFILL###'] = '';
     $disable_autofill = '';
     if ($this->ms['MODULES']['DISABLE_INPUT_AUTOFILL_IN_CUSTOMER_CREATE_EDIT_ACCOUNT'] > 0) {
