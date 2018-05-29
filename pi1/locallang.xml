@@ -1442,7 +1442,7 @@
             <label index="basket_contain_unorderable_free_products">Basket contains free products. These are not orderable.</label>
             <label index="feed_exporter_fields_label_ordered_by">Ordered by</label>
             <label index="admin_customers_subscribed_newsletter">Subscribed to newsletter</label>
-            <label index="feed_exporter_fields_label_order_tax_total">Order tax total %s</label>
+            <label index="feed_exporter_fields_label_order_tax_total">Order grand tax total %s</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
