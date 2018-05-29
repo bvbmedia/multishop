@@ -100,7 +100,7 @@ if ($count_product > 0) {
     foreach ($cart['products'] as $shopping_cart_item => $value) {
         if (is_numeric($value['products_id'])) {
             $ordered_qty = $value['qty'];
-            $product_info = mslib_fe::getProduct($value['products_id']);
+            $product_info = mslib_fe::getProduct($value['products_id'], $value['categories_id']);
             $products_id = $value['products_id'];
             $product = $value;
             if (!$output['product_row_type'] || $output['product_row_type'] == 'even') {
@@ -319,6 +319,25 @@ if ($count_product > 0) {
             }
         }
         $markerArray['PRODUCT_LINK'] = $output['product_link'];
+        // Original link
+        $where = '';
+        if ($product_info['categories_id']) {
+            // get all cats to generate multilevel fake url
+            $level = 0;
+            $cats = mslib_fe::Crumbar($product_info['categories_id']);
+            $cats = array_reverse($cats);
+            $where = '';
+            if (count($cats) > 0) {
+                foreach ($cats as $cat) {
+                    $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                    $level++;
+                }
+                $where = substr($where, 0, (strlen($where) - 1));
+                $where .= '&';
+            }
+            // get all cats to generate multilevel fake url eof
+        }
+        $markerArray['PRODUCT_DETAIL_LINK'] = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product_info['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
         $markerArray['PRODUCT_NAME'] = $output['product_name'];
         $markerArray['PRODUCT_SHORTDESCRIPTION'] = $product['product_shortdescription_raw'];
         $markerArray['PRODUCT_DESCRIPTION'] = $product['product_description_raw'];
