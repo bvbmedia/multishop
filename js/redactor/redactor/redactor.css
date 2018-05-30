@@ -197,14 +197,14 @@
 
 .redactor-focus.redactor-styles-on,
 .redactor-focus:focus.redactor-styles-on {
-  border-color: #82b7ec; }
+  border-color: #82b7ec !important; }
 
 .redactor-over:hover.redactor-styles-on {
-  border-color: #ee698a; }
+  border-color: #ee698a !important; }
 
 .redactor-source-view,
 .redactor-source-view.redactor-styles-on {
-  border-color: #000; }
+  border-color: #000 !important; }
 
 .redactor-in {
   position: relative;
@@ -225,13 +225,13 @@
 .redactor-in h2:empty,
 .redactor-in h3:empty,
 .redactor-in h4:empty,
-.redactor-in h5
-h6:empty,
+.redactor-in h5:empty,
+.redactor-in h6:empty,
 .redactor-in p:empty,
 .redactor-in blockquote:empty {
   min-height: 1.5em; }
 
-.redactor-in strong:empty, .redactor-in b:empty, .redactor-in em:empty, .redactor-in i:empty, .redactor-in sup:empty, .redactor-in sub:empty, .redactor-in u:empty, .redactor-in ins:empty {
+.redactor-in strong:empty, .redactor-in b:empty, .redactor-in em:empty, .redactor-in i:empty, .redactor-in span:empty, .redactor-in sup:empty, .redactor-in sub:empty, .redactor-in u:empty, .redactor-in ins:empty {
   display: inline-block;
   min-width: 1px;
   min-height: 1rem; }
@@ -274,7 +274,8 @@ h6:empty,
   position: absolute;
   z-index: 1; }
 
-.redactor-component[data-redactor-type=image] {
+.redactor-component[data-redactor-type=image],
+.redactor-component[data-redactor-type=widget] {
   clear: both; }
 
 .redactor-component[data-redactor-type=variable] {
@@ -1213,9 +1214,6 @@ h6:empty,
   .redactor-styles embed,
   .redactor-styles object {
     height: auto !important; }
-  .redactor-styles embed,
-  .redactor-styles object {
-    height: 100%; }
   .redactor-styles img {
     vertical-align: middle;
     -ms-interpolation-mode: bicubic; }

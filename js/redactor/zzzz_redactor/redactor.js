@@ -1,14 +1,14 @@
 /*
     Redactor
-    Version 3.0 b5
-    Updated: January 17, 2018
+    Version 3.0.7
+    Updated: April 4, 2018
 
     http://imperavi.com/redactor/
 
-    Copyright (c) 2009-2018, Imperavi LLC.
+    Copyright (c) 2009-2018, Imperavi Ltd.
     License: http://imperavi.com/redactor/license/
 */
-;(function() {
+(function() {
 var Ajax = {};
 
 Ajax.settings = {};
@@ -109,6 +109,7 @@ AjaxRequest.prototype = {
             str = str.replace(/\]$/, '');
 
             var o = JSON.parse(str);
+
             if (o && typeof o === 'object')
             {
                 return o;
@@ -120,12 +121,12 @@ AjaxRequest.prototype = {
     toParams: function (obj)
     {
         return Object.keys(obj).map(
-            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]) }
+            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]); }
         ).join('&');
     }
 };
 var DomCache = [0];
-var DomExpando = 'data' + +new Date();
+var DomExpando = 'data' + new Date();
 var DomDisplayCache = {};
 
 var Dom = function(selector, context)
@@ -461,15 +462,17 @@ Dom.prototype = {
             var reDataAttr = /^data\-(.+)$/;
             var attrs = this.get().attributes;
 
-            data = {};
+            var data = {};
+            var replacer = function (g) { return g[1].toUpperCase(); };
 
             for (var key in attrs)
             {
                 if (reDataAttr.test(attrs[key].nodeName))
                 {
-                    var name = attrs[key].nodeName.match(reDataAttr)[1];
-                    name = name.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
-                    data[name] = (this._isNumber(attrs[key].value)) ? parseFloat(attrs[key].value) : attrs[key].value;
+                    var dataName = attrs[key].nodeName.match(reDataAttr)[1];
+                    var val = attrs[key].value;
+                    dataName = dataName.replace(/-([a-z])/g, replacer);
+                    data[dataName] = (this._isNumber(val)) ? parseFloat(val) : this._getBooleanFromStr(val);
                 }
             }
 
@@ -496,14 +499,16 @@ Dom.prototype = {
     {
         return this.each(function(node)
         {
-            value.split(' ').forEach(function(name) { (node.nodeType !== 3) ? node.removeAttribute(name) : false; });
+            var rmAttr = function(name) { if (node.nodeType !== 3) node.removeAttribute(name); };
+            value.split(' ').forEach(rmAttr);
         });
     },
     removeData: function(value)
     {
         return this.each(function(node)
         {
-            value.split(' ').forEach(function(name) { (node.nodeType !== 3) ? node.removeAttribute('data-' + name) : false; });
+            var rmData = function(name) { if (node.nodeType !== 3) node.removeAttribute('data-' + name); };
+            value.split(' ').forEach(rmData);
         });
     },
 
@@ -559,7 +564,7 @@ Dom.prototype = {
     {
         return this.each(function(node)
         {
-            return node.innerHTML = '';
+            node.innerHTML = '';
         });
     },
     html: function(html)
@@ -667,6 +672,7 @@ Dom.prototype = {
             wrapper.appendChild(node);
 
             return new Dom(wrapper);
+
         });
     },
     unwrap: function()
@@ -777,16 +783,23 @@ Dom.prototype = {
         var node = this.get();
         var isWindow = (node === window);
         var isDocument = (node.nodeType === 9);
-        var el = (isDocument) ? (document.documentElement || document.body.parentNode || document.body) : node;
+        var el = (isDocument) ? (document.scrollingElement || document.body.parentNode || document.body || document.documentElement) : node;
 
         if (value !== undefined)
         {
             if (isWindow) window.scrollTo(0, value);
-            else          el.scrollTop = value;
+            else el.scrollTop = value;
             return;
         }
 
-        return (isWindow) ? window.pageYOffset : el.scrollTop
+        if (isDocument)
+        {
+            return (typeof window.pageYOffset != 'undefined') ? window.pageYOffset : ((document.documentElement.scrollTop) ? document.documentElement.scrollTop : ((document.body.scrollTop) ? document.body.scrollTop : 0));
+        }
+        else
+        {
+            return (isWindow) ? window.pageYOffset : el.scrollTop;
+        }
     },
     offset: function()
     {
@@ -878,38 +891,35 @@ Dom.prototype = {
     },
     off: function(names, handler)
     {
+        var testEvent = function(name, key, event) { return (name === event); };
+        var testNamespace = function(name, key, event, namespace) { return (key === namespace); };
+        var testEventNamespace = function(name, key, event, namespace) { return (name === event && key === namespace); };
+        var testPositive = function() { return true; };
+
         if (names === undefined)
         {
             // ALL
             return this.each(function(node)
             {
-                this._offEvent(node, false, false, handler, function(name, key, event, namespace) { return true; });
+                this._offEvent(node, false, false, handler, testPositive);
             });
         }
 
         return this.each(function(node)
         {
             var events = names.split(' ');
+
             for (var i = 0; i < events.length; i++)
             {
                 var event = this._getEventName(events[i]);
                 var namespace = this._getEventNamespace(events[i]);
 
                 // 1) event without namespace
-                if (namespace === '_events')
-                {
-                    this._offEvent(node, event, namespace, handler, function(name, key, event, namespace) { return (name === event); });
-                }
+                if (namespace === '_events') this._offEvent(node, event, namespace, handler, testEvent);
                 // 2) only namespace
-                else if (!event && namespace !== '_events')
-                {
-                    this._offEvent(node, event, namespace, handler, function(name, key, event, namespace) { return (key === namespace); });
-                }
+                else if (!event && namespace !== '_events') this._offEvent(node, event, namespace, handler, testNamespace);
                 // 3) event + namespace
-                else
-                {
-                    this._offEvent(node, event, namespace, handler, function(name, key, event, namespace) { return (name === event && key === namespace); });
-                }
+                else this._offEvent(node, event, namespace, handler, testEventNamespace);
             }
         });
     },
@@ -998,8 +1008,8 @@ Dom.prototype = {
         var nodes = [];
         while (len--)
         {
-            html = (typeof html === 'function') ? html.call(this, this.nodes[len]) : html;
-            var el = (len === 0) ? html : this._clone(html);
+            var res = (typeof html === 'function') ? html.call(this, this.nodes[len]) : html;
+            var el = (len === 0) ? res : this._clone(res);
             var node = fn.call(this, el, this.nodes[len]);
 
             if (node)
@@ -1050,7 +1060,8 @@ Dom.prototype = {
         {
             if (value)
             {
-                value.split(' ').forEach(function(name) { (node.classList) ? node.classList[type](name) : false; });
+                var setClass = function(name) { if (node.classList) node.classList[type](name); };
+                value.split(' ').forEach(setClass);
             }
         });
     },
@@ -1062,7 +1073,7 @@ Dom.prototype = {
     },
     _getOneHandler: function(handler, events)
     {
-        var self = this
+        var self = this;
         return function()
         {
             handler.apply(this, arguments);
@@ -1141,6 +1152,7 @@ Dom.prototype = {
         var name = type.charAt(0).toUpperCase() + type.slice(1);
         var style = getComputedStyle(el, null);
         var $el = new Dom(el);
+        var result = 0;
         var $targets = $el.parents().filter(function(node)
         {
             return (getComputedStyle(node, null).display === 'none') ? node : false;
@@ -1151,14 +1163,13 @@ Dom.prototype = {
         {
             var fixStyle = 'visibility: hidden !important; display: block !important;';
             var tmp = [];
-            var result = 0;
 
             $targets.each(function(node)
             {
                 var $node = new Dom(node);
                 var thisStyle = $node.attr('style');
-                tmp.push(thisStyle);
-                $node.attr('style', (thisStyle) ? thisStyle + ';' + fixStyle : fixStyle);
+                if (thisStyle !== null) tmp.push(thisStyle);
+                $node.attr('style', (thisStyle !== null) ? thisStyle + ';' + fixStyle : fixStyle);
             });
 
             result = $el.get()['offset' + name] - this._adjustResultHeightOrWidth(type, el, adjust);
@@ -1259,17 +1270,24 @@ Dom.prototype = {
     {
         return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
     },
-    _isNumber: function(obj)
+    _isNumber: function(str)
     {
-        return !isNaN(parseFloat(obj));
+        return !isNaN(str) && !isNaN(parseFloat(str));
+    },
+    _getBooleanFromStr: function(str)
+    {
+        if (str === 'true') return true;
+        else if (str === 'false') return false;
+
+        return str;
     },
     _getRealDisplay: function(elem)
     {
-	    if (elem.currentStyle) return elem.currentStyle.display
+        if (elem.currentStyle) return elem.currentStyle.display;
         else if (window.getComputedStyle)
         {
-		    var computedStyle = window.getComputedStyle(elem, null )
-            return computedStyle.getPropertyValue('display')
+            var computedStyle = window.getComputedStyle(elem, null);
+            return computedStyle.getPropertyValue('display');
         }
     }
 };
@@ -1283,7 +1301,7 @@ var $R = function(selector, options)
 };
 
 // Globals
-$R.version = '3.0';
+$R.version = '3.0.7';
 $R.options = {};
 $R.modules = {};
 $R.services = {};
@@ -1320,6 +1338,7 @@ $R.env = {
 };
 
 // jQuery Wrapper
+/*eslint-env jquery*/
 if (typeof jQuery !== 'undefined')
 {
     (function($) { $.fn.redactor = function(options) { return RedactorApp(this.toArray(), options, [].slice.call(arguments, 1)); }; })(jQuery);
@@ -1413,13 +1432,24 @@ $R.add = function(type, name, obj)
     }
 };
 
+// add lang
+$R.addLang = function(lang, obj)
+{
+    if (typeof $R.lang[lang] === 'undefined')
+    {
+        $R.lang[lang] = {};
+    }
+
+    $R.lang[lang] = $R.extend($R.lang[lang], obj);
+};
+
 // create
 $R.create = function(name)
 {
     var arr = name.split('.');
     var args = [].slice.call(arguments, 1);
 
-    var type = 'classes'
+    var type = 'classes';
     if (typeof $R.env[arr[0]] !== 'undefined')
     {
         type = $R.env[arr[0]];
@@ -1500,197 +1530,203 @@ $R.extend = function()
     return extended;
 };
 $R.opts = {
-	animation: true,
-	lang: 'en',
-	direction: 'ltr',
-	spellcheck: true,
-	structure: false,
-	scrollTarget: false,
-	styles: true,
-	stylesClass: 'redactor-styles',
-	placeholder: false,
+    animation: true,
+    lang: 'en',
+    direction: 'ltr',
+    spellcheck: true,
+    structure: false,
+    scrollTarget: false,
+    styles: true,
+    stylesClass: 'redactor-styles',
+    placeholder: false,
 
-	source: true,
-	showSource: false,
+    source: true,
+    showSource: false,
 
-	inline: false,
+    inline: false,
 
-	breakline: false,
-	markup: 'p',
-	enterKey: true,
+    breakline: false,
+    markup: 'p',
+    enterKey: true,
 
-	clickToEdit: false,
-	clickToSave: false,
-	clickToCancel: false,
+    clickToEdit: false,
+    clickToSave: false,
+    clickToCancel: false,
 
-	focus: false,
-	focusEnd: false,
+    focus: false,
+    focusEnd: false,
 
-	minHeight: false, // string, '100px'
-	maxHeight: false, // string, '100px'
-	maxWidth: false, // string, '700px'
+    minHeight: false, // string, '100px'
+    maxHeight: false, // string, '100px'
+    maxWidth: false, // string, '700px'
 
-	plugins: [], // array
-	callbacks: {},
+    plugins: [], // array
+    callbacks: {},
 
     // pre & tab
-	preClass: false, // string
-	preSpaces: 4, // or false
-	tabindex: false, // int
-	tabAsSpaces: false, // true or number of spaces
-	tabKey: true,
+    preClass: false, // string
+    preSpaces: 4, // or false
+    tabindex: false, // int
+    tabAsSpaces: false, // true or number of spaces
+    tabKey: true,
 
     // autosave
-	autosave: false, // false or url
+    autosave: false, // false or url
     autosaveName: false,
-	autosaveData: false,
+    autosaveData: false,
 
-	// toolbar
-	toolbar: true,
+    // toolbar
+    toolbar: true,
     toolbarFixed: true,
-	toolbarFixedTarget: document,
-	toolbarFixedTopOffset: 0, // pixels
-	toolbarExternal: false, // ID selector
-	toolbarContext: true,
+    toolbarFixedTarget: document,
+    toolbarFixedTopOffset: 0, // pixels
+    toolbarExternal: false, // ID selector
+    toolbarContext: true,
 
-	// air
-	air: false,
+    // air
+    air: false,
 
-	// formatting
-	formatting: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+    // formatting
+    formatting: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     formattingAdd: false,
     formattingHide: false,
 
-	// buttons
-	buttons: ['html', 'format', 'bold', 'italic', 'deleted', 'lists', 'image', 'file', 'link'],
-	// + 'line', 'redo', 'undo', 'underline', 'ol', 'ul', 'indent', 'outdent'
+    // buttons
+    buttons: ['html', 'format', 'bold', 'italic', 'deleted', 'lists', 'image', 'file', 'link'],
+    // + 'line', 'redo', 'undo', 'underline', 'ol', 'ul', 'indent', 'outdent'
     buttonsTextLabeled: false,
     buttonsAdd: [],
     buttonsAddFirst: [],
     buttonsAddAfter: false,
     buttonsAddBefore: false,
-	buttonsHide: [],
-	buttonsHideOnMobile: [],
+    buttonsHide: [],
+    buttonsHideOnMobile: [],
 
     // image
     imageUpload: false,
     imageUploadParam: 'file',
-	imageData: false,
+    imageData: false,
     imageEditable: true,
-	imageCaption: true,
-	imagePosition: false,
-	imageResizable: false,
-	imageFloatMargin: '10px',
+    imageCaption: true,
+    imagePosition: false,
+    imageResizable: false,
+    imageFloatMargin: '10px',
+    imageFigure: true,
 
     // file
     fileUpload: false,
     fileUploadParam: 'file',
-	fileData: false,
-	fileAttachment: false,
+    fileData: false,
+    fileAttachment: false,
 
     // upload opts
     uploadData: false,
     dragUpload: true,
     multipleUpload: true,
-	clipboardUpload: true,
-	uploadBase64: false,
+    clipboardUpload: true,
+    uploadBase64: false,
 
-	// link
-	linkTarget: false,
+    // link
+    linkTarget: false,
+    linkTitle: false,
     linkNewTab: false,
-	linkNofollow: false,
-	linkSize: 30,
-	linkValidation: true,
+    linkNofollow: false,
+    linkSize: 30,
+    linkValidation: true,
 
-	// clean
-	cleanOnEnter: true,
-	cleanInlineOnEnter: false,
-	paragraphize: true,
+    // clean
+    cleanOnEnter: true,
+    cleanInlineOnEnter: false,
+    paragraphize: true,
     removeScript: true,
     removeNewLines: false,
-	removeComments: true,
-	replaceTags: {
-		'b': 'strong',
-		'i': 'em',
-		'strike': 'del'
-	},
+    removeComments: true,
+    replaceTags: {
+        'b': 'strong',
+        'i': 'em',
+        'strike': 'del'
+    },
 
-	// paste
-	pastePlainText: false,
+    // paste
+    pastePlainText: false,
     pasteLinkTarget: false,
     pasteImages: true,
-	pasteLinks: true,
-	pasteClean: true,
-	pasteKeepStyle: [],
+    pasteLinks: true,
+    pasteClean: true,
+    pasteKeepStyle: [],
     pasteKeepClass: [],
-	pasteKeepAttrs: ['td', 'th'],
-	pasteBlockTags: ['pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'tbody', 'thead', 'tfoot', 'th', 'tr', 'td', 'ul', 'ol', 'li', 'blockquote', 'p', 'figure', 'figcaption'],
-	pasteInlineTags: ['a', 'img', 'br', 'strong', 'ins', 'code', 'del', 'span', 'samp', 'kbd', 'sup', 'sub', 'mark', 'var', 'cite', 'small', 'b', 'u', 'em', 'i', 'abbr'],
+    pasteKeepAttrs: ['td', 'th'],
+    pasteBlockTags: ['pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'tbody', 'thead', 'tfoot', 'th', 'tr', 'td', 'ul', 'ol', 'li', 'blockquote', 'p', 'figure', 'figcaption'],
+    pasteInlineTags: ['a', 'img', 'br', 'strong', 'ins', 'code', 'del', 'span', 'samp', 'kbd', 'sup', 'sub', 'mark', 'var', 'cite', 'small', 'b', 'u', 'em', 'i', 'abbr'],
 
+    // active buttons
+    activeButtons: {
+        b: 'bold',
+        strong: 'bold',
+        i: 'italic',
+        em: 'italic',
+        del: 'deleted',
+        strike: 'deleted',
+        u: 'underline'
+    },
+    activeButtonsAdd: {},
+    activeButtonsObservers: {},
 
-	// active buttons
-	activeButtons: {
-		b: 'bold',
-		strong: 'bold',
-		i: 'italic',
-		em: 'italic',
-		del: 'deleted',
-		strike: 'deleted'
-	},
-	activeButtonsAdd: {},
-	activeButtonsObservers: {},
+    // autoparser
+    autoparse: true,
+    autoparseStart: true,
+    autoparsePaste: true,
+    autoparseLinks: true,
+    autoparseImages: true,
+    autoparseVideo: true,
 
-	// autoparser
-	autoparse: true,
-	autoparseStart: true,
-	autoparsePaste: true,
-	autoparseLinks: true,
-	autoparseImages: true,
-	autoparseVideo: true,
+    // shortcodes
+    shortcodes: {
+        'p.': { format: 'p' },
+        'quote.': { format: 'blockquote' },
+        'pre.': { format: 'pre' },
+        'h1.': { format: 'h1' },
+        'h2.': { format: 'h2' },
+        'h3.': { format: 'h3' },
+        'h4.': { format: 'h4' },
+        'h5.': { format: 'h5' },
+        'h6.': { format: 'h6' },
+        '1.': { format: 'ol' },
+        '*.': { format: 'ul' }
+    },
+    shortcodesAdd: false, // object
 
-	// shortcodes
-	shortcodes: {
-    	'p.': { format: 'p' },
-    	'quote.': { format: 'blockquote' },
-    	'pre.': { format: 'pre' },
-    	'h1.': { format: 'h1' },
-    	'h2.': { format: 'h2' },
-    	'h3.': { format: 'h3' },
-    	'h4.': { format: 'h4' },
-    	'h5.': { format: 'h5' },
-    	'h6.': { format: 'h6' },
-    	'1.': { format: 'ol' },
-    	'*.': { format: 'ul' }
-	},
-	shortcodesAdd: false, // object
+    // shortcuts
+    shortcuts: {
+        'ctrl+shift+m, meta+shift+m': { api: 'module.inline.clearformat' },
+        'ctrl+b, meta+b': { api: 'module.inline.format', args: 'b' },
+        'ctrl+i, meta+i': { api: 'module.inline.format', args: 'i' },
+        'ctrl+u, meta+u': { api: 'module.inline.format', args: 'u' },
+        'ctrl+h, meta+h': { api: 'module.inline.format', args: 'sup' },
+        'ctrl+l, meta+l': { api: 'module.inline.format', args: 'sub' },
+        'ctrl+k, meta+k': { api: 'module.link.open' },
+        'ctrl+alt+0, meta+alt+0': { api: 'module.block.format', args: 'p' },
+        'ctrl+alt+1, meta+alt+1': { api: 'module.block.format', args: 'h1' },
+        'ctrl+alt+2, meta+alt+2': { api: 'module.block.format', args: 'h2' },
+        'ctrl+alt+3, meta+alt+3': { api: 'module.block.format', args: 'h3' },
+        'ctrl+alt+4, meta+alt+4': { api: 'module.block.format', args: 'h4' },
+        'ctrl+alt+5, meta+alt+5': { api: 'module.block.format', args: 'h5' },
+        'ctrl+alt+6, meta+alt+6': { api: 'module.block.format', args: 'h6' },
+        'ctrl+shift+7, meta+shift+7': { api: 'module.list.toggle', args: 'ol' },
+        'ctrl+shift+8, meta+shift+8': { api: 'module.list.toggle', args: 'ul' }
+    },
+    shortcutsAdd: false, // object
 
-	// shortcuts
-	shortcuts: {
-		'ctrl+shift+m, meta+shift+m': { api: 'module.inline.clearformat' },
-		'ctrl+b, meta+b': { api: 'module.inline.format', args: 'b' },
-		'ctrl+i, meta+i': { api: 'module.inline.format', args: 'i' },
-		'ctrl+h, meta+h': { api: 'module.inline.format', args: 'sup' },
-		'ctrl+l, meta+l': { api: 'module.inline.format', args: 'sub' },
-		'ctrl+k, meta+k': { api: 'module.link.open' },
-		'ctrl+alt+0, meta+alt+0': { api: 'module.block.format', args: 'p' },
-		'ctrl+alt+1, meta+alt+1': { api: 'module.block.format', args: 'h1' },
-		'ctrl+alt+2, meta+alt+2': { api: 'module.block.format', args: 'h2' },
-		'ctrl+alt+3, meta+alt+3': { api: 'module.block.format', args: 'h3' },
-		'ctrl+alt+4, meta+alt+4': { api: 'module.block.format', args: 'h4' },
-		'ctrl+alt+5, meta+alt+5': { api: 'module.block.format', args: 'h5' },
-		'ctrl+alt+6, meta+alt+6': { api: 'module.block.format', args: 'h6' },
-		'ctrl+shift+7, meta+shift+7': { api: 'module.list.toggle', args: 'ol' },
-		'ctrl+shift+8, meta+shift+8': { api: 'module.list.toggle', args: 'ul' }
-	},
-	shortcutsAdd: false, // object
+    // misc
+    grammarly: true,
 
-	// private
-	bufferLimit: 100,
-	emptyHtml: '<p></p>',
-	invisibleSpace: '&#x200b;',
-	imageTypes: ['image/png', 'image/jpeg', 'image/gif'],
-	inlineTags: ['a', 'span', 'strong', 'strike', 'b', 'u', 'em', 'i', 'code', 'del', 'ins', 'samp', 'kbd', 'sup', 'sub', 'mark', 'var', 'cite', 'small', 'abbr'],
-	blockTags: ['pre', 'ul', 'ol', 'li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',  'dl', 'dt', 'dd', 'div', 'table', 'tbody', 'thead', 'tfoot', 'tr', 'th', 'td', 'blockquote', 'output', 'figcaption', 'figure', 'address', 'section', 'header', 'footer', 'aside', 'article', 'iframe'],
+    // private
+    bufferLimit: 100,
+    emptyHtml: '<p></p>',
+    markerChar: '\ufeff',
+    imageTypes: ['image/png', 'image/jpeg', 'image/gif'],
+    inlineTags: ['a', 'span', 'strong', 'strike', 'b', 'u', 'em', 'i', 'code', 'del', 'ins', 'samp', 'kbd', 'sup', 'sub', 'mark', 'var', 'cite', 'small', 'abbr'],
+    blockTags: ['pre', 'ul', 'ol', 'li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',  'dl', 'dt', 'dd', 'div', 'table', 'tbody', 'thead', 'tfoot', 'tr', 'th', 'td', 'blockquote', 'output', 'figcaption', 'figure', 'address', 'section', 'header', 'footer', 'aside', 'article', 'iframe'],
     regex: {
         youtube: /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/gi,
         vimeo: /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/gi,
@@ -1778,226 +1814,226 @@ $R.lang['en'] = {
 };
 $R.buttons = {
     html: {
-		title: 'HTML',
-		icon: true,
-		api: 'module.source.toggle'
-	},
-	undo: {
-		title: '## undo ##',
-		icon: true,
-		api: 'module.buffer.undo'
-	},
-	redo: {
-		title: '## redo ##',
-		icon: true,
-		api: 'module.buffer.redo'
-	},
+        title: 'HTML',
+        icon: true,
+        api: 'module.source.toggle'
+    },
+    undo: {
+        title: '## undo ##',
+        icon: true,
+        api: 'module.buffer.undo'
+    },
+    redo: {
+        title: '## redo ##',
+        icon: true,
+        api: 'module.buffer.redo'
+    },
     format: {
-		title: '## format ##',
-		icon: true,
-		dropdown: {
-			p: {
-				title: '## paragraph ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'p'
-				}
-			},
-			blockquote: {
-				title: '## quote ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'blockquote'
-				}
-			},
-			pre: {
-				title: '## code ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'pre'
-				}
-			},
-			h1: {
-				title: '## heading1 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h1'
-				}
-			},
-			h2: {
-				title: '## heading2 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h2'
-				}
-			},
-			h3: {
-				title: '## heading3 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h3'
-				}
-			},
-			h4: {
-				title: '## heading4 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h4'
-				}
-			},
-			h5: {
-				title: '## heading5 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h5'
-				}
-			},
-			h6: {
-				title: '## heading6 ##',
-				api: 'module.block.format',
-				args: {
-    				tag: 'h6'
-				}
-			}
-		}
-	},
-	bold: {
-		title: '## bold-abbr ##',
-		icon: true,
-		tooltip: '## bold ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'b'
-		}
-	},
-	italic: {
-		title: '## italic-abbr ##',
-		icon: true,
-		tooltip: '## italic ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'i'
-		}
-	},
-	deleted: {
-		title: '## deleted-abbr ##',
-		icon: true,
-		tooltip: '## deleted ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'del'
-		}
-	},
-	underline: {
-		title: '## underline-abbr ##',
-		icon: true,
-		tooltip: '## underline ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'u'
-		}
-	},
-	sup: {
-		title: '## superscript-abbr ##',
-		icon: true,
-		tooltip: '## superscript ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'sup'
-		}
-	},
-	sub: {
-		title: '## subscript-abbr ##',
-		icon: true,
-		tooltip: '## subscript ##',
-		api: 'module.inline.format',
-		args: {
-    		tag: 'sub'
-		}
-	},
-	lists: {
-		title: '## lists ##',
-		icon: true,
-  		observe: 'list',
-		dropdown: {
-    		observe: 'list',
-			unorderedlist: {
-				title: '&bull; ## unorderedlist ##',
-				api: 'module.list.toggle',
-				args: 'ul'
-			},
-			orderedlist: {
-				title: '1. ## orderedlist ##',
-				api: 'module.list.toggle',
-				args: 'ol'
-			},
-			outdent: {
-				title: '< ## outdent ##',
-				api: 'module.list.outdent'
-			},
-			indent: {
-				title: '> ## indent ##',
-				api: 'module.list.indent'
-			}
-		}
-	},
-	ul: {
-		title: '&bull; ## bulletslist ##',
-		icon: true,
-		api: 'module.list.toggle',
-		observe: 'list',
-		args: 'ul'
-	},
-	ol: {
-		title: '1. ## numberslist ##',
-		icon: true,
-		api: 'module.list.toggle',
-		observe: 'list',
-		args: 'ol'
-	},
-	outdent: {
-		title: '## outdent ##',
-		icon: true,
-		api: 'module.list.outdent',
-		observe: 'list'
-	},
-	indent: {
-		title: '## indent ##',
-		icon: true,
-		api: 'module.list.indent',
-		observe: 'list'
-	},
-	image: {
-		title: '## image ##',
-		icon: true,
-		api: 'module.image.open'
-	},
-	file: {
-		title: '## file ##',
-		icon: true,
-		api: 'module.file.open'
-	},
-	link: {
-		title: '## link ##',
-		icon: true,
-		observe: 'link',
-		dropdown: {
-    		observe: 'link',
-			link: {
-				title: '## link-insert ##',
-				api: 'module.link.open'
-			},
-			unlink: {
-				title: '## unlink ##',
-				api: 'module.link.unlink'
-			}
-		}
-	},
-	line: {
-		title: '## horizontalrule ##',
-		icon: true,
-		api: 'module.line.insert'
-	}
+        title: '## format ##',
+        icon: true,
+        dropdown: {
+            p: {
+                title: '## paragraph ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'p'
+                }
+            },
+            blockquote: {
+                title: '## quote ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'blockquote'
+                }
+            },
+            pre: {
+                title: '## code ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'pre'
+                }
+            },
+            h1: {
+                title: '## heading1 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h1'
+                }
+            },
+            h2: {
+                title: '## heading2 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h2'
+                }
+            },
+            h3: {
+                title: '## heading3 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h3'
+                }
+            },
+            h4: {
+                title: '## heading4 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h4'
+                }
+            },
+            h5: {
+                title: '## heading5 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h5'
+                }
+            },
+            h6: {
+                title: '## heading6 ##',
+                api: 'module.block.format',
+                args: {
+                    tag: 'h6'
+                }
+            }
+        }
+    },
+    bold: {
+        title: '## bold-abbr ##',
+        icon: true,
+        tooltip: '## bold ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'b'
+        }
+    },
+    italic: {
+        title: '## italic-abbr ##',
+        icon: true,
+        tooltip: '## italic ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'i'
+        }
+    },
+    deleted: {
+        title: '## deleted-abbr ##',
+        icon: true,
+        tooltip: '## deleted ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'del'
+        }
+    },
+    underline: {
+        title: '## underline-abbr ##',
+        icon: true,
+        tooltip: '## underline ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'u'
+        }
+    },
+    sup: {
+        title: '## superscript-abbr ##',
+        icon: true,
+        tooltip: '## superscript ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'sup'
+        }
+    },
+    sub: {
+        title: '## subscript-abbr ##',
+        icon: true,
+        tooltip: '## subscript ##',
+        api: 'module.inline.format',
+        args: {
+            tag: 'sub'
+        }
+    },
+    lists: {
+        title: '## lists ##',
+        icon: true,
+        observe: 'list',
+        dropdown: {
+            observe: 'list',
+            unorderedlist: {
+                title: '&bull; ## unorderedlist ##',
+                api: 'module.list.toggle',
+                args: 'ul'
+            },
+            orderedlist: {
+                title: '1. ## orderedlist ##',
+                api: 'module.list.toggle',
+                args: 'ol'
+            },
+            outdent: {
+                title: '< ## outdent ##',
+                api: 'module.list.outdent'
+            },
+            indent: {
+                title: '> ## indent ##',
+                api: 'module.list.indent'
+            }
+        }
+    },
+    ul: {
+        title: '&bull; ## bulletslist ##',
+        icon: true,
+        api: 'module.list.toggle',
+        observe: 'list',
+        args: 'ul'
+    },
+    ol: {
+        title: '1. ## numberslist ##',
+        icon: true,
+        api: 'module.list.toggle',
+        observe: 'list',
+        args: 'ol'
+    },
+    outdent: {
+        title: '## outdent ##',
+        icon: true,
+        api: 'module.list.outdent',
+        observe: 'list'
+    },
+    indent: {
+        title: '## indent ##',
+        icon: true,
+        api: 'module.list.indent',
+        observe: 'list'
+    },
+    image: {
+        title: '## image ##',
+        icon: true,
+        api: 'module.image.open'
+    },
+    file: {
+        title: '## file ##',
+        icon: true,
+        api: 'module.file.open'
+    },
+    link: {
+        title: '## link ##',
+        icon: true,
+        observe: 'link',
+        dropdown: {
+            observe: 'link',
+            link: {
+                title: '## link-insert ##',
+                api: 'module.link.open'
+            },
+            unlink: {
+                title: '## unlink ##',
+                api: 'module.link.unlink'
+            }
+        }
+    },
+    line: {
+        title: '## horizontalrule ##',
+        icon: true,
+        api: 'module.line.insert'
+    }
 };
 var App = function(element, options, uuid)
 {
@@ -2013,11 +2049,14 @@ var App = function(element, options, uuid)
     this.uuid = uuid;
     this.rootElement = element;
     this.rootOpts = options;
+    this.dragInside = false;
+    this.dragComponentInside = false;
     this.keycodes = $R.keycodes;
     this.namespace = 'redactor';
     this.$win = $R.dom(window);
     this.$doc = $R.dom(document);
     this.$body = $R.dom('body');
+    this.editorReadOnly = false;
 
     // core services
     this.opts = $R.create('service.options', options, element);
@@ -2057,12 +2096,12 @@ App.prototype = {
     },
     stop: function()
     {
-    	this.started = false;
-		this.stopped = true;
+        this.started = false;
+        this.stopped = true;
 
-		this.broadcast('stop');
-		this.broadcast('disable');
-		this.broadcast('stopped');
+        this.broadcast('stop');
+        this.broadcast('disable');
+        this.broadcast('stopped');
     },
 
     // started & stopped
@@ -2078,7 +2117,7 @@ App.prototype = {
     // build
     buildServices: function()
     {
-        var core = ['opts', 'lang'];
+        var core = ['options', 'lang'];
         var bindable = ['uuid', 'keycodes', 'opts', 'lang', '$win', '$doc', '$body'];
         var services = [];
         for (var name in $R.services)
@@ -2092,17 +2131,17 @@ App.prototype = {
         }
 
         // binding
-		for (var i = 0; i < services.length; i++)
-		{
-    		var service = services[i];
+        for (var i = 0; i < services.length; i++)
+        {
+            var service = services[i];
             for (var z = 0; z < bindable.length; z++)
-    		{
-        		var inj = bindable[z];
+            {
+                var inj = bindable[z];
                 if (service !== inj)
                 {
-        		    this[service][inj] = this[inj];
-        		}
-    		}
+                    this[service][inj] = this[inj];
+                }
+            }
         }
     },
     buildModules: function()
@@ -2127,23 +2166,45 @@ App.prototype = {
         }
     },
 
+    // draginside
+    isDragInside: function()
+    {
+        return this.dragInside;
+    },
+    setDragInside: function(dragInside)
+    {
+        this.dragInside = dragInside;
+    },
+    isDragComponentInside: function()
+    {
+        return this.dragComponentInside;
+    },
+    setDragComponentInside: function(dragInside)
+    {
+        this.dragComponentInside = dragInside;
+    },
+    getDragComponentInside: function()
+    {
+        return this.dragComponentInside;
+    },
+
     // readonly
     isReadOnly: function()
     {
-        var $editor = this.editor.getElement();
-
-        return $editor.hasClass('redactor-read-only');
+        return this.editorReadOnly;
     },
     enableReadOnly: function()
     {
+        this.editorReadOnly = true;
         this.broadcast('enablereadonly');
         this.component.clearActive();
-    	this.toolbar.disableButtons();
+        this.toolbar.disableButtons();
     },
     disableReadOnly: function()
     {
+        this.editorReadOnly = false;
         this.broadcast('disablereadonly');
-    	this.toolbar.enableButtons();
+        this.toolbar.enableButtons();
     },
 
     // messaging
@@ -2258,15 +2319,15 @@ App.prototype = {
         }
 
     },
-	isInstanceExists: function(obj, name)
-	{
+    isInstanceExists: function(obj, name)
+    {
         return (typeof obj[name] !== 'undefined');
-	},
+    },
     callInstanceMethod: function(instance, method, args)
     {
-	    if (typeof instance[method] === 'function')
+        if (typeof instance[method] === 'function')
         {
-		    return instance[method].apply(instance, args);
+            return instance[method].apply(instance, args);
         }
     }
 };
@@ -2306,9 +2367,11 @@ $R.add('mixin', 'formatter', {
         var $elements = (nodes) ? $R.dom(nodes) : this.getElements(tags, true);
         $elements.removeAttr('class');
 
+        nodes = this._unwrapSpanWithoutAttr($elements.getAll());
+
         this.selection.restore();
 
-        return $elements.getAll();
+        return nodes;
     },
     clearStyle: function(tags, nodes)
     {
@@ -2317,9 +2380,11 @@ $R.add('mixin', 'formatter', {
         var $elements = (nodes) ? $R.dom(nodes) : this.getElements(tags, true);
         $elements.removeAttr('style');
 
+        nodes = this._unwrapSpanWithoutAttr($elements.getAll());
+
         this.selection.restore();
 
-        return $elements.getAll();
+        return nodes;
     },
     clearAttr: function(tags, nodes)
     {
@@ -2328,9 +2393,11 @@ $R.add('mixin', 'formatter', {
         var $elements = (nodes) ? $R.dom(nodes) : this.getElements(tags, true);
         this._removeAllAttr($elements);
 
+        nodes = this._unwrapSpanWithoutAttr($elements.getAll());
+
         this.selection.restore();
 
-        return $elements.getAll();
+        return nodes;
     },
     set: function(args, tags, nodes, selection)
     {
@@ -2358,10 +2425,12 @@ $R.add('mixin', 'formatter', {
         if (args['attr'])
         {
             this._removeAllAttr($elements);
-            $elements.attr(args['attr'])
+            $elements.attr(args['attr']);
         }
 
-        return this._getNodes($elements, selection);
+        if (selection !== false) this.selection.restore();
+
+        return $elements.getAll();
     },
     toggle: function(args, tags, nodes, selection)
     {
@@ -2374,9 +2443,10 @@ $R.add('mixin', 'formatter', {
             $elements.toggleClass(args['class']);
         }
 
+        var params;
         if (args['style'])
         {
-            var params = args['style'];
+            params = args['style'];
             $elements.each(function(node)
             {
                 var $node = $R.dom(node);
@@ -2414,7 +2484,7 @@ $R.add('mixin', 'formatter', {
 
         if (args['attr'])
         {
-            var params = args['attr'];
+            params = args['attr'];
             $elements.each(function(node)
             {
                 var $node = $R.dom(node);
@@ -2427,7 +2497,9 @@ $R.add('mixin', 'formatter', {
 
         }
 
-        return this._getNodes($elements, selection);
+        if (selection !== false) this.selection.restore();
+
+        return $elements.getAll();
     },
     add: function(args, tags, nodes, selection)
     {
@@ -2459,7 +2531,9 @@ $R.add('mixin', 'formatter', {
             $elements.attr(args['attr']);
         }
 
-        return this._getNodes($elements, selection);
+        if (selection !== false) this.selection.restore();
+
+        return $elements.getAll();
     },
     remove: function(args, tags, nodes, selection)
     {
@@ -2497,44 +2571,15 @@ $R.add('mixin', 'formatter', {
             $elements.removeAttr(args['attr']);
         }
 
-        return this._getNodes($elements, selection);
-    },
-
-
-    // private
-    _getNodes: function($elements, selection)
-    {
-        var nodes = $elements.getAll();
-
-        // clear wrapper class
-        var count = nodes.length - 1;
-        var last;
-        for (var i = 0; i < nodes.length; i++)
-        {
-            if (i === count)
-            {
-                var $block = $R.dom(nodes[i]);
-                if (nodes[i].nodeType !== 3 && this.inspector.isBlockTag(nodes[i].tagName) && $block.hasClass('redactor-textnodes-wrapper'))
-                {
-                    last = nodes[i];
-                }
-            }
-
-            nodes[i] = this._clearWrapperClass(nodes[i]);
-
-        }
-
-        if (last && selection !== false)
-        {
-            //var end = this.marker.find('end');
-            //$R.dom(end).remove();
-            //$R.dom(last).append(this.marker.build('end'));
-        }
+        nodes = this._unwrapSpanWithoutAttr($elements.getAll());
 
         if (selection !== false) this.selection.restore();
 
         return nodes;
     },
+
+
+    // private
     _removeAllAttr: function($elements)
     {
         $elements.each(function(node)
@@ -2562,25 +2607,36 @@ $R.add('mixin', 'formatter', {
         for (var i = 0; i < nodes.length; i++)
         {
             var node = nodes[i];
-            while(node.attributes.length > 0)
+            while (node.attributes.length > 0)
             {
                 node.removeAttribute(node.attributes[0].name);
             }
         }
 
+        nodes = this._unwrapSpanWithoutAttr(nodes);
+
         if (selection !== false) this.selection.restore();
 
         return nodes;
     },
-    _clearWrapperClass: function(block)
+    _unwrapSpanWithoutAttr: function(nodes)
     {
-        block.classList.remove('redactor-textnodes-wrapper');
-        if (block.getAttribute('class') === '')
+        var finalNodes = [];
+        for (var i = 0; i < nodes.length; i++)
         {
-            block.removeAttribute('class');
+            var node = nodes[i];
+            var len = node.attributes.length;
+            if (len <= 0 && node.nodeType !== 3 && node.tagName === 'SPAN')
+            {
+                $R.dom(node).unwrap();
+            }
+            else
+            {
+                finalNodes.push(node);
+            }
         }
 
-        return block;
+        return finalNodes;
     }
 });
 $R.add('mixin', 'dom', $R.Dom.prototype);
@@ -2594,13 +2650,8 @@ $R.add('service', 'options', {
     init: function(options, element)
     {
         var $el = $R.dom(element);
-    	var opts = $R.extend(
-    		{},
-    		$R.opts,
-    		(element) ? $el.data() : {},
-    		$R.options,
-    		options
-    	);
+        var opts = $R.extend({}, $R.opts, (element) ? $el.data() : {}, $R.options);
+        opts = $R.extend(true, opts, options);
 
         return opts;
     }
@@ -2644,14 +2695,24 @@ $R.add('service', 'lang', {
 
         return str;
     },
-	get: function(name)
-	{
-		return (typeof this.vars[name] !== 'undefined') ? this.vars[name] : '';
-	},
+    get: function(name)
+    {
+        var str = '';
+        if (typeof this.vars[name] !== 'undefined')
+        {
+            str = this.vars[name];
+        }
+        else if (this.opts.lang !== 'en' && typeof $R.lang['en'][name] !== 'undefined')
+        {
+            str = $R.lang['en'][name];
+        }
+
+        return str;
+    },
 
     // private
-	_build: function(lang)
-	{
+    _build: function(lang)
+    {
         var vars = $R.lang['en'];
         if (lang !== 'en')
         {
@@ -2659,7 +2720,7 @@ $R.add('service', 'lang', {
         }
 
         return vars;
-	}
+    }
 });
 $R.add('service', 'callback', {
     init: function(app)
@@ -2748,21 +2809,21 @@ $R.add('service', 'animate', {
     },
     start: function(element, animation, options, callback)
     {
-		var defaults = {
-			duration: false,
-			iterate: false,
-			delay: false,
-			timing: false,
-			prefix: 'redactor-'
-		};
+        var defaults = {
+            duration: false,
+            iterate: false,
+            delay: false,
+            timing: false,
+            prefix: 'redactor-'
+        };
 
-		var defaults = (typeof options === 'function') ? defaults : $R.extend(defaults, options);
-		var callback = (typeof options === 'function') ? options : callback;
+        defaults = (typeof options === 'function') ? defaults : $R.extend(defaults, options);
+        callback = (typeof options === 'function') ? options : callback;
 
         // play
-		return new $R.AnimatePlay(element, animation, defaults, callback, this.animationOpt);
+        return new $R.AnimatePlay(element, animation, defaults, callback, this.animationOpt);
     },
-    stop: function(element, effect)
+    stop: function(element)
     {
         this.$el = $R.dom(element);
         this.$el.removeClass('redactor-animated');
@@ -2771,11 +2832,11 @@ $R.add('service', 'animate', {
         this.$el.removeClass(effect);
 
         this.$el.removeAttr('redactor-animate-effect');
-		var hide = this.$el.attr('redactor-animate-hide');
-		if (hide)
-		{
-		    this.$el.addClass(hide).removeAttr('redactor-animate-hide');
-		}
+        var hide = this.$el.attr('redactor-animate-hide');
+        if (hide)
+        {
+            this.$el.addClass(hide).removeAttr('redactor-animate-hide');
+        }
 
         this.$el.off('animationend webkitAnimationEnd');
     }
@@ -2802,50 +2863,50 @@ $R.AnimatePlay = function(element, animation, defaults, callback, animationOpt)
 };
 
 $R.AnimatePlay.prototype = {
-	buildAnimationOff: function(animation)
-	{
+    buildAnimationOff: function(animation)
+    {
         return (this.isHidable(animation)) ? 'hide' : 'show';
-	},
-	buildHideClass: function()
-	{
+    },
+    buildHideClass: function()
+    {
         return 'redactor-animate-hide';
-	},
-	isInanimate: function()
-	{
-    	return (this.animation === 'show' || this.animation === 'hide');
-	},
+    },
+    isInanimate: function()
+    {
+        return (this.animation === 'show' || this.animation === 'hide');
+    },
     isAnimated: function()
     {
         return this.$el.hasClass('redactor-animated');
     },
-	isHidable: function(effect)
-	{
-    	return (this.hidableEffects.indexOf(effect) !== -1);
-	},
+    isHidable: function(effect)
+    {
+        return (this.hidableEffects.indexOf(effect) !== -1);
+    },
     inanimate: function()
     {
-		this.defaults.timing = 'linear';
+        this.defaults.timing = 'linear';
 
         var hide;
-		if (this.animation === 'show')
-		{
+        if (this.animation === 'show')
+        {
             hide = this.buildHideClass();
             this.$el.attr('redactor-animate-hide', hide);
             this.$el.removeClass(hide);
         }
-		else
-		{
+        else
+        {
             hide = this.$el.attr('redactor-animate-hide');
-    		this.$el.addClass(hide).removeAttr('redactor-animate-hide');
+            this.$el.addClass(hide).removeAttr('redactor-animate-hide');
         }
 
-		if (typeof this.callback === 'function') this.callback(this);
+        if (typeof this.callback === 'function') this.callback(this);
 
         return this;
     },
-	animate: function()
-	{
-    	var delay = (this.defaults.delay) ? this.defaults.delay : 0;
+    animate: function()
+    {
+        var delay = (this.defaults.delay) ? this.defaults.delay : 0;
         setTimeout(function()
         {
             this.$body.addClass('no-scroll-x');
@@ -2857,109 +2918,88 @@ $R.AnimatePlay.prototype = {
                 this.$el.removeClass(hide);
             }
 
-		    this.$el.addClass(this.defaults.prefix + this.animation);
-		    this.$el.attr('redactor-animate-effect', this.defaults.prefix + this.animation);
+            this.$el.addClass(this.defaults.prefix + this.animation);
+            this.$el.attr('redactor-animate-effect', this.defaults.prefix + this.animation);
 
-	    	this.set(this.defaults.duration + 's', this.defaults.iterate, this.defaults.timing);
-    		this.complete();
+            this.set(this.defaults.duration + 's', this.defaults.iterate, this.defaults.timing);
+            this.complete();
 
         }.bind(this), delay * 1000);
 
         return this;
-	},
-	set: function(duration, iterate, timing)
-	{
-		var len = this.prefixes.length;
+    },
+    set: function(duration, iterate, timing)
+    {
+        var len = this.prefixes.length;
 
-		while (len--)
-		{
-			if (duration !== false || duration === '') this.$el.css(this.prefixes[len] + 'animation-duration', duration);
-			if (iterate !== false || iterate === '') this.$el.css(this.prefixes[len] + 'animation-iteration-count', iterate);
-			if (timing !== false || timing === '') this.$el.css(this.prefixes[len] + 'animation-timing-function', timing);
-		}
-	},
-	clean: function()
-	{
-    	this.$body.removeClass('no-scroll-x');
-		this.$el.removeClass('redactor-animated');
-		this.$el.removeClass(this.defaults.prefix + this.animation);
-		this.$el.removeAttr('redactor-animate-effect');
+        while (len--)
+        {
+            if (duration !== false || duration === '') this.$el.css(this.prefixes[len] + 'animation-duration', duration);
+            if (iterate !== false || iterate === '') this.$el.css(this.prefixes[len] + 'animation-iteration-count', iterate);
+            if (timing !== false || timing === '') this.$el.css(this.prefixes[len] + 'animation-timing-function', timing);
+        }
+    },
+    clean: function()
+    {
+        this.$body.removeClass('no-scroll-x');
+        this.$el.removeClass('redactor-animated');
+        this.$el.removeClass(this.defaults.prefix + this.animation);
+        this.$el.removeAttr('redactor-animate-effect');
 
-		this.set('', '', '');
-	},
-	complete: function()
-	{
-		this.$el.one('animationend webkitAnimationEnd', function(e)
-		{
-    		if (this.$el.hasClass(this.defaults.prefix + this.animation)) this.clean();
-			if (this.isHidable(this.animation))
-			{
-    			var hide = this.$el.attr('redactor-animate-hide');
-    			this.$el.addClass(hide).removeAttr('redactor-animate-hide');
+        this.set('', '', '');
+    },
+    complete: function()
+    {
+        this.$el.one('animationend webkitAnimationEnd', function()
+        {
+            if (this.$el.hasClass(this.defaults.prefix + this.animation)) this.clean();
+            if (this.isHidable(this.animation))
+            {
+                var hide = this.$el.attr('redactor-animate-hide');
+                this.$el.addClass(hide).removeAttr('redactor-animate-hide');
             }
 
-			if (this.animation === 'slideUp') this.$el.height('');
-			if (typeof this.callback === 'function') this.callback(this.$el);
+            if (this.animation === 'slideUp') this.$el.height('');
+            if (typeof this.callback === 'function') this.callback(this.$el);
 
-		}.bind(this));
-	}
+        }.bind(this));
+    }
 };
 $R.add('service', 'caret', {
     init: function(app)
     {
         this.app = app;
     },
+
     // set
-    set: function(el)
-    {
-        this.editor.focus();
-        this.component.clearActive();
-
-        var node = $R.dom(el).get();
-		var range = this.selection.getRange();
-        if (range && node)
-        {
-            if (this.utils.isEmpty(node))
-            {
-                this.setAtStart(node);
-            }
-            else
-            {
-                range.collapse(false);
-                range.selectNodeContents(node);
-
-                this.selection.setRange(range);
-            }
-        }
-    },
     setStart: function(el)
     {
         this._setCaret('Start', el);
-    },
-    setAtStart: function(node)
-    {
-		var range = document.createRange();
-		var data = this.inspector.parse(node);
-        if (this._isInPage(node))
-        {
-            range.setStart(node, 0);
-            range.collapse(true);
-
-            if (this.utils.isEmpty(node) || data.isInline())
-            {
-                var textNode = this._createTextNode();
-                range.insertNode(textNode);
-                range.selectNodeContents(textNode);
-                range.collapse(false);
-            }
-
-            this.selection.setRange(range);
-        }
     },
     setEnd: function(el)
     {
         this._setCaret('End', el);
     },
+    setBefore: function(el)
+    {
+        this._setCaret('Before', el);
+    },
+    setAfter: function(el)
+    {
+        this._setCaret('After', el);
+    },
+
+    // is
+    isStart: function(el)
+    {
+        return this._isStartOrEnd(el, 'First');
+    },
+    isEnd: function(el)
+    {
+        return this._isStartOrEnd(el, 'Last');
+    },
+
+    // set side
     setAtEnd: function(node)
     {
         var data = this.inspector.parse(node);
@@ -2969,8 +3009,7 @@ $R.add('service', 'caret', {
         {
             if (tag === 'a')
             {
-                var textNode = document.createTextNode('\u200B');
-
+                var textNode = this.utils.createInvisibleChar();
                 node.appendChild(textNode);
 
                 range.setStartBefore(textNode);
@@ -2985,9 +3024,25 @@ $R.add('service', 'caret', {
             this.selection.setRange(range);
         }
     },
-    setBefore: function(el)
+    setAtStart: function(node)
     {
-        this._setCaret('Before', el);
+		var range = document.createRange();
+		var data = this.inspector.parse(node);
+        if (this._isInPage(node))
+        {
+            range.setStart(node, 0);
+            range.collapse(true);
+
+            if (this.utils.isEmpty(node) || data.isInline())
+            {
+                var textNode = this.utils.createInvisibleChar();
+                range.insertNode(textNode);
+                range.selectNodeContents(textNode);
+                range.collapse(false);
+            }
+
+            this.selection.setRange(range);
+        }
     },
     setAtBefore: function(node)
     {
@@ -2998,18 +3053,16 @@ $R.add('service', 'caret', {
             range.setStartBefore(node);
             range.collapse(true);
 
-            if (this.utils.isEmpty(node) && data.isInline())
+            if (data.isInline())
             {
-                var textNode = this._createTextNode();
-                node.appendChild(textNode);
+                var textNode = this.utils.createInvisibleChar();
+                node.parentNode.insertBefore(textNode, node);
+                range.selectNodeContents(textNode);
+                range.collapse(false);
             }
 
             this.selection.setRange(range);
         }
-    },
-    setAfter: function(el)
-    {
-        this._setCaret('After', el);
     },
     setAtAfter: function(node)
     {
@@ -3019,7 +3072,7 @@ $R.add('service', 'caret', {
             range.setStartAfter(node);
             range.collapse(true);
 
-            var textNode = this._createTextNode();
+            var textNode = this.utils.createInvisibleChar();
             range.insertNode(textNode);
             range.selectNodeContents(textNode);
             range.collapse(false);
@@ -3043,16 +3096,6 @@ $R.add('service', 'caret', {
             next = (next.nodeType === 3 && this._isEmptyTextNode(next)) ? next.nextElementSibling : next;
             if (next) this.setStart(next);
         }
-    },
-
-    // is
-    isStart: function(el)
-    {
-        return this._isStartOrEnd('First', el);
-    },
-    isEnd: function(el)
-    {
-        return this._isStartOrEnd('Last', el);
     },
 
     // private
@@ -3107,7 +3150,7 @@ $R.add('service', 'caret', {
             }
         }
         // 6. table
-        else if (tag === 'table')
+        else if (tag === 'table' || tag === 'tr')
         {
             return this.setStart(data.findFirstNode('th, td'));
         }
@@ -3136,7 +3179,7 @@ $R.add('service', 'caret', {
         this.editor.focus();
 
         // set
-        if (!this._setStartInline(node))
+        if (!this._setInline(node, 'Start'))
         {
             this.setAtStart(node);
         }
@@ -3181,7 +3224,7 @@ $R.add('service', 'caret', {
             }
         }
         // 6. table
-        else if (tag === 'table')
+        else if (tag === 'table' || tag === 'tr')
         {
             return this.setEnd(data.findLastNode('th, td'));
         }
@@ -3210,7 +3253,7 @@ $R.add('service', 'caret', {
         this.editor.focus();
 
         // set
-        if (!this._setEndInline(node))
+        if (!this._setInline(node, 'End'))
         {
             // is element empty
             if (this.utils.isEmpty(node))
@@ -3223,18 +3266,13 @@ $R.add('service', 'caret', {
     },
     _setBefore: function(node, data, tag)
     {
-        /*
         // text
-        if (data.isText())
+        if (node.nodeType === 3)
         {
-            var block = this._getPrevBlock(node);
-
-            return (block) ? this.setEnd(block) : this.setAtPrev(node);
+            return this.setAtBefore(node);
         }
-        */
-
         // inline
-        if (data.isInline())
+        else if (data.isInline())
         {
             return this.setAtBefore(node);
         }
@@ -3258,7 +3296,7 @@ $R.add('service', 'caret', {
             return this.setStart(data.getComponent());
         }
         // component
-        else if (data.isComponent())
+        else if (!data.isComponentType('table') && data.isComponent())
         {
             return this.setAtPrev(data.getComponent());
         }
@@ -3274,19 +3312,13 @@ $R.add('service', 'caret', {
     },
     _setAfter: function(node, data, tag)
     {
-
-        /*
         // text
-        if (data.isText())
+        if (node.nodeType === 3)
         {
-            var block = this._getNextBlock(node);
-
-            return (block) ? this.setStart(block) : this.setAtNext(node);
+            return this.setAtAfter(node);
         }
-        */
-
         // inline
-        if (data.isInline())
+        else if (data.isInline())
         {
             return this.setAtAfter(node);
         }
@@ -3305,7 +3337,7 @@ $R.add('service', 'caret', {
             return this.setAtNext(data.getList());
         }
         // component
-        else if (data.isComponent())
+        else if (!data.isComponentType('table') && data.isComponent())
         {
             return this.setAtNext(data.getComponent());
         }
@@ -3318,75 +3350,53 @@ $R.add('service', 'caret', {
         this.editor.focus();
         this.setAtAfter(node);
     },
-    _setStartInline: function(node)
+    _setInline: function(node, type)
     {
         // is first element inline (FF only)
-        var inline = this._hasInlineChild(node, 'first');
+        var inline = this._hasInlineChild(node, (type === 'Start') ? 'first' : 'last');
         if (inline)
         {
-            this.setStart(inline);
+            if (type === 'Start')
+            {
+                this.setStart(inline);
+            }
+            else
+            {
+                this.setEnd(inline);
+            }
+
             return true;
         }
     },
-    _setEndInline: function(node)
+    _isStartOrEnd: function(el, type)
     {
-        // is last element inline (FF only)
-        var inline = this._hasInlineChild(node, 'last');
-        if (inline)
-        {
-            this.setEnd(inline);
-            return true;
-        }
-    },
-    _isStartOrEnd: function(type, el)
-    {
-        var $editor = this.editor.getElement();
-        var isEditor = (typeof el === 'undefined');
-        var node = (isEditor) ? $editor.get() : $R.dom(el).get();
-        var data = (isEditor) ? false : this.inspector.parse(node);
-        node = (isEditor) ? node : this._isStartOrEndNode(node, data, type);
+        var node = this.utils.getNode(el);
+        if (!node) return false;
 
-        if (data && (data.isComponent() && !data.isComponentEditable()))
+        var data = this.inspector.parse(node);
+        node = this._getStartEndNode(node, data, type);
+
+        if (node)
         {
-            return true;
+            var html = (node.nodeType === 3) ? node.textContent : node.innerHTML;
+            html = this.utils.trimSpaces(html);
+            if (html === '') return true;
         }
 
-        if (!data || !data.isComponentEditable())
+        if (!data.isFigcaption() && data.isComponent() && !data.isComponentEditable())
         {
-            this.editor.focus();
+            return true;
         }
 
         var offset = this.offset.get(node, true);
-        var result = false;
-
-        if (type === 'First')
+        if (offset)
         {
-            result = (offset && offset.start === 0);
+            return (type === 'First') ? (offset.start === 0) : (offset.end === this.offset.size(node, true));
         }
         else
         {
-            var length = this.offset.get(node, true, true);
-            result = (offset && offset.end === length);
+            return false;
         }
-
-        return result;
-    },
-    _isStartOrEndNode: function(node, data, type)
-    {
-        if (data.isTable())
-        {
-            node = data['find' + type + 'Node']('th, td');
-        }
-        else if (data.isList())
-        {
-            node = data['find' + type + 'Node']('li');
-        }
-        else if (data.isComponentType('code'))
-        {
-            node = data.findLastNode('pre, code');
-        }
-
-        return node;
     },
     _isInPage: function(node)
     {
@@ -3403,38 +3413,43 @@ $R.add('service', 'caret', {
     {
         var data = this.inspector.parse(el);
         var node = (pos === 'first') ? data.getFirstNode() : data.getLastNode();
-        if (node && node.nodeType !== 3 && this.inspector.isInlineTag(node.tagName))
+        var $node = $R.dom(node);
+
+        if (node && node.nodeType !== 3
+            && this.inspector.isInlineTag(node.tagName)
+            && !$node.hasClass('redactor-component')
+             && !$node.hasClass('non-editable'))
         {
             return node;
         }
     },
-    _getPrevBlock: function(node)
-    {
-        while (node = node.previousSibling)
-        {
-            // TODO: test block tags
-            if (node.nodeType !== 3 && node.tagName !== 'BR') return node;
-        }
-
-        return false;
-    },
-    _getNextBlock: function(node)
-    {
-        while (node = node.nextSibling)
-        {
-            // TODO: test block tags
-            if (node.nodeType !== 3 && node.tagName !== 'BR') return node;
-        }
-
-        return false;
-    },
     _isEmptyTextNode: function(node)
     {
-        return (node.textContent.trim().replace(/\n/, '').replace(/[\u200B-\u200D\uFEFF]/g, '') === '');
+        var text = node.textContent.trim().replace(/\n/, '');
+        text = this.utils.removeInvisibleChars(text);
+
+        return (text === '');
     },
-    _createTextNode: function()
+    _getStartEndNode: function(node, data, type)
     {
-        return document.createTextNode('\u200B');
+        if (data.isFigcaption())
+        {
+            node = data.getFigcaption();
+        }
+        else if (data.isTable())
+        {
+            node = data['find' + type + 'Node']('th, td');
+        }
+        else if (data.isList())
+        {
+            node = data['find' + type + 'Node']('li');
+        }
+        else if (data.isComponentType('code'))
+        {
+            node = data.findLastNode('pre, code');
+        }
+
+        return node;
     }
 });
 $R.add('service', 'selection', {
@@ -3462,7 +3477,7 @@ $R.add('service', 'selection', {
         var range = this.getRange();
 
         if (sel && sel.isCollapsed) return true;
-        else if (range && range.toString().length === 0) return true
+        else if (range && range.toString().length === 0) return true;
 
         return false;
     },
@@ -3498,18 +3513,8 @@ $R.add('service', 'selection', {
             var block = this.getBlock(el);
             var blocks = this.getBlocks();
 
-            // 1) component
-            if (this.component.isActive())
-            {
-                return false;
-            }
-            // 2) has blocks
-            else if (blocks.length !== 0)
-            {
-                return false;
-            }
-            // 3) td, th or hasn't block
-            else if ((block && this.inspector.isTableCellTag(block.tagName)) || block === false)
+            // td, th or hasn't block
+            if ((block && this.inspector.isTableCellTag(block.tagName)) || (block === false && blocks.length === 0))
             {
                 return true;
             }
@@ -3519,48 +3524,54 @@ $R.add('service', 'selection', {
     },
     isAll: function(el)
     {
-        // collapsed
-        if (this.isCollapsed()) return false;
+        var node = this.utils.getNode(el);
+        if (!node) return false;
 
-        var $editor = this.editor.getElement();
-        var isEditor = (typeof el === 'undefined');
-        var el = el || $editor.get();
-        var data = (isEditor) ? false : this.inspector.parse(el);
-
-        // editor empty
-        if (isEditor && this.editor.isEmpty()) return false;
+        var isEditor = this.editor.isEditor(node);
+        var data = this.inspector.parse(node);
 
         // component
-        if (data && data.isComponent() && !data.isComponentEditable() && this.component.isActive(el))
+        if (!data.isFigcaption() && this.component.isNonEditable(node) && this.component.isActive(node))
         {
             return true;
         }
 
-        // pre, table, or pre/code in figure
-        if (!isEditor)
+        //
+        if (isEditor)
         {
-            var isComponentCode = data.isComponentType('code');
-            var isTable = data.isTable();
+            var $editor = this.editor.getElement();
+            var output = this.cleaner.output($editor.html());
+            output = output.replace(/<p><\/p>$/i, '');
 
-            if (isComponentCode || data.isPre() || isTable)
+            var htmlLen = this.getHtml().length;
+            var outputLen = output.length;
+
+            if (htmlLen !== outputLen)
             {
-                el = (isComponentCode) ? data.getComponentCodeElement() : el;
-
-                var text = el.textContent.trim().replace(/\t/g, '').replace(/\u200B/g, '');
-                var selected = this.getText().trim().replace(/\t/g, '');
-
-                text = (isTable) ? text.replace(/\s+/g, '') : text;
-                selected = (isTable) ? selected.replace(/\s+/g, '') : selected;
-
-                return (text === selected);
+                return false;
             }
+
+        }
+
+        // editor empty or collapsed
+        if ((isEditor && this.editor.isEmpty()) || this.isCollapsed())
+        {
+            return false;
         }
 
         // all
-        var range = this.getRange();
-        if (range)
+        var offset = this.offset.get(node, true);
+        var size = this.offset.size(node, true);
+
+        // pre, table, or pre/code in figure
+        if (!isEditor && data.isComponentType('code'))
         {
-            return this._containsInRange(range, el);
+            size = this.getText().trim().length;
+        }
+
+        if (offset && offset.start === 0 && offset.end === size)
+        {
+            return true;
         }
 
         return false;
@@ -3584,57 +3595,47 @@ $R.add('service', 'selection', {
     },
     setAll: function(el)
     {
-        var $editor = this.editor.getElement();
-        var isEditor = (typeof el === 'undefined');
-        var el = el || $editor.get();
+        var node = this.utils.getNode(el);
+        if (!node) return;
 
-        if (isEditor)
+        var data = this.inspector.parse(node);
+
+        this.component.clearActive();
+
+        this.editor.focus();
+        this.editor.saveScroll();
+        this.editor.disableNonEditables();
+
+        if (node && node.tagName === 'TABLE')
         {
-            $editor.prepend(this.marker.build('start'));
-            $editor.append(this.marker.build('end'));
+            var first = data.findFirstNode('td, th');
+            var last = data.findLastNode('td, th');
 
-            this.component.clearActive();
+            $R.dom(first).prepend(this.marker.build('start'));
+            $R.dom(last).append(this.marker.build('end'));
+
             this.restoreMarkers();
+        }
+        else if (!data.isFigcaption() && this.component.isNonEditable(node))
+        {
+            this.component.setActive(node);
         }
         else
         {
-            var data = this.inspector.parse(el);
-
-            // pre/code in figure
             if (data.isComponentType('code'))
             {
-                this.editor.saveScroll();
-
-                el = data.getComponentCodeElement();
-                el.focus();
-
-                this.component.clearActive();
-                this._selectNodeAll(el);
-
-                this.editor.restoreScroll();
+                node = data.getComponentCodeElement();
+                node.focus();
             }
-            // component
-            else if (!data.isFigcaption() && data.isComponent() && !data.isComponentEditable())
-            {
-                this.component.setActive(el);
-            }
-            else
-            {
-                this.editor.focus();
 
-                // table
-                el = (data.isComponentType('table')) ? data.getTable() : el;
+            var range = document.createRange();
+            range.selectNodeContents(node);
 
-                var first = this.editor.getFirstNode();
-                if (first && first.nodeType !== 3 && first.tagName === 'FIGURE')
-                {
-                    this.component.setActive(first);
-                }
-
-                this.component.clearActive();
-                this._selectNodeAll(el);
-            }
+            this.setRange(range);
         }
+
+        this.editor.enableNonEditables();
+        this.editor.restoreScroll();
     },
 
     // get
@@ -3665,42 +3666,70 @@ $R.add('service', 'selection', {
 
         return text;
     },
+    getTextAfterCaret: function(num)
+    {
+        num = (typeof num === 'undefined') ? 1 : num;
+
+        var el = this.editor.getElement().get();
+        var range = this.getRange();
+        var text = false;
+        if (range)
+        {
+            var clonedRange = range.cloneRange();
+            clonedRange.selectNodeContents(el);
+            clonedRange.setStart(range.endContainer, range.endOffset);
+
+            text = clonedRange.toString().slice(0, num);
+        }
+
+        return text;
+    },
     getPosition: function()
     {
-        var sel = this.get();
         var range = this.getRange();
-        var top = 0, left = 0, width = 0, height = 0;
+        var pos = { top: 0, left: 0, width: 0, height: 0 };
         if (window.getSelection && range.getBoundingClientRect)
         {
             range = range.cloneRange();
+            var offset = (range.startOffset-1);
+            range.setStart(range.startContainer, (offset < 0) ? 0 : offset);
             var rect = range.getBoundingClientRect();
-            width = rect.right - rect.left;
-            height = rect.bottom - rect.top;
-            top = rect.top;
-            left = rect.left;
+            pos = { top: rect.top, left: rect.left, width: (rect.right - rect.left) , height: (rect.bottom - rect.top) };
         }
 
-        return { top: top, left: left, width: width , height: height };
+        return pos;
     },
     getCurrent: function()
     {
+        var node = false;
+        var sel = this.get();
         var component = this.component.getActive();
 
-        return (component) ? component : this._getCurrent();
+        if (component)
+        {
+            node = component;
+        }
+        else if (sel && this.is())
+        {
+            var data = this.inspector.parse(sel.anchorNode);
+            node = (!data.isEditor()) ? sel.anchorNode : false;
+        }
+
+        return node;
     },
     getParent: function()
     {
+        var node = false;
         var current = this.getCurrent();
         if (current)
         {
             var parent = current.parentNode;
             var data = this.inspector.parse(parent);
 
-            return (!data.isEditor()) ? parent : false;
-
+            node = (!data.isEditor()) ? parent : false;
         }
 
-        return false;
+        return node;
     },
     getElement: function(el)
     {
@@ -3783,79 +3812,12 @@ $R.add('service', 'selection', {
 
         return false;
     },
-    getBlocks: function(options)
-    {
-        var node;
-        var nodes = this.getNodes();
-        var filteredNodes = [];
-        for (var i = 0; i < nodes.length; i++)
-        {
-            node = this.getBlock(nodes[i]);
-            if (node && !this._isInNodesArray(filteredNodes, node))
-            {
-                if (this._filterBlock(node, options))
-                {
-                    filteredNodes.push(node);
-                }
-            }
-        }
-
-        filteredNodes = (options && options.tags) ? this._filterNodesByTags(filteredNodes, options.tags) : filteredNodes;
-
-        return filteredNodes;
-    },
-    getInlines: function(options)
-    {
-        var nodes = this.getNodes();
-        var inlines = [];
-        for (var i = 0; i < nodes.length; i++)
-        {
-            if (options && options.all)
-            {
-                var node = nodes[i];
-                while (node)
-                {
-                    if (this._isInlineNode(node))
-                    {
-                        inlines.push(node);
-                    }
-
-                    node = node.parentNode;
-                }
-            }
-            else
-            {
-                var node = this.getInline(nodes[i]);
-                if (node)
-                {
-                    inlines.push(node);
-                }
-            }
-        }
-
-        var filteredNodes = [];
-        for (var i = 0; i < inlines.length; i++)
-        {
-            var node = inlines[i];
-            if (node && !this._isInNodesArray(filteredNodes, node))
-            {
-                if (this._filterInline(node, options))
-                {
-                    filteredNodes.push(node);
-                }
-            }
-        }
-
-        filteredNodes = (options && options.tags) ? this._filterNodesByTags(filteredNodes, options.tags) : filteredNodes;
-
-        return filteredNodes;
-    },
     getInlinesAllSelected: function(options)
     {
         if (this.isAll()) return [];
 
         var inlines = this.getInlines({ all: true });
-        var textNodes = this.getTextNodes({ inline: false });
+        var textNodes = this.getNodes({ textnodes: true, inline: false });
         var selected = this.getText().replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         var finalNodes = [];
 
@@ -3870,7 +3832,6 @@ $R.add('service', 'selection', {
         }
         else if (inlines.length > 1)
         {
-            var isIn = false;
             for (var i = 0; i < inlines.length; i++)
             {
                 if (this._isTextSelected(inlines[i], selected))
@@ -3891,6 +3852,64 @@ $R.add('service', 'selection', {
 
         return finalNodes;
     },
+    getInlines: function(options)
+    {
+        var nodes = this.getNodes();
+        var filteredNodes = [];
+        for (var i = 0; i < nodes.length; i++)
+        {
+            var node;
+            if (options && options.all)
+            {
+                node = nodes[i];
+                while (node)
+                {
+                    if (this._isInlineNode(node) && !this._isInNodesArray(filteredNodes, node))
+                    {
+                        filteredNodes.push(node);
+                    }
+
+                    node = node.parentNode;
+                }
+            }
+            else
+            {
+                node = this.getInline(nodes[i]);
+                if (node && !this._isInNodesArray(filteredNodes, node))
+                {
+                    filteredNodes.push(node);
+                }
+            }
+        }
+
+        // filter
+        filteredNodes = (options && options.tags) ? this._filterNodesByTags(filteredNodes, options.tags) : filteredNodes;
+        filteredNodes = (options && options.inside) ? this._filterInlinesInside(filteredNodes, options) : filteredNodes;
+
+        return filteredNodes;
+    },
+    getBlocks: function(options)
+    {
+        var nodes = this.getNodes();
+        var block = this.getBlock();
+        nodes = (nodes.length === 0 && block) ? [block] : nodes;
+
+        var filteredNodes = [];
+        for (var i = 0; i < nodes.length; i++)
+        {
+            var node = this.getBlock(nodes[i]);
+            if (node && !this._isInNodesArray(filteredNodes, node))
+            {
+                filteredNodes.push(node);
+            }
+        }
+
+        // filter
+        filteredNodes = (options && options.tags) ? this._filterNodesByTags(filteredNodes, options.tags) : filteredNodes;
+        filteredNodes = (options && options.first) ? this._filterBlocksFirst(filteredNodes, options) : filteredNodes;
+
+        return filteredNodes;
+    },
     getElements: function(options)
     {
         var nodes = this.getNodes({ textnodes: false });
@@ -3902,124 +3921,14 @@ $R.add('service', 'selection', {
         {
             if (!this._isInNodesArray(filteredNodes, nodes[i]))
             {
-                var push = true;
-
-                // tags
-                if (options && options.tags && options.tags.indexOf(nodes[i].tagName.toLowerCase()) === -1)
-                {
-                    push = false;
-                }
-
-                if (push)
-                {
-                    filteredNodes.push(nodes[i]);
-                }
+                filteredNodes.push(nodes[i]);
             }
-
         }
+
+        // filter
+        filteredNodes = (options && options.tags) ? this._filterNodesByTags(filteredNodes, options.tags) : filteredNodes;
 
         return filteredNodes;
-    },
-    getTextNodes: function(options, passblocks)
-    {
-        var nodes = this.getNodes();
-        var range = this.getRange();
-
-        // only text selected
-        var blocks = this.getBlocks(options);
-        var html = this.getHtml(false);
-
-        if (this.isText() && html !== '' && options && options.wrap)
-        {
-            try {
-                var $tmp = $R.dom('<div>');
-                $tmp.addClass('redactor-textnodes-wrapper');
-                $tmp.html(html);
-                range.surroundContents($tmp.get());
-
-                return [$tmp.get()];
-            }
-            catch(e) {}
-        }
-
-        // text and blocks selected
-        var filteredNodes = [];
-        for (var i = 0; i < nodes.length; i++)
-        {
-            var block = this.getBlock(nodes[i]);
-            var isBlock = (passblocks && block && (block.tagName !== 'TD' && block.tagName !== 'TH'))
-            if (isBlock)
-            {
-                if (this._filterBlock(block, options))
-                {
-                    if (!this._isInNodesArray(filteredNodes, block))
-                    {
-                        if (options && options.tags)
-                        {
-                            if (options.tags.indexOf(block.tagName.toLowerCase()) !== -1)
-                            {
-                                filteredNodes.push(block);
-                            }
-                        }
-                        else
-                        {
-                            filteredNodes.push(block);
-                        }
-                    }
-                }
-                else
-                {
-                    skip = true;
-                }
-            }
-            else if (nodes[i].nodeType === 3 || (options && options.wrap && this.inspector.isInlineTag(nodes[i].tagName)))
-            {
-                var push = true;
-
-                // first && cells
-                if (options && options.first)
-                {
-                    var isCellParent = (block && block.tagName === 'TD' || block.tagName === 'TH');
-                    var isFirstInCells = (options.cells) ? isCellParent : false;
-                    if (block && !isFirstInCells)
-                    {
-                        push = false;
-                    }
-                }
-
-                // parent is not inline
-                if (options && options.inline === false)
-                {
-                    if (this.getInline(nodes[i]))
-                    {
-                        push = false;
-                    }
-                }
-
-                if (push)
-                {
-                    // wrap
-                    if (options && options.wrap)
-                    {
-                        var textnodes = this._getTextNodesWalker(nodes[i], range);
-                        var wrapper = this._wrapTextNodes(textnodes);
-
-                        filteredNodes.push(wrapper);
-                    }
-                    else
-                    {
-                        filteredNodes.push(nodes[i]);
-                    }
-                }
-            }
-
-        }
-
-        return filteredNodes;
-    },
-    getBlocksAndTextNodes: function(options)
-    {
-        return this.getTextNodes(options, true);
     },
     getNodes: function(options)
     {
@@ -4032,19 +3941,20 @@ $R.add('service', 'selection', {
         else if (this.isCollapsed())
         {
             var current = this.getCurrent();
-            nodes = (this.utils.isEmpty(current)) ? [this.getParent()] : [this.getCurrent()];
+            nodes = (current) ? [current] : [];
         }
         else if (this.is() && !activeComponent)
         {
-            nodes = this._getNodesWalker();
+            nodes = this._getRangeSelectedNodes();
         }
 
         // filter
         nodes = this._filterServicesNodes(nodes);
         nodes = this._filterEditor(nodes);
 
+        // options
         nodes = (options && options.tags) ? this._filterNodesByTags(nodes, options.tags) : nodes;
-        nodes = (options && options.textnodes) ? this._filterNodesTexts(nodes) : nodes;
+        nodes = (options && options.textnodes) ? this._filterNodesTexts(nodes, options) : nodes;
         nodes = (options && !options.textnodes) ? this._filterNodesElements(nodes) : nodes;
 
         return nodes;
@@ -4054,7 +3964,7 @@ $R.add('service', 'selection', {
     getText: function()
     {
         var sel = this.get();
-        return (sel) ? sel.toString().replace(/\u200B/g, '') : '';
+        return (sel) ? this.utils.removeInvisibleChars(sel.toString()) : '';
     },
     getHtml: function(clean)
     {
@@ -4071,6 +3981,7 @@ $R.add('service', 'selection', {
 
             html = container.innerHTML;
             html = (clean !== false) ? this.cleaner.output(html) : html;
+            html = html.replace(/<p><\/p>$/i, '');
         }
 
         return html;
@@ -4084,129 +3995,106 @@ $R.add('service', 'selection', {
     },
 
     // collapse
-	collapseToStart: function()
-	{
-		var sel = this.get();
-		if (sel && !sel.isCollapsed) sel.collapseToStart();
-	},
-	collapseToEnd: function()
-	{
-		var sel = this.get();
-		if (sel && !sel.isCollapsed) sel.collapseToEnd();
-	},
+    collapseToStart: function()
+    {
+        var sel = this.get();
+        if (sel && !sel.isCollapsed) sel.collapseToStart();
+    },
+    collapseToEnd: function()
+    {
+        var sel = this.get();
+        if (sel && !sel.isCollapsed) sel.collapseToEnd();
+    },
 
-	// save
-	save: function()
-	{
-    	this._clearSaved();
-
+    // save
+    saveActiveComponent: function()
+    {
         var activeComponent = this.component.getActive();
-        var current = this.getCurrent();
-        var data = this.inspector.parse(current);
-        var table = data.getTable();
-
-        // table
-        if (current && table && this.isAll(table))
-        {
-            this.savedTable = table;
-            return;
-        }
-
-        // component
         if (activeComponent)
         {
             this.savedComponent = activeComponent;
-            return;
+            return true;
         }
 
-    	var $editor = this.editor.getElement();
-        var el = $editor.get();
-        var range = this.getRange();
-
-        this.saved = {
-            start: this._getNodeOffset(el, range.startContainer) + this._getTotalOffsets(range.startContainer, range.startOffset),
-            end: this._getNodeOffset(el, range.endContainer) + this._getTotalOffsets(range.endContainer, range.endOffset)
-        };
-
+        return false;
     },
-    restore: function ()
+    restoreActiveComponent: function()
     {
-        if (!this.saved && !this.savedTable && !this.savedComponent) return;
-
-        this.editor.saveScroll();
-
-        if (this.savedTable)
-        {
-            this.setAll(this.savedTable);
-            this._clearSaved();
-            return;
-        }
-
         if (this.savedComponent)
         {
             this.component.setActive(this.savedComponent);
-            this._clearSaved();
-            this.editor.restoreScroll();
-            return;
+            return true;
         }
 
-        this.editor.focus();
-
-        var $editor = this.editor.getElement();
-        var el = $editor.get();
-        var range = this.getRange();
-        var startNodeOffset = this._getNodeAndOffsetAt(el, this.saved.start);
-        var endNodeOffset = this._getNodeAndOffsetAt(el, this.saved.end);
-
-        range.setStart(startNodeOffset.node, startNodeOffset.offset);
-        range.setEnd(endNodeOffset.node, endNodeOffset.offset);
-
-        this.setRange(range);
-        this.editor.restoreScroll();
+        return false;
+    },
+    save: function()
+    {
         this._clearSaved();
+
+        var el = this.getElement();
+        if (el && (el.tagName === 'TD' || el.tagName === 'TH') && el.innerHTML === '')
+        {
+            this.savedElement = el;
+        }
+        else if (!this.saveActiveComponent())
+        {
+            this.saved = this.offset.get();
+        }
+    },
+    restore: function()
+    {
+        if (!this.saved && !this.savedComponent && !this.savedElement) return;
+
+        this.editor.saveScroll();
+
+        if (this.savedElement)
+        {
+            this.caret.setStart(this.savedElement);
+        }
+        else if (!this.restoreActiveComponent())
+        {
+            this.offset.set(this.saved);
+        }
+
+        this._clearSaved();
+        this.editor.restoreScroll();
     },
     saveMarkers: function()
     {
-        this.marker.remove();
-        this.marker.insert();
+        this._clearSaved();
+
+        if (!this.saveActiveComponent())
+        {
+            this.marker.insert();
+        }
     },
     restoreMarkers: function()
     {
         this.editor.saveScroll();
-        this.editor.focus();
 
-        var start = this.marker.find('start');
-        var end = this.marker.find('end');
-        var range = this.getRange();
-
-        if (start && end)
+        if (!this.restoreActiveComponent())
         {
-            this._setMarkerBoth(range, start, end);
-        }
-        else if (start)
-        {
-            this._setMarkerStart(range, start);
+            this.marker.restore();
         }
 
+        this._clearSaved();
         this.editor.restoreScroll();
-
-        // var block = this.getBlock();
-        // if (block) this.utils.normalizeTextNodes(block);
     },
 
     // private
-    _getCurrent: function()
+    _getNextNode: function(node)
     {
-        var sel = this.get();
-        if (sel && this.is())
-        {
-            var node = sel.anchorNode;
-            var dataElement = this.inspector.parse(node);
+        if (node.hasChildNodes()) return node.firstChild;
 
-            return (dataElement.isEditor()) ? node.firstChild : node;
+        while (node && !node.nextSibling)
+        {
+            node = node.parentNode;
         }
 
-        return false;
+        if (!node) return null;
+
+        return node.nextSibling;
     },
     _getNodesComponent: function(component)
     {
@@ -4215,139 +4103,41 @@ $R.add('service', 'selection', {
 
         return (data.isFigcaption()) ? [data.getFigcaption()] : [component];
     },
-    _getNodesWalker: function()
+    _getRangeSelectedNodes: function()
     {
         var nodes = [];
         var range = this.getRange();
+        var node = range.startContainer;
         var startNode = range.startContainer;
         var endNode = range.endContainer;
         var $editor = this.editor.getElement();
 
         // editor
-        if (startNode === $editor.get())
+        if (startNode === $editor.get() && this.isAll())
         {
-            nodes = (this.isAll()) ? this.utils.getChildNodes($editor) : [];
+            nodes = this.utils.getChildNodes($editor);
         }
         // single node
-        else if (startNode == endNode)
+        else if (node == endNode)
         {
-            nodes = [startNode];
+            nodes = [node];
         }
         else
         {
-            while (startNode && startNode != endNode)
+            while (node && node != endNode)
             {
-                nodes.push(startNode = this._getNextNode(startNode));
+                nodes.push(node = this._getNextNode(node));
             }
 
-            // partially selected nodes
-            startNode = range.startContainer;
-            while (startNode && startNode != range.commonAncestorContainer)
+            node = range.startContainer;
+            while (node && node != range.commonAncestorContainer)
             {
-                nodes.unshift(startNode);
-                startNode = startNode.parentNode;
-            }
-
-            if (nodes.length !== 0)
-            {
-                var parent = nodes[0].parentNode;
-                if (parent) nodes.unshift(parent);
+                nodes.unshift(node);
+                node = node.parentNode;
             }
         }
 
         return nodes;
-    },
-    _getNextNode: function(node)
-    {
-        if (node.hasChildNodes()) return node.firstChild;
-        else
-        {
-            while (node && !node.nextSibling) node = node.parentNode;
-            return (!node) ? null : node.nextSibling;
-        }
-    },
-    _getTextNodesWalker: function(node, range)
-    {
-        var finalNodes = [];
-        var prev = node.previousSibling;
-        var next = node.nextSibling;
-        var start = range.startContainer;
-        var end = range.endContainer;
-
-        finalNodes = this._getTextNodesSiblings('prev', prev, start, finalNodes);
-        finalNodes.push(node);
-        finalNodes = this._getTextNodesSiblings('next', next, end, finalNodes);
-
-        return finalNodes;
-    },
-    _getTextNodesSiblings: function(type, node, stopper, finalNodes)
-    {
-        while (node)
-        {
-            if (node === undefined
-                || node.tagName === 'BR'
-                || this.inspector.isBlockTag(node.tagName)
-            )
-            {
-                return finalNodes;
-            }
-            else
-            {
-                if (type === 'prev')
-                {
-                    finalNodes.unshift(node);
-                    if (stopper === node)
-                    {
-                        return finalNodes;
-                    }
-                }
-                else
-                {
-                    finalNodes.push(node);
-                    if (stopper === node)
-                    {
-                        return finalNodes;
-                    }
-                }
-
-            }
-
-            node = (type === 'prev') ? node.previousSibling : node.nextSibling;
-        }
-
-        return finalNodes;
-    },
-    _wrapTextNodes: function(textnodes)
-    {
-        var $last = $R.dom(textnodes[textnodes.length-1]);
-        var $tmp = $R.dom('<div>');
-        $last.after($tmp);
-        $tmp.addClass('redactor-textnodes-wrapper');
-        $tmp.append(textnodes);
-
-        var $next = $tmp.next();
-        var next = $next.get();
-        if (next && next.tagName === 'BR')
-        {
-            $next.remove();
-        }
-        else if ($next.hasClass('redactor-selection-marker'))
-        {
-            $tmp.append($next);
-        }
-
-        return $tmp.get();
-    },
-    _isTextSelected: function(node, selected)
-    {
-        var text = node.textContent.replace(/\u200B/g, '');
-
-        return (
-            selected === text
-            || text.search(selected) !== -1
-            || selected.search(new RegExp('^' + text)) !== -1
-            || selected.search(new RegExp(text + '$')) !== -1
-        );
     },
     _isInNodesArray: function(nodes, node)
     {
@@ -4373,13 +4163,15 @@ $R.add('service', 'selection', {
         for (var i = 0; i < nodes.length; i++)
         {
             var $el = $R.dom(nodes[i]);
+            var skip = false;
 
-            if (
-                !(nodes[i] && nodes[i].nodeType === 3 && this.utils.isEmpty(nodes[i]))
-                && !$el.hasClass('redactor-script-tag')
-                && !$el.hasClass('redactor-component-caret')
-                && !$el.hasClass('redactor-selection-marker')
-            )
+            if (nodes[i] && nodes[i].nodeType === 3 && this.utils.isEmpty(nodes[i])) skip = true;
+            if ($el.hasClass('redactor-script-tag')
+                || $el.hasClass('redactor-component-caret')
+                || $el.hasClass('redactor-selection-marker')
+                || $el.hasClass('non-editable')) skip = true;
+
+            if (!skip)
             {
                 filteredNodes.push(nodes[i]);
             }
@@ -4387,56 +4179,19 @@ $R.add('service', 'selection', {
 
         return filteredNodes;
     },
-    _filterInline: function(node, options)
-    {
-        var $el = $R.dom(node);
-        var push = true;
-
-        if ($el.hasClass('redactor-selection-marker'))
-        {
-            push = false
-        }
-
-        if (options && options.inside)
-        {
-            //if (!this.isIn(node))
-            if (!window.getSelection().containsNode(node, true))
-            {
-                push = false;
-            }
-        }
-
-        return push;
-    },
-    _filterBlock: function(node, options)
-    {
-        var $el = $R.dom(node);
-        var push = true;
-
-        // first && cells
-        if (options && options.first)
-        {
-            var parent = $el.parent().get();
-            var isFirst = ($el.parent().hasClass('redactor-in'));
-            var isCellParent = (parent && (parent.tagName === 'TD' || parent.tagName === 'TH'));
-            var isFirstInCells = (options.cells) ? isCellParent : false;
-
-            if (!isFirst && !isFirstInCells)
-            {
-                push = false;
-            }
-        }
-
-        return push;
-    },
-    _filterNodesTexts: function(nodes)
+    _filterNodesTexts: function(nodes, options)
     {
         var filteredNodes = [];
         for (var i = 0; i < nodes.length; i++)
         {
-            if (nodes[i].nodeType === 3)
+            if (nodes[i].nodeType === 3 || (options.keepbr && nodes[i].tagName === 'BR'))
             {
-                filteredNodes.push(nodes[i]);
+                var inline = this.getInline(nodes[i]);
+                var isInline = (inline && options && options.inline === false);
+                if (!isInline)
+                {
+                    filteredNodes.push(nodes[i]);
+                }
             }
         }
 
@@ -4455,12 +4210,16 @@ $R.add('service', 'selection', {
 
         return filteredNodes;
     },
-    _filterNodesByTags: function(nodes, tags)
+    _filterNodesByTags: function(nodes, tags, passtexts)
     {
         var filteredNodes = [];
         for (var i = 0; i < nodes.length; i++)
         {
-            if (nodes[i].nodeType !== 3)
+            if (passtexts && nodes[i].nodeType === 3)
+            {
+                filteredNodes.push(nodes[i]);
+            }
+            else if (nodes[i].nodeType !== 3)
             {
                 var nodeTag = nodes[i].tagName.toLowerCase();
                 if (tags.indexOf(nodeTag.toLowerCase()) !== -1)
@@ -4472,225 +4231,58 @@ $R.add('service', 'selection', {
 
         return filteredNodes;
     },
+    _filterBlocksFirst: function(nodes)
+    {
+        var filteredNodes = [];
+        for (var i = 0; i < nodes.length; i++)
+        {
+            var $node = $R.dom(nodes[i]);
+            var parent = $node.parent().get();
+            var isFirst = ($node.parent().hasClass('redactor-in'));
+            var isCellParent = (parent && (parent.tagName === 'TD' || parent.tagName === 'TH'));
+            if (isFirst || isCellParent)
+            {
+                filteredNodes.push(nodes[i]);
+            }
+        }
+
+        return filteredNodes;
+    },
+    _filterInlinesInside: function(nodes)
+    {
+        var filteredNodes = [];
+        for (var i = 0; i < nodes.length; i++)
+        {
+            if (window.getSelection().containsNode(nodes[i], true))
+            {
+                filteredNodes.push(nodes[i]);
+            }
+        }
+
+        return filteredNodes;
+    },
+    _isTextSelected: function(node, selected)
+    {
+        var text = this.utils.removeInvisibleChars(node.textContent);
+
+        return (
+            selected === text
+            || text.search(selected) !== -1
+            || selected.search(new RegExp('^' + text)) !== -1
+            || selected.search(new RegExp(text + '$')) !== -1
+        );
+    },
     _isInlineNode: function(node)
     {
         var data = this.inspector.parse(node);
 
         return (this.inspector.isInlineTag(node.tagName) && data.isInEditor());
     },
-    _containsInRange: function(range, node)
-    {
-        var treeWalker = document.createTreeWalker(node,  NodeFilter.SHOW_TEXT, { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
-        var firstTextNode, lastTextNode, textNode;
-        while ((textNode = treeWalker.nextNode()))
-        {
-            if (!firstTextNode)
-            {
-                firstTextNode = textNode;
-            }
-
-            lastTextNode = textNode;
-        }
-
-        var nodeRange = range.cloneRange();
-        if (firstTextNode)
-        {
-            nodeRange.setStart(firstTextNode, 0);
-            nodeRange.setEnd(lastTextNode, lastTextNode.length);
-        }
-        else
-        {
-            nodeRange.selectNodeContents(node);
-        }
-
-        return range.compareBoundaryPoints(Range.START_TO_START, nodeRange) < 1 && range.compareBoundaryPoints(Range.END_TO_END, nodeRange) > -1;
-    },
-    _selectNodeAll: function(node)
-    {
-        var range = this.getRange();
-        if (range)
-        {
-            range.selectNodeContents(node);
-            this.setRange(range);
-        }
-
-    },
-    _setMarkerBoth: function(range, start, end)
-    {
-        range = this._createMarkersRange(range);
-
-        range.setStartBefore(start);
-        range.setEndBefore(end);
-
-        start.parentNode.removeChild(start);
-        end.parentNode.removeChild(end);
-
-        this.setRange(range);
-    },
-    _setMarkerStart: function(range, start)
-    {
-        range = this._createMarkersRange(range);
-
-        var next = start.nextSibling;
-        if (next && next.nodeType !== 3 && next.tagName === 'BR')
-        {
-            range.setStartBefore(next);
-        }
-        else if (next)
-        {
-            range.setStart(next, 0);
-            range.setEnd(next, 0);
-        }
-        else
-        {
-            range.setEndBefore(start);
-        }
-
-        start.parentNode.removeChild(start);
-
-        this.setRange(range);
-    },
-    _createMarkersRange: function(range)
-    {
-        if (!range)
-        {
-            var $editor = this.editor.getElement();
-            var el = $editor.get();
-            var doc = el.ownerDocument, win = doc.defaultView;
-            range = doc.createRange();
-        }
-
-        return range;
-    },
     _clearSaved: function()
     {
         this.saved = false;
-        this.savedTable = false;
         this.savedComponent = false;
-    },
-    _getNodeOffset: function(start, dest)
-    {
-        var offset = 0;
-        var node = start;
-        var stack = [];
-
-        while (true)
-        {
-            if (node === dest) return offset;
-            if (node.firstChild)
-            {
-                if (node !== start) offset += 1;
-                stack.push(node);
-                node = node.firstChild;
-            }
-            // If can go to next sibling
-            else if (stack.length > 0 && node.nextSibling)
-            {
-                if (node.nodeType === 3) offset += node.nodeValue.length + 1;
-                else offset += 1;
-
-                node = node.nextSibling;
-            }
-            else
-            {
-                if (node.nodeType === 3) offset += node.nodeValue.length + 1;
-                else offset += 1;
-
-                while (true)
-                {
-                    if (stack.length <= 1) return offset;
-
-                    var next = stack.pop();
-                    if (next.nextSibling)
-                    {
-                        node = next.nextSibling;
-                        break;
-                    }
-                }
-            }
-        }
-    },
-    _getTotalOffsets: function(parentNode, offset)
-    {
-        if (parentNode.nodeType == 3) return offset;
-        if (parentNode.nodeType == 1)
-        {
-            var total = 0;
-            for (var i = 0; i < offset; i++)
-            {
-                total += this._calculateNodeOffset(parentNode.childNodes[i]);
-            }
-
-            return total;
-        }
-
-        return 0;
-    },
-    _calculateNodeOffset: function(node)
-    {
-        var offset = 0;
-
-        if (node.nodeType === 3) offset += node.nodeValue.length + 1;
-        else offset += 1;
-
-        if (node.childNodes)
-        {
-            for (var i = 0; i < node.childNodes.length; i++)
-            {
-                offset += this._calculateNodeOffset(node.childNodes[i]);
-            }
-        }
-
-        return offset;
-    },
-    _getNodeAndOffsetAt: function(start, offset)
-    {
-        var node = start;
-        var stack = [];
-
-        while (true)
-        {
-            if (offset <= 0) return { node: node, offset: 0 };
-            if (node.nodeType == 3 && (offset <= node.nodeValue.length))
-            {
-                return { node: node, offset: Math.min(offset, node.nodeValue.length) };
-            }
-
-            if (node.firstChild)
-            {
-                if (node !== start) offset -= 1;
-                stack.push(node);
-                node = node.firstChild;
-            }
-            else if (stack.length > 0 && node.nextSibling)
-            {
-                if (node.nodeType === 3) offset -= node.nodeValue.length + 1;
-                else offset -= 1;
-
-                node = node.nextSibling;
-            }
-            else
-            {
-                while (true)
-                {
-                    if (stack.length <= 1)
-                    {
-                        if (node.nodeType == 3) return { node: node, offset: Math.min(offset, node.nodeValue.length) };
-                        else return { node: node, offset: 0 };
-                    }
-
-                    var next = stack.pop();
-                    if (next.nextSibling)
-                    {
-                        if (node.nodeType === 3) offset -= node.nodeValue.length + 1;
-                        else offset -= 1;
-
-                        node = next.nextSibling;
-                        break;
-                    }
-                }
-            }
-        }
+        this.savedElement = false;
     }
 });
 $R.add('service', 'element', {
@@ -4730,11 +4322,11 @@ $R.add('service', 'element', {
     },
     _buildType: function()
     {
-    	var tag = this.$element.get().tagName;
+        var tag = this.$element.get().tagName;
 
-    	this.type = (tag === 'TEXTAREA') ? 'textarea' : this.type;
-		this.type = (tag === 'DIV') ? 'div' : this.type;
-		this.type = (this.opts.inline) ? 'inline' : this.type;
+        this.type = (tag === 'TEXTAREA') ? 'textarea' : this.type;
+        this.type = (tag === 'DIV') ? 'div' : this.type;
+        this.type = (this.opts.inline) ? 'inline' : this.type;
     }
 });
 $R.add('service', 'editor', {
@@ -4777,14 +4369,14 @@ $R.add('service', 'editor', {
     {
         return this.pasting;
     },
-	enablePasting: function()
-	{
+    enablePasting: function()
+    {
         this.pasting = true;
-	},
-	disablePasting: function()
-	{
+    },
+    disablePasting: function()
+    {
         this.pasting = false;
-	},
+    },
 
     // scroll
     saveScroll: function()
@@ -4793,10 +4385,10 @@ $R.add('service', 'editor', {
     },
     restoreScroll: function()
     {
-		if (this.scrolltop !== false)
-		{
-    		this._getScrollTarget().scrollTop(this.scrolltop);
-    		this.scrolltop = false;
+        if (this.scrolltop !== false)
+        {
+            this._getScrollTarget().scrollTop(this.scrolltop);
+            this.scrolltop = false;
         }
     },
 
@@ -4817,14 +4409,14 @@ $R.add('service', 'editor', {
     // nodes
     getFirstNode: function()
     {
-		return this.$editor.contents()[0];
+        return this.$editor.contents()[0];
     },
-	getLastNode: function()
-	{
-    	var nodes = this.$editor.contents();
+    getLastNode: function()
+    {
+        var nodes = this.$editor.contents();
 
         return nodes[nodes.length-1];
-	},
+    },
 
     // utils
     isSourceMode: function()
@@ -4833,19 +4425,29 @@ $R.add('service', 'editor', {
 
         return $source.hasClass('redactor-source-open');
     },
-    isEmpty: function()
+    isEditor: function(el)
     {
-        return this.utils.isEmptyHtml(this.$editor.html());
+        var node = $R.dom(el).get();
+
+        return (node === this.$editor.get());
     },
-	isFocus: function()
-	{
-    	var $active = $R.dom(document.activeElement);
-    	var isComponentSelected = (this.$editor.find('.redactor-component-active').length !== 0);
+    isEmpty: function(keeplists)
+    {
+        return this.utils.isEmptyHtml(this.$editor.html(), false, keeplists);
+    },
+    isFocus: function()
+    {
+        var $active = $R.dom(document.activeElement);
+        var isComponentSelected = (this.$editor.find('.redactor-component-active').length !== 0);
 
         return (isComponentSelected || $active.closest('.redactor-in-' + this.uuid).length !== 0);
-	},
+    },
+    setEmpty: function()
+    {
+        this.$editor.html(this.opts.emptyHtml);
+    },
 
-	// element
+    // element
     getElement: function()
     {
         return this.$editor;
@@ -4861,15 +4463,15 @@ $R.add('service', 'editor', {
     },
     _getScrollTarget: function()
     {
-		return (this.opts.scrollTarget) ? $R.dom(this.opts.scrollTarget) : this.$doc;
+        return (this.opts.scrollTarget) ? $R.dom(this.opts.scrollTarget) : this.$doc;
     },
-	_isContenteditableFocus: function()
-	{
+    _isContenteditableFocus: function()
+    {
         var block = this.selection.getBlock();
         var $blockParent = (block) ? $R.dom(block).closest('[contenteditable=true]').not('.redactor-in') : [];
 
         return ($blockParent.length !== 0);
-	}
+    }
 });
 $R.add('service', 'container', {
     init: function(app)
@@ -4927,7 +4529,7 @@ $R.add('service', 'source', {
     },
     setCode: function(html)
     {
-        return this.insertion.set(html);
+        return this.insertion.set(html, true, false);
     },
     isNameGenerated: function()
     {
@@ -4943,13 +4545,13 @@ $R.add('service', 'source', {
 
         this.$source = $R.dom(sourceElement);
     },
-	_buildName: function()
-	{
-		var $element = this.element.getElement();
+    _buildName: function()
+    {
+        var $element = this.element.getElement();
 
         this.name = $element.attr('name');
         this.$source.attr('name', (this.name) ? this.name : 'content-' + this.uuid);
-	},
+    },
     _buildStartedContent: function()
     {
         var $element = this.element.getElement();
@@ -4971,6 +4573,7 @@ $R.add('service', 'statusbar', {
     start: function()
     {
         this.$statusbar = $R.dom('<ul>');
+        this.$statusbar.attr('dir', this.opts.direction);
     },
     add: function(name, html)
     {
@@ -5049,11 +4652,13 @@ $R.add('service', 'toolbar', {
     {
         this.setButtonsInactive();
 
+        var button, observer;
+
         // observers
         for (var name in this.buttonsObservers)
         {
-            var observer = this.buttonsObservers[name];
-            var button = this.getButton(name);
+            observer = this.buttonsObservers[name];
+            button = this.getButton(name);
             this.app.broadcast('button.' + observer + '.observe', button);
         }
 
@@ -5065,7 +4670,7 @@ $R.add('service', 'toolbar', {
         {
             if (tags.indexOf(key) !== -1)
             {
-                var button = this.getButton(buttons[key])
+                button = this.getButton(buttons[key]);
                 button.setActive();
             }
 
@@ -5090,6 +4695,10 @@ $R.add('service', 'toolbar', {
         var $bar = this.$body.find('#redactor-context-toolbar-' + this.uuid);
         return $bar.hasClass('open');
     },
+    isTarget: function()
+    {
+        return (this.opts.toolbarFixedTarget !== document);
+    },
 
     // get
     getElement: function()
@@ -5104,9 +4713,19 @@ $R.add('service', 'toolbar', {
     {
         return this.dropdownOpened;
     },
+    getTargetElement: function()
+    {
+        return $R.dom(this.opts.toolbarFixedTarget);
+    },
     getButton: function(name)
     {
         var $btn = this._findButton('.re-' + name);
+
+        return ($btn.length !== 0) ? $btn.dataget('data-button-instance') : false;
+    },
+    getButtonByIndex: function(index)
+    {
+        var $btn = this.$toolbar.find('.re-button').eq(index);
 
         return ($btn.length !== 0) ? $btn.dataget('data-button-instance') : false;
     },
@@ -5127,14 +4746,14 @@ $R.add('service', 'toolbar', {
         this._findButtons().each(function(node)
         {
             var $node = $R.dom(node);
-            keys.push($node.attr('data-name'));
+            keys.push($node.attr('data-re-name'));
         });
 
         return keys;
     },
 
     // add
-    addButton: function(name, btnObj, position, $el)
+    addButton: function(name, btnObj, position, $el, start)
     {
         position = position || 'end';
 
@@ -5143,6 +4762,18 @@ $R.add('service', 'toolbar', {
         if (btnObj.observe)
         {
             this.opts.activeButtonsObservers[name] = { observe: btnObj.observe, button: $button };
+        }
+
+        if (start !== true)
+        {
+            var index = (this.opts.buttons.indexOf(name));
+
+            if (index === 0) position = 'first';
+            else if (index !== -1)
+            {
+                $el = this.getButtonByIndex(index-1);
+                if ($el) position = 'after';
+            }
         }
 
         if (position === 'first') this.$toolbar.prepend($button);
@@ -5300,7 +4931,7 @@ $R.add('class', 'toolbar.button', {
         this.obj.tooltip = this.obj.title;
 
         this.attr({ 'alt': this.obj.tooltip, 'aria-label': this.obj.tooltip });
-        if (!this.attr('data-icon')) this.html(this.obj.title);
+        if (!this.attr('data-re-icon')) this.html(this.obj.title);
     },
     setTooltip: function(tooltip)
     {
@@ -5315,11 +4946,11 @@ $R.add('class', 'toolbar.button', {
         this.$icon = $R.dom(icon);
 
         this.html('');
-	    this.append(this.$icon);
-	    this.attr('data-icon', true);
-	    this.addClass('re-button-icon');
-	    this.setTooltip(this.obj.title);
-	    this._buildTooltip();
+        this.append(this.$icon);
+        this.attr('data-re-icon', true);
+        this.addClass('re-button-icon');
+        this.setTooltip(this.obj.title);
+        this._buildTooltip();
     },
     setActive: function()
     {
@@ -5411,7 +5042,7 @@ $R.add('class', 'toolbar.button', {
     {
         this.parse('<a>');
         this.addClass('re-button re-' + this.name);
-        this.attr('data-name', this.name);
+        this.attr('data-re-name', this.name);
         this.dataset('data-button-instance', this);
 
         if (this.obj.dropdown) this.setDropdown(this.obj.dropdown);
@@ -5448,9 +5079,9 @@ $R.add('class', 'toolbar.button', {
         this.$icon = (isHtml) ? $R.dom(icon) : $R.dom('<i>');
         if (!isHtml) this.$icon.addClass('re-icon-' + this.name);
 
-	    this.append(this.$icon);
-	    this.attr('data-icon', true);
-	    this.addClass('re-button-icon');
+        this.append(this.$icon);
+        this.attr('data-re-icon', true);
+        this.addClass('re-button-icon');
     },
     _buildTooltip: function()
     {
@@ -5465,6 +5096,7 @@ $R.add('class', 'toolbar.button.tooltip', {
     init: function(app, $button)
     {
         this.app = app;
+        this.opts = app.opts;
         this.$body = app.$body;
         this.toolbar = app.toolbar;
 
@@ -5481,11 +5113,8 @@ $R.add('class', 'toolbar.button.tooltip', {
 
         this.created = true;
         this.parse('<span>');
-		this.addClass('re-button-tooltip');
-
-        var $wrapper = this.toolbar.getWrapper();
+        this.addClass('re-button-tooltip');
         this.$body.append(this);
-
         this.html(this.$button.attr('alt'));
 
         var offset = this.$button.offset();
@@ -5524,6 +5153,7 @@ $R.add('class', 'toolbar.dropdown', {
         this.app = app;
         this.uuid = app.uuid;
         this.opts = app.opts;
+        this.$win = app.$win;
         this.$doc = app.$doc;
         this.$body = app.$body;
         this.animate = app.animate;
@@ -5557,7 +5187,7 @@ $R.add('class', 'toolbar.dropdown', {
     {
         var $dropdown = this.$body.find('.redactor-dropdown-' + this.uuid + '.open');
 
-        return ($dropdown.length !== 0 && $dropdown.attr('data-name') === this.name);
+        return ($dropdown.length !== 0 && $dropdown.attr('data-re-name') === this.name);
     },
     isActive: function()
     {
@@ -5566,7 +5196,7 @@ $R.add('class', 'toolbar.dropdown', {
     },
     getName: function()
     {
-        return this.attr('data-name');
+        return this.attr('data-re-name');
     },
     getItem: function(name)
     {
@@ -5636,21 +5266,25 @@ $R.add('class', 'toolbar.dropdown', {
         var pos = this.$btn.offset();
         pos.top = (isFixed) ? this.$btn.position().top : pos.top;
 
-        var height = this.$btn.height();
+        var btnHeight = this.$btn.height();
+        var btnWidth = this.$btn.width();
         var position = (isFixed) ? 'fixed' : 'absolute';
         var topOffset = 2;
         var leftOffset = 0;
+        var left = (pos.left + leftOffset);
+        var width = parseFloat(this.css('width'));
+        var leftFix = (this.$win.width() < (left + width)) ? (width - btnWidth) : 0;
 
-        this.css({ position: position, top: (pos.top + height + topOffset) + 'px', left: (pos.left + leftOffset) + 'px' });
+        this.css({ position: position, top: (pos.top + btnHeight + topOffset) + 'px', left: (left - leftFix) + 'px' });
     },
 
     // private
     _build: function()
     {
         this.parse('<div>');
-
+        this.attr('dir', this.opts.direction);
         this.attr('id', 'redactor-dropdown-' + this.uuid + '-' + this.name);
-        this.attr('data-name', this.name);
+        this.attr('data-re-name', this.name);
 
         this.addClass('redactor-dropdown redactor-dropdown-' + this.uuid + ' redactor-dropdown-' + this.name);
         this.dataset('data-dropdown-instance', this);
@@ -5693,32 +5327,32 @@ $R.add('class', 'toolbar.dropdown', {
         for (var key in this.items)
         {
             if (this.opts.formatting.indexOf(key) === -1) delete this.items[key];
-		}
+        }
 
         // remove from the format set
-		if (this.opts.formattingHide)
-		{
-			for (var key in this.items)
+        if (this.opts.formattingHide)
+        {
+            for (var key in this.items)
             {
                 if (this.opts.formattingHide.indexOf(key) !== -1) delete this.items[key];
             }
-		}
+        }
 
-		// add to the format set
-		if (this.opts.formattingAdd)
-		{
-			for (var key in this.opts.formattingAdd)
-			{
+        // add to the format set
+        if (this.opts.formattingAdd)
+        {
+            for (var key in this.opts.formattingAdd)
+            {
                 this.items[key] = this.opts.formattingAdd[key];
-			}
-		}
+            }
+        }
 
         return this.items;
     },
     _handleKeyboard: function(e)
-	{
-		if (e.which === 27) this.close();
-	},
+    {
+        if (e.which === 27) this.close();
+    },
     _isButton: function(e)
     {
         var $el = $R.dom(e.target);
@@ -5761,7 +5395,7 @@ $R.add('class', 'toolbar.dropdown.item', {
 
         // local
         this.dropdown = dropdown;
-        this.name = name
+        this.name = name;
         this.obj = obj;
 
         // init
@@ -5811,7 +5445,7 @@ $R.add('class', 'toolbar.dropdown.item', {
             this.addClass(this.obj.classname);
         }
 
-        this.attr('data-name', this.name);
+        this.attr('data-re-name', this.name);
         this.on('click', this.toggle.bind(this));
 
         this.$span = $R.dom('<span>');
@@ -5827,30 +5461,38 @@ $R.add('service', 'cleaner', {
 
         // local
         this.storedComponents = [];
+        this.storedImages = [];
+        this.storedLinks = [];
         this.deniedTags = ['font', 'html', 'head', 'link', 'title', 'body', 'meta', 'applet'];
+        this.convertRules = {};
+        this.unconvertRules = {};
 
         // regex
-        this.reComments = /<!--[\s\S]*?-->/gi;
+        this.reComments = /<!--[\s\S]*?-->/g;
         this.reSpacedEmpty = /^(||\s||<br\s?\/?>||&nbsp;)$/i;
         this.reScriptTag = /<script(.*?[^>]?)>([\w\W]*?)<\/script>/gi;
-        this.reBreaklineLast = '<br\\s?/?>(\\s|\\n)?</(' + this.opts.blockTags.join('|') + ')>';
     },
     // public
-    input: function(html)
+    addConvertRules: function(name, func)
+    {
+        this.convertRules[name] = func;
+    },
+    addUnconvertRules: function(name, func)
+    {
+        this.unconvertRules[name] = func;
+    },
+    input: function(html, paragraphize, started)
     {
         // pre/code
         html = this.encodePreCode(html);
 
+        // converting entity
+        html = html.replace(/\$/g, '&#36;');
+        html = html.replace(/&amp;/g, '&');
+
         // convert to figure
         var converter = $R.create('cleaner.figure', this.app);
-        html = converter.convert(html);
-
-        // breakline newlines
-        if (this.opts.breakline)
-        {
-            html = html.replace(/<br\s?\/?>\n/gi, '\n');
-            html = this._replaceNlToBr(html);
-        }
+        html = converter.convert(html, this.convertRules);
 
         // store components
         html = this.storeComponents(html);
@@ -5860,9 +5502,8 @@ $R.add('service', 'cleaner', {
         html = this._setSpanAttr(html);
         html = this._setStyleCache(html);
         html = this.removeTags(html, this.deniedTags);
-        html = this._removeLastBlockBreaklineInHtml(html);
         html = (this.opts.removeScript) ? this._removeScriptTag(html) : this._replaceScriptTag(html);
-		html = (this.opts.removeComments) ? this.removeComments(html) : html;
+        html = (this.opts.removeComments) ? this.removeComments(html) : html;
         html = (this._isSpacedEmpty(html)) ? this.opts.emptyHtml : html;
 
         // restore components
@@ -5870,6 +5511,12 @@ $R.add('service', 'cleaner', {
 
         // clear wrapped components
         html = this._cleanWrapped(html);
+
+        // empty p
+        html = (started) ? html.replace(/<p><\/p>/gi, '<p><br></p>') : html;
+
+        // paragraphize
+        html = (paragraphize) ? this.paragraphize(html) : html;
 
         return html;
     },
@@ -5879,6 +5526,7 @@ $R.add('service', 'cleaner', {
 
         // empty
         if (this._isSpacedEmpty(html)) return '';
+        if (this._isParagraphEmpty(html)) return '';
 
         html = this.removeServiceTagsAndAttrs(html, removeMarkers);
 
@@ -5887,7 +5535,7 @@ $R.add('service', 'cleaner', {
 
         html = this.removeSpanWithoutAttributes(html);
         html = this.removeFirstBlockBreaklineInHtml(html);
-        html = this.removeLastBlockBreaklineInHtml(html);
+
         html = (this.opts.removeScript) ? html : this._unreplaceScriptTag(html);
         html = (this.opts.preClass) ? this._setPreClass(html) : html;
         html = (this.opts.linkNofollow) ? this._setLinkNofollow(html) : html;
@@ -5898,13 +5546,24 @@ $R.add('service', 'cleaner', {
 
         // convert to figure
         var converter = $R.create('cleaner.figure', this.app);
-        html = converter.unconvert(html);
+        html = converter.unconvert(html, this.unconvertRules);
 
         // final clean up
         html = this.removeEmptyAttributes(html, ['style', 'class', 'rel', 'alt', 'title']);
         html = this.cleanSpacesInPre(html);
         html = this.tidy(html);
 
+        // empty p
+        html = html.replace(/<p><\/p>/gi, '<p><br></p>');
+
+        // converting entity
+        html = html.replace(/&amp;/g, '&');
+        //todo: BVBMEDIA: do not render: <p><br/></p> as default body
+        compareMarkup = html.replace(/\n/g, '');
+        if (compareMarkup=='<p><br></p>') {
+            html='';
+        }
+        //BVBMEDIA REDACTOR HACK EOL
         return html;
     },
     paste: function(html)
@@ -5967,17 +5626,17 @@ $R.add('service', 'cleaner', {
         });
 
         // paste link target
-		if (this.opts.pasteLinks && this.opts.pasteLinkTarget !== false)
-		{
-			$wrapper.find('a').attr('target', this.opts.pasteLinkTarget);
-		}
+        if (this.opts.pasteLinks && this.opts.pasteLinkTarget !== false)
+        {
+            $wrapper.find('a').attr('target', this.opts.pasteLinkTarget);
+        }
 
         // keep style
-		$wrapper.find('[data-redactor-style-cache]').each(function(node)
-		{
-    		var style = node.getAttribute('data-redactor-style-cache');
-    		node.setAttribute('style', style)
-		});
+        $wrapper.find('[data-redactor-style-cache]').each(function(node)
+        {
+            var style = node.getAttribute('data-redactor-style-cache');
+            node.setAttribute('style', style);
+        });
 
         // remove empty span
         $wrapper.find('span').each(function(node)
@@ -5990,32 +5649,32 @@ $R.add('service', 'cleaner', {
 
         // remove empty inline
         $wrapper.find(this.opts.inlineTags.join(',')).each(function(node)
-		{
-			if (node.attributes.length === 0 && this.utils.isEmptyHtml(node.innerHTML))
-			{
-				$R.dom(node).unwrap();
-			}
+        {
+            if (node.attributes.length === 0 && this.utils.isEmptyHtml(node.innerHTML))
+            {
+                $R.dom(node).unwrap();
+            }
 
-		}.bind(this));
+        }.bind(this));
 
-		// place ul/ol into li
-		$wrapper.find('ul, ol').each(function(node)
-		{
-    		var prev = node.previousSibling;
-    		if (prev && prev.tagName === 'LI')
-    		{
-        		var $li = $R.dom(prev);
-        		$li.find('p').unwrap();
+        // place ul/ol into li
+        $wrapper.find('ul, ol').each(function(node)
+        {
+            var prev = node.previousSibling;
+            if (prev && prev.tagName === 'LI')
+            {
+                var $li = $R.dom(prev);
+                $li.find('p').unwrap();
                 $li.append(node);
-    		}
-		});
+            }
+        });
 
         // get wrapper
         html = this._getWrapperHtml($wrapper);
 
         // remove paragraphs form lists (google docs bug)
-		html = html.replace(/<li><p>/gi, '<li>');
-		html = html.replace(/<\/p><\/li>/gi, '</li>');
+        html = html.replace(/<li><p>/gi, '<li>');
+        html = html.replace(/<\/p><\/li>/gi, '</li>');
 
         // clean empty p
         html = html.replace(/<p>&nbsp;<\/p>/gi, '<p></p>');
@@ -6035,9 +5694,7 @@ $R.add('service', 'cleaner', {
         html = (this.opts.pasteImages) ? this.storeImages(html) : html;
 
         html = this.getPlainText(html);
-        html = this.replaceNlToBr(html);
-
-        html = (this.element.isType('inline')) ? this.removeBr(html) : html;
+        html = this._replaceNlToBr(html);
 
         html = (this.opts.pasteLinks) ? this.restoreLinks(html) : html;
         html = (this.opts.pasteImages) ? this.restoreImages(html) : html;
@@ -6056,24 +5713,40 @@ $R.add('service', 'cleaner', {
     },
 
     // get
-	getFlatText: function(html)
-	{
-    	var $div = $R.dom('<div>');
+    getFlatText: function(html)
+    {
+        var $div = $R.dom('<div>');
 
-    	if (!html.nodeType && !html.dom)
+        if (!html.nodeType && !html.dom)
         {
             html = html.toString();
-    		html = html.trim();
-    		$div.html(html);
-		}
-		else
-		{
+            html = html.trim();
+            $div.html(html);
+        }
+        else
+        {
             $div.append(html);
-		}
+        }
 
-		html = $div.get().textContent || $div.get().innerText || '';
+        html = $div.get().textContent || $div.get().innerText || '';
 
-		return (html === undefined) ? '' : html;
+        return (html === undefined) ? '' : html;
+    },
+	getPlainText: function(html)
+	{
+		html = html.replace(/<!--[\s\S]*?-->/gi, '');
+		html = html.replace(/<style[\s\S]*?style>/gi, '');
+        html = html.replace(/<p><\/p>/g, '');
+		html = html.replace(/<\/div>|<\/li>|<\/td>/gi, '\n');
+		html = html.replace(/<\/p>/gi, '\n\n');
+		html = html.replace(/<\/H[1-6]>/gi, '\n\n');
+
+		var tmp = document.createElement('div');
+		tmp.innerHTML = html;
+
+		html = tmp.textContent || tmp.innerText;
+
+		return html.trim();
 	},
 
     // replace
@@ -6084,92 +5757,94 @@ $R.add('service', 'cleaner', {
             var self = this;
             var keys = Object.keys(tags);
             var $wrapper = this._buildWrapper(html);
-			$wrapper.find(keys.join(',')).each(function(node)
-			{
-				self.utils.replaceToTag(node, tags[node.tagName.toLowerCase()]);
-			});
+            $wrapper.find(keys.join(',')).each(function(node)
+            {
+                self.utils.replaceToTag(node, tags[node.tagName.toLowerCase()]);
+            });
 
-			html = this._getWrapperHtml($wrapper);
+            html = this._getWrapperHtml($wrapper);
         }
 
         return html;
     },
-	replaceNbspToSpaces: function(html)
-	{
-		return html.replace('&nbsp;', ' ');
-	},
-	replaceBlocksToBr: function(html)
-	{
-		html = html.replace(/<\/div>|<\/li>|<\/td>|<\/p>|<\/H[1-6]>/gi, '<br>');
-
-    	return html;
-	},
-
-    // clean
-	cleanNewLines: function(html)
-	{
-        return html.replace(/\r?\n/g, "");
-	},
-	cleanSpacesInPre: function(html)
-	{
-    	return html.replace('&nbsp;&nbsp;&nbsp;&nbsp;', '    ');
-	},
-
-    // remove
-	removeInvisibleSpaces: function(html)
-	{
-    	html = html.replace(/\u200B/g, '');
-		html = html.replace(/&#x200b;/gi, '');
-
-		return html;
-	},
-	removeNl: function(html)
-	{
-        html = html.replace(/\n/g, " ");
-        html = html.replace(/\s{2,}/g, "\s");
+    replaceNbspToSpaces: function(html)
+    {
+        return html.replace('&nbsp;', ' ');
+    },
+    replaceBlocksToBr: function(html)
+    {
+        html = html.replace(/<\/div>|<\/li>|<\/td>|<\/p>|<\/H[1-6]>/gi, '<br>');
 
         return html;
-	},
-	removeBrAtEnd: function(html)
-	{
+    },
+
+    // clean
+    cleanNewLines: function(html)
+    {
+        return html.replace(/\r?\n/g, "");
+    },
+    cleanSpacesInPre: function(html)
+    {
+        return html.replace('&nbsp;&nbsp;&nbsp;&nbsp;', '    ');
+    },
+
+    // remove
+    removeInvisibleSpaces: function(html)
+    {
+        html = this.utils.removeInvisibleChars(html);
+        html = html.replace(/&#x200b;/gi, '');
+        html = html.replace(/&#65279;/gi, '');
+
+        return html;
+    },
+    removeNl: function(html)
+    {
+        html = html.replace(/\n/g, " ");
+        html = html.replace(/\s+/g, "\s");
+
+        return html;
+    },
+    removeBrAtEnd: function(html)
+    {
         html = html.replace(/<br\s?\/?>$/gi, ' ');
         html = html.replace(/<br\s?\/?><li/gi, '<li');
 
-    	return html;
-	},
-	removeTags: function(input, denied)
-	{
-	    var re = (denied) ? /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi : /(<([^>]+)>)/gi;
+        return html;
+    },
+    removeTags: function(input, denied)
+    {
+        var re = (denied) ? /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi : /(<([^>]+)>)/gi;
         var replacer = (!denied) ? '' : function ($0, $1)
-	    {
-	        return denied.indexOf($1.toLowerCase()) === -1 ? $0 : '';
-	    };
+        {
+            return denied.indexOf($1.toLowerCase()) === -1 ? $0 : '';
+        };
 
         return input.replace(re, replacer);
-	},
-	removeTagsExcept: function(input, except)
-	{
-		if (except === undefined) return input.replace(/(<([^>]+)>)/gi, '');
+    },
+    removeTagsExcept: function(input, except)
+    {
+        if (except === undefined) return input.replace(/(<([^>]+)>)/gi, '');
 
-	    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-	    return input.replace(tags, function($0, $1)
-	    {
-	        return except.indexOf($1.toLowerCase()) === -1 ? '' : $0;
-	    });
-	},
+        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+        return input.replace(tags, function($0, $1)
+        {
+            return except.indexOf($1.toLowerCase()) === -1 ? '' : $0;
+        });
+    },
     removeComments: function(html)
     {
         return html.replace(this.reComments, '');
     },
-	removeServiceTagsAndAttrs: function(html, removeMarkers)
-	{
-    	var $wrapper = this._buildWrapper(html);
+    removeServiceTagsAndAttrs: function(html, removeMarkers)
+    {
+        var $wrapper = this._buildWrapper(html);
+        var self = this;
         if (removeMarkers !== false)
         {
             $wrapper.find('.redactor-selection-marker').each(function(node)
             {
                 var $el = $R.dom(node);
-                var text = $el.text().replace(/\u200B/g, '');
+                var text = self.utils.removeInvisibleChars($el.text());
 
                 return (text === '') ? $el.remove() : $el.unwrap();
             });
@@ -6178,66 +5853,62 @@ $R.add('service', 'cleaner', {
         $wrapper.find('[data-redactor-style-cache]').removeAttr('data-redactor-style-cache');
 
         return this._getWrapperHtml($wrapper);
-	},
-	removeSpanWithoutAttributes: function(html)
-	{
-    	var $wrapper = this._buildWrapper(html);
+    },
+    removeSpanWithoutAttributes: function(html)
+    {
+        var $wrapper = this._buildWrapper(html);
         $wrapper.find('span').removeAttr('data-redactor-span data-redactor-style-cache').each(function(node)
-		{
-			if (node.attributes.length === 0) $R.dom(node).unwrap();
-		});
+        {
+            if (node.attributes.length === 0) $R.dom(node).unwrap();
+        });
 
         return this._getWrapperHtml($wrapper);
-	},
+    },
     removeFirstBlockBreaklineInHtml: function(html)
     {
         return html.replace(new RegExp('</li><br\\s?/?>', 'gi'), '</li>');
     },
-    removeLastBlockBreaklineInHtml: function(html)
+    removeEmptyAttributes: function(html, attrs)
     {
-        return html.replace(new RegExp(this.reBreaklineLast, 'gi'), '</$2>');
-    },
-	removeEmptyAttributes: function(html, attrs)
-	{
-    	var $wrapper = this._buildWrapper(html);
+        var $wrapper = this._buildWrapper(html);
         for (var i = 0; i < attrs.length; i++)
         {
             $wrapper.find('[' + attrs[i] + '=""]').removeAttr(attrs[i]);
         }
 
         return this._getWrapperHtml($wrapper);
-	},
+    },
 
     // encode / decode
-	encodeHtml: function(html)
-	{
+    encodeHtml: function(html)
+    {
         html = html.replace(/<br\s?\/?>/g, "\n");
         html = html.replace(/&nbsp;/g, ' ');
-		html = html.replace(/”/g, '"');
-		html = html.replace(/“/g, '"');
-		html = html.replace(/‘/g, '\'');
-		html = html.replace(/’/g, '\'');
-		html = this.encodeEntities(html);
-		html = html.replace(/\$/g, '&#36;');
+        html = html.replace(/”/g, '"');
+        html = html.replace(/“/g, '"');
+        html = html.replace(/‘/g, '\'');
+        html = html.replace(/’/g, '\'');
+        html = this.encodeEntities(html);
+        html = html.replace(/\$/g, '&#36;');
 
         if (this.opts.preSpaces)
         {
             html = html.replace(/\t/g, new Array(this.opts.preSpaces + 1).join(' '));
         }
 
-		return html;
-	},
-	encodePreCode: function(html)
-	{
-    	var matched = html.match(new RegExp('<code(.*?)>(.*?)<pre(.*?)>(.*?)</pre>(.*?)</code>', 'gi'));
-    	if (matched !== null)
-    	{
-        	for (var i = 0; i < matched.length; i++)
+        return html;
+    },
+    encodePreCode: function(html)
+    {
+        var matched = html.match(new RegExp('<code(.*?)>(.*?)<pre(.*?)>(.*?)</pre>(.*?)</code>', 'gi'));
+        if (matched !== null)
+        {
+            for (var i = 0; i < matched.length; i++)
             {
                 var arr = matched[i].match(new RegExp('<pre(.*?)>([\\w\\W]*?)</pre>', 'i'));
                 html = html.replace(arr[0], this.encodeEntities(arr[0]));
             }
-    	}
+        }
 
         var $wrapper = this._buildWrapper(html);
 
@@ -6251,55 +5922,58 @@ $R.add('service', 'cleaner', {
         // restore markers
         html = this._decodeMarkers(html);
 
-    	return html;
-	},
-	encodeEntities: function(str)
-	{
-		str = this.decodeEntities(str);
-		str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return html;
+    },
+    encodeEntities: function(str)
+    {
+        str = this.decodeEntities(str);
+        str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-		return str;
-	},
+        return str;
+    },
     encodePhpCode: function(html)
     {
         html = html.replace('<?php', '&lt;?php');
         html = html.replace('<?', '&lt;?');
-		html = html.replace('?>', '?&gt;');
+        html = html.replace('?>', '?&gt;');
 
-		return html;
+        return html;
     },
-	decodeEntities: function(str)
-	{
-		return String(str).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
-	},
+    decodeEntities: function(str)
+    {
+        return String(str).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+    },
 
     // store / restore
     storeComponents: function(html)
     {
-        this.storedComponents = [];
-        var matched = html.match(/<figure(.*?)>([\w\W]*?)<\/figure>/gi);
-        if (matched)
-        {
-            for (var i = 0; i < matched.length; i++)
-            {
-                this.storedComponents[i] = matched[i];
-                html = html.replace(matched[i], '####figure' + i + '####');
-            }
-        }
+        var matched = this.utils.getElementsFromHtml(html, 'figure', 'table');
 
-        return html;
+        return this._storeMatched(html, matched, 'Components', 'figure');
     },
     restoreComponents: function(html)
     {
-        if (this.storedComponents)
-        {
-            for (var i = 0; i < this.storedComponents.length; i++)
-            {
-                html = html.replace('####figure' + i + '####', this.storedComponents[i]);
-            }
-        }
+        return this._restoreMatched(html, 'Components', 'figure');
+    },
+    storeLinks: function(html)
+    {
+        var matched = this.utils.getElementsFromHtml(html, 'a');
 
-        return html;
+        return this._storeMatched(html, matched, 'Links', 'a');
+    },
+    storeImages: function(html)
+    {
+        var matched = this.utils.getElementsFromHtml(html, 'img');
+
+        return this._storeMatched(html, matched, 'Images', 'img');
+    },
+    restoreLinks: function(html)
+    {
+        return this._restoreMatched(html, 'Links', 'a');
+    },
+    restoreImages: function(html)
+    {
+        return this._restoreMatched(html, 'Images', 'img');
     },
 
     // PRIVATE
@@ -6308,16 +5982,14 @@ $R.add('service', 'cleaner', {
     _cleanWrapped: function(html)
     {
         html = html.replace(new RegExp('<p><figure([\\w\\W]*?)</figure></p>', 'gi'), '<figure$1</figure>');
-        html = html.replace(new RegExp('<figure([\\w\\W]*?)</figure>([^>]+)</p>', 'gi'), '</p><figure$1</figure><p>$2<p>');
-        html = html.replace(new RegExp('<figure([\\w\\W]*?)</figure></p>', 'gi'), '</p><figure$1</figure>');
 
         return html;
     },
     _cleanGDocs: function(html)
     {
-		// remove google docs markers
+        // remove google docs markers
         html = html.replace(/<b\sid="internal-source-marker(.*?)">([\w\W]*?)<\/b>/gi, "$2");
-		html = html.replace(/<b(.*?)id="docs-internal-guid(.*?)">([\w\W]*?)<\/b>/gi, "$3");
+        html = html.replace(/<b(.*?)id="docs-internal-guid(.*?)">([\w\W]*?)<\/b>/gi, "$3");
 
         html = html.replace(/<span[^>]*(font-style: italic; font-weight: bold|font-weight: bold; font-style: italic)[^>]*>([\w\W]*?)<\/span>/gi, '<b><i>$2</i></b>');
         html = html.replace(/<span[^>]*(font-style: italic; font-weight: 700|font-weight: 700; font-style: italic)[^>]*>([\w\W]*?)<\/span>/gi, '<b><i>$2</i></b>');
@@ -6329,26 +6001,128 @@ $R.add('service', 'cleaner', {
     },
     _cleanMsWord: function(html)
     {
-        html = html.replace(/<o:p[^>]*>/gi, '');
-        html = html.replace(/<\/o:p>/gi, '');
-		html = html.replace(/<!--[\s\S]*?-->/g, "");
-		html = html.replace(/<o:p>[\s\S]*?<\/o:p>/gi, '');
-		html = html.replace(/>&nbsp;<\/p>/gi, '></p>');
-		html = html.replace(/<p[^>]*><\/p>/gi, '');
-		html = html.replace(/\n/g, " ");
+        html = html.replace(/<!--[\s\S]+?-->/gi, '');
+        html = html.replace(/<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi, '');
+        html = html.replace(/<(\/?)s>/gi, "<$1strike>");
+        html = html.replace(/&nbsp;/gi, ' ');
+        html = html.replace(/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi, function(str, spaces) {
+            return (spaces.length > 0) ? spaces.replace(/./, " ").slice(Math.floor(spaces.length/2)).split("").join("\u00a0") : '';
+        });
 
-        return html;
+        // build wrapper
+        var $wrapper = this._buildWrapper(html);
+
+        $wrapper.find('p').each(function(node)
+        {
+            var $node = $R.dom(node);
+            var str = $node.attr('style');
+            var matches = /mso-list:\w+ \w+([0-9]+)/.exec(str);
+            if (matches)
+            {
+                $node.data('_listLevel',  parseInt(matches[1], 10));
+            }
+        });
+
+        // parse Lists
+        this._parseWordLists($wrapper);
+
+        $wrapper.find('[style]').removeAttr('style');
+        $wrapper.find('[align]').removeAttr('align');
+        $wrapper.find('span').unwrap();
+        $wrapper.find("[class^='Mso']").removeAttr('class');
+
+        // get wrapper
+        html = this._getWrapperHtml($wrapper);
+
+        html = html.replace(/>\s+<\/p>/gi, '></p>');
+        html = html.replace(/<p[^>]*><\/p>/gi, '');
+        html = html.trim();
+
+        var result = '';
+        var lines = html.split(/\n/);
+        for (var i = 0; i < lines.length; i++)
+        {
+            var space = (lines[i] !== '' && lines[i].search(/>$/) === -1) ? ' ' : '\n';
+
+            result += lines[i] + space;
+        }
+
+        return result;
+    },
+    _parseWordLists: function($wrapper)
+    {
+        var lastLevel = 0;
+        var pnt = null;
+
+        $wrapper.find('p').each(function(node)
+        {
+            var $node = $R.dom(node);
+            var currentLevel = $node.data('_listLevel');
+            if (currentLevel !== null)
+            {
+                var txt = $node.text();
+                var listTag = '<ul></ul>';
+                if (/^\s*\w+\./.test(txt))
+                {
+                    var matches = /([0-9])\./.exec(txt);
+                    if (matches)
+                    {
+                        var start = parseInt(matches[1], 10);
+                        listTag = (start > 1) ? '<ol start="' + start + '"></ol>' : '<ol></ol>';
+                    }
+                    else
+                    {
+                        listTag = '<ol></ol>';
+                    }
+                }
+
+                if (currentLevel > lastLevel)
+                {
+                    if (lastLevel === 0)
+                    {
+                        $node.before(listTag);
+                        pnt = $node.prev();
+                    }
+                    else
+                    {
+                        var $list = $R.dom(listTag);
+                        pnt.append($list);
+                    }
+                }
+
+                if (currentLevel < lastLevel)
+                {
+                    for (var i = 0; i < (lastLevel - currentLevel); i++)
+                    {
+                        pnt = pnt.parent();
+                    }
+                }
+
+                $node.find('span').first().remove();
+                pnt.append('<li>' + $node.html() + '</li>');
+                $node.remove();
+                lastLevel = currentLevel;
+            }
+            else
+            {
+                lastLevel = 0;
+            }
+        });
     },
 
-	// is
+    // is
     _isSpacedEmpty: function(html)
     {
         return (html.search(this.reSpacedEmpty) !== -1);
     },
+    _isParagraphEmpty: function(html)
+    {
+        return (html.search(/^<p><\/p>$/i) !== -1);
+    },
     _isHtmlMsWord: function(html)
-	{
-		return html.match(/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i);
-	},
+    {
+        return html.match(/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i);
+    },
 
     // set
     _setSpanAttr: function(html)
@@ -6362,10 +6136,10 @@ $R.add('service', 'cleaner', {
     {
         var $wrapper = this._buildWrapper(html);
         $wrapper.find('[style]').each(function(node)
-		{
+        {
             var $el = $R.dom(node);
             $el.attr('data-redactor-style-cache', $el.attr('style'));
-		});
+        });
 
         return this._getWrapperHtml($wrapper);
     },
@@ -6391,28 +6165,46 @@ $R.add('service', 'cleaner', {
     },
     _unreplaceScriptTag: function(html)
     {
-		return html.replace(/<pre class="redactor-script-tag"(.*?[^>]?)>([\w\W]*?)<\/pre>/gi, '<script$1>$2</script>');
+        return html.replace(/<pre class="redactor-script-tag"(.*?[^>]?)>([\w\W]*?)<\/pre>/gi, '<script$1>$2</script>');
     },
-	_replaceBrToNl: function(html)
-	{
-		return html.replace(/<br\s?\/?>/gi, '\n');
-	},
 	_replaceNlToBr: function(html)
 	{
 		return html.replace(/\n/g, '<br />');
 	},
 
-	// remove
-	_removeLastBlockBreaklineInHtml: function(html)
-	{
-        return html.replace(new RegExp(this.reBreaklineLast, 'gi'), '</$2>');
-	},
+    // remove
     _removeScriptTag: function(html)
     {
         return html.replace(this.reScriptTag, '');
     },
 
     // private
+    _storeMatched: function(html, matched, stored, name)
+    {
+        this['stored' + stored] = [];
+        if (matched)
+        {
+            for (var i = 0; i < matched.length; i++)
+            {
+                this['stored' + stored][i] = matched[i];
+                html = html.replace(matched[i], '####' + name + i + '####');
+            }
+        }
+
+        return html;
+    },
+    _restoreMatched: function(html, stored, name)
+    {
+        if (this['stored' + stored])
+        {
+            for (var i = 0; i < this['stored' + stored].length; i++)
+            {
+                html = html.replace('####' + name + i + '####', this['stored' + stored][i]);
+            }
+        }
+
+        return html;
+    },
     _buildWrapper: function(html)
     {
         return $R.dom('<div>').html(html);
@@ -6427,7 +6219,7 @@ $R.add('service', 'cleaner', {
     _decodeMarkers: function(html)
     {
         var decodedMarkers = '<span id="selection-marker-$1" class="redactor-selection-marker">​</span>';
-        return html.replace(/&lt;span id="selection-marker-(start|end)" class="redactor-selection-marker"&gt;​&lt;\/span&gt;/g, decodedMarkers);
+        return html.replace(/&lt;span\sid="selection-marker-(start|end)"\sclass="redactor-selection-marker"&gt;(.*?[^>]?)&lt;\/span&gt;/g, decodedMarkers);
     },
     _encodeOuter: function(node)
     {
@@ -6453,16 +6245,16 @@ $R.add('class', 'cleaner.figure', {
         this.utils = app.utils;
     },
     // public
-    convert: function(html)
+    convert: function(html, rules)
     {
         var $wrapper = this._buildWrapper(html);
 
         // convert
         $wrapper.find('img').each(this._convertImage.bind(this));
         $wrapper.find('hr').each(this._convertLine.bind(this));
-        $wrapper.find('form').each(this._convertForm.bind(this));
-        $wrapper.find('table').each(this._convertTable.bind(this));
         $wrapper.find('iframe').each(this._convertIframe.bind(this));
+        $wrapper.find('table').each(this._convertTable.bind(this));
+        $wrapper.find('form').each(this._convertForm.bind(this));
         $wrapper.find('figure pre').each(this._convertCode.bind(this));
 
         // variables
@@ -6474,34 +6266,54 @@ $R.add('class', 'cleaner.figure', {
         // contenteditable
         $wrapper.find('figure pre').each(this._setContenteditableCode.bind(this));
         $wrapper.find('.redactor-component, .non-editable').attr('contenteditable', false);
-        $wrapper.find('td, th, figcaption').attr('contenteditable', true);
+
+        $wrapper.find('figcaption, td, th').attr('contenteditable', true);
         $wrapper.find('.redactor-component, figcaption').attr('tabindex', '-1');
+
+        // extra rules
+        this._acceptExtraRules($wrapper, rules);
 
         return this._getWrapperHtml($wrapper);
     },
-    unconvert: function(html)
+    unconvert: function(html, rules)
     {
         var $wrapper = this._buildWrapper(html);
 
         // contenteditable
-        $wrapper.find('th, td, figcaption, figure, pre, code, .redactor-component').removeAttr('contenteditable');
-        $wrapper.find('figcaption, figure, pre, code, .redactor-component').removeAttr('tabindex');
+        $wrapper.find('th, td, figcaption, figure, pre, code, .redactor-component').removeAttr('contenteditable tabindex');
+
+        // remove class
+        $wrapper.find('figure').removeClass('redactor-component redactor-component-active redactor-uploaded-figure');
 
         // unconvert
         $wrapper.find('[data-redactor-type=variable]').removeClass('redactor-component');
         $wrapper.find('figure[data-redactor-type=line]').unwrap();
+        $wrapper.find('figure[data-redactor-type=widget]').each(this._unconvertWidget.bind(this));
         $wrapper.find('figure[data-redactor-type=form]').each(this._unconvertForm.bind(this));
-        $wrapper.find('figure[data-redactor-type=image]').removeAttr('rel').each(this._unconvertImagesInLists.bind(this));
+        $wrapper.find('figure[data-redactor-type=table]').each(this._unconvertTable.bind(this));
+        $wrapper.find('figure[data-redactor-type=image]').removeAttr('rel').each(this._unconvertImages.bind(this));
 
+        $wrapper.find('img').removeAttr('data-redactor-type').removeClass('redactor-component');
         $wrapper.find('.non-editable').removeAttr('contenteditable');
 
-        // remove classes
-        $wrapper.find('figure').removeClass('redactor-component redactor-component-active').each(this._removeTypes.bind(this));
+        // remove types
+        $wrapper.find('figure').each(this._removeTypes.bind(this));
 
         // remove caret
         $wrapper.find('span.redactor-component-caret').remove();
 
-        return this._getWrapperHtml($wrapper);
+        if (this.opts.breakline)
+        {
+            $wrapper.find('[data-redactor-tag="br"]').before("\n").unwrap();
+        }
+
+        // extra rules
+        this._acceptExtraRules($wrapper, rules);
+
+        html = this._getWrapperHtml($wrapper);
+        html = html.replace(/<br\s?\/?>$/, '');
+
+        return html;
     },
 
     // private
@@ -6510,18 +6322,41 @@ $R.add('class', 'cleaner.figure', {
         var $node = $R.dom(node);
         if (this._isNonEditable($node)) return;
 
+        // set id
+        if (!$node.attr('data-image'))
+        {
+            $node.attr('data-image', this.utils.getRandomId());
+        }
+
         var $link = $node.closest('a');
         var $figure = $node.closest('figure');
         var isImage = ($figure.children().not('a, img, br, figcaption').length === 0);
-
         if (!isImage) return;
 
         if ($figure.length === 0)
         {
             $figure = ($link.length !== 0) ? $link.wrap('<figure>') : $node.wrap('<figure>');
         }
+        else
+        {
+            if ($figure.hasClass('redactor-uploaded-figure'))
+            {
+                $figure.removeClass('redactor-uploaded-figure');
+            }
+            else
+            {
+                $figure.addClass('redactor-keep-figure');
+            }
+        }
 
         this._setFigure($figure, 'image');
+    },
+    _convertTable: function(node)
+    {
+        if (this._isNonEditable(node)) return;
+
+        var $figure = this._wrapFigure(node);
+        this._setFigure($figure, 'table');
     },
     _convertLine: function(node)
     {
@@ -6536,13 +6371,6 @@ $R.add('class', 'cleaner.figure', {
 
         var $figure = this.utils.replaceToTag(node, 'figure');
         this._setFigure($figure, 'form');
-    },
-    _convertTable: function(node)
-    {
-        if (this._isNonEditable(node)) return;
-
-        var $figure = this._wrapFigure(node);
-        this._setFigure($figure, 'table');
     },
     _convertIframe: function(node)
     {
@@ -6562,7 +6390,7 @@ $R.add('class', 'cleaner.figure', {
         if (this._isNonEditable(node)) return;
 
         var $figure = this._wrapFigure(node);
-        this._setFigure($figure, 'code')
+        this._setFigure($figure, 'code');
     },
     _convertWidget: function(node)
     {
@@ -6571,29 +6399,66 @@ $R.add('class', 'cleaner.figure', {
         var $node = $R.dom(node);
         $node.addClass('redactor-component');
         $node.attr('data-redactor-type', 'widget');
+        $node.attr('data-widget-code', encodeURI(node.innerHTML.trim()));
     },
 
     // unconvert
     _unconvertForm: function(node)
     {
-        var $node = this.utils.replaceToTag(node, 'form');
+        this.utils.replaceToTag(node, 'form');
     },
-    _unconvertImagesInLists: function(node)
+    _unconvertTable: function(node)
     {
         var $node = $R.dom(node);
+        $node.unwrap();
+    },
+    _unconvertWidget: function(node)
+    {
+        var $node = $R.dom(node);
+        $node.html(decodeURI($node.attr('data-widget-code')));
+        $node.removeAttr('data-widget-code');
+    },
+    _unconvertImages: function(node)
+    {
+        var $node = $R.dom(node);
+        $node.removeClass('redactor-component');
+
         var isList = ($node.closest('li').length !== 0);
-        if (isList)
+        var isTable = ($node.closest('table').length !== 0);
+        var hasFigcaption = ($node.find('figcaption').length !== 0);
+
+        var style = $node.attr('style');
+        var hasStyle = !(style === null || style === '');
+        var hasClass = ($node.attr('class') !== '');
+
+        if (isList || (isTable && !hasFigcaption && !hasStyle && !hasClass))
         {
             $node.unwrap();
         }
     },
     _removeTypes: function(node)
     {
-        var type = node.getAttribute('data-redactor-type');
+        var $node = $R.dom(node);
+        var type = $node.attr('data-redactor-type');
         var removed = ['image', 'widget', 'line', 'video', 'code', 'form', 'table'];
         if (type && removed.indexOf(type) !== -1)
         {
-            node.removeAttribute('data-redactor-type');
+            $node.removeAttr('data-redactor-type');
+        }
+
+        // keep figure
+        if ($node.hasClass('redactor-keep-figure'))
+        {
+            $node.removeClass('redactor-keep-figure');
+        }
+        // unwrap figure
+        else if (this.opts.imageFigure === false)
+        {
+            var hasFigcaption = ($node.find('figcaption').length !== 0);
+            if (!hasFigcaption)
+            {
+                $node.unwrap();
+            }
         }
     },
 
@@ -6624,6 +6489,16 @@ $R.add('class', 'cleaner.figure', {
     },
 
     // utils
+    _acceptExtraRules: function($wrapper, rules)
+    {
+        for (var key in rules)
+        {
+            if (typeof rules[key] === 'function')
+            {
+                rules[key]($wrapper);
+            }
+        }
+    },
     _isNonEditable: function(node)
     {
         return ($R.dom(node).closest('.non-editable').length !== 0);
@@ -6649,70 +6524,93 @@ $R.add('class', 'cleaner.paragraphize', {
 
         // local
         this.paragraphizeTags = ['table', 'div', 'pre', 'form', 'ul', 'ol', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dl', 'blockquote', 'figcaption',
-    			'address', 'section', 'header', 'footer', 'aside', 'article', 'object', 'style', 'script', 'iframe', 'select', 'input', 'textarea',
-    			'button', 'option', 'map', 'area', 'math', 'hr', 'fieldset', 'legend', 'hgroup', 'nav', 'figure', 'details', 'menu', 'summary', 'p'];
+                'address', 'section', 'header', 'footer', 'aside', 'article', 'object', 'style', 'script', 'iframe', 'select', 'input', 'textarea',
+                'button', 'option', 'map', 'area', 'math', 'hr', 'fieldset', 'legend', 'hgroup', 'nav', 'figure', 'details', 'menu', 'summary', 'p'];
     },
     // public
     convert: function(html)
     {
-        if (this.opts.breakline === true || this.opts.paragraphize === false || this.element.isType('inline'))
-		{
-			return html;
-		}
+        if (this.opts.paragraphize === false || this.element.isType('inline'))
+        {
+            return html;
+        }
 
         // empty
-		if (this._isEmptyHtml(html))
-		{
-			return this.opts.emptyHtml;
-		}
+        if (this._isEmptyHtml(html))
+        {
+            return this.opts.emptyHtml;
+        }
 
-		// paragraphize
-		var stored = [];
-		var markupTag = this.opts.markup;
+        // paragraphize
+        var stored = [];
+        var markupTag = (this.opts.breakline) ? 'sdivtag' : this.opts.markup;
 
         // store
-		var $wrapper = this._buildWrapper(html);
+        var $wrapper = this._buildWrapper(html);
+        $wrapper.find(this.paragraphizeTags.join(', ')).each(function(node, i)
+        {
+            var replacement = document.createTextNode("\n\n#####replace" + i + "#####\n");
+            stored.push(node.outerHTML);
+            node.parentNode.replaceChild(replacement, node);
+        });
 
-		$wrapper.find(this.paragraphizeTags.join(', ')).each(function(node, i)
-		{
-    		var replacement = document.createTextNode("#####replace" + i + "#####\n\n");
-			stored.push(node.outerHTML);
-			node.parentNode.replaceChild(replacement, node);
+        html = this._getWrapperHtml($wrapper);
 
-		});
+        if (this.opts.breakline)
+        {
+            html = html.replace(/<br\s?\/?>\n/gi, "<br>");
+        }
+        else
+        {
+            html = html.replace(/<br\s?\/?>\n/gi, "\n");
+            html = html.replace(/<br\s?\/?>/gi, "\n");
+        }
 
-		html = this._getWrapperHtml($wrapper);
+        html = html.replace(/(?:\r\n|\r|\n)/g, "xparagraphmarkerz");
 
-        html = html.replace('<br>', "\n");
-        html = html.replace(/\r\n/g, "xparagraphmarkerz");
-		html = html.replace(/\n/g, "xparagraphmarkerz");
-		html = html.replace(/\r/g, "xparagraphmarkerz");
+        var re1 = /\s+/g;
+        html = html.replace(re1, " ");
+        html = html.trim();
 
-		var re1 = /\s+/g;
-		html = html.replace(re1, " ");
-		html = html.trim();
+        var re2 = /xparagraphmarkerzxparagraphmarkerz/gi;
+        html = html.replace(re2, '</' + markupTag + '><' + markupTag + '>');
 
-		var re2 = /xparagraphmarkerzxparagraphmarkerz/gi;
-		html = html.replace(re2, '</' + markupTag + '><' + markupTag + '>');
+        var re3 = /xparagraphmarkerz/gi;
+        html = html.replace(re3, "<br>");
 
-		var re3 = /xparagraphmarkerz/gi;
-		html = html.replace(re3, "<br>");
+        html = '<' + markupTag + '>' + html + '</' + markupTag + '>';
 
-		html = '<' + markupTag + '>' + html + '</' + markupTag + '>';
-
-		// clean
-		html = html.replace(new RegExp('<br\\s?/?></' + markupTag + '>', 'gi'), '</' + markupTag + '>');
-		html = html.replace(new RegExp('<' + markupTag + '><br\\s?/?>', 'gi'), '<' + markupTag + '>');
-		html = html.replace(new RegExp('<br\\s?/?><' + markupTag + '>', 'gi'), '<' + markupTag + '>');
-		html = html.replace(new RegExp('<' + markupTag + '></' + markupTag + '>$', 'gi'), '');
-        html = html.replace(new RegExp('<p>#####replace(.*?)#####</p>', 'gi'), '#####replace$1#####');
-        html = html.replace(new RegExp('<p>(.*?)#####replace(.*?)#####\\s?</p>', 'gi'), '<p>$1</p>#####replace$2#####');
+        // clean
+        html = html.replace(new RegExp('<br\\s?/?></' + markupTag + '>', 'gi'), '</' + markupTag + '>');
+        html = html.replace(new RegExp('<' + markupTag + '><br\\s?/?>', 'gi'), '<' + markupTag + '>');
+        html = html.replace(new RegExp('<br\\s?/?><' + markupTag + '>', 'gi'), '<' + markupTag + '>');
+        html = html.replace(new RegExp('<' + markupTag + '></' + markupTag + '>$', 'gi'), '');
+        html = html.replace(new RegExp('<' + markupTag + '>#####replace(.*?)#####</' + markupTag + '>', 'gi'), '#####replace$1#####\n');
 
         // restore
         for (var i = 0; i < stored.length; i++)
-		{
-			html = html.replace('#####replace' + i + '#####', stored[i]);
-		}
+        {
+            stored[i] = stored[i].replace(/\$/g, '&#36;');
+            html = html.replace('#####replace' + i + '#####', stored[i]);
+        }
+
+        // clean empty markup and p
+        html = html.replace(new RegExp('<' + markupTag + '></' + markupTag + '>', 'gi'), '');
+        html = html.replace(new RegExp('<' + markupTag + '>\\s</' + markupTag + '>', 'gi'), '');
+        html = html.replace(new RegExp('<p></p>', 'gi'), '');
+
+        // clean markup tag
+        for (var i = 0; i < this.paragraphizeTags.length; i++)
+        {
+            html = html.replace(new RegExp('</' + this.paragraphizeTags[i] + '></' + markupTag + '>', 'gi'), '</' + this.paragraphizeTags[i] + '>');
+        }
+
+        html = html.replace(new RegExp('<sdivtag>', 'gi'), '<div data-redactor-tag="br">');
+        html = html.replace(new RegExp('sdivtag', 'gi'), 'div');
+
+        // final clean
+        html = html.replace(new RegExp('</figure><br>', 'gi'), '</figure><' + this.opts.markup + '>');
+        html = html.replace(new RegExp('<p><p>', 'gi'), '<p>');
 
         return html;
     },
@@ -6777,79 +6675,72 @@ $R.add('service', 'offset', {
     init: function(app)
     {
         this.app = app;
-
-        // local
-        this.saved = false;
     },
-    get: function(el, trimmed, length)
+    get: function(el, trimmed)
     {
-        var $editor = this.editor.getElement();
-        var isEditor = (el === undefined || el === $editor.get());
+        var offset = { start: 0, end: 0 };
+        var node = this.utils.getNode(el);
+        if (!node) return false;
 
-        var node = (isEditor) ? $editor.get() : $R.dom(el).get();
+        var isEditor = this.editor.isEditor(node);
         var isIn = (isEditor) ? true : this.selection.isIn(node);
+        var range = this.selection.getRange();
 
-        if (node && this.selection.is() && isIn)
+        if (!isEditor && !isIn)
         {
-            return (trimmed) ? this._getTrimmedOffset(node, isEditor, length) : this._getOffset(node);
+            offset = false;
+        }
+        else if (this.selection.is() && isIn)
+        {
+            var $startNode = $R.dom(range.startContainer);
+            var fix = ($startNode.hasClass('redactor-component')) ? range.startOffset : 0;
+            var clonedRange = range.cloneRange();
+
+            clonedRange.selectNodeContents(node);
+            clonedRange.setEnd(range.startContainer, range.startOffset);
+
+            offset.start = this._getString(clonedRange, trimmed).length - fix;
+            offset.end = offset.start + this._getString(range, trimmed).length + fix;
         }
 
-        return false;
+        return offset;
     },
     set: function(offset, el)
     {
-        if (el)
-        {
-            var data = this.inspector.parse(el);
-            if (data.isComponent() && !data.isComponentEditable())
-            {
-                return this.component.setActive(el);
-            }
-        }
+        if (this._setComponentOffset(el)) return;
 
-        this.editor.focus();
+        this.component.clearActive();
+        var node = this.utils.getNode(el);
+        if (!node) return;
 
-        var $editor = this.editor.getElement();
-        var isEditor = (typeof el === 'undefined')
-        var node = (isEditor) ? $editor.get() : $R.dom(el).get();
+        var size = this.size(node);
+        var charIndex = 0, range = document.createRange();
 
-        if (isEditor) this.editor.disableNonEditables();
+        offset.end = (offset.end > size) ? size : offset.end;
 
-        offset.end = (offset.end === undefined) ? offset.start : offset.end;
-
-        this._setOffset(node, offset.start, offset.end);
-        if (isEditor) this.editor.enableNonEditables();
-    },
-
-    // private
-    _setOffset: function(el, start, end)
-    {
-        var charIndex = 0;
-        var range = document.createRange();
-
-        range.setStart(el, 0);
+        range.setStart(node, 0);
         range.collapse(true);
-        var nodeStack = [el], node, foundStart = false, stop = false;
 
+        var nodeStack = [node], foundStart = false, stop = false;
         while (!stop && (node = nodeStack.pop()))
         {
-            if (node.nodeType === 3)
+            if (node.nodeType == 3)
             {
                 var nextCharIndex = charIndex + node.length;
-                if (!foundStart && start >= charIndex && start <= nextCharIndex)
+
+                if (!foundStart && !this._isFigcaptionNext(node) && offset.start >= charIndex && offset.start <= nextCharIndex)
                 {
-                    range.setStart(node, start - charIndex);
+                    range.setStart(node, offset.start - charIndex);
                     foundStart = true;
                 }
 
-                if (foundStart && end >= charIndex && end <= nextCharIndex)
+                if (foundStart && offset.end >= charIndex && offset.end <= nextCharIndex)
                 {
-                    range.setEnd(node, end - charIndex);
+                    range.setEnd(node, offset.end - charIndex);
                     stop = true;
                 }
 
                 charIndex = nextCharIndex;
-
             }
             else
             {
@@ -6863,102 +6754,39 @@ $R.add('service', 'offset', {
 
         this.selection.setRange(range);
     },
-    _getOffset: function(el)
+    size: function(el, trimmed)
     {
-        var offset = false;
-
-        var doc = el.ownerDocument || el.document;
-        var win = doc.defaultView || doc.parentWindow;
-        var sel = win.getSelection();
-        if (sel.rangeCount > 0)
+        var node = this.utils.getNode(el);
+        if (node)
         {
-            var range = win.getSelection().getRangeAt(0);
-            var selected = range.toString().length;
+            var range = document.createRange();
 
             var clonedRange = range.cloneRange();
-            clonedRange.selectNodeContents(el);
-            clonedRange.setEnd(range.endContainer, range.endOffset);
+            clonedRange.selectNodeContents(node);
 
-            var end = clonedRange.toString().length;
-
-            offset = {
-                start: end - selected,
-                end: end
-            };
+            return this._getString(clonedRange, trimmed).length;
         }
 
-        return offset;
+        return 0;
     },
-    _getTrimmedOffset: function(el, isEditor, length)
+
+    // private
+    _getString: function(obj, trimmed)
     {
-        var startOffset = 0;
-        var doc = el.ownerDocument || el.document;
-        var win = doc.defaultView || doc.parentWindow;
-        var sel = win.getSelection();
-        var range = win.getSelection().getRangeAt(0);
-        var selected = range.toString().length;
+        var str = obj.toString();
+        str = (this.editor.isEmpty()) ? str.replace(/\uFEFF/g, '') : str;
+        str = (trimmed) ? str.trim() : str;
 
-        var clonedRange = range.cloneRange();
-        clonedRange.selectNodeContents(el);
-        if (length !== true) clonedRange.setEnd(range.endContainer, range.endOffset);
-        startOffset = clonedRange.toString().replace(/[\u200B-\u200D\uFEFF]/g, '').length;
-
-        var treeWalker = this._getOffsetWalker(range, selected, el, length);
-        var charCount = 0;
-        while (treeWalker.nextNode())
-        {
-            charCount++;
-        }
-
-        if (!isEditor && length && charCount > 0)
-        {
-            charCount--;
-        }
-
-        var start = startOffset + charCount;
-        if (length)
-        {
-            return start;
-        }
-        else
-        {
-            return {
-                start: start - selected,
-                end: start
-            };
-        }
+        return str;
     },
-    _getOffsetWalker: function(range, selected, el, length)
+    _setComponentOffset: function(el)
     {
-        var tags = ['br', 'hr', 'img', 'iframe', 'source', 'embed', 'input', 'param', 'track'];
-        var walker = document.createTreeWalker(
-            el,
-            NodeFilter.SHOW_ALL,
-            function(node)
-            {
-                var nodeRange = document.createRange();
-                nodeRange.selectNode(node);
-
-                if (node.nodeType !== 3 && (selected === 0 && tags.indexOf(node.tagName.toLowerCase()) !== -1))
-                {
-                    if (length)
-                    {
-                        return NodeFilter.FILTER_ACCEPT;
-                    }
-                    else
-                    {
-                        return nodeRange.compareBoundaryPoints(Range.END_TO_END, range) < 1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-                    }
-                }
-                else
-                {
-                    return NodeFilter.FILTER_REJECT;
-                }
-            },
-            false
-        );
-
-        return walker;
+        return (this.component.isNonEditable(el)) ? this.component.setActive(el) : false;
+    },
+    _isFigcaptionNext: function(node)
+    {
+        var next = node.nextSibling;
+        return (node.nodeValue.trim() === '' && next && next.tagName === 'FIGCAPTION');
     }
 });
 $R.add('service', 'inspector', {
@@ -7041,7 +6869,7 @@ $R.add('class', 'inspector.parser', {
         this.el = el;
         this.$el = $R.dom(this.el);
         this.node = this.$el.get();
-        this.$component = this.$el.closest('.redactor-component');
+        this.$component = this.$el.closest('.redactor-component', '.redactor-in');
     },
     // is
     isEditor: function()
@@ -7054,7 +6882,7 @@ $R.add('class', 'inspector.parser', {
     },
     isComponent: function()
     {
-        return (this.$component.length !== 0)
+        return (this.$component.length !== 0);
     },
     isComponentType: function(type)
     {
@@ -7084,7 +6912,7 @@ $R.add('class', 'inspector.parser', {
         var $code = this.$el.closest('code');
         var $parent = $code.parent('pre');
 
-        return ($code.length !== 0 && $parent.length === 0)
+        return ($code.length !== 0 && $parent.length === 0);
     },
     isList: function()
     {
@@ -7210,6 +7038,10 @@ $R.add('class', 'inspector.parser', {
     {
         return this._getClosestNode('ul, ol');
     },
+    getParentList: function()
+    {
+        return this._getClosestUpNode('ul, ol');
+    },
     getListItem: function()
     {
         return this._getClosestNode('li');
@@ -7257,7 +7089,7 @@ $R.add('class', 'inspector.parser', {
     },
     getLink: function()
     {
-        var isComponent = this.isComponent();
+        var isComponent = (this.isComponent() && !this.isFigcaption());
         var isTable = this.isComponentType('table');
 
         if (isTable || !isComponent)
@@ -7325,15 +7157,21 @@ $R.add('class', 'inspector.parser', {
 
         return false;
     },
+    _getClosestUpNode: function(selector)
+    {
+        var $el = this.$el.parents(selector, '.redactor-in').last();
+
+        return ($el.length !== 0) ? $el.get() : false;
+    },
     _getClosestNode: function(selector)
     {
-        var $el = this.$el.closest(selector);
+        var $el = this.$el.closest(selector, '.redactor-in');
 
         return ($el.length !== 0) ? $el.get() : false;
     },
     _getClosestElement: function(selector)
     {
-        var $el = this.$el.closest(selector);
+        var $el = this.$el.closest(selector, '.redactor-in');
 
         return ($el.length !== 0) ? $el : false;
     }
@@ -7343,87 +7181,125 @@ $R.add('service', 'marker', {
     {
         this.app = app;
     },
-    build: function(pos)
-	{
-		var marker = document.createElement('span');
+    build: function(pos, html)
+    {
+        var marker = document.createElement('span');
 
-		marker.id = 'selection-marker-' + this._getPos(pos);
-		marker.className = 'redactor-selection-marker';
-		marker.innerHTML = this.opts.invisibleSpace;
+        marker.id = 'selection-marker-' + this._getPos(pos);
+        marker.className = 'redactor-selection-marker';
+        marker.innerHTML = this.opts.markerChar;
 
-		return marker;
-	},
-	buildHtml: function(pos)
-	{
-		return this.build(pos).outerHTML;
-	},
-	insert: function()
-	{
-    	if (this.selection.isAll())
-    	{
-        	var $editor = this.editor.getElement();
+        return (html) ? marker.outerHTML : marker;
+    },
+    buildHtml: function(pos)
+    {
+        return this.build(pos, true);
+    },
+    insert: function(side)
+    {
+        this.remove();
 
-            $editor.prepend(this.build('start'));
-            $editor.append(this.build('end'));
-    	}
-    	else
-    	{
-        	this.editor.focus();
+        var atStart = (side !== 'both' && (side === 'start' || this.selection.isCollapsed()));
 
-    		return (this.selection.isCollapsed()) ? this.insertStart() : this.insertBoth();
-    	}
-	},
-	insertStart: function()
-	{
-		var range = this.selection.getRange();
+        if (!this.selection.is()) this.editor.focus();
+
+        var range = this.selection.getRange();
         if (range)
         {
             var start = this.build('start');
-            var startNode = range.startContainer, startOffset = range.startOffset;
+            var end = this.build('end');
+
             var cloned = range.cloneRange();
-            cloned.setStart(startNode, startOffset);
+
+            if (!atStart)
+            {
+                cloned.collapse(false);
+                cloned.insertNode(end);
+            }
+
+            cloned.setStart(range.startContainer, range.startOffset);
             cloned.collapse(true);
             cloned.insertNode(start);
+
+            range.setStartAfter(start);
+
+            if (!atStart)
+            {
+                range.setEndBefore(end);
+            }
+
+            this.selection.setRange(range);
 
             return start;
         }
-	},
-	insertEnd: function()
-	{
-		var range = this.selection.getRange();
-        if (range)
-        {
-            var end = this.build('end');
-            var cloned = range.cloneRange();
-            cloned.collapse(false);
-            cloned.insertNode(end);
-
-            return end;
-        }
-	},
-	insertBoth: function()
-	{
-    	var range = this.selection.getRange();
-    	if (range)
-    	{
-        	var start = this.build('start');
-            var end = this.build('end');
-            var startNode = range.startContainer, startOffset = range.startOffset;
-
-            var cloned = range.cloneRange();
-            cloned.collapse(false);
-            cloned.insertNode(end);
-            cloned.setStart(startNode, startOffset);
-            cloned.collapse(true);
-            cloned.insertNode(start);
-        }
-	},
+    },
     find: function(pos, $context)
     {
         var $editor = this.editor.getElement();
         var $marker = ($context || $editor).find('span#selection-marker-' + this._getPos(pos));
 
-		return ($marker.length !== 0) ? $marker.get() : false;
+        return ($marker.length !== 0) ? $marker.get() : false;
+    },
+    restore: function()
+    {
+        var start = this.find('start');
+        var end = this.find('end');
+
+        var range = this.selection.getRange();
+        if (!range || !this.selection.is())
+        {
+            this.editor.focus();
+            range = document.createRange();
+        }
+
+        if (start)
+        {
+            var prev = (end) ? end.previousSibling : false;
+            var next = start.nextSibling;
+            next = (next && next.nodeType === 3 && next.textContent.replace(/[\n\t]/g, '') === '') ? false : next;
+
+            if (!end)
+            {
+                if (next)
+                {
+                    range.selectNodeContents(next);
+                    range.collapse(true);
+                }
+                else
+                {
+                    this._restoreInject(range, start);
+                }
+            }
+            else if (next && next.id === 'selection-marker-end')
+            {
+                this._restoreInject(range, start);
+            }
+            else
+            {
+                if (prev && next)
+                {
+                    range.selectNodeContents(prev);
+                    range.collapse(false);
+                    range.setStart(next, 0);
+                }
+                else if (prev && !next)
+                {
+                    range.selectNodeContents(prev);
+                    range.collapse(false);
+                    range.setStartAfter(start);
+                }
+                else
+                {
+                    range.setStartAfter(start);
+                    range.setEndBefore(end);
+                }
+            }
+
+            this.selection.setRange(range);
+
+            if (start) start.parentNode.removeChild(start);
+            if (end) end.parentNode.removeChild(end);
+        }
     },
     remove: function()
     {
@@ -7432,18 +7308,20 @@ $R.add('service', 'marker', {
 
         if (start) start.parentNode.removeChild(start);
         if (end) end.parentNode.removeChild(end);
-
-        if (start || end)
-        {
-            var el = this.selection.getElement();
-            this.utils.normalizeTextNodes(el);
-        }
     },
 
     // private
     _getPos: function(pos)
     {
         return (pos === undefined) ? 'start' : pos;
+    },
+    _restoreInject: function(range, start)
+    {
+        var textNode = this.utils.createInvisibleChar();
+        $R.dom(start).after(textNode);
+
+        range.selectNodeContents(textNode);
+        range.collapse(false);
     }
 });
 $R.add('service', 'component', {
@@ -7474,9 +7352,10 @@ $R.add('service', 'component', {
     {
         var $component = $R.dom(el).closest('.redactor-component');
         var type = $component.attr('data-redactor-type');
-        var prev = this._findSiblings($component, 'previousSibling');
-        var next = this._findSiblings($component, 'nextSibling');
-
+        var current = $component.parent();
+        var data = this.inspector.parse(current);
+        var prev = this.utils.findSiblings($component, 'prev');
+        var next = this.utils.findSiblings($component, 'next');
         var stop = this.app.broadcast(type + '.delete', $component);
         if (stop !== false)
         {
@@ -7489,21 +7368,40 @@ $R.add('service', 'component', {
 
             if (caret !== false)
             {
-                if (next) this.caret.setStart(next);
+                var cell = data.getTableCell();
+                if (cell && this.utils.isEmptyHtml(cell.innerHTML))
+                {
+                    this.caret.setStart(cell);
+                }
+                else if (next) this.caret.setStart(next);
                 else if (prev) this.caret.setEnd(prev);
                 else
                 {
                     this.editor.startFocus();
                 }
             }
+
+            // is empty
+            if (this.editor.isEmpty())
+            {
+                this.editor.setEmpty();
+                this.editor.startFocus();
+                this.app.broadcast('empty');
+            }
         }
+    },
+    isNonEditable: function(el)
+    {
+        var data = this.inspector.parse(el);
+        return (data.isComponent() && !data.isComponentEditable());
     },
     isActive: function(el)
     {
         var $component;
         if (el)
         {
-            $component = $R.dom(el);
+            var data = this.inspector.parse(el);
+            $component = $R.dom(data.getComponent());
 
             return $component.hasClass(this.activeClass);
         }
@@ -7511,14 +7409,14 @@ $R.add('service', 'component', {
         {
             $component = this._find();
 
-            return ($component.length !== 0)
+            return ($component.length !== 0);
         }
     },
-    getActive: function()
+    getActive: function(dom)
     {
         var $component = this._find();
 
-        return ($component.length !== 0) ? $component.get() : false;
+        return ($component.length !== 0) ? ((dom) ? $component : $component.get()) : false;
     },
     setActive: function(el)
     {
@@ -7545,7 +7443,12 @@ $R.add('service', 'component', {
     },
     clearActive: function()
     {
-        this._find().removeClass(this.activeClass);
+        var $component = this._find();
+
+        $component.removeClass(this.activeClass);
+        $component.find('.redactor-component-caret').remove();
+
+        this.app.broadcast('imageresizer.stop');
     },
     setOnEvent: function(e, contextmenu)
     {
@@ -7571,14 +7474,14 @@ $R.add('service', 'component', {
 
         for (var i = 0; i < scripts.length; i++)
         {
-            if (scripts[i].src != "")
+            if (scripts[i].src !== '')
             {
                 var src = scripts[i].src;
                 this.$doc.find('head script[src="' + src + '"]').remove();
 
-                var tag = document.createElement("script");
+                var tag = document.createElement('script');
                 tag.src = src;
-                document.getElementsByTagName("head")[0].appendChild(tag);
+                document.getElementsByTagName('head')[0].appendChild(tag);
             }
             else
             {
@@ -7591,20 +7494,6 @@ $R.add('service', 'component', {
     _find: function()
     {
         return this.editor.getElement().find('.' + this.activeClass);
-    },
-    _findSiblings: function($component, type)
-    {
-        var node = $component.get();
-        while (node = node[type])
-        {
-            var isEmpty = false;
-            if (node.nodeType === 3 && !this.opts.breakline)
-            {
-                isEmpty = (node.textContent.trim() === '');
-            }
-
-            if (!isEmpty && node.tagName !== 'BR') return node;
-        }
     },
     _buildCaret: function()
     {
@@ -7620,7 +7509,7 @@ $R.add('service', 'insertion', {
     {
         this.app = app;
     },
-    set: function(html, clean)
+    set: function(html, clean, focus)
     {
         html = (clean !== false) ? this.cleaner.input(html) : html;
         html = (clean !== false) ? this.cleaner.paragraphize(html) : html;
@@ -7630,7 +7519,7 @@ $R.add('service', 'insertion', {
         $editor.html(html);
 
         // set focus at the end
-        this.editor.endFocus();
+        if (focus !== false) this.editor.endFocus();
 
         return html;
     },
@@ -7665,49 +7554,55 @@ $R.add('service', 'insertion', {
     {
         return this.insertHtml(html, false);
     },
-    insertToPoint: function(e, html)
+    insertPoint: function(e)
     {
-        var range;
+        var range, data;
         var marker = this.marker.build('start');
         var markerInserted = false;
-		var x = e.clientX, y = e.clientY;
+        var x = e.clientX, y = e.clientY;
 
-		if (document.caretPositionFromPoint)
-		{
-		    var pos = document.caretPositionFromPoint(x, y);
-		    var sel = document.getSelection();
+        if (document.caretPositionFromPoint)
+        {
+            var pos = document.caretPositionFromPoint(x, y);
+            var sel = document.getSelection();
 
-		    var data = this.inspector.parse(pos.offsetNode);
-		    if (data.isInEditor())
+            data = this.inspector.parse(pos.offsetNode);
+            if (data.isInEditor())
             {
-    		    range = sel.getRangeAt(0);
-    		    range.setStart(pos.offsetNode, pos.offset);
-    		    range.collapse(true);
-    		    range.insertNode(marker);
-    		    markerInserted = true;
+                range = sel.getRangeAt(0);
+                range.setStart(pos.offsetNode, pos.offset);
+                range.collapse(true);
+                range.insertNode(marker);
+                markerInserted = true;
             }
-		}
-		else if (document.caretRangeFromPoint)
-		{
-		    range = document.caretRangeFromPoint(x, y);
+        }
+        else if (document.caretRangeFromPoint)
+        {
+            range = document.caretRangeFromPoint(x, y);
 
-            var data = this.inspector.parse(range.startContainer)
+            data = this.inspector.parse(range.startContainer);
             if (data.isInEditor())
             {
                 range.insertNode(marker);
                 markerInserted = true;
             }
-		}
+        }
 
-        if (markerInserted)
+        return markerInserted;
+    },
+    insertToPoint: function(e, html, point)
+    {
+        var pointInserted = (point === true) ? true : this.insertPoint(e);
+        if (!pointInserted)
         {
-            this.component.clearActive();
-	    	this.selection.restoreMarkers();
+            var lastNode = this.editor.getLastNode();
+            $R.dom(lastNode).after(this.marker.build('start'));
+        }
 
-    		return this.insertHtml(html);
-		}
+        this.component.clearActive();
+        this.selection.restoreMarkers();
 
-		return [];
+        return this.insertHtml(html);
     },
     insertToOffset: function(start, html)
     {
@@ -7728,10 +7623,16 @@ $R.add('service', 'insertion', {
             return this._insertToAllSelected(parsedInput);
         }
 
+        // there is no selection
+        if (!this.selection.is())
+        {
+            this.editor.startFocus();
+        }
+
         // environment
         var isCollapsed = this.selection.isCollapsed();
         var isText = this.selection.isText();
-        var current = this._getCurrent();
+        var current = this.selection.getCurrent();
         var dataCurrent = this.inspector.parse(current);
 
         // collapse air
@@ -7742,8 +7643,9 @@ $R.add('service', 'insertion', {
 
         // input is figure or component span
         var isFigure = this._isFigure(parsedInput.html);
-        var isComponentSpan = this._isComponentSpan(parsedInput.html)
+        var isComponentSpan = this._isComponentSpan(parsedInput.html);
         var isInsertedText = this.inspector.isText(parsedInput.html);
+        var fragment, except;
 
         // empty editor
         if (this.editor.isEmpty())
@@ -7768,9 +7670,9 @@ $R.add('service', 'insertion', {
                 return this._insertToInline(current, parsedInput);
             }
 
-            var fragment = this.utils.createFragment(parsedInput.html);
+            fragment = this.utils.createFragment(parsedInput.html);
 
-            this._splitNode(current, fragment);
+            this.utils.splitNode(current, fragment);
             this.caret.setEnd(fragment.last);
 
             return this._sendNodes(fragment.nodes);
@@ -7791,7 +7693,7 @@ $R.add('service', 'insertion', {
             parsedInput.html = (clean !== false) ? this.cleaner.removeTagsExcept(parsedInput.html, ['a']) : parsedInput.html;
             parsedInput.html = (clean !== false) ? this.cleaner.replaceNbspToSpaces(parsedInput.html) : parsedInput.html;
 
-            var fragment = this.utils.createFragment(parsedInput.html);
+            fragment = this.utils.createFragment(parsedInput.html);
 
             return this.insertNode(fragment, 'end');
         }
@@ -7802,9 +7704,9 @@ $R.add('service', 'insertion', {
             {
                 parsedInput.html = (clean !== false) ? this.cleaner.paragraphize(parsedInput.html) : parsedInput.html;
 
-                var fragment = this.utils.createFragment(parsedInput.html);
+                fragment = this.utils.createFragment(parsedInput.html);
 
-                this._splitNode(current, fragment);
+                this.utils.splitNode(current, fragment);
                 this.caret.setEnd(fragment.last);
 
                 return this._sendNodes(fragment.nodes);
@@ -7817,7 +7719,7 @@ $R.add('service', 'insertion', {
         {
             parsedInput.html = (clean !== false) ? this.cleaner.paragraphize(parsedInput.html) : parsedInput.html;
 
-            var fragment = this.utils.createFragment(parsedInput.html);
+            fragment = this.utils.createFragment(parsedInput.html);
 
             return this.insertNode(fragment, 'end');
         }
@@ -7829,13 +7731,13 @@ $R.add('service', 'insertion', {
         // to blockquote or dt, dd
         else if (dataCurrent.isBlockquote() || dataCurrent.isDl())
         {
-            var except = this.opts.inlineTags;
+            except = this.opts.inlineTags;
             except.concat(['br']);
 
             parsedInput.html = (clean !== false) ? this.cleaner.replaceBlocksToBr(parsedInput.html) : parsedInput.html;
             parsedInput.html = (clean !== false) ? this.cleaner.removeTagsExcept(parsedInput.html, except) : parsedInput.html;
 
-            var fragment = this.utils.createFragment(parsedInput.html);
+            fragment = this.utils.createFragment(parsedInput.html);
 
             return this.insertNode(fragment, 'end');
         }
@@ -7849,9 +7751,9 @@ $R.add('service', 'insertion', {
 
             parsedInput.html = (clean !== false) ? this.cleaner.paragraphize(parsedInput.html) : parsedInput.html;
 
-            var fragment = this.utils.createFragment(parsedInput.html);
+            fragment = this.utils.createFragment(parsedInput.html);
 
-            this._splitNode(current, fragment);
+            this.utils.splitNode(current, fragment);
             this.caret.setEnd(fragment.last);
 
             return this._sendNodes(fragment.nodes);
@@ -7859,15 +7761,15 @@ $R.add('service', 'insertion', {
         // to li
         else if (dataCurrent.isList())
         {
-            var except = this.opts.inlineTags;
+            except = this.opts.inlineTags;
             except = except.concat(['br', 'li', 'ul', 'ol', 'img']);
 
             parsedInput.html = (clean !== false) ? this.cleaner.replaceBlocksToBr(parsedInput.html) : parsedInput.html;
             parsedInput.html = (clean !== false) ? this.cleaner.removeTagsExcept(parsedInput.html, except) : parsedInput.html;
             parsedInput.html = (clean !== false) ? this.cleaner.removeBrAtEnd(parsedInput.html) : parsedInput.html;
 
-            var fragment = this.utils.createFragment(parsedInput.html);
-            data.nodes = fragment.nodes;
+            fragment = this.utils.createFragment(parsedInput.html);
+            parsedInput.nodes = fragment.nodes;
 
             if (this._containsTags(parsedInput.html, ['ul', 'ol', 'li']))
             {
@@ -7890,7 +7792,7 @@ $R.add('service', 'insertion', {
                 {
                     fragment = this._buildList(parsedInput, element, fragment);
 
-                    this._splitNode(current, fragment, true);
+                    this.utils.splitNode(current, fragment, true);
                     this.caret.setEnd(fragment.last);
 
                     return this._sendNodes(fragment.nodes);
@@ -7920,14 +7822,14 @@ $R.add('service', 'insertion', {
         $editor.html('');
         $editor.append(fragment.frag);
 
-        this.caret.setEnd(fragment.last);
+        this.caret.setEnd($editor);
 
         return this._sendNodes(fragment.nodes);
     },
     _insertToInline: function(current, parsedInput)
     {
         var fragment = this.utils.createFragment(parsedInput.html);
-        this._splitNode(current, fragment, false, true);
+        this.utils.splitNode(current, fragment, false, true);
         this.caret.setEnd(fragment.last);
 
         return this._sendNodes(fragment.nodes);
@@ -7972,7 +7874,20 @@ $R.add('service', 'insertion', {
         var range = this.selection.getRange();
         if (range)
         {
-            range.deleteContents();
+            if (this.selection.isCollapsed())
+            {
+                var startNode = range.startContainer;
+                if (startNode.nodeType !== 3 && startNode.tagName === 'BR')
+                {
+                    this.caret.setAfter(startNode);
+                    startNode.parentNode.removeChild(startNode);
+                }
+            }
+            else
+            {
+                range.deleteContents();
+            }
+
             range.insertNode(fragment.frag);
         }
     },
@@ -7981,7 +7896,7 @@ $R.add('service', 'insertion', {
         for (var i = 0; i < nodes.length; i++)
         {
             var el = nodes[i];
-            var type = (el.nodeType !== 3) ? el.getAttribute('data-redactor-type') : false;
+            var type = (el.nodeType !== 3 && typeof el.getAttribute === 'function') ? el.getAttribute('data-redactor-type') : false;
             if (type)
             {
                 this.app.broadcast(type + '.inserted', this.component.build(el));
@@ -7995,76 +7910,6 @@ $R.add('service', 'insertion', {
         this.component.executeScripts();
 
         return nodes;
-    },
-    _splitNode: function(current, nodes, isList, inline)
-    {
-        nodes = (this.utils.isFragment(nodes)) ? nodes.frag : nodes;
-
-        var element = (inline) ? this.selection.getInline(current) : this.selection.getBlock(current);
-        var $element = $R.dom(element);
-
-        // replace is empty
-        if (!inline && this.utils.isEmptyHtml(element.innerHTML))
-        {
-            $element.after(nodes);
-            $element.remove();
-
-            return nodes;
-        }
-
-        var tag = $element.get().tagName.toLowerCase();
-        var isEnd = this.caret.isEnd(element);
-        var isStart = this.caret.isStart(element);
-
-        if (!isEnd && !isStart)
-        {
-            var extractedContent = this._extractHtmlFromCaret(inline);
-
-            var $secondPart = $R.dom('<' + tag + ' />');
-            $secondPart = this.utils.cloneAttributes(element, $secondPart);
-
-            $element.after($secondPart.append(extractedContent));
-        }
-
-        if (isStart)
-        {
-            return $element.before(nodes);
-        }
-        else
-        {
-            if (isList)
-            {
-                return $element.append(nodes);
-            }
-            else
-            {
-                nodes = $element.after(nodes);
-
-                var html = $element.html();
-                html = html.replace(/[\u200B-\u200D\uFEFF]/g, '');
-                html = html.replace(/&nbsp;/gi, '');
-
-                if (html === '') $element.remove();
-
-                return nodes;
-            }
-        }
-    },
-    _extractHtmlFromCaret: function(inline, element)
-    {
-        var range = this.selection.getRange();
-        if (range)
-        {
-            element = (element) ? element : ((inline) ? this.selection.getInline() : this.selection.getBlock());
-            if (element)
-            {
-                var clonedRange = range.cloneRange();
-                clonedRange.selectNodeContents(element);
-                clonedRange.setStart(range.endContainer, range.endOffset);
-
-                return clonedRange.extractContents();
-            }
-        }
     },
     _setCaret: function(caret, fragment)
     {
@@ -8099,17 +7944,6 @@ $R.add('service', 'insertion', {
         parsedInput = (!isPreformatted && clean !== false) ? this.utils.parseHtml(parsedInput.html) : parsedInput;
 
         return parsedInput;
-    },
-    _getCurrent: function()
-    {
-        var current = this.selection.getCurrent();
-        if (!current)
-        {
-            this.editor.startFocus();
-            current = this.selection.getCurrent();
-        }
-
-        return current;
     },
     _getContainer: function(nodes)
     {
@@ -8196,26 +8030,23 @@ $R.add('service', 'block', {
         else this.buildArgs(args);
 
         // format
-        var nodes = this._format();
-
-        return nodes;
+        return this._format();
     },
     getBlocks: function(tags)
     {
-        if (tags)
+        return this.selection.getBlocks({ tags: tags || this._getTags(), first: true });
+    },
+    getElements: function(tags)
+    {
+        var block = this.selection.getBlock();
+        if (!this.selection.isCollapsed() && block && (block.tagName === 'TD' || block.tagName === 'TH'))
         {
-            return this.selection.getBlocks({ tags: tags, first: true, cells: true });
+            return this._wrapInsideTable('div');
         }
         else
         {
-            return this.selection.getBlocksAndTextNodes({ tags: this._getTags(), first: true, cells: true, wrap: true });
+            return $R.dom(this.getBlocks(tags));
         }
-    },
-    getElements: function(tags, clear)
-    {
-        blocks = (clear) ? this.selection.getBlocks({ tags: tags || this._getTags(), first: true, cells: true }) : this.getBlocks(tags);
-
-        return $R.dom(blocks);
     },
     clearFormat: function(tags)
 	{
@@ -8233,7 +8064,6 @@ $R.add('service', 'block', {
 		this.selection.restore();
 
         return $elements.getAll();
-
 	},
 
     // private
@@ -8241,30 +8071,108 @@ $R.add('service', 'block', {
     {
         this.selection.save();
         var blocks = this.getBlocks();
+        var block = this.selection.getBlock();
         var nodes = [];
-        if (blocks.length > 0)
+        var data, replacedTag, $wrapper, nextBr;
+
+        // div break format
+        if (blocks.length === 1 && blocks[0].tagName === 'DIV')
+        {
+            data = this._getTextNodesData();
+            if (!data || data.nodes.length === 0)
+            {
+                nodes = this._replaceBlocks(blocks);
+                nodes = this._sendNodes(nodes);
+
+                setTimeout(function() { this.selection.restore(); }.bind(this), 0);
+
+                return nodes;
+            }
+
+            replacedTag = this._getReplacedTag('set');
+            $wrapper = $R.dom('<' + replacedTag + '>');
+
+            nextBr = data.last.nextSibling;
+            if (nextBr && nextBr.tagName === 'BR')
+            {
+                $R.dom(nextBr).remove();
+            }
+
+            for (var i = 0; i < data.nodes.length; i++)
+            {
+                $wrapper.append(data.nodes[i]);
+            }
+
+            this.utils.splitNode(blocks[0], [$wrapper.get()]);
+            nodes = this._sendNodes([$wrapper.get()]);
+
+            if (this.utils.isEmptyHtml($wrapper.html()))
+            {
+                this.caret.setStart($wrapper);
+            }
+            else
+            {
+                setTimeout(function() { this.selection.restore(); }.bind(this), 0);
+            }
+
+            return nodes;
+        }
+        // standard format
+        else if (blocks.length > 0)
         {
             nodes = this._replaceBlocks(blocks);
+            nodes = this._sendNodes(nodes);
 
+            setTimeout(function() { this.selection.restore(); }.bind(this), 0);
+
+            return nodes;
+        }
+        // td/th format
+        else if (!this.selection.isCollapsed() && block && (block.tagName === 'TD' || block.tagName === 'TH'))
+        {
+            replacedTag = this._getReplacedTag('set');
+            $wrapper = this._wrapInsideTable(replacedTag);
+
+            this.selection.setAll($wrapper);
+
+            return this._sendNodes([$wrapper.get()]);
+        }
+    },
+    _wrapInsideTable: function(replacedTag)
+    {
+        var data = this._getTextNodesData();
+        var $wrapper = $R.dom('<' + replacedTag + '>');
+
+        $R.dom(data.first).before($wrapper);
+
+        for (var i = 0; i < data.nodes.length; i++)
+        {
+            $wrapper.append(data.nodes[i]);
+        }
+
+        var nextBr = $wrapper.get().nextSibling;
+        if (nextBr && nextBr.tagName === 'BR')
+        {
+            $R.dom(nextBr).remove();
+        }
+
+        return $wrapper;
+    },
+    _prepareTag: function(tag)
+    {
+        return (typeof tag === 'undefined') ? this.opts.markup : tag;
+    },
+    _sendNodes: function(nodes)
+    {
+        if (nodes.length > 0)
+        {
             // clean & appliyng styles and attributes
             nodes = this.applyArgs(nodes, false);
             nodes = this._combinePre(nodes);
             nodes = this._cleanBlocks(nodes);
-
         }
-
-        setTimeout(function() { this.selection.restore(); }.bind(this), 0);
 
         return nodes;
-    },
-    _prepareTag: function(tag)
-    {
-        if (typeof tag === 'undefined')
-        {
-            tag = (this.opts.breakline) ? 'div' : this.opts.markup;
-        }
-
-        return tag;
     },
     _getTags: function()
     {
@@ -8274,42 +8182,55 @@ $R.add('service', 'block', {
     {
         var nodes = [];
         var type = (this._isToggleFormatType(blocks)) ? 'toggle' : 'set';
+        var replacedTag = this._getReplacedTag(type);
 
-        if (this.opts.markup === 'br')
+        for (var i = 0; i < blocks.length; i++)
         {
-            for (var i = 0; i < blocks.length; i++)
-            {
-                blocks[i] = this._clearWrapperClass(blocks[i]);
-
-                var $node;
-                if (type === 'toggle' || this.tag === 'p')
-                {
-                    var br = document.createElement('br');
-
-                    $node = $R.dom(blocks[i]);
-                    $node.append(br);
-                    $node.unwrap();
-                }
-                else
-                {
-                    $node = this.utils.replaceToTag(blocks[i], this.tag);
-                    nodes.push($node.get());
-                }
-            }
-        }
-        else
-        {
-            var replacedTag = (type === 'toggle') ? this.opts.markup : this.tag;
-            for (var i = 0; i < blocks.length; i++)
-            {
-                blocks[i] = this._clearWrapperClass(blocks[i]);
-                var $node = this.utils.replaceToTag(blocks[i], replacedTag);
-
-                nodes.push($node.get());
-            }
+            var $node = this.utils.replaceToTag(blocks[i], replacedTag);
+            nodes.push($node.get());
         }
 
         return nodes;
+    },
+    _getReplacedTag: function(type)
+    {
+        var replacedTag = (type === 'toggle') ? this.opts.markup : this.tag;
+
+        return (this.opts.breakline && replacedTag === 'p') ? 'div' : replacedTag;
+    },
+    _getTextNodesData: function()
+    {
+        var nodes = this.selection.getNodes({ textnodes: true, keepbr: true });
+        if (nodes.length === 0) return false;
+
+        var firstNode = nodes[0];
+        var lastNode = nodes[nodes.length-1];
+        var node = lastNode;
+        var stop = false;
+
+        while (!stop)
+        {
+            var inline = this.selection.getInline(node);
+            node = (inline) ? inline.nextSibling : node.nextSibling;
+            if (!node)
+            {
+                stop = true;
+            }
+            else if (node.nodeType !== 3 && (node.tagName === 'BR' || this.inspector.isBlockTag(node.tagName)))
+            {
+                stop = true;
+            }
+            else
+            {
+                nodes.push(node);
+            }
+        }
+
+        return {
+            nodes: nodes,
+            first: firstNode,
+            last: lastNode
+        };
     },
     _isToggleFormatType: function(blocks)
     {
@@ -8346,7 +8267,7 @@ $R.add('service', 'block', {
     },
     _cleanBlocks: function(nodes)
     {
-        var headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+        var headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
         var tags = this.opts.inlineTags;
         for (var i = 0; i < nodes.length; i++)
         {
@@ -8360,6 +8281,16 @@ $R.add('service', 'block', {
             else if (tag === 'pre')
             {
                 $node.find(tags.join(',')).not('.redactor-selection-marker').unwrap();
+            }
+
+            // breakline attr
+            if (this.opts.breakline && tag === 'div')
+            {
+                $node.attr('data-redactor-tag', 'br');
+            }
+            else
+            {
+                $node.removeAttr('data-redactor-tag');
             }
 
             this.utils.normalizeTextNodes(nodes[i]);
@@ -8401,9 +8332,9 @@ $R.add('service', 'inline', {
     {
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
-        var isComponent = (data.isComponent() && !data.isComponentType('table'));
+        var isComponent = (data.isComponent() && !data.isComponentType('table') && !data.isFigcaption());
 
-        if (!current || data.isPre() || data.isCode() || data.isFigcaption() || isComponent)
+        if (!current || data.isPre() || data.isCode() || isComponent)
         {
             return false;
         }
@@ -8411,21 +8342,22 @@ $R.add('service', 'inline', {
         return true;
     },
     arrangeTag: function(tag)
-	{
+    {
         var replaced = this.opts.replaceTags;
-		for (var key in replaced)
-		{
-			if (tag === key) tag = replaced[key];
-		}
+        for (var key in replaced)
+        {
+            if (tag === key) tag = replaced[key];
+        }
 
-		return tag;
-	},
+        return tag;
+    },
     formatCollapsed: function()
     {
         var nodes = [];
         var inline = this.selection.getInlineFirst();
         var inlines = this.selection.getInlines({ all: true });
         var $inline = $R.dom(inline);
+        var $parent, parent, $secondPart, extractedContent;
 
         // 1) not inline
         if (!inline)
@@ -8447,9 +8379,9 @@ $R.add('service', 'inline', {
                     if (this.hasSameArgs(inline))
                     {
                         this.caret.setAfter(inline);
-        				$inline.remove();
+                        $inline.remove();
 
-        				var el = this.selection.getElement();
+                        var el = this.selection.getElement();
                         this.utils.normalizeTextNodes(el);
                     }
                     // 2.1.2) has different args and it is span tag
@@ -8471,8 +8403,8 @@ $R.add('service', 'inline', {
                     // 2.2.1) has parent
                     if (dataInline.hasParent([this.tag]))
                     {
-                        var $parent = $inline.closest(this.tag);
-                        var parent = $parent.get();
+                        $parent = $inline.closest(this.tag);
+                        parent = $parent.get();
                         if (this.hasSameArgs(parent))
                         {
                             $parent.unwrap();
@@ -8500,8 +8432,8 @@ $R.add('service', 'inline', {
                     if (this.hasSameArgs(inline))
                     {
                         // insert break
-                        var extractedContent = this.insertion._extractHtmlFromCaret(inline);
-                        var $secondPart = $R.dom('<' + this.tag + ' />');
+                        extractedContent = this.utils.extractHtmlFromCaret(inline);
+                        $secondPart = $R.dom('<' + this.tag + ' />');
                         $secondPart = this.utils.cloneAttributes(inline, $secondPart);
 
                         $inline.after($secondPart.append(extractedContent));
@@ -8519,13 +8451,13 @@ $R.add('service', 'inline', {
                     // 3.2.1) has parent
                     if (dataInline.hasParent([this.tag]))
                     {
-                        var $parent = $inline.closest(this.tag);
-                        var parent = $parent.get();
+                        $parent = $inline.closest(this.tag);
+                        parent = $parent.get();
                         if (this.hasSameArgs(parent))
                         {
                             // insert break
-                            var extractedContent = this.insertion._extractHtmlFromCaret(parent, parent);
-                            var $secondPart = $R.dom('<' + this.tag + ' />');
+                            extractedContent = this.utils.extractHtmlFromCaret(parent, parent);
+                            $secondPart = $R.dom('<' + this.tag + ' />');
                             $secondPart = this.utils.cloneAttributes(parent, $secondPart);
 
                             var $breaked, $last;
@@ -8599,7 +8531,7 @@ $R.add('service', 'inline', {
                     {
                         if (key === 'style')
                         {
-                            value = value.trim().replace(/;$/, '')
+                            value = value.trim().replace(/;$/, '');
 
                             var origRules = this.utils.styleToObj($node.attr('style'));
                             var rules = value.split(';');
@@ -8657,95 +8589,137 @@ $R.add('service', 'inline', {
     {
         var inlines = this.selection.getInlines({ all: true, inside: true });
 
-        // 1) hasn't inline tags
-        if (inlines.length === 0)
-        {
-            this.formatUncollapsedAllInlines();
-        }
-        // 2) has inline tags
-        else
-        {
-            this.selection.save();
-            this.convertToStrike(inlines);
-            this.selection.restore();
-        }
+        this.selection.save();
 
+        // convert del / u
+        this._convertTags('u');
+        this._convertTags('del');
+
+        // convert target tags
+        this._convertToStrike(inlines);
+
+        this.selection.restore();
+
+        // apply strike
         document.execCommand('strikethrough');
 
-        var $editor = this.editor.getElement();
-        $editor.find(this.opts.inlineTags.join(',')).each(function(node)
-        {
-            if (node.style.textDecoration === 'line-through' || node.style.textDecorationLine === 'line-through')
-            {
-                var $el = $R.dom(node);
-                $el.css('textDecorationLine', '');
-                $el.css('textDecoration', '');
-                $el.wrap('<strike>');
-            }
-        });
+        // clear decoration
+        this._clearDecoration();
 
         this.selection.save();
 
-        var nodes = this.revertToInlines(inlines);
+        // revert and set style
+        var nodes = this._revertToInlines();
         nodes = this.applyArgs(nodes, false);
 
         this.selection.restore();
 
-        this.clearEmptyStyle();
-        nodes = this.normalizeBlocks(nodes);
+        // clear and normalize
+        this._clearEmptyStyle();
+        nodes = this._normalizeBlocks(nodes);
 
         return nodes;
-
     },
-    formatUncollapsedAllInlines: function()
+    _convertTags: function(tag)
     {
-        var allInlines = this.selection.getInlines({ all: true });
-        if (allInlines.length === 0) return;
-
-        this.selection.save();
-
-        var replacedNodes = [];
-        for (var i = 0; i < allInlines.length; i++)
+        if (this.tag !== tag)
         {
-            var inline = allInlines[i];
-            var inlineTag = inline.tagName.toLowerCase();
-            var $inline = $R.dom(inline);
-            var $parent = $inline.closest(this.tag);
-            var parent = $parent.get();
-            if (parent)
+            var $editor = this.editor.getElement();
+            $editor.find(tag).each(function(node)
             {
-                var tag = this.arrangeTag(parent.tagName.toLowerCase());
-                if (tag === this.tag && this.hasSameArgs(parent) && replacedNodes.indexOf(parent) === -1)
+                var $el = this.utils.replaceToTag(node, 'span');
+                $el.addClass('redactor-convertable-' + tag);
+            }.bind(this));
+        }
+    },
+    _revertTags: function(tag)
+    {
+        var $editor = this.editor.getElement();
+
+        $editor.find('span.redactor-convertable-' + tag).each(function(node)
+        {
+            var $el = this.utils.replaceToTag(node, tag);
+            $el.removeClass('redactor-convertable-' + tag);
+            if (this.utils.removeEmptyAttr($el, 'class')) $el.removeAttr('class');
+
+        }.bind(this));
+    },
+    _convertToStrike: function(inlines)
+    {
+        var selected = this.selection.getText().replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
+        for (var i = 0; i < inlines.length; i++)
+        {
+            var tag = this.arrangeTag(inlines[i].tagName.toLowerCase());
+            var inline = inlines[i];
+            var $inline = $R.dom(inline);
+            var hasSameArgs = this.hasSameArgs(inline);
+
+            if (tag === this.tag)
+            {
+                if (this.tag === 'span' && this._isTextSelected(inline, selected))
                 {
-                    replacedNodes.push(parent);
+                    $inline.addClass('redactor-convertable-apply');
+                }
+                else if (hasSameArgs)
+                {
+                    this._replaceToStrike($inline);
+                }
+                else if (this.tag === 'span')
+                {
+                    $inline.addClass('redactor-unconvertable-apply');
                 }
             }
-
-            if (this.tag !== 'u' && inlineTag === 'u')
-            {
-                var $el = this.utils.replaceToTag(inline, 'span');
-                $el.addClass('redactor-convertable-u');
-            }
-
-            if (this.tag !== 'del' && inlineTag === 'del')
-            {
-                var $el = this.utils.replaceToTag(inline, 'span');
-                $el.addClass('redactor-convertable-del');
-            }
         }
-
-        for (var i = 0; i < replacedNodes.length; i++)
-        {
-            var $el = $R.dom(replacedNodes[i]);
-            $el.replaceWith(function(node)
-            {
-                return $R.dom('<strike>').append($el.contents());
-            });
-        }
-
-        this.selection.restore();
     },
-    normalizeBlocks: function(nodes)
+    _replaceToStrike: function($el)
+    {
+        $el.replaceWith(function()
+        {
+            return $R.dom('<strike>').append($el.contents());
+        });
+    },
+    _revertToInlines: function()
+    {
+        var nodes = [];
+        var $editor = this.editor.getElement();
+
+        if (this.tag !== 'u') $editor.find('u').unwrap();
+
+        // span convertable
+        $editor.find('span.redactor-convertable-apply').each(function(node)
+        {
+            var $node = $R.dom(node);
+            $node.find('strike').unwrap();
+
+            this._forceRemoveClass($node, 'redactor-convertable-apply');
+            nodes.push(node);
+
+        }.bind(this));
+
+        // span unconvertable
+        $editor.find('span.redactor-unconvertable-apply').each(function(node)
+        {
+            var $node = $R.dom(node);
+            this._forceRemoveClass($node, 'redactor-unconvertable-apply');
+
+        }.bind(this));
+
+        // strike
+        $editor.find('strike').each(function(node)
+        {
+            var $node = this.utils.replaceToTag(node, this.tag);
+            nodes.push($node.get());
+
+        }.bind(this));
+
+
+        this._revertTags('u');
+        this._revertTags('del');
+
+        return nodes;
+    },
+    _normalizeBlocks: function(nodes)
     {
         var tags = this.opts.inlineTags;
         var blocks = this.selection.getBlocks();
@@ -8765,33 +8739,44 @@ $R.add('service', 'inline', {
 
                         $R.dom(inline).unwrap();
                     }.bind(this));
-
                 }
-
-                //this.utils.normalizeTextNodes(blocks[i]);
             }
         }
 
         return nodes;
     },
-    clearEmptyStyle: function()
+    _clearDecoration: function()
+    {
+        var $editor = this.editor.getElement();
+        $editor.find(this.opts.inlineTags.join(',')).each(function(node)
+        {
+            if (node.style.textDecoration === 'line-through' || node.style.textDecorationLine === 'line-through')
+            {
+                var $el = $R.dom(node);
+                $el.css('textDecorationLine', '');
+                $el.css('textDecoration', '');
+                $el.wrap('<strike>');
+            }
+        });
+    },
+    _clearEmptyStyle: function()
     {
         var inlines = this.getInlines();
         for (var i = 0; i < inlines.length; i++)
         {
-            this.clearEmptyStyleAttr(inlines[i]);
+            this._clearEmptyStyleAttr(inlines[i]);
 
             var childNodes = inlines[i].childNodes;
             if (childNodes)
             {
                 for (var z = 0; z < childNodes.length; z++)
                 {
-                    this.clearEmptyStyleAttr(childNodes[z]);
+                    this._clearEmptyStyleAttr(childNodes[z]);
                 }
             }
         }
     },
-    clearEmptyStyleAttr: function(node)
+    _clearEmptyStyleAttr: function(node)
     {
         if (node.nodeType !== 3 && this.utils.removeEmptyAttr(node, 'style'))
         {
@@ -8799,84 +8784,18 @@ $R.add('service', 'inline', {
             node.removeAttribute('data-redactor-style-cache');
         }
     },
-    convertToStrike: function(inlines)
+    _forceRemoveClass: function($node, classname)
     {
-        for (var i = 0; i < inlines.length; i++)
-        {
-            var tag = this.arrangeTag(inlines[i].tagName.toLowerCase());
-            var inline = inlines[i];
-            var $inline = $R.dom(inline);
-            if (tag === this.tag)
-            {
-                if (this.hasSameArgs(inline))
-                {
-                    var $el = $R.dom(inline);
-                    $el.replaceWith(function(node)
-                    {
-                        return $R.dom('<strike>').append($el.contents());
-                    });
-                }
-                else if (this.tag === 'span')
-                {
-                    $inline.addClass('redactor-convertable-apply');
-                }
-
-            }
-
-            this.convertTags(inline, tag, 'u');
-            this.convertTags(inline, tag, 'del');
-        }
+        $node.removeClass(classname);
+        if (this.utils.removeEmptyAttr($node, 'class')) $node.removeAttr('class');
     },
-    revertToInlines: function(inlines)
+    _isTextSelected: function(node, selected)
     {
-        var nodes = [];
-        var $editor = this.editor.getElement();
+        var text = this.utils.removeInvisibleChars(node.textContent);
 
-        $editor.find('u').unwrap();
-        $editor.find('span.redactor-convertable-apply').each(function(node)
-        {
-            var $node = $R.dom(node);
-            $node.removeClass('redactor-convertable-apply');
-            $node.find('strike').unwrap();
-
-            if (this.utils.removeEmptyAttr(node, 'class')) $node.removeAttr('class');
-
-            nodes.push(node);
-
-        }.bind(this));
-
-        $editor.find('strike').each(function(node, i)
-        {
-            var $el = this.utils.replaceToTag(node, this.tag);
-            nodes.push($el.get());
-
-        }.bind(this));
-
-        this.revertTags('u');
-        this.revertTags('del');
-
-        return nodes;
+        return (selected === text || selected.search(new RegExp('^' + this.utils.escapeRegExp(text) + '$')) !== -1);
     },
-    convertTags: function(inline, tag, type)
-    {
-        if (this.tag !== type && tag === type)
-        {
-            var $el = this.utils.replaceToTag(inline, 'span');
-            $el.addClass('redactor-convertable-' + type);
-        }
-    },
-    revertTags: function(tag)
-    {
-        var $editor = this.editor.getElement();
 
-        $editor.find('span.redactor-convertable-' + tag).each(function(node)
-        {
-            var $el = this.utils.replaceToTag(node, tag);
-            $el.removeClass('redactor-convertable-' + tag);
-            if (this.utils.removeEmptyAttr($el, 'class')) $el.removeAttr('class');
-
-        }.bind(this));
-    },
     getInlines: function(tags)
     {
         return (tags) ? this.selection.getInlines({ tags: tags, all: true }) : this.selection.getInlines({ all: true });
@@ -8886,11 +8805,11 @@ $R.add('service', 'inline', {
         return $R.dom(this.getInlines(tags));
     },
     clearFormat: function()
-	{
-		this.selection.save();
+    {
+        this.selection.save();
 
-		var nodes = this.selection.getInlines({ all: true });
-		for (var i = 0; i < nodes.length; i++)
+        var nodes = this.selection.getInlines({ all: true });
+        for (var i = 0; i < nodes.length; i++)
         {
             var $el = $R.dom(nodes[i]);
             var inline = this.selection.getInline(nodes[i]);
@@ -8900,13 +8819,45 @@ $R.add('service', 'inline', {
             }
         }
 
-		this.selection.restore();
-	}
+        this.selection.restore();
+    }
 });
 $R.add('service', 'autoparser', {
     init: function(app)
     {
         this.app = app;
+    },
+    observe: function()
+    {
+        var $editor = this.editor.getElement();
+        var $objects = $editor.find('.redactor-autoparser-object').each(function(node)
+        {
+           var $node = $R.dom(node);
+           $node.removeClass('redactor-autoparser-object');
+           if ($node.attr('class') === '') $node.removeAttr('class');
+        });
+
+        if ($objects.length > 0)
+        {
+            $objects.each(function(node)
+            {
+                var type;
+                var $object = false;
+                var tag = node.tagName;
+
+                if (tag === 'A') type = 'link';
+                else if (tag === 'IMG') type = 'image';
+                else if (tag === 'IFRAME') type = 'video';
+
+                if (type)
+                {
+                    $object = $R.create(type + '.component', this.app, node);
+                    this.app.broadcast(type + '.inserted', $object);
+                    this.app.broadcast('autoparse', type, $object);
+                }
+
+            }.bind(this));
+        }
     },
     format: function(e, key)
     {
@@ -8917,18 +8868,20 @@ $R.add('service', 'autoparser', {
     },
     parse: function(html)
     {
-        var tags = ['figure', 'pre', 'code', 'a', 'iframe', 'img'];
+        var tags = ['figure', 'pre', 'code', 'a', 'iframe', 'img', 'i', 'em', 'span'];
+        var singleReplace = ['img', 'i', 'em', 'span'];
         var stored = [];
         var z = 0;
 
         // encode
         html = this.cleaner.encodePreCode(html);
 
-        // store
+        // store tags
         for (var i = 0; i < tags.length; i++)
         {
-            var re = (tags[i] === 'img') ? '<' + tags[i] + '[^>]*>' : '<' + tags[i] + '([\\w\\W]*?)</' + tags[i] + '>';
-            var matched = html.match(new RegExp(re, 'gi'));
+            var reTags = (singleReplace.indexOf(tags[i]) !== -1) ? '<' + tags[i] + '[^>]*>' : '<' + tags[i] + '([\\w\\W]*?)</' + tags[i] + '>';
+            var matched = html.match(new RegExp(reTags, 'gi'));
+
             if (matched !== null)
             {
                 for (var y = 0; y < matched.length; y++)
@@ -8944,44 +8897,44 @@ $R.add('service', 'autoparser', {
         if (this.opts.autoparseImages && html.match(this.opts.regex.imageurl))
         {
             var imagesMatches = html.match(this.opts.regex.imageurl);
-
             for (var i = 0; i < imagesMatches.length; i++)
             {
-                html = html.replace(imagesMatches[i], '<img src="' + imagesMatches[i] + '">');
+                html = html.replace(imagesMatches[i], '<img class="redactor-autoparser-object" src="' + imagesMatches[i] + '">');
             }
         }
 
         // video
         if (this.opts.autoparseVideo && (html.match(this.opts.regex.youtube) || html.match(this.opts.regex.vimeo)))
         {
-            var iframeStart = '<iframe width="500" height="281" src="';
+            var iframeStart = '<iframe width="500" height="281" class="redactor-autoparser-object" src="';
             var iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
 
-			if (html.match(this.opts.regex.youtube))
-			{
-				str = '//www.youtube.com/embed/$1';
+            var str, re;
+            if (html.match(this.opts.regex.youtube))
+            {
+                str = '//www.youtube.com/embed/$1';
                 re = this.opts.regex.youtube;
-			}
-			else if (html.match(this.opts.regex.vimeo))
-			{
-				str = '//player.vimeo.com/video/$2';
+            }
+            else if (html.match(this.opts.regex.vimeo))
+            {
+                str = '//player.vimeo.com/video/$2';
                 re = this.opts.regex.vimeo;
-			}
+            }
 
-			html = html.replace(re, iframeStart + str + iframeEnd);
+            html = html.replace(re, iframeStart + str + iframeEnd);
         }
 
         // links
         if (this.opts.autoparseLinks && html.match(this.opts.regex.url))
         {
-            html = this._formatLinks(html, true);
+            html = this._formatLinks(html);
         }
 
         // restore
         for (var i = 0; i < stored.length; i++)
-		{
-			html = html.replace('#####replaceparse' + i + '#####', stored[i]);
-		}
+        {
+            html = html.replace('#####replaceparse' + i + '#####', stored[i]);
+        }
 
         return html;
     },
@@ -9003,11 +8956,10 @@ $R.add('service', 'autoparser', {
         }
 
         // add split marker
-        var marker = document.createTextNode('\u200B');
+        var marker = this.utils.createInvisibleChar();
         var range = this.selection.getRange();
         range.insertNode(marker);
 
-        var element = this.selection.getElement();
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
         var $current = $R.dom(current);
@@ -9038,24 +8990,24 @@ $R.add('service', 'autoparser', {
             else if (this.opts.autoparseVideo && (content.match(this._convertToRegExp(this.opts.regex.youtube)) || content.match(this._convertToRegExp(this.opts.regex.vimeo))))
             {
                 var iframeStart = '<iframe width="500" height="281" src="';
-				var iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
-				var str, re;
+                var iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
+                var str, re;
 
-				if (content.match(this.opts.regex.youtube))
-				{
-    				str = '//www.youtube.com/embed/$1';
+                if (content.match(this.opts.regex.youtube))
+                {
+                    str = '//www.youtube.com/embed/$1';
                     re = this.opts.regex.youtube;
-				}
-				else if (content.match(this.opts.regex.vimeo))
-				{
-    				str = '//player.vimeo.com/video/$2';
+                }
+                else if (content.match(this.opts.regex.vimeo))
+                {
+                    str = '//player.vimeo.com/video/$2';
                     re = this.opts.regex.vimeo;
-				}
+                }
 
                 var $video = this.component.create('video', iframeStart + str + iframeEnd);
                 $video.addClass('redactor-autoparser-object');
 
-				content = content.replace(re, $video.get().outerHTML);
+                content = content.replace(re, $video.get().outerHTML);
                 type = 'video';
             }
             // links
@@ -9095,30 +9047,35 @@ $R.add('service', 'autoparser', {
                 this.app.broadcast('autoparse', type, $object);
             }
         }
-
-        this.utils.normalizeTextNodes(element);
     },
-    _formatLinks: function(content, parse)
+    _formatLinks: function(content)
     {
         var matches = content.match(this.opts.regex.url);
+        var obj = {};
         for (var i = 0; i < matches.length; i++)
-		{
-			var href = matches[i], text = href;
-			var linkProtocol = (href.match(/(https?|ftp):\/\//i) !== null) ? '' : 'http://';
+        {
+            var href = matches[i], text = href;
+            var linkProtocol = (href.match(/(https?|ftp):\/\//i) !== null) ? '' : 'http://';
             var regexB = (["/", "&", "="].indexOf(href.slice(-1)) !== -1) ? "" : "\\b";
-			var target = (this.opts.pasteLinkTarget !== false) ? ' target="' + this.opts.pasteLinkTarget + '"' : '';
+            var target = (this.opts.pasteLinkTarget !== false) ? ' target="' + this.opts.pasteLinkTarget + '"' : '';
 
-			text = (text.length > this.opts.linkSize) ? text.substring(0, this.opts.linkSize) + '...' : text;
-			text = (text.search('%') === -1) ? decodeURIComponent(text) : text;
+            text = (text.length > this.opts.linkSize) ? text.substring(0, this.opts.linkSize) + '...' : text;
+            text = (text.search('%') === -1) ? decodeURIComponent(text) : text;
 
-			// escaping url
-			var regexp = new RegExp('(' + href.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + regexB + ')', 'g');
-			var classstr = (parse) ? '' : ' class="redactor-autoparser-object"';
+            // escaping url
+            var regexp = '(' + href.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + regexB + ')';
+            var classstr = ' class="redactor-autoparser-object"';
 
-			content = content.replace(regexp, '<a href="' + linkProtocol + href.trim() + '"' + target + classstr + '>' + text.trim() + '</a>');
-		}
+            obj[regexp] = '<a href="' + linkProtocol + href.trim() + '"' + target + classstr + '>' + text.trim() + '</a>';
+        }
 
-		return content;
+        // replace
+        for (var key in obj)
+        {
+            content = content.replace(new RegExp(key, 'g'), obj[key]);
+        }
+
+        return content;
     },
     _convertToRegExp: function(str)
     {
@@ -9134,19 +9091,6 @@ $R.add('service', 'storage', {
         this.data = [];
     },
     // public
-    markImages: function()
-    {
-        var $editor = this.editor.getElement();
-        $editor.find('img').each(function(node)
-        {
-            var $node = $R.dom(node);
-            if (!$node.attr('data-image'))
-            {
-                $node.attr('data-image', this.utils.getRandomId());
-            }
-
-        }.bind(this));
-    },
     observeImages: function()
     {
         var $editor = this.editor.getElement();
@@ -9206,9 +9150,8 @@ $R.add('service', 'utils', {
     // empty
     isEmpty: function(el)
     {
-        var el = $R.dom(el).get();
         var isEmpty = false;
-
+        el = $R.dom(el).get();
         if (el)
         {
             isEmpty = (el.nodeType === 3) ? (el.textContent.trim().replace(/\n/, '') === '') : (el.innerHTML === '');
@@ -9216,27 +9159,51 @@ $R.add('service', 'utils', {
 
         return isEmpty;
     },
-    isEmptyHtml: function(html)
+    isEmptyHtml: function(html, keepbr, keeplists)
     {
-		html = html.replace(/[\u200B-\u200D\uFEFF]/g, '');
-		html = html.replace(/&nbsp;/gi, '');
-		html = html.replace(/<\/?br\s?\/?>/g, '');
-		html = html.replace(/\s/g, '');
-		html = html.replace(/^<p>[^\W\w\D\d]*?<\/p>$/i, '');
-		html = html.replace(/^<div>[^\W\w\D\d]*?<\/div>$/i, '');
+        html = this.removeInvisibleChars(html);
+        html = html.replace(/&nbsp;/gi, '');
+        html = html.replace(/<\/?br\s?\/?>/g, ((keepbr) ? 'br' : ''));
+        html = html.replace(/\s/g, '');
+        html = html.replace(/^<p>[^\W\w\D\d]*?<\/p>$/i, '');
+        html = html.replace(/^<div>[^\W\w\D\d]*?<\/div>$/i, '');
 
-		html = html.replace(/<hr(.*?[^>])>$/i, 'hr');
-		html = html.replace(/<iframe(.*?[^>])>$/i, 'iframe');
-		html = html.replace(/<source(.*?[^>])>$/i, 'source');
+        if (keeplists)
+        {
+            html = html.replace(/<ul(.*?[^>])>$/i, 'ul');
+            html = html.replace(/<ol(.*?[^>])>$/i, 'ol');
+        }
 
-		// remove empty tags
-		html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, '');
-		html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, '');
+        html = html.replace(/<hr(.*?[^>])>$/i, 'hr');
+        html = html.replace(/<iframe(.*?[^>])>$/i, 'iframe');
+        html = html.replace(/<source(.*?[^>])>$/i, 'source');
+
+        // remove empty tags
+        html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, '');
+        html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, '');
 
         // trim
-		html = html.trim();
+        html = html.trim();
 
-		return html === '';
+        return html === '';
+    },
+    trimSpaces: function(html)
+    {
+        return html = this.removeInvisibleChars(html.trim());
+    },
+
+    // invisible chars
+    createInvisibleChar: function()
+    {
+        return document.createTextNode(this.opts.markerChar);
+    },
+    searchInvisibleChars: function(str)
+    {
+        return str.search(/^[\u200B-\u200D\uFEFF]$/g);
+    },
+    removeInvisibleChars: function(html)
+    {
+        return html.replace(/[\u200B-\u200D\uFEFF]/g, '');
     },
 
     // fragment
@@ -9284,6 +9251,153 @@ $R.add('service', 'utils', {
         return { html: div.innerHTML, nodes: div.childNodes };
     },
 
+    splitNode: function(current, nodes, isList, inline)
+    {
+        nodes = (this.isFragment(nodes)) ? nodes.frag : nodes;
+
+        var element;
+        if (inline)
+        {
+            element = (this.inspector.isInlineTag(current.tagName)) ? current : this.selection.getInline(current);
+        }
+        else
+        {
+            element = (this.inspector.isBlockTag(current.tagName)) ? current : this.selection.getBlock(current);
+        }
+
+        var $element = $R.dom(element);
+
+        // replace is empty
+        if (!inline && this.isEmptyHtml(element.innerHTML, true))
+        {
+            $element.after(nodes);
+            $element.remove();
+
+            return nodes;
+        }
+
+        var tag = $element.get().tagName.toLowerCase();
+        var isEnd = this.caret.isEnd(element);
+        var isStart = this.caret.isStart(element);
+
+        if (!isEnd && !isStart)
+        {
+            var extractedContent = this.extractHtmlFromCaret(inline);
+
+            var $secondPart = $R.dom('<' + tag + ' />');
+            $secondPart = this.cloneAttributes(element, $secondPart);
+
+            $element.after($secondPart.append(extractedContent));
+        }
+
+        if (isStart)
+        {
+            return $element.before(nodes);
+        }
+        else
+        {
+            if (isList)
+            {
+                return $element.append(nodes);
+            }
+            else
+            {
+                nodes = $element.after(nodes);
+
+                var html = $element.html();
+                html = this.removeInvisibleChars(html);
+                html = html.replace(/&nbsp;/gi, '');
+
+                if (html === '') $element.remove();
+
+                return nodes;
+            }
+        }
+    },
+    extractHtmlFromCaret: function(inline, element)
+    {
+        var range = this.selection.getRange();
+        if (range)
+        {
+            element = (element) ? element : ((inline) ? this.selection.getInline() : this.selection.getBlock());
+            if (element)
+            {
+                var clonedRange = range.cloneRange();
+                clonedRange.selectNodeContents(element);
+                clonedRange.setStart(range.endContainer, range.endOffset);
+
+                return clonedRange.extractContents();
+            }
+        }
+    },
+    createMarkup: function(el)
+    {
+        var markup = document.createElement(this.opts.markup);
+        if (this.opts.breakline) markup.setAttribute('data-redactor-tag', 'br');
+
+        var $el = $R.dom(el);
+
+        $el.after(markup);
+        this.caret.setStart(markup);
+    },
+    getNode: function(el)
+    {
+        var node = $R.dom(el).get();
+        var editor = this.editor.getElement().get();
+
+        return (typeof el === 'undefined') ? editor : ((node) ? node : false);
+    },
+    findSiblings: function(node, type)
+    {
+        node = $R.dom(node).get();
+        type = (type === 'next') ? 'nextSibling' : 'previousSibling';
+
+        while (node = node[type])
+        {
+            if ((node.nodeType === 3 && node.textContent.trim() === '') || node.tagName === 'BR')
+            {
+                continue;
+            }
+
+            return node;
+        }
+
+        return false;
+    },
+    getElementsFromHtml: function(html, selector, exclude)
+    {
+        var div = document.createElement("div");
+        div.innerHTML = html;
+
+        var elems = div.querySelectorAll(selector);
+
+        // array map polyfill
+        var mapping = function(callback, thisArg)
+        {
+            if (typeof this.length !== 'number') return;
+            if (typeof callback !== 'function') return;
+
+            var newArr = [];
+            if (typeof this == 'object')
+            {
+                for (var i = 0; i < this.length; i++)
+                {
+                    if (i in this) newArr[i] = callback.call(thisArg || this, this[i], i, this);
+                    else return;
+                }
+            }
+
+            return newArr;
+        };
+
+        return mapping.call(elems, function(el)
+        {
+            var type = el.getAttribute('data-redactor-type');
+            if (exclude && type && type === exclude) {}
+            else return el.outerHTML;
+        });
+    },
+
     // childnodes
     getChildNodes: function(el, recursive, elements)
     {
@@ -9295,7 +9409,7 @@ $R.add('service', 'utils', {
         {
             for (var i = 0; i < nodes.length; i++)
             {
-                if (elements === true && nodes[i].nodeType === 3) continue
+                if (elements === true && nodes[i].nodeType === 3) continue;
                 else if (nodes[i].nodeType === 3 && this.isEmpty(nodes[i])) continue;
 
                 result.push(nodes[i]);
@@ -9335,25 +9449,25 @@ $R.add('service', 'utils', {
     },
 
     // replace
-	replaceToTag: function(node, tag)
-	{
-    	var $node = $R.dom(node);
-		return $node.replaceWith(function(node)
-		{
-			var $replaced = $R.dom('<' + tag + '>').append($R.dom(node).contents());
+    replaceToTag: function(node, tag)
+    {
+        var $node = $R.dom(node);
+        return $node.replaceWith(function(node)
+        {
+            var $replaced = $R.dom('<' + tag + '>').append($R.dom(node).contents());
             if (node.attributes)
             {
                 var attrs = node.attributes;
-    			for (var i = 0; i < attrs.length; i++)
-    			{
+                for (var i = 0; i < attrs.length; i++)
+                {
                     $replaced.attr(attrs[i].nodeName, attrs[i].value);
                 }
-			}
+            }
 
             return $replaced;
 
-		});
-	},
+        });
+    },
 
     // string
     ucfirst: function(str)
@@ -9364,7 +9478,7 @@ $R.add('service', 'utils', {
     // array
     removeFromArrayByValue: function(arr, value)
     {
-        var value, a = arguments, len = a.length, ax;
+        var a = arguments, len = a.length, ax;
         while (len > 1 && arr.length)
         {
             value = a[--len];
@@ -9378,36 +9492,36 @@ $R.add('service', 'utils', {
     },
 
     // attributes
-	removeEmptyAttr: function(el, attr)
-	{
-		var $el = $R.dom(el);
+    removeEmptyAttr: function(el, attr)
+    {
+        var $el = $R.dom(el);
 
-		if (typeof $el.attr(attr) === 'undefined' || $el.attr(attr) == null) return true;
-		else if ($el.attr(attr) === '')
-		{
-    		$el.removeAttr(attr);
-    		return true;
+        if (typeof $el.attr(attr) === 'undefined' || $el.attr(attr) === null) return true;
+        else if ($el.attr(attr) === '')
+        {
+            $el.removeAttr(attr);
+            return true;
         }
 
-		return false;
-	},
+        return false;
+    },
     cloneAttributes: function(elFrom, elTo)
-	{
-		elFrom = $R.dom(elFrom).get();
-		elTo = $R.dom(elTo);
+    {
+        elFrom = $R.dom(elFrom).get();
+        elTo = $R.dom(elTo);
 
-		var attrs = elFrom.attributes;
-		var len = attrs.length;
-		while (len--)
-		{
-		    var attr = attrs[len];
-		    elTo.attr(attr.name, attr.value);
-		}
+        var attrs = elFrom.attributes;
+        var len = attrs.length;
+        while (len--)
+        {
+            var attr = attrs[len];
+            elTo.attr(attr.name, attr.value);
+        }
 
-		return elTo;
-	},
+        return elTo;
+    },
 
-	// object
+    // object
     toParams: function(obj)
     {
         var keys = Object.keys(obj);
@@ -9505,12 +9619,12 @@ $R.add('service', 'utils', {
     },
 
     // color
-	isRgb: function(str)
-	{
+    isRgb: function(str)
+    {
         return (str.search(/^rgb/i) === 0);
-	},
-	rgb2hex: function(rgb)
-	{
+    },
+    rgb2hex: function(rgb)
+    {
         rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
 
         return (rgb && rgb.length === 4) ? "#" +
@@ -9528,15 +9642,15 @@ $R.add('service', 'utils', {
         return val;
     },
 
-	// escape
-	escapeRegExp: function(s)
-	{
+    // escape
+    escapeRegExp: function(s)
+    {
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     },
 
-	// random
-	getRandomId: function()
-	{
+    // random
+    getRandomId: function()
+    {
         var id = '';
         var possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -9546,7 +9660,7 @@ $R.add('service', 'utils', {
         }
 
         return id;
-	},
+    },
 
     // private
     _getFirst: function(nodes)
@@ -9565,48 +9679,48 @@ $R.add('service', 'progress', {
 
         // local
         this.$box = null;
-		this.$bar = null;
+        this.$bar = null;
     },
 
     // public
-	show: function()
-	{
-		if (!this._is()) this._build();
+    show: function()
+    {
+        if (!this._is()) this._build();
         this.$box.show();
-	},
-	hide: function()
-	{
-		if (this._is())
-		{
-    		this.animate.start(this.$box, 'fadeOut', this._destroy.bind(this));
-		}
-	},
-	update: function(value)
-	{
-		this.show();
-		this.$bar.css('width', value + '%');
-	},
+    },
+    hide: function()
+    {
+        if (this._is())
+        {
+            this.animate.start(this.$box, 'fadeOut', this._destroy.bind(this));
+        }
+    },
+    update: function(value)
+    {
+        this.show();
+        this.$bar.css('width', value + '%');
+    },
 
-	// private
-	_is: function()
-	{
-		return (this.$box !== null);
-	},
-	_build: function()
-	{
-		this.$bar = $R.dom('<span />');
-		this.$box = $R.dom('<div id="redactor-progress" />');
+    // private
+    _is: function()
+    {
+        return (this.$box !== null);
+    },
+    _build: function()
+    {
+        this.$bar = $R.dom('<span />');
+        this.$box = $R.dom('<div id="redactor-progress" />');
 
-		this.$box.append(this.$bar);
-		this.$body.append(this.$box);
-	},
-	_destroy: function()
-	{
-		if (this._is()) this.$box.remove();
+        this.$box.append(this.$bar);
+        this.$body.append(this.$box);
+    },
+    _destroy: function()
+    {
+        if (this._is()) this.$box.remove();
 
-		this.$box = null;
-		this.$bar = null;
-	}
+        this.$box = null;
+        this.$bar = null;
+    }
 });
 $R.add('module', 'starter', {
     init: function(app)
@@ -9697,17 +9811,28 @@ $R.add('module', 'element', {
         if (type === 'div') this._redefineOptions(this.opts.modes['original']);
 
         if (type !== 'inline')
-		{
-    		if (this._isRootOption('styles') && this.rootOpts.styles) this.opts.styles = true;
-    		if (this._isRootOption('source') && !this.rootOpts.source) this.opts.showSource = false;
-		}
+        {
+            if (this._isRootOption('styles') && this.rootOpts.styles) this.opts.styles = true;
+            if (this._isRootOption('source') && !this.rootOpts.source) this.opts.showSource = false;
+        }
     },
     _buildMarkup: function()
     {
-        if (this.opts.breakline) this.opts.markup = 'br';
+        var type = this.element.getType();
 
-        var tag = this.opts.markup;
-        this.opts.emptyHtml = (tag === 'br') ? '' : '<' + tag + '></' + tag + '>';
+        if (type === 'inline')
+        {
+            this.opts.emptyHtml = '';
+        }
+        else if (this.opts.breakline)
+        {
+            this.opts.markup = 'div';
+            this.opts.emptyHtml = '<div data-redactor-tag="br">' + this.opts.markerChar + '</div>';
+        }
+        else
+        {
+            this.opts.emptyHtml = '<' + this.opts.markup + '></' + this.opts.markup + '>';
+        }
     },
     _redefineOptions: function(opts)
     {
@@ -9716,7 +9841,7 @@ $R.add('module', 'element', {
             this.opts[key] = opts[key];
         }
     },
-    _isRootOption: function(name)
+    _isRootOption: function()
     {
         return (typeof this.rootOpts['styles'] !== 'undefined');
     }
@@ -9733,6 +9858,7 @@ $R.add('module', 'editor', {
         this.component = app.component;
         this.container = app.container;
         this.inspector = app.inspector;
+        this.autoparser = app.autoparser;
 
         // local
         this.placeholder = false;
@@ -9775,6 +9901,10 @@ $R.add('module', 'editor', {
     {
         this._disableReadOnly();
     },
+    onautoparseobserve: function()
+    {
+        this.autoparser.observe();
+    },
     onplaceholder: {
         build: function()
         {
@@ -9807,6 +9937,7 @@ $R.add('module', 'editor', {
         $editor.removeAttr('dir');
         $editor.removeAttr('contenteditable');
         $editor.removeAttr('placeholder');
+        $editor.removeAttr('data-gramm_editor');
         $editor.removeClass(classesEditor.join(' '));
 
         $container.removeClass(classesContainer.join(' '));
@@ -9821,12 +9952,12 @@ $R.add('module', 'editor', {
         var $container = this.container.getElement();
 
         $editor.addClass('redactor-in redactor-in-' + this.uuid);
-		$editor.attr({ 'contenteditable': true });
+        $editor.attr({ 'contenteditable': true });
 
-		if (this.opts.structure)
-		{
-    		$editor.addClass('redactor-structure');
-		}
+        if (this.opts.structure)
+        {
+            $editor.addClass('redactor-structure');
+        }
 
         if (this.opts.toolbar && !this.opts.air && !this.opts.toolbarExternal)
         {
@@ -9834,7 +9965,7 @@ $R.add('module', 'editor', {
         }
 
         // prevent editing
-		this._disableBrowsersEditing();
+        this._disableBrowsersEditing();
     },
     disable: function()
     {
@@ -9842,8 +9973,8 @@ $R.add('module', 'editor', {
         var $container = this.container.getElement();
 
         $editor.removeClass('redactor-in redactor-in-' + this.uuid);
-  		$editor.removeClass('redactor-structure');
-		$editor.removeAttr('contenteditable');
+        $editor.removeClass('redactor-structure');
+        $editor.removeAttr('contenteditable');
 
         $container.addClass('redactor-toolbar-on');
     },
@@ -9856,6 +9987,11 @@ $R.add('module', 'editor', {
         var $container = this.container.getElement();
 
         $container.addClass('redactor-blur');
+
+        if (!this.opts.grammarly)
+        {
+            $editor.attr('data-gramm_editor', false);
+        }
 
         if (this.opts.styles)
         {
@@ -9882,23 +10018,23 @@ $R.add('module', 'editor', {
     {
         var $editor = this.editor.getElement();
 
-		$editor.attr('dir', this.opts.direction);
+        $editor.attr('dir', this.opts.direction);
 
-		if (this.opts.tabindex)  $editor.attr('tabindex', this.opts.tabindex);
-		if (this.opts.minHeight) $editor.css('min-height', this.opts.minHeight);
-		if (this.opts.maxHeight) $editor.css('max-height', this.opts.maxHeight);
-		if (this.opts.maxWidth)  $editor.css({ 'max-width': this.opts.maxWidth, 'margin': 'auto' });
+        if (this.opts.tabindex)  $editor.attr('tabindex', this.opts.tabindex);
+        if (this.opts.minHeight) $editor.css('min-height', this.opts.minHeight);
+        if (this.opts.maxHeight) $editor.css('max-height', this.opts.maxHeight);
+        if (this.opts.maxWidth)  $editor.css({ 'max-width': this.opts.maxWidth, 'margin': 'auto' });
     },
-	_buildAccesibility: function()
-	{
-    	var $editor = this.editor.getElement();
+    _buildAccesibility: function()
+    {
+        var $editor = this.editor.getElement();
 
-		$editor.attr({ 'aria-labelledby': 'redactor-voice-' + this.uuid, 'role': 'presentation' });
-	},
-	_buildPlaceholder: function()
-	{
-		this.placeholder = $R.create('editor.placeholder', this.app);
-	},
+        $editor.attr({ 'aria-labelledby': 'redactor-voice-' + this.uuid, 'role': 'presentation' });
+    },
+    _buildPlaceholder: function()
+    {
+        this.placeholder = $R.create('editor.placeholder', this.app);
+    },
     _enableFocus: function()
     {
         if (this.opts.showSource) this._enableFocusSource();
@@ -9924,63 +10060,63 @@ $R.add('module', 'editor', {
         {
             setTimeout(this.editor.startFocus.bind(this.editor), 100);
         }
-	    else if (this.opts.focusEnd)
-	    {
-    	    setTimeout(this.editor.endFocus.bind(this.editor), 100);
+        else if (this.opts.focusEnd)
+        {
+            setTimeout(this.editor.endFocus.bind(this.editor), 100);
         }
     },
     _togglePlacehodler: function()
     {
         if (this.placeholder) this.placeholder.toggle();
     },
-	_disableBrowsersEditing: function()
-	{
-		try {
-			// FF fix
-			document.execCommand('enableObjectResizing', false, false);
-			document.execCommand('enableInlineTableEditing', false, false);
-			// IE prevent converting links
-			document.execCommand("AutoUrlDetect", false, false);
+    _disableBrowsersEditing: function()
+    {
+        try {
+            // FF fix
+            document.execCommand('enableObjectResizing', false, false);
+            document.execCommand('enableInlineTableEditing', false, false);
+            // IE prevent converting links
+            document.execCommand("AutoUrlDetect", false, false);
 
             // IE disable image resizing
             var $editor = this.editor.getElement();
-			var el = $editor.get();
-			if (el.addEventListener) el.addEventListener('mscontrolselect', function(e) { e.preventDefault(); });
-			else el.attachEvent('oncontrolselect', function(e) { e.returnValue = false; });
+            var el = $editor.get();
+            if (el.addEventListener) el.addEventListener('mscontrolselect', function(e) { e.preventDefault(); });
+            else el.attachEvent('oncontrolselect', function(e) { e.returnValue = false; });
 
-		} catch (e) {}
-	},
-	_destroyEvents: function()
-	{
+        } catch (e) {}
+    },
+    _destroyEvents: function()
+    {
         if (this.events)
         {
             this.events.destroy();
         }
-	},
-	_enableReadOnly: function()
-	{
+    },
+    _enableReadOnly: function()
+    {
         var $editor = this.editor.getElement();
 
-    	this._getEditables($editor).removeAttr('contenteditable');
-    	$editor.addClass('redactor-read-only');
+        this._getEditables($editor).removeAttr('contenteditable');
         $editor.removeAttr('contenteditable');
+        $editor.addClass('redactor-read-only');
 
         if (this.events) this.events.destroy();
-	},
-	_disableReadOnly: function()
-	{
+    },
+    _disableReadOnly: function()
+    {
         var $editor = this.editor.getElement();
 
-    	this._getEditables($editor).attr({ 'contenteditable': true });
+        this._getEditables($editor).attr({ 'contenteditable': true });
         $editor.removeClass('redactor-read-only');
         $editor.attr({ 'contenteditable': true });
 
-        if (this.events) this.events.init();
-	},
-	_getEditables: function($editor)
-	{
+        this._buildEvents();
+    },
+    _getEditables: function($editor)
+    {
         return $editor.find('figcaption, td, th');
-	}
+    }
 });
 $R.add('class', 'editor.placeholder', {
     init: function(app)
@@ -10007,7 +10143,7 @@ $R.add('class', 'editor.placeholder', {
     },
     toggle: function()
     {
-        return (this.editor.isEmpty()) ? this.show() : this.hide();
+        return (this.editor.isEmpty(true)) ? this.show() : this.hide();
     },
     show: function()
     {
@@ -10024,10 +10160,13 @@ $R.add('class', 'editor.events', {
     init: function(app)
     {
         this.app = app;
+        this.opts = app.opts;
         this.$doc = app.$doc;
         this.uuid = app.uuid;
         this.editor = app.editor;
+        this.cleaner = app.cleaner;
         this.container = app.container;
+        this.insertion = app.insertion;
         this.inspector = app.inspector;
         this.selection = app.selection;
         this.component = app.component;
@@ -10042,7 +10181,7 @@ $R.add('class', 'editor.events', {
     },
     destroy: function()
     {
-    	var $editor = this.editor.getElement();
+        var $editor = this.editor.getElement();
 
         $editor.off('.redactor-focus');
         this.$doc.off('keyup' + this.blurNamespace + ' mousedown' + this.blurNamespace);
@@ -10050,75 +10189,130 @@ $R.add('class', 'editor.events', {
         // all events
         this._loop('off');
     },
-	focus: function(e)
-	{
-    	var $container = this.container.getElement();
+    focus: function(e)
+    {
+        var $container = this.container.getElement();
 
-    	if (this.editor.isPasting() || $container.hasClass('redactor-focus')) return;
+        if (this.editor.isPasting() || $container.hasClass('redactor-focus')) return;
 
         $container.addClass('redactor-focus');
         $container.removeClass('redactor-blur');
 
-    	this.app.broadcast('observe', e);
-    	this.app.broadcast('focus', e);
+        this.app.broadcast('observe', e);
+        this.app.broadcast('focus', e);
 
-		this.isFocused = true;
-		this.isBlured = false;
-	},
-	blur: function(e)
-	{
-    	var $container = this.container.getElement();
-    	var $target = $R.dom(e.target);
-    	var targets = ['.redactor-in-' + this.uuid,  '.redactor-toolbar', '.redactor-dropdown', '#redactor-modal-box'];
+        this.isFocused = true;
+        this.isBlured = false;
+    },
+    blur: function(e)
+    {
+        var $container = this.container.getElement();
+        var $target = $R.dom(e.target);
+        var targets = ['.redactor-in-' + this.uuid,  '.redactor-toolbar', '.redactor-dropdown',
+        '.redactor-context-toolbar', '#redactor-modal-box', '#redactor-image-resizer'];
 
-    	if (!this.app.isStarted() || this.editor.isPasting()) return;
-    	if ($target.closest(targets.join(',')).length !== 0) return;
+        this.app.broadcast('originalblur', e);
+        if (this.app.stopBlur) return;
+
+        if (!this.app.isStarted() || this.editor.isPasting()) return;
+        if ($target.closest(targets.join(',')).length !== 0) return;
 
         if (!this.isBlured && !$container.hasClass('redactor-blur'))
-		{
+        {
             $container.removeClass('redactor-focus');
             $container.addClass('redactor-blur');
-			this.app.broadcast('blur', e);
+            this.app.broadcast('blur', e);
 
             this.isFocused = false;
-    		this.isBlured = true;
-		}
-	},
-	cut: function(e)
-	{
-    	var current = this.selection.getCurrent();
+            this.isBlured = true;
+        }
+    },
+    cut: function(e)
+    {
+        var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
 
         this.app.broadcast('state', e);
 
-        if (data.isComponent() && !data.isComponentEditable())
+        if (this.component.isNonEditable(current))
         {
             this._passSelectionToClipboard(e, data, true);
             e.preventDefault();
         }
-	},
-	copy: function(e)
-	{
-    	var current = this.selection.getCurrent();
+    },
+    copy: function(e)
+    {
+        var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
 
         this.app.broadcast('state', e);
 
-        if (data.isComponent() && !data.isComponentEditable())
+        if (this.component.isNonEditable(current))
         {
             this._passSelectionToClipboard(e, data, false);
             e.preventDefault();
         }
-	},
+    },
     drop: function(e)
     {
         e = e.originalEvent || e;
         e.stopPropagation();
         this._removeOverClass();
 
+        if (this.app.isDragComponentInside())
+        {
+            var $dragComponent = $R.dom(this.app.getDragComponentInside());
+            var $component = $dragComponent.clone(true);
+            this.insertion.insertToPoint(e, $component);
+
+            $dragComponent.remove();
+
+            this.app.setDragComponentInside(false);
+            this.app.broadcast('state', e);
+            this.app.broadcast('drop', e);
+            this.app.broadcast('image.observe', e);
+
+            e.preventDefault();
+
+            return;
+        }
+        else if (this.app.isDragInside() && this.opts.input)
+        {
+            this.insertion.insertPoint(e);
+
+            var dt = e.dataTransfer;
+            var html = dt.getData('text/html');
+
+            // clear selected
+            var range = this.selection.getRange();
+            if (range)
+            {
+                var blocks = this.selection.getBlocks();
+                range.deleteContents();
+
+                // remove empty blocks
+                for (var i = 0; i < blocks.length; i++)
+                {
+                    if (blocks[i].innerHTML === '') $R.dom(blocks[i]).remove();
+                }
+            }
+
+            // paste
+            $R.create('input.paste', this.app, e, true, html, true);
+
+            this.app.broadcast('state', e);
+            this.app.broadcast('drop', e);
+
+            this.app.setDragInside(false);
+            e.preventDefault();
+
+            return;
+        }
+
         this.app.broadcast('state', e);
         this.app.broadcast('paste', e, e.dataTransfer);
         this.app.broadcast('drop', e);
+
     },
     dragenter: function(e)
     {
@@ -10126,13 +10320,25 @@ $R.add('class', 'editor.events', {
     },
     dragstart: function(e)
     {
+        this.app.setDragComponentInside(false);
+        this.app.setDragInside(false);
+
+        var data = this.inspector.parse(e.target);
+        if (data.isComponent() && !data.isComponentEditable() && !data.isFigcaption())
+        {
+            this.app.setDragComponentInside(data.getComponent());
+        }
+        else if (this.selection.is() && !this.selection.isCollapsed())
+        {
+            // drag starts inside editor
+            this.app.setDragInside(true);
+            this._setDragData(e);
+        }
+
         this.app.broadcast('dragstart', e);
     },
     dragover: function(e)
     {
-        e = e.originalEvent || e;
-        e.preventDefault();
-
         this.app.broadcast('dragover', e);
     },
     dragleave: function(e)
@@ -10145,10 +10351,29 @@ $R.add('class', 'editor.events', {
     },
     contextmenu: function(e)
     {
-        this.app.broadcast('contextmenu', e);
+        // chrome crashes fix
+        this.editor.disableNonEditables();
+
+        setTimeout(function()
+        {
+            this.editor.enableNonEditables();
+            this.app.broadcast('contextmenu', e);
+
+        }.bind(this), 0);
     },
     click: function(e)
     {
+        // triple click selection
+        if (e.detail === 3)
+        {
+            e.preventDefault();
+
+            var block = this.selection.getBlock();
+            var range = document.createRange();
+            range.selectNodeContents(block);
+            this.selection.setRange(range)
+        }
+
         this.app.broadcast('state', e);
         this.app.broadcast('click', e);
     },
@@ -10163,24 +10388,24 @@ $R.add('class', 'editor.events', {
     },
     keyup: function(e)
     {
-    	this.app.broadcast('observe', e);
+        this.app.broadcast('observe', e);
         this.app.broadcast('keyup', e);
     },
     mouseup: function(e)
     {
-    	this.app.broadcast('observe', e);
+        this.app.broadcast('observe', e);
         this.app.broadcast('state', e);
     },
     touchstart: function(e)
     {
-    	this.app.broadcast('observe', e);
+        this.app.broadcast('observe', e);
         this.app.broadcast('state', e);
     },
 
-	// private
+    // private
     _init: function()
     {
-    	var $editor = this.editor.getElement();
+        var $editor = this.editor.getElement();
 
         $editor.on('focus.redactor-focus click.redactor-focus', this.focus.bind(this));
         this.$doc.on('keyup' + this.blurNamespace + ' mousedown' + this.blurNamespace, this.blur.bind(this));
@@ -10188,11 +10413,11 @@ $R.add('class', 'editor.events', {
         // all events
         this._loop('on');
     },
-	_removeOverClass: function()
-	{
+    _removeOverClass: function()
+    {
         var $editor = this.editor.getElement();
         $editor.removeClass('over');
-	},
+    },
     _loop: function(func)
     {
         var $editor = this.editor.getElement();
@@ -10223,6 +10448,14 @@ $R.add('class', 'editor.events', {
 
         clipboard.setData('text/html', content);
         clipboard.setData('text/plain', content.toString().replace(/\n$/, ""));
+    },
+    _setDragData: function(e)
+    {
+        e = e.originalEvent || e;
+
+        var dt = e.dataTransfer;
+        dt.effectAllowed = 'move';
+        dt.setData('text/Html', this.selection.getHtml());
     }
 });
 $R.add('module', 'container', {
@@ -10265,17 +10498,17 @@ $R.add('module', 'container', {
         $element.after($container);
         $container.append($element);
     },
-	_buildAccesibility: function()
-	{
+    _buildAccesibility: function()
+    {
         var $container = this.container.getElement();
-    	var $label = $R.dom('<span />');
+        var $label = $R.dom('<span />');
 
-    	$label.addClass('redactor-voice-label');
-    	$label.attr({ 'id': 'redactor-voice-' + this.uuid, 'aria-hidden': false });
+        $label.addClass('redactor-voice-label');
+        $label.attr({ 'id': 'redactor-voice-' + this.uuid, 'aria-hidden': false });
         $label.html(this.lang.get('accessibility-help-label'));
 
-		$container.prepend($label);
-	}
+        $container.prepend($label);
+    }
 });
 $R.add('module', 'source', {
     init: function(app)
@@ -10284,7 +10517,6 @@ $R.add('module', 'source', {
         this.uuid = app.uuid;
         this.opts = app.opts;
         this.utils = app.utils;
-        this.marker = app.marker;
         this.element = app.element;
         this.source = app.source;
         this.editor = app.editor;
@@ -10297,7 +10529,6 @@ $R.add('module', 'source', {
 
         // local
         this.syncedHtml = '';
-        this.started = false;
     },
     // messages
     onstartcode: function()
@@ -10313,7 +10544,7 @@ $R.add('module', 'source', {
         }
 
         // started content
-        var startContent = this.cleaner.input(sourceContent);
+        var startContent = this.cleaner.input(sourceContent, true, true);
         var syncContent = this.cleaner.output(startContent);
 
         // set content
@@ -10321,8 +10552,8 @@ $R.add('module', 'source', {
         $source.val(syncContent);
 
         this.syncedHtml = syncContent;
-        this.started = (this.utils.isEmptyHtml(syncContent));
         this.app.broadcast('placeholder.build');
+        this.app.broadcast('autoparseobserve');
 
         // widget's scripts
         this.component.executeScripts();
@@ -10349,6 +10580,7 @@ $R.add('module', 'source', {
 
         $element.removeClass('redactor-source redactor-source-open');
         $source.off('input.redactor-source');
+        $source.removeAttr('data-gramm_editor');
 
         if ($source.get().classList.length === 0) $source.removeAttr('class');
         if (this.source.isNameGenerated()) $element.removeAttr('name');
@@ -10381,12 +10613,12 @@ $R.add('module', 'source', {
 
         if (this.app.isStarted()) html = this.app.broadcast('source.open', html);
 
-        this.editorIsSelected = this.selection.is();
-
         // insert markers
-        this.editorHtml = this._insertMarkersToEditor();
-        this.editorHtml = this.cleaner.output(this.editorHtml, false);
-        this.editorHtml = this.editorHtml.trim();
+        var sourceSelection = $R.create('source.selection', this.app);
+
+        var editorHtml = sourceSelection.insertMarkersToEditor();
+        editorHtml = this.cleaner.output(editorHtml, false);
+        editorHtml = editorHtml.trim();
 
         // get height
         var editorHeight = $editor.height();
@@ -10403,7 +10635,7 @@ $R.add('module', 'source', {
         $container.addClass('redactor-source-view');
 
         // offset markers
-        this._setSelectionOffsetSource();
+        sourceSelection.setSelectionOffsetSource(editorHtml);
 
         // buttons
         setTimeout(function()
@@ -10426,16 +10658,12 @@ $R.add('module', 'source', {
         var html = $source.val();
 
         // insert markers
-        html = this._insertMarkersToSource(html);
+        var sourceSelection = $R.create('source.selection', this.app);
+        html = sourceSelection.insertMarkersToSource(html);
 
         // clean
-        html = this.cleaner.input(html);
-
-        if (this.utils.isEmptyHtml(html))
-        {
-            html = (this.opts.breakline) ? '<br>' : this.opts.emptyHtml;
-        }
-
+        html = this.cleaner.input(html, true);
+        html = (this.utils.isEmptyHtml(html)) ? this.opts.emptyHtml : html;
         html = this.app.broadcast('source.close', html);
 
         // buttons
@@ -10450,7 +10678,17 @@ $R.add('module', 'source', {
 
         $container.removeClass('redactor-source-view');
 
-        setTimeout(function() { this.selection.restoreMarkers(); }.bind(this), 0);
+        setTimeout(function()
+        {
+            if (sourceSelection.isOffset()) this.selection.restoreMarkers();
+            else if (sourceSelection.isOffsetEnd()) this.editor.endFocus();
+            else this.editor.startFocus();
+
+            // widget's scripts
+            this.component.executeScripts();
+
+        }.bind(this), 0);
+
         this.app.broadcast('source.closed');
     },
     sync: function()
@@ -10459,13 +10697,13 @@ $R.add('module', 'source', {
         var $editor = this.editor.getElement();
         var html = $editor.html();
 
-        if (this.started) html = this.app.broadcast('syncBefore', html);
+        html = this.app.broadcast('syncBefore', html);
         html = this.cleaner.output(html);
 
-		if (this._isSync(html))
-		{
-    		if (this.timeout) clearTimeout(this.timeout);
-    		this.timeout = setTimeout(function() { self._syncing(html); }, 200);
+        if (this._isSync(html))
+        {
+            if (this.timeout) clearTimeout(this.timeout);
+            this.timeout = setTimeout(function() { self._syncing(html); }, 200);
         }
     },
 
@@ -10477,25 +10715,31 @@ $R.add('module', 'source', {
 
         $source.hide();
 
-        if (!this.element.isType('textarea')) $element.after($source);
+        if (!this.opts.grammarly)
+        {
+            $source.attr('data-gramm_editor', false);
+        }
+
+        if (!this.element.isType('textarea'))
+        {
+            $element.after($source);
+        }
     },
-	_buildClasses: function()
-	{
-    	var $source = this.source.getElement();
+    _buildClasses: function()
+    {
+        var $source = this.source.getElement();
 
         $source.addClass('redactor-source');
-	},
+    },
     _syncing: function(html)
     {
-        if (this.started) html = this.app.broadcast('syncing', html);
+        html = this.app.broadcast('syncing', html);
 
         var $source = this.source.getElement();
         $source.val(html);
 
-        if (this.started) this.app.broadcast('synced', html);
-        if (this.started) this.app.broadcast('changed', html);
-
-        this.started = true;
+        this.app.broadcast('synced', html);
+        this.app.broadcast('changed', html);
     },
     _isSync: function(html)
     {
@@ -10507,7 +10751,7 @@ $R.add('module', 'source', {
 
         return false;
     },
-    _onChangedSource: function(e)
+    _onChangedSource: function()
     {
         var $source = this.source.getElement();
         var html = $source.val();
@@ -10523,10 +10767,10 @@ $R.add('module', 'source', {
 
         var $source = this.source.getElement();
         var el = $source.get();
-		var start = el.selectionStart;
+        var start = el.selectionStart;
 
-		$source.val($source.val().substring(0, start) + "    " + $source.val().substring(el.selectionEnd));
-		el.selectionStart = el.selectionEnd = start + 4;
+        $source.val($source.val().substring(0, start) + "    " + $source.val().substring(el.selectionEnd));
+        el.selectionStart = el.selectionEnd = start + 4;
     },
     _onFocus: function()
     {
@@ -10550,64 +10794,56 @@ $R.add('module', 'source', {
     {
         var $btn = this.toolbar.getButton('html');
         $btn.setInactive();
-    },
-    _insertMarkersToEditor: function()
+    }
+});
+$R.add('class', 'source.selection', {
+    init: function(app)
     {
-        var html = '';
+        this.app = app;
+        this.utils = app.utils;
+        this.source = app.source;
+        this.editor = app.editor;
+        this.marker = app.marker;
+        this.component = app.component;
+        this.selection = app.selection;
+
+        // local
+        this.markersOffset = false;
+        this.markersOffsetEnd = false;
+    },
+    insertMarkersToEditor: function()
+    {
         var $editor = this.editor.getElement();
-        var $start = this.marker.build('start');
-        var $end = this.marker.build('end');
+        var start = this.marker.build('start');
+        var end = this.marker.build('end');
         var component = this.component.getActive();
         if (component)
         {
             this.marker.remove();
             var $component = $R.dom(component);
 
-            $component.after($end);
-            $component.after($start);
+            $component.after(end);
+            $component.after(start);
         }
-        else if (window.getSelection && this.editorIsSelected)
-    	{
-            this.marker.remove();
-            this.marker.insertBoth();
+        else if (window.getSelection && this.selection.is())
+        {
+            this.marker.insert('both');
         }
 
         return this._getHtmlAndRemoveMarkers($editor);
     },
-    _insertMarkersToSource: function(html)
-    {
-        var $source = this.source.getElement();
-        var markerStart = this.marker.buildHtml('start');
-        var markerEnd = this.marker.buildHtml('end');
-
-        var markerLength = markerStart.toString().length;
-        var startOffset = this._enlargeOffset(html, $source.get().selectionStart);
-        var endOffset = this._enlargeOffset(html, $source.get().selectionEnd);
-
-        html = html.substr(0, startOffset) + markerStart + html.substr(startOffset);
-        html = html.substr(0, endOffset + markerLength) + markerEnd + html.substr(endOffset + markerLength);
-
-        return html;
-    },
-    _getHtmlAndRemoveMarkers: function($editor)
-    {
-        var html = $editor.html();
-        $editor.find('.redactor-selection-marker').remove();
-
-        return html;
-    },
-    _setSelectionOffsetSource: function()
+    setSelectionOffsetSource: function(editorHtml)
     {
         var start = 0;
         var end = 0;
         var $source = this.source.getElement();
-        if (this.editorHtml !== '')
+        if (editorHtml !== '')
         {
-            var startMarker = this.marker.buildHtml('start').replace(/\u200B/g, '');
-            var endMarker = this.marker.buildHtml('end').replace(/\u200B/g, '');
+            var startMarker = this.utils.removeInvisibleChars(this.marker.buildHtml('start'));
+            var endMarker = this.utils.removeInvisibleChars(this.marker.buildHtml('end'));
 
-            start = this._strpos(this.editorHtml, startMarker);
-            end = this._strpos(this.editorHtml, endMarker) - endMarker.toString().length - 2;
+            start = this._strpos(editorHtml, startMarker);
+            end = this._strpos(editorHtml, endMarker) - endMarker.toString().length - 2;
 
             if (start === false)
             {
@@ -10621,40 +10857,86 @@ $R.add('module', 'source', {
 
         setTimeout(function() { $source.focus(); }.bind(this), 0);
     },
+    isOffset: function()
+    {
+        return this.markersOffset;
+    },
+    isOffsetEnd: function()
+    {
+        return this.markersOffsetEnd;
+    },
+    insertMarkersToSource: function(html)
+    {
+        var $source = this.source.getElement();
+        var markerStart = this.marker.buildHtml('start');
+        var markerEnd = this.marker.buildHtml('end');
+
+        var markerLength = markerStart.toString().length;
+        var startOffset = this._enlargeOffset(html, $source.get().selectionStart);
+        var endOffset = this._enlargeOffset(html, $source.get().selectionEnd);
+        var sizeOffset = html.length;
+
+        if (startOffset === sizeOffset)
+        {
+            this.markersOffsetEnd = true;
+        }
+        else if (startOffset !== 0 && endOffset !== 0)
+        {
+            this.markersOffset = true;
+
+            html = html.substr(0, startOffset) + markerStart + html.substr(startOffset);
+            html = html.substr(0, endOffset + markerLength) + markerEnd + html.substr(endOffset + markerLength);
+        }
+        else
+        {
+            this.markersOffset = false;
+        }
+
+        return html;
+    },
+
+    // private
+    _getHtmlAndRemoveMarkers: function($editor)
+    {
+        var html = $editor.html();
+        $editor.find('.redactor-selection-marker').remove();
+
+        return html;
+    },
     _strpos: function(haystack, needle, offset)
-	{
-		var i = haystack.indexOf(needle, offset);
-		return i >= 0 ? i : false;
-	},
-	_enlargeOffset: function(html, offset)
-	{
-		var htmlLength = html.length;
-		var c = 0;
+    {
+        var i = haystack.indexOf(needle, offset);
+        return i >= 0 ? i : false;
+    },
+    _enlargeOffset: function(html, offset)
+    {
+        var htmlLength = html.length;
+        var c = 0;
 
-		if (html[offset] === '>')
-		{
-			c++;
-		}
-		else
-		{
-			for(var i = offset; i <= htmlLength; i++)
-			{
-				c++;
+        if (html[offset] === '>')
+        {
+            c++;
+        }
+        else
+        {
+            for(var i = offset; i <= htmlLength; i++)
+            {
+                c++;
 
-				if (html[i] === '>')
-				{
-					break;
-				}
-				else if (html[i] === '<' || i === htmlLength)
-				{
-					c = 0;
-					break;
-				}
-			}
-		}
+                if (html[i] === '>')
+                {
+                    break;
+                }
+                else if (html[i] === '<' || i === htmlLength)
+                {
+                    c = 0;
+                    break;
+                }
+            }
+        }
 
-		return offset + c;
-	}
+        return offset + c;
+    }
 });
 $R.add('module', 'observer', {
     init: function(app)
@@ -10723,28 +11005,28 @@ $R.add('module', 'clicktoedit', {
     },
     // messages
     onstartclicktoedit: function()
-	{
+    {
         this.start();
-	},
-	onstop: function()
-	{
+    },
+    onstop: function()
+    {
         this.stop();
-	},
+    },
 
-	// public
-	start: function()
-	{
-		this._build();
-	},
+    // public
+    start: function()
+    {
+        this._build();
+    },
     stop: function()
     {
         if (this.buttonSave) this.buttonSave.stop();
         if (this.buttonCancel) this.buttonCancel.stop();
 
         this._destroy();
-		this.app.broadcast('disable');
+        this.app.broadcast('disable');
     },
-    enable: function(e)
+    enable: function()
     {
         this.app.broadcast('clickStart');
 
@@ -10762,29 +11044,29 @@ $R.add('module', 'clicktoedit', {
     },
     save: function(e)
     {
-    	if (e) e.preventDefault();
+        if (e) e.preventDefault();
 
         var html = this.source.getCode();
 
-		this.app.broadcast('disable');
-		this.app.broadcast('clickSave', html);
-		this.app.broadcast('clickStop');
-		this._build();
+        this.app.broadcast('disable');
+        this.app.broadcast('clickSave', html);
+        this.app.broadcast('clickStop');
+        this._build();
     },
     cancel: function(e)
     {
-		if (e) e.preventDefault();
+        if (e) e.preventDefault();
 
         var html = this.saved;
         var $editor = this.editor.getElement();
-		$editor.html(html);
+        $editor.html(html);
 
         this.saved = '';
 
-		this.app.broadcast('disable');
-		this.app.broadcast('clickCancel', html);
-		this.app.broadcast('clickStop');
-		this._build();
+        this.app.broadcast('disable');
+        this.app.broadcast('clickCancel', html);
+        this.app.broadcast('clickStop');
+        this._build();
     },
 
     // private
@@ -10794,13 +11076,13 @@ $R.add('module', 'clicktoedit', {
         this.buttonSave = $R.create('clicktoedit.button', 'save', this.app, this);
         this.buttonCancel = $R.create('clicktoedit.button', 'cancel', this.app, this);
 
-		this.buttonSave.stop();
-		this.buttonCancel.stop();
+        this.buttonSave.stop();
+        this.buttonCancel.stop();
 
         var $editor = this.editor.getElement();
         var $container = this.container.getElement();
 
-        $editor.on('click.redactor-click-to-edit', this.enable.bind(this));
+        $editor.on('click.redactor-click-to-edit mouseup.redactor-click-to-edit', this.enable.bind(this));
         $container.addClass('redactor-over');
     },
     _destroy: function()
@@ -10808,15 +11090,15 @@ $R.add('module', 'clicktoedit', {
         var $editor = this.editor.getElement();
         var $container = this.container.getElement();
 
-        $editor.off('click.redactor-click-to-edit');
-		$container.removeClass('redactor-over');
+        $editor.off('.redactor-click-to-edit');
+        $container.removeClass('redactor-over');
     },
     _setFocus: function()
     {
-		this.saved = this.source.getCode();
+        this.saved = this.source.getCode();
 
-		this.buttonSave.start();
-		this.buttonCancel.start();
+        this.buttonSave.start();
+        this.buttonCancel.start();
     }
 });
 $R.add('class', 'clicktoedit.button', {
@@ -10851,9 +11133,9 @@ $R.add('class', 'clicktoedit.button', {
     {
         if (this.objected) return;
 
-		this.$button.off(this.namespace);
-		this.$button.show();
-		this.$button.on('click' + this.namespace, this.context[this.type].bind(this.context));
+        this.$button.off(this.namespace);
+        this.$button.show();
+        this.$button.on('click' + this.namespace, this.context[this.type].bind(this.context));
     },
     stop: function()
     {
@@ -10902,11 +11184,15 @@ $R.add('module', 'contextbar', {
         this.app = app;
         this.opts = app.opts;
         this.uuid = app.uuid;
+        this.$win = app.$win;
         this.$doc = app.$doc;
         this.$body = app.$body;
         this.editor = app.editor;
         this.toolbar = app.toolbar;
         this.detector = app.detector;
+
+        // local
+        this.$target = (this.toolbar.isTarget()) ? this.toolbar.getTargetElement() : this.$body;
     },
     // messages
     onenablereadonly: function()
@@ -10941,6 +11227,7 @@ $R.add('module', 'contextbar', {
         $editor.off('.redactor-context');
 
         this.$doc.off('.redactor-context');
+        this.$win.off('.redactor-context');
 
         if (this.$contextbar) this.$contextbar.remove();
     },
@@ -10970,10 +11257,14 @@ $R.add('module', 'contextbar', {
         this.$contextbar.show();
         this.$contextbar.addClass('open');
         this.$doc.on('click.redactor-context mouseup.redactor-context', this.close.bind(this));
+        this.$win.on('resize.redactor-context', this.close.bind(this));
     },
     open: function(e)
     {
-        this.app.broadcast('contextbar', e, this);
+        setTimeout(function()
+        {
+            this.app.broadcast('contextbar', e, this);
+        }.bind(this), 0);
     },
     close: function(e)
     {
@@ -10997,30 +11288,32 @@ $R.add('module', 'contextbar', {
     {
         this.$contextbar = $R.dom('<div>');
         this.$contextbar.attr('id', 'redactor-context-toolbar-' + this.uuid);
+        this.$contextbar.attr('dir', this.opts.direction);
         this.$contextbar.addClass('redactor-context-toolbar');
         this.$contextbar.hide();
 
-        this.$body.append(this.$contextbar);
+        this.$target.append(this.$contextbar);
     },
     _buildPosition: function(e, $el, position)
     {
         var top, left;
-        var offset = $el.offset();
+        var isTarget = this.toolbar.isTarget();
+        var offset = (isTarget) ? $el.position() : $el.offset();
         var width = $el.width();
         var height = $el.height();
 
         var barWidth = this.$contextbar.width();
         var barHeight = this.$contextbar.height();
+        var docScrollTop = (isTarget) ? (this.$target.scrollTop() + this.$doc.scrollTop()) : this.$doc.scrollTop();
 
-        var isMobile = this.detector.isMobile();
-
-        var clientX = (isMobile) ? e.pageX : e.clientX;
-        var clientY = (isMobile) ? e.pageY : e.clientY;
+        var targetOffset = this.$target.offset();
+        var leftFix = (isTarget) ? targetOffset.left : 0;
+        var topFix = (isTarget) ? targetOffset.top : 0;
 
         if (!position)
         {
-            top = (clientY + this.$doc.scrollTop() - barHeight);
-            left = (clientX - barWidth/2);
+            top = (e.clientY + docScrollTop - barHeight);
+            left = (e.clientX - barWidth/2);
         }
         else if (position === 'top')
         {
@@ -11035,7 +11328,7 @@ $R.add('module', 'contextbar', {
 
         if (left < 0) left = 0;
 
-        return { top: top + 'px', left: left + 'px' };
+        return { top: (top - topFix) + 'px', left: (left - leftFix) + 'px' };
     }
 });
 $R.add('class', 'contextbar.button', {
@@ -11142,6 +11435,20 @@ $R.add('module', 'toolbar', {
     {
         this._setExternalOnFocus();
     },
+    onempty: function()
+    {
+        if (this.toolbar.isFixed())
+        {
+            this.toolbarModule.resetPosition();
+        }
+    },
+    onenablereadonly: function()
+    {
+        if (this.toolbar.isAir())
+        {
+            this.toolbarModule.close();
+        }
+    },
 
     // public
     start: function()
@@ -11189,20 +11496,24 @@ $R.add('module', 'toolbar', {
         // end
         if (this.opts.buttonsAdd.length !== 0)
         {
+            this.opts.buttonsAdd = this._removeExistButtons(this.opts.buttonsAdd);
             this.buttons = this.buttons.concat(this.opts.buttonsAdd);
         }
 
         // beginning
         if (this.opts.buttonsAddFirst.length !== 0)
         {
+            this.opts.buttonsAddFirst = this._removeExistButtons(this.opts.buttonsAddFirst);
             this.buttons.unshift(this.opts.buttonsAddFirst);
         }
+
+        var index, btns;
 
         // after
         if (this.opts.buttonsAddAfter !== false)
         {
-            var index = this.buttons.indexOf(this.opts.buttonsAddAfter.after) + 1;
-            var btns = this.opts.buttonsAddAfter.buttons;
+            index = this.buttons.indexOf(this.opts.buttonsAddAfter.after) + 1;
+            btns = this.opts.buttonsAddAfter.buttons;
             for (var i = 0; i < btns.length; i++)
             {
                 this.buttons.splice(index+i, 0, btns[i]);
@@ -11212,8 +11523,8 @@ $R.add('module', 'toolbar', {
         // before
         if (this.opts.buttonsAddBefore !== false)
         {
-            var index = this.buttons.indexOf(this.opts.buttonsAddBefore.before)+1;
-            var btns = this.opts.buttonsAddBefore.buttons;
+            index = this.buttons.indexOf(this.opts.buttonsAddBefore.before)+1;
+            btns = this.opts.buttonsAddBefore.buttons;
             for (var i = 0; i < btns.length; i++)
             {
                 this.buttons.splice(index-(1-i), 0, btns[i]);
@@ -11230,6 +11541,18 @@ $R.add('module', 'toolbar', {
                 this.utils.removeFromArrayByValue(this.buttons, buttons[i]);
             }
         }
+    },
+    _removeExistButtons: function(buttons)
+    {
+        for (var i = 0; i < buttons.length; i++)
+        {
+            if (this.opts.buttons.indexOf(buttons[i]) !== -1)
+            {
+                this.utils.removeFromArrayByValue(buttons, buttons[i]);
+            }
+        }
+
+        return buttons;
     },
     _setExternalOnFocus: function()
     {
@@ -11249,7 +11572,7 @@ $R.add('module', 'toolbar', {
             var name = this.buttons[i];
             if ($R.buttons[name])
             {
-                this.toolbar.addButton(name, $R.buttons[name]);
+                this.toolbar.addButton(name, $R.buttons[name], false, false, true);
             }
         }
     }
@@ -11315,6 +11638,14 @@ $R.add('class', 'toolbar.air', {
 
         }.bind(this), 0);
     },
+    close: function()
+    {
+        this.$doc.off('.redactor-air');
+
+        var $toolbar = this.toolbar.getElement();
+        $toolbar.removeClass('open');
+        $toolbar.hide();
+    },
 
     // private
     _init: function()
@@ -11371,6 +11702,7 @@ $R.add('class', 'toolbar.air', {
 
         setTimeout(function()
         {
+            if (this.app.isReadOnly()) return;
             if (this._isSelection()) this._doOpen(pos);
 
         }.bind(this), 1);
@@ -11398,27 +11730,21 @@ $R.add('class', 'toolbar.air', {
         var leftFix = 0;
 
         $wrapper.css({
-			left: (pos.left - containerOffset.left - leftFix) + 'px',
-			top: (pos.top - containerOffset.top + pos.height + this.$doc.scrollTop()) + 'px'
-		});
+            left: (pos.left - containerOffset.left - leftFix) + 'px',
+            top: (pos.top - containerOffset.top + pos.height + this.$doc.scrollTop()) + 'px'
+        });
 
         this.app.broadcast('airOpen');
         $toolbar.addClass('open');
         $toolbar.show();
-        //this.animate.start($toolbar, 'fadeIn', this._opened.bind(this));
-        this._opened();
-    },
-    _opened: function()
-    {
+
         this.$doc.on('click.redactor-air', this._close.bind(this));
         this.$doc.on('keydown.redactor-air', this._close.bind(this));
         this.app.broadcast('airOpened');
     },
     _close: function(e)
     {
-        var target = (e) ? e.target : false;
         var $el = (e) ? $R.dom(e.target) : false;
-        var dataTarget = this.inspector.parse(target);
         var isDropdownCall = (e && $el.closest('[data-dropdown], .redactor-dropdown-not-close').length !== 0);
         var isButtonCall = (!isDropdownCall && e && $el.closest('.re-button').length !== 0);
 
@@ -11430,16 +11756,7 @@ $R.add('class', 'toolbar.air', {
         // close
         this.app.broadcast('airClose');
 
-        var $toolbar = this.toolbar.getElement();
-        $toolbar.removeClass('open');
-        $toolbar.hide();
-        this._closed();
-
-        //this.animate.start($toolbar, 'fadeOut', this._closed.bind(this));
-    },
-    _closed: function()
-    {
-        this.$doc.off('.redactor-air');
+        this.close();
         this.app.broadcast('airClosed');
     }
 });
@@ -11448,6 +11765,7 @@ $R.add('class', 'toolbar.fixed', {
     {
         this.app = app;
         this.opts = app.opts;
+        this.$doc = app.$doc;
         this.$win = app.$win;
         this.editor = app.editor;
         this.toolbar = app.toolbar;
@@ -11462,9 +11780,6 @@ $R.add('class', 'toolbar.fixed', {
     {
         this.$fixedTarget.off('.redactor-toolbar');
         this.$win.off('.redactor-toolbar');
-
-        var $editor = this.editor.getElement();
-        $editor.off('.redactor-toolbar');
     },
     reset: function()
     {
@@ -11482,12 +11797,10 @@ $R.add('class', 'toolbar.fixed', {
     // private
     _init: function()
     {
-        var isTarget = (this.opts.toolbarFixedTarget !== document);
-
-        this.$fixedTarget = (isTarget) ? $R.dom(this.opts.toolbarFixedTarget) : this.$win;
+        this.$fixedTarget = (this.toolbar.isTarget()) ? this.toolbar.getTargetElement() : this.$win;
         this._doFixed();
 
-        if (isTarget)
+        if (this.toolbar.isTarget())
         {
             this.$win.on('scroll.redactor-toolbar', this._doFixed.bind(this));
             this.$win.on('resize.redactor-toolbar', this._doFixed.bind(this));
@@ -11495,17 +11808,6 @@ $R.add('class', 'toolbar.fixed', {
 
         this.$fixedTarget.on('scroll.redactor-toolbar', this._doFixed.bind(this));
         this.$fixedTarget.on('resize.redactor-toolbar', this._doFixed.bind(this));
-
-        var $editor = this.editor.getElement();
-        $editor.on('keyup.redactor-toolbar', this._checkFixed.bind(this));
-
-    },
-    _checkFixed: function()
-    {
-        if (this.editor.isEmpty())
-        {
-            this.reset();
-        }
     },
     _doFixed: function()
     {
@@ -11529,11 +11831,11 @@ $R.add('class', 'toolbar.fixed', {
 
         var toolbarHeight = $toolbar.height();
         var toleranceEnd = 60;
-        var containerPosition = $container.position();
-        var boxOffset = containerPosition.top;
+        var containerOffset = $container.offset();
+        var boxOffset = containerOffset.top;
         var boxEnd = boxOffset + $container.height() - (toleranceEnd + this.opts.toolbarFixedTopOffset);
         var scrollOffset = this.$fixedTarget.scrollTop();
-        var top = (this.opts.toolbarFixedTarget === document) ? 0 : this.$fixedTarget.offset().top - this.$win.scrollTop();
+        var top = (!this.toolbar.isTarget()) ? 0 : this.$fixedTarget.offset().top - this.$win.scrollTop();
 
         if (scrollOffset > boxOffset && scrollOffset < boxEnd)
         {
@@ -11650,9 +11952,9 @@ $R.add('class', 'toolbar.standard', {
             var $container = this.container.getElement();
             $container.prepend($wrapper);
         }
-	},
-	_buildExternal: function()
-	{
+    },
+    _buildExternal: function()
+    {
         this._initExternal();
         this._findToolbars();
 
@@ -11665,14 +11967,14 @@ $R.add('class', 'toolbar.standard', {
             var $toolbar = this.toolbar.getElement();
             $toolbar.show();
         }
-	},
-	_buildFixed: function()
-	{
+    },
+    _buildFixed: function()
+    {
         if (this.opts.toolbarFixed)
         {
             this.toolbarFixed = $R.create('toolbar.fixed', this.app);
         }
-	},
+    },
     _initExternal: function()
     {
         var $toolbar = this.toolbar.getElement();
@@ -11708,7 +12010,7 @@ $R.add('module', 'line', {
     // messages
     oncontextbar: function(e, contextbar)
     {
-        var data = this.inspector.parse(e.target)
+        var data = this.inspector.parse(e.target);
         if (data.isComponentType('line'))
         {
             var node = data.getComponent();
@@ -11795,24 +12097,40 @@ $R.add('class', 'line.component', {
     }
 });
 $R.add('module', 'link', {
+    // bvbmedia custom
     modals: {
         'link':
             '<form action=""> \
                 <div class="form-item"> \
-                    <label>URL <span class="req">*</span></label> \
-                    <input type="text" name="url"> \
+                    <label for="modal-link-url">URL <span class="req">*</span></label> \
+                    <input type="text" id="modal-link-url" name="url"> \
                 </div> \
                 <div class="form-item"> \
-                    <label>## text ##</label> \
-                    <input type="text" name="text"> \
+                    <label for="modal-link-text">## text ##</label> \
+                    <input type="text" id="modal-link-text" name="text"> \
                 </div> \
-                <div class="form-item"> \
-                    <label>Title</label> \
-                    <input type="text" name="link_title"> \
+                <div class="form-item form-item-title"> \
+                    <label for="modal-link-title">## title ##</label> \
+                    <input type="text" id="modal-link-title" name="title"> \
                 </div> \
-                <div class="form-item"> \
-                    <label>Class</label> \
-                    <input type="text" name="link_class"> \
+                <div class="form-item form-item-class form-inline "> \
+                    <div class="col-md-8" style="padding-left: 0px"> \
+                        <label for="modal-link-class">Class</label> \
+                        <input type="text" id="modal-link-class" name="link_class"> \
+                    </div> \
+                    <div class="col-md-4" style="padding-right: 0px">\
+                        <label for="modal-link-pre-class">Predefined class</label> \
+                        <select id="predefined-class">\
+                            <option value="">Default</option> \
+                            <option value="btn btn-danger">Red button</option>\
+                            <option value="btn btn-alternative">Gray text link</option>\
+                            <option value="btn btn-default">Default button</option>\
+                            <option value="btn btn-primary">Dark blue button</option>\
+                            <option value="btn btn-success">Green button</option>\
+                            <option value="btn btn-info">Blue button</option>\
+                            <option value="btn btn-warning">Orange button</option>\
+                        </select> \
+                    </div>\
                 </div> \
                 <div class="form-item form-item-target"> \
                     <input type="checkbox" name="target" id="target" aria-label="## link-in-new-tab ##"> \
@@ -11826,7 +12144,6 @@ $R.add('module', 'link', {
         this.opts = app.opts;
         this.lang = app.lang;
         this.utils = app.utils;
-        this.caret = app.caret;
         this.inline = app.inline;
         this.editor = app.editor;
         this.inspector = app.inspector;
@@ -11864,7 +12181,7 @@ $R.add('module', 'link', {
                     this._insert(data);
                 }
             },
-            unlink: function($modal, $form)
+            unlink: function()
             {
                 this._unlink();
             }
@@ -12054,10 +12371,9 @@ $R.add('module', 'link', {
         if (links.length === 1 && (links[0].textContext === this.selection.getText()) || (inline && inline.tagName === 'A'))
         {
             var $link = $R.create('link.component', this.app, links[0]);
-            $link.setData(data);
 
-            // caret
-            this.caret.set($link);
+            $link.setData(data);
+            this.selection.setAll($link);
 
             // callback
             this.app.broadcast('link.inserted', $link);
@@ -12080,9 +12396,10 @@ $R.add('module', 'link', {
             var linkData = {};
 
             if (data.text && isTextChanged) linkData.text = data.text;
-            if (data.link_title) linkData.link_title = data.link_title;
-            if (data.link_class) linkData.link_class = data.link_class;
             if (data.url) linkData.url = data.url;
+            if (data.title !== undefined) linkData.title = data.title;
+            // bvbmedia custom
+            if (data.link_class) linkData.link_class = data.link_class;
             if (data.target !== undefined) linkData.target = data.target;
 
             $link.setData(linkData);
@@ -12152,19 +12469,20 @@ $R.add('module', 'link', {
     {
         var current = this._getCurrent();
         var data = this.inspector.parse(current);
+        var $link;
 
         if (data.isLink())
         {
             this.currentLink = true;
 
-            var $link = data.getLink();
+            $link = data.getLink();
             $link = $R.create('link.component', this.app, $link);
         }
         else
         {
             this.currentLink = false;
 
-            var $link = $R.create('link.component', this.app);
+            $link = $R.create('link.component', this.app);
             var linkData = {
                 text: this.selection.getText()
             };
@@ -12199,29 +12517,35 @@ $R.add('module', 'link', {
         this.currentText = false;
     },
     _truncateText: function(url)
-	{
-		return (url.length > this.opts.linkSize) ? url.substring(0, this.opts.linkSize) + '...' : url;
-	},
-	_validateData: function($form, data)
-	{
-    	return (data.url.trim() === '') ? $form.setError('url') : true;
-	},
+    {
+        return (url.length > this.opts.linkSize) ? url.substring(0, this.opts.linkSize) + '...' : url;
+    },
+    _validateData: function($form, data)
+    {
+        return (data.url.trim() === '') ? $form.setError('url') : true;
+    },
     _setFormFocus: function($form)
     {
         $form.getField('url').focus();
     },
     _setFormData: function($form, $modal)
     {
+        // bvbmedia custom
         var linkData = this.$link.getData();
         var data = {
             url: linkData.url,
             text: linkData.text,
-            link_title: (linkData.link_title ? linkData.link_title : ''),
+            title: linkData.title,
             link_class: (linkData.link_class ? linkData.link_class : ''),
             target: (this.opts.linkTarget || linkData.target)
         };
-
+        // bvbmedia custom
         //if (!this.opts.linkNewTab) $modal.find('.form-item-target').hide();
+        //if (!this.opts.linkTitle) $modal.find('.form-item-title').hide();
+        $(document).on('change', '#predefined-class', function(){
+            var link_class_val = $(this).val();
+            $('#modal-link-class').val(link_class_val);
+        });
 
         $form.setData(data);
         this.currentText = $form.getField('text').val();
@@ -12233,10 +12557,9 @@ $R.add('class', 'link.component', {
     {
         this.app = app;
         this.opts = app.opts;
-        this.marker = app.marker;
 
         // local
-        this.reUrl = new RegExp('^((https?|ftp):\\/\\/)?(([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$','i');
+        this.reUrl = /^(?:(?:(?:https?|ftp):)?\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
         // init
         return (el && el.cmnt !== undefined) ? el :  this._init(el);
@@ -12252,7 +12575,8 @@ $R.add('class', 'link.component', {
     },
     getData: function()
     {
-        var names = ['url', 'text', 'link_title', 'link_class', 'target'];
+        // bvbmedia custom
+        var names = ['url', 'text', 'title', 'link_class', 'target'];
         var data = {};
 
         for (var i = 0; i < names.length; i++)
@@ -12288,17 +12612,18 @@ $R.add('class', 'link.component', {
     {
         return (this.attr('target')) ? this.attr('target') : false;
     },
-    _get_link_title: function()
-    {
-        return (this.attr('title')) ? this.attr('title') : false;
-    },
-    _get_link_class: function()
-    {
-        return (this.attr('class')) ? this.attr('class') : false;
-    },
     _get_url: function()
     {
         return this.attr('href');
+    },
+    _get_title: function()
+    {
+        return this.attr('title');
+    },
+    // bvbmedia custom
+    _get_link_class: function()
+    {
+        return (this.attr('class')) ? this.attr('class') : false;
     },
     _get_text: function()
     {
@@ -12316,14 +12641,16 @@ $R.add('class', 'link.component', {
             this.attr('target', (target === true) ? '_blank' : target);
         }
     },
-    _set_link_title: function(link_title)
+    _set_text: function(text)
     {
-        if (link_title === false) this.removeAttr('title');
-        else if (link_title)
-        {
-            this.attr('title', link_title);
-        }
+        this._getContext().html(text);
     },
+    _set_title: function(title)
+    {
+        if (!title || title === '') this.removeAttr('title');
+        else this.attr('title', title);
+    },
+    // bvbmedia custom
     _set_link_class: function(link_class)
     {
         if (link_class === false) this.removeAttr('class');
@@ -12332,32 +12659,20 @@ $R.add('class', 'link.component', {
             this.attr('class', link_class);
         }
     },
-    _set_text: function(text)
-    {
-        var html = this._getContext().html();
-        var start = this.marker.find('start', this);
-        var end = this.marker.find('end', this);
-        var startHtml = this.marker.buildHtml('start');
-        var endHtml = this.marker.buildHtml('end');
-
-        if (start && end)
-        {
-            text = startHtml + text + endHtml;
-        }
-        else if (start || end)
-        {
-            text = text + startHtml;
-        }
-
-        this._getContext().html(text);
-    },
     _set_url: function(url)
     {
         if (this.opts.linkValidation)
         {
             url = this._cleanUrl(url);
-            url = (this._isMailto(url)) ? 'mailto:' + url.replace('mailto:', '') : url;
-            url = (this._isUrl(url)) ? 'http://' + url.replace(/(ftp|https?):\/\//gi, '') : url;
+
+            if (this._isMailto(url))
+            {
+                url = 'mailto:' + url.replace('mailto:', '');
+            }
+            else if (this._isUrl(url) && url.search(/^(ftp|https?)/i) === -1)
+            {
+                url = 'http://' + url.replace(/(ftp|https?):\/\//i, '');
+            }
         }
 
         this.attr('href', url);
@@ -12455,11 +12770,11 @@ $R.add('module', 'modal', {
             this.$overlay.remove();
         }
     },
-	resize: function()
-	{
-    	this.$modal.setWidth(this.p.width);
+    resize: function()
+    {
+        this.$modal.setWidth(this.p.width);
         this.$modal.updatePosition();
-	},
+    },
 
     // private
     _isOpened: function()
@@ -12491,12 +12806,12 @@ $R.add('module', 'modal', {
     _doOpen: function(template)
     {
         this.stop();
-        this.selection.saveMarkers();
+        this.selection.save();
 
         if (!this.detector.isDesktop())
-		{
-			document.activeElement.blur();
-		}
+        {
+            document.activeElement.blur();
+        }
 
         this._createModal(template);
 
@@ -12521,7 +12836,10 @@ $R.add('module', 'modal', {
         this.$box.on('mousedown.redactor.modal', this._close.bind(this));
         this.$doc.on('keyup.redactor.modal', this._handleEscape.bind(this));
         this.$win.on('resize.redactor.modal', this.resize.bind(this));
-		this.$modal.getBody().find('input[type=text],input[type=url],input[type=email]').on('keydown.redactor.modal', this._handleEnter.bind(this));
+        this.$modal.getBody().find('input[type=text],input[type=url],input[type=email]').on('keydown.redactor.modal', this._handleEnter.bind(this));
+
+        // fix bootstrap modal focus
+        if (window.jQuery) jQuery(document).off('focusin.modal');
 
         this._broadcast('opened');
     },
@@ -12540,7 +12858,7 @@ $R.add('module', 'modal', {
             e.preventDefault();
         }
 
-        this.selection.restoreMarkers();
+        this.selection.restore();
 
         this._broadcast('close');
 
@@ -12556,54 +12874,54 @@ $R.add('module', 'modal', {
 
         this._broadcast('closed');
     },
-	_createModal: function(template)
-	{
-    	this.$modal = $R.create('modal.element', this.app, template);
-	},
-	_broadcast: function(message)
-	{
-    	this.app.broadcast('modal.' + message, this.$modal, this.$modalForm);
+    _createModal: function(template)
+    {
+        this.$modal = $R.create('modal.element', this.app, template);
+    },
+    _broadcast: function(message)
+    {
+        this.app.broadcast('modal.' + message, this.$modal, this.$modalForm);
         this.app.broadcast('modal.' + this.p.name + '.' + message, this.$modal, this.$modalForm);
-	},
+    },
     _buildDefaults: function(data)
     {
          this.p = $R.extend({}, this.defaults, data);
     },
-	_buildModalBox: function()
-	{
+    _buildModalBox: function()
+    {
         this.$box = $R.dom('<div>');
         this.$box.attr('id', 'redactor-modal');
         this.$box.addClass('redactor-animate-hide');
         this.$box.html('');
         this.$body.append(this.$box);
-	},
-	_buildOverlay: function()
-	{
-		this.$overlay = $R.dom('#redactor-overlay');
-		if (this.$overlay.length === 0)
-		{
-			this.$overlay = $R.dom('<div>');
-			this.$overlay.attr('id', 'redactor-overlay');
-			this.$overlay.addClass('redactor-animate-hide');
-			this.$body.prepend(this.$overlay);
-		}
-	},
-	_buildModal: function()
-	{
-    	this.$box.append(this.$modal);
+    },
+    _buildOverlay: function()
+    {
+        this.$overlay = $R.dom('#redactor-overlay');
+        if (this.$overlay.length === 0)
+        {
+            this.$overlay = $R.dom('<div>');
+            this.$overlay.attr('id', 'redactor-overlay');
+            this.$overlay.addClass('redactor-animate-hide');
+            this.$body.prepend(this.$overlay);
+        }
+    },
+    _buildModal: function()
+    {
+        this.$box.append(this.$modal);
 
         this.$modal.setTitle(this.p.title);
         this.$modal.setHeight(this.p.height);
-    	this.$modal.setWidth(this.p.width);
-	},
-	_buildModalCommands: function()
-	{
-    	if (this.p.commands)
-    	{
-        	var commands = this.p.commands;
-        	var $footer = this.$modal.getFooter();
-        	for (var key in commands)
-        	{
+        this.$modal.setWidth(this.p.width);
+    },
+    _buildModalCommands: function()
+    {
+        if (this.p.commands)
+        {
+            var commands = this.p.commands;
+            var $footer = this.$modal.getFooter();
+            for (var key in commands)
+            {
                 var $btn = $R.dom('<button>');
 
                 $btn.html(commands[key].title);
@@ -12625,8 +12943,8 @@ $R.add('module', 'modal', {
                 $btn.on('click', this._handleCommand.bind(this));
 
                 $footer.append($btn);
-        	}
-    	}
+            }
+        }
 
     },
     _buildModalTabs: function()
@@ -12641,87 +12959,88 @@ $R.add('module', 'modal', {
             $box.addClass('redactor-modal-tabs');
 
             $tabs.each(function(node, i)
-			{
-    			var $node = $R.dom(node);
-				var $item = $R.dom('<a>');
-				$item.attr('href', '#');
-				$item.attr('rel', i);
-				$item.text($node.attr('data-title'));
-				$item.on('click', this._showTab.bind(this));
+            {
+                var $node = $R.dom(node);
+                var $item = $R.dom('<a>');
+                $item.attr('href', '#');
+                $item.attr('rel', i);
+                $item.text($node.attr('data-title'));
+                $item.on('click', this._showTab.bind(this));
 
-				if (i === 0)
-				{
-					$item.addClass('active');
-				}
+                if (i === 0)
+                {
+                    $item.addClass('active');
+                }
 
-				$box.append($item);
+                $box.append($item);
 
-			}.bind(this));
+            }.bind(this));
 
-			$body.prepend($box)
+            $body.prepend($box);
         }
     },
-	_buildModalForm: function()
-	{
+    _buildModalForm: function()
+    {
         this.$modalForm = $R.create('modal.form', this.app, this.$modal.getForm());
-	},
-	_showTab: function(e)
-	{
+    },
+    _showTab: function(e)
+    {
         e.preventDefault();
 
-		var $el = $R.dom(e.target);
-		var index = $el.attr('rel');
+        var $el = $R.dom(e.target);
+        var index = $el.attr('rel');
         var $body = this.$modal.getBody();
         var $tabs = $body.find('.redactor-modal-tab');
 
-		$tabs.hide();
-		$tabs.eq(index).show();
+        $tabs.hide();
+        $tabs.eq(index).show();
 
         $body.find('.redactor-modal-tabs a').removeClass('active');
-		$el.addClass('active');
+        $el.addClass('active');
 
-	},
-	_needToClose: function(el)
-	{
+    },
+    _needToClose: function(el)
+    {
         var $target = $R.dom(el);
         if ($target.attr('data-action') === 'close' || this.$modal.isCloseNode(el) || $target.closest('.redactor-modal').length === 0)
-    	{
-        	return true;
-    	}
+        {
+            return true;
+        }
 
-    	return false;
-	},
-	_handleCommand: function(e)
-	{
-    	var $btn = $R.dom(e.target).closest('button');
-    	var command = $btn.attr('data-command');
+        return false;
+    },
+    _handleCommand: function(e)
+    {
+        var $btn = $R.dom(e.target).closest('button');
+        var command = $btn.attr('data-command');
 
         if (command !== 'cancel') e.preventDefault();
 
         this._broadcast(command);
 
-	},
-	_handleEnter: function(e)
-	{
-    	if (e.which === 13)
-    	{
-        	if (this.p.handle)
-        	{
-            	e.preventDefault();
-            	this._broadcast(this.p.handle);
-        	}
+    },
+    _handleEnter: function(e)
+    {
+        if (e.which === 13)
+        {
+            if (this.p.handle)
+            {
+                e.preventDefault();
+                this._broadcast(this.p.handle);
+            }
         }
-	},
-	_handleEscape: function(e)
-	{
-    	if (e.which === 27) this._close();
-	}
+    },
+    _handleEscape: function(e)
+    {
+        if (e.which === 27) this._close();
+    }
 });
 $R.add('class', 'modal.element', {
     mixins: ['dom'],
     init: function(app, template)
     {
         this.app = app;
+        this.opts = app.opts;
         this.$win = app.$win;
 
         // init
@@ -12798,6 +13117,7 @@ $R.add('class', 'modal.element', {
     {
         this.parse('<div>');
         this.addClass('redactor-modal');
+        this.attr('dir', this.opts.direction);
     },
     _buildClose: function()
     {
@@ -12808,22 +13128,22 @@ $R.add('class', 'modal.element', {
     },
     _buildHeader: function()
     {
-		this.$modalHeader = $R.dom('<div>');
-		this.$modalHeader.addClass('redactor-modal-header');
+        this.$modalHeader = $R.dom('<div>');
+        this.$modalHeader.addClass('redactor-modal-header');
 
         this.append(this.$modalHeader);
     },
     _buildBody: function()
     {
-		this.$modalBody = $R.dom('<div>');
-		this.$modalBody.addClass('redactor-modal-body');
+        this.$modalBody = $R.dom('<div>');
+        this.$modalBody.addClass('redactor-modal-body');
 
         this.append(this.$modalBody);
     },
     _buildFooter: function()
     {
-		this.$modalFooter = $R.dom('<div>');
-		this.$modalFooter.addClass('redactor-modal-footer');
+        this.$modalFooter = $R.dom('<div>');
+        this.$modalFooter.addClass('redactor-modal-footer');
 
         this.append(this.$modalFooter);
     },
@@ -12892,7 +13212,7 @@ $R.add('class', 'modal.form', {
     },
     _getFieldEventName: function(el)
     {
-		return (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'keyup';
+        return (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'keyup';
     }
 });
 $R.add('module', 'block', {
@@ -13011,16 +13331,19 @@ $R.add('module', 'autosave', {
         var name = (this.opts.autosaveName) ? this.opts.autosaveName : this.source.getName();
 
         var data = {};
-        data[name] = this.source.getCode()
+        data[name] = this.source.getCode();
         data = this.utils.extendData(data, this.opts.autosaveData);
 
         $R.ajax.post({
             url: this.opts.autosave,
             data: data,
-            success: this._complete.bind(this)
+            success: function(response)
+            {
+                this._complete(response, name, data);
+            }.bind(this)
         });
     },
-    _complete: function(response)
+    _complete: function(response, name, data)
     {
         var callback = (response && response.error) ? 'autosaveError' : 'autosave';
         this.app.broadcast(callback, name, data, response);
@@ -13031,6 +13354,7 @@ $R.add('module', 'input', {
     {
         this.app = app;
         this.opts = app.opts;
+        this.utils = app.utils;
         this.editor = app.editor;
         this.keycodes = app.keycodes;
         this.element = app.element;
@@ -13061,7 +13385,7 @@ $R.add('module', 'input', {
         if (shortcut.is()) return;
 
         // select all
-        if ((e.ctrlKey || e.metaKey) && key === 65)
+        if ((e.ctrlKey || e.metaKey) && !e.altKey && key === 65)
         {
             e.preventDefault();
             return this._selectAll();
@@ -13069,21 +13393,24 @@ $R.add('module', 'input', {
 
         // set empty if all selected
         var keys = [this.keycodes.ENTER, this.keycodes.SPACE, this.keycodes.BACKSPACE, this.keycodes.DELETE];
-		if (this.selection.isAll() && (keys.indexOf(key) !== -1))
-		{
-    		e.preventDefault();
+        if (this.selection.isAll() && (keys.indexOf(key) !== -1))
+        {
+            e.preventDefault();
 
-    		if (this.element.isType('inline'))
-    		{
-        		var $editor = this.editor.getElement();
-        		$editor.html('');
+            if (this.element.isType('inline'))
+            {
+                var $editor = this.editor.getElement();
+                $editor.html('');
 
-        		this.editor.startFocus();
+                this.editor.startFocus();
             }
-            else this.insertion.set(this.opts.emptyHtml);
+            else
+            {
+                this.insertion.set(this.opts.emptyHtml);
+            }
 
             return;
-		}
+        }
 
         // autoparse
         if (this.opts.autoparse)
@@ -13091,18 +13418,16 @@ $R.add('module', 'input', {
             this.autoparser.format(e, key);
         }
 
-		// input
-
-		// a-z, 0-9
-		if ((key >= 48 && key <= 57) || (key >= 65 && key <= 90))
-		{
+        // a-z, 0-9 - non editable
+        if ((!e.ctrlKey && !e.metaKey) && ((key >= 48 && key <= 57) || (key >= 65 && key <= 90)))
+        {
             // has non-editable
             if (this.selection.hasNonEditable())
             {
                 e.preventDefault();
                 return;
             }
-		}
+        }
 
         // enter, shift/ctrl + enter
         if (key === this.keycodes.ENTER)
@@ -13152,6 +13477,28 @@ $R.add('module', 'input', {
         // shortcode
         var shortcode = $R.create('input.shortcode', this.app, e, key);
         if (shortcode.is()) return;
+
+        // is empty
+        if (key === this.keycodes.BACKSPACE)
+        {
+            var $editor = this.editor.getElement();
+            var html = this.utils.trimSpaces($editor.html());
+            html = html.replace(/<br\s?\/?>/g, '');
+            html = html.replace(/<div><\/div>/, '');
+
+            if (html === '')
+            {
+                e.preventDefault();
+                this.editor.setEmpty();
+                this.editor.startFocus();
+                return;
+            }
+        }
+
+        if (this.editor.isEmpty())
+        {
+            this.app.broadcast('empty');
+        }
     },
 
     // public
@@ -13169,16 +13516,17 @@ $R.add('module', 'input', {
     {
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
+        var el;
 
         if (data.isComponentType('table'))
         {
-            var el = data.getTable();
+            el = data.getTable();
             this.selection.setAll(el);
             return;
         }
         else if (data.isComponentType('code'))
         {
-            var el = data.getComponentCodeElement();
+            el = data.getComponentCodeElement();
             this.selection.setAll(el);
             return;
         }
@@ -13201,6 +13549,7 @@ $R.add('class', 'input.arrow', {
         this.opts = app.opts;
         this.utils = app.utils;
         this.caret = app.caret;
+        this.marker = app.marker;
         this.editor = app.editor;
         this.keycodes = app.keycodes;
         this.component = app.component;
@@ -13216,18 +13565,24 @@ $R.add('class', 'input.arrow', {
     // private
     _init: function(e)
     {
+        if (this._isRightLeftKey() && this._isExitVariable(e)) return;
+
         if (this._isRightDownKey())
         {
-            if (this._isExitOnDownRightArrow(e)) return;
-            if (this._selectComponent(e, 'End', 'nextSibling')) return;
+            if (this._isExitOnDownRight(e)) return;
+            if (this._selectComponent(e, 'End', 'next')) return;
         }
 
         if (this._isLeftUpKey())
         {
-            if (this._selectComponent(e, 'Start', 'previousSibling')) return;
+            if (this._isExitOnUpLeft(e)) return;
+            if (this._selectComponent(e, 'Start', 'prev')) return;
         }
 
-        if (this._isRightLeftKey()) this._removeInvisibleSpace();
+        if (this._isRightLeftKey())
+        {
+            this._removeInvisibleSpace();
+        }
     },
     _isRightDownKey: function()
     {
@@ -13241,56 +13596,113 @@ $R.add('class', 'input.arrow', {
     {
         return ([this.keycodes.RIGHT, this.keycodes.LEFT].indexOf(this.key) !== -1);
     },
-    _isExitOnDownRightArrow: function(e)
+    _isExitVariable: function(e)
     {
-        var $editor = this.editor.getElement();
+        var current = this.selection.getCurrent();
+        var data = this.inspector.parse(current);
+        var component = data.getComponent();
+        if (data.isComponentType('variable') && data.isComponentActive())
+        {
+            e.preventDefault();
+            var func = (this.key === this.keycodes.LEFT) ? 'setBefore' : 'setAfter';
+            this.caret[func](component);
+            return;
+        }
+    },
+    _isExitOnUpLeft: function(e)
+    {
         var current = this.selection.getCurrent();
         var block = this.selection.getBlock(current);
         var data = this.inspector.parse(current);
-        var isEnd = this.caret.isEnd(block);
+        var prev = block.previousElementSibling;
+        var isStart = this.caret.isStart(block);
+
+        // prev table
+        if (isStart && prev && prev.tagName === 'TABLE')
+        {
+            e.preventDefault();
+            this.caret.setEnd(prev);
+            return true;
+        }
+        // figcaption
+        else if (data.isFigcaption())
+        {
+            block = data.getFigcaption();
+            isStart = this.caret.isStart(block);
+
+            var $component = $R.dom(block).closest('.redactor-component');
+            if (isStart && $component.length !== 0)
+            {
+                e.preventDefault();
+                this.caret.setEnd($component);
+                return true;
+            }
+        }
+        // exit table
+        else if (data.isTable() && isStart)
+        {
+            e.preventDefault();
+            this.caret.setEnd(block.previousElementSibling);
+            return true;
+        }
+        // component
+        else if (!data.isComponentEditable() && data.isComponent() && !data.isComponentType('variable'))
+        {
+            var component = data.getComponent();
+            if (component.previousElementSibling)
+            {
+                e.preventDefault();
+                this.component.clearActive();
+                this.caret.setEnd(component.previousElementSibling);
+                return true;
+            }
+        }
+    },
+    _isExitOnDownRight: function(e)
+    {
+        var $editor = this.editor.getElement();
+        var current = this.selection.getCurrent();
+        var data = this.inspector.parse(current);
         var isEndEditor = this.caret.isEnd();
-        var isNextEnd = (isEnd && isEndEditor);
+        var block, isEnd;
 
         // table
         if (data.isTable())
         {
-            var isRightEnd = (isEnd && this.key === this.keycodes.RIGHT);
-            if (isRightEnd || isNextEnd)
+            if (isEnd || isEndEditor)
             {
-                var component = data.getComponent();
-
-                return this._exitNextElement(e, component);
+                return this._exitNextElement(e, data.getComponent());
             }
         }
         // figcaption
         else if (data.isFigcaption())
         {
-            var block = data.getFigcaption();
-            var isEnd = this.caret.isEnd(block);
-            var isNextEnd = (isEnd && isEndEditor);
-            if (isNextEnd)
-            {
-                var component = data.getComponent();
+            block = data.getFigcaption();
+            isEnd = this.caret.isEnd(block);
 
-                return this._exitNextElement(e, component);
+            if (isEnd || isEndEditor)
+            {
+                return this._exitNextElement(e, data.getComponent());
             }
         }
         // figure/code
         else if (data.isComponentType('code'))
         {
             var component = data.getComponent();
-            if (!component.nextSibling)
+            var pre = $R.dom(data.getComponentCodeElement()).closest('pre');
+
+            isEnd = this.caret.isEnd(block);
+
+            var isNext = (pre && pre.get().nextElementSibling);
+            if (isEnd && !isNext)
             {
-                e.preventDefault();
-                var code = data.getComponentCodeElement();
-                this._createExitNextMarkup(code);
-                return true;
+                return this._exitNextElement(e, component);
             }
         }
         // pre & blockquote & dl
         else if (data.isPre() || data.isBlockquote() || data.isDl())
         {
-            if (isNextEnd)
+            if (isEndEditor)
             {
                 if (data.isPre()) return this._exitNextElement(e, data.getPre());
                 else if (data.isBlockquote()) return this._exitNextElement(e, data.getBlockquote());
@@ -13300,100 +13712,62 @@ $R.add('class', 'input.arrow', {
         // li
         else if (data.isList())
         {
-            var list = $R.dom(current).parents('ul, ol', $editor).last();
-            var isEnd = this.caret.isEnd(list);
-            var isNextEnd = (isEnd && isEndEditor);
+            var $list = $R.dom(current).parents('ul, ol', $editor).last();
+            isEnd = this.caret.isEnd($list);
 
-            if (isNextEnd)
+            if (isEnd || isEndEditor)
             {
-                return this._exitNextElement(e, list);
+                return this._exitNextElement(e, $list.get());
             }
         }
         // component
         else if (data.isComponent() && !data.isComponentType('variable'))
         {
-            if (!current.nextElementSibling)
-            {
-                e.preventDefault();
-                var component = data.getComponent();
-                this._createExitNextMarkup(component);
-                return true;
-            }
-
             this.component.clearActive();
+            return this._exitNextElement(e, data.getComponent());
         }
     },
     _exitNextElement: function(e, node)
     {
         e.preventDefault();
 
-        if (node.nextSibling)
-        {
-            this.caret.setStart(node.nextSibling);
-        }
-        else
-        {
-            this._createExitNextMarkup(node);
-        }
+        if (node.nextElementSibling) this.caret.setStart(node.nextElementSibling);
+        else this.utils.createMarkup(node);
 
         return true;
     },
-    _createExitNextMarkup: function(el)
-    {
-        var markup = document.createElement(this.opts.markup);
-        var $el = $R.dom(el);
-
-        $el.after(markup);
-        this.caret.setStart(markup);
-    },
     _removeInvisibleSpace: function()
     {
-        var re = /^\u200B$/g;
         var current = this.selection.getCurrent();
-        var $current = $R.dom(current);
-        var $prev = (current.previousSibling) ? $R.dom(current.previousSibling) : false;
-        var isEmpty = this.utils.isEmptyHtml($current.html());
-
-		if (isEmpty && $current.text().search(re) === 0) $current.remove();
-        if (this.key === this.keycodes.DELETE && $prev && $prev.text().search(re) === 0) $prev.remove();
+        var isEmpty = (current) ? this.utils.isEmptyHtml(((current.nodeType === 3) ? current.textContent : current.innerHTML)) : false;
+        if (isEmpty && current && current.nodeType === 3 && this.utils.searchInvisibleChars(current.textContent) === 0)
+        {
+            current.parentNode.removeChild(current);
+        }
     },
     _selectComponent: function(e, caret, type)
     {
         var current = this.selection.getCurrent();
         var block = this.selection.getBlock(current);
-        var prev = this._findSiblings(current, type);
-        var prevBlock = this._findSiblings(block, type);
+        var sibling = this.utils.findSiblings(current, type);
+        var siblingBlock = this.utils.findSiblings(block, type);
 
-        if (prev && this.caret['is' + caret](current))
+        if (sibling && this.caret['is' + caret](current))
         {
-            this._selectComponentItem(e, prev, caret);
+            this._selectComponentItem(e, sibling, caret);
         }
-        else if (prevBlock && this.caret['is' + caret](block))
+        else if (siblingBlock && this.caret['is' + caret](block))
         {
-            this._selectComponentItem(e, prevBlock, caret);
+            this._selectComponentItem(e, siblingBlock, caret);
         }
     },
     _selectComponentItem: function(e, item, caret)
     {
-        var data = this.inspector.parse(item);
-        if (data.isComponent() && !data.isComponentEditable())
+        if (this.component.isNonEditable(item))
         {
             e.preventDefault();
             this.caret['set' + caret](item);
             return true;
-        }
-    },
-    _findSiblings: function(node, type)
-    {
-        while (node = node[type])
-        {
-            var isEmpty = false;
-            if (node.nodeType === 3 && !this.opts.breakline)
-            {
-                isEmpty = (node.textContent.trim() === '');
-            }
-
-            if (!isEmpty && node.tagName !== 'BR') return node;
         }
     }
 });
@@ -13423,31 +13797,21 @@ $R.add('class', 'input.delete', {
         if (this._removeActiveComponent(e)) return;
         if (this._removeAllSelectedTable(e)) return;
 
-        var initialCurrent = this.selection.getCurrent();
-        var current = this._getCurrent();
-        var data = this.inspector.parse(current);
-        var isStart = this.caret.isStart(current);
-        var isEnd = this.caret.isEnd(current);
-        var isStartBackspace = (isStart && this.key === this.keycodes.BACKSPACE);
-        var isEndDelete = (isEnd && this.key === this.keycodes.DELETE);
-
-        // variable select
-        if (this.key === this.keycodes.BACKSPACE && initialCurrent && this.caret.isStart(initialCurrent) && initialCurrent.previousSibling)
-        {
-            e.preventDefault();
-            this.caret.setStart(initialCurrent.previousSibling);
-            return;
-        }
-
-        // is non-editable
-        if (this._isNonEditable() || this.selection.hasNonEditable())
-        {
-            e.preventDefault();
-            return;
-        }
-
         // is empty
-        if (this.key === this.keycodes.BACKSPACE && this.editor.isEmpty())
+        if (this.key === this.keycodes.BACKSPACE)
+        {
+            var $editor = this.editor.getElement();
+            var html = this.utils.trimSpaces($editor.html());
+
+            if (html === this.opts.emptyHtml)
+            {
+                e.preventDefault();
+                return;
+            }
+        }
+
+        // variable or non editable prev/next or selection
+        if (this._detectVariableOrNonEditable() || this.selection.hasNonEditable())
         {
             e.preventDefault();
             return;
@@ -13456,16 +13820,9 @@ $R.add('class', 'input.delete', {
         // collapsed
         if (this.selection.isCollapsed())
         {
-            // figure/code
-            if (data.isComponentType('code') && (isStartBackspace || isEndDelete))
-            {
-                e.preventDefault();
-                return;
-            }
-
             // next / prev
-            if (isStartBackspace) this._removePrev(e, current, data);
-            else if (isEndDelete) this._removeNext(e, current, data);
+            if (this.key === this.keycodes.BACKSPACE) this._traverseBackspace(e);
+            else if (this.key === this.keycodes.DELETE) this._traverseDelete(e);
         }
 
         this._removeInvisibleSpace();
@@ -13474,136 +13831,150 @@ $R.add('class', 'input.delete', {
         this._removeSpanTagsInHeadings();
         this._removeInlineTagsInPre();
     },
-    _getCurrent: function()
+    _detectVariableOrNonEditable: function()
+    {
+        var block = this.selection.getBlock();
+        var isBlockStart = this.caret.isStart(block);
+        var isBlockEnd = this.caret.isEnd(block);
+        var el;
+
+        // backspace
+        if (this.key === this.keycodes.BACKSPACE && isBlockStart)
+        {
+            el = block.previousSibling;
+            if (this._isNonEditable(el)) return true;
+        }
+        // delete
+        else if (this.key === this.keycodes.DELETE && isBlockEnd)
+        {
+            el = block.nextSibling;
+            if (this._isNonEditable(el)) return true;
+        }
+
+        var current = this.selection.getCurrent();
+        var isCurrentStart = this.caret.isStart(current);
+        var isCurrentEnd = this.caret.isEnd(current);
+        var isCurrentStartSpace = (this.selection.getTextBeforeCaret().trim() === '');
+        var isCurrentEndSpace = (this.selection.getTextAfterCaret().trim() === '');
+
+        // backspace
+        if (this.key === this.keycodes.BACKSPACE && isCurrentStart && !isCurrentStartSpace)
+        {
+            el = current.previousSibling;
+            if (this._isVariable(el))
+            {
+                this.caret.setEnd(el);
+                return true;
+            }
+            else if (this._isNonEditable(el)) return true;
+        }
+        // delete
+        else if (this.key === this.keycodes.DELETE && isCurrentEnd && !isCurrentEndSpace)
+        {
+            el = current.nextSibling;
+            if (this._isVariable(el))
+            {
+                this.caret.setStart(el);
+                return true;
+            }
+            else if (this._isNonEditable(el)) return true;
+        }
+    },
+    _isVariable: function(node)
+    {
+        return ($R.dom(node).closest('[data-redactor-type="variable"]').length !== 0);
+    },
+    _isNonEditable: function(node)
+    {
+        return ($R.dom(node).closest('.non-editable').length !== 0);
+    },
+    _getBlock: function()
     {
         var $editor = this.editor.getElement();
-        var current = this.selection.getCurrent();
-        var data = this.inspector.parse(current);
-        var isList = data.isList();
-        var isText = this.selection.isText();
+        var block = this.selection.getBlock();
+        var data = this.inspector.parse(block);
 
-        var block = this.selection.getBlock(current);
-        block = (isList) ? $R.dom(current).parents('ul, ol', $editor).last().get() : block;
-        block = (isText) ? current : block;
+        block = (data.isList()) ? $R.dom(block).parents('ul, ol', $editor).last().get() : block;
+        block = (data.isDl()) ? data.getDl() : block;
+        block = (data.isTable()) ? data.getTable() : block;
 
         return block;
     },
-    _findSiblings: function(node, type)
+    _traverseDelete: function(e)
     {
-        while (node = node[type])
-        {
-            var isEmpty = false;
-            if (node.nodeType === 3 && !this.opts.breakline)
-            {
-                isEmpty = (node.textContent.trim() === '');
-            }
+        var current = this.selection.getCurrent();
+        var data = this.inspector.parse(current);
+        var block, isEnd, $next;
 
-            if (!isEmpty && node.tagName !== 'BR') return node;
-        }
-    },
-    _removePrev: function(e, current, data)
-    {
-        var prev = this._findSiblings(current, 'previousSibling');
-        if (!prev)
-        {
-            return;
-        }
-
-        var dataPrev = this.inspector.parse(prev);
-        var $current = $R.dom(current);
-        var $prev = $R.dom(prev);
-
-        // combine lists
-        if (data.isList())
-        {
-            e.preventDefault();
-
-            if (dataPrev.isList())
-            {
-                $current.children('li').first().prepend(this.marker.build('start'));
-                $prev.append($current);
-                $current.unwrap();
-
-                this.selection.restoreMarkers();
-            }
-            else
-            {
-                var $first = $current.children('li').first();
-                var first = $first.get();
-                var $lists = $first.find('ul, ol');
-
-                if (this.opts.markup === 'br')
-                {
-                    $current.before($first);
-                    $first.prepend(this.marker.build('start'));
-                    $first.prepend('<br>').append('<br>').unwrap();
-                    this.selection.restoreMarkers();
-                }
-                else
-                {
-                    var $newnode = this.utils.replaceToTag(first, this.opts.markup);
-                    $current.before($newnode);
-                    this.caret.setStart($newnode);
-                }
-
-                if ($lists.length !== 0)
-                {
-                    $current.prepend($lists);
-                    $lists.unwrap();
-                }
-            }
-
-            return;
-        }
         // figcaption
-        else if (data.isFigcaption())
+        if (data.isFigcaption())
         {
-            e.preventDefault();
-            return;
+            block = data.getFigcaption();
+            isEnd = this.caret.isEnd(block);
+
+            if (isEnd)
+            {
+                e.preventDefault();
+                return;
+            }
         }
+        // figure/code
+        else if (data.isComponentType('code'))
+        {
+            block = data.getComponent();
+            isEnd = this.caret.isEnd(block);
+
+            if (isEnd)
+            {
+                e.preventDefault();
+                return;
+            }
+        }
+
+        // next
+        block = this._getBlock();
+        var next = this.utils.findSiblings(block, 'next');
+        if (!next) return;
+
+        isEnd = this.caret.isEnd(block);
+        var dataNext = this.inspector.parse(next);
+        var isNextBlock = (next.tagName === 'P' || next.tagName === 'DIV');
+
         // figure/code or table
-        else if (dataPrev.isComponentEditable())
+        if (isEnd && dataNext.isComponentEditable())
         {
             e.preventDefault();
-            this.component.remove(prev, false);
+            this.component.remove(next, false);
             return;
         }
         // component
-        else if (dataPrev.isComponent())
+        else if (isEnd && dataNext.isComponent())
         {
             e.preventDefault();
 
+            // select component
+            this.caret.setStart(next);
+
             // remove current if empty
-            if (this.utils.isEmptyHtml($current.html()))
+            if (this.utils.isEmptyHtml(block.innerHTML))
             {
-                $current.remove();
+                $R.dom(block).remove();
             }
 
-            this.caret.setStart(prev);
             return;
         }
-    },
-    _removeNext: function(e, current, data)
-    {
-        var next = this._findSiblings(current, 'nextSibling');
-        if (!next)
+        // combine list
+        else if (isEnd && dataNext.isList())
         {
-            return;
-        }
+            var $currentList = $R.dom(block);
+            $next = $R.dom(next);
 
-        var dataNext = this.inspector.parse(next);
-        var $current = $R.dom(current);
-        var $next = $R.dom(next);
-
-        // next list
-        if (dataNext.isList())
-        {
             // current list
             if (data.isList())
             {
                 e.preventDefault();
 
-                $current.append($next);
+                $currentList.append($next);
                 $next.unwrap();
 
                 return;
@@ -13611,7 +13982,6 @@ $R.add('class', 'input.delete', {
             else
             {
                 var $first = $next.children('li').first();
-                var first = $first.get();
                 var $lists = $first.find('ul, ol');
 
                 if ($lists.length !== 0)
@@ -13621,33 +13991,171 @@ $R.add('class', 'input.delete', {
                     $next.prepend($lists);
                     $lists.unwrap();
 
-                    $current.append($first);
-                    $first.unwrap()
+                    $currentList.append($first);
+                    $first.unwrap();
 
                     return;
                 }
             }
         }
-        // figcaption
-        else if (data.isFigcaption())
+        // block
+        else if (isEnd && !data.isTable() && isNextBlock && !this.utils.isEmptyHtml(block.innerHTML))
         {
             e.preventDefault();
+
+            var $current = $R.dom(block);
+            $next = $R.dom(next);
+
+            $current.append($next);
+            $next.unwrap();
+
             return;
         }
+    },
+    _traverseBackspace: function(e)
+    {
+        var current = this.selection.getCurrent();
+        var data = this.inspector.parse(current);
+        var block, isStart, $prev, $currentList;
+
+        // figcaption
+        if (data.isFigcaption())
+        {
+            block = data.getFigcaption();
+            isStart = this.caret.isStart(block);
+
+            if (isStart)
+            {
+                e.preventDefault();
+                return;
+            }
+        }
+        // figure/code
+        else if (data.isComponentType('code'))
+        {
+            block = data.getComponent();
+            isStart = this.caret.isStart(block);
+
+            if (isStart && block.previousElementSibling)
+            {
+                e.preventDefault();
+                this.caret.setEnd(block.previousElementSibling);
+                return true;
+            }
+        }
+
+        // prev
+        block = this._getBlock();
+        var prev = this.utils.findSiblings(block, 'prev');
+
+        if (!prev)
+        {
+            setTimeout(this._replaceBlock.bind(this), 1);
+            return;
+        }
+
+        isStart = this.caret.isStart(block);
+        var dataPrev = this.inspector.parse(prev);
+        var isPrevBlock = (prev.tagName === 'P' || prev.tagName === 'DIV');
+
         // figure/code or table
-        else if (dataNext.isComponentEditable())
+        if (isStart && dataPrev.isComponentEditable())
         {
             e.preventDefault();
-            this.component.remove(next, false);
+            this.component.remove(prev, false);
             return;
         }
         // component
-        else if (dataNext.isComponent())
+        else if (isStart && dataPrev.isComponent())
         {
             e.preventDefault();
-            this.caret.setStart(next);
+
+            // select component
+            this.caret.setStart(prev);
+
+            // remove current if empty
+            if (this.utils.isEmptyHtml(block.innerHTML))
+            {
+                $R.dom(block).remove();
+            }
+
             return;
         }
+        // lists
+        else if (isStart && data.isList())
+        {
+            e.preventDefault();
+
+            $currentList = $R.dom(block);
+            $prev = $R.dom(prev);
+
+            if (dataPrev.isList())
+            {
+                $currentList.children('li').first().prepend(this.marker.build('start'));
+                $prev.append($currentList);
+                $currentList.unwrap();
+
+                this.selection.restoreMarkers();
+            }
+            else
+            {
+                var $first = $currentList.children('li').first();
+                var first = $first.get();
+                var $lists = $first.find('ul, ol');
+
+                var $newnode = this.utils.replaceToTag(first, this.opts.markup);
+                if (this.opts.breakline) $newnode.attr('data-redactor-tag', 'br');
+                $currentList.before($newnode);
+                this.caret.setStart($newnode);
+
+                if ($lists.length !== 0)
+                {
+                    $currentList.prepend($lists);
+                    $lists.unwrap();
+                }
+            }
+
+            return;
+        }
+        // block
+        else if (isStart && isPrevBlock)
+        {
+            e.preventDefault();
+
+            var textNode = this.utils.createInvisibleChar();
+            var $current = $R.dom(block);
+            $prev = $R.dom(prev);
+
+            this.caret.setEnd($prev);
+
+            $current.prepend(textNode);
+            $prev.append($current.contents());
+            $current.remove();
+
+            return;
+        }
+    },
+    _replaceBlock: function()
+    {
+        var block = this.selection.getBlock();
+        var $block = $R.dom(block);
+
+        if (this.opts.markup === 'p' && block && this._isNeedToReplaceBlock(block))
+        {
+            var markup = document.createElement(this.opts.markup);
+
+            $block.replaceWith(markup);
+            this.caret.setStart(markup);
+        }
+
+        if (this.opts.breakline && block && block.tagName === 'DIV')
+        {
+            $block.attr('data-redactor-tag', 'br');
+        }
+    },
+    _isNeedToReplaceBlock: function(block)
+    {
+        return (block.tagName === 'DIV' && this.utils.isEmptyHtml(block.innerHTML));
     },
     _removeActiveComponent: function(e)
     {
@@ -13677,19 +14185,19 @@ $R.add('class', 'input.delete', {
     {
         var $editor = this.editor.getElement();
 
-		setTimeout(function()
-		{
-			var $tags = $editor.find('*[style]');
-			$tags.not('img, figure, iframe, [data-redactor-style-cache], [data-redactor-span]').removeAttr('style');
+        setTimeout(function()
+        {
+            var $tags = $editor.find('*[style]');
+            $tags.not('img, figure, iframe, [data-redactor-style-cache], [data-redactor-span]').removeAttr('style');
 
-		}, 0);
+        }, 0);
     },
     _removeEmptySpans: function()
     {
         var $editor = this.editor.getElement();
 
         setTimeout(function()
-		{
+        {
             $editor.find('span').each(function(node)
             {
                 if (node.attributes.length === 0)
@@ -13702,14 +14210,19 @@ $R.add('class', 'input.delete', {
     },
     _removeInvisibleSpace: function()
     {
-        var re = /^\u200B$/g;
         var current = this.selection.getCurrent();
-        var $current = $R.dom(current);
-        var $prev = (current && current.previousSibling) ? $R.dom(current.previousSibling) : false;
-        var isEmpty = this.utils.isEmptyHtml($current.html());
+        var prev = (current) ? current.previousSibling : false;
+        var isEmpty = (current) ? this.utils.isEmptyHtml(((current.nodeType === 3) ? current.textContent : current.innerHTML)) : false;
 
-		if (isEmpty && $current.text().search(re) === 0) $current.remove();
-        if (this.key === this.keycodes.DELETE && $prev && $prev.text().search(re) === 0) $prev.remove();
+        if (isEmpty && current && current.nodeType === 3 && this.utils.searchInvisibleChars(current.textContent) === 0)
+        {
+            current.parentNode.removeChild(current);
+        }
+
+        if (this.key === this.keycodes.DELETE && prev && prev.nodeType === 3 && this.utils.searchInvisibleChars(prev.textContent) === 0)
+        {
+            prev.parentNode.removeChild(prev);
+        }
     },
     _removeSpanTagsInHeadings: function()
     {
@@ -13722,7 +14235,7 @@ $R.add('class', 'input.delete', {
                 var $node = $R.dom(node);
                 if ($node.closest('figure').length === 0)
                 {
-                    $node.find('span').not('.redactor-component, .non-editable, .redactor-selection-marker').unwrap();
+                    $node.find('span').not('.redactor-component, .non-editable, .redactor-selection-marker, [data-redactor-style-cache], [data-redactor-span]').unwrap();
                 }
             });
 
@@ -13745,29 +14258,10 @@ $R.add('class', 'input.delete', {
             });
 
         }, 1);
-    },
-    _isNonEditable: function()
-    {
-        // prev & next non editable
-        var block = this.selection.getBlock();
-        var blockSides = (this.caret.isStart(block) || this.caret.isEnd(block));
-        var current = (block && blockSides) ? block : this.selection.getCurrent();
-        if (!current) return false;
-
-        var isBackspace = (this.key === this.keycodes.BACKSPACE);
-        var type = (isBackspace) ? 'previousSibling' : 'nextSibling';
-        var el = this._findSiblings(current, type);
-
-        var isNon = ($R.dom(el).closest('.non-editable').length !== 0)
-
-        if (isBackspace && this.caret.isStart(current) && isNon) return true;
-        else if (!isBackspace && this.caret.isEnd(current) && isNon) return true;
-
-        return false;
     }
 });
 $R.add('class', 'input.enter', {
-    init: function(app, e, key)
+    init: function(app, e)
     {
         this.app = app;
         this.opts = app.opts;
@@ -13789,7 +14283,7 @@ $R.add('class', 'input.enter', {
 
         // callback
         var stop = this.app.broadcast('enter', e);
-    	if (stop === false) return e.preventDefault();
+        if (stop === false) return e.preventDefault();
 
         // has non-editable
         if (this.selection.hasNonEditable())
@@ -13827,22 +14321,21 @@ $R.add('class', 'input.enter', {
     _isExit: function(e)
     {
         var $editor = this.editor.getElement();
-        var current = this.selection.getCurrent();
-        var data = this.inspector.parse(current);
-        var block = this.selection.getBlock(current);
+        var block = this.selection.getBlock();
+        var data = this.inspector.parse(block);
         var isEnd = this.caret.isEnd(block);
+        var current = this.selection.getCurrent();
         var prev = current.previousSibling;
 
         // blockquote
         if (data.isBlockquote())
         {
             var isParagraphExit = (isEnd && this._isExitableBlock(block, 'P'));
-            var isBreaklineExit = (isEnd && prev && prev.tagName === 'BR');
-            var blockquote = data.getBlockquote();
+            var isBreaklineExit = (isEnd && this._isExitableDblBreak(prev));
 
             if (isParagraphExit || isBreaklineExit)
             {
-                return this._exitFromElement(e, ((isBreaklineExit) ? prev : block), blockquote);
+                return this._exitFromElement(e, ((isBreaklineExit) ? prev : block), data.getBlockquote());
             }
         }
         // pre
@@ -13851,12 +14344,11 @@ $R.add('class', 'input.enter', {
             if (isEnd)
             {
                 var html = block.innerHTML;
-                if (html.replace(/[\u200B-\u200D\uFEFF]/g, '').match(/(\n\n\n)$/) !== null)
+                html = this.utils.removeInvisibleChars(html);
+                if (html.match(/(\n\n\n)$/) !== null)
                 {
                     $R.dom(prev.previousSibling.previousSibling).remove();
-                    this._exitFromElement(e, prev, block);
-
-                    return;
+                    return this._exitFromElement(e, prev, block);
                 }
             }
         }
@@ -13865,20 +14357,33 @@ $R.add('class', 'input.enter', {
         {
             if (isEnd && this._isExitableBlock(block, 'DT'))
             {
-                var dl = data.getDl();
-
-                return this._exitFromElement(e, block, dl);
+                return this._exitFromElement(e, block, data.getDl());
             }
         }
         // li
         else if (data.isList())
         {
             var list = $R.dom(current).parents('ul, ol', $editor).last();
-            var isEnd = this.caret.isEnd(list);
+
+            isEnd = this.caret.isEnd(list);
             if (isEnd && this._isExitableBlock(block, 'LI'))
             {
                 return this._exitFromElement(e, block, list);
             }
+        }
+        else if (data.isComponent() && data.isComponentActive() && !data.isFigcaption() && !data.isComponentEditable())
+        {
+            return this._exitFromElement(e, false, data.getComponent());
+        }
+    },
+    _isExitableDblBreak: function(prev)
+    {
+        var next = (prev) ? prev.nextSibling : false;
+        if (next)
+        {
+            var text = this.utils.removeInvisibleChars(next.textContent);
+
+            return (next.nodeType === 3 && text.trim() === '');
         }
     },
     _isExitableBlock: function(block, tag)
@@ -13888,50 +14393,59 @@ $R.add('class', 'input.enter', {
     _exitFromElement: function(e, prev, el)
     {
         e.preventDefault();
-
-        var $prev = $R.dom(prev);
-        $prev.remove();
-
-        if (this.opts.markup === 'br') this.caret.setAfter(el);
-        else this._createExitNextMarkup(el);
+        if (prev) $R.dom(prev).remove();
+        this.utils.createMarkup(el);
 
         return true;
     },
-    _createExitNextMarkup: function(el)
+    _exitNextElement: function(e, node)
     {
-        var markup = document.createElement(this.opts.markup);
-        var $el = $R.dom(el);
+        e.preventDefault();
 
-        $el.after(markup);
-        this.caret.setStart(markup);
+        if (node.nextSibling) this.caret.setStart(node.nextSibling);
+        else this.utils.createMarkup(node);
+
+        return true;
     },
     _traverse: function(e)
     {
         var current = this.selection.getCurrent();
         var isText = this.selection.isText();
+        var block = this.selection.getBlock();
         var data = this.inspector.parse(current);
+        var blockTag = (block) ? block.tagName.toLowerCase() : false;
 
         // pre
         if (data.isPre())
         {
             e.preventDefault();
-            return this.insertion.insertNewline()
+            return this.insertion.insertNewline();
         }
         // blockquote
         else if (data.isBlockquote())
         {
-            var block = this.selection.getBlock(current);
+            block = this.selection.getBlock(current);
             if (block && block.tagName === 'BLOCKQUOTE')
             {
                 e.preventDefault();
-                return this.insertion.insertBreakLine()
+                return this.insertion.insertBreakLine();
             }
         }
         // figcaption
         else if (data.isFigcaption())
         {
-            e.preventDefault();
-            return;
+            block = data.getFigcaption();
+            var isEnd = this.caret.isEnd(block);
+            var isEndEditor = this.caret.isEnd();
+            if (isEnd || isEndEditor)
+            {
+                return this._exitNextElement(e, data.getComponent());
+            }
+            else
+            {
+                e.preventDefault();
+                return;
+            }
         }
         // dl
         else if (data.isDl())
@@ -13940,7 +14454,7 @@ $R.add('class', 'input.enter', {
             return this._traverseDl(current);
         }
         // text
-        else if (isText)
+        else if (isText || (this.opts.breakline && blockTag === 'div'))
         {
             e.preventDefault();
             return this.insertion.insertBreakLine();
@@ -13960,8 +14474,8 @@ $R.add('class', 'input.enter', {
         var $el = $R.dom(block);
         var next = $el.get().nextSibling || false;
         var $next = $R.dom(next);
-        var nextDd = (next && $next.is('dd'))
-        var nextDt = (next && $next.is('dt'))
+        var nextDd = (next && $next.is('dd'));
+        var nextDt = (next && $next.is('dt'));
         var isEnd = this.caret.isEnd(block);
 
         if (tag === 'dt' && !nextDd && isEnd)
@@ -13988,31 +14502,51 @@ $R.add('class', 'input.enter', {
         var block = this.selection.getBlock();
         var $block = $R.dom(block);
 
-        if (this.opts.markup !== 'div' && block && this._isNeedToReplaceBlock(block))
+        if (this.opts.markup === 'p' && block && this._isNeedToReplaceBlock(block))
         {
             var markup = document.createElement(this.opts.markup);
 
-			$block.replaceWith(markup);
-			this.caret.setStart(markup);
+            $block.replaceWith(markup);
+            this.caret.setStart(markup);
         }
         else
         {
-            if (block && this.utils.isEmptyHtml(block.innerHTML))
+            if (block)
             {
-                if (this.opts.cleanInlineOnEnter || block.innerHTML === '<br>')
+                if (this.utils.isEmptyHtml(block.innerHTML))
                 {
-                    $block.html('');
+                    this._clearBlock($block, block);
                 }
-
-                this.caret.setStart(block);
+                else
+                {
+                    var first = this.utils.getFirstNode(block);
+                    if (first && first.tagName === 'BR')
+                    {
+                        $R.dom(first).remove();
+                        this.caret.setStart(block);
+                    }
+                }
             }
         }
-
 
         if (block && this._isNeedToCleanBlockStyle(block) && this.opts.cleanOnEnter)
         {
             $block.removeAttr('class style');
         }
+
+        if (this.opts.breakline && block && block.tagName === 'DIV')
+        {
+            $block.attr('data-redactor-tag', 'br');
+        }
+    },
+    _clearBlock: function($block, block)
+    {
+        if (this.opts.cleanInlineOnEnter || block.innerHTML === '<br>')
+        {
+            $block.html('');
+        }
+
+        this.caret.setStart(block);
     },
     _isNeedToReplaceBlock: function(block)
     {
@@ -14024,7 +14558,7 @@ $R.add('class', 'input.enter', {
     }
 });
 $R.add('class', 'input.paste', {
-    init: function(app, e, dataTransfer)
+    init: function(app, e, dataTransfer, html, point)
     {
         this.app = app;
         this.opts = app.opts;
@@ -14037,6 +14571,8 @@ $R.add('class', 'input.paste', {
         this.autoparser = app.autoparser;
 
         // local
+        this.pasteHtml = html;
+        this.pointInserted = point;
         this.dataTransfer = dataTransfer;
 
         // init
@@ -14062,7 +14598,16 @@ $R.add('class', 'input.paste', {
 
         if (this.isRawCode || !clipboard)
         {
-            this._getPastedUsingHiddenBox(e);
+            var text = clipboard.getData("text/plain");
+
+            e.preventDefault();
+            this._insert(e, text);
+            return;
+        }
+        else if (this.pasteHtml)
+        {
+            e.preventDefault();
+            this._insert(e, this.pasteHtml);
         }
         else
         {
@@ -14099,34 +14644,6 @@ $R.add('class', 'input.paste', {
             this._insert(e, html);
         }
     },
-    _getPastedUsingHiddenBox: function(e)
-    {
-        this._createBox();
-
-        setTimeout(function()
-        {
-            var html = this._getCodeFromBox();
-            this._insert(e, html);
-
-        }.bind(this), 1);
-    },
-    _createBox: function()
-    {
-		var $container = this.container.getElement();
-
-		this.$pasteBox = (this.isRawCode) ? $R.dom('<textarea>') : $R.dom('<div contenteditable="true">');
-		this.$pasteBox.css({ position: 'fixed', width: '1px', top: 0, left: '-9999px' });
-
-        $container.append(this.$pasteBox);
-		this.$pasteBox.focus();
-    },
-    _getCodeFromBox: function()
-    {
-        var html = (this.isRawCode) ? this.$pasteBox.val() : this.$pasteBox.html();
-		this.$pasteBox.remove();
-
-		return html;
-    },
     _isPlainText: function(clipboard)
     {
         var text = clipboard.getData("text/plain");
@@ -14144,7 +14661,7 @@ $R.add('class', 'input.paste', {
         }
         else
         {
-            return (text != null);
+            return (text !== null);
         }
     },
     _restoreSelection: function()
@@ -14160,15 +14677,15 @@ $R.add('class', 'input.paste', {
     {
         // pasteBefore callback
         var returned = this.app.broadcast('pasteBefore', html);
-		html = (returned === undefined) ? html : returned;
+        html = (returned === undefined) ? html : returned;
 
-		// clean
-		html = (this.isRawCode) ? html : this.cleaner.paste(html);
+        // clean
+        html = (this.isRawCode) ? html : this.cleaner.paste(html);
         html = (this.isRawCode) ? this.cleaner.encodePhpCode(html) : html;
 
-		// paste callback
-        var returned = this.app.broadcast('pasting', html);
-		html = (returned === undefined) ? html : returned;
+        // paste callback
+        returned = this.app.broadcast('pasting', html);
+        html = (returned === undefined) ? html : returned;
 
         this._restoreSelection();
 
@@ -14178,10 +14695,11 @@ $R.add('class', 'input.paste', {
             html = this.autoparser.parse(html);
         }
 
-        var nodes = (this.dropPasted) ? this.insertion.insertToPoint(e, html) : this.insertion.insertHtml(html);
+        var nodes = (this.dropPasted) ? this.insertion.insertToPoint(e, html, this.pointInserted) : this.insertion.insertHtml(html);
 
         // pasted callback
         this.app.broadcast('pasted', nodes);
+        this.app.broadcast('autoparseobserve');
     },
     _insertFiles: function(e, files)
     {
@@ -14208,7 +14726,7 @@ $R.add('class', 'input.shortcode', {
         // local
         this.worked = false;
 
-    	// init
+        // init
         if (key === this.keycodes.SPACE) this._init();
     },
     // public
@@ -14222,7 +14740,7 @@ $R.add('class', 'input.shortcode', {
         var current = this.selection.getCurrent();
         if (current && current.nodeType === 3)
         {
-            var text = current.textContent.replace(/[\u200B-\u200D\uFEFF]/g, '');
+            var text = this.utils.removeInvisibleChars(current.textContent);
             var shortcodes = this.opts.shortcodes;
             for (var name in shortcodes)
             {
@@ -14232,20 +14750,21 @@ $R.add('class', 'input.shortcode', {
                 {
                     if (typeof shortcodes[name].format !== 'undefined')
                     {
-                        return this._format(shortcodes[name].format, text, current, re);
+                        return this._format(shortcodes[name].format, current, re);
                     }
                 }
             }
         }
     },
-    _format: function(tag, text, current, re)
+    _format: function(tag, current, re)
     {
-        var marker = this.marker.insertStart();
-        var current = marker.previousSibling;
-        var currentText = current.textContent;
+        var marker = this.marker.insert('start');
+        current = marker.previousSibling;
 
-        currentText = currentText.replace(re, '');
-        current.textContent = currentText;
+        var text = current.textContent;
+        text = this.utils.trimSpaces(text);
+        text = text.replace(re, '');
+        current.textContent = text;
 
         var api = (tag === 'ul' || tag === 'ol') ? 'module.list.toggle' : 'module.block.format';
 
@@ -14265,25 +14784,25 @@ $R.add('class', 'input.shortcut', {
         this.worked = false;
 
         // based on https://github.com/jeresig/jquery.hotkeys
-    	this.hotkeys = {
-    		8: "backspace", 9: "tab", 10: "return", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",
-    		20: "capslock", 27: "esc", 32: "space", 33: "pageup", 34: "pagedown", 35: "end", 36: "home",
-    		37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del", 59: ";", 61: "=",
-    		96: "0", 97: "1", 98: "2", 99: "3", 100: "4", 101: "5", 102: "6", 103: "7",
-    		104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/",
-    		112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8",
-    		120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 173: "-", 186: ";", 187: "=",
-    		188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\", 221: "]", 222: "'"
+        this.hotkeys = {
+            8: "backspace", 9: "tab", 10: "return", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",
+            20: "capslock", 27: "esc", 32: "space", 33: "pageup", 34: "pagedown", 35: "end", 36: "home",
+            37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del", 59: ";", 61: "=",
+            96: "0", 97: "1", 98: "2", 99: "3", 100: "4", 101: "5", 102: "6", 103: "7",
+            104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/",
+            112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8",
+            120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 173: "-", 186: ";", 187: "=",
+            188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\", 221: "]", 222: "'"
         };
 
         this.hotkeysShiftNums = {
-    		"`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&",
-    		"8": "*", "9": "(", "0": ")", "-": "_", "=": "+", ";": ": ", "'": "\"", ",": "<",
-    		".": ">",  "/": "?",  "\\": "|"
-    	};
+            "`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&",
+            "8": "*", "9": "(", "0": ")", "-": "_", "=": "+", ";": ": ", "'": "\"", ",": "<",
+            ".": ">",  "/": "?",  "\\": "|"
+        };
 
-    	// init
-    	this._init(e);
+        // init
+        this._init(e);
     },
     // public
     is: function()
@@ -14293,83 +14812,83 @@ $R.add('class', 'input.shortcut', {
     // private
     _init: function(e)
     {
-		// disable browser's hot keys for bold and italic if shortcuts off
-		if (this.opts.shortcuts === false)
-		{
-			if ((e.ctrlKey || e.metaKey) && (e.which === 66 || e.which === 73)) e.preventDefault();
-			return;
-		}
+        // disable browser's hot keys for bold and italic if shortcuts off
+        if (this.opts.shortcuts === false)
+        {
+            if ((e.ctrlKey || e.metaKey) && (e.which === 66 || e.which === 73)) e.preventDefault();
+            return;
+        }
 
-		// build
-		for (var key in this.opts.shortcuts)
-		{
-    		this._build(e, key, this.opts.shortcuts[key]);
-		}
+        // build
+        for (var key in this.opts.shortcuts)
+        {
+            this._build(e, key, this.opts.shortcuts[key]);
+        }
     },
     _build: function(e, str, command)
-	{
-		var keys = str.split(',');
-		var len = keys.length;
-		for (var i = 0; i < len; i++)
-		{
-			if (typeof keys[i] === 'string')
-			{
-				this._handler(e, keys[i].trim(), command);
-			}
-		}
-	},
-	_handler: function(e, keys, command)
-	{
-		keys = keys.toLowerCase().split(" ");
+    {
+        var keys = str.split(',');
+        var len = keys.length;
+        for (var i = 0; i < len; i++)
+        {
+            if (typeof keys[i] === 'string')
+            {
+                this._handler(e, keys[i].trim(), command);
+            }
+        }
+    },
+    _handler: function(e, keys, command)
+    {
+        keys = keys.toLowerCase().split(" ");
 
-		var special = this.hotkeys[e.keyCode];
-		var character = String.fromCharCode(e.which).toLowerCase();
-		var modif = "", possible = {};
-		var cmdKeys = ["alt", "ctrl", "meta", "shift"];
+        var special = this.hotkeys[e.keyCode];
+        var character = String.fromCharCode(e.which).toLowerCase();
+        var modif = "", possible = {};
+        var cmdKeys = ["alt", "ctrl", "meta", "shift"];
 
         for (var i = 0; i < cmdKeys.length; i++)
-		{
-    		var specialKey = cmdKeys[i];
-			if (e[specialKey + 'Key'] && special !== specialKey)
-			{
-				modif += specialKey + '+';
-			}
-		}
+        {
+            var specialKey = cmdKeys[i];
+            if (e[specialKey + 'Key'] && special !== specialKey)
+            {
+                modif += specialKey + '+';
+            }
+        }
 
-		if (special) possible[modif + special] = true;
-		if (character)
-		{
-			possible[modif + character] = true;
-			possible[modif + this.hotkeysShiftNums[character]] = true;
+        if (special) possible[modif + special] = true;
+        if (character)
+        {
+            possible[modif + character] = true;
+            possible[modif + this.hotkeysShiftNums[character]] = true;
 
-			// "$" can be triggered as "Shift+4" or "Shift+$" or just "$"
-			if (modif === "shift+")
-			{
-				possible[this.hotkeysShiftNums[character]] = true;
-			}
-		}
+            // "$" can be triggered as "Shift+4" or "Shift+$" or just "$"
+            if (modif === "shift+")
+            {
+                possible[this.hotkeysShiftNums[character]] = true;
+            }
+        }
 
-		var len = keys.length;
-		for (var i = 0; i < len; i++)
-		{
-			if (possible[keys[i]])
-			{
-				e.preventDefault();
-				this.worked = true;
+        var len = keys.length;
+        for (var i = 0; i < len; i++)
+        {
+            if (possible[keys[i]])
+            {
+                e.preventDefault();
+                this.worked = true;
 
-				if (command.message)
-				{
-				    this.app.broadcast(command.message, command.args);
-				}
-				else if (command.api)
-				{
-    				this.app.api(command.api, command.args);
-				}
+                if (command.message)
+                {
+                    this.app.broadcast(command.message, command.args);
+                }
+                else if (command.api)
+                {
+                    this.app.api(command.api, command.args);
+                }
 
-				return;
-			}
-		}
-	}
+                return;
+            }
+        }
+    }
 });
 $R.add('class', 'input.space', {
     init: function(app, e, key, lastShiftKey)
@@ -14406,7 +14925,7 @@ $R.add('class', 'input.space', {
     }
 });
 $R.add('class', 'input.tab', {
-    init: function(app, e, key)
+    init: function(app, e)
     {
         this.app = app;
         this.opts = app.opts;
@@ -14425,7 +14944,7 @@ $R.add('class', 'input.tab', {
 
         // callback
         var stop = this.app.broadcast('tab', e);
-    	if (stop === false) return e.preventDefault();
+        if (stop === false) return e.preventDefault();
 
         // traverse
         this._traverse(e);
@@ -14439,6 +14958,12 @@ $R.add('class', 'input.tab', {
     {
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
+
+        // hard tab
+        if (!data.isComponent() && e.shiftKey)
+        {
+            return this._insertHardTab(e, 4);
+        }
 
         // list
         if (data.isList())
@@ -14455,10 +14980,14 @@ $R.add('class', 'input.tab', {
         // tab as spaces
         if (this.opts.tabAsSpaces !== false)
         {
-            e.preventDefault();
-            var node = document.createTextNode(Array(this.opts.tabAsSpaces + 1).join('\u00a0'));
-    		return this.insertion.insertNode(node, 'end');
+            return this._insertHardTab(e, this.opts.tabAsSpaces);
         }
+    },
+    _insertHardTab: function(e, num)
+    {
+        e.preventDefault();
+        var node = document.createTextNode(Array(num + 1).join('\u00a0'));
+        return this.insertion.insertNode(node, 'end');
     },
     _tabCode: function(e)
     {
@@ -14466,7 +14995,7 @@ $R.add('class', 'input.tab', {
 
         var node = (this.opts.preSpaces) ? document.createTextNode(Array(this.opts.preSpaces + 1).join('\u00a0')) : document.createTextNode('\t');
 
-		return this.insertion.insertNode(node, 'end');
+        return this.insertion.insertNode(node, 'end');
     }
 });
 $R.add('module', 'upload', {
@@ -14486,24 +15015,12 @@ $R.add('module', 'upload', {
             name: false,
             files: false,
             url: false,
-            data: false
+            data: false,
+            paramName: false
         };
     },
     // public
     build: function(options)
-    {
-        this._build(options);
-    },
-    send: function(options)
-    {
-        this.p = $R.extend(this.defaults, options);
-        this.$uploadbox = this.editor.getElement();
-
-        this._send(this.p.event, this.p.files);
-    },
-
-    // private
-    _build: function(options)
     {
         this.p = $R.extend(this.defaults, options);
         this.$el = $R.dom(this.p.element);
@@ -14511,6 +15028,18 @@ $R.add('module', 'upload', {
         if (this.$el.get().tagName === 'INPUT') this._buildInput();
         else                                    this._buildBox();
     },
+    send: function(options)
+    {
+        this.p = $R.extend(this.defaults, options);
+        this.$uploadbox = this.editor.getElement();
+        this._send(this.p.event, this.p.files);
+    },
+    complete: function(response, e)
+    {
+        this._complete(response, e);
+    },
+
+    // private
     _buildInput: function()
     {
         this.box = false;
@@ -14518,10 +15047,13 @@ $R.add('module', 'upload', {
 
         this.$uploadbox = $R.dom('<div class="upload-box" />');
 
-		this.$el.hide();
-		this.$el.after(this.$uploadbox);
+        this.$el.hide();
+        this.$el.after(this.$uploadbox);
 
-		this._buildPlaceholder();
+        if (this.opts.multipleUpload) this.$el.attr('multiple', 'multiple');
+        else this.$el.removeAttr('multiple');
+
+        this._buildPlaceholder();
         this._buildEvents();
     },
     _buildBox: function()
@@ -14530,124 +15062,126 @@ $R.add('module', 'upload', {
         this.prefix = 'box-';
 
         this.$uploadbox = this.$el;
+        this.$uploadbox.attr('ondragstart', 'return false;');
 
         // events
         this.$uploadbox.on('drop.redactor.upload', this._onDropBox.bind(this));
-		this.$uploadbox.on('dragover.redactor.upload', this._onDragOver.bind(this));
-		this.$uploadbox.on('dragleave.redactor.upload', this._onDragLeave.bind(this));
+        this.$uploadbox.on('dragover.redactor.upload', this._onDragOver.bind(this));
+        this.$uploadbox.on('dragleave.redactor.upload', this._onDragLeave.bind(this));
     },
-	_buildPlaceholder: function()
-	{
-		this.$placeholder = $R.dom('<div class="upload-placeholder" />');
-		this.$placeholder.html(this.lang.get('upload-label'));
-		this.$uploadbox.append(this.$placeholder);
-	},
-	_buildEvents: function()
-	{
-		this.$el.on('change.redactor.upload', this._onChange.bind(this));
+    _buildPlaceholder: function()
+    {
+        this.$placeholder = $R.dom('<div class="upload-placeholder" />');
+        this.$placeholder.html(this.lang.get('upload-label'));
+        this.$uploadbox.append(this.$placeholder);
+    },
+    _buildEvents: function()
+    {
+        this.$el.on('change.redactor.upload', this._onChange.bind(this));
         this.$uploadbox.on('click.redactor.upload', this._onClick.bind(this));
-		this.$uploadbox.on('drop.redactor.upload', this._onDrop.bind(this));
-		this.$uploadbox.on('dragover.redactor.upload', this._onDragOver.bind(this));
-		this.$uploadbox.on('dragleave.redactor.upload', this._onDragLeave.bind(this));
-	},
-	_onClick: function(e)
-	{
-		e.preventDefault();
-		this.$el.click();
-	},
-	_onChange: function(e)
-	{
-    	this.app.broadcast('upload.start');
-		this._send(e, this.$el.get().files);
-	},
-	_onDrop: function(e)
-	{
-		e.preventDefault();
+        this.$uploadbox.on('drop.redactor.upload', this._onDrop.bind(this));
+        this.$uploadbox.on('dragover.redactor.upload', this._onDragOver.bind(this));
+        this.$uploadbox.on('dragleave.redactor.upload', this._onDragLeave.bind(this));
+    },
+    _onClick: function(e)
+    {
+        e.preventDefault();
+        this.$el.click();
+    },
+    _onChange: function(e)
+    {
+        this.app.broadcast('upload.start');
+        this._send(e, this.$el.get().files);
+    },
+    _onDrop: function(e)
+    {
+        e.preventDefault();
 
-		this._clear();
-		this._setStatusDrop();
+        this._clear();
+        this._setStatusDrop();
 
-		this.app.broadcast('upload.start');
-		this._send(e);
-	},
-	_onDragOver: function(e)
-	{
-    	e.preventDefault();
-		this._setStatusHover();
+        this.app.broadcast('upload.start');
+        this._send(e);
+    },
+    _onDragOver: function(e)
+    {
+        e.preventDefault();
+        this._setStatusHover();
 
-		return false;
-	},
-	_onDragLeave: function(e)
-	{
-    	e.preventDefault();
-		this._removeStatusHover();
+        return false;
+    },
+    _onDragLeave: function(e)
+    {
+        e.preventDefault();
+        this._removeStatusHover();
 
-		return false;
-	},
-	_onDropBox: function(e)
-	{
-		e.preventDefault();
+        return false;
+    },
+    _onDropBox: function(e)
+    {
+        e.preventDefault();
 
-		this._clear();
-		this._setStatusDrop();
+        this._clear();
+        this._setStatusDrop();
 
-		this.app.broadcast('upload.start');
-		this._send(e);
-	},
-	_removeStatusHover: function()
-	{
+        this.app.broadcast('upload.start');
+        this._send(e);
+    },
+    _removeStatusHover: function()
+    {
         this.$uploadbox.removeClass('upload-' + this.prefix + 'hover');
-	},
-	_setStatusDrop: function()
-	{
+    },
+    _setStatusDrop: function()
+    {
         this.$uploadbox.addClass('upload-' + this.prefix + 'drop');
-	},
-	_setStatusHover: function()
-	{
+    },
+    _setStatusHover: function()
+    {
         this.$uploadbox.addClass('upload-' + this.prefix + 'hover');
-	},
-	_setStatusError: function()
-	{
-    	this.$uploadbox.addClass('upload-' + this.prefix + 'error');
-	},
-	_setStatusSuccess: function()
-	{
-    	this.$uploadbox.addClass('upload-' + this.prefix + 'success');
-	},
-	_clear: function()
-	{
-    	var classes = ['drop', 'hover', 'error', 'success'];
+    },
+    _setStatusError: function()
+    {
+        this.$uploadbox.addClass('upload-' + this.prefix + 'error');
+    },
+    _setStatusSuccess: function()
+    {
+        this.$uploadbox.addClass('upload-' + this.prefix + 'success');
+    },
+    _clear: function()
+    {
+        var classes = ['drop', 'hover', 'error', 'success'];
         for (var i = 0; i < classes.length; i++)
         {
-    	    this.$uploadbox.removeClass('upload-' + this.prefix + classes[i]);
-	    }
-	},
-	_getParamName: function()
-	{
-        return (this.opts.uploadParamName) ? this.opts.uploadParamName : 'file';
-	},
-	_send: function(e, files)
-	{
-    	e = e.originalEvent || e;
+            this.$uploadbox.removeClass('upload-' + this.prefix + classes[i]);
+        }
 
-		files = (files) ? files : e.dataTransfer.files;
+        this.$uploadbox.removeAttr('ondragstart');
+    },
+    _send: function(e, files)
+    {
+        e = e.originalEvent || e;
 
-		var data = new FormData();
-		var name = this._getParamName();
+        files = (files) ? files : e.dataTransfer.files;
+
+        var data = new FormData();
+        var name = this._getUploadParam();
 
         data = this._buildData(name, files, data);
         data = this.utils.extendData(data, this.p.data);
 
-        this._sendData(data, e);
-	},
-	_sendData: function(data, e)
-	{
-    	this.progress.show();
+        this._sendData(data, files, e);
+    },
+    _sendData: function(data, files, e)
+    {
+        this.progress.show();
 
         if (typeof this.p.url === 'function')
         {
-            this.p.url(data, e);
-            this.progress.hide();
+            var res = this.p.url(data, files, e, this);
+            if (!(res instanceof Promise))
+            {
+                this._complete(res);
+            }
         }
         else
         {
@@ -14661,29 +15195,33 @@ $R.add('module', 'upload', {
                 }.bind(this),
                 success: function(response)
                 {
-                    this._complete(response, e)
+                    this._complete(response, e);
                 }.bind(this)
             });
         }
-	},
-	_buildData: function(name, files, data)
-	{
+    },
+    _getUploadParam: function()
+    {
+        return (this.p.paramName) ? this.p.paramName : 'file';
+    },
+    _buildData: function(name, files, data)
+    {
         if (files.length === 1)
-		{
-			data.append(name, files[0]);
-		}
-		else if (files.length > 1 && this.opts.multipleUpload !== false)
-		{
-    		for (var i = 0; i < files.length; i++)
-    		{
-    			data.append(name + '-' + i, files[i]);
-    		}
-		}
+        {
+            data.append(name + '[]', files[0]);
+        }
+        else if (files.length > 1 && this.opts.multipleUpload !== false)
+        {
+            for (var i = 0; i < files.length; i++)
+            {
+                data.append(name + '[]', files[i]);
+            }
+        }
 
-		return data;
-	},
-	_complete: function (response, e)
-	{
+        return data;
+    },
+    _complete: function (response, e)
+    {
         this._clear();
         this.progress.hide();
 
@@ -14703,7 +15241,7 @@ $R.add('module', 'upload', {
 
             setTimeout(this._clear.bind(this), 500);
         }
-	}
+    }
 });
 $R.add('class', 'code.component', {
     mixins: ['dom', 'component'],
@@ -14780,7 +15318,7 @@ $R.add('module', 'form', {
     },
     oncontextbar: function(e, contextbar)
     {
-        var data = this.inspector.parse(e.target)
+        var data = this.inspector.parse(e.target);
         if (data.isComponentType('form'))
         {
             var node = data.getComponent();
@@ -14852,36 +15390,36 @@ $R.add('module', 'image', {
     modals: {
         'image':
             '<div class="redactor-modal-tab" data-title="## upload ##"><form action=""> \
-                <input type="file" name="file" multiple> \
+                <input type="file" name="file"> \
             </form></div>',
         'imageedit':
             '<div class="redactor-modal-group"> \
                 <div id="redactor-modal-image-preview" class="redactor-modal-side"></div> \
                 <form action="" class="redactor-modal-area"> \
-            		<div class="form-item"> \
-            			<label> ## title ##</label> \
-            			<input type="text" name="title" /> \
-            		</div> \
-            		<div class="form-item form-item-caption"> \
-            			<label>## caption ##</label> \
-            			<input type="text" name="caption" aria-label="## caption ##" /> \
-            		</div> \
-            		<div class="form-item"> \
-            			<label>## link ##</label> \
-            			<input type="text" name="url" aria-label="## link ##" /> \
-            		</div> \
-            		<div class="form-item form-item-align"> \
-            			<label>## image-position ##</label> \
-            			<select name="align" aria-label="## image-position ##"> \
-            				<option value="none">## none ##</option> \
-            				<option value="left">## left ##</option> \
-            				<option value="center">## center ##</option> \
-            				<option value="right">## right ##</option> \
-            			</select> \
-            		</div> \
-            		<div class="form-item"> \
-            			<label class="checkbox"><input type="checkbox" name="target" aria-label="## link-in-new-tab ##"> ## link-in-new-tab ##</label> \
-            		</div> \
+                    <div class="form-item"> \
+                        <label for="modal-image-title"> ## title ##</label> \
+                        <input type="text" id="modal-image-title" name="title" /> \
+                    </div> \
+                    <div class="form-item"> \
+                        <label for="modal-image-caption">## caption ##</label> \
+                        <input type="text" id="modal-image-caption" name="caption" aria-label="## caption ##" /> \
+                    </div> \
+                    <div class="form-item form-item-align"> \
+                        <label>## image-position ##</label> \
+                        <select name="align" aria-label="## image-position ##"> \
+                            <option value="none">## none ##</option> \
+                            <option value="left">## left ##</option> \
+                            <option value="center">## center ##</option> \
+                            <option value="right">## right ##</option> \
+                        </select> \
+                    </div> \
+                    <div class="form-item"> \
+                        <label for="modal-image-url">## link ##</label> \
+                        <input type="text" id="modal-image-url" name="url" aria-label="## link ##" /> \
+                    </div> \
+                    <div class="form-item"> \
+                        <label class="checkbox"><input type="checkbox" name="target" aria-label="## link-in-new-tab ##"> ## link-in-new-tab ##</label> \
+                    </div> \
                 </form> \
             </div>'
     },
@@ -14898,12 +15436,18 @@ $R.add('module', 'image', {
         this.inspector = app.inspector;
         this.insertion = app.insertion;
         this.selection = app.selection;
+
+        // local
+        this.justResized = false;
     },
     // messages
+    oninsert: function()
+    {
+        this._observeImages();
+    },
     onstarted: function()
     {
         // storage observe
-        this.storage.markImages();
         this.storage.observeImages();
 
         // resize
@@ -14911,6 +15455,9 @@ $R.add('module', 'image', {
         {
             this.resizer = $R.create('image.resize', this.app);
         }
+
+        // observe
+        this._observeImages();
     },
     ondropimage: function(e, files, clipboard)
     {
@@ -14933,16 +15480,25 @@ $R.add('module', 'image', {
     onimageresizer: {
         stop: function()
         {
-            if (this.resizer) this.resizer.stop();
+            if (this.resizer) this.resizer.hide();
         }
     },
     onsource: {
         open: function()
         {
-            if (this.resizer) this.resizer.stop();
+            if (this.resizer) this.resizer.hide();
+        },
+        closed: function()
+        {
+            this._observeImages();
+            if (this.resizer) this.resizer.rebuild();
         }
     },
     onupload: {
+        complete: function()
+        {
+            this._observeImages();
+        },
         image: {
             complete: function(response)
             {
@@ -14972,6 +15528,16 @@ $R.add('module', 'image', {
             {
                 this._uploadError(response);
             }
+        },
+        imagereplace: {
+            complete: function(response)
+            {
+                this._change(response, false);
+            },
+            error: function(response)
+            {
+                this._uploadError(response);
+            }
         }
     },
     onmodal: {
@@ -14990,7 +15556,7 @@ $R.add('module', 'image', {
             {
                 this._setFormFocus($form);
             },
-            remove: function($modal, $form)
+            remove: function()
             {
                 this._remove(this.$image);
             },
@@ -15000,10 +15566,27 @@ $R.add('module', 'image', {
             }
         }
     },
+    onimage: {
+        observe: function()
+        {
+            this._observeImages();
+        },
+        resized: function()
+        {
+            this.justResized = true;
+        }
+    },
     oncontextbar: function(e, contextbar)
     {
+        if (this.justResized)
+        {
+            this.justResized = false;
+            return;
+        }
+
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
+
         if (!data.isFigcaption() && data.isComponentType('image'))
         {
             var node = data.getComponent();
@@ -15080,48 +15663,103 @@ $R.add('module', 'image', {
     _insert: function(response, e)
     {
         this.app.api('module.modal.close');
-        if (typeof response !== 'object') return;
 
-        var $img, $inserted;
+        if (typeof response === 'string')
+        {
+            response = { "file": { url: response }};
+        }
+
+        if (typeof response === 'object')
+        {
+            var multiple = (Object.keys(response).length  > 1);
+            if (multiple)
+            {
+                this._insertMultiple(response, e);
+            }
+            else
+            {
+                this._insertSingle(response, e);
+            }
+        }
+    },
+    _insertSingle: function(response, e)
+    {
+        for (var key in response)
+        {
+            var $img = this._createImageAndStore(response[key]);
+            var inserted = (e) ? this.insertion.insertToPoint(e, $img) : this.insertion.insertHtml($img);
+
+            this._removeSpaceBeforeFigure(inserted[0]);
+
+            // set is active
+            this.component.setActive(inserted[0]);
+            this.app.broadcast('image.uploaded', inserted[0], response);
+        }
+    },
+    _insertMultiple: function(response, e)
+    {
         var z = 0;
-        var len = Object.keys(response).length;
-        var multiple = (len  > 1);
+        var inserted = [];
+        var last;
         for (var key in response)
         {
             z++;
 
-            $img = this.component.create('image');
-            $img.setData({
-                src: response[key].url,
-                id: (response[key].id) ? response[key].id : this.utils.getRandomId()
-            });
-
-            // add to storage
-            this.storage.add('image', $img.getElement());
+            var $img = this._createImageAndStore(response[key]);
 
             if (z === 1)
             {
-                $inserted = (e) ? this.insertion.insertToPoint(e, $img) : this.insertion.insertHtml($img);
-
-                if (multiple) this.caret.setAfter($inserted);
+                inserted = (e) ? this.insertion.insertToPoint(e, $img) : this.insertion.insertHtml($img);
             }
             else
             {
-                $inserted = this.insertion.insertHtml($img);
+                var $inserted = $R.dom(inserted[0]);
+                $inserted.after($img);
+                inserted = [$img.get()];
 
-                if (multiple && z <= len) this.caret.setAfter($inserted);
+                this.app.broadcast('image.inserted', $img);
             }
 
-            // has not next sibling
-            if (!$inserted[0].nextSibling)
-            {
-                var markup = document.createElement(this.opts.markup);
-                $inserted[0].after(markup);
+            last = inserted[0];
 
-                this.caret.setStart(markup);
-            }
+            this._removeSpaceBeforeFigure(inserted[0]);
+            this.app.broadcast('image.uploaded', inserted[0], response);
+        }
 
-            this.app.broadcast('image.uploaded', $inserted, response);
+        // set last is active
+        this.component.setActive(last);
+    },
+    _createImageAndStore: function(item)
+    {
+        var $img = this.component.create('image');
+
+        $img.addClass('redactor-uploaded-figure');
+        $img.setData({
+            src: item.url,
+            id: (item.id) ? item.id : this.utils.getRandomId()
+        });
+
+        // add to storage
+        this.storage.add('image', $img.getElement());
+
+        return $img;
+    },
+    _removeSpaceBeforeFigure: function(img)
+    {
+        if (!img) return;
+
+        var prev = img.previousSibling;
+        if (prev)
+        {
+            this._removeInvisibleSpace(prev);
+            this._removeInvisibleSpace(prev.previousSibling);
+        }
+    },
+    _removeInvisibleSpace: function(el)
+    {
+        if (el && el.nodeType === 3 && this.utils.searchInvisibleChars(el.textContent) !== -1)
+        {
+            el.parentNode.removeChild(el);
         }
     },
     _save: function($modal, $form)
@@ -15141,26 +15779,34 @@ $R.add('module', 'image', {
         this.app.broadcast('image.changed', this.$image);
         this.app.api('module.modal.close');
     },
-    _change: function(response)
+    _change: function(response, modal)
     {
-        if (typeof response !== 'object') return;
-
-        var $img, $inserted;
-        for (var key in response)
+        if (typeof response === 'string')
         {
-            $img = $R.dom('<img>');
-            $img.attr('src', response[key].url);
-
-            this.$image.changeImage(response[key]);
-
-            this.app.broadcast('image.changed', this.$image, response);
-            this.app.broadcast('image.uploaded', this.$image, response);
-
-            break;
+            response = { "file": { url: response }};
         }
 
-        $img.on('load', function() { this.$previewBox.html($img); }.bind(this));
+        if (typeof response === 'object')
+        {
+            var $img;
+            for (var key in response)
+            {
+                $img = $R.dom('<img>');
+                $img.attr('src', response[key].url);
 
+                this.$image.changeImage(response[key]);
+
+                this.app.broadcast('image.changed', this.$image, response);
+                this.app.broadcast('image.uploaded', this.$image, response);
+
+                break;
+            }
+
+            if (modal !== false)
+            {
+                $img.on('load', function() { this.$previewBox.html($img); }.bind(this));
+            }
+        }
     },
     _uploadError: function(response)
     {
@@ -15171,9 +15817,34 @@ $R.add('module', 'image', {
         this.app.api('module.modal.close');
         this.component.remove(node);
     },
+    _observeImages: function()
+    {
+        var $editor = this.editor.getElement();
+        var self = this;
+        $editor.find('img').each(function(node)
+        {
+            var $node = $R.dom(node);
+
+            $node.off('.drop-to-replace');
+            $node.on('dragover.drop-to-replace dragenter.drop-to-replace', function(e)
+            {
+                e.preventDefault();
+                return;
+            });
+
+            $node.on('drop.drop-to-replace', function(e)
+            {
+                if (!self.app.isDragComponentInside())
+                {
+                    return self._setReplaceUpload(e, $node);
+                }
+            });
+        });
+    },
     _setFormData: function($modal, $form)
     {
         this._buildPreview();
+        this._buildPreviewUpload();
 
         var imageData = this.$image.getData();
         var data = {
@@ -15200,13 +15871,35 @@ $R.add('module', 'image', {
     {
         $form.getField('title').focus();
     },
+    _setReplaceUpload: function(e, $node)
+    {
+        e = e.originalEvent || e;
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (!this.opts.imageUpload) return;
+
+        this.$image = this.component.create('image', $node);
+
+        var options = {
+            url: this.opts.imageUpload,
+            files: e.dataTransfer.files,
+            name: 'imagereplace',
+            data: this.opts.imageData
+        };
+
+        this.app.api('module.upload.send', options);
+
+        return;
+    },
     _setUpload: function($form)
     {
         var options = {
             url: this.opts.imageUpload,
             element: $form.getField('file'),
             name: 'image',
-            data: this.opts.imageData
+            data: this.opts.imageData,
+            paramName: this.opts.imageUploadParam
         };
 
         this.app.api('module.upload.build', options);
@@ -15219,14 +15912,19 @@ $R.add('module', 'image', {
         var $previewImg = $R.dom('<img>');
         $previewImg.attr('src', imageData.src);
 
-        var $desc = $R.dom('<div class="desc">');
-        $desc.html('Drop a new image to change');
-
         this.$previewBox = $R.dom('<div>');
         this.$previewBox.append($previewImg);
 
         this.$preview.html('');
         this.$preview.append(this.$previewBox);
+    },
+    _buildPreviewUpload: function()
+    {
+        if (!this.opts.imageUpload) return;
+
+        var $desc = $R.dom('<div class="desc">');
+        $desc.html('Drop a new image to change');
+
         this.$preview.append($desc);
 
         var options = {
@@ -15244,6 +15942,7 @@ $R.add('class', 'image.component', {
     {
         this.app = app;
         this.opts = app.opts;
+        this.selection = app.selection;
 
         // init
         return (el && el.cmnt !== undefined) ? el : this._init(el);
@@ -15325,14 +16024,14 @@ $R.add('class', 'image.component', {
 
         if (title === '')
         {
-	    	this.$element.removeAttr('alt');
-    		this.$element.removeAttr('title');
+            this.$element.removeAttr('alt');
+            this.$element.removeAttr('title');
         }
         else
         {
-	    	this.$element.attr('alt', title);
-    		this.$element.attr('title', title);
-		}
+            this.$element.attr('alt', title);
+            this.$element.attr('title', title);
+        }
 
     },
     _set_caption: function(caption)
@@ -15354,37 +16053,56 @@ $R.add('class', 'image.component', {
     _set_align: function(align)
     {
         var imageFloat = '';
-		var imageMargin = '';
-		var textAlign = '';
+        var imageMargin = '';
+        var textAlign = '';
         var $el = this;
 
-        switch (align)
-		{
-			case 'left':
-				imageFloat = 'left';
-				imageMargin = '0 ' + this.opts.imageFloatMargin + ' ' + this.opts.imageFloatMargin + ' 0';
-			break;
-			case 'right':
-				imageFloat = 'right';
-				imageMargin = '0 0 ' + this.opts.imageFloatMargin + ' ' + this.opts.imageFloatMargin;
-			break;
-			case 'center':
-                textAlign = 'center';
-			break;
-		}
+        if (typeof this.opts.imagePosition === 'object')
+        {
+            var positions = this.opts.imagePosition;
+            for (var key in positions)
+            {
+                $el.removeClass(positions[key]);
+            }
 
-		$el.css({ 'float': imageFloat, 'margin': imageMargin, 'text-align': textAlign });
-		$el.attr('rel', $el.attr('style'));
+            var alignClass = (typeof positions[align] !== 'undefined') ? positions[align] : false;
+            if (alignClass)
+            {
+                $el.addClass(alignClass);
+            }
+        }
+        else
+        {
+            switch (align)
+            {
+                case 'left':
+                    imageFloat = 'left';
+                    imageMargin = '0 ' + this.opts.imageFloatMargin + ' ' + this.opts.imageFloatMargin + ' 0';
+                break;
+                case 'right':
+                    imageFloat = 'right';
+                    imageMargin = '0 0 ' + this.opts.imageFloatMargin + ' ' + this.opts.imageFloatMargin;
+                break;
+                case 'center':
+                    textAlign = 'center';
+                break;
+            }
+
+            $el.css({ 'float': imageFloat, 'margin': imageMargin, 'text-align': textAlign });
+            $el.attr('rel', $el.attr('style'));
+        }
     },
     _set_link: function(data)
     {
-        var $link = this.find('a');
+        var $link = this._findLink();
         if (data.url === '')
         {
-            return $link.unwrap();
+            if ($link) $link.unwrap();
+
+            return;
         }
 
-        if ($link.length === 0)
+        if (!$link)
         {
             $link = $R.dom('<a>');
             this.$element.wrap($link);
@@ -15418,16 +16136,42 @@ $R.add('class', 'image.component', {
     {
         var $figcaption = this.find('figcaption');
 
-        return ($figcaption.length === 0) ? '' : $figcaption.text();
+        if ($figcaption.length === 0)
+        {
+            return '';
+        }
+        else
+        {
+            return $figcaption.html();
+        }
     },
     _get_align: function()
     {
-		return (this.css('text-align') === 'center') ? 'center' : this.css('float');
+        var align = '';
+        if (typeof this.opts.imagePosition === 'object')
+        {
+            align = 'none';
+            var positions = this.opts.imagePosition;
+            for (var key in positions)
+            {
+                if (this.hasClass(positions[key]))
+                {
+                    align = key;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            align = (this.css('text-align') === 'center') ? 'center' : this.css('float');
+        }
+
+        return align;
     },
     _get_link: function()
     {
-        var $link = this.find('a');
-        if ($link.length !== 0)
+        var $link = this._findLink();
+        if ($link)
         {
             var target = ($link.attr('target')) ? true : false;
 
@@ -15445,6 +16189,20 @@ $R.add('class', 'image.component', {
             'tabindex': '-1',
             'contenteditable': false
         });
+    },
+    _findLink: function()
+    {
+        var $link = this.find('a').filter(function(node)
+        {
+            return ($R.dom(node).closest('figcaption').length === 0);
+        });
+
+        if ($link.length !== 0)
+        {
+            return $link;
+        }
+
+        return false;
     }
 });
 $R.add('class', 'image.resize', {
@@ -15452,11 +16210,14 @@ $R.add('class', 'image.resize', {
     {
         this.app = app;
         this.$doc = app.$doc;
+        this.$win = app.$win;
         this.$body = app.$body;
         this.editor = app.editor;
+        this.toolbar = app.toolbar;
         this.inspector = app.inspector;
 
         // init
+        this.$target = (this.toolbar.isTarget()) ? this.toolbar.getTargetElement() : this.$body;
         this._init();
     },
     // public
@@ -15464,13 +16225,18 @@ $R.add('class', 'image.resize', {
     {
         this._setResizerPosition();
     },
+    hide: function()
+    {
+        this.$target.find('#redactor-image-resizer').remove();
+    },
     stop: function()
     {
         var $editor = this.editor.getElement();
         $editor.off('.redactor.image-resize');
 
         this.$doc.off('.redactor.image-resize');
-        this.$body.find('#redactor-image-resizer').remove();
+        this.$win.off('resize.redactor.image-resize');
+        this.hide();
     },
 
     // private
@@ -15478,10 +16244,12 @@ $R.add('class', 'image.resize', {
     {
         var $editor = this.editor.getElement();
         $editor.on('click.redactor.image-resize', this._build.bind(this));
+
+        this.$win.on('resize.redactor.image-resize', this._setResizerPosition.bind(this));
     },
     _build: function(e)
     {
-        this.$body.find('#redactor-image-resizer').remove();
+        this.$target.find('#redactor-image-resizer').remove();
 
         var data = this.inspector.parse(e.target);
         var $editor = this.editor.getElement();
@@ -15494,7 +16262,7 @@ $R.add('class', 'image.resize', {
             this.$resizer = $R.dom('<span>');
             this.$resizer.attr('id', 'redactor-image-resizer');
 
-            this.$body.append(this.$resizer);
+            this.$target.append(this.$resizer);
 
             this._setResizerPosition();
             this.$resizer.on('mousedown touchstart', this._set.bind(this));
@@ -15502,87 +16270,92 @@ $R.add('class', 'image.resize', {
     },
     _setResizerPosition: function()
     {
-        var topOffset = 7;
-        var leftOffset = 7;
-        var pos = this.$resizableImage.offset();
-        var width = this.$resizableImage.width();
-        var height = this.$resizableImage.height();
-        var resizerWidth =  this.$resizer.width();
-        var resizerHeight =  this.$resizer.height();
+        if (this.$resizer)
+        {
+            var isTarget = this.toolbar.isTarget();
+            var targetOffset = this.$target.offset();
+            var offsetFix = 7;
+            var topOffset = (isTarget) ? (offsetFix - targetOffset.top + this.$target.scrollTop()) : offsetFix;
+            var leftOffset = (isTarget) ? (offsetFix - targetOffset.left) : offsetFix;
+            var pos = this.$resizableImage.offset();
+            var width = this.$resizableImage.width();
+            var height = this.$resizableImage.height();
+            var resizerWidth =  this.$resizer.width();
+            var resizerHeight =  this.$resizer.height();
 
-        this.$resizer.css({ top: (pos.top + height - resizerHeight + topOffset) + 'px', left: (pos.left + width - resizerWidth + leftOffset) + 'px' });
+            this.$resizer.css({ top: (pos.top + height - resizerHeight + topOffset) + 'px', left: (pos.left + width - resizerWidth + leftOffset) + 'px' });
+        }
     },
     _set: function(e)
     {
-		e.preventDefault();
+        e.preventDefault();
 
-	    this.resizeHandle = {
-	        x : e.pageX,
-	        y : e.pageY,
-	        el : this.$resizableImage,
-	        ratio: this.$resizableImage.width() / this.$resizableImage.height(),
-	        h: this.$resizableImage.height()
-	    };
+        this.resizeHandle = {
+            x : e.pageX,
+            y : e.pageY,
+            el : this.$resizableImage,
+            ratio: this.$resizableImage.width() / this.$resizableImage.height(),
+            h: this.$resizableImage.height()
+        };
 
-	    e = e.originalEvent || e;
+        e = e.originalEvent || e;
 
-	    if (e.targetTouches)
-	    {
-	         this.resizeHandle.x = e.targetTouches[0].pageX;
-	         this.resizeHandle.y = e.targetTouches[0].pageY;
-	    }
+        if (e.targetTouches)
+        {
+             this.resizeHandle.x = e.targetTouches[0].pageX;
+             this.resizeHandle.y = e.targetTouches[0].pageY;
+        }
 
         this.app.broadcast('contextbar.close');
         this.app.broadcast('image.resize', this.$resizableImage);
-		this._start();
+        this._start();
     },
     _start: function()
     {
-    	this.$doc.on('mousemove.redactor.image-resize touchmove.redactor.image-resize', this._move.bind(this));
-    	this.$doc.on('mouseup.redactor.image-resize touchend.redactor.image-resize', this._stop.bind(this));
+        this.$doc.on('mousemove.redactor.image-resize touchmove.redactor.image-resize', this._move.bind(this));
+        this.$doc.on('mouseup.redactor.image-resize touchend.redactor.image-resize', this._stop.bind(this));
     },
-	_stop: function()
-	{
-		this.$doc.off('.redactor.image-resize');
-        this.$body.find('#redactor-image-resizer').remove();
+    _stop: function()
+    {
+        this.$doc.off('.redactor.image-resize');
         this.app.broadcast('image.resized', this.$resizableImage);
-	},
-	_move: function(e)
-	{
-		e.preventDefault();
+    },
+    _move: function(e)
+    {
+        e.preventDefault();
 
-		e = e.originalEvent || e;
+        e = e.originalEvent || e;
 
-		var height = this.resizeHandle.h;
+        var height = this.resizeHandle.h;
 
         if (e.targetTouches) height += (e.targetTouches[0].pageY -  this.resizeHandle.y);
         else height += (e.pageY -  this.resizeHandle.y);
 
-		var width = height * this.resizeHandle.ratio;
+        var width = height * this.resizeHandle.ratio;
 
-		if (height < 50 || width < 100) return;
+        if (height < 50 || width < 100) return;
         if (this._getResizableBoxWidth() <= width) return;
 
-		this.resizeHandle.el.attr({width: width, height: height});
+        this.resizeHandle.el.attr({width: width, height: height});
         this.resizeHandle.el.width(width);
         this.resizeHandle.el.height(height);
         this._setResizerPosition();
-	},
-	_getResizableBoxWidth: function()
-	{
-    	var width = this.$resizableBox.width();
-    	return width - parseInt(this.$resizableBox.css('padding-left')) - parseInt(this.$resizableBox.css('padding-right'));
-	}
+    },
+    _getResizableBoxWidth: function()
+    {
+        var width = this.$resizableBox.width();
+        return width - parseInt(this.$resizableBox.css('padding-left')) - parseInt(this.$resizableBox.css('padding-right'));
+    }
 });
 $R.add('module', 'file', {
     modals: {
         'file':
             '<div class="redactor-modal-tab" data-title="## upload ##"><form action=""> \
                 <div class="form-item form-item-title"> \
-            		<label> ## filename ## <span class="desc">(## optional ##)</span></label> \
-                    <input type="text" name="title" /> \
+                    <label for="modal-file-title"> ## filename ## <span class="desc">(## optional ##)</span></label> \
+                    <input type="text" id="modal-file-title" name="title" /> \
                 </div> \
-                <input type="file" name="file" multiple> \
+                <input type="file" name="file"> \
             </form></div>'
     },
     init: function(app)
@@ -15708,56 +16481,106 @@ $R.add('module', 'file', {
         this.app.api('module.modal.close');
         if (typeof response !== 'object') return;
 
-        var modalFormData = (this.$form) ? this.$form.getData() : false;
-        var $file, $inserted;
+        var multiple = (Object.keys(response).length  > 1);
+
+        if (multiple)
+        {
+            this._insertMultiple(response, e);
+        }
+        else
+        {
+            this._insertSingle(response, e);
+        }
+
+        this.$form = false;
+    },
+    _insertSingle: function(response, e)
+    {
+        var inserted = [];
+        for (var key in response)
+        {
+            var $file = this._createFileAndStore(response[key]);
+
+            if (this.opts.fileAttachment)
+            {
+                inserted = this._insertAsAttachment($file);
+            }
+            else
+            {
+                inserted = (e) ? this.insertion.insertToPoint(e, $file) : this.insertion.insertRaw($file);
+            }
+
+            this.app.broadcast('file.uploaded', inserted[0], response);
+        }
+    },
+    _insertMultiple: function(response, e)
+    {
         var z = 0;
-        var len = Object.keys(response).length;
-        var multiple = (len  > 1);
+        var inserted = [];
+        var $last;
         for (var key in response)
         {
             z++;
 
-            var name = (response[key].name) ? response[key].name : response[key].url;
-            var title = (!this.opts.fileAttachment && modalFormData && modalFormData.title !== '') ? modalFormData.title : this._truncateUrl(name);
-
-            $file = this.component.create('file');
-            $file.attr('href', response[key].url);
-            $file.attr('data-file', (response[key].id) ? response[key].id : this.utils.getRandomId());
-            $file.attr('data-name', response[key].name);
-            $file.html(title);
-
-            // add to storage
-            this.storage.add('file', $file);
+            var $file = this._createFileAndStore(response[key]);
 
             if (this.opts.fileAttachment)
             {
-                var $box = $R.dom(this.opts.fileAttachment);
-                var $wrapper = $file.wrapAttachment();
-                $box.append($wrapper);
-
-                $inserted = $wrapper.get();
-
-                this.app.broadcast('file.appended', $inserted, response);
+                inserted = this._insertAsAttachment($file, response);
             }
             else
             {
                 if (z === 1)
                 {
-                    $inserted = (e) ? this.insertion.insertToPoint(e, $file) : this.insertion.insertRaw($file);
-                    if (multiple) this.caret.setAfter($inserted);
+                    inserted = (e) ? this.insertion.insertToPoint(e, $file) : this.insertion.insertRaw($file);
                 }
                 else
                 {
-                    this.insertion.insertRaw($file);
-                    if (multiple && z <= len) this.caret.setAfter($inserted);
-                }
+                    var $inserted = $R.dom(inserted[0]);
+                    $inserted.after($file);
+                    inserted = [$file.get()];
 
+                    this.app.broadcast('file.inserted', $file);
+                }
             }
 
-            this.app.broadcast('file.uploaded', $inserted, response);
+            $last = $file;
+            this.app.broadcast('file.uploaded', inserted[0], response);
         }
 
-        this.$form = false;
+        // set caret after last
+        if (!this.opts.fileAttachment)
+        {
+            this.caret.setAfter($last);
+        }
+    },
+    _insertAsAttachment: function($file, response)
+    {
+        var $box = $R.dom(this.opts.fileAttachment);
+        var $wrapper = $file.wrapAttachment();
+        $box.append($wrapper);
+
+        var inserted = [$wrapper.get()];
+        this.app.broadcast('file.appended', inserted[0], response);
+
+        return inserted;
+    },
+    _createFileAndStore: function(item)
+    {
+        var modalFormData = (this.$form) ? this.$form.getData() : false;
+        var name = (item.name) ? item.name : item.url;
+        var title = (!this.opts.fileAttachment && modalFormData && modalFormData.title !== '') ? modalFormData.title : this._truncateUrl(name);
+
+        var $file = this.component.create('file');
+        $file.attr('href', item.url);
+        $file.attr('data-file', (item.id) ? item.id : this.utils.getRandomId());
+        $file.attr('data-name', item.name);
+        $file.html(title);
+
+        // add to storage
+        this.storage.add('file', $file);
+
+        return $file;
     },
     _remove: function(node)
     {
@@ -15780,16 +16603,17 @@ $R.add('module', 'file', {
         }
     },
     _truncateUrl: function(url)
-	{
-		return (url.length > 20) ? url.substring(0, 20) + '...' : url;
-	},
+    {
+        return (url.search(/^http/) !== -1 && url.length > 20) ? url.substring(0, 20) + '...' : url;
+    },
     _setUpload: function($form)
     {
         var options = {
             url: this.opts.fileUpload,
             element: $form.getField('file'),
             name: 'file',
-            data: this.opts.fileData
+            data: this.opts.fileData,
+            paramName: this.opts.fileUploadParam
         };
 
         this.app.api('module.upload.build', options);
@@ -15875,7 +16699,7 @@ $R.add('module', 'buffer', {
 
         // local
         this.state = false;
-    	this.passed = false;
+        this.passed = false;
         this.keyPressed = false;
         this.savedHtml = false;
         this.savedOffset = false;
@@ -15921,26 +16745,26 @@ $R.add('module', 'buffer', {
     undo: function()
     {
         this._getUndo();
-	},
+    },
     redo: function()
     {
         this._getRedo();
-	},
-	trigger: function()
-	{
-    	if (this.state && this.passed === false) this._setUndo();
-	},
+    },
+    trigger: function()
+    {
+        if (this.state && this.passed === false) this._setUndo();
+    },
 
     // private
-	_saveState: function(html, offset)
-	{
-    	var $editor = this.editor.getElement();
+    _saveState: function(html, offset)
+    {
+        var $editor = this.editor.getElement();
 
         this.state = {
             html: html || $editor.html(),
             offset: offset || this.offset.get()
         };
-	},
+    },
     _listen: function(e)
     {
         var key = e.which;
@@ -15951,38 +16775,38 @@ $R.add('module', 'buffer', {
 
         // undo
         if (this._isUndo(e)) // z key
-    	{
-    		e.preventDefault();
-    		this.undo();
-    		return;
-    	}
-    	// redo
-    	else if (this._isRedo(e))
-    	{
-    		e.preventDefault();
-    		this.redo();
-    		return;
-    	}
-    	// spec keys
-    	else if (!ctrl && keys.indexOf(key) !== -1)
-    	{
-        	cmd = true;
-        	this.trigger();
-    	}
+        {
+            e.preventDefault();
+            this.undo();
+            return;
+        }
+        // redo
+        else if (this._isRedo(e))
+        {
+            e.preventDefault();
+            this.redo();
+            return;
+        }
+        // spec keys
+        else if (!ctrl && keys.indexOf(key) !== -1)
+        {
+            cmd = true;
+            this.trigger();
+        }
         // cut & copy
-    	else (ctrl && (key === 88 || key === 67))
-    	{
-        	cmd = true;
-        	this.trigger();
-    	}
+        else if (ctrl && (key === 88 || key === 67))
+        {
+            cmd = true;
+            this.trigger();
+        }
 
         // empty buffer
-    	if (!cmd && !this._hasUndo())
-    	{
+        if (!cmd && !this._hasUndo())
+        {
             this.trigger();
-    	}
+        }
 
-    	this.keyPressed = true;
+        this.keyPressed = true;
     },
     _isUndo: function(e)
     {
@@ -16001,59 +16825,59 @@ $R.add('module', 'buffer', {
     _setUndo: function()
     {
         var last = this.undoStorage[this.undoStorage.length-1];
-		if (typeof last === 'undefined' || last[0] !== this.state.html)
-		{
-			this.undoStorage.push([this.state.html, this.state.offset]);
+        if (typeof last === 'undefined' || last[0] !== this.state.html)
+        {
+            this.undoStorage.push([this.state.html, this.state.offset]);
             this._removeOverStorage();
-		}
+        }
     },
     _setRedo: function()
     {
         var $editor = this.editor.getElement();
-		var offset = this.offset.get();
-		var html = $editor.html();
+        var offset = this.offset.get();
+        var html = $editor.html();
 
-		this.redoStorage.push([html, offset]);
-		this.redoStorage = this.redoStorage.slice(0, this.opts.bufferLimit);
+        this.redoStorage.push([html, offset]);
+        this.redoStorage = this.redoStorage.slice(0, this.opts.bufferLimit);
     },
     _getUndo: function()
     {
         if (!this._hasUndo()) return;
 
-		this.passed = true;
+        this.passed = true;
 
         var $editor = this.editor.getElement();
-		var buffer = this.undoStorage.pop();
+        var buffer = this.undoStorage.pop();
 
-		this._setRedo();
+        this._setRedo();
 
-		$editor.html(buffer[0]);
-		this.offset.set(buffer[1]);
-		this.selection.restore();
+        $editor.html(buffer[0]);
+        this.offset.set(buffer[1]);
+        this.selection.restore();
 
-		this.app.broadcast('undo', buffer[0], buffer[1]);
+        this.app.broadcast('undo', buffer[0], buffer[1]);
 
     },
     _getRedo: function()
     {
         if (!this._hasRedo()) return;
 
-		this.passed = true;
+        this.passed = true;
 
         var $editor = this.editor.getElement();
-		var buffer = this.redoStorage.pop();
+        var buffer = this.redoStorage.pop();
 
-		this._setUndo();
-		$editor.html(buffer[0]);
-		this.offset.set(buffer[1]);
+        this._setUndo();
+        $editor.html(buffer[0]);
+        this.offset.set(buffer[1]);
 
-		this.app.broadcast('redo', buffer[0], buffer[1]);
+        this.app.broadcast('redo', buffer[0], buffer[1]);
     },
     _removeOverStorage: function()
     {
         if (this.undoStorage.length > this.opts.bufferLimit)
-		{
-			this.undoStorage = this.undoStorage.slice(0, (this.undoStorage.length - this.opts.bufferLimit));
+        {
+            this.undoStorage = this.undoStorage.slice(0, (this.undoStorage.length - this.opts.bufferLimit));
         }
     },
     _hasUndo: function()
@@ -16125,9 +16949,9 @@ $R.add('module', 'list', {
 
         if (isIndent)
         {
-            this.selection.save();
+            this.selection.saveMarkers();
 
-            var $prev = $R.dom(prev);
+            $prev = $R.dom(prev);
             var $prevChild = $prev.children('ul, ol');
             var $list = $item.closest('ul, ol');
 
@@ -16144,7 +16968,7 @@ $R.add('module', 'list', {
                 $prev.append($newList);
             }
 
-            this.selection.restore();
+            this.selection.restoreMarkers();
         }
     },
     outdent: function()
@@ -16157,26 +16981,27 @@ $R.add('module', 'list', {
 
         if (isCollapsed && item)
         {
+
             var $listItem = $item.parent();
             var $liItem = $listItem.closest('li');
             var $prev = $item.prevElement();
             var $next = $item.nextElement();
             var prev = $prev.get();
             var next = $next.get();
-
+            var nextItems, nextList, $newList, $nextList;
             var isTop = (prev === false);
             var isMiddle = (prev !== false && next !== false);
             var isBottom = (!isTop && next === false);
 
-            this.selection.save();
+            this.selection.saveMarkers();
 
             // out
             if ($liItem.length !== 0)
             {
                 if (isMiddle)
                 {
-                    var nextItems = this._getAllNext($item.get());
-                    var $newList = $R.dom('<' + $listItem.get().tagName.toLowerCase() + '>');
+                    nextItems = this._getAllNext($item.get());
+                    $newList = $R.dom('<' + $listItem.get().tagName.toLowerCase() + '>');
 
                     for (var i = 0; i < nextItems.length; i++)
                     {
@@ -16210,8 +17035,8 @@ $R.add('module', 'list', {
                 else if (isBottom) $listItem.after($container);
                 else if (isMiddle)
                 {
-                    var $newList = $R.dom('<' + $listItem.get().tagName.toLowerCase() + '>');
-                    var nextItems = this._getAllNext($item.get());
+                    $newList = $R.dom('<' + $listItem.get().tagName.toLowerCase() + '>');
+                    nextItems = this._getAllNext($item.get());
 
                     for (var i = 0; i < nextItems.length; i++)
                     {
@@ -16224,8 +17049,8 @@ $R.add('module', 'list', {
 
                 if ($childList.length !== 0)
                 {
-                    var $nextList = $container.nextElement();
-                    var nextList = $nextList.get();
+                    $nextList = $container.nextElement();
+                    nextList = $nextList.get();
                     if (nextList && nextList.tagName === $listItem.get().tagName)
                     {
                         $R.dom(nextList).prepend($childList);
@@ -16237,15 +17062,10 @@ $R.add('module', 'list', {
                     }
                 }
 
-                if ($container.hasClass('redactor-list-item-container'))
-                {
-                    $container.replaceWith($container.contents());
-                }
-
                 $item.remove();
             }
 
-            this.selection.restore();
+            this.selection.restoreMarkers();
         }
     },
 
@@ -16369,7 +17189,7 @@ $R.add('module', 'list', {
     {
         return (node.nodeType === 3 || tags.indexOf(node.tagName.toLowerCase()) !== -1);
     },
-    _createList: function(type, blocks, key)
+    _createList: function(type, blocks)
     {
         var last = blocks[blocks.length-1];
         var $last = $R.dom(last);
@@ -16446,15 +17266,12 @@ $R.add('module', 'list', {
                     if (ci)
                     {
                         var $node = $R.dom(node);
-                        var $childList = ($node.children('ul, ol').length !== 0);
-
                         if ($node.closest('.redactor-split-item').length === 0 && ($parent === false || $node.closest($parent).length === 0))
                         {
                             $node.addClass('redactor-split-item');
                         }
 
                         $parent = $node;
-
                     }
 
                     if (node === $last.get())
@@ -16575,26 +17392,18 @@ $R.add('module', 'list', {
     },
     _createUnformatContainer: function($item)
     {
-        var $container;
-        if (this.opts.markup === 'br')
-        {
-            $item.append('<br>');
-            $container = $R.dom('<div class="redactor-list-item-container">');
-        }
-        else
-        {
-            $container = $R.dom('<' + this.opts.markup + '>');
-        }
+        var $container = $R.dom('<' + this.opts.markup + '>');
+        if (this.opts.breakline) $container.attr('data-redactor-tag', 'br');
 
         $container.append($item.contents());
 
         return $container;
     },
-    _getBlocks: function(tag)
+    _getBlocks: function()
     {
-        return this.selection.getBlocksAndTextNodes({ first: true, cells: true, wrap: true });
+        return this.selection.getBlocks({ first: true });
     },
-    _observeButton: function(button)
+    _observeButton: function()
     {
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
@@ -16653,9 +17462,10 @@ $R.add('module', 'list', {
 
     window.Redactor = window.$R = $R;
 
+    // Data attribute load
+    window.addEventListener('load', function()
+    {
+        $R('[data-redactor]');
+    });
+
 }());
-// Data attribute load
-window.addEventListener('load', function()
-{
-    $R('[data-redactor]');
-});
