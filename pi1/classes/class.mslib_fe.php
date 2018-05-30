@@ -9724,15 +9724,21 @@ class mslib_fe {
     /*
 		loads all options ids plus option values ids that are mapped to a specific product
 	*/
-    public function getShopNameByPageUid($page_uid) {
+    public function getShopNameByPageUid($page_uid, $default_title='') {
         if (!is_numeric($page_uid)) {
             return false;
         } else {
-            $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
-            $pageTitle = $shop[0]['title'];
-            if ($shop[0]['nav_title']) {
-                $pageTitle = $shop[0]['nav_title'];
+            if ($page_uid>0) {
+                $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
+                $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
+                $pageTitle = $shop[0]['title'];
+                if ($shop[0]['nav_title']) {
+                    $pageTitle = $shop[0]['nav_title'];
+                }
+            } else {
+                if (!empty($default_title)) {
+                    $pageTitle = $default_title;
+                }
             }
             // hook
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShopNameByPageUidPostProc'])) {

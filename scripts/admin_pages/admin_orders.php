@@ -1030,10 +1030,10 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['payment_method_label'] = 'Empty payment method';
     }
     if ($this->masterShop) {
-        if ($payment_method['page_uid']>0) {
-            $shop_title = ' ('.mslib_fe::getShopNameByPageUid($payment_method['page_uid']) . ')';
-        } else {
-            $shop_title = '';
+        $pageTitle=mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
+        $shop_title='';
+        if (!empty($pageTitle)) {
+            $shop_title = ' (' . $pageTitle . ')';
         }
         $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
     }
@@ -1070,12 +1070,12 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['shipping_method_label'] = 'Empty shipping method';
     }
     if ($this->masterShop) {
-        if ($shipping_method['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($shipping_method['page_uid']);
-        } else {
-            $shop_title = 'All';
+        $pageTitle=mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
+        $shop_title='';
+        if (!empty($pageTitle)) {
+            $shop_title = ' (' . $pageTitle . ')';
         }
-        $row['shipping_method_label'] = $row['shipping_method_label'] . ' ('.$shop_title.')';
+        $row['shipping_method_label'] = $row['shipping_method_label'] . $shop_title;
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
 }
