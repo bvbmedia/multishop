@@ -1011,13 +1011,14 @@ if (is_array($groups) and count($groups)) {
 $customer_groups_input .= '</select>' . "\n";
 // payment method
 $payment_methods = array();
+$payment_methods_label = array();
 $shop_title = array();
 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'payment_method', // GROUP BY...
-        'payment_method_label', // ORDER BY...
-        '' // LIMIT ...
+    'tx_multishop_orders', // FROM ...
+    ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
+    'payment_method', // GROUP BY...
+    'payment_method_label asc', // ORDER BY...
+    '' // LIMIT ...
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
@@ -1038,25 +1039,27 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
     }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
+    $payment_methods_label[strtoupper($row['payment_method_label'])]=$row['payment_method'];
 
 }
+ksort($payment_methods_label);
 $payment_method_input = '';
 $payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
 $payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
-if (is_array($payment_methods) and count($payment_methods)) {
-    foreach ($payment_methods as $payment_method_code => $payment_method) {
-
-        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_method . '</option>' . "\n";
+if (is_array($payment_methods_label) and count($payment_methods_label)) {
+    foreach ($payment_methods_label as $payment_method_label => $payment_method_code) {
+        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_methods[$payment_method_code] . '</option>' . "\n";
     }
 }
 $payment_method_input .= '</select>' . "\n";
 // shipping method
 $shipping_methods = array();
+$shipping_methods_label = array();
 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
         ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'shipping_method', // GROUP BY...
-        'shipping_method_label', // ORDER BY...
+        'shipping_method_label asc', // ORDER BY...
         '' // LIMIT ...
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
@@ -1078,13 +1081,15 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['shipping_method_label'] = $row['shipping_method_label'] . $shop_title;
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
+    $shipping_methods_label[strtoupper($row['shipping_method_label'])] = $row['shipping_method'];
 }
+ksort($shipping_methods_label);
 $shipping_method_input = '';
 $shipping_method_input .= '<select id="shipping_method" class="order_select2" name="shipping_method">' . "\n";
 $shipping_method_input .= '<option value="all">' . $this->pi_getLL('all_shipping_methods') . '</option>' . "\n";
-if (is_array($shipping_methods) and count($shipping_methods)) {
-    foreach ($shipping_methods as $shipping_method_code => $shipping_method) {
-        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_method . '</option>' . "\n";
+if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
+    foreach ($shipping_methods_label as $shipping_method_label => $shipping_method_code) {
+        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_methods[$shipping_method_code] . '</option>' . "\n";
     }
 }
 $shipping_method_input .= '</select>' . "\n";

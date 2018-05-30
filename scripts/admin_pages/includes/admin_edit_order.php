@@ -2024,10 +2024,22 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $shipping_methods = mslib_fe::loadShippingMethods(1);
                 $payment_methods = mslib_fe::loadPaymentMethods(1);
+                // sort shipping method
+                $shipping_methods_sorted=array();
+                foreach ($shipping_methods as $code => $item) {
+                    $shipping_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($shipping_methods_sorted);
+                // sort payment method
+                $payment_methods_sorted=array();
+                foreach ($payment_methods as $code => $item) {
+                    $payment_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($payment_methods_sorted);
                 if (is_array($shipping_methods) and count($shipping_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($shipping_methods as $code => $item) {
+                    foreach ($shipping_methods_sorted as $idx => $item) {
                         if (!$item['status']) {
                             $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                         }
@@ -2036,8 +2048,8 @@ if (is_numeric($this->get['orders_id'])) {
                         if (!empty($pageTitle)) {
                             $shop_title = ' (' . $pageTitle . ')';
                         }
-                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
-                        if ($code == $orders['shipping_method']) {
+                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($item['code'] == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                        if ($item['code'] == $orders['shipping_method']) {
                             $dontOverrideDefaultOption = 1;
                         }
                     }
@@ -2066,7 +2078,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if (is_array($payment_methods) and count($payment_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($payment_methods as $code => $item) {
+                    foreach ($payment_methods_sorted as $idx => $item) {
                         if (is_numeric($item['id']) && $item['id'] > 0) {
                             if (!$item['status']) {
                                 $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
@@ -2076,8 +2088,8 @@ if (is_numeric($this->get['orders_id'])) {
                             if (!empty($pageTitle)) {
                                 $shop_title = ' (' . $pageTitle . ')';
                             }
-                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
-                            if ($code == $orders['payment_method']) {
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $item['code'] == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                            if ($item['code'] == $orders['payment_method']) {
                                 $dontOverrideDefaultOption = 1;
                             }
                         }
