@@ -2031,7 +2031,12 @@ if (is_numeric($this->get['orders_id'])) {
                         if (!$item['status']) {
                             $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                         }
-                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
+                        $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                        $shop_title='';
+                        if (!empty($pageTitle)) {
+                            $shop_title = ' (' . $pageTitle . ')';
+                        }
+                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
                         if ($code == $orders['shipping_method']) {
                             $dontOverrideDefaultOption = 1;
                         }
@@ -2066,7 +2071,12 @@ if (is_numeric($this->get['orders_id'])) {
                             if (!$item['status']) {
                                 $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                             }
-                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
+                            $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                            $shop_title='';
+                            if (!empty($pageTitle)) {
+                                $shop_title = ' (' . $pageTitle . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
                             if ($code == $orders['payment_method']) {
                                 $dontOverrideDefaultOption = 1;
                             }
