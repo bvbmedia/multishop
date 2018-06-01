@@ -67,7 +67,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
         } else {
             $meta_keywords = '';
         }
-        if (!$this->conf['disableMetatags']) {
+        if ($this->conf['disableMetatags']=='0') {
             $output_array['meta']['title'] = '<title>' . htmlspecialchars($meta_title) . '</title>';
             if ($meta_description) {
                 $output_array['meta']['description'] = '<meta name="description" content="' . $meta_description . '" />';
@@ -393,6 +393,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                 // load products listing eof
             }
         }
+    }
+    if ($this->ms['MODULES']['CACHE_FRONT_END']) {
+        $output_array['content'] = $content;
+        $Cache_Lite->save(serialize($output_array));
     }
 } elseif ($output_array) {
     $output_array = unserialize($output_array);

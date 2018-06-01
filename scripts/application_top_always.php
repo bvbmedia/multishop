@@ -258,7 +258,7 @@ if ($this->conf['hideIfNoResults']) {
 } else {
     $this->hideIfNoResults = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideIfNoResults', 'sDEFAULT');
 }
-if ($this->conf['disableMetatags']) {
+if ($this->conf['disableMetatags']=='1') {
     $this->disableMetatags = $this->conf['disableMetatags'];
 } else {
     $this->disableMetatags = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'disableMetatags', 's_advanced');
