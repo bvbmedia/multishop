@@ -51,6 +51,12 @@ if ($this->get['orders_export_hash']) {
             $column = 'o.crdate';
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
+        if (!empty($post_data['orders_delivery_date_from']) && !empty($post_data['orders_delivery_date_till'])) {
+            $start_time = strtotime($post_data['orders_delivery_date_from']);
+            $end_time = strtotime($post_data['orders_delivery_date_till']);
+            $column = 'o.expected_delivery_date';
+            $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+        }
         if (!empty($post_data['start_duration'])) {
             $start_duration = strtotime(date('Y-m-d 00:00:00', strtotime($post_data['start_duration'])));
             if (!empty($post_data['end_duration'])) {
@@ -612,6 +618,22 @@ if ($this->get['orders_export_hash']) {
                     case 'discount':
                         if ($row['discount']) {
                             $excelCols[] = number_format($row['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '');
+                        } else {
+                            $excelCols[] = '';
+                        }
+                        break;
+                    case 'order_memo':
+                        if ($row['order_memo']) {
+                            $memo=str_replace('<p>', '', $row['order_memo']);
+                            $memo=str_replace('</p>', " ", $memo);
+                            $excelCols[] = strip_tags($memo);
+                        } else {
+                            $excelCols[] = '';
+                        }
+                        break;
+                    case 'customer_comments':
+                        if ($row['customer_comments']) {
+                            $excelCols[] = $row['customer_comments'];
                         } else {
                             $excelCols[] = '';
                         }

@@ -113,6 +113,8 @@ $array['turnover_per_main_category_excl_vat'] = $this->pi_getLL('feed_exporter_f
 $array['bought_products_per_main_category'] = $this->pi_getLL('feed_exporter_fields_label_bought_products_per_main_category');
 $array['ordered_by'] = $this->pi_getLL('ordered_by');
 $array['discount'] = $this->pi_getLL('discount');
+$array['customer_comments'] = $this->pi_getLL('customer_comments');
+$array['order_memo'] = $this->pi_getLL('order_memo');
 // get orders vat rate
 $str = "SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -257,6 +259,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="paid"' . ($post_data['payment_status'] == 'paid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('paid') . '</option>
 			<option value="unpaid"' . ($post_data['payment_status'] == 'unpaid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('unpaid') . '</option>
 		</select>';
+
         // order by selectbox
         $order_by_sb = '<select name="order_by" class="form-control">
 			<option value="orders_id"' . ($post_data['order_by'] == 'orders_id' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('orders_id') . '</option>
@@ -330,6 +333,21 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_payment_status')) . '</label>
 			<div class="col-md-10">
 			' . $payment_status_sb . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delivery_date')) . '</label>
+			<div class="col-md-10">
+			<span class="input_label_wrapper form-inline">
+				<label for="visual_orders_delivery_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>
+				<input name="visual_orders_delivery_date_from" id="visual_orders_delivery_date_from" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_from'] . '" />
+				<input name="orders_delivery_date_from" id="orders_delivery_date_from" type="hidden" value="' . $post_data['orders_delivery_date_from'] . '" />
+			</span>
+			<span class="input_label_wrapper form-inline">
+				<label for="visual_orders_delivery_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>
+				<input name="visual_orders_delivery_date_till" id="visual_orders_delivery_date_till" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_till'] . '" />
+				<input name="orders_delivery_date_till" id="orders_delivery_date_till" type="hidden" value="' . $post_data['orders_delivery_date_till'] . '" />
+			</span>
 			</div>
 		</div>
 		<div class="form-group">
@@ -428,6 +446,24 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		$("#visual_orders_date_till").datepicker({
 			dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
 			altField: "#orders_date_till",
+        	altFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			yearRange: "' . $first_year . ':' . (date('Y') + 1) . '"
+		});
+		$("#visual_orders_delivery_date_from").datepicker({
+			dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
+			altField: "#orders_delivery_date_from",
+        	altFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			yearRange: "' . $first_year . ':' . (date('Y') + 1) . '"
+		});
+		$("#visual_orders_delivery_date_till").datepicker({
+			dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
+			altField: "#orders_delivery_date_till",
         	altFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
