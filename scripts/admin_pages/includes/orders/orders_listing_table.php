@@ -445,23 +445,107 @@ $headerData .= '
 			var orders_id=$(this).attr("rel");
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
-			var confirm_label="' . $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x') . '";
-			confirm_label=confirm_label.replace(\'OrdersId\', orders_id).replace(\'OrdersStatusLabel\', orders_status_label);
-			if (confirm(confirm_label)) {
-				var request = $.ajax({
-						type:   "POST",
-						url:    "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status') . '",
-						dataType: \'json\',
-						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
-						dataType: "html"
-				});
-				request.done(function(msg) {
-				    if (msg) {
-				        $("body").append(msg);
-				    }
-				});
-			}
+			var tmp_confirm_content="' . $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x') . '";
+			var confirm_content=\'<div class="form-group row"><div class="col-md-12">\' + tmp_confirm_content.replace(\'OrdersId\', orders_id).replace(\'OrdersStatusLabel\', orders_status_label) + \'</div></div>\';
+            jQuery.ajax({
+				type: "POST",
+				url: "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status_pre') . '",
+				dataType: \'json\',
+				data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
+				success: function(d) {
+				    if (d.status==\'OK\') {
+				        confirm_content+=d.extra_checkbox;
+                        var confirm_box=jQuery.confirm({
+                            title: \''.$this->pi_getLL('update_order_status').'\',
+                            content: confirm_content,
+                            columnClass: \'col-md-6 col-md-offset-4 \',
+                            confirm: function(){
+                                var send_notification_email=this.$b.find("#send_update_status_email").prop("checked") ? 1 : 0;
+                                var request = $.ajax({
+                                    type:   "POST",
+                                    url:    "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status') . '",
+                                    dataType: \'json\',
+                                    data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id+"&tx_multishop_pi1[send_notification_email]="+send_notification_email,
+                                    dataType: "html"
+                                });
+                                request.done(function(msg) {
+                                    if (msg) {
+                                        $("body").append(msg);
+                                    }
+                                });
+                            },
+                            cancel: function(){},
+                            confirmButton: \'' . $this->pi_getLL('yes') . '\',
+                            cancelButton: \'' . $this->pi_getLL('no') . '\',
+                            backgroundDismiss: false
+                        });
+                    } else {
+                        var request = $.ajax({
+                            type:   "POST",
+                            url:    "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status') . '",
+                            dataType: \'json\',
+                            data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id+"&tx_multishop_pi1[send_notification_email]=0",
+                            dataType: "html"
+                        });
+                    }
+                }
+            });
 		});
+		/*
+		$(document).on("click", ".change_orders_status", function(e){
+			e.preventDefault();
+			var link=$(this).attr("href");
+			var order_id=$(this).attr("data-order-id");
+			var tthis=$(this).parent();
+			jQuery.ajax({
+				type: "POST",
+				url: "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_order_payment_methods') . '",
+				dataType: \'json\',
+				data: "tx_multishop_pi1[order_id]=" + order_id,
+				success: function(d) {
+					var tmp_confirm_content =\'' . addslashes(sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), '%order_id%')) . '\';
+					var confirm_content = \'<div><h3 class="panel-title">\' + tmp_confirm_content . replace(\'%order_id%\', order_id) + \'</h3></div><div class="form-group" id="popup_order_wrapper_listing">\' + d.payment_method_date_purchased + \'</div>\';
+					var confirm_box=jQuery.confirm({
+						title: \'\',
+						content: confirm_content,
+						columnClass: \'col-md-6 col-md-offset-4 \',
+						confirm: function(){
+							var payment_id=this.$b.find("#payment_method_sb_listing").val();
+							var date_paid=this.$b.find("#orders_paid_timestamp").val();
+							var send_paid_letter=this.$b.find("#send_payment_received_email").prop("checked") ? 1 : 0;
+							//
+							jQuery.ajax({
+								type: "POST",
+								url: "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=update_paid_status_save_popup_value') . '",
+								dataType: \'json\',
+								data: "tx_multishop_pi1[payment_id]=" + payment_id + "&tx_multishop_pi1[date_paid]=" + date_paid + "&tx_multishop_pi1[order_id]=" + order_id + "&tx_multishop_pi1[send_paid_letter]=" + send_paid_letter + "&tx_multishop_pi1[action]=update_selected_orders_to_paid",
+								success: function(d) {
+									if (d.status=="OK") {
+										var return_string = \'<a href="#" class="update_to_unpaid" data-order-id="\' + order_id + \'"><span class="admin_status_red disabled" alt="' . $this->pi_getLL('admin_label_disable') . '"></span></a><span class="admin_status_green" alt="' . $this->pi_getLL('admin_label_enable') . '"></span>\';
+									    tthis.html(return_string);
+									}
+								}
+							});
+							//window.location =link;
+						},
+						cancel: function(){},
+						confirmButton: \'' . $this->pi_getLL('yes') . '\',
+						cancelButton: \'' . $this->pi_getLL('no') . '\',
+						backgroundDismiss: false
+					});
+					confirm_box.$b.find("#orders_paid_timestamp_visual").datepicker({
+						dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
+						altField: "#orders_paid_timestamp",
+						altFormat: "yy-mm-dd",
+						changeMonth: true,
+						changeYear: true,
+						showOtherMonths: true,
+						yearRange: "' . (date("Y") - 15) . ':' . (date("Y") + 2) . '"
+					});
+				}
+			});
+		});
+		*/
 		$(\'#selected_orders_action\').change(function(){
 			if ($(this).val()==\'change_order_status_for_selected_orders\') {
 				$("#msadmin_order_status_select").show();
