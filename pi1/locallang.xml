@@ -2864,7 +2864,7 @@
             <label index="admin_customers_subscribed_newsletter">Ingeschreven op de nieuwsbrief</label>
             <label index="delivery_date">Afleverdatum</label>
             <label index="update_order_status">Update bestelstatus</label>
-            <label index="send_notification_email_to_customer">Stuur een kennisgeving per e-mail naar de klant</label>
+            <label index="send_notification_email_to_customer">Verstuur e-mail naar klant</label>
         </languageKey>
     </data>
 </T3locallang>
