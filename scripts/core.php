@@ -164,6 +164,13 @@ switch ($this->ms['page']) {
     case 'psp_declineurl':
     case 'psp_exceptionurl':
     case 'psp_cancelurl':
+        //hook to let other plugins further manipulate
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentLandingPagePreProc'])) {
+            $conf = array();
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentLandingPagePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+            }
+        }
         $cmsPage = $this->ms['page'];
         $array1 = array();
         $array2 = array();
