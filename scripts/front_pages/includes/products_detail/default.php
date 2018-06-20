@@ -213,6 +213,11 @@ if (!$product['products_id']) {
                 $tr_type = 'even';
             }
             list($staffel_qty, $staffel_price) = explode(':', $staffel_data);
+            if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $staffel_price = ($staffel_price * (1 + $product['tax_rate']));
+            } else {
+                $staffel_price=mslib_fe::taxDecimalCrop($staffel_price, 2, false, false);
+            }
             if (strpos($staffel_qty, '99999') !== false) {
                 list($qty_1, $qty_2) = explode('-', $staffel_qty);
                 $staffel_qty = '> ' . $qty_1;
