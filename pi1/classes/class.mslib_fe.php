@@ -5850,6 +5850,7 @@ class mslib_fe {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'] as $funcRef) {
                     $params['row3'] = &$row3;
+                    $params['shipping_method'] = &$shipping_method;
                     $params['shipping_method_id'] = $shipping_method_id;
                     $params['shipping_cost'] = &$shipping_cost;
                     $params['shipping_cost_method_box'] = &$shipping_cost_method_box;
