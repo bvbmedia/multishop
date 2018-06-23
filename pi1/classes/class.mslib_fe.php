@@ -2991,7 +2991,8 @@ class mslib_fe {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'])) {
                 $params = array(
                         'products_id' => $products_id,
-                        'output_html' => &$output_html
+                        'output_html' => &$output_html,
+                        'sessionData' => &$sessionData
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
