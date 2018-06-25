@@ -37,6 +37,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         mslib_fe::init($ref);
     }
     function updateCart() {
+        $continue_check_stock=true;
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreCheckerHook'])) {
+            $params = array(
+                    'get' => &$this->get,
+                    'post' => &$this->post,
+                    'continue_check_stock' => &$continue_check_stock
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreCheckerHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
         $product_id = $this->post['products_id'];
         $categories_id = $this->post['categories_id'];
         if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
@@ -45,7 +58,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
             $categories_id = $this->get['categories_id'];
         }
-        if (is_numeric($product_id)) {
+        if (is_numeric($product_id) && $continue_check_stock) {
             $product = mslib_fe::getProduct($product_id, $categories_id);
             if ($product['products_quantity'] < 1 && (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level'])) {
                 if ($product['categories_id']) {
