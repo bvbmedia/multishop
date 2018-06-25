@@ -268,7 +268,7 @@ if ($count_product > 0) {
                         'disable_checkout' => &$disable_checkout,
                         'subtotal' => &$subtotal,
                         'shopping_cart_item' => $shopping_cart_item,
-                        'cart_item' => $value,
+                        'cart_item' => &$value,
                         'product_info' => $product_info
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPriceHook'] as $funcRef) {
