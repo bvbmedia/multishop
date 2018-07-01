@@ -3250,7 +3250,12 @@ if (is_numeric($this->get['orders_id'])) {
                                 'orders' => &$orders,
                                 'order' => &$order,
                                 'tbody_tag_id' => &$tbody_tag_id,
-                                'order_products_table_body' => &$order_products_table['body']
+                                'orders_products_attributes' => &$orders_products_attributes[$order['orders_products_id']],
+                                'order_products_table_body' => &$order_products_table['body'],
+                                'order_products_tax_data' => &$order_products_tax_data,
+                                'settings' => &$settings,
+                                'tr_type' => &$tr_type,
+                                'all_orders_status' => &$all_orders_status
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
