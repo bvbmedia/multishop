@@ -472,7 +472,11 @@ class mslib_fe {
                     $where_clause = ' p.products_status=1 AND c.status=1 ';
                 }
             } else {
-                $where_clause = ' c.status=1 ';
+                if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+                    $where_clause = ' 1 ';
+                } else {
+                    $where_clause = ' c.status=1 ';
+                }
             }
             if (!$this->masterShop) {
                 $p2c_is_deepest = ' AND p2c.is_deepest=1';
