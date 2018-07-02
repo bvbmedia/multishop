@@ -472,7 +472,7 @@ class mslib_fe {
                     $where_clause = ' p.products_status=1 AND c.status=1 ';
                 }
             } else {
-                if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+                if ($this->ROOTADMIN_USER or $this->ADMIN_USER) {
                     $where_clause = ' 1 ';
                 } else {
                     $where_clause = ' c.status=1 ';
