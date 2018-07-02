@@ -1039,7 +1039,7 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
         $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
     }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
-    $payment_methods_label[strtoupper($row['payment_method_label'])]=$row['payment_method'];
+    $payment_methods_label[strtoupper($row['payment_method_label']). '_' . $row['payment_method']]=$row['payment_method'];
 
 }
 ksort($payment_methods_label);
