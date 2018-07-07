@@ -10184,30 +10184,7 @@ class mslib_fe {
 							<a href="' . $link . '" target="_blank" class="text-primary msadmin_view"><i class="fa fa-eye"></i></a>
 						</div>';
                     } else {
-                        // get all cats to generate multilevel fake url
-                        $level = 0;
-                        $cats = mslib_fe::Crumbar($item['categories_id']);
-                        $cats = array_reverse($cats);
-                        $where = '';
-                        if (count($cats) > 0) {
-                            foreach ($cats as $tmp) {
-                                $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                                $level++;
-                            }
-                            $where = substr($where, 0, (strlen($where) - 1));
-                            //								$where.='&';
-                        }
-                        //							$where.='categories_id['.$level.']='.$item['categories_id'];
-                        $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-                        // get all cats to generate multilevel fake url eof
-                        //							$content.=$item['categories_name'];
-                        if ($link) {
-                            $content .= '<a href="' . $link . '" class="ajax_link"' . $target . '>';
-                        }
                         $content .= $item['categories_name'];
-                        if ($link) {
-                            $content .= '</a>';
-                        }
                     }
                     $sub_content = mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id'], $admin_mode);
                     if ($sub_content) {
