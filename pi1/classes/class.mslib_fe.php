@@ -10209,7 +10209,7 @@ class mslib_fe {
                             $content .= '</a>';
                         }
                     }
-                    $sub_content = mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id']);
+                    $sub_content = mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id'], $admin_mode);
                     if ($sub_content) {
                         $content .= '<ul class="sub_categories_ul">' . $sub_content . '</ul>';
                     }
