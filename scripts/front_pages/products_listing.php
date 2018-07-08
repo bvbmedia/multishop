@@ -340,6 +340,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                             break;
                     }
                 }
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'])) {
+                    $params = array(
+                        'filter' => &$filter,
+                        'orderby' => &$orderby,
+                        'select' => &$select,
+                        'where' => &$where,
+                        'extra_from' => &$extra_from,
+                        'extra_join' => &$extra_join
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 //$this->msDebug=true;
                 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
                 //echo $this->msDebugInfo;
