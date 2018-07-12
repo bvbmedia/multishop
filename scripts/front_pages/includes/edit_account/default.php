@@ -39,11 +39,14 @@ if ($this->post) {
     if (!$this->post['city']) {
         $erno[] = ucfirst($this->pi_getLL('city_is_required'));
     }
-    if (!$this->post['telephone']) {
-        $erno[] = ucfirst($this->pi_getLL('telephone_is_required'));
-    }
-    if (isset($this->post['telephone']) && strlen($this->post['telephone'])<10) {
-        $erno[] = ucfirst($this->pi_getLL('telephone_is_required'));
+    if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] == '1') {
+        if (!$this->post['telephone']) {
+            $erno[] = ucfirst($this->pi_getLL('telephone_is_required'));
+        } else {
+            if (isset($this->post['telephone']) && strlen($this->post['telephone']) < 10) {
+                $erno[] = ucfirst($this->pi_getLL('telephone_is_required'));
+            }
+        }
     }
     if (!$this->post['delivery_street_name']) {
         $erno[] = ucfirst($this->pi_getLL('delivery_street_address_is_required'));
@@ -62,6 +65,9 @@ if ($this->post) {
     }
     if (!$this->post['delivery_city']) {
         $erno[] = ucfirst($this->pi_getLL('delivery_city_is_required'));
+    }
+    if (!$this->post['username']) {
+        $erno[] = ucfirst($this->pi_getLL('username_is_required'));
     }
     // billing details
     $user['email'] = $this->post['email'];
