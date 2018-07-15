@@ -3130,14 +3130,16 @@ if ($this->post) {
         }
         $images_tab_block .= '</div>
         <script type="text/javascript" data-ignore="1">
-		jQuery(document).ready(function($) {';
+		jQuery(document).ready(function($) {
+		    var products_name=$("#products_name_0").val();
+		    var filledFilenameIndex={};
+		';
         for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
             $i = $x;
             if ($i == 0) {
                 $i = '';
             }
             $images_tab_block .= '
-			var products_name=$("#products_name_0").val();
 			var uploader' . $i . ' = new qq.FileUploader({
 				element: document.getElementById(\'products_image' . $i . '\'),
 				action: \'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images') . '\',
@@ -3153,48 +3155,48 @@ if ($this->post) {
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul' . $i . '"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
-				    var uploadList= \'#qq-upload-list-ul' . $i . '\';
-					var filenameServer = responseJSON[\'filename\'];
-					var fileOriginal = responseJSON[\'fileOriginal\'];
-					var filenameLocationServer = responseJSON[\'fileLocation\'];
-					if (parseInt($(uploadList).find(\'li\').length) > 1) {
-					    $.each($(uploadList).find(\'li\'), function(idx, obj_li) {
-					        var current_filename=$(obj_li).find(\'span.qq-upload-file\').html();
-					        if (fileOriginal==current_filename) {
-					            var el_idx=idx;
-					            if (el_idx==\'0\') {
-					                el_idx=\'\';
-					            }
+                    var uploadList= \'#qq-upload-list-ul' . $i . ' > li\';
+                    var filenameServer = responseJSON[\'filename\'];
+                    var fileOriginal = responseJSON[\'fileOriginal\'];
+                    var filenameLocationServer = responseJSON[\'fileLocation\'];
+                    if (parseInt($(uploadList).length) > 1) {
+                        $.each($(uploadList), function(idx, obj_li) {
+                            var current_filename=$(obj_li).find(\'span.qq-upload-file\').html();
+                            //if (fileOriginal==current_filename) {
+                                var el_idx=idx;
+                                if (el_idx==\'0\') {
+                                    el_idx=\'\';
+                                }
                                 var ajax_products_image_id=\'#ajax_products_image\' + el_idx;
-                                $(ajax_products_image_id).val(filenameServer);
-                                return false;   					                
-					        }
-					    });
-					} else {
-					    $("#ajax_products_image' . $i . '").val(filenameServer);
-					}
-					uploader' . $i . '.setParams({
-					   products_name: products_name,
-					   file_type: \'products_image\',
-					   old_image: $("#ajax_products_image' . $i . '").val()
-					});
-					' . ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
-					// hide the qq-upload status
-					$("#qq-upload-list-ul' . $i . '").hide();
-					// display instantly uploaded image
-					$("#image_action' . $i . '").empty();
-					var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
-					new_image+=\'<div class="image_tools">\';
-					new_image+=\'<a href="#" id="cropEditor" class="btn btn-primary btn-sm " rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a> \';
-					new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_images" rel="' . $i . ':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
-					new_image+=\'</div>\';
-					$("#image_action' . $i . '").html(new_image);
-					' : '') . '
+                                if ($.inArray(filenameServer, filledFilenameIndex)==\'-1\' && $(ajax_products_image_id).val()==\'\') {
+                                    filledFilenameIndex=[filenameServer];
+                                    $(ajax_products_image_id).val(filenameServer);
+                                }  					                
+                            //}
+                        });
+                    } else {
+                        $("#ajax_products_image' . $i . '").val(filenameServer);
+                    }
+                    uploader' . $i . '.setParams({
+                       products_name: products_name,
+                       file_type: \'products_image\',
+                       old_image: $("#ajax_products_image' . $i . '").val()
+                    });
+                    ' . ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
+                    // hide the qq-upload status
+                    $("#qq-upload-list-ul' . $i . '").hide();
+                    // display instantly uploaded image
+                    $("#image_action' . $i . '").empty();
+                    var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
+                    new_image+=\'<div class="image_tools">\';
+                    new_image+=\'<a href="#" id="cropEditor" class="btn btn-primary btn-sm " rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a> \';
+                    new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_images" rel="' . $i . ':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
+                    new_image+=\'</div>\';
+                    $("#image_action' . $i . '").html(new_image);
+                    ' : '') . '
 				},
-				'.($x>0 ? '
-				multiple: false,
-				' : '').'
-				debug: true
+				'.($x>0 ? 'multiple: false,' : 'multiple: true,').'
+				debug: false
 			});';
         }
         $images_tab_block .= '
