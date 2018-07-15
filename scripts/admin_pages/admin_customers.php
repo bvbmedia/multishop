@@ -10,6 +10,7 @@ if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] &
         mslib_befe::loginAsUser($user['uid'], 'admin_customers');
     }
 }
+$postErno = array();
 if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($this->post['tx_multishop_pi1']['action'])) {
     $redirectAfterPostProc = 1;
     switch ($this->post['tx_multishop_pi1']['action']) {
@@ -28,6 +29,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
                 $params = array();
                 $params['content'] =& $content;
                 $params['redirectAfterPostProc'] =& $redirectAfterPostProc;
+                $params['postErno']=&$postErno;
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
@@ -645,6 +647,42 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+if (count($postErno)) {
+    $returnMarkup = '
+	<div style="display:none" id="msAdminPostMessage">
+	<table class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th class="text-center">Status</th>
+		<th>Message</th>
+	</tr>
+	</thead>
+	<tbody>
+	';
+    foreach ($postErno as $item) {
+        switch ($item['status']) {
+            case 'error':
+                $item['status'] = '<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+                break;
+            case 'info':
+                $item['status'] = '<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+                break;
+        }
+        $returnMarkup .= '<tr><td class="text-center">' . $item['status'] . '</td><td>' . $item['message'] . '</td></tr>' . "\n";
+    }
+    $returnMarkup .= '</tbody></table></div>';
+    $content .= $returnMarkup;
+    $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
+	jQuery(document).ready(function ($) {
+		$.confirm({
+			title: \'\',
+			content: $(\'#msAdminPostMessage\').html(),
+			cancelButton: false // hides the cancel button.
+		});
+	});
+	</script>
+	';
+}
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);
