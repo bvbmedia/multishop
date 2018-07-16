@@ -2789,7 +2789,7 @@ class mslib_fe {
                                 $row_val_desc = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_val_desc);
                                 if (!empty($row_val_desc['description'])) {
                                     $value_desc = htmlspecialchars('<div class="valuesdesc_info">' . $row_val_desc['description'] . '</div>');
-                                    $value_desc = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $value_desc . '"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>';
+                                    $value_desc = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $value_desc . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
                                 }
                             }
                             $options_values[] = $products_options_values;
