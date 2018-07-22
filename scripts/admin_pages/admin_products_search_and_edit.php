@@ -485,7 +485,22 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
     $dates_till=explode(' ', $this->get['product_date_till']);
     list($d, $m, $y)=explode('/', $dates_till[0]);
     $date_till=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_till[1]);
+} else {
+    if (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) {
+        $prefix = 'p.';
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix = 'pf.';
+        }
+        $dates_from=explode(' ', $this->get['product_date_from']);
+        list($d, $m, $y)=explode('/', $dates_from[0]);
+        $date_from=strtotime($y . '-' . $m . '-' . $d . ' 00:00:00');
 
+        $dates_till=explode(' ', $this->get['product_date_from']);
+        list($d, $m, $y)=explode('/', $dates_till[0]);
+        $date_till=strtotime($y . '-' . $m . '-' . $d . ' 23:59:59');
+    }
+}
+if ($date_from && $date_till) {
     switch ($this->get['search_by_product_date']) {
         case 'products_date_added':
             $filter[]=$prefix . 'products_date_added BETWEEN ' . $date_from . ' AND ' . $date_till;
