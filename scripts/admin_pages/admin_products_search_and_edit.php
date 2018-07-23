@@ -493,26 +493,69 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
         }
         $dates_from=explode(' ', $this->get['product_date_from']);
         list($d, $m, $y)=explode('/', $dates_from[0]);
-        $date_from=strtotime($y . '-' . $m . '-' . $d . ' 00:00:00');
-
-        $dates_till=explode(' ', $this->get['product_date_from']);
+        $date_from=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_from[1]);
+        $dates_till='';
+    }
+    if (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) {
+        $prefix = 'p.';
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix = 'pf.';
+        }
+        $dates_from='';
+        $dates_till=explode(' ', $this->get['product_date_till']);
         list($d, $m, $y)=explode('/', $dates_till[0]);
-        $date_till=strtotime($y . '-' . $m . '-' . $d . ' 23:59:59');
+        $dates_till=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_till[1]);
     }
 }
 if ($date_from && $date_till) {
     switch ($this->get['search_by_product_date']) {
         case 'products_date_added':
-            $filter[]=$prefix . 'products_date_added BETWEEN ' . $date_from . ' AND ' . $date_till;
+            if ($date_from && $date_till) {
+                $filter[] = $prefix . 'products_date_added BETWEEN ' . $date_from . ' AND ' . $date_till;
+            } else {
+                if ($date_from) {
+                    $filter[] = $prefix . 'products_date_added >= ' . $date_from;
+                }
+                if ($date_till) {
+                    $filter[] = $prefix . 'products_date_added <= ' . $date_till;
+                }
+            }
             break;
         case 'products_last_modified':
-            $filter[]=$prefix . 'products_last_modified BETWEEN ' . $date_from . ' AND ' . $date_till;
+            if ($date_from && $date_till) {
+                $filter[] = $prefix . 'products_last_modified BETWEEN ' . $date_from . ' AND ' . $date_till;
+            } else {
+                if ($date_from) {
+                    $filter[] = $prefix . 'products_last_modified >= ' . $date_from;
+                }
+                if ($date_till) {
+                    $filter[] = $prefix . 'products_last_modified <= ' . $date_till;
+                }
+            }
             break;
         case 'products_date_available':
-            $filter[]=$prefix . 'products_date_available BETWEEN ' . $date_from . ' AND ' . $date_till;
+            if ($date_from && $date_till) {
+                $filter[] = $prefix . 'products_date_available BETWEEN ' . $date_from . ' AND ' . $date_till;
+            } else {
+                if ($date_from) {
+                    $filter[] = $prefix . 'products_date_available >= ' . $date_from;
+                }
+                if ($date_till) {
+                    $filter[] = $prefix . 'products_date_available <= ' . $date_till;
+                }
+            }
             break;
         case 'products_date_visible':
-            $filter[]=$prefix . 'products_date_visible BETWEEN ' . $date_from . ' AND ' . $date_till;
+            if ($date_from && $date_till) {
+                $filter[] = $prefix . 'products_date_visible BETWEEN ' . $date_from . ' AND ' . $date_till;
+            } else {
+                if ($date_from) {
+                    $filter[] = $prefix . 'products_date_visible >= ' . $date_from;
+                }
+                if ($date_till) {
+                    $filter[] = $prefix . 'products_date_visible <= ' . $date_till;
+                }
+            }
             break;
     }
 }

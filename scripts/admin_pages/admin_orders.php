@@ -860,6 +860,31 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         $filter[] = $column . " <= '" . $end_time . "'";
     }
 }
+if (!empty($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_till'])) {
+    list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
+    list($fd, $fm, $fy) = explode('/', $from_date);
+    list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
+    list($td, $tm, $ty) = explode('/', $till_date);
+    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $column = 'o.expected_delivery_date';
+    $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->post['order_expected_delivery_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
+        list($fd, $fm, $fy) = explode('/', $from_date);
+        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        $column = 'o.expected_delivery_date';
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->post['order_expected_delivery_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
+        list($td, $tm, $ty) = explode('/', $till_date);
+        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        $column = 'o.expected_delivery_date';
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
+}
 if ($this->post['search_by_telephone_orders']) {
     $filter[] = "o.by_phone=1";
 }
@@ -1121,6 +1146,8 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
         (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
         (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
         (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+        (isset($this->get['order_expected_delivery_date_from']) && !empty($this->get['order_expected_delivery_date_from'])) ||
+        (isset($this->get['order_expected_delivery_date_till']) && !empty($this->get['order_expected_delivery_date_till'])) ||
         (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
         (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders']))
 ) {
@@ -1142,9 +1169,16 @@ $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###'] = $orders_status_list;
 $subpartArray['###VALUE_SEARCH###'] = htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FORM###'] = $this->post['order_date_from'];
+$subpartArray['###VALUE_DATE_FROM###'] = $this->post['order_date_from'];
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###'] = $this->post['order_date_till'];
+
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_FROM###'] = $this->pi_getLL('from');
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE###'] = $this->pi_getLL('expected_delivery_date');
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM###'] = $this->post['order_expected_delivery_date_from'];
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_TO###'] = $this->pi_getLL('to');
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO###'] = $this->post['order_expected_delivery_date_till'];
+
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
 $subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###'] = $this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###'] = ($this->post['search_by_status_last_modified'] ? ' checked' : '');
