@@ -2590,6 +2590,7 @@ class mslib_fe {
         $query_array['select'][] = 'popt.products_options_name';
         $query_array['select'][] = 'popt.listtype';
         $query_array['select'][] = 'popt.hide';
+        $query_array['select'][] = 'popt.products_options_descriptions';
         $query_array['from'][] = 'tx_multishop_products_options popt';
         $query_array['from'][] = 'tx_multishop_products_attributes patrib';
         $query_array['where'][] = 'patrib.products_id=\'' . (int)$products_id . '\'';
@@ -2766,14 +2767,20 @@ class mslib_fe {
                         );
                         $products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
                         $total_values = $GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
+                        // SHOW_ATTRIBUTE_DESCRIPTION
+                        $option_desc_tooltip='';
+                        if ($this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION']=='1' && $this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP']=='1' && !empty($options['products_options_descriptions'])) {
+                            $option_desc_tooltip = htmlspecialchars('<div class="valuesdesc_info">' . $options['products_options_descriptions'] . '</div>');
+                            $option_desc_tooltip = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $option_desc_tooltip . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
+                        }
                         if (!$readonly) {
-                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ':</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
+                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
                         } else {
-                            $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . ':</label>';
+                            $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>';
                         }
                         // SHOW_ATTRIBUTE_DESCRIPTION
-                        if (SHOW_ATTRIBUTE_DESCRIPTION && !empty($products_options_name_values['description'])) {
-                            $output_html[$options['products_options_id']] .= $products_options_name_values['description'] . "<br/>";
+                        if ($this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION']=='1' && $this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP']=='0' && !empty($options['products_options_descriptions'])) {
+                            $output_html[$options['products_options_id']] .= $options['products_options_descriptions'] . "<br/>";
                         }
                         $opt = 0;
                         $next_index++;

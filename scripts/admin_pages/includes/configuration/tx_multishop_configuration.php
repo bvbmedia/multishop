@@ -2848,6 +2848,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Show Product Options Description',
+        'configuration_key' => 'SHOW_PRODUCT_OPTIONS_DESCRIPTION',
+        'configuration_value' => '0',
+        'description' => 'Show Product Options Description',
+        'group_id' => '7',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Show Product Options Description in Tooltip',
+        'configuration_key' => 'SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP',
+        'configuration_value' => '0',
+        'description' => 'Show Product Options Description in Tooltip',
+        'group_id' => '7',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(
