@@ -462,7 +462,7 @@ class mslib_fe {
                 $from_clause .= ", ";
                 $from_clause .= implode(",", $extra_from);
             }
-            if ($search_section!='admin_products_search') {
+            if ($search_section!='admin_products_search' && $search_section!='products_feeds') {
                 if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
                     $where_clause = ' 1 ';
                     if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS'] == '1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
@@ -472,7 +472,7 @@ class mslib_fe {
                     $where_clause = ' p.products_status=1 AND c.status=1 ';
                 }
             } else {
-                if ($this->ROOTADMIN_USER or $this->ADMIN_USER) {
+                if ($includeDisabled || ($this->ROOTADMIN_USER or $this->ADMIN_USER)) {
                     $where_clause = ' 1 ';
                 } else {
                     $where_clause = ' c.status=1 ';
