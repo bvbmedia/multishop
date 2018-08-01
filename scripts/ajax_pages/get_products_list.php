@@ -98,7 +98,7 @@ if ($this->ADMIN_USER) {
             $counter = 0;
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                 if ((is_numeric($catid) && $catid > 0) || (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0)) {
-                    $return_data[$counter]['text'] = htmlentities($row['products_name']);
+                    $return_data[$counter]['text'] = htmlentities($row['products_name']) .' (PID: '.$row['products_id'].')';
                 } else {
                     $catsname = array();
                     if ($row['categories_id'] > 0) {
@@ -114,7 +114,11 @@ if ($this->ADMIN_USER) {
                         }
                         // get all cats to generate multilevel fake url eof
                     }
-                    $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']);
+                    if (!empty($row['products_model'])) {
+                        $return_data[$counter]['text'] =  '('.addslashes($row['products_model']).') ' . htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']) . ' (PID: ' . $row['products_id'] . ')';
+                    } else {
+                        $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']) . ' (PID: ' . $row['products_id'] . ')';
+                    }
                 }
                 $return_data[$counter]['id'] = $row['products_id'];
                 $counter++;
@@ -130,7 +134,7 @@ if ($this->ADMIN_USER) {
         foreach ($products['products'] as $product) {
             if ($product['products_name'] && !empty($product['products_name'])) {
                 if ((is_numeric($catid) && $catid > 0) || (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0)) {
-                    $return_data[$counter]['text'] = htmlspecialchars($product['products_name']);
+                    $return_data[$counter]['text'] = htmlspecialchars($product['products_name']) . ' (PID: '.$row['products_id'].')';
                 } else {
                     $catsname = array();
                     if ($product['categories_id']) {
@@ -146,7 +150,11 @@ if ($this->ADMIN_USER) {
                         }
                         // get all cats to generate multilevel fake url eof
                     }
-                    $return_data[$counter]['text'] = htmlspecialchars(implode(" > ", $catsname) . ' > ' . $product['products_name']);
+                    if (!empty($row['products_model'])) {
+                        $return_data[$counter]['text'] =  '('.addslashes($row['products_model']).') ' . htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']) . ' (PID: ' . $row['products_id'] . ')';
+                    } else {
+                        $return_data[$counter]['text'] = htmlspecialchars(implode(" > ", $catsname) . ' > ' . $product['products_name']) . ' (PID: ' . $row['products_id'] . ')';
+                    }
                 }
                 $return_data[$counter]['id'] = $product['products_id'];
                 $counter++;
