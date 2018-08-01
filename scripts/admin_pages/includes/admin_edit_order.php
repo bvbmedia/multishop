@@ -3556,6 +3556,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $params = array(
                         'orders' => &$orders,
                         'colspan' => &$colspan,
+                        'settings' => $settings,
                         'order_products_table' => &$order_products_table['body']
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'] as $funcRef) {
