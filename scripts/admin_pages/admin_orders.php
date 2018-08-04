@@ -1149,7 +1149,8 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
         (isset($this->get['order_expected_delivery_date_from']) && !empty($this->get['order_expected_delivery_date_from'])) ||
         (isset($this->get['order_expected_delivery_date_till']) && !empty($this->get['order_expected_delivery_date_till'])) ||
         (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
-        (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders']))
+        (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders'])) ||
+        ($this->ms['MODULES']['ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING']=='1')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -1196,6 +1197,8 @@ $subpartArray['###RESULTS###'] = $order_results;
 $subpartArray['###NORESULTS###'] = $no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
+$subpartArray['###ADMIN_LABEL_YES###'] = $this->pi_getLL('yes');
+$subpartArray['###ADMIN_LABEL_NO###'] = $this->pi_getLL('no');
 // search on shop
 $subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']='';
 if ($this->conf['masterShop']) {
