@@ -5652,7 +5652,7 @@ class mslib_fe {
         }
         $product_detail_mode=false;
         $product_id=0;
-        if ($this->get['tx_multishop_pi1']['page_section']=='products_detail') {
+        if ($this->get['tx_multishop_pi1']['page_section']=='products_detail' || $this->get['tx_multishop_pi1']['caller_script']=='products_detail') {
             $product_detail_mode=true;
             $product_id=$this->get['products_id'];
             $product_data=mslib_fe::getProduct($product_id, '', '', 1);
