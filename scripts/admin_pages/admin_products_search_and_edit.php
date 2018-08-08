@@ -243,7 +243,7 @@ asort($fields);
 $searchby_selectbox = '<select name="tx_multishop_pi1[search_by]" class="form-control">';
 if (isset($this->conf['adminProductsSearchAndEditStandardCustomSearchOn']) && $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']!='') {
     $new_fields=array();
-    $new_fields['standard']='Standard';
+    $new_fields['default']=$this->pi_getLL('default');
     $fields=array_merge($new_fields, $fields);
 }
 foreach ($fields as $key => $label) {
@@ -254,7 +254,7 @@ foreach ($fields as $key => $label) {
         }
     } else {
         if (isset($this->conf['adminProductsSearchAndEditStandardCustomSearchOn']) && $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']!='') {
-            if ($key == 'standard') {
+            if ($key == 'default') {
                 $option_selected = ' selected="selected"';
             }
         } else {
@@ -309,7 +309,7 @@ if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 //$filter[]='p.page_uid='.$this->shop_pid; is already inside the getProductsPageSet
 if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
     switch ($this->get['tx_multishop_pi1']['search_by']) {
-        case 'standard':
+        case 'default':
             $search_on_fields=explode(',', $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']);
             $subfilter=array();
             foreach ($search_on_fields as $search_on_field) {
