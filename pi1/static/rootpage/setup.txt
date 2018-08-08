@@ -129,6 +129,7 @@ plugin.tx_multishop_pi1 {
 	confirmed_create_account_target_pid = {$plugin.multishop.confirmed_create_account_target_pid}
 	developer_email = {$plugin.multishop.developer_email}
 	loadOldRedactorVersion = {$plugin.multishop.loadOldRedactorVersion}
+	adminProductsSearchAndEditStandardCustomSearchOn = {$plugin.multishop.adminProductsSearchAndEditStandardCustomSearchOn}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

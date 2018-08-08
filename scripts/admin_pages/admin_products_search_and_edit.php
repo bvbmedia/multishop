@@ -241,6 +241,11 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 asort($fields);
 $searchby_selectbox = '<select name="tx_multishop_pi1[search_by]" class="form-control">';
+if (isset($this->conf['adminProductsSearchAndEditStandardCustomSearchOn']) && $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']!='') {
+    $new_fields=array();
+    $new_fields['standard']='Standard';
+    $fields=array_merge($new_fields, $fields);
+}
 foreach ($fields as $key => $label) {
     $option_selected='';
     if (isset($this->get['tx_multishop_pi1']['search_by'])) {
@@ -248,8 +253,14 @@ foreach ($fields as $key => $label) {
             $option_selected=' selected="selected"';
         }
     } else {
-        if ($key=='products_name') {
-            $option_selected=' selected="selected"';
+        if (isset($this->conf['adminProductsSearchAndEditStandardCustomSearchOn']) && $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']!='') {
+            if ($key == 'standard') {
+                $option_selected = ' selected="selected"';
+            }
+        } else {
+            if ($key == 'products_name') {
+                $option_selected = ' selected="selected"';
+            }
         }
     }
     $searchby_selectbox .= '<option value="' . $key . '"' . $option_selected . '>' . $label . '</option>' . "\n";
@@ -298,6 +309,17 @@ if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 //$filter[]='p.page_uid='.$this->shop_pid; is already inside the getProductsPageSet
 if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
     switch ($this->get['tx_multishop_pi1']['search_by']) {
+        case 'standard':
+            $search_on_fields=explode(',', $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']);
+            $subfilter=array();
+            foreach ($search_on_fields as $search_on_field) {
+                $search_on_field=trim($search_on_field);
+                $subfilter[]="(".$search_on_field . " like '%" . addslashes($this->get['keyword']) . "%')";
+            }
+            if (count($subfilter)) {
+                $filter[] = '(' . implode(' OR ', $subfilter) . ')';
+            }
+            break;
         case 'products_description':
             $prefix = 'pd.';
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
