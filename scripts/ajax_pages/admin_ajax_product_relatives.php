@@ -34,7 +34,7 @@ if ($this->post['req'] == 'init') {
         $where_A ='';
         $filter=array();
         if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-            if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+            if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                 $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
             }
         } else {
@@ -59,7 +59,7 @@ if ($this->post['req'] == 'init') {
 		INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 		INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
 		WHERE ' . implode(' AND ', $filter) . '
-		GROUP BY cd.categories_name ASC ORDER BY cd.categories_name';
+		GROUP BY cd.categories_id ASC ORDER BY cd.categories_name';
         //	error_log($query);
         $pid_regs = array();
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -68,7 +68,7 @@ if ($this->post['req'] == 'init') {
                 if ($row['categories_name']) {
                     $filter=array();
                     if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-                        if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                        if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                             $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
                         }
                     } else {
@@ -97,7 +97,7 @@ if ($this->post['req'] == 'init') {
 					INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
 					WHERE ' . implode(' AND ', $filter) . '
 					group by p.products_id ORDER BY pd.products_name ASC';
-                    //var_dump($query2);
+                    var_dump($query2);
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
@@ -233,7 +233,7 @@ if ($this->post['req'] == 'init') {
                 $filter[]='('.implode(' OR ', $subfilter).')';
             }
             if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-                if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                     $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
                 }
             } else {
