@@ -277,20 +277,6 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-$str = "select foreign_source_name from tx_multishop_orders_products limit 1";
-$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-if (!$qry) {
-    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
-    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $messages[] = $str;
-}
-$str = "select foreign_orders_products_id from tx_multishop_orders_products limit 1";
-$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-if (!$qry) {
-    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `foreign_orders_products_id` varchar(30) default '', ADD KEY `foreign_orders_products_id` (`foreign_orders_products_id`)";
-    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $messages[] = $str;
-}
 $indexesToDrop = array();
 $indexesToDrop[] = 'credit_order';
 $indexesToDrop[] = 'payed';
@@ -717,5 +703,19 @@ if (!$qry) {
     $str="ALTER TABLE `tx_multishop_order_units` ADD is_default tinyint(1) default '0', ADD KEY `is_default` (`is_default`)";
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
+}
+$str = "select foreign_source_name from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select foreign_orders_products_id from tx_multishop_orders_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders_products` ADD `foreign_orders_products_id` varchar(30) default '', ADD KEY `foreign_orders_products_id` (`foreign_orders_products_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
 }
 ?>
