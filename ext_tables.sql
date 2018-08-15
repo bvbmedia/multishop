@@ -652,6 +652,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  `crdate` int(11) default '0',
  `manufacturers_name` varchar(127) default '',
  `related_to_orders_products_id ` int(11) default '0',
+ `foreign_source_name` varchar(30) default '',
+ `foreign_orders_id` varchar(30) default '',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -672,7 +674,9 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `stock_subtracted` (`stock_subtracted`),
  KEY `crdate` (`crdate`),
  KEY `manufacturers_name` (`manufacturers_name`),
- KEY `related_to_orders_products_id` (`related_to_orders_products_id`)
+ KEY `related_to_orders_products_id` (`related_to_orders_products_id`),
+ KEY `foreign_source_name` (`foreign_source_name`),
+ KEY `foreign_orders_id` (`foreign_orders_id`)
 );
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
