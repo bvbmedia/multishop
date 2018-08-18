@@ -51,10 +51,24 @@ qq.getUniqueId = (function(){
 // Events
 
 qq.attach = function(element, type, fn){
-    if (element.addEventListener){
-        element.addEventListener(type, fn, false);
-    } else if (element.attachEvent){
-        element.attachEvent('on' + type, fn);
+    if (type=='drag' || type=='dragstart' || type=='dragend' || type=='dragenter' || type=='dragover' || type=='dragleave' || type=='drop') {
+        if (jQuery(element).hasClass('qq-upload-drop-area')) {
+            if (element.addEventListener) {
+                element.addEventListener(type, fn, false);
+            } else {
+                if (element.attachEvent) {
+                    element.attachEvent('on' + type, fn);
+                }
+            }
+        }
+    } else {
+        if (element.addEventListener) {
+            element.addEventListener(type, fn, false);
+        } else {
+            if (element.attachEvent) {
+                element.attachEvent('on' + type, fn);
+            }
+        }
     }
 };
 qq.detach = function(element, type, fn){

@@ -2024,15 +2024,32 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $shipping_methods = mslib_fe::loadShippingMethods(1);
                 $payment_methods = mslib_fe::loadPaymentMethods(1);
+                // sort shipping method
+                $shipping_methods_sorted=array();
+                foreach ($shipping_methods as $code => $item) {
+                    $shipping_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($shipping_methods_sorted);
+                // sort payment method
+                $payment_methods_sorted=array();
+                foreach ($payment_methods as $code => $item) {
+                    $payment_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($payment_methods_sorted);
                 if (is_array($shipping_methods) and count($shipping_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($shipping_methods as $code => $item) {
+                    foreach ($shipping_methods_sorted as $idx => $item) {
                         if (!$item['status']) {
                             $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                         }
-                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
-                        if ($code == $orders['shipping_method']) {
+                        $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                        $shop_title='';
+                        if (!empty($pageTitle)) {
+                            $shop_title = ' (' . $pageTitle . ')';
+                        }
+                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($item['code'] == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                        if ($item['code'] == $orders['shipping_method']) {
                             $dontOverrideDefaultOption = 1;
                         }
                     }
@@ -2061,13 +2078,18 @@ if (is_numeric($this->get['orders_id'])) {
                 if (is_array($payment_methods) and count($payment_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($payment_methods as $code => $item) {
+                    foreach ($payment_methods_sorted as $idx => $item) {
                         if (is_numeric($item['id']) && $item['id'] > 0) {
                             if (!$item['status']) {
                                 $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                             }
-                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
-                            if ($code == $orders['payment_method']) {
+                            $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                            $shop_title='';
+                            if (!empty($pageTitle)) {
+                                $shop_title = ' (' . $pageTitle . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $item['code'] == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                            if ($item['code'] == $orders['payment_method']) {
                                 $dontOverrideDefaultOption = 1;
                             }
                         }
@@ -3228,7 +3250,12 @@ if (is_numeric($this->get['orders_id'])) {
                                 'orders' => &$orders,
                                 'order' => &$order,
                                 'tbody_tag_id' => &$tbody_tag_id,
-                                'order_products_table_body' => &$order_products_table['body']
+                                'orders_products_attributes' => &$orders_products_attributes[$order['orders_products_id']],
+                                'order_products_table_body' => &$order_products_table['body'],
+                                'order_products_tax_data' => &$order_products_tax_data,
+                                'settings' => &$settings,
+                                'tr_type' => &$tr_type,
+                                'all_orders_status' => &$all_orders_status
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3529,6 +3556,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $params = array(
                         'orders' => &$orders,
                         'colspan' => &$colspan,
+                        'settings' => $settings,
                         'order_products_table' => &$order_products_table['body']
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'] as $funcRef) {
@@ -3843,12 +3871,13 @@ if (is_numeric($this->get['orders_id'])) {
                     var new_val = 0;
                     var qty_id = "#" + $(this).attr("rel");
                     var qty = parseFloat($(qty_id).val());
-                    if (qty > minQty) {
-                        new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
-                    }
-                    if (parseFloat(new_val)==0) {
-                        new_val=minQty;
-                    }
+                    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //if (qty > minQty) {
+                    //    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //}
+                    //if (parseFloat(new_val)==0) {
+                    //    new_val=minQty;
+                    //}
                     $(qty_id).val(new_val);
                 });
                 $(".qty_plus").click(function () {
@@ -4697,7 +4726,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($row['comments']) {
                     $order_status_tab_content['order_history_table'] .= '
                     <tr class="even">
-                        <td colspan="5">' . $row['comments'] . '</td>
+                        <td colspan="6">' . $row['comments'] . '</td>
                     </tr>
                     ';
                 }

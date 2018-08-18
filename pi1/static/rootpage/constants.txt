@@ -282,4 +282,10 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/email; type=string; label= Email address of the developer: Email address of the developer.
 	developer_email=
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Load old redactor version (v2.4).
+	loadOldRedactorVersion = 1
+
+	# cat=plugin.multishop - optional/enable; type=string; label= Standard custom "search on" (Zoek op)
+	adminProductsSearchAndEditStandardCustomSearchOn =
 }

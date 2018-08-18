@@ -890,6 +890,19 @@ if ($this->post) {
 						<textarea spellcheck="true" name="content_footer[' . $language['uid'] . ']" id="content_footer[' . $language['uid'] . ']" class="mceEditor" rows="4">' . htmlspecialchars($lngcat[$language['uid']]['content_footer']) . '</textarea>
 						</div>
 			</div>';
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['adminEditCategoryDescriptionSubstitutePreProc'])) {
+                $params = array(
+                        'tmpcontent' => &$tmpcontent,
+                        'category' => &$category,
+                        'lngcat' => &$lngcat,
+                        'language' => &$language,
+                        'categories_content_block' => &$categories_content_block
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['adminEditCategoryDescriptionSubstitutePreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+
             $categories_content_block .= '</div></div></div>';
         }
         $categories_meta_block = '';

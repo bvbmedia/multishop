@@ -128,6 +128,8 @@ plugin.tx_multishop_pi1 {
 	login_as_customer_target_pid = {$plugin.multishop.login_as_customer_target_pid}
 	confirmed_create_account_target_pid = {$plugin.multishop.confirmed_create_account_target_pid}
 	developer_email = {$plugin.multishop.developer_email}
+	loadOldRedactorVersion = {$plugin.multishop.loadOldRedactorVersion}
+	adminProductsSearchAndEditStandardCustomSearchOn = {$plugin.multishop.adminProductsSearchAndEditStandardCustomSearchOn}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
@@ -662,6 +664,50 @@ multishop_ajax_server {
 				compress = 1
 			}
 		}
+	}
+[end]
+
+[usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}] && [globalVar = LIT:1 = {$plugin.multishop.loadOldRedactorVersion}]
+	multishop_admin_page {
+		# Redactor
+		includeJS.msRedactor = EXT:multishop/js/redactorv2/redactor/redactor.js
+		includeJS.msRedactor.compress = 1
+		includeCSS.msRedactorCore = EXT:multishop/js/redactorv2/redactor/redactor.css
+		includeCSS.msRedactorCore {
+			media =
+			import = 0
+			compress = 1
+		}
+
+		includeCSS.msRedactor = EXT:multishop/js/redactorv2/css/style.css
+		includeCSS.msRedactor {
+			media =
+			import = 0
+			compress = 1
+		}
+		# Redactor EOL
+		# Redactor Plugins
+		includeJS.msRedactorTable = EXT:multishop/js/redactorv2/plugins/table.js
+		includeJS.msRedactorTable.compress = 1
+		includeJS.msRedactorAlignment = EXT:multishop/js/redactorv2/plugins/alignment.js
+		includeJS.msRedactorAlignment.compress = 1
+		includeJS.msRedactorFontColor = EXT:multishop/js/redactorv2/plugins/fontcolor.js
+		includeJS.msRedactorFontColor.compress = 1
+		includeJS.msRedactorFontSize = EXT:multishop/js/redactorv2/plugins/fontsize.js
+		includeJS.msRedactorFontSize.compress = 1
+		includeJS.msRedactorFileManager = EXT:multishop/js/redactorv2/plugins/filemanager.js
+		includeJS.msRedactorFileManager.compress = 1
+		includeJS.msRedactorImageManager = EXT:multishop/js/redactorv2/plugins/imagemanager.js
+		includeJS.msRedactorImageManager.compress = 1
+		includeJS.msRedactorVideo = EXT:multishop/js/redactorv2/plugins/video.js
+		includeJS.msRedactorVideo.compress = 1
+		includeJS.msRedactorTextExpander = EXT:multishop/js/redactorv2/plugins/textexpander.js
+		includeJS.msRedactorTextExpander.compress = 1
+		includeJS.msRedactorFullScreen = EXT:multishop/js/redactorv2/plugins/fullscreen.js
+		includeJS.msRedactorFullScreen.compress = 1
+		includeJS.msRedactorSource = EXT:multishop/js/redactorv2/plugins/source.js
+		includeJS.msRedactorSource.compress = 1
+		# Redactor Plugins EOL
 	}
 [end]
 

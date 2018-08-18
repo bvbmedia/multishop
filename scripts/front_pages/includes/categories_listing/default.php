@@ -22,7 +22,6 @@ if (is_array($current) && $current['categories_name']) {
 if ($current['categories_id'] == $this->conf['categoriesStartingPoint'] and $this->hideHeader) {
     $output['categories_header'] = '';
 }
-$output_array=array();
 if (is_array($categories) && count($categories)) {
     // load optional cms content and show the current category name eof
     $counter = 0;
@@ -122,7 +121,7 @@ if (is_array($categories) && count($categories)) {
     }
     if (is_array($output_array['meta'])) {
         $GLOBALS['TSFE']->additionalHeaderData = array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
-        unset($output_array);
+        //unset($output_array);
     }
     // custom hook that can be controlled by third-party plugin eof
     $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);

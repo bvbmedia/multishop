@@ -147,8 +147,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
         }
         $updateCookie = 0;
+        $that->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');
         if (!isset($params['settings']['limit'])) {
-            if ((isset($that->get['Search']) || isset($that->get['submit'])) and ($that->get['limit'] != $that->cookie['limit'])) {
+            if ((isset($that->get['Search']) || isset($that->get['submit'])) and (is_numeric($that->get['limit']) && $that->get['limit']>0 && $that->get['limit'] != $that->cookie['limit'])) {
                 $that->cookie['limit'] = $that->get['limit'];
                 $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
                 $params['settings']['limit'] = $that->cookie['limit'];
@@ -158,6 +159,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($that->get['Search'] and ($that->get['display_all_records'] != $that->cookie['display_all_records'])) {
             $that->cookie['display_all_records'] = $that->get['display_all_records'];
             $updateCookie = 1;
+        }
+        if (!isset($params['settings']['limit']) && !$that->get['limit'] && !$that->ms['MODULES']['PAGESET_LIMIT']) {
+            $that->get['limit']=25;
+            $that->cookie['limit'] = $that->get['limit'];
         }
         if ($updateCookie) {
             $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $that->cookie);
@@ -195,6 +200,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $that->get['limit'] = $params['settings']['limit'];
             }
         }
+
         $that->ms['MODULES']['PAGESET_LIMIT'] = $that->get['limit'];
         if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
             $that->ms['MODULES']['PAGESET_LIMIT'] = $params['settings']['limit'];

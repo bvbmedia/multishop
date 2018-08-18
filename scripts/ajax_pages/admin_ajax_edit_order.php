@@ -338,9 +338,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                 }
                 if (!empty($row['products_name'])) {
-                    //if (!empty($row['products_model'])) {
-                    //    $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
-                    //}
+                    if (!empty($row['products_model'])) {
+                        $row['products_name'] = '('.addslashes($row['products_model']).') ' . $row['products_name'];
+                    }
+                    $row['products_name'] .= ' (PID: '.$row['products_id'].')';
                     if ($row['products_status'] < 1) {
                         $row['products_name'] .= ' [disabled]';
                     }

@@ -67,7 +67,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
         } else {
             $meta_keywords = '';
         }
-        if (!$this->conf['disableMetatags']) {
+        if ($this->conf['disableMetatags']=='0') {
             $output_array['meta']['title'] = '<title>' . htmlspecialchars($meta_title) . '</title>';
             if ($meta_description) {
                 $output_array['meta']['description'] = '<meta name="description" content="' . $meta_description . '" />';
@@ -338,6 +338,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                         case 'manufacturers_desc':
                             $orderby[] = $tbl_m . "manufacturers_name desc";
                             break;
+                    }
+                }
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'])) {
+                    $params = array(
+                        'filter' => &$filter,
+                        'orderby' => &$orderby,
+                        'select' => &$select,
+                        'where' => &$where,
+                        'extra_from' => &$extra_from,
+                        'extra_join' => &$extra_join
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
                 //$this->msDebug=true;

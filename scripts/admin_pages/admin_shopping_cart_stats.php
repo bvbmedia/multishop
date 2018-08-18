@@ -189,6 +189,7 @@ foreach ($dates as $key => $value) {
                 }
                 $tmp_content = '<table class="table table-striped table-bordered table-condensed no-mb">';
                 $tmp_content .= '<thead><tr>
+					<th class="cellQty">' . $this->pi_getLL('products_id') . '</th>
 					<th class="cellQty">' . $this->pi_getLL('qty') . '</th>
 					<th class="cellName">' . $this->pi_getLL('products_name') . '</th>
 					<th class="cellPrice">' . $this->pi_getLL('price') . '</th>
@@ -201,6 +202,7 @@ foreach ($dates as $key => $value) {
                         $sub_sub_tr_type = 'even';
                     }
                     $tmp_content .= '<tr class="' . $sub_sub_tr_type . '">';
+                    $tmp_content .= '<td class="cellQty">' . $product['products_id'] . '</td>';
                     $tmp_content .= '<td class="cellQty">' . $product['qty'] . '</td>';
                     $tmp_content .= '<td class="cellName">' . $product['products_name'] . '</td>';
                     $tmp_content .= '<td class="cellPrice">' . mslib_fe::amount2Cents($product['final_price'], 0) . '</td>';

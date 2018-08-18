@@ -1,7 +1,7 @@
 /*
     Redactor
-    Version 3.0.7
-    Updated: April 4, 2018
+    Version 3.0.10
+    Updated: May 29, 2018
 
     http://imperavi.com/redactor/
 
@@ -56,7 +56,7 @@ AjaxRequest.prototype = {
     {
         if (this.p.method === 'POST' && !this.isFormData()) this.p.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         if (typeof this.p.data === 'object' && !this.isFormData()) this.p.data = this.toParams(this.p.data);
-        if (this.p.method === 'GET') this.p.url = this.p.url + '?' + this.p.data;
+        if (this.p.method === 'GET') this.p.url = (this.p.data) ? this.p.url + '?' + this.p.data : this.p.url;
     },
     setHeaders: function()
     {
@@ -105,15 +105,12 @@ AjaxRequest.prototype = {
     parseJson: function(str)
     {
         try {
-            str = str.replace(/^\[/, '');
-            str = str.replace(/\]$/, '');
-
             var o = JSON.parse(str);
-
             if (o && typeof o === 'object')
             {
                 return o;
             }
+
         } catch (e) {}
 
         return false;
@@ -223,15 +220,15 @@ Dom.prototype = {
     },
     eq: function(index)
     {
-        return new Dom(this.nodes[index]) || false;
+        return new Dom(this.nodes[index]);
     },
     first: function()
     {
-        return new Dom(this.nodes[0]) || false;
+        return new Dom(this.nodes[0]);
     },
     last: function()
     {
-        return new Dom(this.nodes[this.nodes.length - 1]) || false;
+        return new Dom(this.nodes[this.nodes.length - 1]);
     },
     contents: function()
     {
@@ -377,21 +374,21 @@ Dom.prototype = {
 
         return new Dom(nodes);
     },
-    next: function()
+    next: function(selector)
     {
-        return new Dom(this.get().nextSibling);
+         return this._getSibling(selector, 'nextSibling');
     },
-    nextElement: function()
+    nextElement: function(selector)
     {
-        return new Dom(this.get().nextElementSibling);
+        return this._getSibling(selector, 'nextElementSibling');
     },
-    prev: function()
+    prev: function(selector)
     {
-        return new Dom(this.get().previousSibling);
+        return this._getSibling(selector, 'previousSibling');
     },
-    prevElement: function()
+    prevElement: function(selector)
     {
-        return new Dom(this.get().previousElementSibling);
+        return this._getSibling(selector, 'previousElementSibling');
     },
 
     // css
@@ -431,9 +428,10 @@ Dom.prototype = {
 
         if (value === undefined && (typeof name !== 'object'))
         {
-            if (this.get().nodeType !== 3)
+            var node = this.get();
+            if (node && node.nodeType !== 3)
             {
-                return (name === 'checked') ? this.get().checked : this.get().getAttribute(data + name);
+                return (name === 'checked') ? node.checked : this._getBooleanFromStr(node.getAttribute(data + name));
             }
             else return;
         }
@@ -449,7 +447,7 @@ Dom.prototype = {
             {
                 if (node.nodeType !== 3)
                 {
-                    if (key === 'checked' && obj[key] === false) node.removeAttribute(key);
+                    if (key === 'checked') node.checked = obj[key];
                     else node.setAttribute(data + key, obj[key]);
                 }
             }
@@ -472,7 +470,11 @@ Dom.prototype = {
                     var dataName = attrs[key].nodeName.match(reDataAttr)[1];
                     var val = attrs[key].value;
                     dataName = dataName.replace(/-([a-z])/g, replacer);
-                    data[dataName] = (this._isNumber(val)) ? parseFloat(val) : this._getBooleanFromStr(val);
+
+                    if (this._isObjectString(val)) val = this._toObject(val);
+                    else val = (this._isNumber(val)) ? parseFloat(val) : this._getBooleanFromStr(val);
+
+                    data[dataName] = val;
                 }
             }
 
@@ -622,7 +624,7 @@ Dom.prototype = {
     {
         return this._inject(html, function(frag, node)
         {
-            if (typeof frag === 'string')
+            if (typeof frag === 'string' || typeof frag === 'number')
             {
                 node.insertAdjacentHTML('beforeend', frag);
             }
@@ -642,7 +644,7 @@ Dom.prototype = {
     {
         return this._inject(html, function(frag, node)
         {
-            if (typeof frag === 'string')
+            if (typeof frag === 'string' || typeof frag === 'number')
             {
                 node.insertAdjacentHTML('afterbegin', frag);
             }
@@ -662,7 +664,7 @@ Dom.prototype = {
     {
         return this._inject(html, function(frag, node)
         {
-            var wrapper = (typeof frag === 'string') ? this.create(frag)[0] : (frag instanceof Node) ? frag : this._toArray(frag)[0];
+            var wrapper = (typeof frag === 'string' || typeof frag === 'number') ? this.create(frag)[0] : (frag instanceof Node) ? frag : this._toArray(frag)[0];
 
             if (node.parentNode)
             {
@@ -689,7 +691,7 @@ Dom.prototype = {
         return this._inject(html, function(frag, node)
         {
             var docFrag = document.createDocumentFragment();
-            var elms = (typeof frag === 'string') ? this.create(frag) : (frag instanceof Node) ? [frag] : this._toArray(frag);
+            var elms = (typeof frag === 'string' || typeof frag === 'number') ? this.create(frag) : (frag instanceof Node) ? [frag] : this._toArray(frag);
 
             for (var i = 0; i < elms.length; i++)
             {
@@ -1238,6 +1240,27 @@ Dom.prototype = {
 			left: rect.left + win.pageXOffset - docElem.clientLeft
 		};
     },
+    _getSibling: function(selector, method)
+    {
+        selector = (selector && selector.dom) ? selector.get() : selector;
+
+        var isNode = (selector && selector.nodeType);
+        var sibling;
+
+        this.each(function(node)
+        {
+            while (node = node[method])
+            {
+                if ((isNode && node === selector) || new Dom(node).is(selector))
+                {
+                    sibling = node;
+                    return;
+                }
+            }
+        });
+
+        return new Dom(sibling);
+    },
     _toArray: function(obj)
     {
         if (obj instanceof NodeList)
@@ -1266,6 +1289,10 @@ Dom.prototype = {
 
         return params.replace(/^&/, '');
     },
+    _toObject: function(str)
+    {
+        return (new Function("return " + str))();
+    },
     _encodeUri: function(str)
     {
         return encodeURIComponent(str).replace(/!/g, '%21').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');
@@ -1273,6 +1300,10 @@ Dom.prototype = {
     _isNumber: function(str)
     {
         return !isNaN(str) && !isNaN(parseFloat(str));
+    },
+    _isObjectString: function(str)
+    {
+        return (str.search(/^{/) !== -1);
     },
     _getBooleanFromStr: function(str)
     {
@@ -1301,7 +1332,7 @@ var $R = function(selector, options)
 };
 
 // Globals
-$R.version = '3.0.7';
+$R.version = '3.0.10';
 $R.options = {};
 $R.modules = {};
 $R.services = {};
@@ -3033,7 +3064,7 @@ $R.add('service', 'caret', {
             range.setStart(node, 0);
             range.collapse(true);
 
-            if (this.utils.isEmpty(node) || data.isInline())
+            if (data.isInline() || this.utils.isEmpty(node))
             {
                 var textNode = this.utils.createInvisibleChar();
                 range.insertNode(textNode);
@@ -3066,6 +3097,7 @@ $R.add('service', 'caret', {
     },
     setAtAfter: function(node)
     {
+
         var range = document.createRange();
         if (this._isInPage(node))
         {
@@ -3076,6 +3108,7 @@ $R.add('service', 'caret', {
             range.insertNode(textNode);
             range.selectNodeContents(textNode);
             range.collapse(false);
+
             this.selection.setRange(range);
         }
     },
@@ -4650,6 +4683,8 @@ $R.add('service', 'toolbar', {
     },
     observe: function()
     {
+        if (!this.is()) return;
+
         this.setButtonsInactive();
 
         var button, observer;
@@ -4665,6 +4700,12 @@ $R.add('service', 'toolbar', {
         // inline buttons
         var buttons = this.opts.activeButtons;
         var inlines = this.selection.getInlinesAllSelected();
+        var current = this.selection.getInline();
+        if (this.selection.isCollapsed() && current)
+        {
+            inlines.push(current);
+        }
+
         var tags = this._inlinesToTags(inlines);
         for (var key in buttons)
         {
@@ -4684,11 +4725,11 @@ $R.add('service', 'toolbar', {
     },
     isAir: function()
     {
-        return this.$toolbar.hasClass('redactor-air');
+        return (this.is()) ? this.$toolbar.hasClass('redactor-air') : false;
     },
     isFixed: function()
     {
-        return this.$toolbar.hasClass('redactor-toolbar-fixed');
+        return (this.is()) ? this.$toolbar.hasClass('redactor-toolbar-fixed') : false;
     },
     isContextBar: function()
     {
@@ -4776,10 +4817,13 @@ $R.add('service', 'toolbar', {
             }
         }
 
-        if (position === 'first') this.$toolbar.prepend($button);
-        else if (position === 'after') $el.after($button);
-        else if (position === 'before') $el.before($button);
-        else this.$toolbar.append($button);
+        if (this.is())
+        {
+            if (position === 'first') this.$toolbar.prepend($button);
+            else if (position === 'after') $el.after($button);
+            else if (position === 'before') $el.before($button);
+            else this.$toolbar.append($button);
+        }
 
         return $button;
     },
@@ -4848,11 +4892,11 @@ $R.add('service', 'toolbar', {
     // private
     _findButton: function(selector)
     {
-        return this.$toolbar.find(selector);
+        return (this.is()) ? this.$toolbar.find(selector) : $R.dom();
     },
     _findButtons: function()
     {
-        return this.$toolbar.find('.re-button');
+        return (this.is()) ? this.$toolbar.find('.re-button') : $R.dom();
     },
     _extendActiveButtons: function()
     {
@@ -5207,7 +5251,10 @@ $R.add('class', 'toolbar.dropdown', {
         var result = [];
         for (var key in this.$items)
         {
-            if (this.$items[key].hasClass(classname)) result.push(this.$items[key]);
+            if (typeof this.$items[key] === 'object' && this.$items[key].hasClass(classname))
+            {
+                result.push(this.$items[key]);
+            }
         }
 
         return result;
@@ -5512,9 +5559,6 @@ $R.add('service', 'cleaner', {
         // clear wrapped components
         html = this._cleanWrapped(html);
 
-        // empty p
-        html = (started) ? html.replace(/<p><\/p>/gi, '<p><br></p>') : html;
-
         // paragraphize
         html = (paragraphize) ? this.paragraphize(html) : html;
 
@@ -5553,21 +5597,19 @@ $R.add('service', 'cleaner', {
         html = this.cleanSpacesInPre(html);
         html = this.tidy(html);
 
-        // empty p
-        html = html.replace(/<p><\/p>/gi, '<p><br></p>');
-
         // converting entity
         html = html.replace(/&amp;/g, '&');
-        //todo: BVBMEDIA: do not render: <p><br/></p> as default body
-        compareMarkup = html.replace(/\n/g, '');
-        if (compareMarkup=='<p><br></p>') {
-            html='';
-        }
-        //BVBMEDIA REDACTOR HACK EOL
+
+        // check whitespaces
+        html = (html.replace(/\n/g, '') === '') ? '' : html;
+
         return html;
     },
     paste: function(html)
     {
+        // store components
+        html = this.storeComponents(html);
+
         // remove tags
         var deniedTags = this.deniedTags.concat(['iframe']);
         html = this.removeTags(html, deniedTags);
@@ -5578,6 +5620,9 @@ $R.add('service', 'cleaner', {
         // remove style tag
         html = html.replace(new RegExp("<style([\\s\\S]+?)</style>", 'gi'), '');
 
+        // remove br between
+        html = html.replace(new RegExp("</p><br /><p", 'gi'), '</p><p');
+
         // gdocs & word
         var isMsWord = this._isHtmlMsWord(html);
 
@@ -5585,11 +5630,20 @@ $R.add('service', 'cleaner', {
         html = (isMsWord) ? this._cleanMsWord(html) : html;
 
         // do not clean
-        if (!this.opts.pasteClean) return html;
+        if (!this.opts.pasteClean)
+        {
+            // restore components
+            html = this.restoreComponents(html);
+
+            return html;
+        }
 
         // plain text
         if (this.opts.pastePlainText)
         {
+            // restore components
+            html = this.restoreComponents(html);
+
             return this.pastePlainText(html);
         }
 
@@ -5597,12 +5651,13 @@ $R.add('service', 'cleaner', {
         var exceptedTags = this.opts.pasteBlockTags.concat(this.opts.pasteInlineTags);
         html = this.removeTagsExcept(html, exceptedTags);
 
+
         // links & images
         html = (this.opts.pasteLinks) ? html : this.removeTags(html, ['a']);
         html = (this.opts.pasteImages) ? html : this.removeTags(html, ['img']);
 
         // build wrapper
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
 
         // clean attrs
         var $elms = $wrapper.find('*');
@@ -5670,7 +5725,7 @@ $R.add('service', 'cleaner', {
         });
 
         // get wrapper
-        html = this._getWrapperHtml($wrapper);
+        html = this.utils.getWrapperHtml($wrapper);
 
         // remove paragraphs form lists (google docs bug)
         html = html.replace(/<li><p>/gi, '<li>');
@@ -5685,6 +5740,9 @@ $R.add('service', 'cleaner', {
             html = html.replace(/<p><\/p>/gi, '');
             html = html.replace(/<p>\s<\/p>/gi, '');
         }
+
+        // restore components
+        html = this.restoreComponents(html);
 
         return html;
     },
@@ -5756,13 +5814,13 @@ $R.add('service', 'cleaner', {
         {
             var self = this;
             var keys = Object.keys(tags);
-            var $wrapper = this._buildWrapper(html);
+            var $wrapper = this.utils.buildWrapper(html);
             $wrapper.find(keys.join(',')).each(function(node)
             {
                 self.utils.replaceToTag(node, tags[node.tagName.toLowerCase()]);
             });
 
-            html = this._getWrapperHtml($wrapper);
+            html = this.utils.getWrapperHtml($wrapper);
         }
 
         return html;
@@ -5792,7 +5850,6 @@ $R.add('service', 'cleaner', {
     removeInvisibleSpaces: function(html)
     {
         html = this.utils.removeInvisibleChars(html);
-        html = html.replace(/&#x200b;/gi, '');
         html = html.replace(/&#65279;/gi, '');
 
         return html;
@@ -5837,7 +5894,7 @@ $R.add('service', 'cleaner', {
     },
     removeServiceTagsAndAttrs: function(html, removeMarkers)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         var self = this;
         if (removeMarkers !== false)
         {
@@ -5852,17 +5909,17 @@ $R.add('service', 'cleaner', {
 
         $wrapper.find('[data-redactor-style-cache]').removeAttr('data-redactor-style-cache');
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     removeSpanWithoutAttributes: function(html)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         $wrapper.find('span').removeAttr('data-redactor-span data-redactor-style-cache').each(function(node)
         {
             if (node.attributes.length === 0) $R.dom(node).unwrap();
         });
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     removeFirstBlockBreaklineInHtml: function(html)
     {
@@ -5870,13 +5927,13 @@ $R.add('service', 'cleaner', {
     },
     removeEmptyAttributes: function(html, attrs)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         for (var i = 0; i < attrs.length; i++)
         {
             $wrapper.find('[' + attrs[i] + '=""]').removeAttr(attrs[i]);
         }
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
 
     // encode / decode
@@ -5910,14 +5967,14 @@ $R.add('service', 'cleaner', {
             }
         }
 
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
 
         $wrapper.find('code code').replaceWith(this._encodeOuter.bind(this));
         $wrapper.find('code pre').replaceWith(this._encodeOuter.bind(this));
         $wrapper.find('pre pre').replaceWith(this._encodeOuter.bind(this));
         $wrapper.find('code, pre').each(this._encodePreCodeLine.bind(this));
 
-        html = this._getWrapperHtml($wrapper);
+        html = this.utils.getWrapperHtml($wrapper);
 
         // restore markers
         html = this._decodeMarkers(html);
@@ -6010,7 +6067,7 @@ $R.add('service', 'cleaner', {
         });
 
         // build wrapper
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
 
         $wrapper.find('p').each(function(node)
         {
@@ -6028,15 +6085,19 @@ $R.add('service', 'cleaner', {
 
         $wrapper.find('[style]').removeAttr('style');
         $wrapper.find('[align]').removeAttr('align');
+        $wrapper.find('[name]').removeAttr('name');
         $wrapper.find('span').unwrap();
         $wrapper.find("[class^='Mso']").removeAttr('class');
+        $wrapper.find('a').filter(function(node) { return !node.hasAttribute('href'); }).unwrap();
 
         // get wrapper
-        html = this._getWrapperHtml($wrapper);
-
-        html = html.replace(/>\s+<\/p>/gi, '></p>');
+        html = this.utils.getWrapperHtml($wrapper);
         html = html.replace(/<p[^>]*><\/p>/gi, '');
+        html = html.replace(/<li>·/gi, '<li>');
         html = html.trim();
+
+        // remove spaces between
+        html = html.replace(/\/(p|ul|ol|h1|h2|h3|h4|h5|h6|blockquote)>\s+<(p|ul|ol|h1|h2|h3|h4|h5|h6|blockquote)/gi, '/$1>\n<$2');
 
         var result = '';
         var lines = html.split(/\n/);
@@ -6098,7 +6159,7 @@ $R.add('service', 'cleaner', {
                     }
                 }
 
-                $node.find('span').first().remove();
+                $node.find('span').first().unwrap();
                 pnt.append('<li>' + $node.html() + '</li>');
                 $node.remove();
                 lastLevel = currentLevel;
@@ -6127,35 +6188,35 @@ $R.add('service', 'cleaner', {
     // set
     _setSpanAttr: function(html)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         $wrapper.find('span').attr('data-redactor-span', true);
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     _setStyleCache: function(html)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         $wrapper.find('[style]').each(function(node)
         {
             var $el = $R.dom(node);
             $el.attr('data-redactor-style-cache', $el.attr('style'));
         });
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     _setPreClass: function(html)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         $wrapper.find('pre').addClass(this.opts.preClass);
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     _setLinkNofollow: function(html)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
         $wrapper.find('a').attr('rel', 'nofollow');
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
 
     // replace
@@ -6205,17 +6266,6 @@ $R.add('service', 'cleaner', {
 
         return html;
     },
-    _buildWrapper: function(html)
-    {
-        return $R.dom('<div>').html(html);
-    },
-    _getWrapperHtml: function($wrapper)
-    {
-        var html = $wrapper.html();
-        $wrapper.remove();
-
-        return html;
-    },
     _decodeMarkers: function(html)
     {
         var decodedMarkers = '<span id="selection-marker-$1" class="redactor-selection-marker">​</span>';
@@ -6247,7 +6297,7 @@ $R.add('class', 'cleaner.figure', {
     // public
     convert: function(html, rules)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
 
         // convert
         $wrapper.find('img').each(this._convertImage.bind(this));
@@ -6273,11 +6323,11 @@ $R.add('class', 'cleaner.figure', {
         // extra rules
         this._acceptExtraRules($wrapper, rules);
 
-        return this._getWrapperHtml($wrapper);
+        return this.utils.getWrapperHtml($wrapper);
     },
     unconvert: function(html, rules)
     {
-        var $wrapper = this._buildWrapper(html);
+        var $wrapper = this.utils.buildWrapper(html);
 
         // contenteditable
         $wrapper.find('th, td, figcaption, figure, pre, code, .redactor-component').removeAttr('contenteditable tabindex');
@@ -6304,13 +6354,19 @@ $R.add('class', 'cleaner.figure', {
 
         if (this.opts.breakline)
         {
-            $wrapper.find('[data-redactor-tag="br"]').before("\n").unwrap();
+            $wrapper.find('[data-redactor-tag="br"]').each(function(node)
+            {
+                if (node.lastChild && node.lastChild.tagName !== 'BR')
+                {
+                    node.appendChild(document.createElement('br'));
+                }
+            }).unwrap();
         }
 
         // extra rules
         this._acceptExtraRules($wrapper, rules);
 
-        html = this._getWrapperHtml($wrapper);
+        html = this.utils.getWrapperHtml($wrapper);
         html = html.replace(/<br\s?\/?>$/, '');
 
         return html;
@@ -6502,17 +6558,6 @@ $R.add('class', 'cleaner.figure', {
     _isNonEditable: function(node)
     {
         return ($R.dom(node).closest('.non-editable').length !== 0);
-    },
-    _buildWrapper: function(html)
-    {
-        return $R.dom('<div>').html(html);
-    },
-    _getWrapperHtml: function($wrapper)
-    {
-        var html = $wrapper.html();
-        $wrapper.remove();
-
-        return html;
     }
 });
 $R.add('class', 'cleaner.paragraphize', {
@@ -6520,9 +6565,13 @@ $R.add('class', 'cleaner.paragraphize', {
     {
         this.app = app;
         this.opts = app.opts;
+        this.utils = app.utils;
         this.element = app.element;
 
         // local
+        this.stored = [];
+        this.remStart = '#####replace';
+        this.remEnd = '#####';
         this.paragraphizeTags = ['table', 'div', 'pre', 'form', 'ul', 'ol', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'dl', 'blockquote', 'figcaption',
                 'address', 'section', 'header', 'footer', 'aside', 'article', 'object', 'style', 'script', 'iframe', 'select', 'input', 'textarea',
                 'button', 'option', 'map', 'area', 'math', 'hr', 'fieldset', 'legend', 'hgroup', 'nav', 'figure', 'details', 'menu', 'summary', 'p'];
@@ -6530,106 +6579,130 @@ $R.add('class', 'cleaner.paragraphize', {
     // public
     convert: function(html)
     {
-        if (this.opts.paragraphize === false || this.element.isType('inline'))
-        {
-            return html;
-        }
+        var value = this._isConverted(html);
 
-        // empty
-        if (this._isEmptyHtml(html))
-        {
-            return this.opts.emptyHtml;
-        }
-
-        // paragraphize
-        var stored = [];
-        var markupTag = (this.opts.breakline) ? 'sdivtag' : this.opts.markup;
-
-        // store
-        var $wrapper = this._buildWrapper(html);
-        $wrapper.find(this.paragraphizeTags.join(', ')).each(function(node, i)
-        {
-            var replacement = document.createTextNode("\n\n#####replace" + i + "#####\n");
-            stored.push(node.outerHTML);
-            node.parentNode.replaceChild(replacement, node);
-        });
-
-        html = this._getWrapperHtml($wrapper);
-
-        if (this.opts.breakline)
-        {
-            html = html.replace(/<br\s?\/?>\n/gi, "<br>");
-        }
-        else
-        {
-            html = html.replace(/<br\s?\/?>\n/gi, "\n");
-            html = html.replace(/<br\s?\/?>/gi, "\n");
-        }
-
-        html = html.replace(/(?:\r\n|\r|\n)/g, "xparagraphmarkerz");
-
-        var re1 = /\s+/g;
-        html = html.replace(re1, " ");
-        html = html.trim();
-
-        var re2 = /xparagraphmarkerzxparagraphmarkerz/gi;
-        html = html.replace(re2, '</' + markupTag + '><' + markupTag + '>');
-
-        var re3 = /xparagraphmarkerz/gi;
-        html = html.replace(re3, "<br>");
-
-        html = '<' + markupTag + '>' + html + '</' + markupTag + '>';
-
-        // clean
-        html = html.replace(new RegExp('<br\\s?/?></' + markupTag + '>', 'gi'), '</' + markupTag + '>');
-        html = html.replace(new RegExp('<' + markupTag + '><br\\s?/?>', 'gi'), '<' + markupTag + '>');
-        html = html.replace(new RegExp('<br\\s?/?><' + markupTag + '>', 'gi'), '<' + markupTag + '>');
-        html = html.replace(new RegExp('<' + markupTag + '></' + markupTag + '>$', 'gi'), '');
-        html = html.replace(new RegExp('<' + markupTag + '>#####replace(.*?)#####</' + markupTag + '>', 'gi'), '#####replace$1#####\n');
-
-        // restore
-        for (var i = 0; i < stored.length; i++)
-        {
-            stored[i] = stored[i].replace(/\$/g, '&#36;');
-            html = html.replace('#####replace' + i + '#####', stored[i]);
-        }
-
-        // clean empty markup and p
-        html = html.replace(new RegExp('<' + markupTag + '></' + markupTag + '>', 'gi'), '');
-        html = html.replace(new RegExp('<' + markupTag + '>\\s</' + markupTag + '>', 'gi'), '');
-        html = html.replace(new RegExp('<p></p>', 'gi'), '');
-
-        // clean markup tag
-        for (var i = 0; i < this.paragraphizeTags.length; i++)
-        {
-            html = html.replace(new RegExp('</' + this.paragraphizeTags[i] + '></' + markupTag + '>', 'gi'), '</' + this.paragraphizeTags[i] + '>');
-        }
-
-        html = html.replace(new RegExp('<sdivtag>', 'gi'), '<div data-redactor-tag="br">');
-        html = html.replace(new RegExp('sdivtag', 'gi'), 'div');
-
-        // final clean
-        html = html.replace(new RegExp('</figure><br>', 'gi'), '</figure><' + this.opts.markup + '>');
-        html = html.replace(new RegExp('<p><p>', 'gi'), '<p>');
-
-        return html;
+        return (value === true) ? this._convert(html) : value;
     },
 
     // private
+    _convert: function(html)
+    {
+        // build markup tag
+        var markupTag = (this.opts.breakline) ? 'sdivtag' : this.opts.markup;
+
+        // store tags
+        html = this._storeTags(html);
+
+        // remove new lines
+        html = html.trim();
+
+        if (this.opts.breakline)
+        {
+            html = html.replace(new RegExp('\\n#####', 'gi'), 'xnonbreakmarkerz#####');
+            html = html.replace(new RegExp('#####\\n\\n', 'gi'), "#####\nxnonbreakmarkerz");
+            html = html.replace(new RegExp('#####\\n', 'gi'), "#####xnonbreakmarkerz");
+            html = html.replace(/<br\s?\/?>\n/gi, "<br>");
+            html = html.replace(/\n/g, "<br>");
+            html = html.replace(/xnonbreakmarkerz/gi, "\n");
+        }
+        else
+        {
+            html = html.replace(/[\n]+/g, "\n");
+        }
+
+        html = this._trimEmptyLines(html);
+
+        // paragraph and break markers
+        html = (this.opts.breakline) ? html : html.replace(/<br\s?\/?>\n/gi, "xbreakmarkerz\n");
+        html = html.replace(/(?:\r\n|\r|\n)/g, "xparagraphmarkerz");
+
+        // replace markers
+        html = html.replace(/xparagraphmarkerz/gi, "</" + markupTag + ">\n<" + markupTag + ">");
+        html = (this.opts.breakline) ? html : html.replace(/xbreakmarkerz/gi, "<br>");
+
+        // wrap all
+        html = '<' + markupTag + '>' + html + '</' + markupTag + '>';
+
+        // clean
+        html = html.replace(new RegExp('<' + markupTag + '>#####', 'gi'), '#####');
+        html = html.replace(new RegExp('#####</' + markupTag + '>', 'gi'), '#####');
+
+        // restore tags
+        html = this._restoreTags(html);
+
+        // clean restored
+        html = (this.opts.breakline) ? html : html.replace(new RegExp('<' + markupTag + '><br\\s?/?></' + markupTag + '>', 'gi'), '<' + markupTag + '></' + markupTag + '>');
+        html = html.replace(new RegExp('<sdivtag>', 'gi'), '<div data-redactor-tag="br">');
+        html = html.replace(new RegExp('sdivtag', 'gi'), 'div');
+
+        return html;
+    },
+    _storeTags: function(html)
+    {
+        var self = this;
+        var $wrapper = this.utils.buildWrapper(html);
+
+        if (this.opts.breakline)
+        {
+            $wrapper.find('p').each(function(node)
+            {
+                var $node = $R.dom(node);
+                var isUnwrap = ($node.closest('figure[data-redactor-type=widget],figure[data-redactor-type=form],.non-editable').length === 0);
+
+                if (isUnwrap)
+                {
+                    $node.append('<br><br>');
+                    $node.unwrap();
+                }
+            });
+        }
+
+        $wrapper.find(this.paragraphizeTags.join(', ')).each(function(node, i)
+        {
+            var replacement = document.createTextNode("\n" + self.remStart + i + self.remEnd + "\n");
+            self.stored.push(node.outerHTML);
+            node.parentNode.replaceChild(replacement, node);
+        });
+
+        return this.utils.getWrapperHtml($wrapper);
+    },
+    _restoreTags: function(html)
+    {
+        for (var i = 0; i < this.stored.length; i++)
+        {
+            this.stored[i] = this.stored[i].replace(/\$/g, '&#36;');
+            html = html.replace(this.remStart + i + this.remEnd, this.stored[i]);
+        }
+
+        return html;
+    },
+    _trimEmptyLines: function(html)
+    {
+        var str = '';
+        var arr = html.split("\n");
+        for (var i = 0; i < arr.length; i++)
+        {
+            if (arr[i].trim() !== '')
+            {
+                str += arr[i] + "\n";
+            }
+        }
+
+        return str.replace(/\n$/, '');
+    },
+    _isConverted: function(html)
+    {
+        if (this._isDisabled(html)) return html;
+        else if (this._isEmptyHtml(html)) return this.opts.emptyHtml;
+        else return true;
+    },
+    _isDisabled: function()
+    {
+        return (this.opts.paragraphize === false || this.element.isType('inline'));
+    },
     _isEmptyHtml: function(html)
     {
         return (html === '' || html === '<p></p>' || html === '<div></div>');
-    },
-    _buildWrapper: function(html)
-    {
-        return $R.dom('<div>').html(html);
-    },
-    _getWrapperHtml: function($wrapper)
-    {
-        var html = $wrapper.html();
-        $wrapper.remove();
-
-        return html;
     }
 });
 $R.add('service', 'detector', {
@@ -6728,7 +6801,8 @@ $R.add('service', 'offset', {
             {
                 var nextCharIndex = charIndex + node.length;
 
-                if (!foundStart && !this._isFigcaptionNext(node) && offset.start >= charIndex && offset.start <= nextCharIndex)
+                if (!foundStart && !this._isFigcaptionNext(node)
+                    && offset.start >= charIndex && offset.start <= nextCharIndex)
                 {
                     range.setStart(node, offset.start - charIndex);
                     foundStart = true;
@@ -7479,9 +7553,14 @@ $R.add('service', 'component', {
                 var src = scripts[i].src;
                 this.$doc.find('head script[src="' + src + '"]').remove();
 
-                var tag = document.createElement('script');
-                tag.src = src;
-                document.getElementsByTagName('head')[0].appendChild(tag);
+                var $script = $R.dom('<script>');
+                $script.attr('src', src);
+                $script.attr('async defer');
+
+                if (src.search('instagram') !== -1) $script.attr('onload', 'window.instgrm.Embeds.process()');
+
+                var head = document.getElementsByTagName('head')[0];
+                if (head) head.appendChild($script.get());
             }
             else
             {
@@ -7712,7 +7791,10 @@ $R.add('service', 'insertion', {
                 return this._sendNodes(fragment.nodes);
             }
 
-            return this.insertNode(parsedInput.nodes, 'end');
+            parsedInput.html = (clean !== false) ? parsedInput.html.replace(/\n/g, '<br>') : parsedInput.html;
+            fragment = this.utils.createFragment(parsedInput.html);
+
+            return this.insertNode(fragment.nodes, 'end');
         }
         // uncollapsed
         else if (!isCollapsed && !isFigure)
@@ -8868,8 +8950,7 @@ $R.add('service', 'autoparser', {
     },
     parse: function(html)
     {
-        var tags = ['figure', 'pre', 'code', 'a', 'iframe', 'img', 'i', 'em', 'span'];
-        var singleReplace = ['img', 'i', 'em', 'span'];
+        var tags = ['figure', 'pre', 'iframe', 'code', 'a', 'img'];
         var stored = [];
         var z = 0;
 
@@ -8879,7 +8960,7 @@ $R.add('service', 'autoparser', {
         // store tags
         for (var i = 0; i < tags.length; i++)
         {
-            var reTags = (singleReplace.indexOf(tags[i]) !== -1) ? '<' + tags[i] + '[^>]*>' : '<' + tags[i] + '([\\w\\W]*?)</' + tags[i] + '>';
+            var reTags = (tags[i] === 'img') ? '<' + tags[i] + '[^>]*>' : '<' + tags[i] + '([\\w\\W]*?)</' + tags[i] + '>';
             var matched = html.match(new RegExp(reTags, 'gi'));
 
             if (matched !== null)
@@ -8931,10 +9012,10 @@ $R.add('service', 'autoparser', {
         }
 
         // restore
-        for (var i = 0; i < stored.length; i++)
-        {
-            html = html.replace('#####replaceparse' + i + '#####', stored[i]);
-        }
+        html = this._restoreReplaced(stored, html);
+
+        // repeat for nested tags
+        html = this._restoreReplaced(stored, html);
 
         return html;
     },
@@ -9077,6 +9158,15 @@ $R.add('service', 'autoparser', {
 
         return content;
     },
+    _restoreReplaced: function(stored, html)
+    {
+        for (var i = 0; i < stored.length; i++)
+        {
+            html = html.replace('#####replaceparse' + i + '#####', stored[i]);
+        }
+
+        return html;
+    },
     _convertToRegExp: function(str)
     {
         return new RegExp(String(str).replace(/^\//, '').replace(/\/ig$/, '').replace(/\/gi$/, '') + '$', 'gi');
@@ -9199,11 +9289,45 @@ $R.add('service', 'utils', {
     },
     searchInvisibleChars: function(str)
     {
-        return str.search(/^[\u200B-\u200D\uFEFF]$/g);
+        return str.search(/^\uFEFF$/g);
     },
     removeInvisibleChars: function(html)
     {
-        return html.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        return html.replace(/\uFEFF/g, '');
+    },
+    trimInvisibleChars: function(direction)
+    {
+        if (!this.selection.isCollapsed()) return;
+
+        var current = this.selection.getCurrent();
+        var side = (direction === 'left') ? this.selection.getTextBeforeCaret() : this.selection.getTextAfterCaret();
+        var isSpace = (current && current.nodeType === 3 && this.searchInvisibleChars(side) === 0);
+
+        if (isSpace)
+        {
+            if (direction === 'left')
+            {
+                $R.dom(current).replaceWith(current.textContent.trim());
+            }
+            else
+            {
+                var offset = this.offset.get();
+                this.offset.set({ start: offset.start + 1, end: offset.end + 1 });
+            }
+        }
+    },
+
+    // wrapper
+    buildWrapper: function(html)
+    {
+        return $R.dom('<div>').html(html);
+    },
+    getWrapperHtml: function($wrapper)
+    {
+        var html = $wrapper.html();
+        $wrapper.remove();
+
+        return html;
     },
 
     // fragment
@@ -10434,15 +10558,16 @@ $R.add('class', 'editor.events', {
         var clipboard = e.clipboardData;
         var node = data.getComponent();
         var $node = $R.dom(node);
+        var $cloned = $node.clone();
 
         // clean
-        $node.find('.redactor-component-caret').remove();
-        $node.removeClass('redactor-component-active');
-        $node.removeAttr('contenteditable');
-        $node.removeAttr('tabindex');
+        $cloned.find('.redactor-component-caret').remove();
+        $cloned.removeClass('redactor-component-active');
+        $cloned.removeAttr('contenteditable');
+        $cloned.removeAttr('tabindex');
 
         // html
-        var content = node.outerHTML;
+        var content = $cloned.get().outerHTML;
 
         if (remove) this.component.remove(node);
 
@@ -10583,7 +10708,7 @@ $R.add('module', 'source', {
         $source.removeAttr('data-gramm_editor');
 
         if ($source.get().classList.length === 0) $source.removeAttr('class');
-        if (this.source.isNameGenerated()) $element.removeAttr('name');
+        if (!this.source.isNameGenerated()) $element.removeAttr('name');
         if (!this.element.isType('textarea')) $source.remove();
 
     },
@@ -10983,7 +11108,7 @@ $R.add('module', 'observer', {
     },
     _iterate: function(mutation, el)
     {
-        if (mutation.type === 'attributes' && mutation.target === el)
+        if (this.app.isReadOnly() || (mutation.type === 'attributes' && mutation.target === el))
         {
             return;
         }
@@ -11007,6 +11132,14 @@ $R.add('module', 'clicktoedit', {
     onstartclicktoedit: function()
     {
         this.start();
+    },
+    onenablereadonly: function()
+    {
+        if (!this._isEnabled()) this.stop();
+    },
+    ondisablereadonly: function()
+    {
+        if (!this._isEnabled()) this.start();
     },
     onstop: function()
     {
@@ -11041,6 +11174,9 @@ $R.add('module', 'clicktoedit', {
 
         if (!isEmpty) this.selection.restoreMarkers();
         if (isEmpty) this.editor.focus();
+
+        var $container = this.container.getElement();
+        $container.addClass('redactor-clicktoedit-enabled');
     },
     save: function(e)
     {
@@ -11084,6 +11220,11 @@ $R.add('module', 'clicktoedit', {
 
         $editor.on('click.redactor-click-to-edit mouseup.redactor-click-to-edit', this.enable.bind(this));
         $container.addClass('redactor-over');
+        $container.removeClass('redactor-clicktoedit-enabled');
+    },
+    _isEnabled: function()
+    {
+        return this.container.getElement().hasClass('redactor-clicktoedit-enabled');
     },
     _destroy: function()
     {
@@ -11091,7 +11232,7 @@ $R.add('module', 'clicktoedit', {
         var $container = this.container.getElement();
 
         $editor.off('.redactor-click-to-edit');
-        $container.removeClass('redactor-over');
+        $container.removeClass('redactor-over redactor-clicktoedit-enabled');
     },
     _setFocus: function()
     {
@@ -12363,6 +12504,7 @@ $R.add('module', 'link', {
         }
 
         var nodes = this.inline.format({ tag: 'a' });
+
         this._setLinkData(nodes, data, 'inserted');
     },
     _insertSingle: function(links, data)
@@ -12373,7 +12515,7 @@ $R.add('module', 'link', {
             var $link = $R.create('link.component', this.app, links[0]);
 
             $link.setData(data);
-            this.selection.setAll($link);
+            this.caret.setAfter($link);
 
             // callback
             this.app.broadcast('link.inserted', $link);
@@ -12732,6 +12874,7 @@ $R.add('module', 'modal', {
         // local
         this.$box = false;
         this.$modal = false;
+        this.selectionMarkers = false;
 
         // defaults
         this.defaults = {
@@ -12806,7 +12949,17 @@ $R.add('module', 'modal', {
     _doOpen: function(template)
     {
         this.stop();
-        this.selection.save();
+
+        if (this.selection.isCollapsed())
+        {
+            this.selection.save();
+            this.selectionMarkers = false;
+        }
+        else
+        {
+            this.selection.saveMarkers();
+            this.selectionMarkers = true;
+        }
 
         if (!this.detector.isDesktop())
         {
@@ -12858,7 +13011,10 @@ $R.add('module', 'modal', {
             e.preventDefault();
         }
 
-        this.selection.restore();
+        if (this.selectionMarkers) this.selection.restoreMarkers();
+        else this.selection.restore();
+
+        this.selectionMarkers = false;
 
         this._broadcast('close');
 
@@ -13393,9 +13549,12 @@ $R.add('module', 'input', {
 
         // set empty if all selected
         var keys = [this.keycodes.ENTER, this.keycodes.SPACE, this.keycodes.BACKSPACE, this.keycodes.DELETE];
-        if (this.selection.isAll() && (keys.indexOf(key) !== -1))
+        var isKeys = (keys.indexOf(key) !== -1);
+        var isXKey = ((e.ctrlKey || e.metaKey) && key === 88); // x
+
+        if (this.selection.isAll() && (isXKey || !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey))
         {
-            e.preventDefault();
+            if (isKeys || isXKey) e.preventDefault();
 
             if (this.element.isType('inline'))
             {
@@ -13409,7 +13568,8 @@ $R.add('module', 'input', {
                 this.insertion.set(this.opts.emptyHtml);
             }
 
-            return;
+            if (isKeys || isXKey) return;
+            else this.app.broadcast('empty');
         }
 
         // autoparse
@@ -13549,6 +13709,7 @@ $R.add('class', 'input.arrow', {
         this.opts = app.opts;
         this.utils = app.utils;
         this.caret = app.caret;
+        this.offset = app.offset;
         this.marker = app.marker;
         this.editor = app.editor;
         this.keycodes = app.keycodes;
@@ -13579,10 +13740,9 @@ $R.add('class', 'input.arrow', {
             if (this._selectComponent(e, 'Start', 'prev')) return;
         }
 
-        if (this._isRightLeftKey())
-        {
-            this._removeInvisibleSpace();
-        }
+        if (this.key === this.keycodes.LEFT) this.utils.trimInvisibleChars('left');
+        else if (this.key === this.keycodes.RIGHT) this.utils.trimInvisibleChars('right');
+
     },
     _isRightDownKey: function()
     {
@@ -13736,15 +13896,6 @@ $R.add('class', 'input.arrow', {
 
         return true;
     },
-    _removeInvisibleSpace: function()
-    {
-        var current = this.selection.getCurrent();
-        var isEmpty = (current) ? this.utils.isEmptyHtml(((current.nodeType === 3) ? current.textContent : current.innerHTML)) : false;
-        if (isEmpty && current && current.nodeType === 3 && this.utils.searchInvisibleChars(current.textContent) === 0)
-        {
-            current.parentNode.removeChild(current);
-        }
-    },
     _selectComponent: function(e, caret, type)
     {
         var current = this.selection.getCurrent();
@@ -13825,7 +13976,8 @@ $R.add('class', 'input.delete', {
             else if (this.key === this.keycodes.DELETE) this._traverseDelete(e);
         }
 
-        this._removeInvisibleSpace();
+        if (this.key === this.keycodes.BACKSPACE) this.utils.trimInvisibleChars('left');
+
         this._removeUnwantedStyles();
         this._removeEmptySpans();
         this._removeSpanTagsInHeadings();
@@ -14208,22 +14360,6 @@ $R.add('class', 'input.delete', {
 
         }, 0);
     },
-    _removeInvisibleSpace: function()
-    {
-        var current = this.selection.getCurrent();
-        var prev = (current) ? current.previousSibling : false;
-        var isEmpty = (current) ? this.utils.isEmptyHtml(((current.nodeType === 3) ? current.textContent : current.innerHTML)) : false;
-
-        if (isEmpty && current && current.nodeType === 3 && this.utils.searchInvisibleChars(current.textContent) === 0)
-        {
-            current.parentNode.removeChild(current);
-        }
-
-        if (this.key === this.keycodes.DELETE && prev && prev.nodeType === 3 && this.utils.searchInvisibleChars(prev.textContent) === 0)
-        {
-            prev.parentNode.removeChild(prev);
-        }
-    },
     _removeSpanTagsInHeadings: function()
     {
         var $editor = this.editor.getElement();
@@ -14314,7 +14450,7 @@ $R.add('class', 'input.enter', {
         var current = this.selection.getCurrent();
         var data = this.inspector.parse(current);
 
-        if (data.isComponent() || data.isCode()) return;
+        if ((data.isComponent() && !data.isComponentEditable()) || data.isCode()) return;
         else if (data.isPre()) this.insertion.insertNewline();
         else this.insertion.insertBreakLine();
     },
@@ -14689,6 +14825,9 @@ $R.add('class', 'input.paste', {
 
         this._restoreSelection();
 
+        // stop input
+        if (!this.opts.input) return;
+
         // autoparse
         if (this.opts.autoparse && this.opts.autoparsePaste)
         {
@@ -14916,7 +15055,7 @@ $R.add('class', 'input.space', {
         }
 
         // shift/ctrl + space
-        if (!this.lastShiftKey && this.key === this.keycodes.SPACE && (e.ctrlKey || e.shiftKey))
+        if (!this.lastShiftKey && this.key === this.keycodes.SPACE && (e.ctrlKey || e.shiftKey) && !e.metaKey)
         {
             e.preventDefault();
             this.insertion.insertChar('&nbsp;');
@@ -15090,7 +15229,6 @@ $R.add('module', 'upload', {
     },
     _onChange: function(e)
     {
-        this.app.broadcast('upload.start');
         this._send(e, this.$el.get().files);
     },
     _onDrop: function(e)
@@ -15099,8 +15237,6 @@ $R.add('module', 'upload', {
 
         this._clear();
         this._setStatusDrop();
-
-        this.app.broadcast('upload.start');
         this._send(e);
     },
     _onDragOver: function(e)
@@ -15123,8 +15259,6 @@ $R.add('module', 'upload', {
 
         this._clear();
         this._setStatusDrop();
-
-        this.app.broadcast('upload.start');
         this._send(e);
     },
     _removeStatusHover: function()
@@ -15169,6 +15303,7 @@ $R.add('module', 'upload', {
         data = this._buildData(name, files, data);
         data = this.utils.extendData(data, this.p.data);
 
+        this.app.broadcast('upload.start', e, data);
         this._sendData(data, files, e);
     },
     _sendData: function(data, files, e)
@@ -15664,7 +15799,17 @@ $R.add('module', 'image', {
     {
         this.app.api('module.modal.close');
 
-        if (typeof response === 'string')
+        if (Array.isArray(response))
+        {
+            var obj = {};
+            for (var i = 0; i < response.length; i++)
+            {
+                obj = $R.extend(obj, response[i]);
+            }
+
+            response = obj;
+        }
+        else if (typeof response === 'string')
         {
             response = { "file": { url: response }};
         }
@@ -16481,6 +16626,17 @@ $R.add('module', 'file', {
         this.app.api('module.modal.close');
         if (typeof response !== 'object') return;
 
+        if (Array.isArray(response))
+        {
+            var obj = {};
+            for (var i = 0; i < response.length; i++)
+            {
+                obj = $R.extend(obj, response[i]);
+            }
+
+            response = obj;
+        }
+
         var multiple = (Object.keys(response).length  > 1);
 
         if (multiple)
@@ -16895,6 +17051,7 @@ $R.add('module', 'list', {
         this.app = app;
         this.opts = app.opts;
         this.utils = app.utils;
+        this.block = app.block;
         this.toolbar = app.toolbar;
         this.inspector = app.inspector;
         this.selection = app.selection;
@@ -16930,7 +17087,10 @@ $R.add('module', 'list', {
             nodes = [$list.get()];
         }
 
-        nodes = (this._isUnformat(type, nodes)) ? this._unformat(type, nodes) : this._format(type, nodes);
+        // =TMP
+        //nodes = this.block.format('div');
+
+        nodes = (nodes.length !== 0 && this._isUnformat(type, nodes)) ? this._unformat(type, nodes) : this._format(type, nodes);
 
         this.selection.restoreMarkers();
 

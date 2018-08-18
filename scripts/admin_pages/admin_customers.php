@@ -10,6 +10,7 @@ if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] &
         mslib_befe::loginAsUser($user['uid'], 'admin_customers');
     }
 }
+$postErno = array();
 if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($this->post['tx_multishop_pi1']['action'])) {
     $redirectAfterPostProc = 1;
     switch ($this->post['tx_multishop_pi1']['action']) {
@@ -28,6 +29,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
                 $params = array();
                 $params['content'] =& $content;
                 $params['redirectAfterPostProc'] =& $redirectAfterPostProc;
+                $params['postErno']=&$postErno;
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
@@ -218,6 +220,7 @@ if ((isset($this->get['tx_multishop_pi1']['search_by']) && !empty($this->get['tx
         (isset($this->get['country']) && !empty($this->get['country'])) ||
         (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
         (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
+        (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter']!='all') ||
         (isset($this->get['crdate_from']) && !empty($this->get['crdate_from'])) ||
         (isset($this->get['crdate_till']) && !empty($this->get['crdate_till']))
 ) {
@@ -272,6 +275,16 @@ $formTopSearch .= '
 					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="' . $this->get['crdate_from'] . '">
 					<label for="order_date_till" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
 					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="' . $this->get['crdate_till'] . '">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="type_search">' . $this->pi_getLL('admin_customers_subscribed_newsletter') . '</label>
+				<div class="form-inline">
+                    <select name="tx_multishop_pi1[subscribed_newsletter]" class="invoice_select2">
+                        <option value="all"'.(!isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) || $this->get['tx_multishop_pi1']['subscribed_newsletter']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('not_applicable_short').'</option>
+                        <option value="y"'.($this->get['tx_multishop_pi1']['subscribed_newsletter']=='y' ? ' selected="selected"' : '').'>'.$this->pi_getLL('yes').'</option>
+                        <option value="n"'.($this->get['tx_multishop_pi1']['subscribed_newsletter']=='n' ? ' selected="selected"' : '').'>'.$this->pi_getLL('no').'</option>
+                    </select>
 				</div>
 			</div>
 			<div class="form-group">
@@ -438,8 +451,18 @@ if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
     $filter[] = "f.country='" . $this->get['country'] . "'";
 }
-if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) {
+if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!='99999') {
     $filter[] = "f.uid in (select o.customer_id from tx_multishop_orders o, tx_multishop_orders_products op where op.products_id='" . $this->get['ordered_product'] . "' and o.orders_id=op.orders_id)";
+}
+if (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter']!='all') {
+    switch($this->get['tx_multishop_pi1']['subscribed_newsletter']) {
+        case 'y':
+            $filter[] = "f.tx_multishop_newsletter=1";
+            break;
+        case 'n':
+            $filter[] = "f.tx_multishop_newsletter=0";
+            break;
+    }
 }
 if (!$this->masterShop) {
     $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
@@ -510,7 +533,7 @@ jQuery(document).ready(function($) {
     });
 	jQuery(\'#check_all_1\').click(function() {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
-		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+		$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
 	var originalLeave = $.fn.popover.Constructor.prototype.leave;
 	$.fn.popover.Constructor.prototype.leave = function(obj){
@@ -624,6 +647,42 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+if (count($postErno)) {
+    $returnMarkup = '
+	<div style="display:none" id="msAdminPostMessage">
+	<table class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th class="text-center">Status</th>
+		<th>Message</th>
+	</tr>
+	</thead>
+	<tbody>
+	';
+    foreach ($postErno as $item) {
+        switch ($item['status']) {
+            case 'error':
+                $item['status'] = '<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+                break;
+            case 'info':
+                $item['status'] = '<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+                break;
+        }
+        $returnMarkup .= '<tr><td class="text-center">' . $item['status'] . '</td><td>' . $item['message'] . '</td></tr>' . "\n";
+    }
+    $returnMarkup .= '</tbody></table></div>';
+    $content .= $returnMarkup;
+    $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
+	jQuery(document).ready(function ($) {
+		$.confirm({
+			title: \'\',
+			content: $(\'#msAdminPostMessage\').html(),
+			cancelButton: false // hides the cancel button.
+		});
+	});
+	</script>
+	';
+}
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);

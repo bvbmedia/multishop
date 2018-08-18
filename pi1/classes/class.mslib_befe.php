@@ -3604,28 +3604,40 @@ class mslib_befe {
         return $password;
     }
     public function storeProductsKeywordSearch($keyword, $negative_results = 0, $categories_id = 0) {
-        $insertArray = array();
-        $insertArray['keyword'] = $keyword;
-        $insertArray['ip_address'] = $this->REMOTE_ADDR;
-        $insertArray['crdate'] = time();
-        $insertArray['negative_results'] = $negative_results;
-        $insertArray['http_host'] = $this->HTTP_HOST;
-        $insertArray['page_uid'] = $this->shop_pid;
-        if ($GLOBALS['TSFE']->fe_user->user['uid']) {
-            $insertArray['customer_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+        $continue=true;
+        //hook to let other plugins further manipulate the redirect link
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'])) {
+            $params = array(
+                'continue' => &$continue
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
         }
-        if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
-            $categories_id = $this->get['categories_id'];
-        }
-        if (is_numeric($categories_id) && $categories_id > 0) {
-            $insertArray['categories_id'] = $categories_id;
-        }
-        $filter = array();
-        $filter[] = 'ip_address=\'' . addslashes($this->REMOTE_ADDR) . '\'';
-        $record = mslib_befe::getRecord($keyword, 'tx_multishop_products_search_log', 'keyword', $filter);
-        if (!is_array($record) || (time() - $record['crdate']) > 180) {
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        if ($continue) {
+            $insertArray = array();
+            $insertArray['keyword'] = $keyword;
+            $insertArray['ip_address'] = $this->REMOTE_ADDR;
+            $insertArray['crdate'] = time();
+            $insertArray['negative_results'] = $negative_results;
+            $insertArray['http_host'] = $this->HTTP_HOST;
+            $insertArray['page_uid'] = $this->shop_pid;
+            if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+                $insertArray['customer_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            }
+            if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
+                $categories_id = $this->get['categories_id'];
+            }
+            if (is_numeric($categories_id) && $categories_id > 0) {
+                $insertArray['categories_id'] = $categories_id;
+            }
+            $filter = array();
+            $filter[] = 'ip_address=\'' . addslashes($this->REMOTE_ADDR) . '\'';
+            $record = mslib_befe::getRecord($keyword, 'tx_multishop_products_search_log', 'keyword', $filter);
+            if (!is_array($record) || (time() - $record['crdate']) > 180) {
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
         }
     }
     public function storeCustomerCartContent($content, $customer_id = '', $is_checkout = 0) {

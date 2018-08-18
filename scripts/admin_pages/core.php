@@ -36,14 +36,18 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 </script>
 <script type="text/javascript">
 $(function() {
-	$R(\'.mceEditor\', {
+    '.($this->conf['loadOldRedactorVersion']=='1' ? '
+    $(\'.mceEditor\').redactor({
+    ' : '
+    $R(\'.mceEditor\', {
+    ').'
 	    imagePosition: true,
 	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
 		toolbarFixed: true,
 		focus: false,
 		linkSize: 250,
-		pasteImages: true,
+		'.($this->conf['loadOldRedactorVersion']=='1' ? '' : 'pasteImages: true,').'
 		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl', 1) . '\',
 		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload', 1) . '\',
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload', 1) . '\',
@@ -752,6 +756,11 @@ switch ($this->ms['page']) {
     case 'admin_processed_manual_order':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
+        }
+        break;
+    case 'admin_users_overview':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_users_overview.php');
         }
         break;
     /*

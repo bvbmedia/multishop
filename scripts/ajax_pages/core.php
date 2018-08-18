@@ -1219,7 +1219,42 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
-    case 'admin_update_orders_status':
+    case 'admin_update_orders_status_pre':
+        if ($this->ADMIN_USER) {
+            $returnOutput = array();
+            $returnOutput['status'] = 'NOTOK';
+            if (is_numeric($this->post['tx_multishop_pi1']['orders_id']) and is_numeric($this->post['tx_multishop_pi1']['orders_status_id'])) {
+                $order_id=$this->post['tx_multishop_pi1']['orders_id'];
+                $orders_status=$this->post['tx_multishop_pi1']['orders_status_id'];
+                $order_data = mslib_fe::getOrder($order_id);
+                $orders_status_name = mslib_fe::getOrderStatusName($orders_status, 0);
+                $keys = array();
+                $keys[] = 'email_order_status_changed_' . mslib_befe::strtolower($orders_status_name);
+                $keys[] = 'email_order_status_changed';
+                foreach ($keys as $key) {
+                    //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
+                    $page = mslib_fe::getCMScontent($key, $order['language_id']);
+                    if ($page[0]) {
+                        $returnOutput['extra_checkbox']='<div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="checkbox checkbox-inline checkbox-success">
+                                    <input type="checkbox" id="send_update_status_email" value="1" checked="checked">
+                                    <label for="send_update_status_email">'.$this->pi_getLL('send_notification_email_to_customer').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
+                                </div>
+                            </div>
+                        </div>    
+                        ';
+                        $returnOutput['status'] = 'OK';
+                        break;
+                    }
+                }
+            }
+            echo json_encode($returnOutput);
+            exit();
+        }
+        exit();
+        break;
+        case 'admin_update_orders_status':
         if ($this->ADMIN_USER) {
             $returnOutput = '';
             if (is_numeric($this->post['tx_multishop_pi1']['orders_id']) and is_numeric($this->post['tx_multishop_pi1']['orders_status_id'])) {
@@ -1234,8 +1269,11 @@ switch ($this->ms['page']) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
+                if (isset($this->post['tx_multishop_pi1']['send_notification_email'])) {
+                    $send_notification_email = $this->post['tx_multishop_pi1']['send_notification_email'];
+                }
                 // hook eof
-                mslib_befe::updateOrderStatus($this->post['tx_multishop_pi1']['orders_id'], $this->post['tx_multishop_pi1']['orders_status_id'], 1, 'admin_update_orders_status');
+                mslib_befe::updateOrderStatus($this->post['tx_multishop_pi1']['orders_id'], $this->post['tx_multishop_pi1']['orders_status_id'], $send_notification_email, 'admin_update_orders_status');
                 echo $returnOutput;
             }
         }
@@ -1611,11 +1649,18 @@ switch ($this->ms['page']) {
                 }
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
-                    $result['file'] = array(
-                            'url' => $fileLocation,
-                            'name' => $filename,
-                            'id' => $filename
-                    );
+                    if ($this->conf['loadOldRedactorVersion']=='1') {
+                        $result = array(
+                                'url' => $fileLocation,
+                                'name' => $filename
+                        );
+                    } else {
+                        $result['file'] = array(
+                                'url' => $fileLocation,
+                                'name' => $filename,
+                                'id' => $filename
+                        );
+                    }
                     echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                     exit();
                 }

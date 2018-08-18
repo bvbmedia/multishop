@@ -37,6 +37,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         mslib_fe::init($ref);
     }
     function updateCart() {
+        $continue_check_stock=true;
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreCheckerHook'])) {
+            $params = array(
+                    'get' => &$this->get,
+                    'post' => &$this->post,
+                    'continue_check_stock' => &$continue_check_stock
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreCheckerHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
         $product_id = $this->post['products_id'];
         $categories_id = $this->post['categories_id'];
         if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
@@ -45,7 +58,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($this->get['categories_id']) and $this->get['tx_multishop_pi1']['action'] == 'add_to_cart') {
             $categories_id = $this->get['categories_id'];
         }
-        if (is_numeric($product_id)) {
+        if (is_numeric($product_id) && $continue_check_stock) {
             $product = mslib_fe::getProduct($product_id, $categories_id);
             if ($product['products_quantity'] < 1 && (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT'] && !$product['ignore_stock_level'])) {
                 if ($product['categories_id']) {
@@ -1049,6 +1062,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $cart['discount'] = $discount_percentage;
                             $cart['discount_type'] = 'percentage';
                             $cart['discount_from'] = 'user';
+                        } else {
+                            $cart['coupon_code'] = '';
+                            $cart['discount'] = 0;
+                            $cart['discount_type'] = '';
+                            $cart['discount_from'] = '';
                         }
                     }
                 }
@@ -1380,7 +1398,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $return_orders_id=false;
         $orders_id=0;
         $address = $cart['user'];
-        $vat_id_validate_country=$this->post['b_cc'];
+        $vat_id_validate_country=$address['country'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'])) {
             // hook
             $params = array(
@@ -1417,7 +1435,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
         if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $address['tx_multishop_vat_id']) {
             if (strtolower($vat_id_validate_country) != strtolower($this->tta_shop_info['country'])) {
-                $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+               $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
         }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'])) {
@@ -1750,6 +1768,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         } else {
             //update fe_users newsletter value
             $updateFEUsers=array();
+            $updateFEUsers['telephone']=$address['telephone'];
             if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
                 $updateFEUsers['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
             } else {
@@ -1758,8 +1777,64 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
             $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
             // insert tt_address for existing customer if no record found
-            if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing')) {
-                // ADD TT_ADDRESS RECORD
+            $billing_address=mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing');
+            // ADD/UPDATE TT_ADDRESS RECORD
+            $insertArray = array();
+            $insertArray['tstamp'] = time();
+            $insertArray['company'] = $address['company'];
+            $insertArray['name'] = $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name'];
+            $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+            $insertArray['name'] = str_replace('  ', ' ', $insertArray['name']);
+            $insertArray['first_name'] = $address['first_name'];
+            $insertArray['middle_name'] = $address['middle_name'];
+            $insertArray['last_name'] = $address['last_name'];
+            $insertArray['email'] = $address['email'];
+            if (!$address['street_name']) {
+                // fallback for old custom checkouts
+                $insertArray['building'] = $address['building'];
+                $insertArray['street_name'] = $address['address'];
+                $insertArray['address_number'] = $address['address_number'];
+                $insertArray['address_ext'] = $address['address_ext'];
+                $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
+                $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
+                $insertArray['address'] = str_replace('  ', ' ', $insertArray['address']);
+            } else {
+                $insertArray['building'] = $address['delivery_building'];
+                $insertArray['street_name'] = $address['street_name'];
+                $insertArray['address_number'] = $address['address_number'];
+                $insertArray['address_ext'] = $address['address_ext'];
+                $insertArray['address'] = $address['address'];
+            }
+            $insertArray['zip'] = $address['zip'];
+            $insertArray['phone'] = $address['telephone'];
+            $insertArray['mobile'] = $address['mobile'];
+            $insertArray['city'] = $address['city'];
+            $insertArray['country'] = $address['country'];
+            $insertArray['gender'] = $address['gender'];
+            $insertArray['birthday'] = strtotime($address['birthday']);
+            if ($address['gender'] == 'm') {
+                $insertArray['title'] = 'Mr.';
+            } else if ($address['gender'] == 'f') {
+                $insertArray['title'] = 'Mrs.';
+            }
+            $insertArray['region'] = $address['state'];
+            $insertArray['pid'] = $this->conf['fe_customer_pid'];
+            $insertArray['page_uid'] = $this->shop_pid;
+            $insertArray['tstamp'] = time();
+            $insertArray['tx_multishop_address_type'] = 'billing';
+            $insertArray['tx_multishop_default'] = 1;
+            $insertArray['tx_multishop_customer_id'] = $customer_id;
+            $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+            if (!$billing_address) {
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            } else {
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
+            // insert delivery into tt_address
+            $delivery_address=mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
+            if (!$address['different_delivery_address']) {
                 $insertArray = array();
                 $insertArray['tstamp'] = time();
                 $insertArray['company'] = $address['company'];
@@ -1780,7 +1855,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
                     $insertArray['address'] = str_replace('  ', ' ', $insertArray['address']);
                 } else {
-                    $insertArray['building'] = $address['delivery_building'];
+                    $insertArray['building'] = $address['building'];
                     $insertArray['street_name'] = $address['street_name'];
                     $insertArray['address_number'] = $address['address_number'];
                     $insertArray['address_ext'] = $address['address_ext'];
@@ -1799,108 +1874,60 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['title'] = 'Mrs.';
                 }
                 $insertArray['region'] = $address['state'];
-                $insertArray['pid'] = $this->conf['fe_customer_pid'];
-                $insertArray['page_uid'] = $this->shop_pid;
-                $insertArray['tstamp'] = time();
-                $insertArray['tx_multishop_address_type'] = 'billing';
-                $insertArray['tx_multishop_default'] = 1;
+            } else {
+                $insertArray = array();
                 $insertArray['tx_multishop_customer_id'] = $customer_id;
-                $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+                $insertArray['tstamp'] = time();
+                $insertArray['company'] = $address['delivery_company'];
+                $insertArray['name'] = $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name'];
+                $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+                $insertArray['name'] = str_replace('  ', ' ', $insertArray['name']);
+                $insertArray['first_name'] = $address['delivery_first_name'];
+                $insertArray['middle_name'] = $address['delivery_middle_name'];
+                $insertArray['last_name'] = $address['delivery_last_name'];
+                $insertArray['email'] = $address['delivery_email'];
+                if (!$address['delivery_street_name']) {
+                    // fallback for old custom checkouts
+                    $insertArray['building'] = $address['building'];
+                    $insertArray['street_name'] = $address['delivery_address'];
+                    $insertArray['address_number'] = $address['delivery_address_number'];
+                    $insertArray['address_ext'] = $address['delivery_address_ext'];
+                    $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
+                    $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
+                    $insertArray['address'] = str_replace('  ', ' ', $insertArray['address']);
+                } else {
+                    $insertArray['building'] = $address['building'];
+                    $insertArray['street_name'] = $address['delivery_street_name'];
+                    $insertArray['address_number'] = $address['delivery_address_number'];
+                    $insertArray['address_ext'] = $address['delivery_address_ext'];
+                    $insertArray['address'] = $address['delivery_address'];
+                }
+                $insertArray['zip'] = $address['delivery_zip'];
+                $insertArray['phone'] = $address['delivery_telephone'];
+                $insertArray['mobile'] = $address['delivery_mobile'];
+                $insertArray['city'] = $address['delivery_city'];
+                $insertArray['country'] = $address['delivery_country'];
+                $insertArray['gender'] = $address['delivery_gender'];
+                $insertArray['birthday'] = strtotime($address['delivery_birthday']);
+                if ($address['delivery_gender'] == 'm') {
+                    $insertArray['title'] = 'Mr.';
+                } else if ($address['delivery_gender'] == 'f') {
+                    $insertArray['title'] = 'Mrs.';
+                }
+                $insertArray['region'] = $address['delivery_state'];
+            }
+            $insertArray['pid'] = $this->conf['fe_customer_pid'];
+            $insertArray['page_uid'] = $this->shop_pid;
+            $insertArray['tstamp'] = time();
+            $insertArray['tx_multishop_customer_id'] = $customer_id;
+            $insertArray['tx_multishop_address_type'] = 'delivery';
+            $insertArray['tx_multishop_default'] = 0;
+            $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+            if (!$delivery_address) {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            }
-            if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
-                // insert delivery into tt_address
-                if (!$address['different_delivery_address']) {
-                    $insertArray = array();
-                    $insertArray['tstamp'] = time();
-                    $insertArray['company'] = $address['company'];
-                    $insertArray['name'] = $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name'];
-                    $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
-                    $insertArray['name'] = str_replace('  ', ' ', $insertArray['name']);
-                    $insertArray['first_name'] = $address['first_name'];
-                    $insertArray['middle_name'] = $address['middle_name'];
-                    $insertArray['last_name'] = $address['last_name'];
-                    $insertArray['email'] = $address['email'];
-                    if (!$address['street_name']) {
-                        // fallback for old custom checkouts
-                        $insertArray['building'] = $address['building'];
-                        $insertArray['street_name'] = $address['address'];
-                        $insertArray['address_number'] = $address['address_number'];
-                        $insertArray['address_ext'] = $address['address_ext'];
-                        $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
-                        $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
-                        $insertArray['address'] = str_replace('  ', ' ', $insertArray['address']);
-                    } else {
-                        $insertArray['building'] = $address['building'];
-                        $insertArray['street_name'] = $address['street_name'];
-                        $insertArray['address_number'] = $address['address_number'];
-                        $insertArray['address_ext'] = $address['address_ext'];
-                        $insertArray['address'] = $address['address'];
-                    }
-                    $insertArray['zip'] = $address['zip'];
-                    $insertArray['phone'] = $address['telephone'];
-                    $insertArray['mobile'] = $address['mobile'];
-                    $insertArray['city'] = $address['city'];
-                    $insertArray['country'] = $address['country'];
-                    $insertArray['gender'] = $address['gender'];
-                    $insertArray['birthday'] = strtotime($address['birthday']);
-                    if ($address['gender'] == 'm') {
-                        $insertArray['title'] = 'Mr.';
-                    } else if ($address['gender'] == 'f') {
-                        $insertArray['title'] = 'Mrs.';
-                    }
-                    $insertArray['region'] = $address['state'];
-                } else {
-                    $insertArray = array();
-                    $insertArray['tx_multishop_customer_id'] = $customer_id;
-                    $insertArray['tstamp'] = time();
-                    $insertArray['company'] = $address['delivery_company'];
-                    $insertArray['name'] = $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name'];
-                    $insertArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
-                    $insertArray['name'] = str_replace('  ', ' ', $insertArray['name']);
-                    $insertArray['first_name'] = $address['delivery_first_name'];
-                    $insertArray['middle_name'] = $address['delivery_middle_name'];
-                    $insertArray['last_name'] = $address['delivery_last_name'];
-                    $insertArray['email'] = $address['delivery_email'];
-                    if (!$address['delivery_street_name']) {
-                        // fallback for old custom checkouts
-                        $insertArray['building'] = $address['building'];
-                        $insertArray['street_name'] = $address['delivery_address'];
-                        $insertArray['address_number'] = $address['delivery_address_number'];
-                        $insertArray['address_ext'] = $address['delivery_address_ext'];
-                        $insertArray['address'] = $insertArray['street_name'] . ' ' . $insertArray['address_number'] . ($insertArray['address_ext'] ? '-' . $insertArray['address_ext'] : '');
-                        $insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['address']);
-                        $insertArray['address'] = str_replace('  ', ' ', $insertArray['address']);
-                    } else {
-                        $insertArray['building'] = $address['building'];
-                        $insertArray['street_name'] = $address['delivery_street_name'];
-                        $insertArray['address_number'] = $address['delivery_address_number'];
-                        $insertArray['address_ext'] = $address['delivery_address_ext'];
-                        $insertArray['address'] = $address['delivery_address'];
-                    }
-                    $insertArray['zip'] = $address['delivery_zip'];
-                    $insertArray['phone'] = $address['delivery_telephone'];
-                    $insertArray['mobile'] = $address['delivery_mobile'];
-                    $insertArray['city'] = $address['delivery_city'];
-                    $insertArray['country'] = $address['delivery_country'];
-                    $insertArray['gender'] = $address['delivery_gender'];
-                    $insertArray['birthday'] = strtotime($address['delivery_birthday']);
-                    if ($address['delivery_gender'] == 'm') {
-                        $insertArray['title'] = 'Mr.';
-                    } else if ($address['delivery_gender'] == 'f') {
-                        $insertArray['title'] = 'Mrs.';
-                    }
-                    $insertArray['region'] = $address['delivery_state'];
-                }
-                $insertArray['pid'] = $this->conf['fe_customer_pid'];
-                $insertArray['page_uid'] = $this->shop_pid;
-                $insertArray['tstamp'] = time();
-                $insertArray['tx_multishop_customer_id'] = $customer_id;
-                $insertArray['tx_multishop_address_type'] = 'delivery';
-                $insertArray['tx_multishop_default'] = 0;
-                $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
-                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
+            } else {
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
         }
@@ -2691,16 +2718,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                     // hook oef
                 }
-                if ($cart['discount']) {
-                    if ($cart['discount']) {
-                        if ($cart['coupon_code']) {
-                            $str = "update tx_multishop_coupons set times_used=(times_used+1) where code='" . addslashes($cart['coupon_code']) . "'";
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                            $cart['coupon_code'] = '';
-                        }
-                        $cart['discount'] = '';
-                        $cart['discount_type'] = '';
-                    }
+                if (isset($cart['coupon_code']) && !empty($cart['coupon_code'])) {
+                    $str = "update tx_multishop_coupons set times_used=(times_used+1) where code='" . addslashes($cart['coupon_code']) . "'";
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                 }
                 mslib_befe::storeCustomerCartContent($cart, $customer_id, 1);
                 // debug
@@ -2726,6 +2746,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     unset($cart['user']);
                 }
                 //unset($cart['user']);
+                unset($cart['coupon_code']);
+                unset($cart['discount']);
+                unset($cart['discount_type']);
                 unset($cart['discount_type']);
                 unset($cart['discount_amount']);
                 //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
