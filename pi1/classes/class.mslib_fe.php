@@ -2774,7 +2774,7 @@ class mslib_fe {
                             $option_desc_tooltip = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $option_desc_tooltip . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
                         }
                         if (!$readonly) {
-                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ': ' . $option_desc_tooltip . '</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
+                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ':' . $option_desc_tooltip . '</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
                         } else {
                             $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>';
                         }
