@@ -97,7 +97,7 @@ if ($this->post['req'] == 'init') {
 					INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
 					WHERE ' . implode(' AND ', $filter) . '
 					group by p.products_id ORDER BY pd.products_name ASC';
-                    var_dump($query2);
+                    //var_dump($query2);
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
