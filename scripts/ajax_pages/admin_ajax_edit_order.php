@@ -296,7 +296,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $limit = '';
             }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'p.products_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'p.products_id in (' . addslashes($this->get['preselected_id']) . ')';
         }
         if (is_numeric($categories_id) && $categories_id > 0) {
             $from[] = 'tx_multishop_products_to_categories p2c';
