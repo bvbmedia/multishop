@@ -1446,6 +1446,7 @@
             <label index="delivery_date">Delivery date</label>
             <label index="update_order_status">Update order status</label>
             <label index="send_notification_email_to_customer">Send notification email to customer</label>
+            <label index="other">Other</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
