@@ -1642,7 +1642,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['city'] = $address['city'];
                 $insertArray['country'] = $address['country'];
                 $insertArray['gender'] = $address['gender'];
-                $insertArray['birthday'] = strtotime(['birthday']);
+                $insertArray['birthday'] = strtotime($address['birthday']);
                 if ($address['gender'] == 'm') {
                     $insertArray['title'] = 'Mr.';
                 } else if ($address['gender'] == 'f') {
