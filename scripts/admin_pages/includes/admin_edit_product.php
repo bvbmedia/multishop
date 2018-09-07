@@ -3794,8 +3794,8 @@ if ($this->post) {
 					});
 				}
 				var sort_li = function () {
-				    if ($(\'.group_attributes_panel\').length>0) {
-				        var sort_selector=\'td#products_attributes_items > .group_attributes_panel\';
+				    if (jQuery(\'.group_attributes_panel\').length>0) {
+				        var sort_selector=\'.group_attributes_panel\';
 				    } else {
                         var sort_selector=\'td#products_attributes_items\';
 					}
