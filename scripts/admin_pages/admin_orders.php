@@ -566,10 +566,39 @@ $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['orders_results'] = $this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['orders_listing'] = $this->cObj->getSubpart($subparts['orders_results'], '###ORDERS_LISTING###');
 $subparts['orders_noresults'] = $this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-if ($this->post['Search'] and ($this->post['payment_status'] != $this->cookie['payment_status'])) {
-    $this->cookie['payment_status'] = $this->post['payment_status'];
+// search keys storage
+$search_keys=array();
+$search_keys[]='type_search';
+$search_keys[]='usergroup';
+$search_keys[]='country';
+$search_keys[]='ordered_product';
+$search_keys[]='payment_status';
+$search_keys[]='orders_status_search';
+$search_keys[]='order_date_from';
+$search_keys[]='order_date_till';
+$search_keys[]='order_expected_delivery_date_from';
+$search_keys[]='order_expected_delivery_date_till';
+$search_keys[]='payment_method';
+$search_keys[]='shipping_method';
+$search_keys[]='search_by_status_last_modified';
+$search_keys[]='search_by_telephone_orders';
+foreach ($search_keys as $search_key) {
+    if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
+        $this->cookie[$search_key] = $this->post[$search_key];
+        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+        $GLOBALS['TSFE']->storeSessionData();
+    }
+    if ($this->cookie[$search_key]) {
+        $this->post[$search_key] = $this->cookie[$search_key];
+    }
+}
+if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat']!=$this->cookie['excluding_vat'])) {
+    $this->cookie['excluding_vat'] = $this->post['tx_multishop_pi1']['excluding_vat'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['excluding_vat']) {
+    $this->post['tx_multishop_pi1']['excluding_vat']= $this->cookie['excluding_vat'];
 }
 if ($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) {
     $this->cookie['limit'] = $this->post['limit'];
@@ -1135,22 +1164,22 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###'] = mslib_fe::typolink($this->shop_p
 $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
-if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search'] != 'all') ||
-        (isset($this->get['country']) && !empty($this->get['country'])) ||
-        (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
-        (isset($this->get['ordered_category']) && is_numeric($this->get['ordered_category'])) ||
-        (isset($this->get['ordered_product']) && is_numeric($this->get['ordered_product'])) ||
-        (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
-        (isset($this->get['orders_status_search']) && $this->get['orders_status_search'] > 0) ||
-        (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method'] != 'all') ||
-        (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
-        (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
-        (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
-        (isset($this->get['order_expected_delivery_date_from']) && !empty($this->get['order_expected_delivery_date_from'])) ||
-        (isset($this->get['order_expected_delivery_date_till']) && !empty($this->get['order_expected_delivery_date_till'])) ||
-        (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
-        (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders'])) ||
-        ($this->ms['MODULES']['ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING']=='1')
+if ((isset($this->post['type_search']) && !empty($this->post['type_search']) && $this->post['type_search'] != 'all') ||
+    (isset($this->post['country']) && !empty($this->post['country'])) ||
+    (isset($this->post['usergroup']) && $this->post['usergroup'] > 0) ||
+    (isset($this->post['ordered_category']) && is_numeric($this->post['ordered_category'])) ||
+    (isset($this->post['ordered_product']) && is_numeric($this->post['ordered_product'])) ||
+    (isset($this->post['payment_status']) && !empty($this->post['payment_status'])) ||
+    (isset($this->post['orders_status_search']) && $this->post['orders_status_search'] > 0) ||
+    (isset($this->post['payment_method']) && !empty($this->post['payment_method']) && $this->post['payment_method'] != 'all') ||
+    (isset($this->post['shipping_method']) && !empty($this->post['shipping_method']) && $this->post['shipping_method'] != 'all') ||
+    (isset($this->post['order_date_from']) && !empty($this->post['order_date_from'])) ||
+    (isset($this->post['order_date_till']) && !empty($this->post['order_date_till'])) ||
+    (isset($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_from'])) ||
+    (isset($this->post['order_expected_delivery_date_till']) && !empty($this->post['order_expected_delivery_date_till'])) ||
+    (isset($this->post['search_by_status_last_modified']) && is_numeric($this->post['search_by_status_last_modified'])) ||
+    (isset($this->post['search_by_telephone_orders']) && is_numeric($this->post['search_by_telephone_orders'])) ||
+    ($this->ms['MODULES']['ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING']=='1')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -1185,7 +1214,7 @@ $subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###'] = $this->pi_getLL('filter_b
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###'] = ($this->post['search_by_status_last_modified'] ? ' checked' : '');
 $subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###'] = ($this->post['search_by_telephone_orders'] ? ' checked' : '');
 $subpartArray['###EXCLUDING_VAT_LABEL###'] = htmlspecialchars($this->pi_getLL('excluding_vat'));
-$subpartArray['###EXCLUDING_VAT_CHECKED###'] = ($this->get['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '');
+$subpartArray['###EXCLUDING_VAT_CHECKED###'] = ($this->post['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '');
 $subpartArray['###LABEL_PAYMENT_STATUS###'] = $this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###'] = $payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###'] = $this->pi_getLL('limit_number_of_records_to');
