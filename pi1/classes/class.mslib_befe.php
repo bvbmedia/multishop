@@ -4374,11 +4374,12 @@ class mslib_befe {
                 $markerArray['ITEM_ROW_TYPE'] = $tr_type;
                 $markerArray['ITEM_PRODUCT_QTY'] = round($product['qty'], 2);
                 $product_tmp = mslib_fe::getProduct($product['products_id']);
-                if ($product['products_id']>0) {
+                if ($product['products_id']>0 && !empty($product_tmp['products_name'])) {
                     $product_name = htmlspecialchars($product_tmp['products_name']);
                 } else {
                     $product_name = htmlspecialchars($product['products_name']);
                 }
+
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
                 }
