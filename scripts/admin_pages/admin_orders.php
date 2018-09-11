@@ -1164,21 +1164,21 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###'] = mslib_fe::typolink($this->shop_p
 $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
-if ((isset($this->post['type_search']) && !empty($this->post['type_search']) && $this->post['type_search'] != 'all') ||
-    (isset($this->post['country']) && !empty($this->post['country'])) ||
-    (isset($this->post['usergroup']) && $this->post['usergroup'] > 0) ||
-    (isset($this->post['ordered_category']) && is_numeric($this->post['ordered_category'])) ||
-    (isset($this->post['ordered_product']) && is_numeric($this->post['ordered_product'])) ||
-    (isset($this->post['payment_status']) && !empty($this->post['payment_status'])) ||
-    (isset($this->post['orders_status_search']) && $this->post['orders_status_search'] > 0) ||
-    (isset($this->post['payment_method']) && !empty($this->post['payment_method']) && $this->post['payment_method'] != 'all') ||
-    (isset($this->post['shipping_method']) && !empty($this->post['shipping_method']) && $this->post['shipping_method'] != 'all') ||
-    (isset($this->post['order_date_from']) && !empty($this->post['order_date_from'])) ||
-    (isset($this->post['order_date_till']) && !empty($this->post['order_date_till'])) ||
-    (isset($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_from'])) ||
-    (isset($this->post['order_expected_delivery_date_till']) && !empty($this->post['order_expected_delivery_date_till'])) ||
-    (isset($this->post['search_by_status_last_modified']) && is_numeric($this->post['search_by_status_last_modified'])) ||
-    (isset($this->post['search_by_telephone_orders']) && is_numeric($this->post['search_by_telephone_orders'])) ||
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search'] != 'all') ||
+    (isset($this->get['country']) && !empty($this->get['country'])) ||
+    (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
+    (isset($this->get['ordered_category']) && is_numeric($this->get['ordered_category'])) ||
+    (isset($this->get['ordered_product']) && is_numeric($this->get['ordered_product'])) ||
+    (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
+    (isset($this->get['orders_status_search']) && $this->get['orders_status_search'] > 0) ||
+    (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method'] != 'all') ||
+    (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
+    (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
+    (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+    (isset($this->get['order_expected_delivery_date_from']) && !empty($this->get['order_expected_delivery_date_from'])) ||
+    (isset($this->get['order_expected_delivery_date_till']) && !empty($this->get['order_expected_delivery_date_till'])) ||
+    (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
+    (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders'])) ||
     ($this->ms['MODULES']['ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING']=='1')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
