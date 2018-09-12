@@ -7526,6 +7526,9 @@ class mslib_fe {
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders') {
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
             }
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_order' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_order') {
+                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
+            }
             if ($this->ms['MODULES']['MANUAL_ORDER']) {
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['label'] = $this->pi_getLL('add');
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
