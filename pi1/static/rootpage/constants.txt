@@ -286,6 +286,9 @@ plugin.multishop {
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Load old redactor version (v2.4).
 	loadOldRedactorVersion = 1
 
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Add link to product name for psp_cancelurl
+	addLinkToProductNameForCancelUrl = 0
+
 	# cat=plugin.multishop - optional/enable; type=string; label= Standard custom "search on" (Zoek op)
 	adminProductsSearchAndEditStandardCustomSearchOn =
 }

@@ -910,7 +910,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $product['products_name']=str_replace(' [disabled]', '', $product['products_name']);
             }
             $tmp_item_name['products_name'] = htmlspecialchars($product['products_name']);
-
+            if ($this->ms['page']=='psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl']=='1') {
+                if ($product['product_link']) {
+                    $tmp_item_name['products_name']='<a href="'.$product['product_link'].'">'.$tmp_item_name['products_name'].'</a>';
+                }
+            }
             $tmp_item_name['products_model'] = '';
             if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS'] == '1' && !empty($product['products_model'])) {
                 $tmp_item_name['products_model'] = ' (' . htmlspecialchars($product['products_model']) . ') ';
