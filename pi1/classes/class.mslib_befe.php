@@ -4783,8 +4783,11 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
             $params_internal = array(
-                    'subpartArray' => &$subpartArray,
-                    'order' => &$order
+                'subpartArray' => &$subpartArray,
+                'order' => &$order,
+                'prefix' => $prefix,
+                'customer_currency' => $customer_currency,
+                'display_currency_symbol' => $display_currency_symbol
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
