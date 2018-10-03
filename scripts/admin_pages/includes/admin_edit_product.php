@@ -1494,7 +1494,7 @@ if ($this->post) {
 						}*/
                     }
                 }
-                if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
+                if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories']) && isset($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
                     foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
                         if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
                             if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
@@ -1697,6 +1697,24 @@ if ($this->post) {
 					}
 				}
 				*/
+            }
+        }
+        if ($this->conf['enableMultipleShops']) {
+            if (is_array($shopPids) && count($shopPids)) {
+                foreach ($shopPids as $shop_pid) {
+                    if ($shop_pid != $this->shop_pid) {
+                        if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            // remove the custom page desc if the cat id is not related anymore in p2c
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            //
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                    }
+                }
             }
         }
     } else {
