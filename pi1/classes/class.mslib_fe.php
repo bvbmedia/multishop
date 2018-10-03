@@ -5331,6 +5331,7 @@ class mslib_fe {
         if ($skipFlatDatabase || (!$this->ms['MODULES']['FLAT_DATABASE'] || $include_disabled_products)) {
             $select = array();
             $select[] = '*';
+            $select[] = 'p.search_engines_allow_indexing as search_engines_allow_indexing';
             $select[] = 'p.staffel_price as staffel_price';
             $select[] = 's.specials_new_products_price';
             $select[] = 's.start_date as special_start_date';
