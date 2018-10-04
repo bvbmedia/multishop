@@ -2890,6 +2890,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                         $subtotal = mslib_fe::countCartTotalPrice(1, $total_include_vat, $countries_id);
                         if ($subtotal) {
+                            if (isset($this->cart['user']['shipping_method_costs']) && $this->cart['user']['shipping_method_costs'] > 0) {
+                                if ($total_include_vat) {
+                                    $subtotal += $this->cart['user']['shipping_method_costs'] + $this->cart['user']['shipping_tax'];
+                                } else {
+                                    $subtotal += $this->cart['user']['shipping_method_costs'];
+                                }
+                            }
                             $handling_cost = ($subtotal / 100 * $percentage);
                             if ($total_include_vat && $payment_method['tax_rate']) {
                                 $handling_cost = $handling_cost / (1 + $payment_method['tax_rate']);
