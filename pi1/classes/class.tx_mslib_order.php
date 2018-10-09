@@ -1448,7 +1448,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             // now add the order
             $insertArray = array();
             $insertArray['customer_id'] = $customer_id;
-            $insertArray['page_uid'] = $this->shop_pid;
+            if (is_numeric($address['shop_pid'])) {
+                $insertArray['page_uid'] = $address['shop_pid'];
+            } else {
+                $insertArray['page_uid'] = $this->shop_pid;
+            }
             $insertArray['language_id'] = 0;
             if (is_numeric($address['language_id'])) {
                 $insertArray['language_id'] = $address['language_id'];
