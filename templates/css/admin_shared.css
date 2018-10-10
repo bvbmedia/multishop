@@ -191,6 +191,16 @@ th.cell_orders_id { white-space:nowrap; }
 .cellActionFluid .btn { width:100%; margin-bottom:5px; }
 .cellActionFluid .btn:last-child { margin-bottom:0; }
 
+.cell_phone_icon {
+	min-width: 76px;
+	max-width: 76px;
+	text-align: center;
+	white-space: normal!important;
+}
+.cell_phone_icon br {
+	display: none;
+}
+
 .alert h3:last-child { margin-bottom:0; }
 
 /* blockUI overrule */
