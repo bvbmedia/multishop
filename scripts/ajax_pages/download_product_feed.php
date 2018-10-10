@@ -1151,10 +1151,12 @@ if ($this->get['feed_hash']) {
                                         $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
                                         $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
                                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                            $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                            $tmpcontent .= $priceArray['shipping_costs_including_vat'];
+                                            //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                         } else {
                                             if ($priceArray['shipping_costs']) {
-                                                $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                $tmpcontent .= $priceArray['shipping_costs'];
                                             }
                                         }
                                     } else {
