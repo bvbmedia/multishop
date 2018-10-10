@@ -103,7 +103,7 @@ if ($this->get['feed_hash']) {
                                 $str2 = "SELECT * from tx_multishop_zones z where z.id='" . $zone_id . "'";
                                 $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                                 $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
-                                $tmpcontent .= 'shipping_costs_per_product_zone_' . str_replace(' ', '_', $row2['name']);
+                                $tmpcontent .= 'shipping_costs_per_product_zone_' . mslib_befe::strtolower(str_replace(' ', '_', $row2['name']));
                             } else {
                                 // if key name is attribute option, print the option name. else print key name
                                 if ($attributes[$field]) {
