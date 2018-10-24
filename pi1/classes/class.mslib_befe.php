@@ -4279,6 +4279,11 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_VAT'] = $this->pi_getLL('vat');
         $markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE'] = $this->pi_getLL('normal_price');
         $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '';
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_inc_vat');
+        } else {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_ex_vat');
+        }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
             $params_internal = array(
@@ -4293,10 +4298,8 @@ class mslib_befe {
             $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '<th align="right" class="cell_products_normal_price">' . $this->pi_getLL('discount') . '</th>';
         }
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_inc_vat');
             $subpartArray['###HEADER_INCLUDE_VAT_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['HEADER_INCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
         } else {
-            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_ex_vat');
             $subpartArray['###HEADER_EXCLUDE_VAT_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['HEADER_EXCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
         }
         // template wrapper
