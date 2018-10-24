@@ -3424,6 +3424,8 @@ if ($this->post) {
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').empty();
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
+					$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 					' . ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var cols_image_attributes_html=\'<div class="form-group" class="msEditAttributeValueImage">\';
 					cols_image_attributes_html+=\'<label for="attribute_value_image">' . addslashes(htmlspecialchars($this->pi_getLL('admin_image'))) . '</label>\';
@@ -3540,6 +3542,8 @@ if ($this->post) {
 					' . implode("\n", $extra_js_before_clone_new_attributes_row) . '
 					// add new shiny cloned attributes row
 					$($(this).parent().prev()).append(element_cloned);
+					$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 					// init select2
 					select2_sb(".product_attribute_options" + n, "' . addslashes($this->pi_getLL('admin_label_choose_option')) . '", "new_product_attribute_options_dropdown", "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options') . '");
 					select2_values_sb(".product_attribute_values" + n, "' . addslashes($this->pi_getLL('admin_label_choose_attribute')) . '", "new_product_attribute_values_dropdown", "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values') . '");
