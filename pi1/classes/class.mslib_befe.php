@@ -1491,7 +1491,7 @@ class mslib_befe {
                 if (!$oldproduct[$colname]) {
                     if ($item[$colname]) {
                         $plaatje1 = $item[$colname];
-                        $data = mslib_fe::file_get_contents($plaatje1);
+                        $data = mslib_fe::file_get_contents($plaatje1,0,10);
                         if ($data) {
                             $plaatje1_name = $products_id . '-' . ($colname) . '-' . time();
                             $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
