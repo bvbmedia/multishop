@@ -191,6 +191,11 @@ th.cell_orders_id { white-space:nowrap; }
 .cellActionFluid .btn { width:100%; margin-bottom:5px; }
 .cellActionFluid .btn:last-child { margin-bottom:0; }
 
+.popoverActionMenuWrapper .btn {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 .cell_phone_icon {
 	min-width: 76px;
 	max-width: 76px;

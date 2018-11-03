@@ -9917,7 +9917,7 @@ class mslib_fe {
             }
         }
     }
-    public function file_get_contents($filename, $force_gz = 0) {
+    public function file_get_contents($filename, $force_gz = 0, $timeout=0) {
         if ($filename) {
             if (!preg_match("/^\//", $filename) and strstr($filename, ' ')) {
                 // if filename is not a local path and it contains a space, then encode it
@@ -9944,6 +9944,10 @@ class mslib_fe {
                         curl_setopt($ch, CURLOPT_HEADER, 0);
                         curl_setopt($ch, CURLOPT_POST, 0);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        if ($timeout) {
+                            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                        }
                         //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
                         //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
                         $file_content = curl_exec($ch);
