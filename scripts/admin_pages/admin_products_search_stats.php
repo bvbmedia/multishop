@@ -167,6 +167,15 @@ foreach ($dates as $key => $value) {
     } else {
         $where[] = '(s.negative_results=0 or s.negative_results=1)';
     }
+    // hook
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_stats.php']['productSearchStatsQueryHookPreProc'])) {
+        $params = array(
+            'where' => &$where
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_stats.php']['productSearchStatsQueryHookPreProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
     $str = "SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM  tx_multishop_products_search_log s WHERE (" . implode(" AND ", $where) . ") and (s.crdate BETWEEN " . $start_time . " and " . $end_time . ") group by s.keyword order by total desc limit 5";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $key_data = array();
