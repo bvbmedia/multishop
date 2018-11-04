@@ -518,6 +518,15 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         }
         break;
 }
+$sesPostsErno=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_posterno');
+if ($sesPostsErno) {
+    foreach ($sesPostsErno as $sesPostErno) {
+        $postErno[]=$sesPostErno;
+    }
+    $sesPostsErno=array();
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_posterno', $sesPostsErno);
+    $GLOBALS['TSFE']->storeSessionData();
+}
 if (count($postErno)) {
     $returnMarkup = '
 	<div style="display:none" id="msAdminPostMessage">
