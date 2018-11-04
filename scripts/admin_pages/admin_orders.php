@@ -519,7 +519,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         break;
 }
 $sesPostsErno=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_posterno');
-if ($sesPostsErno) {
+if (count($sesPostsErno)) {
     foreach ($sesPostsErno as $sesPostErno) {
         $postErno[]=$sesPostErno;
     }
