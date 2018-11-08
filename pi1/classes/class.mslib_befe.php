@@ -4786,8 +4786,11 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
             $params_internal = array(
+                'subparts' => &$subparts,
                 'subpartArray' => &$subpartArray,
                 'order' => &$order,
+                'table_type' => $table_type,
+                'real_prefix' => $real_prefix,
                 'prefix' => $prefix,
                 'customer_currency' => $customer_currency,
                 'display_currency_symbol' => $display_currency_symbol
