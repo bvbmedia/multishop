@@ -1491,7 +1491,7 @@ class mslib_befe {
                 if (!$oldproduct[$colname]) {
                     if ($item[$colname]) {
                         $plaatje1 = $item[$colname];
-                        $data = mslib_fe::file_get_contents($plaatje1);
+                        $data = mslib_fe::file_get_contents($plaatje1,0,10);
                         if ($data) {
                             $plaatje1_name = $products_id . '-' . ($colname) . '-' . time();
                             $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
@@ -4279,6 +4279,11 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_VAT'] = $this->pi_getLL('vat');
         $markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE'] = $this->pi_getLL('normal_price');
         $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '';
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_inc_vat');
+        } else {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_ex_vat');
+        }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
             $params_internal = array(
@@ -4293,10 +4298,8 @@ class mslib_befe {
             $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '<th align="right" class="cell_products_normal_price">' . $this->pi_getLL('discount') . '</th>';
         }
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_inc_vat');
             $subpartArray['###HEADER_INCLUDE_VAT_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['HEADER_INCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
         } else {
-            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_ex_vat');
             $subpartArray['###HEADER_EXCLUDE_VAT_WRAPPER###'] = $this->cObj->substituteMarkerArray($subparts['HEADER_EXCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
         }
         // template wrapper
@@ -4375,6 +4378,10 @@ class mslib_befe {
                 $markerArray['ITEM_PRODUCT_QTY'] = round($product['qty'], 2);
                 $product_tmp = mslib_fe::getProduct($product['products_id']);
                 $product_name = htmlspecialchars($product['products_name']);
+                if (empty($product['products_name']) && !empty($product_tmp['products_name'])) {
+                    $product_name = htmlspecialchars($product_tmp['products_name']);
+                }
+
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
                 }
@@ -4779,8 +4786,11 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
             $params_internal = array(
-                    'subpartArray' => &$subpartArray,
-                    'order' => &$order
+                'subpartArray' => &$subpartArray,
+                'order' => &$order,
+                'prefix' => $prefix,
+                'customer_currency' => $customer_currency,
+                'display_currency_symbol' => $display_currency_symbol
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);

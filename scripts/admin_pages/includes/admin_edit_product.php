@@ -1494,7 +1494,7 @@ if ($this->post) {
 						}*/
                     }
                 }
-                if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
+                if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories']) && isset($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
                     foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
                         if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
                             if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
@@ -1697,6 +1697,24 @@ if ($this->post) {
 					}
 				}
 				*/
+            }
+        }
+        if ($this->conf['enableMultipleShops']) {
+            if (is_array($shopPids) && count($shopPids)) {
+                foreach ($shopPids as $shop_pid) {
+                    if ($shop_pid != $this->shop_pid) {
+                        if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            // remove the custom page desc if the cat id is not related anymore in p2c
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            //
+                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\'' . $prodid . '\' and page_uid=' . $shop_pid);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                    }
+                }
             }
         }
     } else {
@@ -3406,6 +3424,8 @@ if ($this->post) {
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').empty();
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
+					$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 					' . ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var cols_image_attributes_html=\'<div class="form-group" class="msEditAttributeValueImage">\';
 					cols_image_attributes_html+=\'<label for="attribute_value_image">' . addslashes(htmlspecialchars($this->pi_getLL('admin_image'))) . '</label>\';
@@ -3522,6 +3542,8 @@ if ($this->post) {
 					' . implode("\n", $extra_js_before_clone_new_attributes_row) . '
 					// add new shiny cloned attributes row
 					$($(this).parent().prev()).append(element_cloned);
+					$(\'input.priceInputReal\').number(true, 2, \'.\', \'\');
+			        $(\'input.priceInputDisplay\').number(true, 2, decimal_sep, thousands_sep);
 					// init select2
 					select2_sb(".product_attribute_options" + n, "' . addslashes($this->pi_getLL('admin_label_choose_option')) . '", "new_product_attribute_options_dropdown", "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options') . '");
 					select2_values_sb(".product_attribute_values" + n, "' . addslashes($this->pi_getLL('admin_label_choose_attribute')) . '", "new_product_attribute_values_dropdown", "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values') . '");
@@ -3794,25 +3816,30 @@ if ($this->post) {
 					});
 				}
 				var sort_li = function () {
-					jQuery("td#products_attributes_items").sortable({
-						' . ($product['products_id'] ? '
-						update: function(e, ui) {
-							href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid=' . $product['products_id']) . '";
-							jQuery(this).sortable("refresh");
-							sorted = jQuery(this).sortable("serialize", "id");
-							jQuery.ajax({
-								type:"POST",
-								url:href,
-								data:sorted,
-								success: function(msg) {
-									//do something with the sorted data
-								}
-							});
-						},
-						' : '') . '
-						cursor:"move",
-						items:">div.products_attributes_item"
-					});
+				    if (jQuery(\'.group_attributes_panel\').length>0) {
+				        var sort_selector=\'.group_attributes_panel\';
+				    } else {
+                        var sort_selector=\'td#products_attributes_items\';
+					}
+					jQuery(sort_selector).sortable({
+                        ' . ($product['products_id'] ? '
+                        update: function(e, ui) {
+                            href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid=' . $product['products_id']) . '";
+                            jQuery(this).sortable("refresh");
+                            sorted = jQuery(this).sortable("serialize", "id");
+                            jQuery.ajax({
+                                type:"POST",
+                                url:href,
+                                data:sorted,
+                                success: function(msg) {
+                                    //do something with the sorted data
+                                }
+                            });
+                        },
+                        ' : '') . '
+                        cursor:"move",
+                        items:">div.products_attributes_item"
+                    });
 				}
 				var sort_li_children = function () {
 					jQuery(".items_wrapper").sortable({
@@ -4018,6 +4045,8 @@ if ($this->post) {
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
                         $attributes_tab_block .= '<td colspan="5" id="products_attributes_items">';
+
+                        $attributes_block_panel=array();
                         foreach ($options_data as $option_id => $option_name) {
                             if (!isset($group_row_type) || $group_row_type == 'even_group_row') {
                                 $group_row_type = 'odd_group_row';
@@ -4028,7 +4057,7 @@ if ($this->post) {
                             if (!$options_hide_data[$option_id]) {
                                 $hide_row=' style="display:none"';
                             }
-                            $attributes_tab_block .= '
+                            $attributes_block_panel[$option_id] = '
                             <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"'.$hide_row.'>
                                 <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="false" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
                                     <h3 class="panel-title"><i class="fa fa-bars"></i> ' . $option_name . '</h3>
@@ -4151,16 +4180,79 @@ if ($this->post) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                     }
                                 }
-                                $attributes_tab_block .= '<div class="wrap-attributes-item ' . $item_row_type . '" id="item_product_attribute_' . $attribute_data['products_attributes_id'] . '" rel="' . $attribute_data['products_attributes_id'] . '">';
-                                $attributes_tab_block .= '<table class="table">';
-                                $attributes_tab_block .= '<thead><tr class="option_row">';
-                                $attributes_tab_block .= implode("\n", $existing_product_attributes_block_columns);
-                                $attributes_tab_block .= '</tr></thead>';
-                                $attributes_tab_block .= '</table>';
-                                $attributes_tab_block .= '</div>';
+                                $attributes_block_panel[$option_id] .= '<div class="wrap-attributes-item ' . $item_row_type . '" id="item_product_attribute_' . $attribute_data['products_attributes_id'] . '" rel="' . $attribute_data['products_attributes_id'] . '">';
+                                $attributes_block_panel[$option_id] .= '<table class="table">';
+                                $attributes_block_panel[$option_id] .= '<thead><tr class="option_row">';
+                                $attributes_block_panel[$option_id] .= implode("\n", $existing_product_attributes_block_columns);
+                                $attributes_block_panel[$option_id] .= '</tr></thead>';
+                                $attributes_block_panel[$option_id] .= '</table>';
+                                $attributes_block_panel[$option_id] .= '</div>';
                             }
-                            $attributes_tab_block .= '</div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="' . $this->pi_getLL('admin_add_new_value') . ' [+]" rel="' . $option_id . '" /></div></div></div>';
-                            $attributes_tab_block .= '</div>';
+
+                            $attributes_block_panel[$option_id] .= '</div>
+                            <div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="' . $this->pi_getLL('admin_add_new_value') . ' [+]" rel="' . $option_id . '" /></div></div></div>';
+                            $attributes_block_panel[$option_id] .= '</div>';
+                        }
+
+                        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+                            $groups_options_list=array();
+                            $group_to_option=array();
+                            $group_name_to_group_id=array();
+                            if (count($options_data)) {
+                                foreach ($options_data as $option_id => $option_name) {
+                                    $str = 'SELECT aog.* from tx_multishop_attributes_options_groups aog, tx_multishop_attributes_options_groups_to_products_options og2po WHERE aog.attributes_options_groups_id=og2po.attributes_options_groups_id AND aog.language_id=0 AND og2po.products_options_id=' . $option_id . ' GROUP BY og2po.products_options_id ORDER BY aog.sort_order ASC';
+                                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                                        $groups_options_list[$row['sort_order']]=$row['attributes_options_groups_name'];
+                                        $group_name_to_group_id[$row['attributes_options_groups_name']]=$row['attributes_options_groups_id'];
+                                        $group_to_option[$row['attributes_options_groups_id']][]=$option_id;
+                                    } else {
+                                        $groups_options_list['999999']=$this->pi_getLL('other');
+                                        $group_name_to_group_id[$this->pi_getLL('other')]='999999';
+                                        $group_to_option['999999'][]=$option_id;
+                                    }
+                                }
+                            }
+                            if (count($groups_options_list)==1 && isset($groups_options_list['999999'])) {
+                                $attributes_tab_block .= implode("\n", $attributes_block_panel);
+                            } else {
+                                ksort($groups_options_list);
+                                $attributes_group_block_panel=array();
+                                $counter=0;
+                                foreach ($groups_options_list as $sort_order => $group_name) {
+                                    $group_id=$group_name_to_group_id[$group_name];
+                                    $option_panel=array();
+                                    foreach ($group_to_option[$group_id] as $option_id) {
+                                        $option_panel[]=$attributes_block_panel[$option_id];
+                                    }
+                                    $panel_count=count($option_panel);
+
+                                    $collapsed=' collapsed';
+                                    $aria_expanded='false';
+                                    $expand_in='';
+                                    if ($counter=='0') {
+                                        $collapsed='';
+                                        $aria_expanded='true';
+                                        $expand_in=' in';
+                                    }
+                                    $attributes_group_block_panel[$group_id]='<div class="panel panel-success"> 
+                                        <div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
+                                            <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
+                                            <i class="fa fa-file-text-o"></i> '.$group_name.' ('.$panel_count.')</a> </h3> 
+                                        </div> 
+                                        <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+                                            <div class="group_attributes_panel panel-body"> 
+                                            ' . implode("\n", $option_panel) . '
+                                            </div> 
+                                        </div> 
+                                    </div>';
+                                    $counter++;
+                                }
+                                $attributes_tab_block .= implode("\n", $attributes_group_block_panel);
+                            }
+                        } else {
+                            $attributes_tab_block .= implode("\n", $attributes_block_panel);
                         }
                         $attributes_tab_block .= '</td>';
                         $attributes_tab_block .= '</tr></thead>';

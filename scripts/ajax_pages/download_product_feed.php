@@ -103,7 +103,7 @@ if ($this->get['feed_hash']) {
                                 $str2 = "SELECT * from tx_multishop_zones z where z.id='" . $zone_id . "'";
                                 $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                                 $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
-                                $tmpcontent .= 'shipping_costs_per_product_zone_' . str_replace(' ', '_', $row2['name']);
+                                $tmpcontent .= 'shipping_costs_per_product_zone_' . mslib_befe::strtolower(str_replace(' ', '_', $row2['name']));
                             } else {
                                 // if key name is attribute option, print the option name. else print key name
                                 if ($attributes[$field]) {
@@ -1031,6 +1031,15 @@ if ($this->get['feed_hash']) {
                     case 'products_feed_generated_date':
                         $tmpcontent .= strftime('%x', time());
                         break;
+                    case 'products_date_added':
+                        $tmpcontent .= strftime('%x', $row['products_date_added']);
+                        break;
+                    case 'products_date_available':
+                        $tmpcontent .= strftime('%x', $row['products_date_available']);
+                        break;
+                    case 'products_last_modified':
+                        $tmpcontent .= strftime('%x', $row['products_last_modified']);
+                        break;
                     default:
                         if ($field) {
                             // COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES
@@ -1142,10 +1151,12 @@ if ($this->get['feed_hash']) {
                                         $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
                                         $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
                                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                            $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                            $tmpcontent .= $priceArray['shipping_costs_including_vat'];
+                                            //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                         } else {
                                             if ($priceArray['shipping_costs']) {
-                                                $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                $tmpcontent .= $priceArray['shipping_costs'];
                                             }
                                         }
                                     } else {

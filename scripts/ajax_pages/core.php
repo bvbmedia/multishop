@@ -1345,11 +1345,11 @@ switch ($this->ms['page']) {
             $imgSettings['string'] = $this->get['tx_multishop_pi1']['string'];
             $imgSettings['font_type'] = 'code39';
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'])) {
-                $params = array(
+                $params_core = array(
                         'imgSettings' => &$imgSettings
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkodeImgSettingsPreProc'] as $funcRef) {
-                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_core, $this);
                 }
             }
             $im = imagecreatetruecolor($imgSettings['canvas_width'], $imgSettings['canvas_height']);
@@ -1361,7 +1361,7 @@ switch ($this->ms['page']) {
             if (is_numeric($this->get['tx_multishop_pi1']['angle'])) {
                 $imgSettings['angle'] = $this->get['tx_multishop_pi1']['angle'];
             }
-            $data = Barcode::gd($im, $black, $imgSettings['barcode_x_pos'], $imgSettings['barcode_y_pos'], $imgSettings['angle'], $imgSettings['font_type'], array('code' => $imgSettings['string']), $width, $imgSettings['height']);
+            $data = Barcode::gd($im, $black, $imgSettings['barcode_x_pos'], $imgSettings['barcode_y_pos'], $imgSettings['angle'], $imgSettings['font_type'], array('code' => $imgSettings['string']), $imgSettings['width'], $imgSettings['height']);
             header('Content-type: image/png');
             imagepng($im);
             imagedestroy($im);
