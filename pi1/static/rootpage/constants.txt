@@ -291,4 +291,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/enable; type=string; label= Standard custom "search on" (Zoek op)
 	adminProductsSearchAndEditStandardCustomSearchOn =
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable auto-remember orders listing filters
+	adminOrdersListingDisableAutoRememberFilters = 0
 }

@@ -597,7 +597,7 @@ foreach ($search_keys as $search_key) {
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
         $GLOBALS['TSFE']->storeSessionData();
     }
-    if ($this->cookie[$search_key]) {
+    if ($this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters']=='0') {
         $this->post[$search_key] = $this->cookie[$search_key];
     }
 }
