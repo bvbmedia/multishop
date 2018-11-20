@@ -2881,6 +2881,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Display prepended products model to product name in edit order',
+        'configuration_key' => 'DISPLAY_PRODUCTS_MODEL_IN_EDIT_ORDER',
+        'configuration_value' => '0',
+        'description' => 'Display prepended products model to product name in edit order',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Display appended products id to product name in edit order',
+        'configuration_key' => 'DISPLAY_PRODUCTS_ID_IN_EDIT_ORDER',
+        'configuration_value' => '0',
+        'description' => 'Display appended products id to product name in edit order',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

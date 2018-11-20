@@ -1432,6 +1432,7 @@ switch ($_REQUEST['action']) {
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
                 $params = array(
+                        'orders' => $orders_pageset,
                         'markerArray' => &$markerArray,
                         'user' => &$user
                 );

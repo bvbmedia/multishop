@@ -130,6 +130,8 @@ plugin.tx_multishop_pi1 {
 	developer_email = {$plugin.multishop.developer_email}
 	loadOldRedactorVersion = {$plugin.multishop.loadOldRedactorVersion}
 	adminProductsSearchAndEditStandardCustomSearchOn = {$plugin.multishop.adminProductsSearchAndEditStandardCustomSearchOn}
+	addLinkToProductNameForCancelUrl = {$plugin.multishop.addLinkToProductNameForCancelUrl}
+	adminOrdersListingDisableAutoRememberFilters = {$plugin.multishop.adminOrdersListingDisableAutoRememberFilters}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

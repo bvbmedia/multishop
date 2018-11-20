@@ -93,6 +93,7 @@ if (is_numeric($this->get['orders_id'])) {
             $address['delivery_vat_id'] = $order['delivery_vat_id'];
             $address['by_phone'] = 1;
             $address['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $address['shop_pid'] = $order['page_uid'];
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPostProc'])) {
                 // hook
                 $params = array(

@@ -2774,7 +2774,7 @@ class mslib_fe {
                             $option_desc_tooltip = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $option_desc_tooltip . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
                         }
                         if (!$readonly) {
-                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
+                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ':' . $option_desc_tooltip . '</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
                         } else {
                             $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>';
                         }
@@ -5331,6 +5331,7 @@ class mslib_fe {
         if ($skipFlatDatabase || (!$this->ms['MODULES']['FLAT_DATABASE'] || $include_disabled_products)) {
             $select = array();
             $select[] = '*';
+            $select[] = 'p.search_engines_allow_indexing as search_engines_allow_indexing';
             $select[] = 'p.staffel_price as staffel_price';
             $select[] = 's.specials_new_products_price';
             $select[] = 's.start_date as special_start_date';
@@ -7524,6 +7525,9 @@ class mslib_fe {
             $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders');
             $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['class'] = 'fa fa-info-circle';
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders') {
+                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
+            }
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_order' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_order') {
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
             }
             if ($this->ms['MODULES']['MANUAL_ORDER']) {
@@ -9913,7 +9917,7 @@ class mslib_fe {
             }
         }
     }
-    public function file_get_contents($filename, $force_gz = 0) {
+    public function file_get_contents($filename, $force_gz = 0, $timeout=0) {
         if ($filename) {
             if (!preg_match("/^\//", $filename) and strstr($filename, ' ')) {
                 // if filename is not a local path and it contains a space, then encode it
@@ -9940,6 +9944,10 @@ class mslib_fe {
                         curl_setopt($ch, CURLOPT_HEADER, 0);
                         curl_setopt($ch, CURLOPT_POST, 0);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        if ($timeout) {
+                            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                        }
                         //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
                         //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
                         $file_content = curl_exec($ch);
