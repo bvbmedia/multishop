@@ -171,6 +171,7 @@ if ($rows) {
 //	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
     //$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
     //$content.='<div class="attribute_options_sortable" id="attribute_listings">';
+    $counter=0;
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         if (is_array($selected_options_group) && isset($selected_options_group[$row['products_options_id']])) {
             $identifier_id=$selected_options_group[$row['products_options_id']];
@@ -184,9 +185,14 @@ if ($rows) {
         $collapsed=' collapsed';
         $aria_expanded='false';
         $expand_in='';
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']=='0') {
+            if ($counter == '0') {
+                $collapsed = '';
+                $aria_expanded = 'true';
+                $expand_in = ' in';
+            }
+        }
         $attributes_content[$identifier_id] .= '<div class="panel panel-default" id="options_' . $row['products_options_id'] . '">';
-
-
         $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'">
                 <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'" class="">
                     <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')</a> 
@@ -268,6 +274,7 @@ if ($rows) {
             </div>';
 
         $attributes_content[$identifier_id] .= '</div>';
+        $counter++;
     }
     if (isset($attributes_group['groups']) && count($attributes_group['groups']) > 0) {
         $counter=0;
