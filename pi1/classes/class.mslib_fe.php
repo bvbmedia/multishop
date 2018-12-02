@@ -10644,6 +10644,30 @@ class mslib_fe {
         }
         return $enabled_countries;
     }
+    public function getAttributesOptionsGroup() {
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+            $str = "SELECT * from tx_multishop_attributes_options_groups order by sort_order asc";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $attributesGroup=array();
+            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                    $attributesGroup['groups'][$row['attributes_options_groups_id']]=$row['attributes_options_groups_name'];
+                    $str2 = "select attributes_options_groups_id, products_options_id from tx_multishop_attributes_options_groups_to_products_options where attributes_options_groups_id = '" . $row['attributes_options_groups_id'] . "'";
+                    $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2) > 0) {
+                        while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+                            $attributesGroup['selected'][$row2['products_options_id']]=$row2['attributes_options_groups_id'];
+                        }
+                    }
+                }
+                return $attributesGroup;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     public function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
             $str = "SELECT * from tx_multishop_attributes_options_groups";
