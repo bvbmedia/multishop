@@ -151,6 +151,17 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $link = mslib_fe::typolink($this->conf['shop_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
                 }
                 $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
+                //hook to let other plugins further manipulate the query
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArraySubMenuArrayIteratorPostProc'])) {
+                    $params = array(
+                            'item' => &$item,
+                            'menuArr' => &$menuArr,
+                            'tel' => &$tel
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArraySubMenuArrayIteratorPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 $sub_content = $this->subMenuArray($item);
                 if ($sub_content) {
                     $menuArr[$tel]['_SUB_MENU'] = $sub_content;
