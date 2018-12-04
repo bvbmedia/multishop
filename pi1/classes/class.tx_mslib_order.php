@@ -796,11 +796,28 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         if ($mailSubject == '') {
                             $mailSubject = $this->pi_getLL('copy_for_merchant') . ': ' . $pageCopyToMerchant[0]['name'];
                         }
-                        // now mail a copy to the merchant
-                        $merchant = array();
-                        $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
-                        $merchant['email'] = $this->ms['MODULES']['STORE_EMAIL'];
-                        mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                        if (isset($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO']) && !empty($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'])) {
+                            $email = array();
+                            if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'], ",")) {
+                                $email[] = $this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'];
+                            } else {
+                                $email = explode(',', $this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO']);
+                            }
+                            if (count($email)) {
+                                foreach ($email as $item) {
+                                    $merchant = array();
+                                    $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
+                                    $merchant['email'] = $item;
+                                    mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                                }
+                            }
+                        } else {
+                            // now mail a copy to the merchant
+                            $merchant = array();
+                            $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
+                            $merchant['email'] = $this->ms['MODULES']['STORE_EMAIL'];
+                            mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                        }
                         if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
                             $email = array();
                             if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {
