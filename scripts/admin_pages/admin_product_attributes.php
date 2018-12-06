@@ -193,9 +193,11 @@ if ($rows) {
             }
         }
         $attributes_content[$identifier_id] .= '<div class="panel panel-default" id="options_' . $row['products_options_id'] . '">';
-        $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'">
-                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'" class="">
-                    <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')</a> 
+        $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle panel-heading-option'.$collapsed.'" data-toggle="collapse" aria-expanded="'.$aria_expanded.'">
+                <h3 class="panel-title"> 
+                    <a role="button" data-toggle="collapse" href="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'" class="toggle_class">
+                        <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')
+                    </a> 
                     <span class="option_edit">
                         <a href="#" class="edit_options btn btn-primary btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-pencil"></i></a>
                         <a href="#" class="delete_options btn btn-danger btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-remove"></i></a>
