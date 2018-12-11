@@ -2179,7 +2179,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $orderDetailsItem = '<hr><div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
                     <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">' . nl2br($orders['customer_comments']) . '</div></div></div>
                 </div>';
-                $orderDetails[] = $orderDetailsItem;
+                $orderDetails['customer_comments'] = $orderDetailsItem;
             }
 
             $extraDetails = array();
