@@ -412,6 +412,21 @@ switch ($this->ms['page']) {
                         foreach ($this->post['movecats'] as $move_catid) {
                             $sql_update = 'update tx_multishop_categories set parent_id = ' . $new_parent_id . ' where categories_id = ' . $move_catid;
                             $GLOBALS['TYPO3_DB']->sql_query($sql_update);
+
+                            // move product as well
+                            $products = mslib_befe::getRecords($move_catid, 'tx_multishop_products_to_categories', 'node_id', array(), 'products_id', '', '', array('products_id, categories_id'));
+                            if (is_array($products) && count($products)) {
+                                foreach ($products as $product) {
+                                    $pid=$product['products_id'];
+                                    $filter = array();
+                                    $filter[] = 'products_id=' . $pid;
+                                    if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+                                        // lock changed columns
+                                        mslib_befe::updateImportedProductsLockedFields($pid, 'tx_multishop_products_to_categories', array('categories_id' => $move_catid));
+                                    }
+                                    mslib_befe::moveProduct($pid, $product['categories_id'], $product['categories_id']);
+                                }
+                            }
                         }
                     } else {
                         if (isset($this->post['delete_selected_categories'])) {

@@ -1624,7 +1624,9 @@ if ($this->post) {
                         if (is_array($catOldIds[$page_uid]) && count($catOldIds[$page_uid])) {
                             $catIdsToAdd = array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
                         }
-                        //print_r($catIdsToAdd);
+                        if (!count($catIdsToAdd)) {
+                            $catIdsToAdd = $catArray;
+                        }
                         //
                         foreach ($catIdsToAdd as $catId) {
                             if (strpos($catId, '::rel_') !== false) {
@@ -1634,10 +1636,13 @@ if ($this->post) {
                                 $relCatId = 0;
                             }
                             if ($catId > 0) {
+                                /*
                                 $p2c_record = mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
                                         'categories_id=\'' . $catId . '\'',
                                         '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
                                 ));
+                                */
+                                $p2c_record=false;
                                 if (!is_array($p2c_record)) {
                                     $updateArray = array();
                                     $updateArray['categories_id'] = $catId;
