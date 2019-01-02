@@ -1645,10 +1645,10 @@ if ($this->post) {
                                     $updateArray = array();
                                     $updateArray['categories_id'] = $catId;
                                     $updateArray['products_id'] = $prodid;
-                                    if (!is_array($p2c_record)) {
-                                        $updateArray['sort_order'] = time();
-                                    } else {
+                                    if (is_array($p2c_record) && is_numeric($p2c_record['sort_order']) && $p2c_record['sort_order'] > 0) {
                                         $updateArray['sort_order'] = $p2c_record['sort_order'];
+                                    } else {
+                                        $updateArray['sort_order'] = time();
                                     }
                                     $updateArray['page_uid'] = $page_uid;
                                     $updateArray['related_to'] = $relCatId;
