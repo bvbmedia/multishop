@@ -1636,25 +1636,27 @@ if ($this->post) {
                                 $relCatId = 0;
                             }
                             if ($catId > 0) {
-                                /*
                                 $p2c_record = mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
-                                        'categories_id=\'' . $catId . '\'',
-                                        '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
+                                    'categories_id=\'' . $catId . '\'',
+                                    '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
                                 ));
-                                */
-                                $p2c_record=false;
-                                if (!is_array($p2c_record)) {
+                                //$p2c_record=false;
+                                //if (!is_array($p2c_record)) {
                                     $updateArray = array();
                                     $updateArray['categories_id'] = $catId;
                                     $updateArray['products_id'] = $prodid;
-                                    $updateArray['sort_order'] = time();
+                                    if (!is_array($p2c_record)) {
+                                        $updateArray['sort_order'] = time();
+                                    } else {
+                                        $updateArray['sort_order'] = $p2c_record['sort_order'];
+                                    }
                                     $updateArray['page_uid'] = $page_uid;
                                     $updateArray['related_to'] = $relCatId;
                                     /*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
                                     // create categories tree linking
                                     tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
-                                }
+                                //}
                                 // update the counterpart relation
                                 if ($relCatId > 0) {
                                     $updateArray = array();
