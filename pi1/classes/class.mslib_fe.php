@@ -9935,26 +9935,40 @@ class mslib_fe {
                     // local path
                     $file_content = @file_get_contents($filename);
                 } else {
-                    $path = @parse_url($filename);
-                    if ($path['scheme']) {
-                        // we try to use Curl, so we don't need PHP allow_url_fopen to be on
-                        $ch = curl_init($filename);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
-                        curl_setopt($ch, CURLOPT_POST, 0);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        if ($timeout) {
-                            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-                            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'])) {
+                        $http_code='';
+                        $file_content='';
+                        $conf = array(
+                                'filename' => &$filename,
+                                'http_code' => &$http_code,
+                                'file_content' => &$file_content,
+                                'timeout' => &$timeout,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                         }
-                        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
-                        //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
-                        $file_content = curl_exec($ch);
-                        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        if ($http_code == 301 || $http_code == 302) {
-                            // redirect. lets download it manually
-                            $file_content = file_get_contents($filename);
+                    } else {
+                        $path = @parse_url($filename);
+                        if ($path['scheme']) {
+                            // we try to use Curl, so we don't need PHP allow_url_fopen to be on
+                            $ch = curl_init($filename);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                            curl_setopt($ch, CURLOPT_HEADER, 0);
+                            curl_setopt($ch, CURLOPT_POST, 0);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            if ($timeout) {
+                                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                            }
+                            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
+                            //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
+                            $file_content = curl_exec($ch);
+                            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                            if ($http_code == 301 || $http_code == 302) {
+                                // redirect. lets download it manually
+                                $file_content = file_get_contents($filename);
+                            }
                         }
                     }
                 }
