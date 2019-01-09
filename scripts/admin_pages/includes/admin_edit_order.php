@@ -4324,7 +4324,9 @@ if (is_numeric($this->get['orders_id'])) {
                             var tr_parent=$(this).parent().parent().parent().parent();
                             var tbody_parent=$(tr_parent).parent();
                             //
-                            if (typeof $(tbody_parent).attr("id")=="undefined") {
+                            if ($(\'input[name="manual_products_id"]\').val() != ""){
+                                var product_id=$(\'input[name="manual_products_id"]\').val();
+                            } else if (typeof $(tbody_parent).attr("id")=="undefined") {
                                 // add new product
                                 var product_id=$(tbody_parent).children("tr:nth-child(2)").children().find("input.product_name").val();
                             } else {
@@ -4336,8 +4338,11 @@ if (is_numeric($this->get['orders_id'])) {
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order') . '",{pid: product_id, optid: option_id, valid: option_value_id}, function(k){
                                 if (k.length>0) {
                                     jQuery.each(k, function(idx, optvalid) {
+                                        optid=optvalid.optid;
                                         valid=optvalid.valid;
-                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                        var input_id="#edit_product_price" + optid
+                                        var display_price_wrapper_id=".attributesPriceWrapper" + optid                                        
+                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, display_values_price_including_vat_formatted: optvalid.display_values_price_including_vat_formatted, price_prefix: optvalid.price_prefix};
                                         jQuery.each(jQuery(price_input_obj), function(i, v) {
                                             if ($(v).attr("id")=="display_manual_name_excluding_vat") {
                                                 $(v).val(price_data.price_prefix + price_data.display_values_price);
@@ -4348,7 +4353,19 @@ if (is_numeric($this->get['orders_id'])) {
                                             if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
                                                 $(v).val(price_data.price_prefix + price_data.values_price);
                                             }
+                                            if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
+                                            if ($(v).attr("id")==input_id || $(v).attr("id")==input_id) {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
                                         });
+                                        if ($(input_id).length > 0) {
+                                            $(input_id).val(price_data.price_prefix + price_data.values_price);
+                                        }
+                                        if ($(display_price_wrapper_id).length > 0) {
+                                            $(display_price_wrapper_id).html(price_data.display_values_price_including_vat_formatted);
+                                        }
                                     });
                                 } else {
                                     jQuery.each(jQuery(price_input_obj), function(i, v) {

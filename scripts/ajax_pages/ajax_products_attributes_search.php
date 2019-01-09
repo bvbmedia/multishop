@@ -80,6 +80,7 @@ if ($this->ADMIN_USER) {
                 $option_data[$ctr]['values_price'] = $rs_option['options_values_price'];
                 $option_data[$ctr]['display_values_price'] = mslib_fe::taxDecimalCrop($rs_option['options_values_price'], 2, false, false);
                 $option_data[$ctr]['display_values_price_including_vat'] = $attribute_price_display_incl;
+                $option_data[$ctr]['display_values_price_including_vat_formatted'] = mslib_fe::currency() . ' ' . mslib_fe::amount2Cents($attribute_price_display_incl, 1);
                 $option_data[$ctr]['price_prefix'] = $rs_option['price_prefix'];
                 $ctr++;
             }
