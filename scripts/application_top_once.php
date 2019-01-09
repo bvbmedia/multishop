@@ -49,4 +49,11 @@ foreach ($paths as $path) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($path);
     }
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_once.php']['applicationTopOncePostProc'])) {
+    $params = array();
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_once.php']['applicationTopOncePostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 ?>
