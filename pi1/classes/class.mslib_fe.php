@@ -9935,26 +9935,40 @@ class mslib_fe {
                     // local path
                     $file_content = @file_get_contents($filename);
                 } else {
-                    $path = @parse_url($filename);
-                    if ($path['scheme']) {
-                        // we try to use Curl, so we don't need PHP allow_url_fopen to be on
-                        $ch = curl_init($filename);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
-                        curl_setopt($ch, CURLOPT_POST, 0);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        if ($timeout) {
-                            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-                            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'])) {
+                        $http_code='';
+                        $file_content='';
+                        $conf = array(
+                                'filename' => &$filename,
+                                'http_code' => &$http_code,
+                                'file_content' => &$file_content,
+                                'timeout' => &$timeout,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                         }
-                        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
-                        //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
-                        $file_content = curl_exec($ch);
-                        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        if ($http_code == 301 || $http_code == 302) {
-                            // redirect. lets download it manually
-                            $file_content = file_get_contents($filename);
+                    } else {
+                        $path = @parse_url($filename);
+                        if ($path['scheme']) {
+                            // we try to use Curl, so we don't need PHP allow_url_fopen to be on
+                            $ch = curl_init($filename);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                            curl_setopt($ch, CURLOPT_HEADER, 0);
+                            curl_setopt($ch, CURLOPT_POST, 0);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            if ($timeout) {
+                                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                            }
+                            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
+                            //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
+                            $file_content = curl_exec($ch);
+                            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                            if ($http_code == 301 || $http_code == 302) {
+                                // redirect. lets download it manually
+                                $file_content = file_get_contents($filename);
+                            }
                         }
                     }
                 }
@@ -10643,6 +10657,30 @@ class mslib_fe {
             $enabled_countries[] = $row2;
         }
         return $enabled_countries;
+    }
+    public function getAttributesOptionsGroup() {
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+            $str = "SELECT * from tx_multishop_attributes_options_groups order by sort_order asc";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $attributesGroup=array();
+            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                    $attributesGroup['groups'][$row['attributes_options_groups_id']]=$row['attributes_options_groups_name'];
+                    $str2 = "select attributes_options_groups_id, products_options_id from tx_multishop_attributes_options_groups_to_products_options where attributes_options_groups_id = '" . $row['attributes_options_groups_id'] . "'";
+                    $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2) > 0) {
+                        while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+                            $attributesGroup['selected'][$row2['products_options_id']]=$row2['attributes_options_groups_id'];
+                        }
+                    }
+                }
+                return $attributesGroup;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
     public function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {

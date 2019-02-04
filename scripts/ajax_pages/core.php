@@ -2224,6 +2224,8 @@ switch ($this->ms['page']) {
                     switch ($details_type) {
                         case "delivery_details":
                             $keys[] = 'gender';
+                            $keys[] = 'vat_id';
+                            $keys[] = 'coc_id';
                             foreach ($keys as $key) {
                                 $string = 'delivery_' . $key;
                                 if (isset($this->post['tx_multishop_pi1'][$string])) {

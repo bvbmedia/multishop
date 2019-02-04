@@ -1610,6 +1610,18 @@ if (is_numeric($this->get['orders_id'])) {
                 		<input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="' . $orders['delivery_fax'] . '" />
                 	</div>
                 </div>';
+                $edit_delivery_details['delivery_vat_id'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[delivery_vat_id]" type="text" id="edit_delivery_vat_id" value="' . $orders['delivery_vat_id'] . '" />
+						</div>
+					</div>';
+                $edit_delivery_details['delivery_coc_id'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[delivery_coc_id]" type="text" id="edit_delivery_coc_id" value="' . $orders['delivery_coc_id'] . '" />
+						</div>
+					</div>';
                 $edit_delivery_details['delivery_save_form'] = '
                 <div id="delivery_details_erno_wrapper">
                 ' . ($count_validate_erno ? '<div class="erno_message well text-danger"><ul>' . implode("\n", $validate_erno) . '</ul></div>' : '') . '
@@ -1661,6 +1673,15 @@ if (is_numeric($this->get['orders_id'])) {
             }
             if ($orders['delivery_fax']) {
                 $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+            }
+            if ($orders['delivery_fax']) {
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+            }
+            if ($orders['delivery_vat_id']) {
+                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['delivery_vat_id'] . '</strong><br />';
+            }
+            if ($orders['delivery_coc_id']) {
+                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['delivery_coc_id'] . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -1817,6 +1838,12 @@ if (is_numeric($this->get['orders_id'])) {
 
                 $("#edit_delivery_fax").val("");
                 $("#edit_delivery_fax").val($("#edit_billing_fax").val());
+                
+                $("#edit_delivery_vat_id").val("");
+                $("#edit_delivery_vat_id").val($("#edit_billing_vat_id").val());
+                
+                $("#edit_delivery_coc_id").val("");
+                $("#edit_delivery_coc_id").val($("#edit_billing_coc_id").val());
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
@@ -1895,6 +1922,14 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_delivery_fax") {
                         if ($(this).val() != "") {
                             delivery_details += "' . $this->pi_getLL('fax') . ': " + $(this).val() + "<br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_delivery_vat_id") {
+                        if ($(this).val() != "") {
+                            delivery_details += "<strong>' . $this->pi_getLL('vat_id') . ': " + $(this).val() + "</strong><br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_delivery_coc_id") {
+                        if ($(this).val() != "") {
+                            delivery_details += "<strong>' . $this->pi_getLL('coc_id') . ': " + $(this).val() + "</strong><br/>";
                         }
                     }
                 });
@@ -2179,7 +2214,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $orderDetailsItem = '<hr><div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
                     <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">' . nl2br($orders['customer_comments']) . '</div></div></div>
                 </div>';
-                $orderDetails[] = $orderDetailsItem;
+                $orderDetails['customer_comments'] = $orderDetailsItem;
             }
 
             $extraDetails = array();
@@ -4289,7 +4324,9 @@ if (is_numeric($this->get['orders_id'])) {
                             var tr_parent=$(this).parent().parent().parent().parent();
                             var tbody_parent=$(tr_parent).parent();
                             //
-                            if (typeof $(tbody_parent).attr("id")=="undefined") {
+                            if ($(\'input[name="manual_products_id"]\').val() != ""){
+                                var product_id=$(\'input[name="manual_products_id"]\').val();
+                            } else if (typeof $(tbody_parent).attr("id")=="undefined") {
                                 // add new product
                                 var product_id=$(tbody_parent).children("tr:nth-child(2)").children().find("input.product_name").val();
                             } else {
@@ -4301,8 +4338,11 @@ if (is_numeric($this->get['orders_id'])) {
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order') . '",{pid: product_id, optid: option_id, valid: option_value_id}, function(k){
                                 if (k.length>0) {
                                     jQuery.each(k, function(idx, optvalid) {
+                                        optid=optvalid.optid;
                                         valid=optvalid.valid;
-                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                        var input_id="#edit_product_price" + optid
+                                        var display_price_wrapper_id=".attributesPriceWrapper" + optid                                        
+                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, display_values_price_including_vat_formatted: optvalid.display_values_price_including_vat_formatted, price_prefix: optvalid.price_prefix};
                                         jQuery.each(jQuery(price_input_obj), function(i, v) {
                                             if ($(v).attr("id")=="display_manual_name_excluding_vat") {
                                                 $(v).val(price_data.price_prefix + price_data.display_values_price);
@@ -4313,7 +4353,19 @@ if (is_numeric($this->get['orders_id'])) {
                                             if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
                                                 $(v).val(price_data.price_prefix + price_data.values_price);
                                             }
+                                            if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
+                                            if ($(v).attr("id")==input_id || $(v).attr("id")==input_id) {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
                                         });
+                                        if ($(input_id).length > 0) {
+                                            $(input_id).val(price_data.price_prefix + price_data.values_price);
+                                        }
+                                        if ($(display_price_wrapper_id).length > 0) {
+                                            $(display_price_wrapper_id).html(price_data.display_values_price_including_vat_formatted);
+                                        }
                                     });
                                 } else {
                                     jQuery.each(jQuery(price_input_obj), function(i, v) {

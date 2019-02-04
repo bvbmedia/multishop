@@ -167,7 +167,7 @@ if ($this->post['req'] == 'init') {
                             $relation_type_list[]='both';
                             foreach ($relation_type_list as $rtype) {
                                 if (!is_array($pid_regs[$rtype])) {
-                                    //$pid_regs[$rtype]=array();
+                                    $pid_regs[$rtype]=array();
                                 }
                                 if (!in_array($row2['products_id'], $pid_regs[$rtype])) {
                                     if ($rtype=='main' && !$have_main_relation_type) {

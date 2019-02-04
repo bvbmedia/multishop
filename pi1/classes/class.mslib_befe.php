@@ -4268,7 +4268,8 @@ class mslib_befe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'])) {
             $params_internal = array(
                     'markerArray' => &$markerArray,
-                    'table_type' => $table_type
+                    'table_type' => $table_type,
+                    'order' => &$order
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4288,7 +4289,8 @@ class mslib_befe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
             $params_internal = array(
                     'markerArray' => &$markerArray,
-                    'table_type' => $table_type
+                    'table_type' => $table_type,
+                    'order' => &$order
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);

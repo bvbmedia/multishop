@@ -1624,7 +1624,9 @@ if ($this->post) {
                         if (is_array($catOldIds[$page_uid]) && count($catOldIds[$page_uid])) {
                             $catIdsToAdd = array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
                         }
-                        //print_r($catIdsToAdd);
+                        if (!count($catIdsToAdd)) {
+                            $catIdsToAdd = $catArray;
+                        }
                         //
                         foreach ($catIdsToAdd as $catId) {
                             if (strpos($catId, '::rel_') !== false) {
@@ -1635,21 +1637,26 @@ if ($this->post) {
                             }
                             if ($catId > 0) {
                                 $p2c_record = mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
-                                        'categories_id=\'' . $catId . '\'',
-                                        '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
+                                    'categories_id=\'' . $catId . '\'',
+                                    '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
                                 ));
-                                if (!is_array($p2c_record)) {
+                                //$p2c_record=false;
+                                //if (!is_array($p2c_record)) {
                                     $updateArray = array();
                                     $updateArray['categories_id'] = $catId;
                                     $updateArray['products_id'] = $prodid;
-                                    $updateArray['sort_order'] = time();
+                                    if (is_array($p2c_record) && is_numeric($p2c_record['sort_order']) && $p2c_record['sort_order'] > 0) {
+                                        $updateArray['sort_order'] = $p2c_record['sort_order'];
+                                    } else {
+                                        $updateArray['sort_order'] = time();
+                                    }
                                     $updateArray['page_uid'] = $page_uid;
                                     $updateArray['related_to'] = $relCatId;
                                     /*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
                                     // create categories tree linking
                                     tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
-                                }
+                                //}
                                 // update the counterpart relation
                                 if ($relCatId > 0) {
                                     $updateArray = array();
