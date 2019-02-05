@@ -1015,6 +1015,9 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 if (isset($this->post['country']) && !empty($this->post['country'])) {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
+if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {
+    $filter[] = "o.orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.manufacturers_id = " . addslashes($this->post['manufacturers_id']) . ")";
+}
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
     $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id='" . addslashes($this->get['ordered_category']) . "' or op.categories_id_0='" . addslashes($this->get['ordered_category']) . "'))";
 }
@@ -1175,6 +1178,7 @@ $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
 if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search'] != 'all') ||
     (isset($this->get['country']) && !empty($this->get['country'])) ||
+    (isset($this->get['manufacturers_id']) && $this->get['manufacturers_id'] > 0) ||
     (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
     (isset($this->get['ordered_category']) && is_numeric($this->get['ordered_category'])) ||
     (isset($this->get['ordered_product']) && is_numeric($this->get['ordered_product'])) ||
@@ -1283,6 +1287,7 @@ $objRef->setHeaderButtons($headerButtons);
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###'] = $this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###'] = $billing_countries_selectbox;
+$subpartArray['###LABEL_MANUFACTURERS_SELECTBOX###'] = $this->pi_getLL('manufacturers');
 $subpartArray['###BACK_BUTTON###'] = '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
 $subpartArray['###LABEL_ORDERED_CATEGORY###'] = $this->pi_getLL('admin_ordered_category');
 $subpartArray['###VALUE_ORDERED_CATEGORY###'] = $this->get['ordered_category'];
@@ -1306,6 +1311,61 @@ jQuery(document).ready(function($) {
     '.(!empty($subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']) ? '
     $("#search_in_shop").select2();
     ' : '').'
+    $(\'#manufacturers_id\').select2({
+		placeholder: \'' . $this->pi_getLL('admin_choose_manufacturer') . '\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
 	$(".order_select2").select2();
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",
