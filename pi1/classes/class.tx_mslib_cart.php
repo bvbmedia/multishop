@@ -2549,6 +2549,21 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         // now decrease the stocklevel eof
                                     }
                                 }
+                                // hook to manipulate the continuity of update stock
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPostProc'])) {
+                                    // hook
+                                    $params = array(
+                                            'ms' => $this->ms,
+                                            'value' => $value,
+                                            'continue_update_stock' => &$continue_update_stock,
+                                            'orders_id' => $orders_id,
+                                            'orders_products_id' => $orders_products_id
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPostProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                    // hook oef
+                                }
                             }
                             if ($orders_products_id and is_array($value['attributes'])) {
                                 foreach ($value['attributes'] as $attribute_key => $attribute_values) {
