@@ -2610,6 +2610,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 // hook
                                 $params = array(
                                         'ms' => $this->ms,
+                                        'orders_id' => $orders_id,
                                         'orders_products_id' => $orders_products_id,
                                         'insertArray' => $insertArray,
                                         'insertAttributes' => $insertAttributes,
