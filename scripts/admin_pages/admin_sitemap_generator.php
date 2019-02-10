@@ -117,6 +117,16 @@ if (!$this->get['skip_categories']) {
         if (trim($categories['categories_external_url']) != '') {
             $link=$categories['categories_external_url'];
         }
+        // hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorCategoryUrlsPreProc'])) {
+            $params = array(
+                    'link' => &$link
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorCategoryUrlsPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // hook eof
         // TXT
         if ($logs_lines_reg==$max_lines_per_file) {
             $logs_file_reg++;
