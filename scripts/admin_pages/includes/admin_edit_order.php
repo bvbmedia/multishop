@@ -1067,6 +1067,17 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($continue_update) {
                     // dynamic variables
                     mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified'], 'edit_order_save');
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'])) {
+                        // hook
+                        $params = array(
+                            'orders_id' => &$this->get['orders_id'],
+                            'order_status' => $this->post['order_status']
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook oef
+                    }
                 }
             }
         }
