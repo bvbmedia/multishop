@@ -20,10 +20,6 @@
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-$version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
-if ($version < 6000000) {
-    require_once(PATH_tslib . 'class.tslib_pibase.php');
-}
 /**
  * Plugin 'multishop' for the 'multishop' extension.
  * @author    BVB Media BV - Bas van Beek <bvbmedia@gmail.com>
