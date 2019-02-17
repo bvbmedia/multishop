@@ -107,6 +107,9 @@ if ($this->post) {
             if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
                 if (isset($this->post['options_groups'][$products_options_id])) {
                     if (!empty($this->post['options_groups'][$products_options_id])) {
+                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\'' . $products_options_id . '\'');
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
                         $updateArray = array();
                         $updateArray['attributes_options_groups_id'] = $this->post['options_groups'][$products_options_id];
                         $updateArray['products_options_id'] = $products_options_id;
@@ -157,22 +160,53 @@ $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 $content .= '<form action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes') . '" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
 $content .= '<div class="attribute_options_sortable" id="attribute_listings">';
+if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+    $attributes_group = mslib_fe::getAttributesOptionsGroup();
+    $selected_options_group=$attributes_group['selected'];
+}
+$attributes_content=array();
+$counter_panel=array();
 if ($rows) {
     //$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
 //	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
     //$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
     //$content.='<div class="attribute_options_sortable" id="attribute_listings">';
+    $counter=0;
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-        $content .= '<div class="panel panel-default" id="options_' . $row['products_options_id'] . '">';
-        $content .= '<div class="panel-heading">';
-        $content .= '<h3>' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')';
-        $content .= '<span class="option_edit">';
-        $content .= '&nbsp;<a href="#" class="edit_options btn btn-primary btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-pencil"></i></a>';
-        $content .= '&nbsp;<a href="#" class="delete_options btn btn-danger btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-remove"></i></a>&nbsp;';
-        $content .= '</span>';
-        $content .= '</h3>';
-        $content .= '</div>';
-        $content .= '<div class="panel-body">';
+        if (is_array($selected_options_group) && isset($selected_options_group[$row['products_options_id']])) {
+            $identifier_id=$selected_options_group[$row['products_options_id']];
+        } else {
+            $identifier_id=999999;
+        }
+        if (!isset($attributes_content[$identifier_id])) {
+            $attributes_content[$identifier_id] = '';
+        }
+        $counter_panel[$identifier_id] +=1;
+        $collapsed=' collapsed';
+        $aria_expanded='false';
+        $expand_in='';
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']=='0') {
+            if ($counter == '0') {
+                $collapsed = '';
+                $aria_expanded = 'true';
+                $expand_in = ' in';
+            }
+        }
+        $attributes_content[$identifier_id] .= '<div class="panel panel-default" id="options_' . $row['products_options_id'] . '">';
+        $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'">
+                <h3 class="panel-title"> 
+                    <a role="button" data-toggle="collapse" href="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'" class="toggle_class">
+                        <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')
+                    </a> 
+                    <span class="option_edit">
+                        <a href="#" class="edit_options btn btn-primary btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-pencil"></i></a>
+                        <a href="#" class="delete_options btn btn-danger btn-xs" rel="' . $row['products_options_id'] . '"><i class="fa fa-remove"></i></a>
+                    </span>
+                </h3> 
+            </div> 
+            <div id="productAttributesOption'.$row['products_options_id'].'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+                <div class="group_attributes_panel panel-body">';
+
         $options_group = '';
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
             $options_group = mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'class="form-control"');
@@ -184,15 +218,15 @@ if ($rows) {
         }
         // settings related to options
         //$content.='<div class="option_settings">';
-        $content .= $options_group;
-        $content .= '<div class="form-group">';
-        $content .= '<label class="col-md-2 control-label">' . $this->pi_getLL('admin_label_listing_type') . ': </label><div class="col-md-4"><select name="listtype[' . $row['products_options_id'] . ']" class="form-control">';
+        $attributes_content[$identifier_id] .= $options_group;
+        $attributes_content[$identifier_id] .= '<div class="form-group">';
+        $attributes_content[$identifier_id] .= '<label class="col-md-2 control-label">' . $this->pi_getLL('admin_label_listing_type') . ': </label><div class="col-md-4"><select name="listtype[' . $row['products_options_id'] . ']" class="form-control">';
         foreach ($selects as $key => $value) {
-            $content .= '<option value="' . $key . '"' . ($key == $row['listtype'] ? ' selected' : '') . '>' . htmlspecialchars($value) . '</option>';
+            $attributes_content[$identifier_id] .= '<option value="' . $key . '"' . ($key == $row['listtype'] ? ' selected' : '') . '>' . htmlspecialchars($value) . '</option>';
         }
-        $content .= '</select></div>';
-        $content .= '</div>';
-        $content .= '
+        $attributes_content[$identifier_id] .= '</select></div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '
 <div class="form-group">
     <div class="col-md-8 col-md-offset-2">
         <div class="checkbox checkbox-success checkbox-inline">
@@ -207,39 +241,100 @@ if ($rows) {
     </div>
 </div>';
         //$content.='</div>';
-        $content .= '<div class="form-group">';
-        $content .= '<div class="col-md-10 col-md-offset-2">';
-        $content .= '<a href="#" class="btn btn-success add_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-edit"></i> ' . $this->pi_getLL('admin_add_new_value') . '</a> ';
-        $content .= '<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_' . $row['products_options_id'] . '" rel="' . $row['products_options_id'] . '"><i class="fa fa-eye"></i> ' . $this->pi_getLL('show_attributes_values', 'SHOW VALUES') . '</a>';
-        $content .= '</div>';
-        $content .= '</div>';
-        //$content.='<a href="#" class="btn btn-success fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
-        $content .= '<div class="panel panel-default" style="display: none">';
-        $content .= '<div class="panel-body">';
-        $content .= '<div class="form-group">';
-        $content .= '<label for="sort_order_attributes_option_values" class="col-md-4">Sort by</label>';
-        $content .= '<div class="col-md-8">';
-        $content .= '<select id="sort_order_attributes_option_values" class="form-control sort_order_attributes_option_values" rel="' . $row['products_options_id'] . '">';
-        $content .= '<option value="id_asc">Product option values id (' . $this->pi_getLL('ascending') . ')</option>';
-        $content .= '<option value="id_desc">Product option values id (' . $this->pi_getLL('descending') . ')</option>';
-        $content .= '<option value="alpha_asc">' . $this->pi_getLL('admin_sort_alphabet_asc') . '</option>';
-        $content .= '<option value="alpha_desc">' . $this->pi_getLL('admin_sort_alphabet_desc') . '</option>';
-        $content .= '<option value="alpha_nat_asc">' . $this->pi_getLL('admin_sort_alphabet_natural_asc') . '</option>';
-        $content .= '<option value="alpha_nat_desc">' . $this->pi_getLL('admin_sort_alphabet_natural_desc') . '</option>';
-        $content .= '</select>';
-        $content .= '</div>';
-        $content .= '</div>';
-        $content .= '<div class="attribute_option_values_sortable" rel="' . $row['products_options_id'] . '" id="vc_' . $row['products_options_id'] . '" style="display:none">';
-        $content .= '<div id="last_line_' . $row['products_options_id'] . '">';
-        $content .= '<a href="#" class="btn btn-success add_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-edit"></i> ' . $this->pi_getLL('admin_add_new_value') . '</a> ';
-        $content .= '<a href="#" class="btn btn-success hide_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-eye"></i> ' . $this->pi_getLL('admin_label_hide_values') . '</a>';
-        $content .= '</div>';
-        $content .= '</div>';
-        $content .= '</div>';
-        $content .= '</div>';
-        $content .= '<input type="hidden" name="values_fetched_' . $row['products_options_id'] . '" id="values_fetched_' . $row['products_options_id'] . '" value="0" />';
-        $content .= '</div>';
-        $content .= '</div>';
+        $attributes_content[$identifier_id] .= '<div class="form-group">';
+        $attributes_content[$identifier_id] .= '<div class="col-md-10 col-md-offset-2">';
+        $attributes_content[$identifier_id] .= '<a href="#" class="btn btn-success add_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-edit"></i> ' . $this->pi_getLL('admin_add_new_value') . '</a> ';
+        $attributes_content[$identifier_id] .= '<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_' . $row['products_options_id'] . '" rel="' . $row['products_options_id'] . '"><i class="fa fa-eye"></i> ' . $this->pi_getLL('show_attributes_values', 'SHOW VALUES') . '</a>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        //$attributes_content[$identifier_id].='<a href="#" class="btn btn-success fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
+        $attributes_content[$identifier_id] .= '<div class="panel panel-default" style="display: none">';
+        $attributes_content[$identifier_id] .= '<div class="panel-body">';
+        $attributes_content[$identifier_id] .= '<div class="form-group">';
+        $attributes_content[$identifier_id] .= '<label for="sort_order_attributes_option_values" class="col-md-4">Sort by</label>';
+        $attributes_content[$identifier_id] .= '<div class="col-md-8">';
+        $attributes_content[$identifier_id] .= '<select id="sort_order_attributes_option_values" class="form-control sort_order_attributes_option_values" rel="' . $row['products_options_id'] . '">';
+        $attributes_content[$identifier_id] .= '<option value="id_asc">Product option values id (' . $this->pi_getLL('ascending') . ')</option>';
+        $attributes_content[$identifier_id] .= '<option value="id_desc">Product option values id (' . $this->pi_getLL('descending') . ')</option>';
+        $attributes_content[$identifier_id] .= '<option value="alpha_asc">' . $this->pi_getLL('admin_sort_alphabet_asc') . '</option>';
+        $attributes_content[$identifier_id] .= '<option value="alpha_desc">' . $this->pi_getLL('admin_sort_alphabet_desc') . '</option>';
+        $attributes_content[$identifier_id] .= '<option value="alpha_nat_asc">' . $this->pi_getLL('admin_sort_alphabet_natural_asc') . '</option>';
+        $attributes_content[$identifier_id] .= '<option value="alpha_nat_desc">' . $this->pi_getLL('admin_sort_alphabet_natural_desc') . '</option>';
+        $attributes_content[$identifier_id] .= '</select>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '<div class="attribute_option_values_sortable" rel="' . $row['products_options_id'] . '" id="vc_' . $row['products_options_id'] . '" style="display:none">';
+        $attributes_content[$identifier_id] .= '<div id="last_line_' . $row['products_options_id'] . '">';
+        $attributes_content[$identifier_id] .= '<a href="#" class="btn btn-success add_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-edit"></i> ' . $this->pi_getLL('admin_add_new_value') . '</a> ';
+        $attributes_content[$identifier_id] .= '<a href="#" class="btn btn-success hide_attributes_values" rel="' . $row['products_options_id'] . '"><i class="fa fa-eye"></i> ' . $this->pi_getLL('admin_label_hide_values') . '</a>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '</div>';
+        $attributes_content[$identifier_id] .= '<input type="hidden" name="values_fetched_' . $row['products_options_id'] . '" id="values_fetched_' . $row['products_options_id'] . '" value="0" />';
+        $attributes_content[$identifier_id] .= '</div> 
+            </div>';
+
+        $attributes_content[$identifier_id] .= '</div>';
+        $counter++;
+    }
+    if (isset($attributes_group['groups']) && count($attributes_group['groups']) > 0) {
+        $counter=0;
+        $collapsed=' collapsed';
+        $aria_expanded='false';
+        $expand_in='';
+        foreach ($attributes_group['groups'] as $group_id => $group_name) {
+            $collapsed=' collapsed';
+            $aria_expanded='false';
+            $expand_in='';
+            if ($counter=='0') {
+                $collapsed='';
+                $aria_expanded='true';
+                $expand_in=' in';
+            }
+            $content .= '<div class="panel panel-success" id="group_options_' . $group_id . '">';
+            $content .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
+                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
+                <i class="fa fa-file-text-o"></i> '.$group_name.' ('.$counter_panel[$group_id].')</a> </h3> 
+            </div> 
+            <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+                <div class="group_attributes_panel panel-body"> 
+                ' . $attributes_content[$group_id] . '
+                </div>
+                <div class="panel-footer" style="text-align: right">
+                    <button id="save_attributes_options_form" class="btn btn-success" type="submit"' . $hide_form_save_btn . '><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . $this->pi_getLL('save') . '</button>
+                </div> 
+            </div>
+            ';
+            $content .= '</div>';
+            $counter++;
+        }
+        if (isset($attributes_content['999999'])) {
+            $collapsed=' collapsed';
+            $aria_expanded='false';
+            $expand_in='';
+            if ($counter=='0') {
+                $collapsed='';
+                $aria_expanded='true';
+                $expand_in=' in';
+            }
+            $group_id='999999';
+            $content .= '<div class="panel panel-success" id="group_options_999999">';
+
+            $content .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
+                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
+                <i class="fa fa-file-text-o"></i> '.$this->pi_getLL('other').' ('.$counter_panel[$group_id].')</a> </h3> 
+            </div> 
+            <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+                <div class="group_attributes_panel panel-body"> 
+                ' . $attributes_content[$group_id] . '
+                </div> 
+            </div>';
+            $content .= '</div>';
+            $counter++;
+        }
+    } else {
+        $content .= implode("\n", $attributes_content);
     }
     //$content.='</div>';
     //$content.='<button class="btn btn-success" type="submit"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>';
@@ -309,8 +404,11 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options");
-				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
+				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion']=='1' ? '
+				jQuery(\'.redactor_options\').redactor({
+				' : '
 				$R(\'.redactor_options\', {
+				') . '
 				    imagePosition: true,
 	                imageResizable: true,
 				    toolbarFixedTopOffset: 38,
@@ -347,8 +445,11 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options_values");
-				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
-				$R(\'.redactor_values\', {
+				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion']=='1' ? '
+				jQuery(\'.redactor_options\').redactor({
+				' : '
+				$R(\'.redactor_options\', {
+				') . '
 				    imagePosition: true,
 	                imageResizable: true,
 				    toolbarFixedTopOffset: 38,
@@ -1073,7 +1174,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				}
 			});
 		});
-		var result=$(".attribute_options_sortable").sortable({
+		var result=$(".group_attributes_panel").sortable({
 			cursor:"move",
 			//axis:"y",
 			update:function(e, ui) {

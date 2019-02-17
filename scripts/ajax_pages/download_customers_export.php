@@ -71,6 +71,7 @@ if ($this->get['customers_export_hash']) {
         if (!$this->masterShop) {
             $filter[] = 'f.page_uid=' . $this->shop_pid;
         }
+        $filter[] = "f.deleted='0'";
         $order_by = 'f.uid';
         switch ($post_data['sort_direction']) {
             case 'asc':

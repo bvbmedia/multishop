@@ -93,6 +93,7 @@ if (is_numeric($this->get['orders_id'])) {
             $address['delivery_vat_id'] = $order['delivery_vat_id'];
             $address['by_phone'] = 1;
             $address['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $address['shop_pid'] = $order['page_uid'];
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersCreateNewOrderPostProc'])) {
                 // hook
                 $params = array(
@@ -1066,6 +1067,17 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($continue_update) {
                     // dynamic variables
                     mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified'], 'edit_order_save');
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'])) {
+                        // hook
+                        $params = array(
+                            'orders_id' => &$this->get['orders_id'],
+                            'order_status' => $this->post['order_status']
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook oef
+                    }
                 }
             }
         }
@@ -1609,6 +1621,18 @@ if (is_numeric($this->get['orders_id'])) {
                 		<input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="' . $orders['delivery_fax'] . '" />
                 	</div>
                 </div>';
+                $edit_delivery_details['delivery_vat_id'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[delivery_vat_id]" type="text" id="edit_delivery_vat_id" value="' . $orders['delivery_vat_id'] . '" />
+						</div>
+					</div>';
+                $edit_delivery_details['delivery_coc_id'] = '<div class="form-group">
+						<label class="control-label col-md-5">' . ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')) . '</label>
+						<div class="col-md-7">
+							<input class="form-control" name="tx_multishop_pi1[delivery_coc_id]" type="text" id="edit_delivery_coc_id" value="' . $orders['delivery_coc_id'] . '" />
+						</div>
+					</div>';
                 $edit_delivery_details['delivery_save_form'] = '
                 <div id="delivery_details_erno_wrapper">
                 ' . ($count_validate_erno ? '<div class="erno_message well text-danger"><ul>' . implode("\n", $validate_erno) . '</ul></div>' : '') . '
@@ -1660,6 +1684,15 @@ if (is_numeric($this->get['orders_id'])) {
             }
             if ($orders['delivery_fax']) {
                 $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+            }
+            if ($orders['delivery_fax']) {
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+            }
+            if ($orders['delivery_vat_id']) {
+                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['delivery_vat_id'] . '</strong><br />';
+            }
+            if ($orders['delivery_coc_id']) {
+                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['delivery_coc_id'] . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -1816,6 +1849,12 @@ if (is_numeric($this->get['orders_id'])) {
 
                 $("#edit_delivery_fax").val("");
                 $("#edit_delivery_fax").val($("#edit_billing_fax").val());
+                
+                $("#edit_delivery_vat_id").val("");
+                $("#edit_delivery_vat_id").val($("#edit_billing_vat_id").val());
+                
+                $("#edit_delivery_coc_id").val("");
+                $("#edit_delivery_coc_id").val($("#edit_billing_coc_id").val());
             });
             $("#close_edit_billing_info").click(function(e) {
                 e.preventDefault();
@@ -1894,6 +1933,14 @@ if (is_numeric($this->get['orders_id'])) {
                     } else if ($(this).attr("id") == "edit_delivery_fax") {
                         if ($(this).val() != "") {
                             delivery_details += "' . $this->pi_getLL('fax') . ': " + $(this).val() + "<br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_delivery_vat_id") {
+                        if ($(this).val() != "") {
+                            delivery_details += "<strong>' . $this->pi_getLL('vat_id') . ': " + $(this).val() + "</strong><br/>";
+                        }
+                    } else if ($(this).attr("id") == "edit_delivery_coc_id") {
+                        if ($(this).val() != "") {
+                            delivery_details += "<strong>' . $this->pi_getLL('coc_id') . ': " + $(this).val() + "</strong><br/>";
                         }
                     }
                 });
@@ -2024,15 +2071,32 @@ if (is_numeric($this->get['orders_id'])) {
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $shipping_methods = mslib_fe::loadShippingMethods(1);
                 $payment_methods = mslib_fe::loadPaymentMethods(1);
+                // sort shipping method
+                $shipping_methods_sorted=array();
+                foreach ($shipping_methods as $code => $item) {
+                    $shipping_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($shipping_methods_sorted);
+                // sort payment method
+                $payment_methods_sorted=array();
+                foreach ($payment_methods as $code => $item) {
+                    $payment_methods_sorted[strtoupper($item['name'])]=$item;
+                }
+                ksort($payment_methods_sorted);
                 if (is_array($shipping_methods) and count($shipping_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($shipping_methods as $code => $item) {
+                    foreach ($shipping_methods_sorted as $idx => $item) {
                         if (!$item['status']) {
                             $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                         }
-                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($code == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
-                        if ($code == $orders['shipping_method']) {
+                        $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                        $shop_title='';
+                        if (!empty($pageTitle)) {
+                            $shop_title = ' (' . $pageTitle . ')';
+                        }
+                        $optionItems[] = '<option value="' . $item['id'] . '"' . ($item['code'] == $orders['shipping_method'] ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                        if ($item['code'] == $orders['shipping_method']) {
                             $dontOverrideDefaultOption = 1;
                         }
                     }
@@ -2061,13 +2125,18 @@ if (is_numeric($this->get['orders_id'])) {
                 if (is_array($payment_methods) and count($payment_methods)) {
                     $optionItems = array();
                     $dontOverrideDefaultOption = 0;
-                    foreach ($payment_methods as $code => $item) {
+                    foreach ($payment_methods_sorted as $idx => $item) {
                         if (is_numeric($item['id']) && $item['id'] > 0) {
                             if (!$item['status']) {
                                 $item['name'] .= ' (' . $this->pi_getLL('hidden_in_checkout') . ')';
                             }
-                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $code == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name']) . '</option>';
-                            if ($code == $orders['payment_method']) {
+                            $pageTitle=mslib_fe::getShopNameByPageUid($item['page_uid'], 'All');
+                            $shop_title='';
+                            if (!empty($pageTitle)) {
+                                $shop_title = ' (' . $pageTitle . ')';
+                            }
+                            $optionItems[] = '<option value="' . $item['id'] . '"' . (($orders['payment_method'] && $item['code'] == $orders['payment_method']) || (!$orders['payment_method'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] && $this->ms['MODULES']['DEFAULT_PAYMENT_METHOD_CODE'] == $code) ? ' selected' : '') . '>' . htmlspecialchars($item['name'] . $shop_title) . '</option>';
+                            if ($item['code'] == $orders['payment_method']) {
                                 $dontOverrideDefaultOption = 1;
                             }
                         }
@@ -2156,7 +2225,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $orderDetailsItem = '<hr><div class="form-group" id="customer_comments"><label class="control-label col-md-3">' . htmlspecialchars($this->pi_getLL('customer_comments')) . '</label>
                     <div class="col-md-9"><div class="customer_comments_body"><div class="form-control-static">' . nl2br($orders['customer_comments']) . '</div></div></div>
                 </div>';
-                $orderDetails[] = $orderDetailsItem;
+                $orderDetails['customer_comments'] = $orderDetailsItem;
             }
 
             $extraDetails = array();
@@ -3228,7 +3297,12 @@ if (is_numeric($this->get['orders_id'])) {
                                 'orders' => &$orders,
                                 'order' => &$order,
                                 'tbody_tag_id' => &$tbody_tag_id,
-                                'order_products_table_body' => &$order_products_table['body']
+                                'orders_products_attributes' => &$orders_products_attributes[$order['orders_products_id']],
+                                'order_products_table_body' => &$order_products_table['body'],
+                                'order_products_tax_data' => &$order_products_tax_data,
+                                'settings' => &$settings,
+                                'tr_type' => &$tr_type,
+                                'all_orders_status' => &$all_orders_status
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3529,6 +3603,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $params = array(
                         'orders' => &$orders,
                         'colspan' => &$colspan,
+                        'settings' => $settings,
                         'order_products_table' => &$order_products_table['body']
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'] as $funcRef) {
@@ -3843,12 +3918,13 @@ if (is_numeric($this->get['orders_id'])) {
                     var new_val = 0;
                     var qty_id = "#" + $(this).attr("rel");
                     var qty = parseFloat($(qty_id).val());
-                    if (qty > minQty) {
-                        new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
-                    }
-                    if (parseFloat(new_val)==0) {
-                        new_val=minQty;
-                    }
+                    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //if (qty > minQty) {
+                    //    new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+                    //}
+                    //if (parseFloat(new_val)==0) {
+                    //    new_val=minQty;
+                    //}
                     $(qty_id).val(new_val);
                 });
                 $(".qty_plus").click(function () {
@@ -4259,7 +4335,9 @@ if (is_numeric($this->get['orders_id'])) {
                             var tr_parent=$(this).parent().parent().parent().parent();
                             var tbody_parent=$(tr_parent).parent();
                             //
-                            if (typeof $(tbody_parent).attr("id")=="undefined") {
+                            if ($(\'input[name="manual_products_id"]\').val() != ""){
+                                var product_id=$(\'input[name="manual_products_id"]\').val();
+                            } else if (typeof $(tbody_parent).attr("id")=="undefined") {
                                 // add new product
                                 var product_id=$(tbody_parent).children("tr:nth-child(2)").children().find("input.product_name").val();
                             } else {
@@ -4271,8 +4349,11 @@ if (is_numeric($this->get['orders_id'])) {
                             jQuery.getJSON("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order') . '",{pid: product_id, optid: option_id, valid: option_value_id}, function(k){
                                 if (k.length>0) {
                                     jQuery.each(k, function(idx, optvalid) {
+                                        optid=optvalid.optid;
                                         valid=optvalid.valid;
-                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                        var input_id="#edit_product_price" + optid
+                                        var display_price_wrapper_id=".attributesPriceWrapper" + optid                                        
+                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, display_values_price_including_vat_formatted: optvalid.display_values_price_including_vat_formatted, price_prefix: optvalid.price_prefix};
                                         jQuery.each(jQuery(price_input_obj), function(i, v) {
                                             if ($(v).attr("id")=="display_manual_name_excluding_vat") {
                                                 $(v).val(price_data.price_prefix + price_data.display_values_price);
@@ -4283,7 +4364,19 @@ if (is_numeric($this->get['orders_id'])) {
                                             if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
                                                 $(v).val(price_data.price_prefix + price_data.values_price);
                                             }
+                                            if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
+                                            if ($(v).attr("id")==input_id || $(v).attr("id")==input_id) {
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
+                                            }
                                         });
+                                        if ($(input_id).length > 0) {
+                                            $(input_id).val(price_data.price_prefix + price_data.values_price);
+                                        }
+                                        if ($(display_price_wrapper_id).length > 0) {
+                                            $(display_price_wrapper_id).html(price_data.display_values_price_including_vat_formatted);
+                                        }
                                     });
                                 } else {
                                     jQuery.each(jQuery(price_input_obj), function(i, v) {
@@ -4697,7 +4790,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($row['comments']) {
                     $order_status_tab_content['order_history_table'] .= '
                     <tr class="even">
-                        <td colspan="5">' . $row['comments'] . '</td>
+                        <td colspan="6">' . $row['comments'] . '</td>
                     </tr>
                     ';
                 }

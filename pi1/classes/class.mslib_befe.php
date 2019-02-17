@@ -1491,7 +1491,7 @@ class mslib_befe {
                 if (!$oldproduct[$colname]) {
                     if ($item[$colname]) {
                         $plaatje1 = $item[$colname];
-                        $data = mslib_fe::file_get_contents($plaatje1);
+                        $data = mslib_fe::file_get_contents($plaatje1,0,10);
                         if ($data) {
                             $plaatje1_name = $products_id . '-' . ($colname) . '-' . time();
                             $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
@@ -3603,29 +3603,41 @@ class mslib_befe {
         }
         return $password;
     }
-    public static function storeProductsKeywordSearch($keyword, $negative_results = 0, $categories_id = 0) {
-        $insertArray = array();
-        $insertArray['keyword'] = $keyword;
-        $insertArray['ip_address'] = $this->REMOTE_ADDR;
-        $insertArray['crdate'] = time();
-        $insertArray['negative_results'] = $negative_results;
-        $insertArray['http_host'] = $this->HTTP_HOST;
-        $insertArray['page_uid'] = $this->shop_pid;
-        if ($GLOBALS['TSFE']->fe_user->user['uid']) {
-            $insertArray['customer_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+    public function storeProductsKeywordSearch($keyword, $negative_results = 0, $categories_id = 0) {
+        $continue=true;
+        //hook to let other plugins further manipulate the redirect link
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'])) {
+            $params = array(
+                'continue' => &$continue
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
         }
-        if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
-            $categories_id = $this->get['categories_id'];
-        }
-        if (is_numeric($categories_id) && $categories_id > 0) {
-            $insertArray['categories_id'] = $categories_id;
-        }
-        $filter = array();
-        $filter[] = 'ip_address=\'' . addslashes($this->REMOTE_ADDR) . '\'';
-        $record = mslib_befe::getRecord($keyword, 'tx_multishop_products_search_log', 'keyword', $filter);
-        if (!is_array($record) || (time() - $record['crdate']) > 180) {
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        if ($continue) {
+            $insertArray = array();
+            $insertArray['keyword'] = $keyword;
+            $insertArray['ip_address'] = $this->REMOTE_ADDR;
+            $insertArray['crdate'] = time();
+            $insertArray['negative_results'] = $negative_results;
+            $insertArray['http_host'] = $this->HTTP_HOST;
+            $insertArray['page_uid'] = $this->shop_pid;
+            if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+                $insertArray['customer_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            }
+            if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
+                $categories_id = $this->get['categories_id'];
+            }
+            if (is_numeric($categories_id) && $categories_id > 0) {
+                $insertArray['categories_id'] = $categories_id;
+            }
+            $filter = array();
+            $filter[] = 'ip_address=\'' . addslashes($this->REMOTE_ADDR) . '\'';
+            $record = mslib_befe::getRecord($keyword, 'tx_multishop_products_search_log', 'keyword', $filter);
+            if (!is_array($record) || (time() - $record['crdate']) > 180) {
+                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_search_log', $insertArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            }
         }
     }
     public static function storeCustomerCartContent($content, $customer_id = '', $is_checkout = 0) {
@@ -4256,7 +4268,8 @@ class mslib_befe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'])) {
             $params_internal = array(
                     'markerArray' => &$markerArray,
-                    'table_type' => $table_type
+                    'table_type' => $table_type,
+                    'order' => &$order
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderNormalPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4267,11 +4280,17 @@ class mslib_befe {
         $markerArray['LABEL_HEADER_VAT'] = $this->pi_getLL('vat');
         $markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE'] = $this->pi_getLL('normal_price');
         $markerArray['LABEL_HEADER_ITEM_DISCOUNT'] = '';
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_inc_vat');
+        } else {
+            $markerArray['LABEL_HEADER_ITEM_FINAL_PRICE'] = $this->pi_getLL('final_price_ex_vat');
+        }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'])) {
             $params_internal = array(
                     'markerArray' => &$markerArray,
-                    'table_type' => $table_type
+                    'table_type' => $table_type,
+                    'order' => &$order
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsTableHeaderIncludeExcludeVatPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4363,6 +4382,10 @@ class mslib_befe {
                 $markerArray['ITEM_PRODUCT_QTY'] = round($product['qty'], 2);
                 $product_tmp = mslib_fe::getProduct($product['products_id']);
                 $product_name = htmlspecialchars($product['products_name']);
+                if (empty($product['products_name']) && !empty($product_tmp['products_name'])) {
+                    $product_name = htmlspecialchars($product_tmp['products_name']);
+                }
+
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
                 }
@@ -4767,8 +4790,14 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
             $params_internal = array(
-                    'subpartArray' => &$subpartArray,
-                    'order' => &$order
+                'subparts' => &$subparts,
+                'subpartArray' => &$subpartArray,
+                'order' => &$order,
+                'table_type' => $table_type,
+                'real_prefix' => $real_prefix,
+                'prefix' => $prefix,
+                'customer_currency' => $customer_currency,
+                'display_currency_symbol' => $display_currency_symbol
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);

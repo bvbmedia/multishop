@@ -143,6 +143,10 @@ $array['custom_field'] = $this->pi_getLL('feed_exporter_fields_label_custom_fiel
 $array['products_price_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_currency');
 $array['products_price_with_currency'] = $this->pi_getLL('feed_exporter_fields_label_products_price_with_currency');
 $array['products_feed_generated_date'] = $this->pi_getLL('feed_exporter_fields_label_generated_date');
+$array['products_date_added'] = $this->pi_getLL('feed_exporter_fields_label_products_date_added');
+$array['products_date_available'] = $this->pi_getLL('feed_exporter_fields_label_products_date_available');
+$array['products_last_modified'] = $this->pi_getLL('feed_exporter_fields_label_products_last_modified');
+
 // load shipping costs per zone
 $str = "SELECT * from tx_multishop_zones order by name";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);

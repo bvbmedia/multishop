@@ -462,13 +462,21 @@ class mslib_fe {
                 $from_clause .= ", ";
                 $from_clause .= implode(",", $extra_from);
             }
-            if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
-                $where_clause = ' 1 ';
-                if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS']=='1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+            if ($search_section!='admin_products_search' && $search_section!='products_feeds') {
+                if ($includeDisabled || ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+                    $where_clause = ' 1 ';
+                    if ($this->ms['MODULES']['ALWAYS_HIDE_DISABLED_PRODUCTS'] == '1' && ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+                        $where_clause = ' p.products_status=1 AND c.status=1 ';
+                    }
+                } else {
                     $where_clause = ' p.products_status=1 AND c.status=1 ';
                 }
             } else {
-                $where_clause = ' p.products_status=1 AND c.status=1 ';
+                if ($includeDisabled || ($this->ROOTADMIN_USER or $this->ADMIN_USER)) {
+                    $where_clause = ' 1 ';
+                } else {
+                    $where_clause = ' c.status=1 ';
+                }
             }
             if (!$this->masterShop) {
                 $p2c_is_deepest = ' AND p2c.is_deepest=1';
@@ -1322,8 +1330,7 @@ class mslib_fe {
         }
         return $url;
     }
-    ////
-    public static function rebuildStaffelPrice($staffel_price_list, $product_price) {
+    public function rebuildStaffelPrice($staffel_price_list, $product_price) {
         if (empty($staffel_price_list)) {
             return false;
         }
@@ -2174,8 +2181,10 @@ class mslib_fe {
     public static function getUsersByGroup($group_id) {
         if (is_numeric($group_id)) {
             $additional_where = array();
+            $additional_where[] = 'deleted=0';
+            $additional_where[] = 'disable=0';
             $additional_where[] = 'FIND_IN_SET(\'' . $group_id . '\',usergroup) > 0';
-            $users = mslib_befe::getRecords(0, 'fe_users', 'disable', $additional_where);
+            $users = mslib_befe::getRecords('', 'fe_users', '', $additional_where);
             return $users;
         }
     }
@@ -2319,8 +2328,14 @@ class mslib_fe {
             }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
-            if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
-                $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+            if (isset($options['reply_to_email'])) {
+                if ($options['reply_to_email'] !='') {
+                    $mail->AddReplyTo($options['reply_to_email']);
+                }
+            } else {
+                if (!empty($this->ms['MODULES']['STORE_REPLY_TO_EMAIL'])) {
+                    $mail->AddReplyTo($this->ms['MODULES']['STORE_REPLY_TO_EMAIL']);
+                }
             }
             if (count($attachments)) {
                 foreach ($attachments as $path) {
@@ -2574,6 +2589,7 @@ class mslib_fe {
         $query_array['select'][] = 'popt.products_options_name';
         $query_array['select'][] = 'popt.listtype';
         $query_array['select'][] = 'popt.hide';
+        $query_array['select'][] = 'popt.products_options_descriptions';
         $query_array['from'][] = 'tx_multishop_products_options popt';
         $query_array['from'][] = 'tx_multishop_products_attributes patrib';
         $query_array['where'][] = 'patrib.products_id=\'' . (int)$products_id . '\'';
@@ -2750,14 +2766,20 @@ class mslib_fe {
                         );
                         $products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
                         $total_values = $GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
+                        // SHOW_ATTRIBUTE_DESCRIPTION
+                        $option_desc_tooltip='';
+                        if ($this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION']=='1' && $this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP']=='1' && !empty($options['products_options_descriptions'])) {
+                            $option_desc_tooltip = htmlspecialchars('<div class="valuesdesc_info">' . $options['products_options_descriptions'] . '</div>');
+                            $option_desc_tooltip = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $option_desc_tooltip . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
+                        }
                         if (!$readonly) {
-                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ':</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
+                            $output_html[$options['products_options_id']] .= '<div class="' . $class . '" id="attribute_item_wrapper_' . $options['products_options_id'] . '"><label>' . $options['products_options_name'] . ':' . $option_desc_tooltip . '</label>' . $warning_holder . '<div class="attribute_item_wrapper">';
                         } else {
-                            $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . ':</label>';
+                            $output_html[$options['products_options_id']] .= '<li><label>' . $options['products_options_name'] . $option_desc_tooltip . ':</label>';
                         }
                         // SHOW_ATTRIBUTE_DESCRIPTION
-                        if (SHOW_ATTRIBUTE_DESCRIPTION && !empty($products_options_name_values['description'])) {
-                            $output_html[$options['products_options_id']] .= $products_options_name_values['description'] . "<br/>";
+                        if ($this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION']=='1' && $this->ms['MODULES']['SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP']=='0' && !empty($options['products_options_descriptions'])) {
+                            $output_html[$options['products_options_id']] .= $options['products_options_descriptions'] . "<br/>";
                         }
                         $opt = 0;
                         $next_index++;
@@ -2773,7 +2795,7 @@ class mslib_fe {
                                 $row_val_desc = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_val_desc);
                                 if (!empty($row_val_desc['description'])) {
                                     $value_desc = htmlspecialchars('<div class="valuesdesc_info">' . $row_val_desc['description'] . '</div>');
-                                    $value_desc = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $value_desc . '"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>';
+                                    $value_desc = '&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $value_desc . '"><i class="fa fa-info-circle" aria-hidden="true"></i></a>';
                                 }
                             }
                             $options_values[] = $products_options_values;
@@ -2979,7 +3001,8 @@ class mslib_fe {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'])) {
                 $params = array(
                         'products_id' => $products_id,
-                        'output_html' => &$output_html
+                        'output_html' => &$output_html,
+                        'sessionData' => &$sessionData
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -5307,6 +5330,7 @@ class mslib_fe {
         if ($skipFlatDatabase || (!$this->ms['MODULES']['FLAT_DATABASE'] || $include_disabled_products)) {
             $select = array();
             $select[] = '*';
+            $select[] = 'p.search_engines_allow_indexing as search_engines_allow_indexing';
             $select[] = 'p.staffel_price as staffel_price';
             $select[] = 's.specials_new_products_price';
             $select[] = 's.start_date as special_start_date';
@@ -5628,7 +5652,7 @@ class mslib_fe {
         }
         $product_detail_mode=false;
         $product_id=0;
-        if ($this->get['tx_multishop_pi1']['page_section']=='products_detail') {
+        if ($this->get['tx_multishop_pi1']['page_section']=='products_detail' || $this->get['tx_multishop_pi1']['caller_script']=='products_detail') {
             $product_detail_mode=true;
             $product_id=$this->get['products_id'];
             $product_data=mslib_fe::getProduct($product_id, '', '', 1);
@@ -5837,6 +5861,7 @@ class mslib_fe {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShippingCostsPostProc'] as $funcRef) {
                     $params['row3'] = &$row3;
+                    $params['shipping_method'] = &$shipping_method;
                     $params['shipping_method_id'] = $shipping_method_id;
                     $params['shipping_cost'] = &$shipping_cost;
                     $params['shipping_cost_method_box'] = &$shipping_cost_method_box;
@@ -6453,6 +6478,7 @@ class mslib_fe {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getUserGroupDiscount'])) {
             $params = array(
+                    'user' => $user,
                     'discount' => &$discount,
                     'discount_sign' => &$discount_sign,
             );
@@ -7500,6 +7526,9 @@ class mslib_fe {
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders') {
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
             }
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_order' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_order') {
+                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active'] = 1;
+            }
             if ($this->ms['MODULES']['MANUAL_ORDER']) {
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['label'] = $this->pi_getLL('add');
                 $ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
@@ -7780,6 +7809,14 @@ class mslib_fe {
             $ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_user_agent']['class'] = 'fa fa-quote-right';
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_stats_user_agent' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_stats_user_agent') {
                 $ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_user_agent']['active'] = 1;
+            }
+            // admin users overview
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['label'] = htmlspecialchars($this->pi_getLL('admin_users','Admin users'));
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['description'] = '';
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_users_overview');
+            $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['class'] = 'fa fa-user';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_users_overview' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_users_overview') {
+                $ms_menu['footer']['ms_admin_statistics']['subs']['admin_users_overview']['active'] = 1;
             }
         }
         $ms_menu['footer']['ms_admin_logout']['label'] = $this->pi_getLL('admin_log_out');
@@ -9703,16 +9740,32 @@ class mslib_fe {
     /*
 		loads all options ids plus option values ids that are mapped to a specific product
 	*/
-    public static function getShopNameByPageUid($page_uid) {
+    public static function getShopNameByPageUid($page_uid, $default_title='') {
         if (!is_numeric($page_uid)) {
             return false;
         } else {
-            $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-            $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
-            $pageTitle = $shop[0]['title'];
-            if ($shop[0]['nav_title']) {
-                $pageTitle = $shop[0]['nav_title'];
+            if ($page_uid>0) {
+                $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
+                $shop = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid, p.nav_title', 'tt_content t, pages p', 'p.uid=\'' . $page_uid . '\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', '');
+                $pageTitle = $shop[0]['title'];
+                if ($shop[0]['nav_title']) {
+                    $pageTitle = $shop[0]['nav_title'];
+                }
+            } else {
+                if (!empty($default_title)) {
+                    $pageTitle = $default_title;
+                }
             }
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShopNameByPageUidPostProc'])) {
+                $params = array(
+                    'pageTitle' => &$pageTitle
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getShopNameByPageUidPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // hook eof
             return $pageTitle;
         }
     }
@@ -9863,7 +9916,7 @@ class mslib_fe {
             }
         }
     }
-    public static function file_get_contents($filename, $force_gz = 0) {
+    public static function file_get_contents($filename, $force_gz = 0, $timeout=0) {
         if ($filename) {
             if (!preg_match("/^\//", $filename) and strstr($filename, ' ')) {
                 // if filename is not a local path and it contains a space, then encode it
@@ -9881,22 +9934,40 @@ class mslib_fe {
                     // local path
                     $file_content = @file_get_contents($filename);
                 } else {
-                    $path = @parse_url($filename);
-                    if ($path['scheme']) {
-                        // we try to use Curl, so we don't need PHP allow_url_fopen to be on
-                        $ch = curl_init($filename);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
-                        curl_setopt($ch, CURLOPT_POST, 0);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
-                        //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
-                        $file_content = curl_exec($ch);
-                        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        if ($http_code == 301 || $http_code == 302) {
-                            // redirect. lets download it manually
-                            $file_content = file_get_contents($filename);
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'])) {
+                        $http_code='';
+                        $file_content='';
+                        $conf = array(
+                                'filename' => &$filename,
+                                'http_code' => &$http_code,
+                                'file_content' => &$file_content,
+                                'timeout' => &$timeout,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mslibFileGetContentsCurlPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
+                    } else {
+                        $path = @parse_url($filename);
+                        if ($path['scheme']) {
+                            // we try to use Curl, so we don't need PHP allow_url_fopen to be on
+                            $ch = curl_init($filename);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                            curl_setopt($ch, CURLOPT_HEADER, 0);
+                            curl_setopt($ch, CURLOPT_POST, 0);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            if ($timeout) {
+                                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+                            }
+                            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
+                            //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
+                            $file_content = curl_exec($ch);
+                            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                            if ($http_code == 301 || $http_code == 302) {
+                                // redirect. lets download it manually
+                                $file_content = file_get_contents($filename);
+                            }
                         }
                     }
                 }
@@ -10141,32 +10212,9 @@ class mslib_fe {
 							<a href="' . $link . '" target="_blank" class="text-primary msadmin_view"><i class="fa fa-eye"></i></a>
 						</div>';
                     } else {
-                        // get all cats to generate multilevel fake url
-                        $level = 0;
-                        $cats = mslib_fe::Crumbar($item['categories_id']);
-                        $cats = array_reverse($cats);
-                        $where = '';
-                        if (count($cats) > 0) {
-                            foreach ($cats as $tmp) {
-                                $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                                $level++;
-                            }
-                            $where = substr($where, 0, (strlen($where) - 1));
-                            //								$where.='&';
-                        }
-                        //							$where.='categories_id['.$level.']='.$item['categories_id'];
-                        $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-                        // get all cats to generate multilevel fake url eof
-                        //							$content.=$item['categories_name'];
-                        if ($link) {
-                            $content .= '<a href="' . $link . '" class="ajax_link"' . $target . '>';
-                        }
                         $content .= $item['categories_name'];
-                        if ($link) {
-                            $content .= '</a>';
-                        }
                     }
-                    $sub_content = mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id']);
+                    $sub_content = mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id'], $admin_mode);
                     if ($sub_content) {
                         $content .= '<ul class="sub_categories_ul">' . $sub_content . '</ul>';
                     }
@@ -10609,7 +10657,31 @@ class mslib_fe {
         }
         return $enabled_countries;
     }
-    public static function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
+    public function getAttributesOptionsGroup() {
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+            $str = "SELECT * from tx_multishop_attributes_options_groups order by sort_order asc";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $attributesGroup=array();
+            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                    $attributesGroup['groups'][$row['attributes_options_groups_id']]=$row['attributes_options_groups_name'];
+                    $str2 = "select attributes_options_groups_id, products_options_id from tx_multishop_attributes_options_groups_to_products_options where attributes_options_groups_id = '" . $row['attributes_options_groups_id'] . "'";
+                    $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2) > 0) {
+                        while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+                            $attributesGroup['selected'][$row2['products_options_id']]=$row2['attributes_options_groups_id'];
+                        }
+                    }
+                }
+                return $attributesGroup;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    public function buildAttributesOptionsGroupSelectBox($options_id, $element_class = '') {
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
             $str = "SELECT * from tx_multishop_attributes_options_groups";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -11025,7 +11097,7 @@ class mslib_fe {
             return true;
         }
     }
-    public static function genderSalutation($gender, $custom_salutation='') {
+    public static function genderSalutation($gender='', $custom_salutation='') {
         switch ($gender) {
             case '0':
             case 'm':

@@ -62,7 +62,7 @@ if ($this->post) {
         if (count($this->post['tx_multishop_pi1']['order_unit_name'])) {
             if ($this->post['tx_multishop_pi1']['order_unit_name'][0]) {
                 $insertArray = array();
-                $insertArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'][0];
+                $insertArray['code'] = $this->post['tx_multishop_pi1']['order_unit_code'];
                 $insertArray['page_uid'] = $this->post['tx_multishop_pi1']['related_shop_pid'];
                 $insertArray['crdate'] = time();
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units', $insertArray);

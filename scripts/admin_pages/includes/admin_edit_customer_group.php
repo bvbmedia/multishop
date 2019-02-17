@@ -247,7 +247,7 @@ jQuery(document).ready(function($) {
 	$("#userIdSelect2").select2({
 		placeholder: "' . $this->pi_getLL('select_members') . '",
 		multiple: true,
-		minimumInputLength: 0,
+		minimumInputLength: 2,
 		query: function(query) {
 			if (usersSearchList[query.term] !== undefined) {
 				query.callback({results: usersSearchList[query.term]});

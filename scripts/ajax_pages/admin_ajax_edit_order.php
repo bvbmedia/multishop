@@ -296,7 +296,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $limit = '';
             }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'p.products_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'p.products_id in (' . addslashes($this->get['preselected_id']) . ')';
         }
         if (is_numeric($categories_id) && $categories_id > 0) {
             $from[] = 'tx_multishop_products_to_categories p2c';
@@ -338,9 +338,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                 }
                 if (!empty($row['products_name'])) {
-                    //if (!empty($row['products_model'])) {
-                    //    $row['products_name'] .= ' (MODEL: '.addslashes($row['products_model']).')';
-                    //}
+                    if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_EDIT_ORDER'] == '1' && !empty($row['products_model'])) {
+                        $row['products_name'] = '('.addslashes($row['products_model']).') ' . $row['products_name'];
+                    }
+                    if ($this->ms['MODULES']['DISPLAY_PRODUCTS_ID_IN_EDIT_ORDER'] == '1') {
+                        $row['products_name'] .= ' (PID: ' . $row['products_id'] . ')';
+                    }
                     if ($row['products_status'] < 1) {
                         $row['products_name'] .= ' [disabled]';
                     }

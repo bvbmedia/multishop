@@ -428,7 +428,18 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         } elseif ($this->categoriesStartingPoint and !$this->get['categories_id']) {
                             $this->get['categories_id'] = $this->categoriesStartingPoint;
                         }
-                        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/products_listing.php');
+                        if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_PROCESSOR_TYPE'], "..")) {
+                            die('error in PRODUCTS_LISTING_PROCESSOR_TYPE value');
+                        } else {
+                            if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_PROCESSOR_TYPE'], "/")) {
+                                require($this->DOCUMENT_ROOT . $this->ms['MODULES']['PRODUCTS_LISTING_PROCESSOR_TYPE'] . '.php');
+                            } else {
+                                if (!$this->ms['MODULES']['PRODUCTS_LISTING_PROCESSOR_TYPE']) {
+                                    $this->ms['MODULES']['PRODUCTS_LISTING_PROCESSOR_TYPE'] = 'default';
+                                }
+                                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/front_pages/products_listing.php');
+                            }
+                        }
                         break;
                 }
                 break;

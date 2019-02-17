@@ -796,11 +796,28 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         if ($mailSubject == '') {
                             $mailSubject = $this->pi_getLL('copy_for_merchant') . ': ' . $pageCopyToMerchant[0]['name'];
                         }
-                        // now mail a copy to the merchant
-                        $merchant = array();
-                        $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
-                        $merchant['email'] = $this->ms['MODULES']['STORE_EMAIL'];
-                        mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                        if (isset($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO']) && !empty($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'])) {
+                            $email = array();
+                            if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'], ",")) {
+                                $email[] = $this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO'];
+                            } else {
+                                $email = explode(',', $this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_TO']);
+                            }
+                            if (count($email)) {
+                                foreach ($email as $item) {
+                                    $merchant = array();
+                                    $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
+                                    $merchant['email'] = $item;
+                                    mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                                }
+                            }
+                        } else {
+                            // now mail a copy to the merchant
+                            $merchant = array();
+                            $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
+                            $merchant['email'] = $this->ms['MODULES']['STORE_EMAIL'];
+                            mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                        }
                         if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
                             $email = array();
                             if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {
@@ -902,6 +919,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $item['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 } else {
                     $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+
+                    if ($this->ms['page']=='psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl']=='1') {
+                        if ($product['product_link']) {
+                            $item['ITEM_IMAGE'] = '<a href="'.$product['product_link'].'"><img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '"></a>';
+                        }
+                    }
                 }
             }
             // ITEM_NAME
@@ -910,7 +933,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $product['products_name']=str_replace(' [disabled]', '', $product['products_name']);
             }
             $tmp_item_name['products_name'] = htmlspecialchars($product['products_name']);
-
+            if ($this->ms['page']=='psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl']=='1') {
+                if ($product['product_link']) {
+                    $tmp_item_name['products_name']='<a href="'.$product['product_link'].'">'.$tmp_item_name['products_name'].'</a>';
+                }
+            }
             $tmp_item_name['products_model'] = '';
             if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_ORDER_DETAILS'] == '1' && !empty($product['products_model'])) {
                 $tmp_item_name['products_model'] = ' (' . htmlspecialchars($product['products_model']) . ') ';
@@ -1444,7 +1471,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             // now add the order
             $insertArray = array();
             $insertArray['customer_id'] = $customer_id;
-            $insertArray['page_uid'] = $this->shop_pid;
+            if (is_numeric($address['shop_pid'])) {
+                $insertArray['page_uid'] = $address['shop_pid'];
+            } else {
+                $insertArray['page_uid'] = $this->shop_pid;
+            }
             $insertArray['language_id'] = 0;
             if (is_numeric($address['language_id'])) {
                 $insertArray['language_id'] = $address['language_id'];

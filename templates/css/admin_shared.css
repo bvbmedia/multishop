@@ -48,7 +48,7 @@
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer { line-height:18px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li { position:relative; float:left; border-right:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_logout { border-right:none; }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_has_subs:before { position:absolute; right:10px; top:16px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:"";}
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_has_subs:before { position:absolute; right:10px; top:16px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; z-index:10;}
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer ul li.ms_admin_has_subs:before { position:absolute; right:10px; top:12px; border-left:5px solid #cdcdcd; border-top:5px solid transparent; border-bottom:5px solid transparent; content:"";}
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer ul li.ms_admin_has_subs:hover:before,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer ul li.ms_admin_has_subs.msAdminPanelMenuHover:before { opacity:0; }
@@ -190,6 +190,21 @@ th.cell_orders_id { white-space:nowrap; }
 .cellProjectsID { width:170px; }
 .cellActionFluid .btn { width:100%; margin-bottom:5px; }
 .cellActionFluid .btn:last-child { margin-bottom:0; }
+
+.popoverActionMenuWrapper .btn {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.cell_phone_icon {
+	min-width: 76px;
+	max-width: 76px;
+	text-align: center;
+	white-space: normal!important;
+}
+.cell_phone_icon br {
+	display: none;
+}
 
 .alert h3:last-child { margin-bottom:0; }
 

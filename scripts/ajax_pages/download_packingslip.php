@@ -121,6 +121,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###DELIVERY_TELEPHONE###'] = $order['delivery_telephone'];
         $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'];
         $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
+        $markerArray['###LABEL_EXPECTED_DELIVERY_DATE###'] = $this->pi_getLL('expected_delivery_date');
+        $markerArray['###EXPECTED_DELIVERY_DATE###'] = '-';
+        if ($order['expected_delivery_date'] > 0) {
+            $markerArray['###EXPECTED_DELIVERY_DATE###'] = strftime("%x", $order['expected_delivery_date']);
+        }
         // CMS HEADER
         $markerArray['###PACKINGSLIP_CONTENT_HEADER_MESSAGE###'] = '';
         $cmsKeys = array();

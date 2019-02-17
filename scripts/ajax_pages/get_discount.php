@@ -40,7 +40,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
     //$code = mslib_fe::RemoveXSS(mslib_befe::strtolower($_POST['code']));
     $code = mslib_fe::RemoveXSS($_POST['code']);
     $time = time();
-    $str = "SELECT * from tx_multishop_coupons where code = '" . addslashes($code) . "' and status = 1 and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "') and (startdate <= '" . $time . "' and enddate >= '" . $time . "')";
+    $str = "SELECT * from tx_multishop_coupons where code = '" . addslashes($code) . "' and status = 1 and (page_uid=0 or (page_uid='" . $this->showCatalogFromPage . "' or FIND_IN_SET(" . $this->showCatalogFromPage . ", page_uid))) and (startdate <= '" . $time . "' and enddate >= '" . $time . "')";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);

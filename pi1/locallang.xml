@@ -710,6 +710,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_email">Customer delivery e-mail</label>
             <label index="feed_exporter_fields_label_customer_delivery_name">Customer delivery name</label>
             <label index="feed_exporter_fields_label_customer_delivery_telephone">Customer delivery telephone</label>
+            <label index="feed_exporter_fields_label_customer_delivery_mobile">Customer delivery mobile</label>
             <label index="feed_exporter_fields_label_customer_delivery_zip">Customer delivery zip</label>
             <label index="feed_exporter_fields_label_customer_id">Customer ID</label>
             <label index="feed_exporter_fields_label_delivery_time">Delivery Time</label>
@@ -1440,6 +1441,15 @@
             <label index="email_create_account_completed">E-mail create account completed</label>
             <label index="basket_contain_unorderable_free_products">Basket contains free products. These are not orderable.</label>
             <label index="feed_exporter_fields_label_ordered_by">Ordered by</label>
+            <label index="admin_customers_subscribed_newsletter">Subscribed to newsletter</label>
+            <label index="feed_exporter_fields_label_order_tax_total">Order grand tax total %s</label>
+            <label index="delivery_date">Delivery date</label>
+            <label index="update_order_status">Update order status</label>
+            <label index="send_notification_email_to_customer">Send notification email to customer</label>
+            <label index="other">Other</label>
+            <label index="feed_exporter_fields_label_products_date_added">Product date added</label>
+            <label index="feed_exporter_fields_label_products_date_available">Product date available</label>
+            <label index="feed_exporter_fields_label_products_last_modified">Product last modified</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2144,6 +2154,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_email">Debiteur (aflever) e-mailadres</label>
             <label index="feed_exporter_fields_label_customer_delivery_name">Debiteur (aflever) naam</label>
             <label index="feed_exporter_fields_label_customer_delivery_telephone">Debiteur (aflever) telefoonnummer</label>
+            <label index="feed_exporter_fields_label_customer_delivery_mobile">Debiteur (aflever) mobielnummer</label>
             <label index="feed_exporter_fields_label_customer_delivery_zip">Debiteur (aflever) postcode</label>
             <label index="feed_exporter_fields_label_customer_id">Klantnummer</label>
             <label index="feed_exporter_fields_label_delivery_time">Levertijd</label>
@@ -2854,6 +2865,13 @@
             <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>
             <label index="basket_contain_unorderable_free_products">Winkelwagen bevat gratis producten. Deze zijn niet te bestellen.</label>
             <label index="feed_exporter_fields_label_ordered_by">Besteld door</label>
+            <label index="admin_customers_subscribed_newsletter">Ingeschreven op de nieuwsbrief</label>
+            <label index="delivery_date">Afleverdatum</label>
+            <label index="update_order_status">Update bestelstatus</label>
+            <label index="send_notification_email_to_customer">Verstuur e-mail naar klant</label>
+            <label index="feed_exporter_fields_label_products_date_added">Product datum toegevoegd</label>
+            <label index="feed_exporter_fields_label_products_date_available">Product releasedatum</label>
+            <label index="feed_exporter_fields_label_products_last_modified">Product wijzigingsdatum</label>
         </languageKey>
     </data>
 </T3locallang>

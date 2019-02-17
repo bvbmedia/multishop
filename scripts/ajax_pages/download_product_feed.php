@@ -6,6 +6,22 @@ if ($this->get['feed_hash']) {
     set_time_limit(86400);
     ignore_user_abort(true);
     $feed = mslib_fe::getProductFeed($this->get['feed_hash'], 'code');
+    $utms_data=array();
+    if ($feed['utm_source']) {
+        $utms[]='utm_source=' . $feed['utm_source'];
+    }
+    if ($feed['utm_medium']) {
+        $utms[]='utm_medium=' . $feed['utm_medium'];
+    }
+    if ($feed['utm_term']) {
+        $utms[]='utm_term=' . $feed['utm_term'];
+    }
+    if ($feed['utm_content']) {
+        $utms[]='utm_content=' . $feed['utm_content'];
+    }
+    if ($feed['utm_campaign']) {
+        $utms[]='utm_campaign=' . $feed['utm_campaign'];
+    }
     $lifetime = 0;
     if ($this->ADMIN_USER) {
         $lifetime = 0;
@@ -87,7 +103,7 @@ if ($this->get['feed_hash']) {
                                 $str2 = "SELECT * from tx_multishop_zones z where z.id='" . $zone_id . "'";
                                 $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                                 $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
-                                $tmpcontent .= 'shipping_costs_per_product_zone_' . str_replace(' ', '_', $row2['name']);
+                                $tmpcontent .= 'shipping_costs_per_product_zone_' . mslib_befe::strtolower(str_replace(' ', '_', $row2['name']));
                             } else {
                                 // if key name is attribute option, print the option name. else print key name
                                 if ($attributes[$field]) {
@@ -974,6 +990,7 @@ if ($this->get['feed_hash']) {
                     case 'maximum_quantity':
                         $tmpcontent .= $row['maximum_quantity'];
                         break;
+                        break;
                     case 'manufacturers_products_id':
                         $tmpcontent .= $row['vendor_code'];
                         break;
@@ -999,7 +1016,7 @@ if ($this->get['feed_hash']) {
                             }
                             // get all cats to generate multilevel fake url eof
                         }
-                        $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                        $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail' . (count($utms)>0 ? '&'.implode('&', $utms) : ''));
                         $tmpcontent .= $this->FULL_HTTP_URL . $link;
                         break;
                     case 'products_meta_title':
@@ -1013,6 +1030,15 @@ if ($this->get['feed_hash']) {
                         break;
                     case 'products_feed_generated_date':
                         $tmpcontent .= strftime('%x', time());
+                        break;
+                    case 'products_date_added':
+                        $tmpcontent .= strftime('%x', $row['products_date_added']);
+                        break;
+                    case 'products_date_available':
+                        $tmpcontent .= strftime('%x', $row['products_date_available']);
+                        break;
+                    case 'products_last_modified':
+                        $tmpcontent .= strftime('%x', $row['products_last_modified']);
                         break;
                     default:
                         if ($field) {
@@ -1125,10 +1151,12 @@ if ($this->get['feed_hash']) {
                                         $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
                                         $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
                                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                            $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                            $tmpcontent .= $priceArray['shipping_costs_including_vat'];
+                                            //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs_including_vat'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                                         } else {
                                             if ($priceArray['shipping_costs']) {
-                                                $tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                //$tmpcontent .= $cn_iso_2 . ':::' . $priceArray['shipping_costs'] . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                                                $tmpcontent .= $priceArray['shipping_costs'];
                                             }
                                         }
                                     } else {

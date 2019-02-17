@@ -518,6 +518,15 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         }
         break;
 }
+$sesPostsErno=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_posterno');
+if (count($sesPostsErno)) {
+    foreach ($sesPostsErno as $sesPostErno) {
+        $postErno[]=$sesPostErno;
+    }
+    $sesPostsErno=array();
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_posterno', $sesPostsErno);
+    $GLOBALS['TSFE']->storeSessionData();
+}
 if (count($postErno)) {
     $returnMarkup = '
 	<div style="display:none" id="msAdminPostMessage">
@@ -566,10 +575,40 @@ $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['orders_results'] = $this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['orders_listing'] = $this->cObj->getSubpart($subparts['orders_results'], '###ORDERS_LISTING###');
 $subparts['orders_noresults'] = $this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-if ($this->post['Search'] and ($this->post['payment_status'] != $this->cookie['payment_status'])) {
-    $this->cookie['payment_status'] = $this->post['payment_status'];
+// search keys storage
+$search_keys=array();
+$search_keys[]='type_search';
+$search_keys[]='usergroup';
+$search_keys[]='country';
+$search_keys[]='ordered_product';
+$search_keys[]='payment_status';
+$search_keys[]='orders_status_search';
+$search_keys[]='order_date_from';
+$search_keys[]='order_date_till';
+$search_keys[]='order_expected_delivery_date_from';
+$search_keys[]='order_expected_delivery_date_till';
+$search_keys[]='payment_method';
+$search_keys[]='shipping_method';
+$search_keys[]='search_by_status_last_modified';
+$search_keys[]='search_by_telephone_orders';
+$search_keys[]='manufacturers_id';
+foreach ($search_keys as $search_key) {
+    if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
+        $this->cookie[$search_key] = $this->post[$search_key];
+        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+        $GLOBALS['TSFE']->storeSessionData();
+    }
+    if ($this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters']=='0') {
+        $this->post[$search_key] = $this->cookie[$search_key];
+    }
+}
+if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat']!=$this->cookie['excluding_vat'])) {
+    $this->cookie['excluding_vat'] = $this->post['tx_multishop_pi1']['excluding_vat'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['excluding_vat']) {
+    $this->post['tx_multishop_pi1']['excluding_vat']= $this->cookie['excluding_vat'];
 }
 if ($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) {
     $this->cookie['limit'] = $this->post['limit'];
@@ -607,6 +646,7 @@ $option_search = array(
         "order_products" => $this->pi_getLL('admin_ordered_product'),
         /*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
         "billing_telephone" => $this->pi_getLL('telephone'),
+        "billing_mobile" => $this->pi_getLL('mobile'),
         "http_referer" => $this->pi_getLL('http_referer'),
         "delivery_email" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email'),
         "delivery_name" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name'),
@@ -615,6 +655,7 @@ $option_search = array(
         "delivery_address" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address'),
         "delivery_company" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company'),
         "delivery_telephone" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone'),
+        "delivery_mobile" => $this->pi_getLL('feed_exporter_fields_label_customer_delivery_mobile'),
         "foreign_orders_id" => $this->pi_getLL('feed_exporter_fields_label_foreign_orders_id'),
         "cruser_id" => $this->pi_getLL('feed_exporter_fields_label_ordered_by'),
 
@@ -794,8 +835,14 @@ if ($this->post['skeyword']) {
         case 'billing_telephone':
             $filter[] = " billing_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
+        case 'billing_mobile':
+            $filter[] = " billing_mobile LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'delivery_telephone':
             $filter[] = " delivery_telephone LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
+        case 'delivery_mobile':
+            $filter[] = " delivery_mobile LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
         case 'http_referer':
             $filter[] = " http_referer LIKE '%" . addslashes($this->post['skeyword']) . "%'";
@@ -849,6 +896,31 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         } else {
             $column = 'o.crdate';
         }
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
+}
+if (!empty($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_till'])) {
+    list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
+    list($fd, $fm, $fy) = explode('/', $from_date);
+    list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
+    list($td, $tm, $ty) = explode('/', $till_date);
+    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $column = 'o.expected_delivery_date';
+    $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->post['order_expected_delivery_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
+        list($fd, $fm, $fy) = explode('/', $from_date);
+        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        $column = 'o.expected_delivery_date';
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->post['order_expected_delivery_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
+        list($td, $tm, $ty) = explode('/', $till_date);
+        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        $column = 'o.expected_delivery_date';
         $filter[] = $column . " <= '" . $end_time . "'";
     }
 }
@@ -944,6 +1016,9 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 if (isset($this->post['country']) && !empty($this->post['country'])) {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
+if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {
+    $filter[] = "o.orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.manufacturers_id = " . addslashes($this->post['manufacturers_id']) . ")";
+}
 if (isset($this->get['ordered_category']) && !empty($this->get['ordered_category']) && $this->get['ordered_category'] != 99999) {
     $filter[] = "o.orders_id in (select op.orders_id from tx_multishop_orders_products op where (op.categories_id='" . addslashes($this->get['ordered_category']) . "' or op.categories_id_0='" . addslashes($this->get['ordered_category']) . "'))";
 }
@@ -1003,72 +1078,85 @@ if (is_array($groups) and count($groups)) {
 $customer_groups_input .= '</select>' . "\n";
 // payment method
 $payment_methods = array();
+$payment_methods_label = array();
 $shop_title = array();
 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'payment_method', // GROUP BY...
-        'payment_method_label', // ORDER BY...
-        '' // LIMIT ...
+    'tx_multishop_orders', // FROM ...
+    'deleted=0'.((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
+    'payment_method', // GROUP BY...
+    'payment_method_label asc', // ORDER BY...
+    '' // LIMIT ...
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+    $payment_method =array();
+    if ($row['payment_method']) {
+        $payment_method = mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', 0, false);
+    }
     if (empty($row['payment_method_label'])) {
         $row['payment_method'] = 'nopm';
         $row['payment_method_label'] = 'Empty payment method';
     }
     if ($this->masterShop) {
-        if ($row['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
-        } else {
-            $shop_title = 'All';
+        $pageTitle=mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
+        $shop_title='';
+        if (!empty($pageTitle)) {
+            $shop_title = ' (' . $pageTitle . ')';
         }
-        $row['payment_method_label'] = $shop_title . ': ' . $row['payment_method_label'];
+        $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
     }
     $payment_methods[$row['payment_method']] = $row['payment_method_label'];
+    $payment_methods_label[strtoupper($row['payment_method_label']). '_' . $row['payment_method']]=$row['payment_method'];
 
 }
+ksort($payment_methods_label);
 $payment_method_input = '';
 $payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
 $payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
-if (is_array($payment_methods) and count($payment_methods)) {
-    foreach ($payment_methods as $payment_method_code => $payment_method) {
-
-        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_method . '</option>' . "\n";
+if (is_array($payment_methods_label) and count($payment_methods_label)) {
+    foreach ($payment_methods_label as $payment_method_label => $payment_method_code) {
+        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_methods[$payment_method_code] . '</option>' . "\n";
     }
 }
 $payment_method_input .= '</select>' . "\n";
 // shipping method
 $shipping_methods = array();
+$shipping_methods_label = array();
 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
         'tx_multishop_orders', // FROM ...
-        ((!$this->masterShop) ? 'page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
+        'deleted=0'.((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
         'shipping_method', // GROUP BY...
-        'shipping_method_label', // ORDER BY...
+        'shipping_method_label asc', // ORDER BY...
         '' // LIMIT ...
 );
 $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+    $shipping_method =array();
+    if ($row['shipping_method']) {
+        $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', 0, false);
+    }
     if (empty($row['shipping_method_label'])) {
         $row['shipping_method'] = 'nosm';
         $row['shipping_method_label'] = 'Empty shipping method';
     }
     if ($this->masterShop) {
-        if ($row['page_uid']>0) {
-            $shop_title = mslib_fe::getShopNameByPageUid($row['page_uid']);
-        } else {
-            $shop_title = 'All';
+        $pageTitle=mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
+        $shop_title='';
+        if (!empty($pageTitle)) {
+            $shop_title = ' (' . $pageTitle . ')';
         }
-        $row['shipping_method_label'] = $shop_title . ': ' . $row['shipping_method_label'];
+        $row['shipping_method_label'] = $row['shipping_method_label'] . $shop_title;
     }
     $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
+    $shipping_methods_label[strtoupper($row['shipping_method_label'])] = $row['shipping_method'];
 }
+ksort($shipping_methods_label);
 $shipping_method_input = '';
 $shipping_method_input .= '<select id="shipping_method" class="order_select2" name="shipping_method">' . "\n";
 $shipping_method_input .= '<option value="all">' . $this->pi_getLL('all_shipping_methods') . '</option>' . "\n";
-if (is_array($shipping_methods) and count($shipping_methods)) {
-    foreach ($shipping_methods as $shipping_method_code => $shipping_method) {
-        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_method . '</option>' . "\n";
+if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
+    foreach ($shipping_methods_label as $shipping_method_label => $shipping_method_code) {
+        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_methods[$shipping_method_code] . '</option>' . "\n";
     }
 }
 $shipping_method_input .= '</select>' . "\n";
@@ -1090,18 +1178,22 @@ $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
 if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search'] != 'all') ||
-        (isset($this->get['country']) && !empty($this->get['country'])) ||
-        (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
-        (isset($this->get['ordered_category']) && is_numeric($this->get['ordered_category'])) ||
-        (isset($this->get['ordered_product']) && is_numeric($this->get['ordered_product'])) ||
-        (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
-        (isset($this->get['orders_status_search']) && $this->get['orders_status_search'] > 0) ||
-        (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method'] != 'all') ||
-        (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
-        (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
-        (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
-        (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
-        (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders']))
+    (isset($this->get['country']) && !empty($this->get['country'])) ||
+    (isset($this->get['manufacturers_id']) && $this->get['manufacturers_id'] > 0) ||
+    (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
+    (isset($this->get['ordered_category']) && is_numeric($this->get['ordered_category'])) ||
+    (isset($this->get['ordered_product']) && is_numeric($this->get['ordered_product'])) ||
+    (isset($this->get['payment_status']) && !empty($this->get['payment_status'])) ||
+    (isset($this->get['orders_status_search']) && $this->get['orders_status_search'] > 0) ||
+    (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method'] != 'all') ||
+    (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
+    (isset($this->get['order_date_from']) && !empty($this->get['order_date_from'])) ||
+    (isset($this->get['order_date_till']) && !empty($this->get['order_date_till'])) ||
+    (isset($this->get['order_expected_delivery_date_from']) && !empty($this->get['order_expected_delivery_date_from'])) ||
+    (isset($this->get['order_expected_delivery_date_till']) && !empty($this->get['order_expected_delivery_date_till'])) ||
+    (isset($this->get['search_by_status_last_modified']) && is_numeric($this->get['search_by_status_last_modified'])) ||
+    (isset($this->get['search_by_telephone_orders']) && is_numeric($this->get['search_by_telephone_orders'])) ||
+    ($this->ms['MODULES']['ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING']=='1')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -1121,15 +1213,22 @@ $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###'] = $orders_status_list;
 $subpartArray['###VALUE_SEARCH###'] = htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FORM###'] = $this->post['order_date_from'];
+$subpartArray['###VALUE_DATE_FROM###'] = $this->post['order_date_from'];
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###'] = $this->post['order_date_till'];
+
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_FROM###'] = $this->pi_getLL('from');
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE###'] = $this->pi_getLL('expected_delivery_date');
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM###'] = $this->post['order_expected_delivery_date_from'];
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_TO###'] = $this->pi_getLL('to');
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO###'] = $this->post['order_expected_delivery_date_till'];
+
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
 $subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###'] = $this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###'] = ($this->post['search_by_status_last_modified'] ? ' checked' : '');
 $subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###'] = ($this->post['search_by_telephone_orders'] ? ' checked' : '');
 $subpartArray['###EXCLUDING_VAT_LABEL###'] = htmlspecialchars($this->pi_getLL('excluding_vat'));
-$subpartArray['###EXCLUDING_VAT_CHECKED###'] = ($this->get['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '');
+$subpartArray['###EXCLUDING_VAT_CHECKED###'] = ($this->post['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '');
 $subpartArray['###LABEL_PAYMENT_STATUS###'] = $this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###'] = $payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###'] = $this->pi_getLL('limit_number_of_records_to');
@@ -1141,6 +1240,13 @@ $subpartArray['###RESULTS###'] = $order_results;
 $subpartArray['###NORESULTS###'] = $no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
+$subpartArray['###ADMIN_LABEL_YES###'] = $this->pi_getLL('yes');
+$subpartArray['###ADMIN_LABEL_NO###'] = $this->pi_getLL('no');
+$subpartArray['###UPDATE_ORDER_STATUS###'] = $this->pi_getLL('update_order_status');
+$subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_PRE_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status_pre');
+$subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
+$subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL2###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
+$subpartArray['###LABEL_JS_DO_YOU_WANT_CHANGE_ORDERS_ID_X_TO_STATUS_X###']= $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x');
 // search on shop
 $subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']='';
 if ($this->conf['masterShop']) {
@@ -1182,9 +1288,22 @@ $objRef->setHeaderButtons($headerButtons);
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###'] = $this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###'] = $billing_countries_selectbox;
+$subpartArray['###LABEL_MANUFACTURERS_SELECTBOX###'] = $this->pi_getLL('manufacturers');
+$subpartArray['###VALUE_MANUFACTURERS_ID###'] = $this->post['manufacturers_id'];
 $subpartArray['###BACK_BUTTON###'] = '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
 $subpartArray['###LABEL_ORDERED_CATEGORY###'] = $this->pi_getLL('admin_ordered_category');
 $subpartArray['###VALUE_ORDERED_CATEGORY###'] = $this->get['ordered_category'];
+
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainTemplatePreProc'])) {
+    $params = array(
+        'subparts' => &$subparts,
+        'subpartArray' => &$subpartArray,
+        'headerButtons' => &$headerButtons
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainTemplatePreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
@@ -1195,6 +1314,61 @@ jQuery(document).ready(function($) {
     '.(!empty($subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']) ? '
     $("#search_in_shop").select2();
     ' : '').'
+    $(\'#manufacturers_id\').select2({
+		placeholder: \'' . $this->pi_getLL('admin_choose_manufacturer') . '\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
 	$(".order_select2").select2();
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",

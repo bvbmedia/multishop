@@ -34,7 +34,7 @@ if ($this->post['req'] == 'init') {
         $where_A ='';
         $filter=array();
         if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-            if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+            if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                 $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
             }
         } else {
@@ -59,16 +59,17 @@ if ($this->post['req'] == 'init') {
 		INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 		INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
 		WHERE ' . implode(' AND ', $filter) . '
-		GROUP BY cd.categories_name ASC ORDER BY cd.categories_name';
+		GROUP BY cd.categories_id ASC ORDER BY cd.categories_name';
         //	error_log($query);
         $pid_regs = array();
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) != false) {
                 if ($row['categories_name']) {
+                    $json_data['related_product'][$row['categories_id']] = array();
                     $filter=array();
                     if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-                        if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                        if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                             $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
                         }
                     } else {
@@ -89,7 +90,8 @@ if ($this->post['req'] == 'init') {
 						   p2c.categories_id,
 						   cd.categories_name,
 						   p.products_status,
-						   p.page_uid
+						   p.page_uid,
+						   p.products_model
 					FROM tx_multishop_products p,
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
@@ -100,40 +102,48 @@ if ($this->post['req'] == 'init') {
                     $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                     $cheking_check = 0;
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2) > 0) {
-                        $level = 0;
-
-                        $default_path = $row['categories_id'];
-                        $product_path = mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
-                        if (is_array($product_path) && count($product_path)) {
-                            $default_path = $product_path['node_id'];
-                        }
-                        if ($default_path) {
-                            // get all cats to generate multilevel fake url
-                            $level=0;
-                            if ($row['page_uid']!=$this->shop_pid) {
-                                $crum=mslib_fe::Crumbar($default_path, '', array(), $row['page_uid']);
-                            } else {
-                                $crum=mslib_fe::Crumbar($default_path);
-                            }
-                            $crum=array_reverse($crum);
-                        }
-                        $where = '';
-                        if ($crum) {
-                            $cats = array();
-                            foreach ($crum as $item) {
-                                $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
-                                $cats[] = $item['name'];
-                                $level++;
-                            }
-                        }
-                        if (!empty($where)) {
-                            $where = substr($where, 0, (strlen($where) - 1));
-                            $where .= '&';
-                        }
-                        $json_data['related_product'][$row['categories_id']] = array();
-                        $json_data['related_product'][$row['categories_id']]['categories_name'] = implode(' / ', $cats);
                         $product_counter = 0;
                         while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
+                            $level = 0;
+                            $default_path = $row2['categories_id'];
+                            $product_path = mslib_befe::getRecord($row2['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+                            if (is_array($product_path) && count($product_path)) {
+                                $default_path = $product_path['node_id'];
+                            }
+                            if ($default_path) {
+                                // get all cats to generate multilevel fake url
+                                $level=0;
+                                if ($row2['page_uid']!=$this->shop_pid) {
+                                    $crum=mslib_fe::Crumbar($default_path, '', array(), $row2['page_uid']);
+                                } else {
+                                    $crum=mslib_fe::Crumbar($default_path);
+                                }
+                                $crum=array_reverse($crum);
+                            }
+                            $where = '';
+                            if ($crum) {
+                                $cats = array();
+                                foreach ($crum as $item) {
+                                    $where .= "categories_id[" . $level . "]=" . $item['id'] . "&";
+                                    $cats[] = $item['name'];
+                                    $level++;
+                                }
+                            }
+                            if (!empty($where)) {
+                                $where = substr($where, 0, (strlen($where) - 1));
+                                $where .= '&';
+                            }
+                            $json_data['related_product'][$row2['categories_id']]['categories_name'] = implode(' / ', $cats);
+                            // custom hook that can be controlled by third-party plugin
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_relatives.php']['adminAjaxProductRelativesIteratorPreProc'])) {
+                                $params = array(
+                                        'row2' => &$row2
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_relatives.php']['adminAjaxProductRelativesIteratorPreProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
+                            // custom hook that can be controlled by third-party plugin eof
                             $have_main_relation_type=false;
                             $have_sub_relation_type=false;
                             $have_both_relation_type=false;
@@ -156,50 +166,56 @@ if ($this->post['req'] == 'init') {
                             $relation_type_list[]='sub';
                             $relation_type_list[]='both';
                             foreach ($relation_type_list as $rtype) {
+                                if (!is_array($pid_regs[$rtype])) {
+                                    $pid_regs[$rtype]=array();
+                                }
                                 if (!in_array($row2['products_id'], $pid_regs[$rtype])) {
                                     if ($rtype=='main' && !$have_main_relation_type) {
                                         continue;
-                                    }
-                                    if ($rtype=='sub' && !$have_sub_relation_type) {
+                                    } else if ($rtype=='sub' && !$have_sub_relation_type) {
+                                        continue;
+                                    } else if ($rtype=='both' && !$have_both_relation_type) {
                                         continue;
                                     }
-                                    if ($rtype=='both' && !$have_both_relation_type) {
-                                        continue;
-                                    }
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['id'] = $row2['products_id'];
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['name'] = $row2['products_name'];
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['id'] = $row2['products_id'];
                                     if ($row2['products_model']) {
-                                        $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
+                                        $row2['products_name'] = $row2['products_model'] . ': ' . $row2['products_name'];
                                     }
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['checked'] = 0;
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['name'] = $row2['products_name'];
+
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['checked'] = 0;
 
                                     $product_link = '#';
                                     if (!empty($where)) {
                                         if ($row['page_uid']!=$this->shop_pid) {
-                                            $product_link = mslib_fe::typolink($row['page_uid'], '&' . $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                            $product_link = mslib_fe::typolink($row['page_uid'], '&' . $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                         } else {
-                                            $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                                            $product_link = mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $row2['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
                                         }
                                     }
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['link'] = $product_link;
-                                    $json_data['related_product'][$row['categories_id']][$rtype]['products'][$product_counter]['relation_type'] = $rtype;
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['link'] = $product_link;
+                                    $json_data['related_product'][$row2['categories_id']][$rtype]['products'][$product_counter]['relation_type'] = $rtype;
                                     $pid_regs[$rtype][] = $row2['products_id'];
                                     $product_counter++;
                                 }
                             }
                         }
                         if (!count($json_data['related_product'][$row['categories_id']][$relation_type]['products'])) {
-                            unset($json_data['related_product'][$row['categories_id']]);
+                            //unset($json_data['related_product'][$row['categories_id']]);
                         }
                     } else {
-                        $json_data['related_product'] = 0;
+                        $json_data['related_product'][$row['categories_id']] = array();
                     }
                 }
                 if (isset($json_data['related_product'][$row['categories_id']])) {
-                    $json_data['related_product'][$row['categories_id']]['have_main_relation_type']=$have_main_relation_type;
-                    $json_data['related_product'][$row['categories_id']]['have_sub_relation_type']=$have_sub_relation_type;
-                    $json_data['related_product'][$row['categories_id']]['have_both_relation_type']=$have_both_relation_type;
+                    if (count($json_data['related_product'][$row['categories_id']])>0) {
+                        $json_data['related_product'][$row['categories_id']]['have_main_relation_type'] = $have_main_relation_type;
+                        $json_data['related_product'][$row['categories_id']]['have_sub_relation_type'] = $have_sub_relation_type;
+                        $json_data['related_product'][$row['categories_id']]['have_both_relation_type'] = $have_both_relation_type;
+                    } else {
+                        unset($json_data['related_product'][$row['categories_id']]);
+                    }
                 }
             }
         }
@@ -218,7 +234,7 @@ if ($this->post['req'] == 'init') {
                 $filter[]='('.implode(' OR ', $subfilter).')';
             }
             if (isset($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION'])) {
-                if (!$this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']) {
+                if ($this->ms['MODULES']['CROSS_SHOP_PRODUCT_RELATION']=='0') {
                     $filter[] = "p.page_uid='" . $this->showCatalogFromPage . "'";
                 }
             } else {
@@ -232,8 +248,10 @@ if ($this->post['req'] == 'init') {
             if ($this->post['s_cid'] > 0) {
                 $subcats = mslib_fe::get_subcategory_ids($this->post['s_cid'], $subcats);
                 $subcat_queries[] = 'p2c.categories_id = ' . (int)$this->post['s_cid'];
-                foreach ($subcats as $subcat_id) {
-                    $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
+                if (is_array($subcats)) {
+                    foreach ($subcats as $subcat_id) {
+                        $subcat_queries[] = 'p2c.categories_id = ' . $subcat_id;
+                    }
                 }
                 $subcat_query = '(' . implode(' OR ', $subcat_queries) . ')';
                 $filter[] = $subcat_query;
@@ -259,7 +277,7 @@ if ($this->post['req'] == 'init') {
                     if ($row['categories_name']) {
                         $productFilter = $filter;
                         $productFilter[] = '(p2c.categories_id = ' . $row['categories_id'] . ' and p2c.is_deepest=1 and pd.products_id <> ' . (int)$this->post['pid'] . ')';
-                        $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_id, pd.products_name, p2c.categories_id,cd.categories_name, p.products_status', // SELECT ...
+                        $query2 = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_id, pd.products_name, p2c.categories_id,cd.categories_name, p.products_status, p.products_model', // SELECT ...
                             'tx_multishop_products p, tx_multishop_products_description pd INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id', // FROM ...
                             implode(" AND ", $productFilter), // WHERE...
                             'p.products_id', // GROUP BY...
@@ -292,12 +310,22 @@ if ($this->post['req'] == 'init') {
                             }
                             $product_counter = 0;
                             while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) != false) {
+                                // custom hook that can be controlled by third-party plugin
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_relatives.php']['adminAjaxProductRelativesIteratorPreProc'])) {
+                                    $params = array(
+                                            'row2' => &$row2
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_relatives.php']['adminAjaxProductRelativesIteratorPreProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
+                                // custom hook that can be controlled by third-party plugin eof
                                 //if (!in_array($row2['products_id'], $pid_regs)) {
                                 $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['id'] = $row2['products_id'];
-                                $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['name'] = $row2['products_name'];
                                 if ($row2['products_model']) {
-                                    $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['name'] .= ' - ' . $row2['products_model'];
+                                    $row2['products_name'] = $row2['products_model'] . ': ' . $row2['products_name'];
                                 }
+                                $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['name'] = $row2['products_name'];
                                 $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['name'] .= ' (ID: ' . $row2['products_id'] . ')' . (!$row2['products_status'] ? ' (' . $this->pi_getLL('disabled') . ')' : '');
                                 if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
                                     $json_data['related_product'][$row['categories_id']][$relation_type]['products'][$product_counter]['checked'] = 1;

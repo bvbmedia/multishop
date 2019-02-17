@@ -210,6 +210,9 @@ foreach ($available_sid as $sids) {
         } else if ($priceArray['shipping_costs_including_vat'] < 0) {
             $data['available_shippingcost'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat'], 0, 0);
             $data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box_including_vat'], 0, 0);
+        } else {
+            $data['available_shippingcost'][$sids] = '';
+            $data['available_shippingcost_method_box'][$sids] = '';
         }
     } else {
         $data['available_shippingcost'][$sids] = '';
@@ -219,6 +222,9 @@ foreach ($available_sid as $sids) {
         } else if ($priceArray['shipping_costs'] < 0) {
             $data['available_shippingcost'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs'], 0, 0);
             $data['available_shippingcost_method_box'][$sids] = mslib_fe::currency() . ' -' . mslib_fe::amount2Cents($priceArray['shipping_costs_method_box'], 0, 0);
+        } else {
+            $data['available_shippingcost'][$sids] = '';
+            $data['available_shippingcost_method_box'][$sids] = '';
         }
     }
 }

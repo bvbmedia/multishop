@@ -213,6 +213,11 @@ if (!$product['products_id']) {
                 $tr_type = 'even';
             }
             list($staffel_qty, $staffel_price) = explode(':', $staffel_data);
+            if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $staffel_price = ($staffel_price * (1 + $product['tax_rate']));
+            } else {
+                $staffel_price=mslib_fe::taxDecimalCrop($staffel_price, 2, false, false);
+            }
             if (strpos($staffel_qty, '99999') !== false) {
                 list($qty_1, $qty_2) = explode('-', $staffel_qty);
                 $staffel_qty = '> ' . $qty_1;
@@ -613,11 +618,20 @@ if (!$product['products_id']) {
         $plugin_extra_content = implode("\n", $plugins_extra_content);
         $markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###'] = $plugin_extra_content;
     }
+    $product_attributes=mslib_fe::showAttributes($product['products_id'], '', array(), 0, 0, 1);
+    if (is_array($product_attributes)) {
+        $attributes_requirement_js=array();
+        $attributes_requirement_js[]='var attributes_requirement={}';
+        foreach ($product_attributes as $option_id => $attributes) {
+            $attributes_requirement_js[]='attributes_requirement[\'attributes'.$option_id.'\']=' . ($attributes['required']=='1' ? 'true' : 'false') . ';';
+        }
+    }
     if (count($js_detail_page_triggers)) {
         $output_array['meta']['details_page_js'] = '
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
 			    ' . implode("\n", $js_detail_page_triggers) . '
+			    ' . implode("\n", $attributes_requirement_js) . '
 			    $(\'form#add_to_shopping_cart_form\').submit(function(e){
                     if ($(\'.attribute-value-radio\').length>0 || $(\'.attribute-value-checkbox\').length>0) {
                         var attribute_radio_data=[];
@@ -631,7 +645,10 @@ if (!$product['products_id']) {
                         //
                         $(\'.attribute-value-radio\').each(function(i, v){
                             if ($.inArray($(v).attr(\'rel\'), attribute_radio_data)===-1) {
-                                attribute_radio_data.push($(v).attr(\'rel\'));
+                                var rel_data=$(v).attr(\'rel\');
+                                if (attributes_requirement[rel_data]) {
+                                    attribute_radio_data.push($(v).attr(\'rel\'));
+                                }
                             }
                         });
                         //
@@ -648,7 +665,10 @@ if (!$product['products_id']) {
                         //
                         $(\'.attribute-value-checkbox\').each(function(o, p){
                             if ($.inArray($(p).attr(\'rel\'), attribute_checkbox_data)===-1) {
-                                attribute_checkbox_data.push($(p).attr(\'rel\'));
+                                var rel_data=$(p).attr(\'rel\');
+                                if (attributes_requirement[rel_data]) {
+                                    attribute_checkbox_data.push($(p).attr(\'rel\'));
+                                }
                             }
                         });
                         //

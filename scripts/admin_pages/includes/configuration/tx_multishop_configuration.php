@@ -2837,7 +2837,83 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
-
+$records[] = array(
+        'configuration_title' => 'Products Listing Processor Type',
+        'configuration_key' => 'PRODUCTS_LISTING_PROCESSOR_TYPE',
+        'configuration_value' => 'default',
+        'description' => 'The processort for displaying categories/products listing lay-out type ',
+        'group_id' => '6',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Show Product Options Description',
+        'configuration_key' => 'SHOW_PRODUCT_OPTIONS_DESCRIPTION',
+        'configuration_value' => '0',
+        'description' => 'Show Product Options Description',
+        'group_id' => '7',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Show Product Options Description in Tooltip',
+        'configuration_key' => 'SHOW_PRODUCT_OPTIONS_DESCRIPTION_IN_TOOLTIP',
+        'configuration_value' => '0',
+        'description' => 'Show Product Options Description in Tooltip',
+        'group_id' => '7',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Always open extend search box in orders listing',
+        'configuration_key' => 'ALWAYS_OPEN_EXTEND_SEARCH_IN_ORDERS_LISTING',
+        'configuration_value' => '0',
+        'description' => 'Always open extend search box in orders listing',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Display prepended products model to product name in edit order',
+        'configuration_key' => 'DISPLAY_PRODUCTS_MODEL_IN_EDIT_ORDER',
+        'configuration_value' => '0',
+        'description' => 'Display prepended products model to product name in edit order',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Display appended products id to product name in edit order',
+        'configuration_key' => 'DISPLAY_PRODUCTS_ID_IN_EDIT_ORDER',
+        'configuration_value' => '0',
+        'description' => 'Display appended products id to product name in edit order',
+        'group_id' => '9',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Send Order Confirmation Letters to',
+        'configuration_key' => 'SEND_ORDER_CONFIRMATION_LETTER_TO',
+        'configuration_value' => '',
+        'description' => 'Send the order confirmation letter to the following e-mail addresses.',
+        'group_id' => '3',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

@@ -36,14 +36,18 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 </script>
 <script type="text/javascript">
 $(function() {
-	$R(\'.mceEditor\', {
+    '.($this->conf['loadOldRedactorVersion']=='1' ? '
+    $(\'.mceEditor\').redactor({
+    ' : '
+    $R(\'.mceEditor\', {
+    ').'
 	    imagePosition: true,
 	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
 		toolbarFixed: true,
 		focus: false,
 		linkSize: 250,
-		pasteImages: true,
+		'.($this->conf['loadOldRedactorVersion']=='1' ? '' : 'pasteImages: true,').'
 		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl', 1) . '\',
 		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload', 1) . '\',
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload', 1) . '\',
@@ -408,6 +412,21 @@ switch ($this->ms['page']) {
                         foreach ($this->post['movecats'] as $move_catid) {
                             $sql_update = 'update tx_multishop_categories set parent_id = ' . $new_parent_id . ' where categories_id = ' . $move_catid;
                             $GLOBALS['TYPO3_DB']->sql_query($sql_update);
+
+                            // move product as well
+                            $products = mslib_befe::getRecords($move_catid, 'tx_multishop_products_to_categories', 'node_id', array(), 'products_id', '', '', array('products_id, categories_id'));
+                            if (is_array($products) && count($products)) {
+                                foreach ($products as $product) {
+                                    $pid=$product['products_id'];
+                                    $filter = array();
+                                    $filter[] = 'products_id=' . $pid;
+                                    if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+                                        // lock changed columns
+                                        mslib_befe::updateImportedProductsLockedFields($pid, 'tx_multishop_products_to_categories', array('categories_id' => $move_catid));
+                                    }
+                                    mslib_befe::moveProduct($pid, $product['categories_id'], $product['categories_id']);
+                                }
+                            }
                         }
                     } else {
                         if (isset($this->post['delete_selected_categories'])) {
@@ -752,6 +771,11 @@ switch ($this->ms['page']) {
     case 'admin_processed_manual_order':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
+        }
+        break;
+    case 'admin_users_overview':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_users_overview.php');
         }
         break;
     /*
