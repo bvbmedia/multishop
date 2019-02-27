@@ -54,6 +54,17 @@ if (count($manufacturers) > 0) {
             </div>';
         }
         $markerArray['ADMIN_ICONS'] = $output['admin_icons'];
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/manufacturers_listing.php']['manufacturersListingRecordHook'])) {
+            $params = array(
+                    'markerArray' => &$markerArray,
+                    'manufacturer' => &$row,
+                    'output' => &$output
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/manufacturers_listing.php']['manufacturersListingRecordHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $contentItem .= $this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
     }
     // fill the row marker with the expanded rows
