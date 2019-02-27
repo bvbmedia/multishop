@@ -4040,14 +4040,18 @@ if ($this->post) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                             }
                         }
-                        $row['options_values_name'] = mslib_fe::getNameOptions($row['options_values_id']);
+                        // js cache
+                        if ($row['products_options_id']) {
+                            $js_select2_cache_options[$row['products_options_id']] = 'attributesOptions[' . $row['products_options_id'] . ']={id:"' . $row['products_options_id'] . '", text:"' . htmlentities($row['products_options_name'], ENT_QUOTES) . '"}';
+                        }
+                        $row['options_values_name'] = '';
+                        if ($row['options_values_id'] > 0) {
+                            $row['options_values_name'] = mslib_fe::getNameOptions($row['options_values_id']);
+                            $js_select2_cache_values[$row['options_values_id']] = 'attributesValues[' . $row['options_values_id'] . ']={id:"' . $row['options_values_id'] . '", text:"' . htmlentities($row['options_values_name'], ENT_QUOTES) . '"}';
+                        }
                         $options_hide_data[$row['products_options_id']] = $add_to_list;
                         $options_data[$row['products_options_id']] = $row['products_options_name'];
                         $attributes_data[$row['products_options_id']][] = $row;
-                        // js cache
-                        $js_select2_cache_options[$row['products_options_id']] = 'attributesOptions[' . $row['products_options_id'] . ']={id:"' . $row['products_options_id'] . '", text:"' . htmlentities($row['products_options_name'], ENT_QUOTES) . '"}';
-                        $js_select2_cache_values[$row['options_values_id']] = 'attributesValues[' . $row['options_values_id'] . ']={id:"' . $row['options_values_id'] . '", text:"' . htmlentities($row['options_values_name'], ENT_QUOTES) . '"}';
-
                     }
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
