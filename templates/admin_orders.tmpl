@@ -51,31 +51,31 @@
                 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
                 <div class="row formfield-container-wrapper">
                     <div class="col-sm-4 formfield-wrapper">
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewSearch">
                             <label for="type_search" class="control-label">###LABEL_SEARCH_ON###</label>
                             ###OPTION_ITEM_SELECTBOX###
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewUsergroup">
                             <label for="groups" class="labelInbetween control-label">###LABEL_USERGROUP###</label>
                             ###USERGROUP_SELECTBOX###
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewCountries">
                             <label for="country" class="control-label">###LABEL_COUNTRIES_SELECTBOX###</label>
                             ###COUNTRIES_SELECTBOX###
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewManufacturers">
                             <label for="manufacturers_id" class="control-label">###LABEL_MANUFACTURERS_SELECTBOX###</label>
                             <div class="form-inline">
                                 <input type="hidden" class="manufacturers_id" name="manufacturers_id" id="manufacturers_id" value="###VALUE_MANUFACTURERS_ID###" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewOrderedCategory">
                             <label class="control-label" for="ordered_category">###LABEL_ORDERED_CATEGORY###</label>
                             <div class="form-inline">
                                 <input type="hidden" class="ordered_category" name="ordered_category" id="ordered_category" value="###VALUE_ORDERED_CATEGORY###" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewOrderedProduct">
                             <label class="control-label" for="type_search">###LABEL_ORDERED_PRODUCT###</label>
                             <div class="form-inline">
                                 <input type="hidden" class="ordered_product" name="ordered_product" id="ordered_product" value="###VALUE_ORDERED_PRODUCT###" />
@@ -83,58 +83,62 @@
                         </div>
                     </div>
                     <div class="col-sm-4 formfield-wrapper">
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewOrderStatus">
                             <label for="payment_status" class="control-label">###LABEL_PAYMENT_STATUS###</label>
                             ###PAYMENT_STATUS_SELECTBOX###
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewOrderStatus">
                             <label for="orders_status_search" class="control-label labelInbetween">###LABEL_ORDER_STATUS###</label>
                             ###ORDERS_STATUS_LIST_SELECTBOX###
                         </div>
-                        <label class="control-label" for="type_search">###LABEL_DATE###</label>
-                        <div class="form-group">
-                            <div class="form-inline">
-                                <label class="control-label w-30" for="order_date_from">###LABEL_DATE_FROM###</label>
-                                <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FROM###">
+                        <div id="msAdminOrdersOverviewOrderedDate">
+                            <label class="control-label" for="type_search">###LABEL_DATE###</label>
+                            <div class="form-group">
+                                <div class="form-inline">
+                                    <label class="control-label w-30" for="order_date_from">###LABEL_DATE_FROM###</label>
+                                    <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FROM###">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-inline">
+                                    <label for="order_date_till" class="labelInbetween w-30">###LABEL_DATE_TO###</label>
+                                    <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="form-inline">
-                                <label for="order_date_till" class="labelInbetween w-30">###LABEL_DATE_TO###</label>
-                                <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+                        <div id="msAdminOrdersOverviewExpectedDeliveryDate">
+                            <label class="control-label" for="type_search">###LABEL_EXPECTED_DELIVERY_DATE###</label>
+                            <div class="form-group">
+                                <div class="form-inline">
+                                    <label class="control-label w-30" for="order_expected_delivery_date_from">###LABEL_EXPECTED_DELIVERY_DATE_FROM###</label>
+                                    <input class="form-control" type="text" name="order_expected_delivery_date_from" id="order_expected_delivery_date_from" value="###VALUE_EXPECTED_DELIVERY_DATE_FROM###">
+                                </div>
                             </div>
-                        </div>
-                        <label class="control-label" for="type_search">###LABEL_EXPECTED_DELIVERY_DATE###</label>
-                        <div class="form-group">
-                            <div class="form-inline">
-                                <label class="control-label w-30" for="order_expected_delivery_date_from">###LABEL_EXPECTED_DELIVERY_DATE_FROM###</label>
-                                <input class="form-control" type="text" name="order_expected_delivery_date_from" id="order_expected_delivery_date_from" value="###VALUE_EXPECTED_DELIVERY_DATE_FROM###">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-inline">
-                                <label for="order_expected_delivery_date_till" class="labelInbetween w-30">###LABEL_EXPECTED_DELIVERY_DATE_TO###</label>
-                                <input class="form-control" type="text" name="order_expected_delivery_date_till" id="order_expected_delivery_date_till" value="###VALUE_EXPECTED_DELIVERY_DATE_TO###">
+                            <div class="form-group">
+                                <div class="form-inline">
+                                    <label for="order_expected_delivery_date_till" class="labelInbetween w-30">###LABEL_EXPECTED_DELIVERY_DATE_TO###</label>
+                                    <input class="form-control" type="text" name="order_expected_delivery_date_till" id="order_expected_delivery_date_till" value="###VALUE_EXPECTED_DELIVERY_DATE_TO###">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-4 formfield-wrapper">
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewPaymentMethod">
                             <label for="payment_method" class="control-label">###LABEL_PAYMENT_METHOD###</label>
                             ###PAYMENT_METHOD_SELECTBOX###
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="msAdminOrdersOverviewShippingMethod">
                             <label for="shipping_method" class="control-label labelInbetween">###LABEL_SHIPPING_METHOD###</label>
                             ###SHIPPING_METHOD_SELECTBOX###
                         </div>
                         <div class="form-group">
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="msAdminOrdersOverviewFilterByDateChanged">
                                 <div class="checkbox checkbox-success checkbox-inline">
                                     <input type="checkbox" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
                                     <label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="msAdminOrdersOverviewSearchByTelephoneOrders">
                                 <div class="checkbox checkbox-success checkbox-inline">
                                     <input type="checkbox" id="search_by_telephone_orders" name="search_by_telephone_orders" value="1" ###FILTER_BY_TELEPHONE_ORDERS_CHECKED### >
                                     <label for="search_by_telephone_orders">###LABEL_FILTER_TELEPHONE_ORDERS###</label>
@@ -143,7 +147,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-6">
-                                <div class="checkbox checkbox-success checkbox-inline">
+                                <div class="checkbox checkbox-success checkbox-inline" id="msAdminOrdersOverviewSearchExcludeVat">
                                     <input type="checkbox" id="filter_by_excluding_vat" name="tx_multishop_pi1[excluding_vat]" value="1"###EXCLUDING_VAT_CHECKED###>
                                     <label for="filter_by_excluding_vat">###EXCLUDING_VAT_LABEL###</label>
                                 </div>
