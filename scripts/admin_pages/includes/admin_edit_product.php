@@ -1105,15 +1105,15 @@ if ($this->post) {
         $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
         $this->post['specials_new_products_price']=$product_price_excl_vat;
     }
-    if ($this->post['products_date_available']) {
+    if ($this->post['products_date_available_visitor'] && $this->post['products_date_available']) {
         $updateArray['products_date_available'] = strtotime($this->post['products_date_available']);
     } else {
-        $updateArray['products_date_available'] = time();
+        $updateArray['products_date_available'] = '';
     }
-    if ($this->post['products_date_added']) {
+    if ($this->post['products_date_added_visitor'] && $this->post['products_date_added']) {
         $updateArray['products_date_added'] = strtotime($this->post['products_date_added']);
     } else {
-        $updateArray['products_date_added'] = time();
+        $updateArray['products_date_added'] = '';
     }
     $updateArray['ean_code'] = '';
     if ($this->post['ean_code']) {
