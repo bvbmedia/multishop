@@ -113,9 +113,10 @@ if (!$this->get['skip_categories']) {
             $where = substr($where, 0, (strlen($where) - 1));
             $where .= '&';
         }
-        $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-        if (trim($categories['categories_external_url']) != '') {
-            $link=$categories['categories_external_url'];
+        $link = '';
+        if (trim($categories['categories_external_url']) == '') {
+            //$link=$categories['categories_external_url'];
+            $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
         }
         // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorCategoryUrlsPreProc'])) {
