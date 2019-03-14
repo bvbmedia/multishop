@@ -101,6 +101,10 @@ $tmpContent = '';
 if (!$this->get['skip_categories']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id=cd.categories_id and c.status=1 and c.page_uid='" . $this->showCatalogFromPage . "' and cd.language_id=" . $this->sys_language_uid);
     while (($categories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        if (trim($categories['categories_external_url']) != '') {
+            // Skip external URLs
+            continue;
+        }
         $level = 0;
         $cats = mslib_fe::Crumbar($categories['categories_id']);
         $cats = array_reverse($cats);
@@ -113,10 +117,9 @@ if (!$this->get['skip_categories']) {
             $where = substr($where, 0, (strlen($where) - 1));
             $where .= '&';
         }
-        $link = '';
-        if (trim($categories['categories_external_url']) == '') {
-            //$link=$categories['categories_external_url'];
-            $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
+        $link = $prefix_domain . mslib_fe::typolink($this->conf['products_listing_page_pid'], '' . $where . '&tx_multishop_pi1[page_section]=products_listing');
+        if (trim($categories['categories_external_url']) != '') {
+            $link=$categories['categories_external_url'];
         }
         // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorCategoryUrlsPreProc'])) {
