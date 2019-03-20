@@ -131,11 +131,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $menuArr[$tel]['keywords'] = $item['meta_keywords'];
                 $menuArr[$tel]['image'] = '';
                 if ($item['categories_image']) {
-                    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_lazyload')) {
-                        $menuArr[$tel]['image'] = '<img class="lazy" src="" data-src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
-                    } else {
-                        $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
-                    }
+                    $menuArr[$tel]['image'] = '<img src="uploads/tx_multishop/images/categories/normal' . mslib_befe::getImagePath($item['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($item['categories_name']) . '">';
                 }
                 if ($item['categories_external_url']) {
                     $link = $item['categories_external_url'];
