@@ -327,6 +327,9 @@ if ($this->ADMIN_USER) {
                 if ($order['ip_address']) {
                     $extraDetails['right'][] = $this->pi_getLL('ip_address', 'IP address') . ': <strong>' . $order['ip_address'] . '</strong><br />';
                 }
+                if ($order['http_host']) {
+                    $extraDetails['right'][] = $this->pi_getLL('order_on', 'Besteld op') . ': <strong>' . $order['http_host'] . '</strong><br />';
+                }
                 if ($order['http_referer']) {
                     $domain = parse_url($order['http_referer']);
                     if ($domain['host']) {

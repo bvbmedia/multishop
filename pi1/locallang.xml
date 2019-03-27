@@ -1450,6 +1450,7 @@
             <label index="feed_exporter_fields_label_products_date_added">Product date added</label>
             <label index="feed_exporter_fields_label_products_date_available">Product date available</label>
             <label index="feed_exporter_fields_label_products_last_modified">Product last modified</label>
+            <label index="order_on">Order on</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2872,6 +2873,7 @@
             <label index="feed_exporter_fields_label_products_date_added">Product datum toegevoegd</label>
             <label index="feed_exporter_fields_label_products_date_available">Product releasedatum</label>
             <label index="feed_exporter_fields_label_products_last_modified">Product wijzigingsdatum</label>
+            <label index="order_on">Besteld op</label>
         </languageKey>
     </data>
 </T3locallang>

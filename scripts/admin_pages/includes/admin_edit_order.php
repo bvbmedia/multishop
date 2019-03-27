@@ -2255,6 +2255,9 @@ if (is_numeric($this->get['orders_id'])) {
             if ($order['ip_address']) {
                 $extraDetails[$this->pi_getLL('ip_address', 'IP address')] = $order['ip_address'];
             }
+            if ($order['http_host']) {
+                $extraDetails[$this->pi_getLL('order_on', 'Besteld op')] = $order['http_host'];
+            }
             if ($order['http_referer']) {
                 $domain = parse_url($order['http_referer']);
                 if ($domain['host']) {

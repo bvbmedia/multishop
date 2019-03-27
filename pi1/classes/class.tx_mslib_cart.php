@@ -2153,6 +2153,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                 }
             }
+            $insertArray['http_host'] = $this->server['HTTP_HOST'];
             //$insertArray['orders_tax_data']			=	serialize($orders_tax);
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
                 // hook
