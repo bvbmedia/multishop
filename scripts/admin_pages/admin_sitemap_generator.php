@@ -4,10 +4,11 @@ if (!defined('TYPO3_MODE')) {
 }
 set_time_limit(7200);
 ignore_user_abort(true);
-$sitemap_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.txt';
-$sitemap_file_web_path = 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.txt';
-$sitemap_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.xml';
-$sitemap_xml_file_web_path = 'uploads/tx_multishop/sitemap_' . mslib_fe::rewritenamein($this->HTTP_HOST) . '.xml';
+$server_host_suffix = mslib_fe::rewritenamein($this->HTTP_HOST);
+$sitemap_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . $server_host_suffix . '.txt';
+$sitemap_file_web_path = 'uploads/tx_multishop/sitemap_' . $server_host_suffix . '.txt';
+$sitemap_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_' . $server_host_suffix . '.xml';
+$sitemap_xml_file_web_path = 'uploads/tx_multishop/sitemap_' . $server_host_suffix . '.xml';
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorPreProc'])) {
     $params = array(
@@ -24,23 +25,23 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 $prefix_domain = $this->FULL_HTTP_URL;
 $content = '';
 //
-$log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp.txt';
+$log_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '.txt';
 // file counter
 $logs_file_reg=1;
 // links line counter
 $logs_lines_reg=0;
 $max_lines_per_file=50000; // google sitemap max lines per file
 //
-$log_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_file_reg_cache';
+$log_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_file_reg_cache_' . $server_host_suffix;
 $previous_log_file_reg_cache=file_get_contents($log_file_reg_cache);
 if ($previous_log_file_reg_cache>1) {
     $sitemap_file_path_parts = pathinfo($sitemap_file);
     $sitemap_file_fn=$sitemap_file_path_parts['filename'];
     $sitemap_file_ext=$sitemap_file_path_parts['extension'];
     for ($lfrc=1; $lfrc<=$previous_log_file_reg_cache; $lfrc++) {
-        $suffix='';
+        $suffix='_' . $server_host_suffix;
         if ($lfrc>1) {
-            $suffix='-' . $lfrc;
+            $suffix='_' . $server_host_suffix . '-' . $lfrc;
         }
         $log_file_fn=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp' . $suffix . '.txt';
         $sitemap_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_file_fn . $suffix . '.' . $sitemap_file_ext;
@@ -52,23 +53,24 @@ if ($previous_log_file_reg_cache>1) {
     @unlink($log_file);
 }
 // XML
-$log_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp.xml';
+$log_xml_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '.xml';
 // file counter
 $logs_xml_file_reg=1;
 // links line counter
 $logs_xml_lines_reg=0;
 $prefix_domain = $this->FULL_HTTP_URL;
-$log_xml_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_xml_file_reg_cache';
+$log_xml_file_reg_cache = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log_xml_file_reg_cache_' . $server_host_suffix;
 $previous_xml_log_file_reg_cache=file_get_contents($log_xml_file_reg_cache);
 if ($previous_xml_log_file_reg_cache>1) {
     $sitemap_xml_file_path_parts = pathinfo($sitemap_xml_file);
     $sitemap_xml_file_fn=$sitemap_xml_file_path_parts['filename'];
     $sitemap_xml_file_ext=$sitemap_xml_file_path_parts['extension'];
     for ($lfrc=1; $lfrc<=$previous_xml_log_file_reg_cache; $lfrc++) {
-        $suffix='';
+        $suffix='_' . $server_host_suffix;
         if ($lfrc>1) {
-            $suffix='-' . $lfrc;
+            $suffix='_' . $server_host_suffix . '-' . $lfrc;
         }
+
         $log_xml_file_fn=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp' . $suffix . '.xml';
         $sitemap_xml_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_xml_file_fn . $suffix . '.' . $sitemap_xml_file_ext;
         // clean it before write
@@ -134,7 +136,7 @@ if (!$this->get['skip_categories']) {
         // TXT
         if ($logs_lines_reg==$max_lines_per_file) {
             $logs_file_reg++;
-            $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+            $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '-' .$logs_file_reg . '.txt';
             $logs_lines_reg=0;
         }
         $tmpContent = $link . "\n";
@@ -152,7 +154,7 @@ if (!$this->get['skip_categories']) {
         $tmpContent .= '</url>' . "\n";
         if ($logs_xml_lines_reg==$max_lines_per_file) {
             $logs_xml_file_reg++;
-            $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp-'.$logs_xml_file_reg.'.xml';
+            $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '-' . $logs_xml_file_reg . '.xml';
             $logs_xml_lines_reg=0;
         }
         $logs_xml_lines_reg++;
@@ -199,7 +201,7 @@ if (!$this->get['skip_products']) {
             // TXT
             if ($logs_lines_reg==$max_lines_per_file) {
                 $logs_file_reg++;
-                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '-' . $logs_file_reg . '.txt';
                 $logs_lines_reg=0;
             }
             $tmpContent = $link . "\n";
@@ -217,7 +219,7 @@ if (!$this->get['skip_products']) {
             $tmpContent .= '</url>' . "\n";
             if ($logs_xml_lines_reg==$max_lines_per_file) {
                 $logs_xml_file_reg++;
-                $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp-'.$logs_xml_file_reg.'.xml';
+                $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '-' . $logs_xml_file_reg . '.xml';
                 $logs_xml_lines_reg=0;
             }
             $logs_xml_lines_reg++;
@@ -233,7 +235,7 @@ if (!$this->get['skip_manufacturers']) {
         if ($link) {
             if ($logs_lines_reg==$max_lines_per_file) {
                 $logs_file_reg++;
-                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp-'.$logs_file_reg.'.txt';
+                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '-' . $logs_file_reg . '.txt';
                 $logs_lines_reg=0;
             }
             // TXT
@@ -253,7 +255,7 @@ if (!$this->get['skip_manufacturers']) {
             $tmpContent .= '</url>' . "\n";
             if ($logs_xml_lines_reg==$max_lines_per_file) {
                 $logs_xml_file_reg++;
-                $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp-'.$logs_xml_file_reg.'.xml';
+                $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '-' . $logs_xml_file_reg . '.xml';
                 $logs_xml_lines_reg=0;
             }
             $logs_xml_lines_reg++;
@@ -273,9 +275,9 @@ if ($logs_file_reg>1) {
     $sitemap_file_fn=$sitemap_file_path_parts['filename'];
     $sitemap_file_ext=$sitemap_file_path_parts['extension'];
     for ($lfr=1; $lfr<=$logs_file_reg; $lfr++) {
-        $suffix='';
+        $suffix='_' . $server_host_suffix;
         if ($lfr>1) {
-            $suffix='-' . $lfr;
+            $suffix='_' . $server_host_suffix . '-' . $lfr;
         }
         $log_file_iterate=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/' . $log_file_fn . $suffix . '.txt';
         $sitemap_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_file_fn . $suffix . '.' . $sitemap_file_ext;
@@ -297,10 +299,11 @@ if ($logs_xml_file_reg>1) {
     $sitemap_xml_file_fn=$sitemap_xml_file_path_parts['filename'];
     $sitemap_xml_file_ext=$sitemap_xml_file_path_parts['extension'];
     for ($lfr=1; $lfr<=$logs_xml_file_reg; $lfr++) {
-        $suffix='';
+        $suffix='_' . $server_host_suffix;
         if ($lfr>1) {
-            $suffix='-' . $lfr;
+            $suffix='_' . $server_host_suffix . '-' . $lfr;
         }
+
         $log_xml_file_iterate=file_get_contents($this->DOCUMENT_ROOT . 'uploads/tx_multishop/' . $log_xml_file_fn . $suffix . '.xml');
         $sitemap_xml_file_iterate= $this->DOCUMENT_ROOT . 'uploads/tx_multishop/'.$sitemap_xml_file_fn . $suffix . '.' . $sitemap_xml_file_ext;
         $sitemap_xml_file_web_path_list[]='uploads/tx_multishop/' . $sitemap_xml_file_fn . $suffix . '.' . $sitemap_xml_file_ext;
