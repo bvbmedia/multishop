@@ -179,51 +179,57 @@ if (!$this->get['skip_products']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where " . implode(" and ", $filterProducts));
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $product = mslib_fe::getProduct($row['products_id']);
-        $where = '';
-        if ($product['categories_id']) {
-            // get all cats to generate multilevel fake url
-            $level = 0;
-            $cats = mslib_fe::Crumbar($product['categories_id']);
-            $cats = array_reverse($cats);
-            if (count($cats) > 0) {
-                foreach ($cats as $cat) {
-                    $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-                    $level++;
+        $product_paths = mslib_befe::getRecords($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'));
+        if (is_array($product_paths) && count($product_paths)) {
+            foreach ($product_paths as $product_path) {
+                $where = '';
+                if ($product_path['categories_id']) {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($product_path['categories_id']);
+                    $cats = array_reverse($cats);
+                    if (count($cats) > 0) {
+                        foreach ($cats as $cat) {
+                            $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                            $level++;
+                        }
+                        $where = substr($where, 0, (strlen($where) - 1));
+                        $where .= '&';
+                    }
+                    // get all cats to generate multilevel fake url eof
                 }
-                $where = substr($where, 0, (strlen($where) - 1));
-                $where .= '&';
-            }
-            // get all cats to generate multilevel fake url eof
-        }
-        $link = '';
-        if (!empty($where)) {
-            $link = $prefix_domain . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
-            // TXT
-            if ($logs_lines_reg==$max_lines_per_file) {
-                $logs_file_reg++;
-                $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '-' . $logs_file_reg . '.txt';
-                $logs_lines_reg=0;
-            }
-            $tmpContent = $link . "\n";
-            file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
-            $logs_lines_reg++;
+                $link = '';
+                if (!empty($where)) {
+                    $link = $prefix_domain . mslib_fe::typolink($this->conf['products_detail_page_pid'], '&' . $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
+                    // TXT
+                    if ($logs_lines_reg==$max_lines_per_file) {
+                        $logs_file_reg++;
+                        $log_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_tmp_' . $server_host_suffix . '-' . $logs_file_reg . '.txt';
+                        $logs_lines_reg=0;
+                    }
+                    $tmpContent = $link . "\n";
+                    file_put_contents($log_file, $tmpContent, FILE_APPEND | LOCK_EX);
+                    $logs_lines_reg++;
 
-            // XML
-            $tmpContent = '<url>' . "\n";
-            $tmpContent .= "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
-            if ($product['products_last_modified']) {
-                $tmpContent .= "\t" . '<lastmod>' . ($product['products_last_modified'] > 0 ? date('c', $product['products_last_modified']) : '') . '</lastmod>' . "\n";
+                    // XML
+                    $tmpContent = '<url>' . "\n";
+                    $tmpContent .= "\t" . '<loc><![CDATA[' . $link . ']]></loc>' . "\n";
+                    if ($product['products_last_modified']) {
+                        $tmpContent .= "\t" . '<lastmod>' . ($product['products_last_modified'] > 0 ? date('c', $product['products_last_modified']) : '') . '</lastmod>' . "\n";
+                    }
+                    $tmpContent .= "\t" . '<changefreq>daily</changefreq>' . "\n";
+                    $tmpContent .= "\t" . '<priority>0.5</priority>' . "\n";
+                    $tmpContent .= '</url>' . "\n";
+                    if ($logs_xml_lines_reg==$max_lines_per_file) {
+                        $logs_xml_file_reg++;
+                        $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '-' . $logs_xml_file_reg . '.xml';
+                        $logs_xml_lines_reg=0;
+                    }
+                    $logs_xml_lines_reg++;
+                    file_put_contents($log_xml_file, $tmpContent, FILE_APPEND | LOCK_EX);
+                }
+
             }
-            $tmpContent .= "\t" . '<changefreq>daily</changefreq>' . "\n";
-            $tmpContent .= "\t" . '<priority>0.5</priority>' . "\n";
-            $tmpContent .= '</url>' . "\n";
-            if ($logs_xml_lines_reg==$max_lines_per_file) {
-                $logs_xml_file_reg++;
-                $log_xml_file=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/sitemap_xml_tmp_' . $server_host_suffix . '-' . $logs_xml_file_reg . '.xml';
-                $logs_xml_lines_reg=0;
-            }
-            $logs_xml_lines_reg++;
-            file_put_contents($log_xml_file, $tmpContent, FILE_APPEND | LOCK_EX);
         }
     }
 }
