@@ -101,6 +101,10 @@ $tmpContent = '';
 if (!$this->get['skip_categories']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id=cd.categories_id and c.status=1 and c.page_uid='" . $this->showCatalogFromPage . "' and cd.language_id=" . $this->sys_language_uid);
     while (($categories = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        if (trim($categories['categories_external_url']) != '') {
+            // Skip external URLs
+            continue;
+        }
         $level = 0;
         $cats = mslib_fe::Crumbar($categories['categories_id']);
         $cats = array_reverse($cats);
