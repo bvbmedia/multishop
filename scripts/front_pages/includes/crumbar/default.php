@@ -15,7 +15,7 @@ $subparts['template'] = $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item'] = $this->cObj->getSubpart($subparts['template'], '###ITEM###');
 $subparts['item_no_link']=$this->cObj->getSubpart($subparts['template'], '###ITEM_NO_LINK###');
 $lifetime = 3600;
-$string = 'crumbar_' . $this->cObj->data['uid'] . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
+$string = 'crumbar_' . $this->cObj->data['uid'] . '_' .$this->server['HTTP_HOST']. '_'.$this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$tmp = mslib_befe::cacheLite('get', $string, $lifetime, 1))) {
     // code here
     if ($this->get['products_id']) {
