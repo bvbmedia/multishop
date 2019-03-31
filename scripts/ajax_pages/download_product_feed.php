@@ -174,7 +174,12 @@ if ($this->get['feed_hash']) {
                 $orderby = array();
                 $select = array();
                 if (is_numeric($this->get['products_id'])) {
-                    $filter[] = "p.products_id='" . $this->get['products_id'] . "'";
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $tbl = 'pf.';
+                    } else {
+                        $tbl = 'p.';
+                    }
+                    $filter[] = $tbl . "products_id='" . $this->get['products_id'] . "'";
                 }
                 if (is_numeric($this->get['categories_id'])) {
                     $parent_id = $this->get['categories_id'];
