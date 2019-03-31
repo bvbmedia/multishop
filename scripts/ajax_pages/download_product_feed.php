@@ -835,7 +835,7 @@ if ($this->get['feed_hash']) {
                         }
                         break;
                     case 'products_sales_price_incl_vat':
-                        if ($row['specials_new_products_price']) {
+                        if ($row['products_price'] != $row['final_price']) {
                             $final_price = mslib_fe::final_products_price($row);
                             $tmpcontent .= number_format($final_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         } else {
