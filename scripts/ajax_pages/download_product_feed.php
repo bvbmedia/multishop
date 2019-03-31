@@ -834,6 +834,27 @@ if ($this->get['feed_hash']) {
                             $tmpcontent .= '';
                         }
                         break;
+                    case 'products_old_or_current_price_with_currency':
+                        $final_price = mslib_fe::final_products_price($row);
+                        $old_product_price = $row['products_price'];
+                        if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
+                            // in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
+                            if ($row['country_tax_rate'] && $row['region_tax_rate']) {
+                                $country_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['country_tax_rate']));
+                                $region_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['region_tax_rate']));
+                                $old_product_price = $old_product_price + ($country_tax_rate + $region_tax_rate);
+                            } else {
+                                $tax_rate = mslib_fe::taxDecimalCrop($row['products_price'] * ($row['tax_rate']));
+                                $old_product_price = $old_product_price + $tax_rate;
+                            }
+                        }
+                        if ($old_product_price != $final_price) {
+                            //$tmpcontent .= round($old_product_price,14);
+                            $tmpcontent .= round($old_product_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                        } else {
+                            $tmpcontent .= number_format($final_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                        }
+                        break;
                     case 'products_sales_price_incl_vat':
                         if ($row['products_price'] != $row['final_price']) {
                             $final_price = mslib_fe::final_products_price($row);
