@@ -767,6 +767,7 @@
             <label index="feed_exporter_fields_label_products_order_unit_name">Products order unit name</label>
             <label index="feed_exporter_fields_label_products_price_excl_vat">Products price (excl. VAT)</label>
             <label index="feed_exporter_fields_label_products_price_incl_vat">Products price (incl. VAT)</label>
+            <label index="feed_exporter_fields_label_products_sales_price_incl_vat">Products sales price (incl. VAT)</label>
             <label index="feed_exporter_fields_label_products_quantity">Products quantity</label>
             <label index="feed_exporter_fields_label_products_shortdescription">Products shortdescription</label>
             <label index="feed_exporter_fields_label_products_sku_code">Products SKU code</label>
@@ -2212,6 +2213,7 @@
             <label index="feed_exporter_fields_label_products_order_unit_name">Product besteleenheid (naam)</label>
             <label index="feed_exporter_fields_label_products_price_excl_vat">Productprijs (excl. BTW)</label>
             <label index="feed_exporter_fields_label_products_price_incl_vat">Productprijs (incl. BTW)</label>
+            <label index="feed_exporter_fields_label_products_sales_price_incl_vat">Product sales prijs (incl. BTW)</label>
             <label index="feed_exporter_fields_label_products_quantity">Product voorraad</label>
             <label index="feed_exporter_fields_label_products_shortdescription">Product kortebeschrijving</label>
             <label index="feed_exporter_fields_label_products_sku_code">Product SKU code</label>
