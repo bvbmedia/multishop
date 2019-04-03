@@ -3418,7 +3418,7 @@ class mslib_befe {
                             $params = array(
                                     'keys' => &$keys,
                                     'orders_status' => $orders_status,
-                                    'order' => $order,
+                                    'order' => &$order,
                                     'action_call' => &$action_call
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusCMSKeysPostProc'] as $funcRef) {
