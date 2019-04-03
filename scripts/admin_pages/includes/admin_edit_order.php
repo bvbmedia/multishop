@@ -981,6 +981,7 @@ if (is_numeric($this->get['orders_id'])) {
             } else {
                 unset($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
             }
+
             if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']) {
                 if ($order['paid']) {
                     // if order already paid just update timestamp
@@ -1033,6 +1034,21 @@ if (is_numeric($this->get['orders_id'])) {
                     $updateArray['memo_crdate'] = time();
                 }
             }
+            if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp']) && mslib_befe::isValidDate($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+                $this->post['tx_multishop_pi1']['orders_paid_timestamp'] = strtotime($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+            } else {
+                unset($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+            }
+            if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']) {
+                if ($order['paid']) {
+                    if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) && !$this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) {
+                        $updateArray['paid'] = '0';
+                        $updateArray['orders_paid_timestamp'] = '';
+                    } else {
+                        $updateArray['orders_paid_timestamp'] = $this->post['tx_multishop_pi1']['orders_paid_timestamp'];
+                    }
+                }
+            }
             if (count($updateArray)) {
                 $close_window = 1;
                 $updateArray['orders_last_modified'] = time();
@@ -1067,6 +1083,17 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($continue_update) {
                     // dynamic variables
                     mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified'], 'edit_order_save');
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'])) {
+                        // hook
+                        $params = array(
+                            'orders_id' => &$this->get['orders_id'],
+                            'order_status' => $this->post['order_status']
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderStatusPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                        // hook oef
+                    }
                 }
             }
         }
@@ -2163,15 +2190,15 @@ if (is_numeric($this->get['orders_id'])) {
             $orders_paid_timestamp_visual = '';
             $orders_paid_timestamp = '';
             if ($orders['paid']) {
-                if (!$this->post && $orders['orders_paid_timestamp']) {
+                if ($orders['orders_paid_timestamp']) {
                     $this->post['tx_multishop_pi1']['orders_paid_timestamp'] = $orders['orders_paid_timestamp'];
                 }
                 if ($this->post['tx_multishop_pi1']['orders_paid_timestamp'] == 0 || empty($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
                     $orders_paid_timestamp_visual = '';
                     $orders_paid_timestamp = '';
                 } else {
-                    $orders_paid_timestamp_visual = strftime('%x', $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
-                    $orders_paid_timestamp = date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+                    $orders_paid_timestamp_visual = date($this->pi_getLL('locale_date_format'), $orders['orders_paid_timestamp']);
+                    $orders_paid_timestamp = date("Y-m-d", $orders['orders_paid_timestamp']);
                 }
             }
             $orderDetailsItem .= '<div class="col-md-9">
@@ -2227,6 +2254,9 @@ if (is_numeric($this->get['orders_id'])) {
             }
             if ($order['ip_address']) {
                 $extraDetails[$this->pi_getLL('ip_address', 'IP address')] = $order['ip_address'];
+            }
+            if ($order['http_host']) {
+                $extraDetails[$this->pi_getLL('order_on', 'Besteld op')] = $order['http_host'];
             }
             if ($order['http_referer']) {
                 $domain = parse_url($order['http_referer']);

@@ -118,6 +118,8 @@ $array['products_old_price'] = $this->pi_getLL('feed_exporter_fields_label_produ
 $array['products_old_price_excluding_vat'] = $this->pi_getLL('feed_exporter_fields_label_products_old_price_excl_vat');
 $array['products_price'] = $this->pi_getLL('feed_exporter_fields_label_products_price_incl_vat');
 $array['products_price_excluding_vat'] = $this->pi_getLL('feed_exporter_fields_label_products_price_excl_vat');
+$array['products_sales_price_incl_vat'] = $this->pi_getLL('feed_exporter_fields_label_products_sales_price_incl_vat','Products sales price');
+
 $array['product_capital_price'] = $this->pi_getLL('feed_exporter_fields_label_products_capital_price');
 $array['products_weight'] = $this->pi_getLL('feed_exporter_fields_label_products_weight');
 $array['products_status'] = $this->pi_getLL('feed_exporter_fields_label_products_status');

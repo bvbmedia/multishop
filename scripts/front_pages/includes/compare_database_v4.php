@@ -718,4 +718,11 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select http_host from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `http_host` varchar(127) default '', ADD KEY `http_host` (`http_host`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
 ?>

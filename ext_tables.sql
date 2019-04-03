@@ -536,6 +536,7 @@ CREATE TABLE `tx_multishop_orders` (
  `foreign_source_name` varchar(30) default '',
  `foreign_orders_id` varchar(30) default '',
  `is_shipping_costs_manual` tinyint(1) default '0',
+ `http_host` varchar(127) default '',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),

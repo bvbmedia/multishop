@@ -1330,7 +1330,6 @@ class mslib_fe {
         }
         return $url;
     }
-    ////
     public function rebuildStaffelPrice($staffel_price_list, $product_price) {
         if (empty($staffel_price_list)) {
             return false;

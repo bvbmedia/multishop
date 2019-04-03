@@ -783,6 +783,7 @@ select.form-control { padding-left:8px; padding-right:8px; }
 #s2id_msAdminSelect2Bottom.select2-container { width:100%; }
 #s2id_msAdminSelect2Top.select2-container { width:300px; }
 
+.select2-drop { z-index: 8888890; }
 .select2-results li h3 { font-size:14px; line-height:20px; margin-bottom:0; }
 .select2-container-multi .select2-choices { border-color:#ccc; background-image:none; border-radius:4px; box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075); transition:border-color ease-in-out .15s, box-shadow ease-in-out .15s; }
 .select2-container-multi .select2-choices .select2-search-choice { line-height:18px; }
