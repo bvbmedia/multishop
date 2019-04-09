@@ -72,6 +72,7 @@ if ($this->ADMIN_USER) {
             }
         }
     }
+    $filter[] = 'p.products_status=1';
     $filter[] = 'p.products_id=pd.products_id';
     $filter[] = 'p.products_id=p2c.products_id';
     $filter[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
