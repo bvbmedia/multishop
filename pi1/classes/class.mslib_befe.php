@@ -1118,19 +1118,19 @@ class mslib_befe {
             return false;
         }
         if (is_numeric($products_id)) {
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
+                $params = array(
+                        'products_id' => &$products_id,
+                        'categories_id' => &$categories_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $productRow = mslib_fe::getProduct($products_id, '', '', 1, 1);
             if (is_numeric($products_id)) {
                 if (is_numeric($categories_id)) {
-                    //hook to let other plugins further manipulate the create table query
-                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
-                        $params = array(
-                                'products_id' => &$products_id,
-                                'categories_id' => &$categories_id
-                        );
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
-                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                        }
-                    }
                     if (!$delete_all_cat_relation) {
                         // just delete the relation to the category
                         $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id . ' and categories_id=' . $categories_id);
@@ -1161,16 +1161,6 @@ class mslib_befe {
                     $definitive_delete = 1;
                 }
                 if ($definitive_delete) {
-                    //hook to let other plugins further manipulate the create table query
-                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'])) {
-                        $params = array(
-                                'products_id' => $products_id,
-                                'categories_id' => &$categories_id
-                        );
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
-                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                        }
-                    }
                     for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
                         $i = $x;
                         if ($i == 0) {
