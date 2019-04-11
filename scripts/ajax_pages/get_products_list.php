@@ -72,7 +72,6 @@ if ($this->ADMIN_USER) {
             }
         }
     }
-    $filter[] = 'p.products_status=1';
     $filter[] = 'p.products_id=pd.products_id';
     $filter[] = 'p.products_id=p2c.products_id';
     $filter[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
@@ -90,7 +89,7 @@ if ($this->ADMIN_USER) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
                 'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
                 implode(' and ', $filter), // WHERE...
-                'p.products_id', // GROUP BY...
+                'p.products_status desc, p.products_id', // GROUP BY...
                 'pd.products_name asc', // ORDER BY...
                 '' // LIMIT ...
         );
@@ -130,7 +129,7 @@ if ($this->ADMIN_USER) {
         if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
             $limit=15;
         }
-        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array($prefix . 'products_name asc'));
+        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array('products_status desc, '.$prefix . 'products_name asc'));
         $counter = 0;
         foreach ($products['products'] as $product) {
             if ($product['products_name'] && !empty($product['products_name'])) {
