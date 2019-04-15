@@ -1025,6 +1025,7 @@ if (is_numeric($this->get['orders_id'])) {
             if ($order_memo=='<p></p>') {
                 $order_memo='';
             }
+            $updateArray['order_memo']='';
             if (!empty($order_memo)) {
                 $updateArray['order_memo'] = $this->post['order_memo'];
             }
