@@ -2024,6 +2024,18 @@ if (is_numeric($this->get['orders_id'])) {
                     foreach ($invoices as $invoice) {
                         $link = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash'] . $invoice_dl_lang_params);
                         $invoiceArray[] = '<a href="' . $link . '" target="_blank" rel="nofollow"><i class="fa fa-file-pdf-o"></i></a> <a href="' . $link . '" target="_blank" rel="nofollow">' . $invoice['invoice_id'] . '</a>';
+                        // hook for adding new items to details fieldset
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['invoiceArrayDetailsIterator'])) {
+                            // hook
+                            $params = array(
+                                'order' => $order,
+                                'invoice' => &$invoice,
+                                'invoiceArray' => &$invoiceArray
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['invoiceArrayDetailsIterator'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                     }
                 }
                 if (count($invoiceArray)) {
