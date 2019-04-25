@@ -61,6 +61,15 @@ if ($this->get['customers_export_hash']) {
             $column = 'f.crdate';
             $filter[] = $column . " BETWEEN '" . $start_duration . "' and '" . $end_duration . "'";
         }
+        switch ($post_data['customer_with_discount']) {
+            case '0':
+                $filter[] = "f.tx_multishop_discount = 0";
+                break;
+            case '1':
+                $filter[] = "f.tx_multishop_discount > 0";
+                break;
+
+        }
         if (isset($post_data['status'])) {
             if (!$post_data['status']) {
                 $filter[] = "(f.disable='1')";

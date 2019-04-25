@@ -764,6 +764,9 @@ multishop_ajax_server {
 			# highlighter
 			jqPlothighlighter = EXT:multishop/res/jqplot/plugins/jqplot.highlighter.js
 			jqPlothighlighter.compress = 1
+			# canvasOverlay
+			jqPlotcanvasOverlay = EXT:multishop/res/jqplot/plugins/jqplot.canvasOverlay.js
+			jqPlotcanvasOverlay.compress = 1
 		}
 
 		includeCSS {

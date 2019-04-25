@@ -125,26 +125,36 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         break;
     case 'create_reversal_invoice':
         if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
-            foreach ($this->post['selected_invoices'] as $invoice) {
-                if (is_numeric($invoice)) {
-                    $invoice = mslib_fe::getInvoice($invoice, 'id');
-                    if ($invoice['id'] and $invoice['reversal_invoice'] == 0) {
-                        if (mslib_fe::generateReversalInvoice($invoice['id'])) {
-                            $postErno[] = array(
-                                    'status' => 'info',
-                                    'message' => 'Invoice ' . $invoice['invoice_id'] . ' has been reversed.'
-                            );
+            //hook to let other plugins further manipulate the settings
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['createReversalInvoiceCustom'])) {
+                $params = array(
+                    'postErno' => &$postErno
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['createReversalInvoiceCustom'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            } else {
+                foreach ($this->post['selected_invoices'] as $invoice) {
+                    if (is_numeric($invoice)) {
+                        $invoice = mslib_fe::getInvoice($invoice, 'id');
+                        if ($invoice['id'] and $invoice['reversal_invoice'] == 0) {
+                            if (mslib_fe::generateReversalInvoice($invoice['id'])) {
+                                $postErno[] = array(
+                                        'status' => 'info',
+                                        'message' => 'Invoice ' . $invoice['invoice_id'] . ' has been reversed.'
+                                );
+                            } else {
+                                $postErno[] = array(
+                                        'status' => 'error',
+                                        'message' => 'Failed to reverse invoice ' . $invoice['invoice_id']
+                                );
+                            }
                         } else {
                             $postErno[] = array(
                                     'status' => 'error',
-                                    'message' => 'Failed to reverse invoice ' . $invoice['invoice_id']
+                                    'message' => 'Failed to reverse invoice ' . $invoice['invoice_id'] . ' because this invoice is already a credit invoice'
                             );
                         }
-                    } else {
-                        $postErno[] = array(
-                                'status' => 'error',
-                                'message' => 'Failed to reverse invoice ' . $invoice['invoice_id'] . ' because this invoice is already a credit invoice'
-                        );
                     }
                 }
             }
