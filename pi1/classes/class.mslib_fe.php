@@ -5327,6 +5327,19 @@ class mslib_fe {
         if (!empty($categories_id)) {
             $categories_id = (int)$categories_id;
         }
+        $params = array(
+                'products_id' => &$products_id,
+                'categories_id' => &$categories_id,
+                'extra_fields' => &$extra_fields,
+                'include_disabled_products' => &$include_disabled_products,
+                'skipFlatDatabase' => &$skipFlatDatabase,
+                'ignoreStartEndTime' => &$ignoreStartEndTime
+        );
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductPreQueryElementsProc'])) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductPreQueryElementsProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($skipFlatDatabase || (!$this->ms['MODULES']['FLAT_DATABASE'] || $include_disabled_products)) {
             $select = array();
             $select[] = '*';
@@ -5377,6 +5390,8 @@ class mslib_fe {
         $query_elements['from'] = &$from;
         $query_elements['where'] = &$where;
         $params = array(
+                'products_id' => &$products_id,
+                'categories_id' => &$categories_id,
                 'query_elements' => &$query_elements,
                 'skipFlatDatabase' => &$skipFlatDatabase,
                 'include_disabled_products' => &$include_disabled_products,
