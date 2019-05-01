@@ -4873,7 +4873,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
                     $headingButton['target'] = '_blank';
                 }
-                $headerButtons[] = $headingButton;
+                $headerButtons['header_invoice_btn'] = $headingButton;
             }
             if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
                 $headingButton = array();
@@ -4886,19 +4886,19 @@ if (is_numeric($this->get['orders_id'])) {
                 } else {
                     $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&print=packing');
                 }
-                $headerButtons[] = $headingButton;
+                $headerButtons['header_packingslip_btn'] = $headingButton;
             }
         }
         // create new order for same client as active order
         if ($this->ms['MODULES']['CREATE_NEW_ORDER_FROM_EDIT_ORDER']) {
             $headingButton = array();
-            $headingButton['btn_class'] = 'btn btn-primary';
+            $headingButton['btn_class'] = 'btn btn-primary header_create_new_order_btn';
             $headingButton['fa_class'] = 'fa fa-check-circle';
             $headingButton['title'] = $this->pi_getLL('admin_label_create_order');
             $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true');
             $headingButton['attributes'] = '';
             $headingButton['target'] = '_blank';
-            $headerButtons[] = $headingButton;
+            $headerButtons['header_create_new_order_btn'] = $headingButton;
         }
         $headingButton = array();
         $headingButton['btn_class'] = 'btn btn-success';
@@ -4906,7 +4906,7 @@ if (is_numeric($this->get['orders_id'])) {
         $headingButton['title'] = ($this->get['action'] == 'edit_order') ? $this->pi_getLL('update') : $this->pi_getLL('save');
         $headingButton['href'] = '#';
         $headingButton['attributes'] = 'onclick="$(\'#btnSave\').click(); return false;"';
-        $headerButtons[] = $headingButton;
+        $headerButtons['header_save_update_btn'] = $headingButton;
         //
         $headingButton = array();
         $headingButton['btn_class'] = 'btn btn-success';
@@ -4914,7 +4914,7 @@ if (is_numeric($this->get['orders_id'])) {
         $headingButton['title'] = ($this->get['action'] == 'edit_order') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
         $headingButton['href'] = '#';
         $headingButton['attributes'] = 'onclick="$(\'#btnSaveClose\').click(); return false;"';
-        $headerButtons[] = $headingButton;
+        $headerButtons['header_save_close_btn'] = $headingButton;
         // Set header buttons through interface class so other plugins can adjust it
         $objRef->setHeaderButtons($headerButtons);
         // Get header buttons through interface class so we can render them
