@@ -43,7 +43,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
         $array['crdate'] = time();
         $array['hash'] = $cms_hash;
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $array);
-        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
         $cms_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
     }
     if (is_array($this->post['cms_name'])) {
@@ -55,7 +55,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
                 $array['name'] = $value;
                 $array['content'] = $this->post['cms_content'][$key];
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms_description', 'id=\'' . addslashes($cms_id) . '\' and language_id=\'' . $key . '\'', $array);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
             } else {
                 $array = array();
                 $array['id'] = $cms_id;
@@ -63,7 +63,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
                 $array['name'] = $value;
                 $array['content'] = $this->post['cms_content'][$key];
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms_description', $array);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
             }
         }
     }
