@@ -141,7 +141,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // search processor eol
-$dates = array();
+//$dates = array();
 //$content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h3>';
 if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
     $globalStartTime = $search_start_time;
@@ -150,13 +150,12 @@ if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'
     $globalStartTime = strtotime(date($selected_year . '1' . "-01") . " 00:00:00");
     $globalEndTime = strtotime(date($selected_year . '12' . "-01") . " 00:00:00");
 }
-for ($i = 0; $i < 12; $i++) {
-    $time = strtotime('+' . $i . ' month', $globalStartTime);
-    if ($time <= $globalEndTime) {
-        //$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
-        $dates[strftime("%B %Y", $time)] = date($selected_year . "m", $time);
-    }
-}
+//for ($i = 0; $i < 12; $i++) {
+//    $time = strtotime('+' . $i . ' month', $globalStartTime);
+//    if ($time <= $globalEndTime) {
+//        $dates[strftime("%B %Y", $time)] = date($selected_year . "m", $time);
+//   }
+//}
 if ($this->cookie['paid_orders_only']) {
     $data_query['where'][] = '(o.paid=1)';
 } else {
