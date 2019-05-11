@@ -415,6 +415,15 @@ switch ($this->ms['page']) {
     case 'payment_reminder_checkout':
         if ($this->get['tx_multishop_pi1']['hash']) {
             $tmpArray = mslib_befe::getRecord($this->get['tx_multishop_pi1']['hash'], 'tx_multishop_orders', 'hash');
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'])) {
+                $params = array(
+                    'tmpArray' => &$tmpArray,
+                    'content' => &$content
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($tmpArray['orders_id']) {
                 $order = mslib_fe::getOrder($tmpArray['orders_id']);
                 // replacing the variables with dynamic values
