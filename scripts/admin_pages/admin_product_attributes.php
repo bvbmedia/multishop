@@ -742,7 +742,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 					values_data+=\'<div class="panel-heading">\';
 					values_data+=\'<h3>\';
 					values_data+=\'' . addslashes($this->pi_getLL('admin_label_option_value')) . ': \';
-					values_data+=s.values_name;
+					values_data+=s.values_name + \' (ID: \' + s.values_id + \')\';
                     values_data+=\'<span class="values_edit">\';
 					values_data += \'&nbsp;<a href="#" class="edit_options_values btn btn-primary btn-xs" rel="\' + s.pov2po_id + \'"><i class="fa fa-pencil"></i></a>\';
 					values_data += \'&nbsp;<a href="#" class="delete_options_values btn btn-danger btn-xs" rel="\' + optid + \':\' + s.values_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
@@ -823,7 +823,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 								values_data+=\'<div id="option_values_\' + v.values_id + \'" class="panel panel-default option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">\';
 								values_data+=\'<div class="panel-heading">\';
 								values_data+=\'<h3>' . addslashes($this->pi_getLL('admin_label_option_value')) . ': \';
-								values_data+=v.values_name;
+								values_data+=v.values_name + \' (ID: \' + v.values_id + \')\';
 								values_data+=\'<span class="values_edit">\';
 								values_data += \'&nbsp;<a href="#" class="edit_options_values btn btn-primary btn-xs" rel="\' + v.pov2po_id + \'"><i class="fa fa-pencil"></i></a>\';
 								values_data += \'&nbsp;<a href="#" class="delete_options_values btn btn-danger btn-xs" rel="\' + opt_id + \':\' + v.values_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
