@@ -50,7 +50,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_befe.php');
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_fe.php');
         if ($conf['userFunc.']['conf.']['cacheHmenu']) {
-            $string = 'user_msMenuFunc_'.md5(json_encode($conf['userFunc.']['conf.']));
+            $string = 'user_msMenuFunc_'.md5(json_encode($conf['userFunc.']['conf.']).'_'.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
             $lifetime = (3600 * 6);
             $menuArr = mslib_befe::cacheLite('get', $string, $lifetime, 1);
         }
