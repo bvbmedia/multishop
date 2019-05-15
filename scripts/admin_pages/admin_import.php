@@ -1837,7 +1837,17 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                             $tel = 0;
-                            $hashed_id = $this->ms['target-cid'];
+                            //$hashed_id = $this->ms['target-cid'];
+                            $hashed_id = '';
+                            if ($this->ms['target-cid'] == '') {
+                                $this->ms['target-cid'] = $this->categoriesStartingPoint;
+                            }
+                            if ($this->ms['target-cid'] == '') {
+                                $this->ms['target-cid'] = 0;
+                            }
+                            if ($this->ms['target-cid']) {
+                                $hashed_id = $this->ms['target-cid'];
+                            }
                             foreach ($cats as $cat) {
                                 $cat = trim($cat);
                                 if ($hashed_id) {
