@@ -311,13 +311,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                     }
                     switch ($this->cookie['sortbysb']) {
                         case 'best_selling_asc':
-                            $select[] = 'SUM(op.qty) as order_total_qty';
-                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            //$select[] = 'SUM(op.qty) as order_total_qty';
+                            $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
+                            //$extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
                             $orderby[] = "order_total_qty asc";
                             break;
                         case 'best_selling_desc':
-                            $select[] = 'SUM(op.qty) as order_total_qty';
-                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
+                            //$extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
                             $orderby[] = "order_total_qty desc";
                             break;
                         case 'price_asc':
@@ -354,7 +355,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
-                //$this->msDebug=true;
+                //$this->msDebug=1;
                 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
                 //echo $this->msDebugInfo;
                 //die();
