@@ -49,74 +49,84 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function makeHmenuArray($content, $conf) {
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_befe.php');
         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop') . 'pi1/classes/class.mslib_fe.php');
-        $this->conf = $conf['userFunc.']['conf.'];
-        if (!is_numeric($this->conf['categoriesStartingPoint'])) {
-            $this->conf['categoriesStartingPoint'] = 0;
+        if ($conf['userFunc.']['conf.']['cacheHmenu']) {
+            $string = 'user_msMenuFunc_'.md5(json_encode($conf['userFunc.']['conf.']).'_'.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'));
+            $lifetime = (3600 * 6);
+            $menuArr = mslib_befe::cacheLite('get', $string, $lifetime, 1);
         }
-        if (!isset($GLOBALS['TSFE']->config['config']['sys_language_uid'])) {
-            $GLOBALS['TSFE']->config['config']['sys_language_uid'] = 0;
-        }
-        $this->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
-        $this->categoriesStartingPoint = $this->conf['categoriesStartingPoint'];
-        if (!is_numeric($this->conf['catalog_shop_pid']) or $this->conf['catalog_shop_pid'] == 0) {
-            $this->conf['catalog_shop_pid'] = $this->conf['shop_pid'];
-        }
-        $this->showCatalogFromPage = $this->conf['catalog_shop_pid'];
-        $cats = mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 0, $this->conf['catalog_shop_pid'], 0);
-        $menuArr = array();
-        $tel = 0;
-        foreach ($cats as $cat) {
-            //hook to let other plugins further manipulate the query
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'])) {
-                $params = array(
-                    'cat' => &$cat
-                );
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'] as $funcRef) {
-                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                }
+        if (!$menuArr) {
+            $this->conf = $conf['userFunc.']['conf.'];
+            if (!is_numeric($this->conf['categoriesStartingPoint'])) {
+                $this->conf['categoriesStartingPoint'] = 0;
             }
-            $menuArr[$tel]['title'] = $cat['categories_name'];
-            $menuArr[$tel]['uid'] = '9999' . $cat['categories_id'];
-            if ($cat['categories_external_url']) {
-                $link = $cat['categories_external_url'];
-            } else {
-                // get all cats to generate multilevel fake url
-                $level = 0;
-                $cats = mslib_fe::Crumbar($cat['categories_id']);
-                $cats = array_reverse($cats);
-                $where = '';
-                if (count($cats) > 0) {
-                    foreach ($cats as $tmp) {
-                        $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
-                        $level++;
+            if (!isset($GLOBALS['TSFE']->config['config']['sys_language_uid'])) {
+                $GLOBALS['TSFE']->config['config']['sys_language_uid'] = 0;
+            }
+            $this->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+            $this->categoriesStartingPoint = $this->conf['categoriesStartingPoint'];
+            if (!is_numeric($this->conf['catalog_shop_pid']) or $this->conf['catalog_shop_pid'] == 0) {
+                $this->conf['catalog_shop_pid'] = $this->conf['shop_pid'];
+            }
+            $this->showCatalogFromPage = $this->conf['catalog_shop_pid'];
+            $cats = mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 0, $this->conf['catalog_shop_pid'], 0);
+            $menuArr = array();
+            $tel = 0;
+            foreach ($cats as $cat) {
+                //hook to let other plugins further manipulate the query
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'])) {
+                    $params = array(
+                            'cat' => &$cat
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
-                    $where = substr($where, 0, (strlen($where) - 1));
                 }
-                $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
-            }
-            $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
-            if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
-                $GLOBALS['TT']->setTSlogMessage($error, 3);
-            } else {
-                $dataArray = mslib_fe::getSitemap($cat['categories_id'], array(), 0, 0);
-                $menuArr[$tel]['_SUB_MENU'] = array();
-                if (count($dataArray)) {
-                    $sub_content = self::subMenuArray($dataArray);
-                    $menuArr[$tel]['_SUB_MENU'] = $sub_content;
+                $menuArr[$tel]['title'] = $cat['categories_name'];
+                $menuArr[$tel]['uid'] = '9999' . $cat['categories_id'];
+                if ($cat['categories_external_url']) {
+                    $link = $cat['categories_external_url'];
+                } else {
+                    // get all cats to generate multilevel fake url
+                    $level = 0;
+                    $cats = mslib_fe::Crumbar($cat['categories_id']);
+                    $cats = array_reverse($cats);
+                    $where = '';
+                    if (count($cats) > 0) {
+                        foreach ($cats as $tmp) {
+                            $where .= "categories_id[" . $level . "]=" . $tmp['id'] . "&";
+                            $level++;
+                        }
+                        $where = substr($where, 0, (strlen($where) - 1));
+                    }
+                    $link = mslib_fe::typolink($this->conf['shop_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
                 }
-            }
-            //hook to let other plugins further manipulate the query
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'])) {
-                $params = array(
-                    'cat' => &$cat,
-                    'menuArr' => &$menuArr,
-                    'tel' => &$tel
-                );
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'] as $funcRef) {
-                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                $menuArr[$tel]['_OVERRIDE_HREF'] = $link;
+                if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
+                    $GLOBALS['TT']->setTSlogMessage($error, 3);
+                } else {
+                    $dataArray = mslib_fe::getSitemap($cat['categories_id'], array(), 0, 0);
+                    $menuArr[$tel]['_SUB_MENU'] = array();
+                    if (count($dataArray)) {
+                        $sub_content = self::subMenuArray($dataArray);
+                        $menuArr[$tel]['_SUB_MENU'] = $sub_content;
+                    }
                 }
+                //hook to let other plugins further manipulate the query
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'])) {
+                    $params = array(
+                            'cat' => &$cat,
+                            'menuArr' => &$menuArr,
+                            'tel' => &$tel
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.user_msMenuFunc.php']['makeHmenuArrayIteratorPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
+                $tel++;
             }
-            $tel++;
+            if ($conf['userFunc.']['conf.']['cacheHmenu']) {
+                mslib_befe::cacheLite('save', $string, $lifetime, 1, $menuArr);
+            }
         }
         return $menuArr;
     }
