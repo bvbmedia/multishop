@@ -510,7 +510,7 @@ if ($this->get['skeyword']) {
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
     list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-    list($fd, $fm, $fy) = explode('-', $from_date);
+    list($fd, $fm, $fy) = explode('/', $from_date);
     list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
     list($td, $tm, $ty) = explode('-', $till_date);
     $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
@@ -523,8 +523,8 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
-    if (!empty($this->post['invoice_date_from'])) {
-        list($from_date, $from_time) = explode(" ", $this->post['invoice_date_from']);
+    if (!empty($this->get['invoice_date_from'])) {
+        list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
         list($fd, $fm, $fy) = explode('/', $from_date);
         $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
         if ($this->cookie['filter_by_paid_date']) {
@@ -535,8 +535,8 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
         }
         $filter[] = $column . " >= '" . $start_time . "'";
     }
-    if (!empty($this->post['invoice_date_till'])) {
-        list($till_date, $till_time) = explode(" ", $this->post['invoice_date_till']);
+    if (!empty($this->get['invoice_date_till'])) {
+        list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
         list($td, $tm, $ty) = explode('/', $till_date);
         $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
         if ($this->cookie['filter_by_paid_date']) {
@@ -682,8 +682,8 @@ $subpartArray['###LABEL_TERRITORIES###'] = $this->pi_getLL('territory');
 $subpartArray['###VALUE_ORDER_TERRITORY###'] = $this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
-$subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
-$subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT0###'] = 'dd/mm/yy';
+$subpartArray['###DATE_TIME_JS_FORMAT1###'] = 'dd/mm/yy';
 // paid status
 $paid_status_sb = '<select name="invoice_paid_status" id="invoice_paid_status" class="invoice_select2">
 <option value="">' . $this->pi_getLL('all') . '</option>
