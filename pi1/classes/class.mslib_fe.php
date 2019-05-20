@@ -10889,6 +10889,7 @@ class mslib_fe {
             $cu_decimal_point = $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'];
         }
         $prefix = '';
+        $oamount = $amount;
         if (!empty($amount) && strpos($amount, '-') !== false) {
             $amount = str_replace('-', '', $amount);
             $prefix = '-';
@@ -10897,6 +10898,8 @@ class mslib_fe {
         $array = explode('.', $amount);
         if ($array[0] > 0) {
             $array[0] = $prefix . number_format($array[0], 0, '', $cu_thousands_point);
+        } else {
+            $array[0] = $prefix . $array[0];
         }
         $output = '<span class="amountWrapper">';
         if ($include_currency_symbol) {
