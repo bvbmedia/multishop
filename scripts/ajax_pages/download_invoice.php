@@ -410,6 +410,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###PAID_DATE_LABEL###'] = $this->pi_getLL('payment_date');
         if ($invoice['paid']) {
             $array1[] = '###PAID_DATE###';
+            $array2[] = $this->pi_getLL('paid');
             $value = '';
             if ($order['orders_paid_timestamp']) {
                 $value = strftime("%x", $order['orders_paid_timestamp']);
