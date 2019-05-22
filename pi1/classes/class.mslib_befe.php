@@ -3741,6 +3741,12 @@ class mslib_befe {
             if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache")) {
                 $command = "rm -rf " . $this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache/*";
                 exec($command);
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'])) {
+                    $params = array();
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
             }
         } else {
             if (!class_exists('Cache_Lite')) {
