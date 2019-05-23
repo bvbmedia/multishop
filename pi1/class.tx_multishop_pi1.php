@@ -208,6 +208,9 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         }
         */
         // setting coming from typoscript or from flexform
+        if ($this->conf['skipWrapInBase']) {
+            $this->skipWrapInBase = $this->conf['skipWrapInBase'];
+        }
         if ($this->conf['method']) {
             $this->method = $this->conf['method'];
         } else {
