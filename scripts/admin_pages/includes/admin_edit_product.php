@@ -4058,6 +4058,7 @@ if ($this->post) {
                         $attributes_tab_block .= '<td colspan="5" id="products_attributes_items">';
 
                         $attributes_block_panel=array();
+                        $hidden_panel_count = array();
                         foreach ($options_data as $option_id => $option_name) {
                             if (!isset($group_row_type) || $group_row_type == 'even_group_row') {
                                 $group_row_type = 'odd_group_row';
@@ -4234,8 +4235,12 @@ if ($this->post) {
                                 foreach ($groups_options_list as $sort_order => $group_name) {
                                     $group_id=$group_name_to_group_id[$group_name];
                                     $option_panel=array();
+                                    $count_hidden_panel = 0;
                                     foreach ($group_to_option[$group_id] as $option_id) {
                                         $option_panel[]=$attributes_block_panel[$option_id];
+                                        if (!$options_hide_data[$option_id]) {
+                                            $count_hidden_panel += 1;
+                                        }
                                     }
                                     $panel_count=count($option_panel);
 
@@ -4247,7 +4252,11 @@ if ($this->post) {
                                         $aria_expanded='true';
                                         $expand_in=' in';
                                     }
-                                    $attributes_group_block_panel[$group_id]='<div class="panel panel-success"> 
+                                    $hide_group_panel = '';
+                                    if ($count_hidden_panel==$panel_count) {
+                                        $hide_group_panel = ' style="display:none"';
+                                    }
+                                    $attributes_group_block_panel[$group_id]='<div class="panel panel-success"'.$hide_group_panel.'> 
                                         <div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
                                             <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
                                             <i class="fa fa-file-text-o"></i> '.$group_name.' ('.$panel_count.')</a> </h3> 
