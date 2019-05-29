@@ -3738,9 +3738,26 @@ class mslib_befe {
     }
     public function cacheLite($action = '', $key = '', $timeout = '', $serialized = 0, $content = '') {
         if ($action == 'delete_all') {
+            if ($this->conf['debugPurgeCacheLite']) {
+                $subject = '[cacheLite] '.$this->HTTP_HOST . ' delete cache requested by '.htmlspecialchars($this->REMOTE_ADDR);
+                $body='';
+                $body .= '<strong>IP address:</strong><br/>'.$this->REMOTE_ADDR.'<br/><br/>';
+                $body .= '<strong>Browser:</strong><br/>'.htmlspecialchars($this->server['HTTP_USER_AGENT']).'<br/><br/>';
+                $body .= '<strong>Referer:</strong><br/>'.htmlspecialchars($this->server['HTTP_REFERER']).'<br/><br/>';
+                $body .= '<strong>Time:</strong><br/>'.ucfirst(strftime($this->pi_getLL('full_date_format'))).'<br/><br/>';
+                $body .= '<strong>Backtrace:</strong><br/>';
+                $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                mslib_befe::mailDev($subject,$body);
+            }
             if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache")) {
                 $command = "rm -rf " . $this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache/*";
                 exec($command);
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'])) {
+                    $params = array();
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
             }
         } else {
             if (!class_exists('Cache_Lite')) {
@@ -4792,6 +4809,20 @@ class mslib_befe {
             }
         }
         $tmpcontent = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPostProc'])) {
+            $params_internal = array(
+                    'tmpcontent' => &$tmpcontent,
+                    'order' => &$order,
+                    'table_type' => $table_type,
+                    'real_prefix' => $real_prefix,
+                    'prefix' => $prefix,
+                    'customer_currency' => $customer_currency,
+                    'display_currency_symbol' => $display_currency_symbol
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+            }
+        }
         return $tmpcontent;
     }
     function strstr_array($string, $needleArray) {
