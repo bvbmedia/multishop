@@ -3740,7 +3740,9 @@ class mslib_befe {
         if ($action == 'delete_all') {
             if ($this->conf['debugPurgeCacheLite']) {
                 $subject = '[cacheLite] '.$this->HTTP_HOST . ' delete cache requested by '.htmlspecialchars($this->REMOTE_ADDR);
-                $body='IP address "'.$this->REMOTE_ADDR.'" requested to flush the cache.<br/><br/>';
+                $body='';
+                $body .= 'IP address "'.$this->REMOTE_ADDR.'" requested to flush the cache.<br/>';
+                $body .= 'Time: '.strftime($this->pi_getLL('full_date_format')).'<br/><br/>';
                 $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 mslib_befe::mailDev($subject,$body);
             }
