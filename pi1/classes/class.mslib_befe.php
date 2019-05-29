@@ -3738,6 +3738,11 @@ class mslib_befe {
     }
     public function cacheLite($action = '', $key = '', $timeout = '', $serialized = 0, $content = '') {
         if ($action == 'delete_all') {
+            if ($this->conf['debugPurgeCacheLite']) {
+                $subject = '[cacheLite] '.$this->HTTP_HOST . ' delete cache requested';
+                $body = mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                mslib_befe::mailDev($subject,$body);
+            }
             if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache")) {
                 $command = "rm -rf " . $this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache/*";
                 exec($command);
