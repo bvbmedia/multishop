@@ -8911,7 +8911,13 @@ class mslib_fe {
                 mslib_befe::updateOrderStatus($orders_id, $payment_method_vars['success_status'], 0, 'updateOrderStatusToPaid');
             }
             if (isset($this->post['tx_multishop_pi1']['date_paid'])) {
-                $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                $current_date = date('Y-m-d');
+                $date_paid = $this->post['tx_multishop_pi1']['date_paid'];
+                if ($current_date == $date_paid) {
+                    $date_paid = strtotime(date('Y-m-d H:i:s', strtotime($this->post['tx_multishop_pi1']['date_paid'])));
+                } else {
+                    $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                }
                 $updateArray['orders_paid_timestamp'] = $date_paid;
             } else {
                 $updateArray['orders_paid_timestamp'] = $timestamp;

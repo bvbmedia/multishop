@@ -87,13 +87,19 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             $order = mslib_fe::getOrder($order_id);
             if ($order['orders_id']) {
                 if ($this->post['tx_multishop_pi1']['action'] == 'update_selected_orders_to_paid') {
-                    $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                    $current_date = date('Y-m-d');
+                    $date_paid = $this->post['tx_multishop_pi1']['date_paid'];
+                    if ($current_date == $date_paid) {
+                        $date_paid = strtotime(date('Y-m-d H:i:s', strtotime($this->post['tx_multishop_pi1']['date_paid'])));
+                    } else {
+                        $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                    }
                     $payment_id = $this->post['tx_multishop_pi1']['payment_id'];
                     //
                     if (mslib_fe::updateOrderStatusToPaid($order_id)) {
                         $return_data['info'] = array(
                                 'status' => 'info',
-                                'message' => 'Order ' . $orders_id . ' has been updated to paid.'
+                                'message' => 'Order ' . $order_id . ' has been updated to paid.'
                         );
                         //
                         if (is_numeric($payment_id) && $payment_id > 0) {
