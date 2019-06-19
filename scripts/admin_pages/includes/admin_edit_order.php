@@ -4832,14 +4832,27 @@ if (is_numeric($this->get['orders_id'])) {
             </table>
             </div></div>
             ';
+            // hook for adding new tabs into edit_order
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabsOrderHistoryTablePostProc'])) {
+                // hook
+                $params = array(
+                    'all_orders_status' => $all_orders_status,
+                    'order_status_history_items' => $order_status_history_items,
+                    'order_history_table' => &$order_status_tab_content['order_history_table']
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabsOrderHistoryTablePostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
         }
         if (count($order_status_tab_content)) {
             $tmpcontent .= implode("\n", $order_status_tab_content);
         }
         // load the status history eof
         $tabs['Order_Status'] = array(
-                $this->pi_getLL('order_status'),
-                $tmpcontent
+            $this->pi_getLL('order_status'),
+            $tmpcontent
         );
         // order status tab eof
         $page_title=$this->pi_getLL('order_details');

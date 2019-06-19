@@ -69,6 +69,12 @@ if ($this->post) {
             // add new order status eof
             break;
     }
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusUpdatePostProc'])) {
+        $params = array();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusUpdatePostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 }
 $active_shop = mslib_fe::getActiveShop();
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
@@ -95,7 +101,7 @@ foreach ($this->languages as $key => $language) {
     }
     $language_lable .= '' . $language['title'];
     $tmpcontent .= '
-		<div class="panel panel-default">
+		<div class="panel panel-default order_status_input">
 			<div class="panel-heading panel-heading-toggle' . (($language['uid'] === 0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed') . '" data-toggle="collapse" data-target="#msEditOrderStatusInputName_' . $language['uid'] . '">
 				<h3 class="panel-title">
 					<a role="button" data-toggle="collapse" href="#msEditOrderStatusInputName_' . $language['uid'] . '"><i class="fa fa-file-text-o"></i> ' . $language['title'] . '</a>
@@ -130,7 +136,7 @@ if (count($active_shop) > 1) {
         $str_status = "SELECT o.page_uid from tx_multishop_orders_status o where o.id = " . $this->get['tx_multishop_pi1']['orders_status_id'];
         $qry_status = $GLOBALS['TYPO3_DB']->sql_query($str_status);
         $row_status = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_status);
-        $content .= '<div class="form-group">
+        $content .= '<div class="form-group relate_to_shop_pid_input">
 			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_order_status_to_shop', 'Relate this order status to') . '</label>
 			<div class="col-md-10">
 			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"' . ($row_status['page_uid'] == '0' ? ' checked="checked"' : '') . ' /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
@@ -143,7 +149,7 @@ if (count($active_shop) > 1) {
         }
         $content .= '</div></div>';
     } else {
-        $content .= '<div class="form-group">
+        $content .= '<div class="form-group relate_to_shop_pid_input">
 			<label for="related_shop_pid" class="control-label col-md-2">' . $this->pi_getLL('relate_order_status_to_shop', 'Relate this order status to') . '</label>
 			<div class="col-md-10">
 			<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked" /><label>' . $this->pi_getLL('relate_order_status_to_all_shop', 'All shop') . '</label></div>';
@@ -158,6 +164,14 @@ if (count($active_shop) > 1) {
     }
 } else {
     $content .= '<input type="hidden" name="related_shop_pid" value="' . $this->showCatalogFromPage . '">';
+}
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusInputFieldPostProc'])) {
+    $params = array(
+        'content' => &$content
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusInputFieldPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
 }
 $content .= '
 	<div class="form-group">

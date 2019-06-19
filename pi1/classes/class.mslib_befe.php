@@ -3374,6 +3374,15 @@ class mslib_befe {
                 if ($GLOBALS['TSFE']->fe_user->user['uid']) {
                     $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
                 }
+                //hook to let other plugins further manipulate
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusInsertHistory'])) {
+                    $params = array(
+                        'updateArray' => &$updateArray
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusInsertHistory'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
                 $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
                 if ($orders_status == $order['status']) {
