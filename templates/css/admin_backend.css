@@ -947,7 +947,7 @@ td.print_r_key { word-break:normal; }
 td.print_r_value { word-break:break-word; }
 
 .pagination > li > a,
-.pagination > li > span { padding:.6rem 1.05rem; }
+.pagination > li > span { padding:6px 10.5px; }
 .pagination > li > a:hover,
 .pagination > li > span:hover,
 .pagination > li > a:focus,
