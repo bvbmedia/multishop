@@ -4863,7 +4863,9 @@ if (is_numeric($this->get['orders_id'])) {
                 'tabs' => &$tabs,
                 'order_status_tab_content' => &$order_status_tab_content,
                 'orders' => &$orders,
-                'page_title' => &$page_title
+                'page_title' => &$page_title,
+                'all_orders_status' => $all_orders_status,
+                'order_status_history_items' => $order_status_history_items,
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
