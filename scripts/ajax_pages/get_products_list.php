@@ -114,7 +114,7 @@ if ($this->ADMIN_USER) {
         $counter=0;
         foreach ($records as $row) {
             $labelArray=array();
-            if (!$row['products_status']) {
+            if (isset($row['products_status']) && !$row['products_status']) {
                 $labelArray[]='['.htmlspecialchars($this->pi_getLL('disabled_product')).']';
             }
             if ((is_numeric($catid) && $catid > 0) || (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0)) {
