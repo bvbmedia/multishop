@@ -719,6 +719,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $mail_attachment = array();
                 $add_invoice_attachment_on_templates = array();
                 $add_invoice_attachment_on_templates[] = 'email_order_paid_letter';
+                $options=array();
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
                     $params = array(
                             'this' => &$this,
@@ -733,7 +734,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'copy_to_merchant' => $copy_to_merchant,
                             'mail_attachment' => &$mail_attachment,
                             'loadFromPids' => $loadFromPids,
-                            'add_invoice_attachment_on_templates' => &$add_invoice_attachment_on_templates
+                            'add_invoice_attachment_on_templates' => &$add_invoice_attachment_on_templates,
+                            'options'=>&$options
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -757,7 +759,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             file_put_contents($pdfFilePath, $invoice_data);
                             $mail_attachment[] = $pdfFilePath;
                         }
-                        mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
+                        mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment, $options);
                         // moved to cleaning up section
                         //if (strpos($mail_template, 'email_order_paid_letter')!==false && $this->ms['MODULES']['ATTACH_INVOICE_PDF_IN_PAID_LETTER_EMAIL']>0 && file_exists($pdfFilePath)) {
                         //	unlink($pdfFilePath);
