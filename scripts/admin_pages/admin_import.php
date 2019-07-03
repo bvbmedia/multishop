@@ -2639,7 +2639,15 @@ if ($this->post['action'] == 'category-insert') {
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
                             }
-                            $content .= ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))) . ' "<strong>' . ($item['products_name'] ? $item['products_name'] : $item['extid']) . '</strong>" ' . $this->pi_getLL('has_been_adjusted') . '.<br />';
+                            $productsTitle=$item['extid'];
+                            if (isset($item['products_name'])) {
+                                $productsTitle=$item['products_name'];
+                            } else {
+                                if (isset($item['updated_products_id'])) {
+                                    $productsTitle=mslib_fe::getProductName($item['updated_products_id']);
+                                }
+                            }
+                            $content .= ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))) . ' "<strong>' . htmlspecialchars($productsTitle) . '</strong>" ' . $this->pi_getLL('has_been_adjusted') . '.<br />';
                             if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
                                 $this->ms['products_to_categories_array'] = array();
                                 $this->ms['products_to_categories_array'][] = $this->ms['target-cid'];
