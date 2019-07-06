@@ -510,9 +510,9 @@ if ($this->get['skeyword']) {
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
     list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
+    list($fy, $fm, $fd) = explode('-', $from_date);
     list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
-    list($td, $tm, $ty) = explode('-', $till_date);
+    list($ty, $tm, $td) = explode('-', $till_date);
     $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
     $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
     if ($this->cookie['filter_by_paid_date']) {
@@ -525,7 +525,7 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
 } else {
     if (!empty($this->get['invoice_date_from'])) {
         list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-        list($fd, $fm, $fy) = explode('/', $from_date);
+        list($fy, $fm, $fd) = explode('-', $from_date);
         $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
@@ -537,7 +537,7 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
     }
     if (!empty($this->get['invoice_date_till'])) {
         list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
-        list($td, $tm, $ty) = explode('/', $till_date);
+        list($ty, $tm, $td) = explode('-', $till_date);
         $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
@@ -654,9 +654,17 @@ $subpartArray['###VALUE_SEARCH###'] = htmlspecialchars($this->pi_getLL('search')
 $subpartArray['###LABEL_FILTER_BY_DATE###'] = $this->pi_getLL('filter_by_date');
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FROM###'] = $this->get['invoice_date_from'];
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
-$subpartArray['###VALUE_DATE_TO###'] = $this->get['invoice_date_till'];
+$subpartArray['###VALUE_DATE_FROM_VISUAL###'] = '';
+if ($this->get['invoice_date_from']) {
+    $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_from']));
+}
+$subpartArray['###VALUE_DATE_FROM###'] = date('Y/m/d H:i:s', strtotime($this->get['invoice_date_from']));
+$subpartArray['###VALUE_DATE_TO_VISUAL###'] = '';
+if ($this->get['invoice_date_till']) {
+    $subpartArray['###VALUE_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_till']));
+}
+$subpartArray['###VALUE_DATE_TO###'] = date('Y/m/d H:i:s', strtotime($this->get['invoice_date_till']));
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###'] = $this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###'] = ($this->cookie['paid_invoices_only'] ? ' checked' : '');
 $subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###'] = $this->pi_getLL('filter_by_paid_date');
@@ -682,8 +690,8 @@ $subpartArray['###LABEL_TERRITORIES###'] = $this->pi_getLL('territory');
 $subpartArray['###VALUE_ORDER_TERRITORY###'] = $this->get['order_territory'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
-$subpartArray['###DATE_TIME_JS_FORMAT0###'] = 'dd/mm/yy';
-$subpartArray['###DATE_TIME_JS_FORMAT1###'] = 'dd/mm/yy';
+$subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 // paid status
 $paid_status_sb = '<select name="invoice_paid_status" id="invoice_paid_status" class="invoice_select2">
 <option value="">' . $this->pi_getLL('all') . '</option>

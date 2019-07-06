@@ -12,18 +12,26 @@ jQuery(document).ready(function ($) {
         $(activeTab).fadeIn(0);
         return false;
     });
-    $("#invoice_date_from").datetimepicker({
+    $("#invoice_date_from_visual").datetimepicker({
         dateFormat: "###DATE_TIME_JS_FORMAT0###",
         showSecond: true,
-        timeFormat: "HH:mm:ss"
+        timeFormat: "HH:mm:ss",
+        altField: "#invoice_date_from",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
     });
-    $("#invoice_date_till").datetimepicker({
+    $("#invoice_date_till_visual").datetimepicker({
         dateFormat: "###DATE_TIME_JS_FORMAT1###",
         showSecond: true,
         timeFormat: "HH:mm:ss",
         hour: 23,
         minute: 59,
-        second: 59
+        second: 59,
+        altField: "#invoice_date_till",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
     });
     $(".invoice_select2").select2();
     //
@@ -108,14 +116,16 @@ jQuery(document).ready(function ($) {
                                 <label>###LABEL_FILTER_BY_DATE###</label>
                                 <div class="form-group">
                                     <div class="form-inline from-date-field">
-                                        <label for="order_date_from">###LABEL_DATE_FROM###</label>
-                                        <input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
+                                        <label for="invoice_date_from_visual">###LABEL_DATE_FROM###</label>
+                                        <input type="text" class="form-control" id="invoice_date_from_visual" value="###VALUE_DATE_FROM_VISUAL###">
+                                        <input type="hidden" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-inline till-date-field">
-                                        <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
-                                        <input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
+                                        <label for="invoice_date_till_visual" class="labelInbetween">###LABEL_DATE_TO###</label>
+                                        <input type="text" class="form-control" id="invoice_date_till_visual" value="###VALUE_DATE_TO_VISUAL###">
+                                        <input type="hidden" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
                                     </div>
                                 </div>
                                 <div class="form-group">
