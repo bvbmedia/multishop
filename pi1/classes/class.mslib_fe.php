@@ -6930,6 +6930,21 @@ class mslib_fe {
             return $row['products_options_values_id'];
         }
     }
+    public function getAttributeOptionIdByOptionName($option_name) {
+        if ($option_name) {
+            $where = 'po.language_id=0 and po.products_options_name=\'' . addslashes($option_name) . '\'';
+            $query = $GLOBALS['TYPO3_DB']->SELECTquery('po.products_options_id', // SELECT ...
+                    'tx_multishop_products_options po', // FROM ...
+                    $where, // WHERE.
+                    '', // GROUP BY...
+                    '', // ORDER BY...
+                    '' // LIMIT ...
+            );
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+            return $row['products_options_id'];
+        }
+    }
     // if the user is logged in and has admin rights lets check if the shop is fully configured
     public function countProducts($categories_id, $page_uid = '') {
         if (!is_numeric($page_uid)) {

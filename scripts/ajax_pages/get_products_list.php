@@ -86,7 +86,7 @@ if ($this->ADMIN_USER) {
     }
     $records=array();
     if (!empty($this->get['q'])) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('p.products_status, pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
                 'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
                 implode(' and ', $filter), // WHERE...
                 'p.products_status desc, p.products_id', // GROUP BY...
@@ -114,7 +114,7 @@ if ($this->ADMIN_USER) {
         $counter=0;
         foreach ($records as $row) {
             $labelArray=array();
-            if (!$row['products_status']) {
+            if (isset($row['products_status']) && !$row['products_status']) {
                 $labelArray[]='['.htmlspecialchars($this->pi_getLL('disabled_product')).']';
             }
             if ((is_numeric($catid) && $catid > 0) || (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0)) {
