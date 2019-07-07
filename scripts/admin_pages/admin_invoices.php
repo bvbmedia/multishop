@@ -509,12 +509,8 @@ if ($this->get['skeyword']) {
     }
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-    list($fy, $fm, $fd) = explode('-', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
-    list($ty, $tm, $td) = explode('-', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->get['invoice_date_from']);
+    $end_time = strtotime($this->get['invoice_date_till']);
     if ($this->cookie['filter_by_paid_date']) {
         $filter[] = ' i.reversal_invoice=0';
         $column = 'o.orders_paid_timestamp';
@@ -524,9 +520,7 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
     if (!empty($this->get['invoice_date_from'])) {
-        list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-        list($fy, $fm, $fd) = explode('-', $from_date);
-        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        $start_time = strtotime($this->get['invoice_date_from']);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
             $column = 'o.orders_paid_timestamp';
@@ -536,9 +530,7 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
         $filter[] = $column . " >= '" . $start_time . "'";
     }
     if (!empty($this->get['invoice_date_till'])) {
-        list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
-        list($ty, $tm, $td) = explode('-', $till_date);
-        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        $end_time = strtotime($this->get['invoice_date_till']);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
             $column = 'o.orders_paid_timestamp';
@@ -656,15 +648,17 @@ $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = '';
+$subpartArray['###VALUE_DATE_FROM###'] = '';
 if ($this->get['invoice_date_from']) {
     $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_from']));
+    $subpartArray['###VALUE_DATE_FROM###'] = date('Y-m-d H:i:s', strtotime($this->get['invoice_date_from']));
 }
-$subpartArray['###VALUE_DATE_FROM###'] = date('Y/m/d H:i:s', strtotime($this->get['invoice_date_from']));
 $subpartArray['###VALUE_DATE_TO_VISUAL###'] = '';
+$subpartArray['###VALUE_DATE_TO###'] = '';
 if ($this->get['invoice_date_till']) {
     $subpartArray['###VALUE_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_till']));
+    $subpartArray['###VALUE_DATE_TO###'] = date('Y-m-d H:i:s', strtotime($this->get['invoice_date_till']));
 }
-$subpartArray['###VALUE_DATE_TO###'] = date('Y/m/d H:i:s', strtotime($this->get['invoice_date_till']));
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###'] = $this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###'] = ($this->cookie['paid_invoices_only'] ? ' checked' : '');
 $subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###'] = $this->pi_getLL('filter_by_paid_date');

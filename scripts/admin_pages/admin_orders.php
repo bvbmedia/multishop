@@ -863,12 +863,8 @@ if ($this->post['skeyword']) {
     }
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->post['order_date_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->post['order_date_till']);
-    list($td, $tm, $ty) = explode('/', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->post['order_date_from']);
+    $end_time = strtotime($this->post['order_date_till']);
     if ($this->post['search_by_status_last_modified']) {
         $column = 'o.status_last_modified';
     } else {
@@ -877,9 +873,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
     if (!empty($this->post['order_date_from'])) {
-        list($from_date, $from_time) = explode(" ", $this->post['order_date_from']);
-        list($fd, $fm, $fy) = explode('/', $from_date);
-        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        $start_time = strtotime($this->post['order_date_from']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
         } else {
@@ -888,9 +882,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         $filter[] = $column . " >= '" . $start_time . "'";
     }
     if (!empty($this->post['order_date_till'])) {
-        list($till_date, $till_time) = explode(" ", $this->post['order_date_till']);
-        list($td, $tm, $ty) = explode('/', $till_date);
-        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        $end_time = strtotime($this->post['order_date_till']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
         } else {
@@ -900,26 +892,18 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     }
 }
 if (!empty($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
-    list($td, $tm, $ty) = explode('/', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->post['order_expected_delivery_date_from']);
+    $end_time = strtotime($this->post['order_expected_delivery_date_till']);
     $column = 'o.expected_delivery_date';
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
     if (!empty($this->post['order_expected_delivery_date_from'])) {
-        list($from_date, $from_time) = explode(" ", $this->post['order_expected_delivery_date_from']);
-        list($fd, $fm, $fy) = explode('/', $from_date);
-        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+        $start_time = strtotime($this->post['order_expected_delivery_date_from']);
         $column = 'o.expected_delivery_date';
         $filter[] = $column . " >= '" . $start_time . "'";
     }
     if (!empty($this->post['order_expected_delivery_date_till'])) {
-        list($till_date, $till_time) = explode(" ", $this->post['order_expected_delivery_date_till']);
-        list($td, $tm, $ty) = explode('/', $till_date);
-        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+        $end_time = strtotime($this->post['order_expected_delivery_date_till']);
         $column = 'o.expected_delivery_date';
         $filter[] = $column . " <= '" . $end_time . "'";
     }
@@ -1211,17 +1195,38 @@ $subpartArray['###SHIPPING_METHOD_SELECTBOX###'] = $shipping_method_input;
 $subpartArray['###LABEL_ORDER_STATUS###'] = $this->pi_getLL('order_status');
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###'] = $orders_status_list;
 $subpartArray['###VALUE_SEARCH###'] = htmlspecialchars($this->pi_getLL('search'));
-$subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FROM###'] = $this->post['order_date_from'];
-$subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
-$subpartArray['###VALUE_DATE_TO###'] = $this->post['order_date_till'];
-
-$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_EXPECTED_DELIVERY_DATE###'] = $this->pi_getLL('expected_delivery_date');
-$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM###'] = $this->post['order_expected_delivery_date_from'];
+$subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
+$subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
+$subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_EXPECTED_DELIVERY_DATE_TO###'] = $this->pi_getLL('to');
-$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO###'] = $this->post['order_expected_delivery_date_till'];
+
+
+$subpartArray['###VALUE_DATE_FROM###'] = '';
+$subpartArray['###VALUE_DATE_FROM_VISUAL###'] = '';
+if ($this->post['order_date_from']) {
+    $subpartArray['###VALUE_DATE_FROM###'] = date('Y-m-d H:i:s', strtotime($this->post['order_date_from']));
+    $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->post['order_date_from']));
+}
+$subpartArray['###VALUE_DATE_TO###'] = '';
+$subpartArray['###VALUE_DATE_TO_VISUAL###'] = '';
+if ($this->post['order_date_till']) {
+    $subpartArray['###VALUE_DATE_TO###'] = date('Y-m-d H:i:s', strtotime($this->post['order_date_till']));
+    $subpartArray['###VALUE_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->post['order_date_till']));
+}
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM###'] = '';
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM_VISUAL###'] = '';
+if ($this->post['order_expected_delivery_date_from']) {
+    $subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM###'] = date('Y-m-d H:i:s', strtotime($this->post['order_expected_delivery_date_from']));
+    $subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->post['order_expected_delivery_date_from']));
+}
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO###'] = '';
+$subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO_VISUAL###'] = '';
+if ($this->post['order_expected_delivery_date_from']) {
+    $subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO###'] = date('Y-m-d H:i:s', strtotime($this->post['order_expected_delivery_date_till']));
+    $subpartArray['###VALUE_EXPECTED_DELIVERY_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->post['order_expected_delivery_date_till']));
+}
 
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
 $subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###'] = $this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
@@ -1247,6 +1252,10 @@ $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_PRE_URL###'] = mslib_fe::typoli
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL2###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
 $subpartArray['###LABEL_JS_DO_YOU_WANT_CHANGE_ORDERS_ID_X_TO_STATUS_X###']= $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x');
+$subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT2###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT3###'] = $this->pi_getLL('locale_date_format_js');
 // search on shop
 $subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']='';
 if ($this->conf['masterShop']) {

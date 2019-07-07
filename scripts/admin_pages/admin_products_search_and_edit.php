@@ -500,22 +500,15 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
     }
-    $dates_from=explode(' ', $this->get['product_date_from']);
-    list($d, $m, $y)=explode('/', $dates_from[0]);
-    $date_from=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_from[1]);
-
-    $dates_till=explode(' ', $this->get['product_date_till']);
-    list($d, $m, $y)=explode('/', $dates_till[0]);
-    $date_till=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_till[1]);
+    $date_from=strtotime($this->get['product_date_from']);
+    $date_till=strtotime($this->get['product_date_till']);
 } else {
     if (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) {
         $prefix = 'p.';
         if ($this->ms['MODULES']['FLAT_DATABASE']) {
             $prefix = 'pf.';
         }
-        $dates_from=explode(' ', $this->get['product_date_from']);
-        list($d, $m, $y)=explode('/', $dates_from[0]);
-        $date_from=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_from[1]);
+        $date_from=strtotime($this->get['product_date_from']);
         $dates_till='';
     }
     if (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) {
@@ -524,9 +517,7 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
             $prefix = 'pf.';
         }
         $dates_from='';
-        $dates_till=explode(' ', $this->get['product_date_till']);
-        list($d, $m, $y)=explode('/', $dates_till[0]);
-        $dates_till=strtotime($y . '-' . $m . '-' . $d . ' ' . $dates_till[1]);
+        $date_till=strtotime($this->get['product_date_till']);
     }
 }
 if ($date_from && $date_till) {
@@ -1159,8 +1150,20 @@ $subpartArray['###TAX_RATE_SELECTBOX###'] = $tax_rate_selectbox;
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
-$subpartArray['###VALUE_DATE_FROM###'] = $this->get['product_date_from'];
-$subpartArray['###VALUE_DATE_TO###'] = $this->get['product_date_till'];
+$subpartArray['###VALUE_DATE_FROM###'] = '';
+$subpartArray['###VALUE_DATE_FROM_VISUAL###'] = '';
+if ($this->get['product_date_from']) {
+    $subpartArray['###VALUE_DATE_FROM###'] = date('Y-m-d H:i:s', strtotime($this->get['product_date_from']));
+    $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['product_date_from']));
+}
+$subpartArray['###VALUE_DATE_TO###'] = '';
+$subpartArray['###VALUE_DATE_TO_VISUAL###'] = '';
+if ($this->get['product_date_till']) {
+    $subpartArray['###VALUE_DATE_TO###'] = date('Y-m-d H:i:s', strtotime($this->get['product_date_till']));
+    $subpartArray['###VALUE_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['product_date_till']));
+}
+$subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
+$subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###LABEL_FILTER_DATE_ADDED###'] = $this->pi_getLL('date_added');
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###'] = $this->pi_getLL('modified');
 $subpartArray['###LABEL_FILTER_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');

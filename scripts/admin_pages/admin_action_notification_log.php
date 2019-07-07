@@ -189,22 +189,6 @@ if (url.match("#")) {
 		window.location.hash = e.target.hash;
 		$("body,html,document").scrollTop(0);
 	})
-
-    jQuery(\'#order_date_from\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
-        showSecond: true,
-		timeFormat: \'HH:mm:ss\'
-    });
-
-	jQuery(\'#order_date_till\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
-        showSecond: true,
-		timeFormat: \'HH:mm:ss\',
-		hour: 23,
-        minute: 59,
-        second: 59
-    });
-
 });
 </script>
 <div class="panel-body">

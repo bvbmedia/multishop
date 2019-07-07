@@ -86,13 +86,20 @@ $search_end_time = '';
 $filter = array();
 $data_query = array();
 if (!empty($this->get['order_date_from']) && !empty($this->get['order_date_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->get['order_date_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->get['order_date_till']);
-    list($td, $tm, $ty) = explode('/', $till_date);
-    $search_start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $search_end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $search_start_time = strtotime($this->get['order_date_from']);
+    $search_end_time = strtotime($this->get['order_date_till']);
     $data_query['where'][] = "o.crdate BETWEEN '" . $search_start_time . "' and '" . $search_end_time . "'";
+} else {
+    if (!empty($this->get['order_date_from'])) {
+        $start_time = strtotime($this->get['order_date_from']);
+        $column = 'o.crdate';
+        $data_query['where'][] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->get['order_date_till'])) {
+        $end_time = strtotime($this->get['order_date_till']);
+        $column = 'o.crdate';
+        $data_query['where'][] = $column . " <= '" . $end_time . "'";
+    }
 }
 if ($this->get['orders_status_search'] > 0) {
     $data_query['where'][] = "(o.status='" . $this->get['orders_status_search'] . "')";

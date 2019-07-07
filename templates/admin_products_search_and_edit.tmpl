@@ -107,9 +107,11 @@
 											<div class="form-group">
 												<div class="form-inline">
 													<label class="control-label" for="product_date_from">###LABEL_DATE_FROM###</label>
-													<input class="form-control" type="text" name="product_date_from" id="product_date_from" value="###VALUE_DATE_FROM###" style="width: 135px">
+													<input class="form-control" type="text" id="product_date_from_visual" value="###VALUE_DATE_FROM_VISUAL###" style="width: 135px">
 													<label for="product_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
-													<input class="form-control" type="text" name="product_date_till" id="product_date_till" value="###VALUE_DATE_TO###" style="width: 135px">
+													<input class="form-control" type="text" id="product_date_till_visual" value="###VALUE_DATE_TO_VISUAL###" style="width: 135px">
+													<input type="hidden" name="product_date_from" id="product_date_from" value="###VALUE_DATE_FROM###">
+													<input type="hidden" name="product_date_till" id="product_date_till" value="###VALUE_DATE_TO###">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -303,19 +305,37 @@
 	</div></div>
 <script type="text/javascript">
     jQuery(document).ready(function($) {
-        $('#product_date_from').datetimepicker({
-			 dateFormat: 'dd/mm/yy',
+        $('#product_date_from_visual').datetimepicker({
+			 dateFormat: '###DATE_TIME_JS_FORMAT0###',
 			 showSecond: true,
-			 timeFormat: 'HH:mm:ss'
+			 timeFormat: 'HH:mm:ss',
+			 altField: "#product_date_from",
+             altFormat: "yy-mm-dd",
+             altFieldTimeOnly: false,
+             altTimeFormat: "HH:mm:ss"
 		 });
-        $('#product_date_till').datetimepicker({
-			 dateFormat: 'dd/mm/yy',
+        $('#product_date_till_visual').datetimepicker({
+			 dateFormat: '###DATE_TIME_JS_FORMAT1###',
 			 showSecond: true,
 			 timeFormat: 'HH:mm:ss',
 			 hour: 23,
 			 minute: 59,
-			 second: 59
+			 second: 59,
+			 altField: "#product_date_till",
+		     altFormat: "yy-mm-dd",
+		     altFieldTimeOnly: false,
+		     altTimeFormat: "HH:mm:ss"
 		 });
+         $(document).on("change", "#product_date_from_visual", function(){
+            if ($(this).val()=='') {
+                $('#product_date_from').val('');
+            }
+         });
+         $(document).on("change", "#product_date_till_visual", function(){
+            if ($(this).val()=='') {
+                $('#product_date_till').val('');
+            }
+         });
         $('.categories_select2_top').select2({
 			 dropdownCssClass: "", // apply css that makes the dropdown taller
 			 minimumInputLength: 0,

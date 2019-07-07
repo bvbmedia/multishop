@@ -226,6 +226,8 @@ if ((isset($this->get['tx_multishop_pi1']['search_by']) && !empty($this->get['tx
 ) {
     $unfold_advanced_search_box = ' in';
 }
+
+
 $formTopSearch .= '
 				</select>
             </div>
@@ -271,10 +273,12 @@ $formTopSearch .= '
 			<label class="control-label" for="type_search">' . $this->pi_getLL('date') . '</label>
 			<div class="form-group">
 				<div class="form-inline">
-					<label class="control-label" for="order_date_from">' . $this->pi_getLL('from') . '</label>
-					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="' . $this->get['crdate_from'] . '">
-					<label for="order_date_till" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
-					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="' . $this->get['crdate_till'] . '">
+					<label class="control-label" for="crdate_from_visual">' . $this->pi_getLL('from') . '</label>
+					<input class="form-control" type="text" name="crdate_from_visual" id="crdate_from_visual" value="' . (!empty($this->get['crdate_from']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_from'])) : '') . '">
+					<label for="crdate_till_visual" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
+					<input class="form-control" type="text" name="crdate_till_visual" id="crdate_till_visual" value="' . (!empty($this->get['crdate_till']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_till'])) : '') . '">
+					<input type="hidden" name="crdate_from" id="crdate_from" value="' . (!empty($this->get['crdate_from']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_from'])) : '') . '">
+                    <input type="hidden" name="crdate_till" id="crdate_till" value="' . (!empty($this->get['crdate_till']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_till'])) : '') . '">
 				</div>
 			</div>
 			<div class="form-group">
@@ -436,14 +440,21 @@ if (!$this->masterShop) {
 }
 $filter[] = "f.pid='" . $this->conf['fe_customer_pid'] . "'";
 if (!empty($this->get['crdate_from']) && !empty($this->get['crdate_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->get['crdate_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->get['crdate_till']);
-    list($td, $tm, $ty) = explode('/', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->get['crdate_from']);
+    $end_time = strtotime($this->get['crdate_till']);
     $column = 'f.crdate';
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->get['crdate_from'])) {
+        $start_time = strtotime($this->get['crdate_from']);
+        $column = 'f.crdate';
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->get['crdate_till'])) {
+        $end_time = strtotime($this->get['crdate_till']);
+        $column = 'f.crdate';
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
     $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users');
@@ -518,18 +529,36 @@ jQuery(document).ready(function($) {
 		jQuery(activeTab).fadeIn(0);
 		return false;
 	});
-    jQuery(\'#crdate_from\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
+    jQuery(\'#crdate_from_visual\').datetimepicker({
+    	dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'
+		timeFormat: \'HH:mm:ss\',
+        altField: "#crdate_from",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
     });
-	jQuery(\'#crdate_till\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
+	jQuery(\'#crdate_till_visual\').datetimepicker({
+    	dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
         showSecond: true,
 		timeFormat: \'HH:mm:ss\',
 		hour: 23,
         minute: 59,
-        second: 59
+        second: 59,
+        altField: "#crdate_till",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
+    });
+    $(document).on("change", "#crdate_from_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#crdate_from\').val(\'\');
+        }
+    });
+    $(document).on("change", "#crdate_till_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#crdate_till\').val(\'\');
+        }
     });
 	jQuery(\'#check_all_1\').click(function() {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));

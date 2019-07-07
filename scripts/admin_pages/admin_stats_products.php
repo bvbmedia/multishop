@@ -183,10 +183,12 @@ $header_form_content = '
 			</div>
 			<label>Date</label>
 			<div class="form-group form-inline">
-			<label for="order_date_from">' . $this->pi_getLL('from') . ':</label>
-			<input type="text" class="form-control" name="order_date_from" id="order_date_from" value="' . $this->get['order_date_from'] . '">
-			<label for="order_date_till" class="labelInbetween">' . $this->pi_getLL('to') . ':</label>
-			<input type="text" class="form-control" name="order_date_till" id="order_date_till" value="' . $this->get['order_date_till'] . '">
+                <label for="order_date_from_visual">' . $this->pi_getLL('from') . ':</label>
+                <input type="text" class="form-control" id="order_date_from_visual" value="' . (!empty($this->get['order_date_from']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['order_date_from'])) : '') . '" autocomplete="off">
+                <label for="order_date_till_visual" class="labelInbetween">' . $this->pi_getLL('to') . ':</label>
+                <input type="text" class="form-control" id="order_date_till_visual" value="' . (!empty($this->get['order_date_till']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['order_date_till'])) : '') . '" autocomplete="off">
+                <input type="hidden" name="order_date_from" id="order_date_from" value="' . (!empty($this->get['order_date_from']) ? date('Y-m-d H:i:s', strtotime($this->get['order_date_from'])) : '') . '">
+                <input type="hidden" name="order_date_till" id="order_date_till" value="' . (!empty($this->get['order_date_till']) ? date('Y-m-d H:i:s', strtotime($this->get['order_date_till'])) : '') . '">
 			</div>
 		</div>
 		<div class="col-md-4 formfield-wrapper">
@@ -234,19 +236,37 @@ $headerData = '';
 $headerData .= '
 <script type="text/javascript">
 jQuery(document).ready(function ($) {
-	$(\'#order_date_from\').datetimepicker({
-		dateFormat: \'dd/mm/yy\',
+	$(\'#order_date_from_visual\').datetimepicker({
+		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
 		showSecond: true,
-		timeFormat: \'HH:mm:ss\'
+		timeFormat: \'HH:mm:ss\',
+        altField: "#order_date_from",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
 	});
-	$(\'#order_date_till\').datetimepicker({
-		dateFormat: \'dd/mm/yy\',
+	$(\'#order_date_till_visual\').datetimepicker({
+		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
 		showSecond: true,
 		timeFormat: \'HH:mm:ss\',
 		hour: 23,
         minute: 59,
-        second: 59
+        second: 59,
+        altField: "#order_date_till",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
 	});
+	$(document).on("change", "#order_date_from_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#order_date_from\').val(\'\');
+        }
+    });
+    $(document).on("change", "#order_date_till_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#order_date_till\').val(\'\');
+        }
+    });
 	$(".order_select2").select2();
 	$(".invoice_select2").select2();
 });
