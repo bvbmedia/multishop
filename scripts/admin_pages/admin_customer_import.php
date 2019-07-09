@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
+
 set_time_limit(86400);
 ignore_user_abort(true);
 if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
@@ -833,6 +834,8 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                     }
                     if ($item['uid']) {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['uid']);
+                    } elseif ($item['foreign_customer_id']) {
+                        $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['foreign_customer_id']);
                     } elseif ($item['tx_multishop_source_id']) {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['tx_multishop_source_id']);
                     } elseif ($item['company']) {
