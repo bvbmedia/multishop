@@ -3449,8 +3449,25 @@ class mslib_befe {
                                 $user['email'] = $order['billing_email'];
                                 $user['name'] = $order['billing_name'];
                                 $user['customer_id'] = $order['customer_id'];
+
+                                $mail_attachments = array();
+                                $options = array();
+                                //hook to let other plugins further manipulate
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMailSendPreProc'])) {
+                                    $params = array(
+                                        'mail_attachments' => &$mail_attachments,
+                                        'options' => &$options,
+                                        'user' => &$user,
+                                        'order' => $order,
+                                        'orders_status' => $orders_status,
+                                        'page' => $page
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMailSendPreProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                                 if ($user['email']) {
-                                    mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+                                    mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachments, $options);
                                 }
                                 break;
                             }
