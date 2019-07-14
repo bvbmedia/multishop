@@ -5669,6 +5669,13 @@ class mslib_befe {
             $user['name'] = $this->conf['developer_email'];
             $user['email'] = $this->conf['developer_email'];
             $mailTo[] = $user;
+        } else {
+            if (isset($this->ms['MODULES']['DEVELOPER_EMAIL'])) {
+                $user = array();
+                $user['name'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
+                $user['email'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
+                $mailTo[] = $user;
+            }
         }
         if ($sendEmail && count($mailTo)) {
             $subject = $subject;
