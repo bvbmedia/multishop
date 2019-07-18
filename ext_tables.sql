@@ -1568,6 +1568,7 @@ CREATE TABLE tt_address (
  tx_multishop_coc_id varchar(127) default '',
  tx_multishop_paypal_account varchar(127) default '',
  department varchar(127) default '',
+ foreign_address_id int(11) default '0',
  PRIMARY KEY (uid),
  KEY parent (pid),
  KEY pid (pid,email),
@@ -1581,7 +1582,8 @@ CREATE TABLE tt_address (
  KEY `tx_multishop_vat_number` (`tx_multishop_vat_number`),
  KEY `tx_multishop_coc_id` (`tx_multishop_coc_id`),
  KEY `tx_multishop_paypal_account` (`tx_multishop_paypal_account`),
- KEY `department` (`department`)
+ KEY `department` (`department`),
+ KEY `foreign_address_id` (`foreign_address_id`)
 );
 
 CREATE TABLE `tx_multishop_products_locked_fields` (
