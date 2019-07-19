@@ -1523,6 +1523,9 @@ class mslib_befe {
                                 }
                             } else {
                                 $item['img'][$i] = '';
+                                if ($log_file) {
+                                    file_put_contents($log_file, 'Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: '.$plaatje1.').' . "\n", FILE_APPEND);
+                                }
                             }
                         } else {
                             $item['img'][$i] = '';
