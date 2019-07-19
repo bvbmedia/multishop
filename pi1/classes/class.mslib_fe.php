@@ -9997,6 +9997,9 @@ class mslib_fe {
                                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
                                 curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); //timeout in seconds
                             }
+                            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko');
+                            // Define empty encoding so gzip wont be used
+                            curl_setopt($ch,CURLOPT_ENCODING , '');
                             //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
                             //curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
                             $file_content = curl_exec($ch);
