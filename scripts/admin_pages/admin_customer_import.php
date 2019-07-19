@@ -1390,6 +1390,17 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
                             }
                         }
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'])) {
+                            $params = array(
+                                    'user' => &$user,
+                                    'item' => &$item,
+                                    'user_check' => &$user_check,
+                                    'prefix_source_name' => $this->post['prefix_source_name']
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
                     }
                 }
                 if ($log_file) {

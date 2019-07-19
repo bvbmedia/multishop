@@ -666,7 +666,7 @@
             <label index="enable">Enable</label>
             <label index="enable_custom_products_description_for">Enable custom products description for</label>
             <label index="enabled">Enabled</label>
-            <label index="end">end</label>
+            <label index="end">End</label>
             <label index="end_time">End time</label>
             <label index="exclude_from_feeds">Exclude from feeds</label>
             <label index="exclude_stock_from_feeds">Exclude stock from feeds</label>
@@ -2115,7 +2115,7 @@
             <label index="enable">Inschakelen</label>
             <label index="enable_custom_products_description_for">Schakel afzonderlijke productbeschrijving in voor</label>
             <label index="enabled">Ingeschakeld</label>
-            <label index="end">einde</label>
+            <label index="end">Einde</label>
             <label index="end_time">Stoptijd</label>
             <label index="exclude_from_feeds">Uitsluiten van productbestanden</label>
             <label index="exclude_stock_from_feeds">Toon voorraad niet in de volgende productbestanden</label>
