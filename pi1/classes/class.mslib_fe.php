@@ -1004,7 +1004,8 @@ class mslib_fe {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['rewritenameinPreProc'])) {
             $params = array(
                     'input' => &$input,
-                    'id' => &$id
+                    'id' => &$id,
+                    'replaceDashByUnderscore' => &$replaceDashByUnderscore
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['rewritenameinPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
