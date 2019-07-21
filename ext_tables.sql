@@ -867,13 +867,15 @@ CREATE TABLE `tx_multishop_payment_shipping_mappings` (
 CREATE TABLE `tx_multishop_payment_transactions` (
  `id` int(11) NOT NULL auto_increment,
  `orders_id` int(11) default '0',
+ `orders_id_extra` varchar(256) default '',
  `transaction_id` varchar(150) default '',
  `psp` varchar(25) default '',
  `crdate` int(11) default '0',
  `status` tinyint(1) default '0',
  `code` varchar(35) default '',
  PRIMARY KEY (`id`),
- KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`)
+ KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`),
+ KEY `orders_id_extra` (`orders_id_extra`)
 );
 
 CREATE TABLE `tx_multishop_products` (

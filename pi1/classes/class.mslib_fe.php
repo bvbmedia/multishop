@@ -9818,7 +9818,15 @@ class mslib_fe {
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-            return $row['orders_id'];
+            if ($row['orders_id'] > 0) {
+                return $row['orders_id'];
+            } else {
+                if (!empty($row['orders_id_extra'])) {
+                    $orders_id = explode(',', $row['orders_id_extra']);
+                    return $orders_id;
+                }
+            }
+            return false;
         }
     }
     public function getTransactionIdByOrderId($order_id, $psp = '') {
@@ -9861,6 +9869,44 @@ class mslib_fe {
             case 'md5':
             default:
                 $array['transaction_id'] = md5(uniqid($orders_id . '-' . $psp, true));
+                break;
+        }
+        $array['psp'] = $psp;
+        $array['code'] = $code;
+        $array['crdate'] = time();
+        $array['status'] = 0;
+        if ($array['transaction_id']) {
+            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_transactions', $array);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            if ($res) {
+                return $array['transaction_id'];
+            }
+        }
+    }
+    public function createPaymentTransactionIdOnMultiOrdersId($order_ids, $psp = '', $code = '', $security_type = 'md5', $transid = '') {
+        if (!is_array($order_ids)) {
+            return false;
+        }
+        $array = array();
+        $array['orders_id'] = 0;
+        $array['orders_id_extra'] = implode(',', $order_ids);
+        switch ($security_type) {
+            case 'sha512':
+                $array['transaction_id'] = hash('sha512', uniqid(implode(',', $order_ids) . '-' . $psp, true));
+                break;
+            case 'sha1':
+                $array['transaction_id'] = sha1(uniqid(implode(',', $order_ids) . '-' . $psp, true));
+                break;
+            case 'manual':
+                $array['transaction_id'] = $transid;
+                break;
+            case 'crc32':
+                $array['transaction_id'] = hash('crc32', uniqid(implode(',', $order_ids) . '-' . $psp, true));
+                break;
+            case 'short_md5':
+            case 'md5':
+            default:
+                $array['transaction_id'] = md5(uniqid(implode(',', $order_ids) . '-' . $psp, true));
                 break;
         }
         $array['psp'] = $psp;

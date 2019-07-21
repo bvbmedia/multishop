@@ -732,4 +732,11 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select orders_id_extra from tx_multishop_payment_transactions limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_payment_transactions` ADD `orders_id_extra` varchar(256) default '', ADD KEY `orders_id_extra` (`orders_id_extra`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
 ?>
