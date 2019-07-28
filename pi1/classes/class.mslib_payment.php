@@ -106,6 +106,9 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function displayPaymentButton($orders_id, $ref) {
         return $content;
     }
+    function getPaymentURL($orders_id, $ref) {
+        return $content;
+    }
     function paymentNotificationHandler() {
     }
 }
