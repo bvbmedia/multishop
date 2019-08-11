@@ -950,6 +950,11 @@ td.print_r_value { word-break:break-word; }
 .pagination > li > span {
 	padding:6px 10.5px;
 }
+.pagination > li > a .fa,
+.pagination > li > span .fa {
+	line-height: 1.42857143;
+}
+
 .pagination > li > a:hover,
 .pagination > li > span:hover,
 .pagination > li > a:focus,
