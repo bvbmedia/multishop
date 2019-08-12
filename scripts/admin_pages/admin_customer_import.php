@@ -914,6 +914,10 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 // We want to filter out the iterated user
                                 $filter[] = 'tx_multishop_source_id != \'' . addslashes($item['tx_multishop_source_id']) . '\'';
                                 //$filter[]='tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
+                            } elseif ($item['foreign_customer_id']) {
+                                // We want to filter out the iterated user
+                                $filter[] = 'foreign_customer_id != \'' . addslashes($item['foreign_customer_id']) . '\'';
+                                //$filter[]='foreign_customer_id !=\''.addslashes($item['foreign_customer_id']).'\'';
                             }
                             // Do a loop to increase the prefix number, but do the first loop with empty prefix
                             $counter = 0;
@@ -927,6 +931,7 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             } while (mslib_befe::ifExists($finalUsername, 'fe_users', 'username', $filter));
                             // Copy final username back to the $item array
                             $item['username'] = $finalUsername;
+
                         }
                         // first combine the values to 1 array
                         $usergroups = array();
@@ -971,6 +976,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                         $user = array();
                         if (isset($item['tx_multishop_source_id'])) {
                             $user['tx_multishop_source_id'] = $item['tx_multishop_source_id'];
+                            if (!isset($item['foreign_customer_id'])) {
+                                $user['foreign_customer_id'] = $item['tx_multishop_source_id'];
+                            }
                         }
                         if ($item['uid']) {
                             $user['uid'] = $item['uid'];
