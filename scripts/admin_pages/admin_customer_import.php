@@ -1299,8 +1299,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             // custom hook that can be controlled by third-party
                             // plugin eof
                             if (!$skipRecord) {
-                                if (!$user['gender']) {
-                                    $user['gender'] = 0;
+                                if (!isset($user['gender'])) {
+                                    // Unknown
+                                    $user['gender'] = '';
                                 }
                                 // T3 6.2 BUGFIXES
                                 $requiredCols = array();
