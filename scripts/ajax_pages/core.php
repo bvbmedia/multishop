@@ -745,11 +745,24 @@ switch ($this->ms['page']) {
         }
         $category_counter = 0;
         foreach ($tmp_return_data as $tree_id => $tree_path) {
-            $return_data[] = array(
-                    'id' => $tree_id,
-                    'text' => $tree_path
-            );
-            $category_counter++;
+            $add_category_to_tree = true;
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryTreeAddToTreePreProc'])) {
+                $params = array(
+                    'add_category_to_tree' => &$add_category_to_tree,
+                    'tree_id' => $tree_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryTreeAddToTreePreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            if ($add_category_to_tree) {
+                $return_data[] = array(
+                        'id' => $tree_id,
+                        'text' => $tree_path
+                );
+                $category_counter++;
+            }
             if ($categories_results_limit > 0) {
                 if ($category_counter >= $categories_results_limit) {
                     break;
