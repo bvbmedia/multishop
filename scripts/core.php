@@ -395,6 +395,9 @@ switch ($this->ms['page']) {
             $params = array(
                     'page' => $this->ms['page'],
                     'content' => &$content,
+                    'array1' => &$array1,
+                    'array2' => &$array2,
+                    'order' => &$order,
                     'order_session' => &$order_session
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'] as $funcRef) {
