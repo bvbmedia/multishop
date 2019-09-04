@@ -405,6 +405,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             $this->get['q'] = $search_term;
             $pid = $tmp_pid;
         }
+        if (!$pid) {
+            if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid = $this->get['pid'];
+            }
+        }
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (!is_numeric($this->get['q'])) {
                 $where[] = "po.products_options_name like '%" . addslashes($this->get['q']) . "%'";
@@ -451,13 +456,25 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $content = json_encode($data);
         break;
     case 'get_attributes_values':
+        $from = array();
         $where = array();
+        $from[] = 'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id';
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
         $skip_db = false;
-        if (isset($this->get['q']) && !empty($this->get['q'])) {
-            if (strpos($this->get['q'], '||optid') !== false) {
-                list($search_term, $tmp_optid) = explode('||', $this->get['q']);
-                $search_term = trim($search_term);
+        $pid = 0;
+        if (strpos($this->get['q'], '||') !== false) {
+            list($search_term, $tmp_pid, $tmp_optid) = explode('||', $this->get['q']);
+            $this->get['q'] = $search_term;
+            list(, $pid) = explode('=', $tmp_pid);
+            list(, $optid) = explode('=', $tmp_optid);
+        }
+        if (!$pid) {
+            if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid = $this->get['pid'];
+            }
+        }
+        if ($optid || (isset($this->get['q']) && !empty($this->get['q']))) {
+            if ($optid) {
                 if (!empty($search_term)) {
                     $where_str = '';
                     if (isset($tmp_optid) && !empty($tmp_optid)) {
@@ -472,11 +489,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         $where[] = "optval.products_options_values_name like '%" . addslashes($search_term) . "%'";
                     }
                 } else {
-                    if (isset($tmp_optid) && !empty($tmp_optid)) {
-                        list(, $optid) = explode('=', $tmp_optid);
-                        if (is_numeric($optid)) {
-                            $where[] = "(optval2opt.products_options_id = '" . $optid . "')";
-                        }
+                    if (is_numeric($optid)) {
+                        $where[] = "optval2opt.products_options_id = '" . $optid . "'";
                     }
                 }
             } else {
@@ -489,8 +503,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
             }
         }
+        if (is_numeric($pid) && $pid > 0) {
+            $from[] = 'tx_multishop_products_attributes pa';
+            $where[] = 'pa.products_id=\'' . $pid . '\' and pa.options_id=optval2opt.products_options_id and pa.options_values_id=optval2opt.products_options_values_id';
+        }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT ...
-                'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
+                implode(', ', $from), // FROM ..., // FROM ...
                 implode(' and ', $where), // WHERE.
                 'optval.products_options_values_id', // GROUP BY...
                 'optval2opt.sort_order', // ORDER BY...
