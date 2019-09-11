@@ -128,7 +128,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array = $Cache_Lite->ge
     }
     if ($this->ms['MODULES']['CACHE_FRONT_END']) {
         $output_array['content'] = $content;
-        $Cache_Lite->save(serialize($output_array));
+        $Cache_Lite->save(serialize($output_array), $string);
     }
 } elseif ($output_array) {
     $output_array = unserialize($output_array);

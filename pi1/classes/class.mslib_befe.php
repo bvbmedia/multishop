@@ -3799,7 +3799,8 @@ class mslib_befe {
             );
             $Cache_Lite = new Cache_Lite($options);
             //$Cache_Lite =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Cache_Lite');
-            $string = md5($key);
+            //$string = md5($key);
+            $string = $key;
             switch ($action) {
                 case 'get':
                     // get cache
@@ -3818,9 +3819,10 @@ class mslib_befe {
                     break;
                 case 'delete':
                     // removes the cache
-                    if ($Cache_Lite->get($string)) {
+                    // somehow the get method always return false, disabled by Widy 11/09/2019
+                    //if ($Cache_Lite->get($string)) {
                         $Cache_Lite->remove($string);
-                    }
+                    //}
                     break;
             }
         }

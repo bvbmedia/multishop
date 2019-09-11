@@ -13,6 +13,13 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
     );
     $Cache_Lite = new Cache_Lite($options);
     $string = md5(serialize($this->conf)) . $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'] . serialize($this->post);
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingCacheStringKeyPostProc'])) {
+        $params = array('string' => &$string);
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingCacheStringKeyPostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 }
 $output_array = array();
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->get($string)) {
@@ -411,7 +418,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
     }
     if ($this->ms['MODULES']['CACHE_FRONT_END']) {
         $output_array['content'] = $content;
-        $Cache_Lite->save(serialize($output_array));
+        $Cache_Lite->save(serialize($output_array), $string);
     }
 } elseif ($output_array) {
     $output_array = unserialize($output_array);
