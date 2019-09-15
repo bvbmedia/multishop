@@ -1257,10 +1257,10 @@ switch ($this->ms['page']) {
                             </div>
                         </div>    
                         ';
-                        $returnOutput['status'] = 'OK';
                         break;
                     }
                 }
+                $returnOutput['status'] = 'OK';
             }
             echo json_encode($returnOutput);
             exit();
