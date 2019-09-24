@@ -2638,6 +2638,10 @@ if ($this->post['action'] == 'category-insert') {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
+                            } elseif (!isset($item['products_specials_price']) && $item['updated_products_id']) {
+                                // delete any special
+                                $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
+                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
                             $productsTitle=$item['extid'];
                             if (isset($item['products_name'])) {
