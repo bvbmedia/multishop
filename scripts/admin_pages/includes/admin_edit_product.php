@@ -3628,6 +3628,8 @@ if ($this->post) {
 				    var pa_option_data_id=encodeURIComponent(selected_pa_option_id).replace(/%[0-9A-F]{2}/gi,\'\');
 				    pa_option_data_id=pa_option_data_id.replace(/\'/g,\'\');
 				    pa_option_data_id=pa_option_data_id.replace(/"/g,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/\(/g,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/\)/g,\'\');
 					var target_liwrapper_id="#products_attributes_item_" + pa_option_data_id + " > div > div > div.items_wrapper";
 					if (selected_pa_option_id != "") {
 						var delete_button_html=\'<button type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
