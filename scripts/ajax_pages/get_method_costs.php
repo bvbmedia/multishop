@@ -227,6 +227,7 @@ foreach ($available_sid as $sids) {
             $data['available_shippingcost_method_box'][$sids] = '';
         }
     }
+    $data['raw_data'][$sids] = $priceArray['shipping_costs_raw'];
 }
 // we display the shipping costs and payment costs including vat
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multishop_pi1']['sid']) {
