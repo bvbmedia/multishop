@@ -1522,7 +1522,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_address_number'] = $address['address_number'];
             $insertArray['billing_address_ext'] = $address['address_ext'];
             $insertArray['billing_address'] = $address['street_name'] . ' ' . $address['address_number'] . $address['address_ext'];
-            if ($address['address']) {
+            if ($address['address'] && !$insertArray['billing_street_name']) {
                 $insertArray['billing_street_name']=$address['address'];
                 $insertArray['billing_address']=$address['address'];
             }
@@ -1590,7 +1590,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_address_number'] = $address['delivery_address_number'];
                 $insertArray['delivery_address_ext'] = $address['delivery_address_ext'];
                 $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $address['delivery_street_name'] . ' ' . $address['delivery_address_number'] . $address['delivery_address_ext']);
-                if ($address['delivery_address']) {
+                if ($address['delivery_address'] && !$insertArray['delivery_street_name']) {
                     $insertArray['delivery_street_name']=$address['delivery_address'];
                     $insertArray['delivery_address']=$address['delivery_address'];
                 }
