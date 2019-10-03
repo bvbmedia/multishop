@@ -111,6 +111,10 @@ if ($this->post && $this->post['email']) {
                 $updateArray['department'] = trim($this->post['department']);
             }
         }
+        $updateArray['tx_multishop_newsletter'] = 0;
+        if (isset($this->post['tx_multishop_newsletter'])) {
+            $updateArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter'];
+        }
         if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
             $customer_id = $this->post['tx_multishop_pi1']['cid'];
             // update mode
@@ -388,7 +392,10 @@ if ($this->post && $this->post['email']) {
                     $updateArray['department'] = $this->post['department'];
                 }
             }
-//			$updateArray['tx_multishop_newsletter']			=	$address['tx_multishop_newsletter'];
+            $updateArray['tx_multishop_newsletter'] = 0;
+            if (isset($this->post['tx_multishop_newsletter'])) {
+                $updateArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter'];
+            }
             $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'])) {
@@ -1076,6 +1083,8 @@ switch ($_REQUEST['action']) {
             $subpartArray['###GENDER_MR_CHECKED###'] = (($this->post['gender'] == '0') ? 'checked="checked"' : '');
             $subpartArray['###LABEL_GENDER_MR###'] = ucfirst($this->pi_getLL('mr'));
             $subpartArray['###GENDER_MRS_CHECKED###'] = (($this->post['gender'] == '1') ? 'checked="checked"' : '');
+            $subpartArray['###LABEL_NEWSLETTER###'] = ucfirst($this->pi_getLL('newsletter'));
+            $subpartArray['###NEWSLETTER_CHECKED###'] = (($this->post['tx_multishop_newsletter'] == '1') ? 'checked="checked"' : '');
             $subpartArray['###LABEL_GENDER_MRS###'] = ucfirst($this->pi_getLL('mrs'));
             $subpartArray['###LABEL_FIRSTNAME###'] = ucfirst($this->pi_getLL('first_name'));
             $subpartArray['###VALUE_FIRSTNAME###'] = htmlspecialchars($this->post['first_name']);
@@ -1569,6 +1578,8 @@ switch ($_REQUEST['action']) {
         $subpartArray['###GENDER_MR_CHECKED###'] = $mr_checked;
         $subpartArray['###LABEL_GENDER_MR###'] = ucfirst($this->pi_getLL('mr'));
         $subpartArray['###GENDER_MRS_CHECKED###'] = $mrs_checked;
+        $subpartArray['###LABEL_NEWSLETTER###'] = ucfirst($this->pi_getLL('newsletter'));
+        $subpartArray['###NEWSLETTER_CHECKED###'] = (($this->post['tx_multishop_newsletter'] == '1') ? 'checked="checked"' : '');
         $subpartArray['###LABEL_GENDER_MRS###'] = ucfirst($this->pi_getLL('mrs'));
         $subpartArray['###LABEL_FIRSTNAME###'] = ucfirst($this->pi_getLL('first_name'));
         $subpartArray['###VALUE_FIRSTNAME###'] = htmlspecialchars($this->post['first_name']);

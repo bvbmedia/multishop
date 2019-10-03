@@ -272,7 +272,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $tr_type = 'even';
             }
             $tmpcontent .= '<tr class="' . $tr_type . '">';
-            $tmpcontent .= '<td class="cellQty">' . number_format($product['qty']) . '</td>';
+            $tmpcontent .= '<td class="cellQty">' . round($product['qty'], 13) . '</td>';
             $tmpcontent .= '<td class="cellID">' . $product['products_id'] . '</td>';
             $tmpcontent .= '<td class="cellModel">' . $product['products_model'] . '</td>';
             $product_tmp = mslib_fe::getProduct($product['products_id']);
