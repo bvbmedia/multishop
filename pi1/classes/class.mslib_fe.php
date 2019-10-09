@@ -7947,7 +7947,7 @@ class mslib_fe {
                 $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_multishop_cache']['link_params'] = 'onClick="return CONFIRM(\'' . $this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_multishop_cache') . '?\')"';
                 $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_multishop_cache']['class'] = 'fa fa-asterisk';
             }
-            if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cooluri')) {
+            if ($this->ROOTADMIN_USER && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cooluri')) {
                 $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['label'] = $this->pi_getLL('admin_clear_cooluri_cache');
                 $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_cooluri_cache', 1);
                 $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link_params'] = 'onClick="return CONFIRM(\'' . $this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_cooluri_cache') . '?\')"';
