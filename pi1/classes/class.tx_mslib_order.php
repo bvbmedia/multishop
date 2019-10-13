@@ -339,6 +339,16 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function mailOrder($orders_id, $copy_to_merchant = 1, $custom_email_address = '', $mail_template = '') {
         $order = mslib_fe::getOrder($orders_id);
         if ($order['orders_id']) {
+            //hook to let other plugins further manipulate the replacers
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreProcOrder'])) {
+                $params = array(
+                    'order' => &$order,
+                    'mail_template' => &$mail_template,
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreProcOrder'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $order['mail_template'] = $mail_template;
             if (isset($order['language_id'])) {
                 // Switch to language that is stored in the order
@@ -396,8 +406,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
                 $delivery_address .= '<br />' . mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
             }
-//		if ($order['delivery_telephone']) 		$delivery_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['delivery_telephone']."<br />";
-//		if ($order['delivery_mobile']) 			$delivery_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['delivery_mobile']."<br />";
+            // if ($order['delivery_telephone']) 		$delivery_address.=ucfirst($this->pi_getLL('telephone')).': '.$order['delivery_telephone']."<br />";
+            // if ($order['delivery_mobile']) 			$delivery_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['delivery_mobile']."<br />";
             if ($order['billing_company']) {
                 $billing_address = $order['billing_company'] . "<br />";
             }
