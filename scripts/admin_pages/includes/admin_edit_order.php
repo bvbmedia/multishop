@@ -4724,10 +4724,10 @@ if (is_numeric($this->get['orders_id'])) {
             <label for="customer_notified" class="control-label col-md-2">' . $this->pi_getLL('send_email_to_customer') . '</label>
             <div class="col-md-10">
 	            <div class="radio radio-success radio-inline">
-	            	<input name="customer_notified" type="radio" id="value0" value="0" /><label for="value0">' . $this->pi_getLL('no') . '</label>
+	            	<input name="customer_notified" class="customer_notified_n" type="radio" id="value0" value="0" /><label for="value0">' . $this->pi_getLL('no') . '</label>
 	            </div>
 	            <div class="radio radio-success radio-inline">
-		            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">' . $this->pi_getLL('yes') . '</label>
+		            <input name="customer_notified" class="customer_notified_y" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">' . $this->pi_getLL('yes') . '</label>
 	            </div>
             </div>
         </div>';
@@ -4940,7 +4940,7 @@ if (is_numeric($this->get['orders_id'])) {
         $headingButton['fa_class'] = 'fa fa-check-circle';
         $headingButton['title'] = ($this->get['action'] == 'edit_order') ? $this->pi_getLL('update') : $this->pi_getLL('save');
         $headingButton['href'] = '#';
-        $headingButton['attributes'] = 'onclick="$(\'#btnSave\').click(); return false;"';
+        $headingButton['attributes'] = 'id="topBtnSave" onclick="$(\'#btnSave\').click(); return false;"';
         $headerButtons['header_save_update_btn'] = $headingButton;
         //
         $headingButton = array();
@@ -4948,7 +4948,7 @@ if (is_numeric($this->get['orders_id'])) {
         $headingButton['fa_class'] = 'fa fa-check-circle';
         $headingButton['title'] = ($this->get['action'] == 'edit_order') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
         $headingButton['href'] = '#';
-        $headingButton['attributes'] = 'onclick="$(\'#btnSaveClose\').click(); return false;"';
+        $headingButton['attributes'] = 'id="topBtnSaveClose" onclick="$(\'#btnSaveClose\').click(); return false;"';
         $headerButtons['header_save_close_btn'] = $headingButton;
         // Set header buttons through interface class so other plugins can adjust it
         $objRef->setHeaderButtons($headerButtons);
