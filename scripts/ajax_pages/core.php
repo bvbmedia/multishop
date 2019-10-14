@@ -1244,6 +1244,7 @@ switch ($this->ms['page']) {
                 $keys = array();
                 $keys[] = 'email_order_status_changed_' . mslib_befe::strtolower($orders_status_name);
                 $keys[] = 'email_order_status_changed';
+                $returnOutput['extra_checkbox'] = '';
                 foreach ($keys as $key) {
                     //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                     $page = mslib_fe::getCMScontent($key, $order['language_id']);
@@ -1257,10 +1258,10 @@ switch ($this->ms['page']) {
                             </div>
                         </div>    
                         ';
+                        $returnOutput['status'] = 'OK';
                         break;
                     }
                 }
-                $returnOutput['status'] = 'OK';
             }
             echo json_encode($returnOutput);
             exit();
