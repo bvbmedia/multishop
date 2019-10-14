@@ -1113,7 +1113,7 @@ if ($this->post) {
     if ($this->post['products_date_added_visitor'] && $this->post['products_date_added']) {
         $updateArray['products_date_added'] = strtotime($this->post['products_date_added']);
     } else {
-        $updateArray['products_date_added'] = '';
+        $updateArray['products_date_added'] = time();
     }
     $updateArray['ean_code'] = '';
     if ($this->post['ean_code']) {
