@@ -188,7 +188,9 @@ if ($this->ADMIN_USER) {
                             $jsonData_content .= '<tr class="' . $tr_subtype . '">
 							<td class="text-right">&nbsp;</td>
 							<td class="text-right">&nbsp;</td>
+							 '.($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<td class="cellFixed cellNoWrap text-right"></td>' : '').'
 							<td>' . $attributes['products_options'] . ': ' . $attributes['products_options_values'] . '</td>';
+
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
                                 $jsonData_content .= '<td class="text-right noWrap">' . ($attributes['price_prefix'] == '-' ? '- ' : '') . mslib_fe::amount2Cents(($attributes['price_prefix'] . $attributes['options_values_price']) + $attributes['attributes_tax_data']['tax'], $customer_currency, 1, 0) . '</td>';
                             } else {
@@ -197,6 +199,7 @@ if ($this->ADMIN_USER) {
                             if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
                                 $jsonData_content .= '<td class="text-right noWrap">&nbsp;</td>';
                             }
+
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
                                 $jsonData_content .= '<td class="text-right noWrap">' . ($attributes['price_prefix'] == '-' ? '- ' : '') . mslib_fe::amount2Cents($product['qty'] * (($attributes['price_prefix'] . $attributes['options_values_price']) + $attributes['attributes_tax_data']['tax']), $customer_currency, 1, 0) . '</td>';
                             } else {
