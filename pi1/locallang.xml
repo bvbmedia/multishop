@@ -1453,6 +1453,7 @@
             <label index="feed_exporter_fields_label_products_last_modified">Product last modified</label>
             <label index="order_on">Order on</label>
             <label index="export_customer_with_discount">Customer with discount</label>
+            <label index="admin_label_select_feature_highlights">Select attribute option</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2878,6 +2879,7 @@
             <label index="feed_exporter_fields_label_products_last_modified">Product wijzigingsdatum</label>
             <label index="order_on">Besteld op</label>
             <label index="export_customer_with_discount">Klant met korting</label>
+            <label index="admin_label_select_feature_highlights">Selecteer attribuutoptie</label>
         </languageKey>
     </data>
 </T3locallang>

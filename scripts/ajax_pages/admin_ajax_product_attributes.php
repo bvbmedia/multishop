@@ -39,7 +39,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
             if ((isset($this->get['q']) && empty($this->get['q'])) || (!isset($this->get['preselected_id']))) {
                 $data[] = array(
                         'id' => '0',
-                        'text' => $this->pi_getLL('choose')
+                        'text' => $this->pi_getLL('admin_label_select_feature_highlights')
                 );
             }
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
