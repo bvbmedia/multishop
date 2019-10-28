@@ -36,6 +36,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
+            if ((isset($this->get['q']) && empty($this->get['q'])) || (!isset($this->get['preselected_id']))) {
+                $data[] = array(
+                        'id' => '0',
+                        'text' => $this->pi_getLL('choose')
+                );
+            }
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 if (isset($this->get['exclude_id']) && $this->get['exclude_id'] > 0) {
                     if ($row['products_options_id'] != $this->get['exclude_id']) {
