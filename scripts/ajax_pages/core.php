@@ -2409,6 +2409,12 @@ switch ($this->ms['page']) {
                 $array = mslib_fe::xml2array($row['pi_flexform']);
                 if (is_array($array) && count($array)) {
                     //if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
+                    if ($array['T3FlexForms']['data']['sheet'][3]['language']['field'][0]['value'] == 'specials_section') {
+                        $code = $array['T3FlexForms']['data']['sheet'][3]['language']['field'][3]['value'];
+                        if ($code) {
+                            $sections[$code] = $code;
+                        }
+                    }
                     if ($array['T3FlexForms']['data']['sheet'][4]['language']['field'][0]['value'] == 'specials_section') {
                         $code = $array['T3FlexForms']['data']['sheet'][4]['language']['field'][3]['value'];
                         if ($code) {
