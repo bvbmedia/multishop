@@ -1711,43 +1711,78 @@ class mslib_befe {
                 // 300 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][300]['width'];
                 $maxheight = $this->ms['product_image_formats'][300]['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-                if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthEast ' . $module_path . 'templates/images/curves/rb.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthWest ' . $module_path . 'templates/images/curves/lo.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthEast ' . $module_path . 'templates/images/curves/ro.png "' . $target . '" "' . $target . '"';
+                if ($ext!='gif') {
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                    if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthEast ' . $module_path . 'templates/images/curves/rb.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthWest ' . $module_path . 'templates/images/curves/lo.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthEast ' . $module_path . 'templates/images/curves/ro.png "' . $target . '" "' . $target . '"';
+                    }
+                } else {
+                    $temp_gif = PATH_site . '/typo3temp/temporary_300.gif';
+                    @unlink($temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $target . ' -coalesce ' . $temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $temp_gif . ' -resize ' . $maxwidth . 'x' . $maxheight . ' "' . $target . '"');
                 }
                 $target = PATH_site . $this->ms['image_paths']['products']['200'] . '/' . $folder . '/' . $filename;
                 copy($original_path, $target);
                 // 200 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][200]['width'];
                 $maxheight = $this->ms['product_image_formats'][200]['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-                if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthEast ' . $module_path . 'templates/images/curves/rb.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthWest ' . $module_path . 'templates/images/curves/lo.png "' . $target . '" "' . $target . '"';
-                    $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthEast ' . $module_path . 'templates/images/curves/ro.png "' . $target . '" "' . $target . '"';
+                if ($ext!='gif') {
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                    if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthEast ' . $module_path . 'templates/images/curves/rb.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthWest ' . $module_path . 'templates/images/curves/lo.png "' . $target . '" "' . $target . '"';
+                        $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity SouthEast ' . $module_path . 'templates/images/curves/ro.png "' . $target . '" "' . $target . '"';
+                    }
+                } else {
+                    $temp_gif = PATH_site . '/typo3temp/temporary_200.gif';
+                    @unlink($temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $target . ' -coalesce ' . $temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $temp_gif . ' -resize ' . $maxwidth . 'x' . $maxheight . ' "' . $target . '"');
                 }
                 $target = PATH_site . $this->ms['image_paths']['products']['100'] . '/' . $folder . '/' . $filename;
                 copy($original_path, $target);
                 // 100 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][100]['width'];
                 $maxheight = $this->ms['product_image_formats'][100]['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                if ($ext!='gif') {
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                } else {
+                    $temp_gif = PATH_site . '/typo3temp/temporary_100.gif';
+                    @unlink($temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $target . ' -coalesce ' . $temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $temp_gif . ' -resize ' . $maxwidth . 'x' . $maxheight . ' "' . $target . '"');
+                }
                 $target = PATH_site . $this->ms['image_paths']['products']['50'] . '/' . $folder . '/' . $filename;
                 copy($original_path, $target);
                 // 50 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][50]['width'];
                 $maxheight = $this->ms['product_image_formats'][50]['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                if ($ext!='gif') {
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                } else {
+                    $temp_gif = PATH_site . '/typo3temp/temporary_50.gif';
+                    @unlink($temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $target . ' -coalesce ' . $temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $temp_gif . ' -resize ' . $maxwidth . 'x' . $maxheight . ' "' . $target . '"');
+                }
                 $target = PATH_site . $this->ms['image_paths']['products']['normal'] . '/' . $folder . '/' . $filename;
                 copy($original_path, $target);
                 // normal thumbnail settings
                 $maxwidth = $this->ms['product_image_formats']['enlarged']['width'];
                 $maxheight = $this->ms['product_image_formats']['enlarged']['height'];
-                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                if ($ext!='gif') {
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                } else {
+                    $temp_gif = PATH_site . '/typo3temp/temporary_normal.gif';
+                    @unlink($temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $target . ' -coalesce ' . $temp_gif);
+                    $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $temp_gif . ' -resize ' . $maxwidth . 'x' . $maxheight . ' "' . $target . '"');
+                }
                 $params = array(
                         'original_path' => $original_path,
                         'target' => $target,
@@ -1756,78 +1791,87 @@ class mslib_befe {
                         'folder' => &$folder,
                         'filename' => &$filename
                 );
+
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 } else {
-                    if (!$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT']) {
-                        $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-                    } else {
-                        exec(\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
-                        //\TYPO3\CMS\Core\Utility\CommandUtility::exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
-                        $newsize = @getimagesize($target);
-                        $text_width = $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_WIDTH'];
-                        $text_height = $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_HEIGHT'];
-                        if ($newsize[0] > $maxwidth) {
-                            $final_width = $maxwidth;
+                    if ($ext!='gif') {
+                        if (!$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT']) {
+                            $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"',
+                                    $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                         } else {
-                            $final_width = $newsize[0];
-                        }
-                        if ($newsize[1] > $maxheight) {
-                            $final_height = $maxheight;
-                        } else {
-                            $final_height = $newsize[1];
-                        }
-                        switch ($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_POSITION']) {
-                            case 'north-east':
-                                $pos_x = ($final_width - $text_width);
-                                $pos_y = (25);
-                                break;
-                            case 'south-east':
-                                $pos_x = ($final_width - $text_width);
-                                $pos_y = ($final_height - 5);
-                                break;
-                            case 'south-west':
-                                $pos_x = '2';
-                                $pos_y = ($final_height - 5);
-                                break;
-                            case 'north-west':
-                                $pos_x = '2';
-                                $pos_y = (25);
-                                break;
-                        }
-                        if (is_numeric($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE']) && $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] && ($newsize[0] > $text_width && $newsize[1] > $text_height)) {
-                            if (strstr($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'], "..")) {
-                                die('error in PRODUCT_IMAGE_WATERMARK_FONT_FILE value');
+                            exec(\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"',
+                                    $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
+                            //\TYPO3\CMS\Core\Utility\CommandUtility::exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
+                            $newsize = @getimagesize($target);
+                            $text_width = $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_WIDTH'];
+                            $text_height = $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_HEIGHT'];
+                            if ($newsize[0] > $maxwidth) {
+                                $final_width = $maxwidth;
                             } else {
-                                if (strstr($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'], "/")) {
-                                    $font_file = PATH_site . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'];
-                                } else {
-                                    $font_file = $module_path . 'templates/images/fonts/' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'];
-                                }
+                                $final_width = $newsize[0];
                             }
-                            $savenametest = md5(rand(0, 99));
-                            $tmppath = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache';
-                            // watermark bugfix
-                            // removing the width, to make it proportional width based on height, so the text are always visible in any image size
-                            $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-resize x' . $final_height . ' xc:black -font "' . $font_file . '" -pointsize ' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'] . ' -fill white -draw "text ' . $pos_x . ',' . $pos_y . ' \'' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] . '\'" -shade ' . $text_width . 'x' . ($text_height - 30) . '  "' . $tmppath . '/beveled_' . $savenametest . '.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-                            $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-resize x' . $final_height . ' xc:black -font "' . $font_file . '" -pointsize ' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'] . ' -fill white -draw "text ' . $pos_x . ',' . $pos_y . ' \'' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] . '\'" -shade ' . $text_width . 'x' . $text_height . '  -negate -normalize  "' . $tmppath . '/beveled_mask_' . $savenametest . '.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-                            $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -compose CopyOpacity "' . $tmppath . '/beveled_mask_' . $savenametest . '.jpg' . '" "' . $tmppath . '/beveled_' . $savenametest . '.jpg' . '" "' . $tmppath . '/beveled_trans_' . $savenametest . '.png"';
-                            $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' "' . $tmppath . '/beveled_trans_' . $savenametest . '.png" "' . $target . '" "' . $target . '"';
-                            $commands[] = "rm -f " . $tmppath . '/beveled_' . $savenametest . '.jpg';
-                            $commands[] = "rm -f " . $tmppath . '/beveled_mask_' . $savenametest . '.jpg';
-                            $commands[] = "rm -f " . $tmppath . '/beveled_trans_' . $savenametest . '.png';
-                            /* echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_'.$savenametest.'.jpg">';
-							echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_mask_'.$savenametest.'.jpg">';
-							echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_trans_'.$savenametest.'.png">
-							<img src="'.$this->FULL_HTTP_URL.''.$this->ms['image_paths']['products']['normal'].'/'.$folder.'/'.$filename.'">
-							<BR>';
-							echo $line1.'<BR><BR>';
-							echo $line2.'<BR><BR>';
-							echo $line3.'<BR><BR>';
-							echo $line4.'<BR><BR>';
-							die();*/
+                            if ($newsize[1] > $maxheight) {
+                                $final_height = $maxheight;
+                            } else {
+                                $final_height = $newsize[1];
+                            }
+                            switch ($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_POSITION']) {
+                                case 'north-east':
+                                    $pos_x = ($final_width - $text_width);
+                                    $pos_y = (25);
+                                    break;
+                                case 'south-east':
+                                    $pos_x = ($final_width - $text_width);
+                                    $pos_y = ($final_height - 5);
+                                    break;
+                                case 'south-west':
+                                    $pos_x = '2';
+                                    $pos_y = ($final_height - 5);
+                                    break;
+                                case 'north-west':
+                                    $pos_x = '2';
+                                    $pos_y = (25);
+                                    break;
+                            }
+                            if (is_numeric($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE']) && $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] && ($newsize[0] > $text_width && $newsize[1] > $text_height)) {
+                                if (strstr($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'], "..")) {
+                                    die('error in PRODUCT_IMAGE_WATERMARK_FONT_FILE value');
+                                } else {
+                                    if (strstr($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'], "/")) {
+                                        $font_file = PATH_site . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'];
+                                    } else {
+                                        $font_file = $module_path . 'templates/images/fonts/' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'];
+                                    }
+                                }
+                                $savenametest = md5(rand(0, 99));
+                                $tmppath = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache';
+                                // watermark bugfix
+                                // removing the width, to make it proportional width based on height, so the text are always visible in any image size
+                                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert',
+                                        '-resize x' . $final_height . ' xc:black -font "' . $font_file . '" -pointsize ' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'] . ' -fill white -draw "text ' . $pos_x . ',' . $pos_y . ' \'' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] . '\'" -shade ' . $text_width . 'x' . ($text_height - 30) . '  "' . $tmppath . '/beveled_' . $savenametest . '.jpg"',
+                                        $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert',
+                                        '-resize x' . $final_height . ' xc:black -font "' . $font_file . '" -pointsize ' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'] . ' -fill white -draw "text ' . $pos_x . ',' . $pos_y . ' \'' . $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] . '\'" -shade ' . $text_width . 'x' . $text_height . '  -negate -normalize  "' . $tmppath . '/beveled_mask_' . $savenametest . '.jpg"',
+                                        $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -compose CopyOpacity "' . $tmppath . '/beveled_mask_' . $savenametest . '.jpg' . '" "' . $tmppath . '/beveled_' . $savenametest . '.jpg' . '" "' . $tmppath . '/beveled_trans_' . $savenametest . '.png"';
+                                $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' "' . $tmppath . '/beveled_trans_' . $savenametest . '.png" "' . $target . '" "' . $target . '"';
+                                $commands[] = "rm -f " . $tmppath . '/beveled_' . $savenametest . '.jpg';
+                                $commands[] = "rm -f " . $tmppath . '/beveled_mask_' . $savenametest . '.jpg';
+                                $commands[] = "rm -f " . $tmppath . '/beveled_trans_' . $savenametest . '.png';
+                                /* echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_'.$savenametest.'.jpg">';
+                                echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_mask_'.$savenametest.'.jpg">';
+                                echo '<img src="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/tmp/cache/beveled_trans_'.$savenametest.'.png">
+                                <img src="'.$this->FULL_HTTP_URL.''.$this->ms['image_paths']['products']['normal'].'/'.$folder.'/'.$filename.'">
+                                <BR>';
+                                echo $line1.'<BR><BR>';
+                                echo $line2.'<BR><BR>';
+                                echo $line3.'<BR><BR>';
+                                echo $line4.'<BR><BR>';
+                                die();*/
+                            }
                         }
                     }
                 }
