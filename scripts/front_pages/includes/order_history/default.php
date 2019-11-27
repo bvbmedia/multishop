@@ -109,6 +109,14 @@ if (mslib_fe::loggedin()) {
                 $tmp .= '</tr></thead><tbody>';
                 $tr_type = 'even';
                 foreach ($tmporders as $order) {
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/order_history/default.php']['orderHistoryListingItemPreProc'])) {
+                        $params = array(
+                                'order' => &$order
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/order_history/default.php']['orderHistoryListingItemPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
                     if (!$tr_type or $tr_type == 'even') {
                         $tr_type = 'odd';
                     } else {
