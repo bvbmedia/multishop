@@ -4338,17 +4338,20 @@ if (is_numeric($this->get['orders_id'])) {
                             //}
                         },
                         initSelection: function(element, callback) {
-                            if ($(".product_name").length) {
-                            	var product_id=$(".product_name").select2("val");
-                            } else {
-                            	var product_id=$(".product_name_input").select2("val");
+                            var product_id = "";
+                            if ($(\'input[name="manual_products_id"]\').length) {
+                            	product_id=$(\'input[name="manual_products_id"]\').select2("val");
+                            	if (typeof product_id == "object") {
+                            	    product_id=$(\'input[name="manual_products_id"]\').val();
+                            	}
                             }
-                            var id=$(element).val();
-                            var optid = $(selector_str).parent().prev().prev().children("input").val();
-                            if (id!=="") {
-                                //if (attributesValues[id] !== undefined) {
-                                //    callback(attributesValues[id]);
-                                //} else {
+                            if (product_id=="" && $(\'input[name="products_id"]\').length) {
+                                product_id=$(\'input[name="products_id"]\').select2("val");
+                            }
+                            if (product_id != "") {
+                                var id=$(element).val();
+                                var optid = $(selector_str).parent().prev().prev().children("input").val();    
+                                if (id!=="") {
                                     $.ajax(ajax_url, {
                                         data: {
                                             preselected_id: id,
@@ -4360,7 +4363,7 @@ if (is_numeric($this->get['orders_id'])) {
                                         attributesValues[data.id]={id: data.id, text: data.text};
                                         callback(data);
                                     });
-                                //}
+                                }
                             }
                         },
                         formatResult: function(data){
@@ -4550,9 +4553,13 @@ if (is_numeric($this->get['orders_id'])) {
                 $.each($(".edit_product_manual_option"), function(i, v){
                     select2_sb("#" + $(v).attr("id"), "' . $this->pi_getLL('admin_label_option') . '", "edit_product_manual_option", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options') . '");
                 });
+                console.log($(".edit_product_manual_values").length);
                 $.each($(".edit_product_manual_values"), function(i, v){
                     var select2_element_id="#" + $(v).attr("id");
-                    select2_values_sb(select2_element_id, "' . $this->pi_getLL('admin_value') . '", "edit_product_manual_values", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values') . '");
+                    
+                    console.log(select2_element_id);
+                    
+                    select2_values_sb(select2_element_id, "' . $this->pi_getLL('admin_value') . '", "edit_product_manual_values_class", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values') . '");
                 });
                 select2_discount("#product_discount_percentage");
                 ' : '') . '
