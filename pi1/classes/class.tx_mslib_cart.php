@@ -3181,7 +3181,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         $subPrices .= mslib_fe::amount2Cents(($product['qty'] * ($attribute_item['price_prefix'] . $attribute_item['options_values_price'])));
                                     }
                                     $subPrices .= '<br />';
-                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . $row['products_options_name'] . ':</span><span class="attribute-value">' . $attribute_values['products_options_values_name'] . '</span></div>';
+                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . (isset($attribute_item['products_options_name']) && !empty($attribute_item['products_options_name']) ? $attribute_item['products_options_name'] : $row['products_options_name']) . ': </span><span class="attribute-value">' . $attribute_values['products_options_values_name'] . '</span></div>';
                                     $price = $price + (($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['qty']);
                                 }
                             }
