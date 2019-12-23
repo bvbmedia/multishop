@@ -3282,6 +3282,8 @@ class mslib_befe {
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'],'2','.','');
                 $ORDER_DETAILS = mslib_fe::printOrderDetailsTable($order, 'email');
                 $array1[] = '###ORDER_DETAILS###';
                 $array2[] = $ORDER_DETAILS;
@@ -3323,6 +3325,8 @@ class mslib_befe {
                 $array2[] = strftime("%x");
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'],'2','.','');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';
