@@ -284,6 +284,8 @@ switch ($this->ms['page']) {
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+            $array1[] = '###TOTAL_AMOUNT_RAW###';
+            $array2[] = number_format($order['total_amount'],'2','.','');
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
             $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
             $mslib_order->init($this);
@@ -336,6 +338,8 @@ switch ($this->ms['page']) {
             $array2[] = $this->ms['MODULES']['STORE_EMAIL'];
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+            $array1[] = '###TOTAL_AMOUNT_RAW###';
+            $array2[] = number_format($order['total_amount'],'2','.','');
             $array1[] = '###PROPOSAL_NUMBER###';
             $array2[] = $order['orders_id'];
             $array1[] = '###ORDER_NUMBER###';
@@ -526,6 +530,8 @@ switch ($this->ms['page']) {
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'],'2','.','');
                 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                 $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                 $mslib_order->init($this);
@@ -574,6 +580,8 @@ switch ($this->ms['page']) {
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'],'2','.','');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';
