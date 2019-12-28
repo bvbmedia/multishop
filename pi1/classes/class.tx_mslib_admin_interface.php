@@ -835,6 +835,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $tableContent .= '
 			</div>
 			';
+            if ($params['settings']['contentBelowTableDiv']) {
+                $tableContent .= $params['settings']['contentBelowTableDiv'];
+            }
             if (!$params['settings']['disableForm']) {
                 $tableContent .= '</form>';
             }
