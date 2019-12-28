@@ -753,7 +753,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     if ($valArray['class']) {
                         $tdClass[] = $valArray['class'];
                     }
-                    $tableContent .= '<td' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $adjustedValue . '</td>';
+                    $tdAttributes = array();
+                    if ($valArray['attributes']) {
+                        $tdAttributes[] = $valArray['attributes'];
+                    }
+                    $tableContent .= '<td' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . (count($tdAttributes) ? ' ' . implode(' ', $tdAttributes) : '') . '>' . $adjustedValue . '</td>';
                 }
                 $tableContent .= '</tr>';
                 if ($params['settings']['returnResultSetAsArray']) {
