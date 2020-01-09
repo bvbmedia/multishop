@@ -1084,3 +1084,7 @@ td.print_r_value { word-break:break-word; }
 .table-valign-middle > thead > tr > td,
 .table-valign-middle > tbody > tr > td,
 .table-valign-middle > tfoot > tr > td { vertical-align:middle; }
+
+.product_highlights_1 .attribute-group+.attribute-group {
+	margin-top: 8px;
+}
