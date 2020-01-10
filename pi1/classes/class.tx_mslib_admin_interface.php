@@ -611,8 +611,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'content':
                             foreach ($row as $tmpCol => $tmpVal) {
-                                $valArray['content'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['content']);
-                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['content']);
+                                $value=$row[$tmpCol];
+                                switch($valArray['encode_type']) {
+                                    case 'htmlspecialchars':
+                                        $value=htmlspecialchars($value);
+                                        break;
+                                }
+                                $valArray['content'] = str_replace('###' . $tmpCol . '###', $value, $valArray['content']);
+                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $value, $valArray['content']);
                             }
                             $row[$col] = $valArray['content'];
                             break;
