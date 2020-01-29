@@ -1264,6 +1264,8 @@ if ($this->post) {
                     $updateArray[$arr_key] = $new_filename;
                 }
             }
+            // Generate new unique hash
+            $updateArray['extid']=md5(uniqid());
             if ($update_product_images) {
                 foreach ($update_product_images as $key => $value) {
                     if ($original_images[$key] != $value) {
