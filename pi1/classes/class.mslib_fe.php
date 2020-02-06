@@ -2221,7 +2221,8 @@ class mslib_fe {
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/PHPMailer/vendor/autoload.php');
             $mail = new PHPMailer\PHPMailer\PHPMailer;
             $mail->CharSet = 'UTF-8';
-            $mail->Encoding = 'base64';
+            //$mail->Encoding = 'base64';
+            $mail->Encoding = 'quoted-printable';
             $mail->XMailer = ' ';
             if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'] == 'sendmail') {
                 // Set PHPMailer to use the sendmail transport
