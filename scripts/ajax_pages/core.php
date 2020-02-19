@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
+header('X-Robots-Tag: noindex', true);
 $this->ms['page'] = $this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
     case 'get_users':

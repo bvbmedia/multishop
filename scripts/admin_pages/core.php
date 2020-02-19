@@ -1,5 +1,6 @@
 <?php
-header('X-XSS-Protection: 0');
+header('X-Robots-Tag: noindex', true);
+header('X-XSS-Protection: 0', true);
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
