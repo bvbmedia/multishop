@@ -84,7 +84,7 @@ if ($this->ADMIN_USER) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
     }
-    $records=array();
+    $records = array();
     if (!empty($this->get['q'])) {
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('p.products_status, pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
                 'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
@@ -96,29 +96,29 @@ if ($this->ADMIN_USER) {
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                $records[]=$row;
+                $records[] = $row;
             }
         }
     } else {
-        $limit=500;
-        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
-            $limit=15;
+        $limit = 500;
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
+            $limit = 15;
         }
-        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array('products_status desc, '.$prefix . 'products_name asc'));
+        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array('products_status desc, ' . $prefix . 'products_name asc'));
         $counter = 0;
         foreach ($products['products'] as $row) {
-            $records[]=$row;
+            $records[] = $row;
         }
     }
     if (is_array($records)) {
-        $counter=0;
+        $counter = 0;
         foreach ($records as $row) {
-            $labelArray=array();
+            $labelArray = array();
             if (isset($row['products_status']) && !$row['products_status']) {
-                $labelArray[]='['.htmlspecialchars($this->pi_getLL('disabled_product')).']';
+                $labelArray[] = '[' . htmlspecialchars($this->pi_getLL('disabled_product')) . ']';
             }
             if ((is_numeric($catid) && $catid > 0) || (isset($this->get['preselected_id']) && is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0)) {
-                $labelArray[]=$row['products_name'];
+                $labelArray[] = $row['products_name'];
             } else {
                 $catsname = array();
                 if ($row['categories_id'] > 0) {
@@ -135,14 +135,14 @@ if ($this->ADMIN_USER) {
                     // get all cats to generate multilevel fake url eof
                 }
                 if (!empty($row['products_model'])) {
-                    $labelArray[]='('.addslashes($row['products_model']).')';
+                    $labelArray[] = '(' . addslashes($row['products_model']) . ')';
                 } else {
                     $return_data[$counter]['text'] = htmlentities(implode(" > ", $catsname) . ' > ' . $row['products_name']) . ' (PID: ' . $row['products_id'] . ')';
                 }
-                $labelArray[]=implode(" > ", $catsname) . ' > '.$row['products_name'];
+                $labelArray[] = implode(" > ", $catsname) . ' > ' . $row['products_name'];
             }
-            $labelArray[]='(PID: ' . $row['products_id'] . ')';
-            $return_data[$counter]['text'] = htmlentities(implode(' ',$labelArray));
+            $labelArray[] = '(PID: ' . $row['products_id'] . ')';
+            $return_data[$counter]['text'] = htmlentities(implode(' ', $labelArray));
             $return_data[$counter]['id'] = $row['products_id'];
             $counter++;
         }

@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 if (is_numeric($this->get['orders_id'])) {
-    $continue_download_invoice=true;
+    $continue_download_invoice = true;
     // post processing by third party plugins
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/admin_edit_order_print.php']['adminOrderDownloadInvoiceController'])) {
         $params = array(

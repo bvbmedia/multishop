@@ -456,7 +456,7 @@ $headerData .= '
 				    if (d.status==\'OK\') {
 				        confirm_content+=d.extra_checkbox;
                         var confirm_box=jQuery.confirm({
-                            title: \''.$this->pi_getLL('update_order_status').'\',
+                            title: \'' . $this->pi_getLL('update_order_status') . '\',
                             content: confirm_content,
                             columnClass: \'col-md-6 col-md-offset-4 \',
                             confirm: function(){

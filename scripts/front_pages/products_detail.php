@@ -34,9 +34,9 @@ if (($this->ms['MODULES']['CACHE_FRONT_END'] && !$this->ms['MODULES']['CACHE_TIM
 }
 if ($this->ms['MODULES']['CACHE_FRONT_END']) {
     $options = array(
-        'caching' => true,
-        'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-        'lifeTime' => $this->ms['MODULES']['CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES']
+            'caching' => true,
+            'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+            'lifeTime' => $this->ms['MODULES']['CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES']
     );
     $Cache_Lite = new Cache_Lite($options);
     $string = md5($this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING']);

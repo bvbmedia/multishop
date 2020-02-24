@@ -34,13 +34,13 @@ if ($this->ms['MODULES']['VALIDATE_CHECKOUT_ON_DISABLED_PRODUCTS'] > 0) {
         </div>';
     }
 }
-if ($this->ms['MODULES']['ALLOW_PURCHASE_FREE_PRODUCTS']=='0') {
+if ($this->ms['MODULES']['ALLOW_PURCHASE_FREE_PRODUCTS'] == '0') {
     $no_products = array();
     $cart_products = $cart['products'];
     foreach ($cart_products as $shopping_cart_item => $product) {
-        $staffel_price=0;
+        $staffel_price = 0;
         if ($product['staffel_price']) {
-            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                 $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
             }
             $staffel_price = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $product['qty']) / $product['qty']);

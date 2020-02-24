@@ -16,8 +16,7 @@ if ($this->get['tx_multishop_pi1']['order_id'] && $this->ADMIN_USER) {
         $updateArray['orders_last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=' . $order_id, $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
-        $order['hash']=$hashcode;
+        $order['hash'] = $hashcode;
     }
 } elseif ($this->get['tx_multishop_pi1']['order_hash']) {
     $order_hash = $this->get['tx_multishop_pi1']['order_hash'];
@@ -42,7 +41,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $template = $this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey) . 'templates/admin_packingslip_pdf.tmpl');
         }
         $markerArray = array();
-        $markerArray['###BARKODE_IMG_URL###'] = $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=generateBarkode&tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[string]='.$order['orders_id'],1);
+        $markerArray['###BARKODE_IMG_URL###'] = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=generateBarkode&tx_multishop_pi1[orders_id]=' . $order['orders_id'] . '&tx_multishop_pi1[string]=' . $order['orders_id'], 1);
         $markerArray['###GENDER_SALUTATION###'] = mslib_fe::genderSalutation($order['billing_gender']);
         if ($this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE']) {
             $imageLocation = $this->ms['MODULES']['PACKINGSLIP_PDF_HEADER_IMAGE'];
@@ -245,7 +244,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $array2[] = $order['payment_method_label'];
         $array1[] = '###EXPECTED_DELIVERY_DATE###';
         if ($order['expected_delivery_date'] > 0) {
-            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                 $array2[] = strftime("%x %T", $order['expected_delivery_date']);
             } else {
                 $array2[] = strftime("%x", $order['expected_delivery_date']);

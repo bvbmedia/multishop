@@ -13,8 +13,8 @@ if ($this->post && $this->post['email']) {
                 // check if the emailaddress is not already in use
                 $usercheck = mslib_fe::getUser($this->post['email'], 'email');
                 if ($usercheck['uid']) {
-                    $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
-                    $erno[] = 'Email address is already in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
+                    $edit_customer_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                    $erno[] = 'Email address is already in use by customer ID: <a href="' . $edit_customer_link . '">' . $usercheck['uid'] . '</a>';
                 }
             }
         }
@@ -22,8 +22,8 @@ if ($this->post && $this->post['email']) {
             // check if the emailaddress is not already in use
             $usercheck = mslib_fe::getUser($this->post['username'], 'username');
             if ($usercheck['uid']) {
-                $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
-                $erno[] = 'Username '.$usercheck['username'].' is in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
+                $edit_customer_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                $erno[] = 'Username ' . $usercheck['username'] . ' is in use by customer ID: <a href="' . $edit_customer_link . '">' . $usercheck['uid'] . '</a>';
             }
         }
     } else {
@@ -31,15 +31,15 @@ if ($this->post && $this->post['email']) {
             // check if the emailaddress is not already in use
             $usercheck = mslib_fe::getUser($this->post['email'], 'email');
             if ($usercheck['uid']) {
-                $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
-                $erno[] = 'Email address is already in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
+                $edit_customer_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+                $erno[] = 'Email address is already in use by customer ID: <a href="' . $edit_customer_link . '">' . $usercheck['uid'] . '</a>';
             }
         }
         // check if the emailaddress is not already in use
         $usercheck = mslib_fe::getUser($this->post['username'], 'username');
         if ($usercheck['uid']) {
-            $edit_customer_link=mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
-            $erno[] = 'Username '.$usercheck['username'].' is in use by customer ID: <a href="'.$edit_customer_link.'">' . $usercheck['uid'] . '</a>';
+            $edit_customer_link = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $usercheck['uid'] . '&action=edit_customer', 1);
+            $erno[] = 'Username ' . $usercheck['username'] . ' is in use by customer ID: <a href="' . $edit_customer_link . '">' . $usercheck['uid'] . '</a>';
         }
     }
     if (count($erno)) {
@@ -152,10 +152,10 @@ if ($this->post && $this->post['email']) {
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'])) {
                 $params = array(
-                    'uid' => $this->post['tx_multishop_pi1']['cid'],
-                    'updateArray' => &$updateArray,
-                    'user' => $user,
-                    'erno' => $erno
+                        'uid' => $this->post['tx_multishop_pi1']['cid'],
+                        'updateArray' => &$updateArray,
+                        'user' => $user,
+                        'erno' => $erno
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -201,8 +201,8 @@ if ($this->post && $this->post['email']) {
                 $updateTTAddressArray['mobile'] = $updateArray['mobile'];
                 $updateTTAddressArray['city'] = $updateArray['city'];
                 $updateTTAddressArray['country'] = $updateArray['country'];
-                if ($updateArray['gender']=='0' || $updateArray['gender']=='1') {
-                    $updateTTAddressArray['gender'] = ($updateArray['gender']=='0' ? 'm' : 'f');
+                if ($updateArray['gender'] == '0' || $updateArray['gender'] == '1') {
+                    $updateTTAddressArray['gender'] = ($updateArray['gender'] == '0' ? 'm' : 'f');
                 } else {
                     $updateTTAddressArray['gender'] = $updateArray['gender'];
                 }
@@ -228,7 +228,6 @@ if ($this->post && $this->post['email']) {
                 }
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                 if (!$this->post['different_delivery_address']) {
                     $updateTTAddressArray['tx_multishop_address_type'] = 'delivery';
                     $updateTTAddressArray['tx_multishop_default'] = 0;
@@ -273,8 +272,8 @@ if ($this->post && $this->post['email']) {
                     $updateTTAddressArray['mobile'] = $this->post['delivery_mobile'];
                     $updateTTAddressArray['city'] = $this->post['delivery_city'];
                     $updateTTAddressArray['country'] = $this->post['delivery_country'];
-                    if ($this->post['delivery_gender']=='0' || $this->post['delivery_gender']=='1') {
-                        $updateTTAddressArray['gender'] = ($this->post['delivery_gender']=='0' ? 'm' : 'f');
+                    if ($this->post['delivery_gender'] == '0' || $this->post['delivery_gender'] == '1') {
+                        $updateTTAddressArray['gender'] = ($this->post['delivery_gender'] == '0' ? 'm' : 'f');
                     } else {
                         $updateTTAddressArray['gender'] = $this->post['delivery_gender'];
                     }
@@ -1165,7 +1164,7 @@ switch ($_REQUEST['action']) {
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
                 $md5_list = array();
-                $md5_list[] = ($delivery_address['gender']=='m' ? '0' : '1');
+                $md5_list[] = ($delivery_address['gender'] == 'm' ? '0' : '1');
                 $md5_list[] = $delivery_address['first_name'];
                 $md5_list[] = $delivery_address['middle_name'];
                 $md5_list[] = $delivery_address['last_name'];
@@ -1207,14 +1206,13 @@ switch ($_REQUEST['action']) {
                 $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
                 $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
                 $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
-
             }
             $subpartArray['###LABEL_DISCOUNT###'] = ucfirst($this->pi_getLL('discount'));
             $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
             $subpartArray['###LABEL_PAYMENT_CONDITION###'] = ucfirst($this->pi_getLL('payment_condition'));
             $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
             $subpartArray['###LABEL_FOREIGN_CUSTOMER_ID###'] = ucfirst($this->pi_getLL('foreign_customer_id'));
-            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = ($this->post['foreign_customer_id']>0 ? htmlspecialchars($this->post['foreign_customer_id']) : '');
+            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = ($this->post['foreign_customer_id'] > 0 ? htmlspecialchars($this->post['foreign_customer_id']) : '');
             $subpartArray['###CUSTOMER_GROUPS_INPUT###'] = $customer_groups_input;
             $subpartArray['###VALUE_CUSTOMER_ID###'] = $this->get['tx_multishop_pi1']['cid'];
             if ($_GET['action'] == 'edit_customer') {
@@ -1233,10 +1231,10 @@ switch ($_REQUEST['action']) {
             $customer_billing_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid']);
             $customer_delivery_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid'], 'delivery');
             if (!$customer_billing_address['address']) {
-                $customer_billing_address['address']=preg_replace('/\s+/', ' ', $customer_billing_address['street_name'] . ' ' . $customer_billing_address['address_number'] . ' ' . $customer_billing_address['address_ext']);
+                $customer_billing_address['address'] = preg_replace('/\s+/', ' ', $customer_billing_address['street_name'] . ' ' . $customer_billing_address['address_number'] . ' ' . $customer_billing_address['address_ext']);
             }
             if (!$customer_delivery_address['address']) {
-                $customer_delivery_address['address']=preg_replace('/\s+/', ' ', $customer_delivery_address['street_name'] . ' ' . $customer_delivery_address['address_number'] . ' ' . $customer_delivery_address['address_ext']);
+                $customer_delivery_address['address'] = preg_replace('/\s+/', ' ', $customer_delivery_address['street_name'] . ' ' . $customer_delivery_address['address_number'] . ' ' . $customer_delivery_address['address_ext']);
             }
             if ($customer_billing_address['name'] && $customer_billing_address['phone'] && $customer_billing_address['email']) {
                 $fullname = $customer_billing_address['name'];
@@ -1301,9 +1299,9 @@ switch ($_REQUEST['action']) {
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
                 $params = array(
-                    'actionButtons' => &$actionButtons,
-                    'customer' => &$user,
-                    'markerArray' => &$markerArray
+                        'actionButtons' => &$actionButtons,
+                        'customer' => &$user,
+                        'markerArray' => &$markerArray
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1398,7 +1396,7 @@ switch ($_REQUEST['action']) {
                     } else {
                         $order_edit_url = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order');
                     }
-                    $paid_status='';
+                    $paid_status = '';
                     if (!$order['paid']) {
                         $paid_status .= '<span class="admin_status_red" alt="' . $this->pi_getLL('has_not_been_paid') . '" title="' . $this->pi_getLL('has_not_been_paid') . '"></span> ';
                         $paid_status .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]=' . $order['orders_id']) . '" class="update_to_paid" data-order-id="' . $order['orders_id'] . '"><span class="admin_status_green disabled" alt="' . $this->pi_getLL('change_to_paid') . '" title="' . $this->pi_getLL('change_to_paid') . '"></span></a>';

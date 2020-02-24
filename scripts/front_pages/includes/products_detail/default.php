@@ -156,7 +156,7 @@ if (!$product['products_id']) {
         $tax = mslib_fe::getTaxById($product['tax_id']);
         if ($tax) {
             if ($product['staffel_price'] > 0) {
-                if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                     $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
                 }
                 $price_excl_vat = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
@@ -216,7 +216,7 @@ if (!$product['products_id']) {
             if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                 $staffel_price = ($staffel_price * (1 + $product['tax_rate']));
             } else {
-                $staffel_price=mslib_fe::taxDecimalCrop($staffel_price, 2, false, false);
+                $staffel_price = mslib_fe::taxDecimalCrop($staffel_price, 2, false, false);
             }
             if (strpos($staffel_qty, '99999') !== false) {
                 list($qty_1, $qty_2) = explode('-', $staffel_qty);
@@ -426,7 +426,7 @@ if (!$product['products_id']) {
     $markerArray['###MANUFACTURERS_NAME###'] = $product['manufacturers_name'];
     $markerArray['MANUFACTURERS_IMAGE'] = '';
     if ($product['manufacturers_image']) {
-        $markerArray['###MANUFACTURERS_IMAGE###'] = '<img src="' . mslib_befe::getImagePath($product['manufacturers_image'], 'manufacturers', 'normal') . '" alt="'.htmlspecialchars($product['manufacturers_name']).'">';
+        $markerArray['###MANUFACTURERS_IMAGE###'] = '<img src="' . mslib_befe::getImagePath($product['manufacturers_image'], 'manufacturers', 'normal') . '" alt="' . htmlspecialchars($product['manufacturers_name']) . '">';
     }
     $markerArray['###MANUFACTURERS_IMAGE###'] = $product['manufacturers_image'];
     $markerArray['###MICRODATA_PRICE###'] = $final_price;
@@ -473,7 +473,7 @@ if (!$product['products_id']) {
             }
         }
     }
-    $markerArray['###CANONICAL_URL###'] = $this->FULL_HTTP_URL.$productLink;
+    $markerArray['###CANONICAL_URL###'] = $this->FULL_HTTP_URL . $productLink;
     $markerArray['###MANUFACTURERS_ADVICE_PRICE###'] = '';
     if ($product['manufacturers_advice_price']) {
         if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] && ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
@@ -618,12 +618,12 @@ if (!$product['products_id']) {
         $plugin_extra_content = implode("\n", $plugins_extra_content);
         $markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###'] = $plugin_extra_content;
     }
-    $product_attributes=mslib_fe::showAttributes($product['products_id'], '', array(), 0, 0, 1);
+    $product_attributes = mslib_fe::showAttributes($product['products_id'], '', array(), 0, 0, 1);
     if (is_array($product_attributes)) {
-        $attributes_requirement_js=array();
-        $attributes_requirement_js[]='var attributes_requirement={}';
+        $attributes_requirement_js = array();
+        $attributes_requirement_js[] = 'var attributes_requirement={}';
         foreach ($product_attributes as $option_id => $attributes) {
-            $attributes_requirement_js[]='attributes_requirement[\'attributes'.$option_id.'\']=' . ($attributes['required']=='1' ? 'true' : 'false') . ';';
+            $attributes_requirement_js[] = 'attributes_requirement[\'attributes' . $option_id . '\']=' . ($attributes['required'] == '1' ? 'true' : 'false') . ';';
         }
     }
     if (count($js_detail_page_triggers)) {

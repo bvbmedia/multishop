@@ -32,7 +32,6 @@ if ($this->get['orders_export_hash']) {
             case '':
                 $post_data['delimeter_type'] = ';';
                 break;
-
         }
         $fields_values = $post_data['fields_values'];
         $records = array();
@@ -75,11 +74,11 @@ if ($this->get['orders_export_hash']) {
         } else if ($post_data['payment_status'] == 'unpaid') {
             $filter[] = "(o.paid='0')";
         }
-        if (isset($post_data['shipping_method']) && !empty($post_data['shipping_method']) && $post_data['shipping_method']!='all') {
-            $filter[] = "(o.shipping_method='".addslashes($post_data['shipping_method'])."')";
+        if (isset($post_data['shipping_method']) && !empty($post_data['shipping_method']) && $post_data['shipping_method'] != 'all') {
+            $filter[] = "(o.shipping_method='" . addslashes($post_data['shipping_method']) . "')";
         }
-        if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method']!='all') {
-            $filter[] = "(o.payment_method='".addslashes($post_data['payment_method'])."')";
+        if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method'] != 'all') {
+            $filter[] = "(o.payment_method='" . addslashes($post_data['payment_method']) . "')";
         }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
@@ -136,7 +135,7 @@ if ($this->get['orders_export_hash']) {
         $excelHeaderCols = array();
         foreach ($fields as $counter => $field) {
             if ($field != 'order_products' && $field != 'turnover_per_category_incl_vat' && $field != 'turnover_per_category_excl_vat' && $field != 'turnover_per_main_category_incl_vat' && $field != 'turnover_per_main_category_excl_vat' && $field != 'bought_products_per_main_category') {
-                $excelHeaderCols[$field.'-'.$counter] = $field;
+                $excelHeaderCols[$field . '-' . $counter] = $field;
             } else {
                 switch ($field) {
                     case 'order_products':
@@ -468,7 +467,7 @@ if ($this->get['orders_export_hash']) {
                         $excelCols[] = strftime('%x', $row['orders_last_modified']);
                         break;
                     case 'order_expected_delivery_date':
-                        if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                        if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                             $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                         } else {
                             $excelCols[] = strftime('%x', $row['expected_delivery_date']);
@@ -624,8 +623,8 @@ if ($this->get['orders_export_hash']) {
                         break;
                     case 'order_memo':
                         if ($row['order_memo']) {
-                            $memo=str_replace('<p>', '', $row['order_memo']);
-                            $memo=str_replace('</p>', " ", $memo);
+                            $memo = str_replace('<p>', '', $row['order_memo']);
+                            $memo = str_replace('</p>', " ", $memo);
                             $excelCols[] = strip_tags($memo);
                         } else {
                             $excelCols[] = '';
@@ -639,9 +638,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         break;
                     default:
-                        if (strpos($field, 'order_grand_total_tax_')!==false) {
-                            $tmp_tax_str=explode('_', $field);
-                            $tax_rate=str_replace('%', '', $tmp_tax_str[4]);
+                        if (strpos($field, 'order_grand_total_tax_') !== false) {
+                            $tmp_tax_str = explode('_', $field);
+                            $tax_rate = str_replace('%', '', $tmp_tax_str[4]);
                             if (isset($order_tax_data['tax_separation'][$tax_rate])) {
                                 $excelCols[] = number_format($order_tax_data['tax_separation'][$tax_rate]['products_total_tax'] + $order_tax_data['tax_separation'][$tax_rate]['shipping_tax'], 2, ',', '.');
                             } else {
@@ -653,10 +652,10 @@ if ($this->get['orders_export_hash']) {
                 //hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'])) {
                     $params = array(
-                        'field' => &$field,
-                        'excelCols' => &$excelCols,
-                        'row' => &$row,
-                        'counter' => $counter
+                            'field' => &$field,
+                            'excelCols' => &$excelCols,
+                            'row' => &$row,
+                            'counter' => $counter
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

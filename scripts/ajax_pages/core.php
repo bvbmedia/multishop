@@ -739,7 +739,7 @@ switch ($this->ms['page']) {
         }
         //natsort($tmp_return_data);
         $categories_results_limit = 0; // 0 = unlimited
-        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
             if (!$this->get['q'] || (isset($this->get['q']) && !empty($this->get['q']) && strlen($this->get['q']) < 2)) {
                 $categories_results_limit = 15;
             }
@@ -750,8 +750,8 @@ switch ($this->ms['page']) {
             // hook
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryTreeAddToTreePreProc'])) {
                 $params = array(
-                    'add_category_to_tree' => &$add_category_to_tree,
-                    'tree_id' => $tree_id
+                        'add_category_to_tree' => &$add_category_to_tree,
+                        'tree_id' => $tree_id
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryTreeAddToTreePreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1238,8 +1238,8 @@ switch ($this->ms['page']) {
             $returnOutput = array();
             $returnOutput['status'] = 'NOTOK';
             if (is_numeric($this->post['tx_multishop_pi1']['orders_id']) and is_numeric($this->post['tx_multishop_pi1']['orders_status_id'])) {
-                $order_id=$this->post['tx_multishop_pi1']['orders_id'];
-                $orders_status=$this->post['tx_multishop_pi1']['orders_status_id'];
+                $order_id = $this->post['tx_multishop_pi1']['orders_id'];
+                $orders_status = $this->post['tx_multishop_pi1']['orders_status_id'];
                 $order_data = mslib_fe::getOrder($order_id);
                 $orders_status_name = mslib_fe::getOrderStatusName($orders_status, 0);
                 $keys = array();
@@ -1250,11 +1250,11 @@ switch ($this->ms['page']) {
                     //$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
                     $page = mslib_fe::getCMScontent($key, $order['language_id']);
                     if ($page[0]) {
-                        $returnOutput['extra_checkbox']='<div class="form-group row">
+                        $returnOutput['extra_checkbox'] = '<div class="form-group row">
                             <div class="col-md-12">
                                 <div class="checkbox checkbox-inline checkbox-success">
                                     <input type="checkbox" id="send_update_status_email" value="1" checked="checked">
-                                    <label for="send_update_status_email">'.$this->pi_getLL('send_notification_email_to_customer').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
+                                    <label for="send_update_status_email">' . $this->pi_getLL('send_notification_email_to_customer') . ' (' . $this->pi_getLL('language') . ': ' . strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']) . ')</label>
                                 </div>
                             </div>
                         </div>    
@@ -1269,7 +1269,7 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
-        case 'admin_update_orders_status':
+    case 'admin_update_orders_status':
         if ($this->ADMIN_USER) {
             $returnOutput = '';
             if (is_numeric($this->post['tx_multishop_pi1']['orders_id']) and is_numeric($this->post['tx_multishop_pi1']['orders_status_id'])) {
@@ -1597,7 +1597,7 @@ switch ($this->ms['page']) {
                     }
                     break;
                 case 'imageUpload':
-                    $file_type=$_FILES['file']['type'];
+                    $file_type = $_FILES['file']['type'];
                     if (is_array($_FILES['file']['type'])) {
                         $file_type = strtolower($_FILES['file']['type'][0]);
                     }
@@ -1610,7 +1610,7 @@ switch ($this->ms['page']) {
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                            $file_tmp_name=$_FILES['file']['tmp_name'];
+                            $file_tmp_name = $_FILES['file']['tmp_name'];
                             if (is_array($_FILES['file']['tmp_name'])) {
                                 $file_tmp_name = $_FILES['file']['tmp_name'][0];
                             }
@@ -1633,10 +1633,10 @@ switch ($this->ms['page']) {
                     $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsfiles';
                     $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                     $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
-                    $file_name=$_FILES['file']['name'];
-                    $file_tmp_name=$_FILES['file']['tmp_name'];
+                    $file_name = $_FILES['file']['name'];
+                    $file_tmp_name = $_FILES['file']['tmp_name'];
                     if (is_array($_FILES['file']['tmp_name'])) {
-                        $file_name=$_FILES['file']['name'][0];
+                        $file_name = $_FILES['file']['name'][0];
                         $file_tmp_name = $_FILES['file']['tmp_name'][0];
                     }
                     move_uploaded_file($file_tmp_name, $temp_file);
@@ -1664,7 +1664,7 @@ switch ($this->ms['page']) {
                 }
                 if (copy($temp_file, $target)) {
                     $fileLocation = $this->FULL_HTTP_URL . $fileUploadPathRelative . '/' . $filename;
-                    if ($this->conf['loadOldRedactorVersion']=='1') {
+                    if ($this->conf['loadOldRedactorVersion'] == '1') {
                         $result = array(
                                 'url' => $fileLocation,
                                 'name' => $filename
@@ -1912,7 +1912,7 @@ switch ($this->ms['page']) {
                                                     $folder .= '/';
                                                     $target = $this->DOCUMENT_ROOT . $this->ms['image_paths']['products']['original'] . '/' . $folder . $filename;
                                                     $i++;
-                                                } while (file_exists($target) || $filename==$this->get['old_image']);
+                                                } while (file_exists($target) || $filename == $this->get['old_image']);
                                             }
                                             if (copy($temp_file, $target)) {
                                                 $filename = mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
@@ -2282,11 +2282,11 @@ switch ($this->ms['page']) {
                         // send back the updated data
                         switch ($details_type) {
                             case "delivery_details":
-                                $tmpcontent='';
+                                $tmpcontent = '';
                                 break;
                             case "billing_details":
-                                $select=array();
-                                $select[]='orders_id';
+                                $select = array();
+                                $select[] = 'orders_id';
                                 $keys[] = 'gender';
                                 $keys[] = 'vat_id';
                                 $keys[] = 'coc_id';
@@ -2294,10 +2294,9 @@ switch ($this->ms['page']) {
                                 foreach ($keys as $key) {
                                     $select[] = 'billing_' . $key;
                                 }
-                                $str = "SELECT ".implode(', ', $select)." from tx_multishop_orders o where o.orders_id='" . $orders_id . "'";
+                                $str = "SELECT " . implode(', ', $select) . " from tx_multishop_orders o where o.orders_id='" . $orders_id . "'";
                                 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                 $orders = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-
                                 $settings = array();
                                 $settings['enable_edit_customer_details'] = 1;
                                 $settings['enable_edit_orders_details'] = 1;
@@ -2314,7 +2313,7 @@ switch ($this->ms['page']) {
                                 $address_data['country'] = $orders['billing_country'];
                                 $settings['billing_address_value'] = mslib_befe::customerAddressFormat($address_data);
                                 $settings['customer_edit_link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $orders['customer_id'] . '&action=edit_customer', 1);
-                                $tmpcontent='';
+                                $tmpcontent = '';
                                 if ($orders['billing_company']) {
                                     $tmpcontent .= '<strong>' . $orders['billing_company'] . '</strong><br />';
                                 }
@@ -2346,10 +2345,10 @@ switch ($this->ms['page']) {
                         // hook for adding new items to details fieldset
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsReturnData'])) {
                             $params = array(
-                                'details_type' => $details_type,
-                                'orders' => $orders,
-                                'settings' => $settings,
-                                'tmpcontent' => &$tmpcontent
+                                    'details_type' => $details_type,
+                                    'orders' => $orders,
+                                    'settings' => $settings,
+                                    'tmpcontent' => &$tmpcontent
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminEditOrdersCustomerDetailsReturnData'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2677,8 +2676,8 @@ switch ($this->ms['page']) {
         break;
     case 'productImagesSort':
         if ($this->ADMIN_USER) {
-            $product_id=$this->get['tx_multishop_pi1']['pID'];
-            if (is_numeric($product_id) && $product_id> 0) {
+            $product_id = $this->get['tx_multishop_pi1']['pID'];
+            if (is_numeric($product_id) && $product_id > 0) {
                 $product_images_col_keys = array();
                 for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
                     $i = $x;
@@ -2689,21 +2688,21 @@ switch ($this->ms['page']) {
                 }
                 if (isset($this->post['msEditProductInputImage'])) {
                     $images_records = mslib_befe::getRecord($product_id, 'tx_multishop_products', 'products_id', array(), implode(', ', $product_images_col_keys));
-                    $updateArray=array();
+                    $updateArray = array();
                     foreach ($this->post['msEditProductInputImage'] as $arr_index => $col_index) {
-                        $internal_col_index=$arr_index;
+                        $internal_col_index = $arr_index;
                         if (!$internal_col_index) {
-                            $internal_col_index='';
+                            $internal_col_index = '';
                         }
-                        $external_col_index=$col_index;
+                        $external_col_index = $col_index;
                         if (!$external_col_index) {
-                            $external_col_index='';
+                            $external_col_index = '';
                         }
-                        $image_value=$images_records['products_image' .$external_col_index];
+                        $image_value = $images_records['products_image' . $external_col_index];
                         if (!$image_value) {
-                            $image_value='';
+                            $image_value = '';
                         }
-                        $updateArray['products_image' . $internal_col_index]=$image_value;
+                        $updateArray['products_image' . $internal_col_index] = $image_value;
                     }
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $product_id", $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2727,7 +2726,7 @@ switch ($this->ms['page']) {
                     if (is_numeric($prod_id)) {
                         $where = 'products_id = ' . $prod_id;
                         $updateArray = array(
-                            'sort_order' => $no
+                                'sort_order' => $no
                         );
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', "products_id = $prod_id", $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);

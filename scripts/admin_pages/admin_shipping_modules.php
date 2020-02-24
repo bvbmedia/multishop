@@ -885,7 +885,7 @@ if ($this->ms['show_main']) {
                         $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" checked name="shipping_zone[' . $zone_id . '][' . $shipping_method['id'] . ']" id="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '" onclick="this.form.submit()"><label for="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '">' . $shipping_method['name'] . '</label></div></td>';
                     } else {
                         $tmpcontent .= '<tr class="row_unsortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" name="shipping_zone[' . $zone_id . '][' . $shipping_method['id'] . ']" id="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '" onclick="this.form.submit()"><label for="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '">' .  $shipping_method['name'] . '</label></div></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" name="shipping_zone[' . $zone_id . '][' . $shipping_method['id'] . ']" id="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '" onclick="this.form.submit()"><label for="shipping_zone_' . $zone_id . '_' . $shipping_method['id'] . '">' . $shipping_method['name'] . '</label></div></td>';
                     }
                     $tmpcontent .= '</tr>';
                 }

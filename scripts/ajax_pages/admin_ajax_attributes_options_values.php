@@ -380,8 +380,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
         if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
             $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
         }
-        $from=array();
-        $from=
+        $from = array();
+        $from =
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['q']) . "%'";

@@ -245,11 +245,11 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
 ) {
     $fold_unfold = ' in';
 }
-$headerExtraButton=array();
+$headerExtraButton = array();
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_month.php']['invoiceStatsHeaderExtraButtonPreProc'])) {
     $params = array(
-        'headerExtraButton' => &$headerExtraButton
+            'headerExtraButton' => &$headerExtraButton
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_month.php']['invoiceStatsHeaderExtraButtonPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -260,11 +260,11 @@ $content .= '<div class="order_stats_mode_wrapper">
 	<li><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_stats_invoices&tx_multishop_pi1[stats_section]=turnoverPerYear') . '">' . htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')) . '</a></li>
 	<li class="active"><span>' . htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')) . '</span></li>
 </ul>
-'.(is_array($headerExtraButton) && count($headerExtraButton)>0 ? '
+' . (is_array($headerExtraButton) && count($headerExtraButton) > 0 ? '
 <div class="pull-right">
 ' . implode('', $headerExtraButton) . '
 </div>
-' : '').'
+' : '') . '
 </div>';
 $content .= '
 <form method="get" id="orders_stats_form">
@@ -803,7 +803,7 @@ function downloadOrdersExcelParam() {
 }
 jQuery(document).ready(function ($) {
 	$(\'#order_date_from_visual\').datetimepicker({
-		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
+		dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
 		showSecond: true,
 		timeFormat: \'HH:mm:ss\',
         altField: "#order_date_from",
@@ -812,7 +812,7 @@ jQuery(document).ready(function ($) {
         altTimeFormat: "HH:mm:ss"
 	});
 	$(\'#order_date_till_visual\').datetimepicker({
-		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
+		dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
         showSecond: true,
         timeFormat: \'HH:mm:ss\',
 		hour: 23,

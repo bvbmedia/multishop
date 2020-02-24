@@ -5,18 +5,18 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 // custom page hook that can be controlled by third-party plugin
-$settings=array();
-$settings['plugins']=array();
-$settings['plugins'][]='table';
-$settings['plugins'][]='alignment';
-$settings['plugins'][]='fontcolor';
-$settings['plugins'][]='fontsize';
-$settings['plugins'][]='filemanager';
-$settings['plugins'][]='imagemanager';
-$settings['plugins'][]='video';
-$settings['plugins'][]='textexpander';
-$settings['plugins'][]='source';
-$settings['plugins'][]='fullscreen';
+$settings = array();
+$settings['plugins'] = array();
+$settings['plugins'][] = 'table';
+$settings['plugins'][] = 'alignment';
+$settings['plugins'][] = 'fontcolor';
+$settings['plugins'][] = 'fontsize';
+$settings['plugins'][] = 'filemanager';
+$settings['plugins'][] = 'imagemanager';
+$settings['plugins'][] = 'video';
+$settings['plugins'][] = 'textexpander';
+$settings['plugins'][] = 'source';
+$settings['plugins'][] = 'fullscreen';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/core.php']['redactorPreProc'])) {
     $params = array(
             'settings' => &$settings
@@ -26,7 +26,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 foreach ($settings['plugins'] as $key => $val) {
-    $settings['plugins'][$key]='\''.$val.'\'';
+    $settings['plugins'][$key] = '\'' . $val . '\'';
 }
 // custom page hook that can be controlled by third-party plugin eof
 $GLOBALS['TSFE']->additionalHeaderData[] = '
@@ -37,24 +37,24 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 </script>
 <script type="text/javascript">
 $(function() {
-    '.($this->conf['loadOldRedactorVersion']=='1' ? '
+    ' . ($this->conf['loadOldRedactorVersion'] == '1' ? '
     $(\'.mceEditor\').redactor({
     ' : '
     $R(\'.mceEditor\', {
-    ').'
+    ') . '
 	    imagePosition: true,
 	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
 		toolbarFixed: true,
 		focus: false,
 		linkSize: 250,
-		'.($this->conf['loadOldRedactorVersion']=='1' ? '' : 'pasteImages: true,').'
+		' . ($this->conf['loadOldRedactorVersion'] == '1' ? '' : 'pasteImages: true,') . '
 		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl', 1) . '\',
 		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload', 1) . '\',
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload', 1) . '\',
 		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson', 1) . '\',
 		minHeight:\'400\',
-		plugins: ['.implode(',',$settings['plugins']).'],
+		plugins: [' . implode(',', $settings['plugins']) . '],
 		callbacks: {
             keydown: function(e) {
                 if (e.ctrlKey && e.keyCode === 13) {
@@ -413,12 +413,11 @@ switch ($this->ms['page']) {
                         foreach ($this->post['movecats'] as $move_catid) {
                             $sql_update = 'update tx_multishop_categories set parent_id = ' . $new_parent_id . ' where categories_id = ' . $move_catid;
                             $GLOBALS['TYPO3_DB']->sql_query($sql_update);
-
                             // move product as well
                             $products = mslib_befe::getRecords($move_catid, 'tx_multishop_products_to_categories', 'node_id', array(), 'products_id', '', '', array('products_id, categories_id'));
                             if (is_array($products) && count($products)) {
                                 foreach ($products as $product) {
-                                    $pid=$product['products_id'];
+                                    $pid = $product['products_id'];
                                     $filter = array();
                                     $filter[] = 'products_id=' . $pid;
                                     if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {

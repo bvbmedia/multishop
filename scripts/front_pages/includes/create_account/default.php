@@ -61,9 +61,9 @@ if (mslib_fe::loggedin()) {
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['cmsPageMarkerReplacer'])) {
                 $params = array(
-                    'array1' => &$array1,
-                    'array2' => &$array2,
-                    'user' => &$newCustomer
+                        'array1' => &$array1,
+                        'array2' => &$array2,
+                        'user' => &$newCustomer
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['cmsPageMarkerReplacer'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -147,8 +147,8 @@ if (mslib_fe::loggedin()) {
             $erno = $mslib_user->checkUserData();
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'])) {
                 $params = array(
-                    'erno' => &$erno,
-                    'mslib_user' => &$mslib_user
+                        'erno' => &$erno,
+                        'mslib_user' => &$mslib_user
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountSavePreHook'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -368,12 +368,12 @@ if (mslib_fe::loggedin()) {
             //
             $newsletter_subscribe = '';
             if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
-                $newsletter_checked=false;
+                $newsletter_checked = false;
                 if (!isset($this->post['tx_multishop_newsletter']) && $this->ms['MODULES']['AUTOMATICALLY_CHECKED_NEWSLETTER_SUBSCRIBE']) {
-                    $newsletter_checked=true;
+                    $newsletter_checked = true;
                 } else {
                     if (isset($this->post['tx_multishop_newsletter'])) {
-                        $newsletter_checked=true;
+                        $newsletter_checked = true;
                     }
                 }
                 $newsletter_subscribe .= '<div class="account-field newsletter_checkbox">
@@ -463,8 +463,8 @@ if (mslib_fe::loggedin()) {
             }
             $markerArray['###USERNAME_INPUT###'] = $create_account_username_block;
             //
-            $captcha_placeholder='';
-            if ($this->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT']=='0') {
+            $captcha_placeholder = '';
+            if ($this->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT'] == '0') {
                 $captcha_placeholder = '<div class="account-field security">
                     <img src="' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=captcha') . '">
                     <input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" placeholder="' . $this->pi_getLL('captcha_code_placeholder') . '" />
@@ -472,7 +472,6 @@ if (mslib_fe::loggedin()) {
                 ';
             }
             $markerArray['###CAPTCHA_PLACEHOLDER###'] = $captcha_placeholder;
-
             $markerArray['###LABEL_BACK###'] = $this->pi_getLL('back');
             $markerArray['###LABEL_REGISTER###'] = $this->pi_getLL('register');
             //

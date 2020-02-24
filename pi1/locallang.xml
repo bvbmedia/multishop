@@ -1436,7 +1436,7 @@
             <label index="feed_exporter_fields_label_products_description_tab_title_x">Products description title Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_x">Products description content Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Products description content Tab: %d (HTML encoded)</label>
-            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d (platte tekst / stripped tags)</label>
             <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
             <label index="updated_by">Updated by</label>
             <label index="email_create_account_completed">E-mail create account completed</label>
@@ -2864,7 +2864,7 @@
             <label index="feed_exporter_fields_label_products_description_tab_title_x">Productbeschrijving title Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_x">Productbeschrijving inhoud Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Productbeschrijving inhoud Tab: %d (HTML encoded)</label>
-            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d  (platte tekst / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d (platte tekst / stripped tags)</label>
             <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
             <label index="updated_by">Geactualiseerd door</label>
             <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>

@@ -49,7 +49,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
         if (is_array($records)) {
             foreach ($records as $record) {
                 $updateArray = array();
-                $updateArray['extid']=md5(uniqid());
+                $updateArray['extid'] = md5(uniqid());
                 $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $record['products_id'] . '\'', $updateArray);
                 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                 $messages[] = $query2;

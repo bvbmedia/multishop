@@ -11,7 +11,7 @@ $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_car
 $mslib_cart->init($this);
 $cart = $mslib_cart->getCart();
 if (isset($_COOKIE['last_visited']) && count($_COOKIE['last_visited'])) {
-    $cart['last_visited']=$_COOKIE['last_visited'];
+    $cart['last_visited'] = $_COOKIE['last_visited'];
 }
 if (isset($this->get['clear_list'])) {
     $cart['last_visited'] = array();
