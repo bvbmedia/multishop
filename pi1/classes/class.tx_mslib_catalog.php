@@ -24,33 +24,6 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_catalog {
-    function getCategoryByName($categories_name = '', $parent_id='', $enabled_category_only=true) {
-        $filter = array();
-        $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
-        if ($enabled_category_only) {
-            $filter[] = 'c.status = \'1\'';
-        }
-        if($parent_id !='' && is_numeric($parent_id)) {
-            $filter[] = 'c.parent_id=\'' . addslashes($parent_id) . '\'';
-        }
-        $filter[] = 'cd.language_id=' . $this->sys_language_uid . '';
-        if ($categories_name) {
-            $filter[] = 'cd.categories_name=\'' . addslashes($categories_name) . '\'';
-        }
-        $filter[] = 'c.categories_id=cd.categories_id';
-        $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
-                'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-                implode(' AND ', $filter), // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '' // LIMIT ...
-        );
-        $res = $GLOBALS['TYPO3_DB']->sql_query($qry);
-        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-            return $row;
-        }
-    }
     function getProductByName($products_name, $categories_name = '') {
         $filter = array();
         $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
@@ -80,27 +53,6 @@ class tx_mslib_catalog {
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
             return $row;
-        }
-    }
-    function createCategory($data) {
-        // ADD CATEGORY
-        $insertArray = array();
-        $insertArray['date_added'] = time();
-        $insertArray['sort_order'] = time();
-        $insertArray['status'] = 1;
-        $insertArray['page_uid'] = $this->showCatalogFromPage;
-        $insertArray['parent_id'] = $data['parent_id'];
-        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
-        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-        if ($id) {
-            $insertArray = array();
-            $insertArray['categories_id'] = $id;
-            $insertArray['categories_name'] = $data['categories_name'];
-            $insertArray['language_id'] = $data['language_id'];
-            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            return $id;
         }
     }
     function createProduct($data) {
@@ -212,10 +164,10 @@ class tx_mslib_catalog {
         }
     }
     function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
-        $cats_list=explode(',', $crumbar_string);
-        $deepeset_cat_id=$cats_list[count($cats_list) - 1];
+        $cats_list = explode(',', $crumbar_string);
+        $deepeset_cat_id = $cats_list[count($cats_list) - 1];
         //$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\''.$node_id.'\' and crumbar_identfier=\''.$crumbar_string.'\' and page_uid=\''.$this->shop_pid.'\''));
-        $rec = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\'' . $node_id . '\' and categories_id = \''.$deepeset_cat_id.'\' and page_uid=\'' . $this->shop_pid . '\''));
+        $rec = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('node_id=\'' . $node_id . '\' and categories_id = \'' . $deepeset_cat_id . '\' and page_uid=\'' . $this->shop_pid . '\''));
         if (is_array($rec) && isset($rec['products_id']) && $rec['products_id'] > 0) {
             return $rec;
         } else {
@@ -242,7 +194,6 @@ class tx_mslib_catalog {
             return $GLOBALS['TYPO3_DB']->sql_insert_id();
         }
     }
-    // universal hook method for giving plugin information about update/insert action of the product
     function createAttributeOptionValue($data) {
         if (!is_numeric($data['products_options_id'])) {
             return;
@@ -907,6 +858,7 @@ class tx_mslib_catalog {
         }
         return $content;
     }
+    // universal hook method for giving plugin information about update/insert action of the product
     function productsUpdateNotifierForPlugin($data, $product_id = 0) {
         // handle with care, the $data is just direct information injected from $this->post/$item
         // custom hook that can be controlled by third-party plugin
@@ -1081,27 +1033,27 @@ class tx_mslib_catalog {
             //return true;
         }
     }
-    function moveProductToCrum($product_id, $crum_paths=array(), $force=0) {
+    function moveProductToCrum($product_id, $crum_paths = array(), $force = 0) {
         if (!is_numeric($product_id)) {
             return false;
         }
         if (!is_array($crum_paths)) {
             return false;
         }
-        $path_count=count($crum_paths);
+        $path_count = count($crum_paths);
         if (is_array($crum_paths) && !$path_count) {
             return false;
         }
-        $parent_id=0;
-        $create_category=false;
-        $cat_ids=array();
+        $parent_id = 0;
+        $create_category = false;
+        $cat_ids = array();
         foreach ($crum_paths as $idx => $crum_path) {
-            $category=tx_mslib_catalog::getCategoryByName($crum_path, $parent_id, false);
+            $category = tx_mslib_catalog::getCategoryByName($crum_path, $parent_id, false);
             if ($category['categories_id']) {
-                $cat_ids[]=$category['categories_id'];
-                $parent_id=$category['categories_id'];
+                $cat_ids[] = $category['categories_id'];
+                $parent_id = $category['categories_id'];
             } else {
-                $create_category=true;
+                $create_category = true;
                 if ($force) {
                     $data = array();
                     $data['parent_id'] = $parent_id;
@@ -1109,23 +1061,22 @@ class tx_mslib_catalog {
                     $data['language_id'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
                     $new_category_id = tx_mslib_catalog::createCategory($data);
                     if ($new_category_id) {
-                        $cat_ids[]=$new_category_id;
-                        $parent_id=$new_category_id;
+                        $cat_ids[] = $new_category_id;
+                        $parent_id = $new_category_id;
                     }
                 }
             }
         }
-
         if ($create_category && !$force) {
             return false;
         }
-        $count_cat_ids=count($cat_ids);
-        if ($count_cat_ids==$path_count) {
+        $count_cat_ids = count($cat_ids);
+        if ($count_cat_ids == $path_count) {
             // remove the linking from previous cat
             $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=' . $product_id);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // insert new linking
-            $deepest_cat=$cat_ids[$count_cat_ids-1];
+            $deepest_cat = $cat_ids[$count_cat_ids - 1];
             $insertArray = array();
             $insertArray['products_id'] = $product_id;
             $insertArray['categories_id'] = $deepest_cat;
@@ -1133,6 +1084,54 @@ class tx_mslib_catalog {
             // create categories tree linking
             tx_mslib_catalog::linkCategoriesTreeToProduct($product_id, $deepest_cat, $insertArray);
             return true;
+        }
+    }
+    function getCategoryByName($categories_name = '', $parent_id = '', $enabled_category_only = true) {
+        $filter = array();
+        $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
+        if ($enabled_category_only) {
+            $filter[] = 'c.status = \'1\'';
+        }
+        if ($parent_id != '' && is_numeric($parent_id)) {
+            $filter[] = 'c.parent_id=\'' . addslashes($parent_id) . '\'';
+        }
+        $filter[] = 'cd.language_id=' . $this->sys_language_uid . '';
+        if ($categories_name) {
+            $filter[] = 'cd.categories_name=\'' . addslashes($categories_name) . '\'';
+        }
+        $filter[] = 'c.categories_id=cd.categories_id';
+        $qry = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+                'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+                implode(' AND ', $filter), // WHERE...
+                '', // GROUP BY...
+                '', // ORDER BY...
+                '' // LIMIT ...
+        );
+        $res = $GLOBALS['TYPO3_DB']->sql_query($qry);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+            return $row;
+        }
+    }
+    function createCategory($data) {
+        // ADD CATEGORY
+        $insertArray = array();
+        $insertArray['date_added'] = time();
+        $insertArray['sort_order'] = time();
+        $insertArray['status'] = 1;
+        $insertArray['page_uid'] = $this->showCatalogFromPage;
+        $insertArray['parent_id'] = $data['parent_id'];
+        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
+        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+        if ($id) {
+            $insertArray = array();
+            $insertArray['categories_id'] = $id;
+            $insertArray['categories_name'] = $data['categories_name'];
+            $insertArray['language_id'] = $data['language_id'];
+            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
+            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            return $id;
         }
     }
 }

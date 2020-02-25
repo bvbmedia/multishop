@@ -199,7 +199,7 @@ class tx_mslib_user {
         $this->region = trim($region);
     }
     public function checkUserData() {
-        if ($this->ref->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT']=='0') {
+        if ($this->ref->ms['MODULES']['DISABLE_CAPTCHA_IN_CREATE_ACCOUNT'] == '0') {
             $captcha_code = $this->getCaptcha_code();
             $session = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_captcha');
             if (!$captcha_code or $session['captcha_code'] != md5($captcha_code)) {

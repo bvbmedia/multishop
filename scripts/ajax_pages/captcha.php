@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 // Add little delay so the session wont conflict with the main script (bypass issue with TYPO3 7.6.15)
 sleep(1);
 $randomnr = rand(100000, 900000);
-$session=array();
+$session = array();
 $session['captcha_code'] = md5($randomnr);
 $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_captcha', $session);
 $GLOBALS['TSFE']->storeSessionData();

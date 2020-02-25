@@ -5,11 +5,11 @@ if (!defined('TYPO3_MODE')) {
 if (!$this->get['tx_multishop_pi1']['hash']) {
     die();
 }
-$continue_dowload_invoice=true;
+$continue_dowload_invoice = true;
 // post processing by third party plugins
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'])) {
     $params = array(
-        'continue_download_invoice' => &$continue_download_invoice
+            'continue_download_invoice' => &$continue_download_invoice
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['adminDownloadInvoiceController'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -35,7 +35,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $prefix = '';
     }
     $order = mslib_fe::getOrder($invoice['orders_id'], 'orders_id', 1);
-    if (!$this->get['language'] && is_numeric($order['language_id']) && $order['language_id']>0) {
+    if (!$this->get['language'] && is_numeric($order['language_id']) && $order['language_id'] > 0) {
         // Switch to language that is stored in the order
         mslib_befe::setSystemLanguage($order['language_id']);
     }
@@ -66,10 +66,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             }
         }
         // now parse all the objects in the tmpl file
-        $invoice_pdf_tmpl_path=$this->conf['admin_invoice_pdf_tmpl_path'];
+        $invoice_pdf_tmpl_path = $this->conf['admin_invoice_pdf_tmpl_path'];
         if ($invoice['reversal_invoice'] && isset($this->conf['admin_credit_invoice_pdf_tmpl_path']) && $this->conf['admin_credit_invoice_pdf_tmpl_path'] != '') {
             // Use custom template for credit invoice
-            $invoice_pdf_tmpl_path=$this->conf['admin_credit_invoice_pdf_tmpl_path'];
+            $invoice_pdf_tmpl_path = $this->conf['admin_credit_invoice_pdf_tmpl_path'];
         }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['configureInvoiceTemplatePreProc'])) {
@@ -122,9 +122,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###BILLING_COMPANY###'] = '';
         }
         $markerArray['###BILLING_NAME###'] = $order['billing_name'];
-        $markerArray['###BILLING_DEPARTMENT###']='';
+        $markerArray['###BILLING_DEPARTMENT###'] = '';
         if ($order['billing_department'] != '') {
-            $markerArray['###BILLING_DEPARTMENT###'] = $order['billing_department'].'<br/>';
+            $markerArray['###BILLING_DEPARTMENT###'] = $order['billing_department'] . '<br/>';
         }
         $markerArray['###BILLING_BUILDING###'] = $order['billing_building'];
         if (strpos($template, '###BILLING_BUILDING###') === false && $order['billing_building'] != '') {
@@ -195,7 +195,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###LABEL_YOUR_COC_ID###'] = $this->pi_getLL('your_coc_id');
             $markerArray['###YOUR_COC_ID###'] = strtoupper($order['billing_coc_id']);
         }
-        $markerArray['###BILLING_EMAIL###']=$order['billing_email'];
+        $markerArray['###BILLING_EMAIL###'] = $order['billing_email'];
         $markerArray['###BILLING_TELEPHONE###'] = '';
         if (!empty($order['billing_telephone'])) {
             $markerArray['###BILLING_TELEPHONE###'] = $order['billing_telephone'] . '<br/>';
@@ -212,10 +212,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         if (!empty($order['delivery_mobile'])) {
             $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'] . '<br/>';
         }
-        $markerArray['###DELIVERY_EMAIL###']=$order['delivery_email'];
-        $markerArray['###DELIVERY_VAT_ID###']='';
+        $markerArray['###DELIVERY_EMAIL###'] = $order['delivery_email'];
+        $markerArray['###DELIVERY_VAT_ID###'] = '';
         if ($order['delivery_vat_id']) {
-            $markerArray['###DELIVERY_VAT_ID###']=strtoupper($order['delivery_vat_id']);
+            $markerArray['###DELIVERY_VAT_ID###'] = strtoupper($order['delivery_vat_id']);
         }
         $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
         // CMS HEADER
@@ -251,7 +251,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // CMS FOOTER
         $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###'] = '';
-        $prefixTemplate='pdf_invoice_footer_message';
+        $prefixTemplate = 'pdf_invoice_footer_message';
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPrefixTemplatePreProc'])) {
             $params = array(
                     'prefixTemplate' => &$prefixTemplate,
@@ -265,7 +265,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         $cmsKeys = array();
         if ($order['payment_method']) {
-            $cmsKeys[] = $prefixTemplate.'_' . $order['payment_method'];
+            $cmsKeys[] = $prefixTemplate . '_' . $order['payment_method'];
         }
         $cmsKeys[] = $prefixTemplate;
         //hook to let other plugins further manipulate the replacers
@@ -372,7 +372,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $array2[] = $order['payment_method_label'];
         $array1[] = '###EXPECTED_DELIVERY_DATE###';
         if ($order['expected_delivery_date'] > 0) {
-            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                 $array2[] = strftime("%x %T", $order['expected_delivery_date']);
             } else {
                 $array2[] = strftime("%x", $order['expected_delivery_date']);
@@ -450,14 +450,14 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         if ($invoice['reversal_invoice']) {
             // Get debit invoice
-            $filter=array();
-            $filter[]='orders_id='.$invoice['orders_id'];
-            $filter[]='reversal_invoice=0';
-            $debitInvoice = mslib_befe::getRecord('', 'tx_multishop_invoices','',$filter);
+            $filter = array();
+            $filter[] = 'orders_id=' . $invoice['orders_id'];
+            $filter[] = 'reversal_invoice=0';
+            $debitInvoice = mslib_befe::getRecord('', 'tx_multishop_invoices', '', $filter);
             if (!$debitInvoice['paid']) {
                 // When debit order is not paid show: N/A
-                $markerArray['###INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('not_applicable_short');
-                $markerArray['###INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('not_applicable_short');
+                $markerArray['###INVOICE_PAYMENT_CONDITION###'] = $this->pi_getLL('not_applicable_short');
+                $markerArray['###INVOICE_PAYMENT_METHOD###'] = $this->pi_getLL('not_applicable_short');
             }
         }
         $markerArray['###STORE_NAME###'] = $this->ms['MODULES']['STORE_NAME'];
@@ -480,12 +480,12 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
             $params = array(
-                'array1' => &$array1,
-                'array2' => &$array2,
-                'order' => &$order,
-                'invoice' => &$invoice,
-                'mail_template' => $mail_template,
-                'markerArray' => &$markerArray
+                    'array1' => &$array1,
+                    'array2' => &$array2,
+                    'order' => &$order,
+                    'invoice' => &$invoice,
+                    'mail_template' => $mail_template,
+                    'markerArray' => &$markerArray
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -554,10 +554,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
     }
 }
 if (file_exists($pdfFilePath)) {
-    $filename='';
+    $filename = '';
     header('Content-Type: application/pdf');
     //header('Content-Disposition: attachment; filename="'.$invoice['invoice_id'].'.pdf"');
-    header('Content-Disposition: inline; filename="'.$invoice['invoice_id'].'.pdf"');
+    header('Content-Disposition: inline; filename="' . $invoice['invoice_id'] . '.pdf"');
     header('Content-Length: ' . filesize($pdfFilePath));
     readfile($pdfFilePath);
     if ($this->get['tx_multishop_pi1']['forceRecreate']) {

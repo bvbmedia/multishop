@@ -30,7 +30,7 @@ if ($this->post) {
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     $users = mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
     if (is_array($users) && count($users)) {
-        $posted_users=explode(',', $this->post['tx_multishop_pi1']['users']);
+        $posted_users = explode(',', $this->post['tx_multishop_pi1']['users']);
         foreach ($users as $user) {
             // check if the user should be member or not
             if (in_array($user['uid'], $posted_users)) {

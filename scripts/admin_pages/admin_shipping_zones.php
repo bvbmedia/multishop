@@ -25,7 +25,7 @@ if ($this->post) {
         }
         $updateArray = array();
         $updateArray['hide_in_frontend'] = isset($this->post['hide_zone']) ? 1 : 0;
-        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_zones', 'id=\'' .  $this->post['zone_id'] . '\'', $updateArray);
+        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_zones', 'id=\'' . $this->post['zone_id'] . '\'', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     }
     // add countries to a specific zone eof
@@ -83,13 +83,13 @@ foreach ($zones as $zone) {
             $content .= '</ul>
             <hr>
             <div class="form-group">
-                <label class="control-label col-md-2">'.$this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend').'</label>
+                <label class="control-label col-md-2">' . $this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend') . '</label>
                 <div class="col-md-10">
                     <div class="label_value_container">
                         <div class="twocols_ul">
                             <div class="checkbox checkbox-success checkbox-inline">
-                                <input id="hide_zone'.$this->get['zone_id'].'" name="hide_zone" type="checkbox" value="'.$this->get['zone_id'].'"'.($zone['hide_in_frontend']>0 ? ' checked="checked"' : '').'>
-                                <label for="hide_zone'.$this->get['zone_id'].'">'.$this->pi_getLL('yes').'</label>
+                                <input id="hide_zone' . $this->get['zone_id'] . '" name="hide_zone" type="checkbox" value="' . $this->get['zone_id'] . '"' . ($zone['hide_in_frontend'] > 0 ? ' checked="checked"' : '') . '>
+                                <label for="hide_zone' . $this->get['zone_id'] . '">' . $this->pi_getLL('yes') . '</label>
                             </div>
                         </div>
                     </div>
@@ -115,11 +115,11 @@ foreach ($zones as $zone) {
             }
             $content .= '</ul>
             <div class="form-group">
-                <label class="control-label col-md-2">'.$this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend').'</label>
+                <label class="control-label col-md-2">' . $this->pi_getLL('admin_label_hide_zone_in_frontend', 'Hide zone in frontend') . '</label>
                 <div class="col-md-10">
                     <div class="label_value_container">
                         <div class="twocols_ul">
-                            <p class="static">'.($zone['hide_in_frontend'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</p>                        
+                            <p class="static">' . ($zone['hide_in_frontend'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')) . '</p>                        
                         </div>
                     </div>
                 </div>

@@ -2,18 +2,18 @@
 if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
-$ajax_page_uid=$this->shop_pid;
-if (isset($this->get['pid']) && is_numeric($this->get['pid']) && $this->get['pid']>0) {
-    $puid_rec=mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products', 'products_id', array(), 'page_uid');
-    if (is_array($puid_rec) && isset($puid_rec['page_uid']) && is_numeric($puid_rec['page_uid']) && $puid_rec['page_uid']>0) {
-        if ($puid_rec['page_uid']!=$this->shop_pid) {
-            $ajax_page_uid=$puid_rec['page_uid'];
+$ajax_page_uid = $this->shop_pid;
+if (isset($this->get['pid']) && is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+    $puid_rec = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products', 'products_id', array(), 'page_uid');
+    if (is_array($puid_rec) && isset($puid_rec['page_uid']) && is_numeric($puid_rec['page_uid']) && $puid_rec['page_uid'] > 0) {
+        if ($puid_rec['page_uid'] != $this->shop_pid) {
+            $ajax_page_uid = $puid_rec['page_uid'];
         }
     }
 }
-$catalog_page_uid=$this->showCatalogFromPage;
-if ($ajax_page_uid!=$catalog_page_uid) {
-    $catalog_page_uid=$ajax_page_uid;
+$catalog_page_uid = $this->showCatalogFromPage;
+if ($ajax_page_uid != $catalog_page_uid) {
+    $catalog_page_uid = $ajax_page_uid;
 }
 $jsSelect2InitialValue = array();
 $jsSelect2InitialValue[] = 'var categoriesIdTerm=[];';
@@ -185,7 +185,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]=' . $ajax_page_uid . '&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 				data: {
 					q: query.term
 				},
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
-				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]=' . $ajax_page_uid . '&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 					data: {
 						preselected_id: id
 					},
@@ -1172,7 +1172,7 @@ if ($this->post) {
             //if (!$updateArray['products_image']) {
             $image_tstamp = time();
             $product_original = mslib_fe::getProduct($this->post['pid']);
-            $catalog_page_uid=$this->showCatalogFromPage;
+            $catalog_page_uid = $this->showCatalogFromPage;
             $original_images = array();
             foreach ($product_original as $arr_key => $arr_val) {
                 if (strpos($arr_key, 'products_image') !== false && !empty($arr_val)) {
@@ -1477,13 +1477,12 @@ if ($this->post) {
                                 }
                                 $crumbar_ident_string = implode(',', $crumbar_ident_array);
                                 //
-
                                 if (!empty($crumbar_ident_string)) {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\'' . $prodid . '\' and crumbar_identifier=\'' . $crumbar_ident_string . '\' and page_uid=' . $page_uid);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\'' . $prodid . '\' and layered_categories_id=\'' . $catId . '\' and page_uid=' . $page_uid);
-                                    $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
                             }
                         }
@@ -4085,22 +4084,22 @@ if ($this->post) {
             // mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
             $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>';
             $product_relatives_block .= $form_category_search;
-            $product_relatives_block .='<hr>';
+            $product_relatives_block .= '<hr>';
             $product_relatives_block .= '<div class="form-group">';
             $product_relatives_block .= '<label class="col-md-2 control-label">Save relation as:</label><div class="col-md-10 form-inline"><select class="form-control" name="product_relation_save_as" id="product_relation_save_as"><option value="sub">Sub</option><option value="main">Main</option></select></div>';
             $product_relatives_block .= '</div>';
-            $product_relatives_block .='<hr>';
-            $product_relatives_block .='<div id="load">';
-            $product_relatives_block .='<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
-            $product_relatives_block .='<strong>Loading....</strong>';
-            $product_relatives_block .='</div>';
+            $product_relatives_block .= '<hr>';
+            $product_relatives_block .= '<div id="load">';
+            $product_relatives_block .= '<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
+            $product_relatives_block .= '<strong>Loading....</strong>';
+            $product_relatives_block .= '</div>';
             // main block
             $product_relatives_block .= '<div class="panel panel-default" id="search_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
             $product_relatives_block .= '<h4>' . $this->pi_getLL('search_results', 'Search results:') . '</h4>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="search_related_product_placeholder"></div>';
+            $product_relatives_block .= '<div id="search_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
             // main block
@@ -4109,7 +4108,7 @@ if ($this->post) {
             $product_relatives_block .= '<h4>' . $this->pi_getLL('these_products_related_to_this_product', 'Main related products:') . '</h4>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="main_related_product_placeholder"></div>';
+            $product_relatives_block .= '<div id="main_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
             // sub block
@@ -4118,7 +4117,7 @@ if ($this->post) {
             $product_relatives_block .= '<h4>' . $this->pi_getLL('this_product_related_to_these_products', 'Sub related products:') . '</h4>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="sub_related_product_placeholder"></div>';
+            $product_relatives_block .= '<div id="sub_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
         }

@@ -131,7 +131,7 @@ if ($this->post) {
         // hook to add shipping cost type
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateShippingCost'])) {
             $params = array(
-                'shipping_id' => &$shipping_id,
+                    'shipping_id' => &$shipping_id,
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateShippingCost'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -437,10 +437,10 @@ if (count($shipping_methods) > 0) {
                     // hook to process custom visual shipping cost type
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeWeight'])) {
                         $params = array(
-                            'row' => &$row,
-                            'row3' => &$row3,
-                            'zone' => &$zone,
-                            'content' => &$content
+                                'row' => &$row,
+                                'row3' => &$row3,
+                                'zone' => &$zone,
+                                'content' => &$content
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeWeight'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

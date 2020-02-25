@@ -27,9 +27,9 @@ if (is_numeric($this->get['manufacturers_id'])) {
             $this->cacheLifeTime = $this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
         }
         $options = array(
-            'caching' => true,
-            'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-            'lifeTime' => $this->cacheLifeTime
+                'caching' => true,
+                'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+                'lifeTime' => $this->cacheLifeTime
         );
         $Cache_Lite = new Cache_Lite($options);
         $string = $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
@@ -53,7 +53,6 @@ if (is_numeric($this->get['manufacturers_id'])) {
         } else {
             $extrameta = '';
         }
-
         if ($current['meta_title']) {
             $meta_title = $current['meta_title'];
         } else {

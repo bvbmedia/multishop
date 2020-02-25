@@ -6,7 +6,7 @@ $content = '';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
     case 'get_order_payment_methods':
         $return_data = array();
-        $return_data['payment_method_date_purchased']='';
+        $return_data['payment_method_date_purchased'] = '';
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $order_id = $this->post['tx_multishop_pi1']['order_id'];
             if (is_numeric($order_id)) {
@@ -57,17 +57,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     /*} else {
                         $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
                     }*/
-                    $auto_check_mail_sent=' checked="checked"';
-                    if ($this->ms['MODULES']['AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE']=='0') {
-                        $auto_check_mail_sent='';
+                    $auto_check_mail_sent = ' checked="checked"';
+                    if ($this->ms['MODULES']['AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE'] == '0') {
+                        $auto_check_mail_sent = '';
                     }
                     $orderDetailsItem .= '</div>';
                     $orderDetailsItem .= '<div class="form-group row">
                         <label class="control-label col-md-3">&nbsp;</label>
                         <div class="col-md-9">
                             <div class="checkbox checkbox-inline checkbox-success">
-                                <input type="checkbox" id="send_payment_received_email" value="1"'.$auto_check_mail_sent.'>
-                                <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
+                                <input type="checkbox" id="send_payment_received_email" value="1"' . $auto_check_mail_sent . '>
+                                <label for="send_payment_received_email">' . $this->pi_getLL('send_payment_received_email') . ' (' . $this->pi_getLL('language') . ': ' . strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']) . ')</label>
                             </div>
                         </div>
                     </div>
@@ -225,7 +225,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                     //
                     if ($this->post['tx_multishop_pi1']['action'] == 'update_selected_invoices_to_paid') {
-                        if ($invoice['reversal_invoice']>0) {
+                        if ($invoice['reversal_invoice'] > 0) {
                             $updateArray = array('paid' => 1);
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $invoice['id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -349,9 +349,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        $limit='';
-        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
-            $limit=15;
+        $limit = '';
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
+            $limit = 15;
         }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
                 implode(', ', $from), // FROM ...
@@ -376,7 +376,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 }
                 if (!empty($row['products_name'])) {
                     if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_EDIT_ORDER'] == '1' && !empty($row['products_model'])) {
-                        $row['products_name'] = '('.addslashes($row['products_model']).') ' . $row['products_name'];
+                        $row['products_name'] = '(' . addslashes($row['products_model']) . ') ' . $row['products_name'];
                     }
                     if ($this->ms['MODULES']['DISPLAY_PRODUCTS_ID_IN_EDIT_ORDER'] == '1') {
                         $row['products_name'] .= ' (PID: ' . $row['products_id'] . ')';
@@ -407,17 +407,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             if ($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT'] == '0') {
                 if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
                     $data[] = array(
-                        'id' => $this->get['preselected_id'],
-                        'text' => $this->get['preselected_id'],
-                        'products_model' => '',
-                        'sku_code' => ''
+                            'id' => $this->get['preselected_id'],
+                            'text' => $this->get['preselected_id'],
+                            'products_model' => '',
+                            'sku_code' => ''
                     );
                 } else {
                     $data[] = array(
-                        'id' => $this->get['q'],
-                        'text' => $this->get['q'],
-                        'products_model' => '',
-                        'sku_code' => ''
+                            'id' => $this->get['q'],
+                            'text' => $this->get['q'],
+                            'products_model' => '',
+                            'sku_code' => ''
                     );
                 }
             }

@@ -227,11 +227,11 @@ if (!count($pageset['dataset'])) {
             $markerArray = array();
             $markerArray['ROW_TYPE'] = $tr_type;
             $markerArray['MANUFACTURER_ID'] = $row['manufacturers_id'];
-            $markerArray['MANUFACTURER_EDIT_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id=' . $row['manufacturers_id'].'&action=edit_manufacturer',1);
+            $markerArray['MANUFACTURER_EDIT_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id=' . $row['manufacturers_id'] . '&action=edit_manufacturer', 1);
             $markerArray['MANUFACTURER_NAME'] = $row['manufacturers_name'];
             $markerArray['MANUFACTURER_DATE_ADDED'] = strftime("%x %X", strtotime($row['date_added']));
             $markerArray['MANUFACTURER_STATUS'] = $status_html;
-            $markerArray['MANUFACTURER_DELETE_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_manufacturer&manufacturers_id=' . $row['manufacturers_id'].'&action=delete_manufacturer',1);
+            $markerArray['MANUFACTURER_DELETE_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_manufacturer&manufacturers_id=' . $row['manufacturers_id'] . '&action=delete_manufacturer', 1);
             $markerArray['ADMIN_LABEL_ALT_REMOVE'] = $this->pi_getLL('admin_label_alt_remove');
             $markerArray['ADMIN_LABEL_LINK_EDIT'] = $this->pi_getLL('admin_label_link_edit');
             $contentItem .= $this->cObj->substituteMarkerArray($subparts['manufacturers'], $markerArray, '###|###');

@@ -230,7 +230,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<div class="col-md-10">
                 <div class="col-md-10">
                     <div class="radio radio-success radio-inline">
-                        <input name="customer_with_discount" type="radio" id="valueAll" value="all"' . ((!isset($post_data['customer_with_discount']) or $post_data['customer_with_discount']=='all') ? ' checked' : '') . ' /><label for="valueAll">' . htmlspecialchars($this->pi_getLL('all')) . '</label>
+                        <input name="customer_with_discount" type="radio" id="valueAll" value="all"' . ((!isset($post_data['customer_with_discount']) or $post_data['customer_with_discount'] == 'all') ? ' checked' : '') . ' /><label for="valueAll">' . htmlspecialchars($this->pi_getLL('all')) . '</label>
                     </div>
                     <div class="radio radio-success radio-inline">
                         <input name="customer_with_discount" type="radio" id="valueNo" value="0"' . ((isset($post_data['customer_with_discount']) and $post_data['customer_with_discount'] == '0') ? ' checked' : '') . ' /><label for="valueNo">' . htmlspecialchars($this->pi_getLL('no')) . '</label>

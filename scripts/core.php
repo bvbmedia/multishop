@@ -285,7 +285,7 @@ switch ($this->ms['page']) {
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
             $array1[] = '###TOTAL_AMOUNT_RAW###';
-            $array2[] = number_format($order['total_amount'],'2','.','');
+            $array2[] = number_format($order['total_amount'], '2', '.', '');
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
             $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
             $mslib_order->init($this);
@@ -339,7 +339,7 @@ switch ($this->ms['page']) {
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
             $array1[] = '###TOTAL_AMOUNT_RAW###';
-            $array2[] = number_format($order['total_amount'],'2','.','');
+            $array2[] = number_format($order['total_amount'], '2', '.', '');
             $array1[] = '###PROPOSAL_NUMBER###';
             $array2[] = $order['orders_id'];
             $array1[] = '###ORDER_NUMBER###';
@@ -424,8 +424,8 @@ switch ($this->ms['page']) {
             $tmpArray = mslib_befe::getRecord($this->get['tx_multishop_pi1']['hash'], 'tx_multishop_orders', 'hash');
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'])) {
                 $params = array(
-                    'tmpArray' => &$tmpArray,
-                    'content' => &$content
+                        'tmpArray' => &$tmpArray,
+                        'content' => &$content
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -531,7 +531,7 @@ switch ($this->ms['page']) {
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###TOTAL_AMOUNT_RAW###';
-                $array2[] = number_format($order['total_amount'],'2','.','');
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                 $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                 $mslib_order->init($this);
@@ -581,7 +581,7 @@ switch ($this->ms['page']) {
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###TOTAL_AMOUNT_RAW###';
-                $array2[] = number_format($order['total_amount'],'2','.','');
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';

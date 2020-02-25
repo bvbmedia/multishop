@@ -848,11 +848,11 @@ class mslib_befe {
                             if ($option_id) {
                                 $option_values = mslib_fe::getProductsOptionValues($option_id, $flat_product['products_id']);
                                 if (is_array($option_values)) {
-                                    $values=array();
+                                    $values = array();
                                     foreach ($option_values as $option_value) {
-                                        $values[]=$option_value['products_options_values_name'];
+                                        $values[] = $option_value['products_options_values_name'];
                                     }
-                                    $flat_product[$array[0]] = implode('·',$values);
+                                    $flat_product[$array[0]] = implode('·', $values);
                                 }
                             }
                         }
@@ -1113,7 +1113,7 @@ class mslib_befe {
             }
         }
     }
-    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false, $delete_all_cat_relation=false) {
+    public function deleteProduct($products_id, $categories_id = '', $use_page_uid = false, $delete_all_cat_relation = false) {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -1285,16 +1285,6 @@ class mslib_befe {
         }
     }
     // method for logging changes to specific tables
-    public function deleteManufacturerImage($file_name) {
-        if (is_array($this->ms['image_paths']['manufacturers']) && count($this->ms['image_paths']['manufacturers'])) {
-            foreach ($this->ms['image_paths']['manufacturers'] as $key => $value) {
-                $path = PATH_site . $value . '/' . $file_name;
-                if (unlink($path)) {
-                    return 1;
-                }
-            }
-        }
-    }
     public function deleteManufacturer($id) {
         if (is_numeric($id)) {
             $record = mslib_befe::getRecord($id, 'tx_multishop_manufacturers', 'manufacturers_id');
@@ -1312,7 +1302,6 @@ class mslib_befe {
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id=' . $id);
         }
     }
-    // function for saving the importer products images
     public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*', $groupBy = '', $orderBy = '', $limit = '') {
         $queryArray = array();
         $queryArray['from'] = $table;
@@ -1343,6 +1332,17 @@ class mslib_befe {
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
             return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+        }
+    }
+    // function for saving the importer products images
+    public function deleteManufacturerImage($file_name) {
+        if (is_array($this->ms['image_paths']['manufacturers']) && count($this->ms['image_paths']['manufacturers'])) {
+            foreach ($this->ms['image_paths']['manufacturers'] as $key => $value) {
+                $path = PATH_site . $value . '/' . $file_name;
+                if (unlink($path)) {
+                    return 1;
+                }
+            }
         }
     }
     // method for adding a product to the flat table for maximum speed
@@ -1481,7 +1481,7 @@ class mslib_befe {
                 if (!$oldproduct[$colname]) {
                     if ($item[$colname]) {
                         $plaatje1 = $item[$colname];
-                        $data = mslib_fe::file_get_contents($plaatje1,0,10);
+                        $data = mslib_fe::file_get_contents($plaatje1, 0, 10);
                         if ($data) {
                             $plaatje1_name = $products_id . '-' . ($colname) . '-' . time();
                             $tmpfile = PATH_site . 'uploads/tx_multishop/tmp/' . $plaatje1_name;
@@ -1524,7 +1524,7 @@ class mslib_befe {
                             } else {
                                 $item['img'][$i] = '';
                                 if ($log_file) {
-                                    file_put_contents($log_file, 'Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: '.$plaatje1.').' . "\n", FILE_APPEND);
+                                    file_put_contents($log_file, 'Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: ' . $plaatje1 . ').' . "\n", FILE_APPEND);
                                 }
                             }
                         } else {
@@ -1711,7 +1711,7 @@ class mslib_befe {
                 // 300 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][300]['width'];
                 $maxheight = $this->ms['product_image_formats'][300]['height'];
-                if ($ext!='gif') {
+                if ($ext != 'gif') {
                     $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                     if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
                         $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
@@ -1730,7 +1730,7 @@ class mslib_befe {
                 // 200 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][200]['width'];
                 $maxheight = $this->ms['product_image_formats'][200]['height'];
-                if ($ext!='gif') {
+                if ($ext != 'gif') {
                     $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                     if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
                         $commands[] = $GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"] . 'composite -gravity NorthWest ' . $module_path . 'templates/images/curves/lb.png "' . $target . '" "' . $target . '"';
@@ -1749,7 +1749,7 @@ class mslib_befe {
                 // 100 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][100]['width'];
                 $maxheight = $this->ms['product_image_formats'][100]['height'];
-                if ($ext!='gif') {
+                if ($ext != 'gif') {
                     $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                 } else {
                     $temp_gif = PATH_site . '/typo3temp/temporary_100.gif';
@@ -1762,7 +1762,7 @@ class mslib_befe {
                 // 50 thumbnail settings
                 $maxwidth = $this->ms['product_image_formats'][50]['width'];
                 $maxheight = $this->ms['product_image_formats'][50]['height'];
-                if ($ext!='gif') {
+                if ($ext != 'gif') {
                     $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                 } else {
                     $temp_gif = PATH_site . '/typo3temp/temporary_50.gif';
@@ -1775,7 +1775,7 @@ class mslib_befe {
                 // normal thumbnail settings
                 $maxwidth = $this->ms['product_image_formats']['enlarged']['width'];
                 $maxheight = $this->ms['product_image_formats']['enlarged']['height'];
-                if ($ext!='gif') {
+                if ($ext != 'gif') {
                     $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                 } else {
                     $temp_gif = PATH_site . '/typo3temp/temporary_normal.gif';
@@ -1791,13 +1791,12 @@ class mslib_befe {
                         'folder' => &$folder,
                         'filename' => &$filename
                 );
-
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'])) {
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 } else {
-                    if ($ext!='gif') {
+                    if ($ext != 'gif') {
                         if (!$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT']) {
                             $commands[] = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "' . $maxwidth . 'x' . $maxheight . '>" "' . $target . '" "' . $target . '"',
                                     $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
@@ -2276,8 +2275,7 @@ class mslib_befe {
 		  `starttime` int(11) default '0',
 		  `endtime` int(11) default '0',
 		";
-        $additionalColumns=array();
-
+        $additionalColumns = array();
         if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
             $additional_indexes = '';
             foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
@@ -2292,7 +2290,7 @@ class mslib_befe {
             $params = array(
                     'str' => &$str,
                     'additional_indexes' => &$additional_indexes,
-                    'additionalColumns' =>&$additionalColumns
+                    'additionalColumns' => &$additionalColumns
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2441,72 +2439,6 @@ class mslib_befe {
             }
         }
         return null;
-    }
-    public function print_r($array_in, $title = '') {
-        if (is_object($array_in)) {
-            $json = json_encode($array_in);
-            $array_in = json_decode($json, true);
-        }
-        if (is_array($array_in)) {
-            if (count($array_in) == 0) {
-//				$result .= '<tr><td><font face="Verdana,Arial" size="1"><strong>EMPTY!</strong></font></td></tr>';
-            } else {
-                $result = '
-				<table class="table table-striped table-bordered">';
-                if ($title) {
-                    $result .= '
-					<tr>
-					<th colspan="2">
-					' . htmlspecialchars($title) . '
-					</th>
-					</tr>
-					';
-                }
-                if (is_array($array_in) && count($array_in)) {
-                    foreach ($array_in as $key => $val) {
-                        if ((string)$key or $val) {
-                            if (!$tr_type or $tr_type == 'even') {
-                                $tr_type = 'odd';
-                            } else {
-                                $tr_type = 'even';
-                            }
-                            $result .= '<tr class="' . $tr_type . '">
-							<td valign="top" class="print_r_key">' . htmlspecialchars((string)$key) . '</td>
-							<td class="print_r_value">';
-                            if (is_array($val)) {
-//							$result .= t3lib_utility_Debug::viewArray($val);
-                                $result .= mslib_befe::print_r($val);
-                            } elseif (is_object($val)) {
-                                $string = '';
-                                if (method_exists($val, '__toString')) {
-                                    $string .= get_class($val) . ': ' . (string)$val;
-                                } else {
-                                    $string .= print_r($val, true);
-                                }
-                                $result .= '' . nl2br(htmlspecialchars($string)) . '<br />';
-                            } else {
-                                if (gettype($val) == 'object') {
-                                    $string = 'Unknown object';
-                                } else {
-                                    $string = (string)$val;
-                                }
-                                $result .= nl2br(htmlspecialchars($string)) . '<br />';
-                            }
-                            $result .= '</td>
-						</tr>';
-                        }
-                    }
-                }
-                $result .= '</table>';
-            }
-        } else {
-            $result = '<table class="table table-striped table-bordered">
-				<tr>
-					<td>' . nl2br(htmlspecialchars((string)$array_in)) . '</td>
-				</tr>
-			</table>'; // Output it as a string.
-        }
-        return $result;
     }
     public function Week($week) {
         $year = date('Y');
@@ -3146,15 +3078,15 @@ class mslib_befe {
         chdir($currentDir);
         return $result;
     }
-    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0, $action_call='') {
+    public function updateOrderStatus($orders_id, $orders_status, $mail_customer = 0, $action_call = '') {
         if (!is_numeric($orders_id)) {
             return false;
         }
         if (empty($action_call)) {
-            $extra_data=array();
-            $extra_data['get']=$this->get;
-            $extra_data['post']=$this->post;
-            $action_call=serialize($extra_data);
+            $extra_data = array();
+            $extra_data['get'] = $this->get;
+            $extra_data['post'] = $this->post;
+            $action_call = serialize($extra_data);
         }
         $continue = 1;
         //hook to let other plugins further manipulate
@@ -3283,7 +3215,7 @@ class mslib_befe {
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###TOTAL_AMOUNT_RAW###';
-                $array2[] = number_format($order['total_amount'],'2','.','');
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 $ORDER_DETAILS = mslib_fe::printOrderDetailsTable($order, 'email');
                 $array1[] = '###ORDER_DETAILS###';
                 $array2[] = $ORDER_DETAILS;
@@ -3326,7 +3258,7 @@ class mslib_befe {
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###TOTAL_AMOUNT_RAW###';
-                $array2[] = number_format($order['total_amount'],'2','.','');
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';
@@ -3345,7 +3277,7 @@ class mslib_befe {
                 $array2[] = mslib_fe::getOrderStatusName($orders_status, $order['language_id']);
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
                 if ($order['expected_delivery_date'] > 0) {
-                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                         $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                     } else {
                         $array2[] = strftime("%x", $order['expected_delivery_date']);
@@ -3355,7 +3287,7 @@ class mslib_befe {
                 }
                 $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
                 if ($order['expected_delivery_date'] > 0) {
-                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                         $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                     } else {
                         $array2[] = strftime($this->pi_getLL('full_date_no_time_format'), $order['expected_delivery_date']);
@@ -3421,14 +3353,14 @@ class mslib_befe {
                 $updateArray['new_value'] = $orders_status;
                 $updateArray['requester_ip_addr'] = $this->REMOTE_ADDR;
                 $updateArray['action_call'] = $action_call;
-                $updateArray['cruser_id']=0;
+                $updateArray['cruser_id'] = 0;
                 if ($GLOBALS['TSFE']->fe_user->user['uid']) {
                     $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
                 }
                 //hook to let other plugins further manipulate
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusInsertHistory'])) {
                     $params = array(
-                        'updateArray' => &$updateArray
+                            'updateArray' => &$updateArray
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusInsertHistory'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3500,18 +3432,17 @@ class mslib_befe {
                                 $user['email'] = $order['billing_email'];
                                 $user['name'] = $order['billing_name'];
                                 $user['customer_id'] = $order['customer_id'];
-
                                 $mail_attachments = array();
                                 $options = array();
                                 //hook to let other plugins further manipulate
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMailSendPreProc'])) {
                                     $params = array(
-                                        'mail_attachments' => &$mail_attachments,
-                                        'options' => &$options,
-                                        'user' => &$user,
-                                        'order' => $order,
-                                        'orders_status' => $orders_status,
-                                        'page' => $page
+                                            'mail_attachments' => &$mail_attachments,
+                                            'options' => &$options,
+                                            'user' => &$user,
+                                            'order' => $order,
+                                            'orders_status' => $orders_status,
+                                            'page' => $page
                                     );
                                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['updateOrderStatusMailSendPreProc'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3550,7 +3481,6 @@ class mslib_befe {
             }
         }
     }
-    // get tree
     function setSystemLanguage($sys_language_uid) {
         if (is_numeric($sys_language_uid)) {
             if (!is_array($this->defaultLanguageArray)) {
@@ -3578,7 +3508,7 @@ class mslib_befe {
             }
         }
     }
-    // convert the string of URL to <a href="URL">URL</a>
+    // get tree
     function setDefaultSystemLanguage() {
         if ($this->LLkey) {
             $this->defaultLanguageArray = array();
@@ -3589,6 +3519,7 @@ class mslib_befe {
             $this->defaultLanguageArray['config']['config']['locale_all'] = $GLOBALS['TSFE']->config['config']['locale_all'];
         }
     }
+    // convert the string of URL to <a href="URL">URL</a>
     function getLanguageIso2ByLanguageUid($id) {
         if (!is_numeric($id)) {
             return false;
@@ -3671,11 +3602,11 @@ class mslib_befe {
         return $password;
     }
     public function storeProductsKeywordSearch($keyword, $negative_results = 0, $categories_id = 0) {
-        $continue=true;
+        $continue = true;
         //hook to let other plugins further manipulate the redirect link
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'])) {
             $params = array(
-                'continue' => &$continue
+                    'continue' => &$continue
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['storeProductsKeywordSearchPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3816,15 +3747,15 @@ class mslib_befe {
     public function cacheLite($action = '', $key = '', $timeout = '', $serialized = 0, $content = '') {
         if ($action == 'delete_all') {
             if ($this->conf['debugPurgeCacheLite']) {
-                $subject = '[cacheLite] '.$this->HTTP_HOST . ' delete cache requested by '.htmlspecialchars($this->REMOTE_ADDR);
-                $body='';
-                $body .= '<strong>IP address:</strong><br/>'.$this->REMOTE_ADDR.'<br/><br/>';
-                $body .= '<strong>Browser:</strong><br/>'.htmlspecialchars($this->server['HTTP_USER_AGENT']).'<br/><br/>';
-                $body .= '<strong>Referer:</strong><br/>'.htmlspecialchars($this->server['HTTP_REFERER']).'<br/><br/>';
-                $body .= '<strong>Time:</strong><br/>'.ucfirst(strftime($this->pi_getLL('full_date_format'))).'<br/><br/>';
+                $subject = '[cacheLite] ' . $this->HTTP_HOST . ' delete cache requested by ' . htmlspecialchars($this->REMOTE_ADDR);
+                $body = '';
+                $body .= '<strong>IP address:</strong><br/>' . $this->REMOTE_ADDR . '<br/><br/>';
+                $body .= '<strong>Browser:</strong><br/>' . htmlspecialchars($this->server['HTTP_USER_AGENT']) . '<br/><br/>';
+                $body .= '<strong>Referer:</strong><br/>' . htmlspecialchars($this->server['HTTP_REFERER']) . '<br/><br/>';
+                $body .= '<strong>Time:</strong><br/>' . ucfirst(strftime($this->pi_getLL('full_date_format'))) . '<br/><br/>';
                 $body .= '<strong>Backtrace:</strong><br/>';
                 $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
-                mslib_befe::mailDev($subject,$body);
+                mslib_befe::mailDev($subject, $body);
             }
             if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache")) {
                 $command = "rm -rf " . $this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache/*";
@@ -3869,7 +3800,7 @@ class mslib_befe {
                     // removes the cache
                     // somehow the get method always return false, disabled by Widy 11/09/2019
                     //if ($Cache_Lite->get($string)) {
-                        $Cache_Lite->remove($string);
+                    $Cache_Lite->remove($string);
                     //}
                     break;
             }
@@ -3880,6 +3811,109 @@ class mslib_befe {
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLitePostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+    }
+    public function print_r($array_in, $title = '') {
+        if (is_object($array_in)) {
+            $json = json_encode($array_in);
+            $array_in = json_decode($json, true);
+        }
+        if (is_array($array_in)) {
+            if (count($array_in) == 0) {
+//				$result .= '<tr><td><font face="Verdana,Arial" size="1"><strong>EMPTY!</strong></font></td></tr>';
+            } else {
+                $result = '
+				<table class="table table-striped table-bordered">';
+                if ($title) {
+                    $result .= '
+					<tr>
+					<th colspan="2">
+					' . htmlspecialchars($title) . '
+					</th>
+					</tr>
+					';
+                }
+                if (is_array($array_in) && count($array_in)) {
+                    foreach ($array_in as $key => $val) {
+                        if ((string)$key or $val) {
+                            if (!$tr_type or $tr_type == 'even') {
+                                $tr_type = 'odd';
+                            } else {
+                                $tr_type = 'even';
+                            }
+                            $result .= '<tr class="' . $tr_type . '">
+							<td valign="top" class="print_r_key">' . htmlspecialchars((string)$key) . '</td>
+							<td class="print_r_value">';
+                            if (is_array($val)) {
+//							$result .= t3lib_utility_Debug::viewArray($val);
+                                $result .= mslib_befe::print_r($val);
+                            } elseif (is_object($val)) {
+                                $string = '';
+                                if (method_exists($val, '__toString')) {
+                                    $string .= get_class($val) . ': ' . (string)$val;
+                                } else {
+                                    $string .= print_r($val, true);
+                                }
+                                $result .= '' . nl2br(htmlspecialchars($string)) . '<br />';
+                            } else {
+                                if (gettype($val) == 'object') {
+                                    $string = 'Unknown object';
+                                } else {
+                                    $string = (string)$val;
+                                }
+                                $result .= nl2br(htmlspecialchars($string)) . '<br />';
+                            }
+                            $result .= '</td>
+						</tr>';
+                        }
+                    }
+                }
+                $result .= '</table>';
+            }
+        } else {
+            $result = '<table class="table table-striped table-bordered">
+				<tr>
+					<td>' . nl2br(htmlspecialchars((string)$array_in)) . '</td>
+				</tr>
+			</table>'; // Output it as a string.
+        }
+        return $result;
+    }
+    function mailDev($subject, $body, $overrideUsers = array()) {
+        $sendEmail = 1;
+        //hook to let other plugins further manipulate the settings
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'])) {
+            $params = array(
+                    'subject' => &$subject,
+                    'body' => &$body,
+                    'sendEmail' => &$sendEmail,
+                    'overrideUsers' => &$overrideUsers
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $mailTo = array();
+        if (is_array($overrideUsers) && count($overrideUsers)) {
+            $mailTo = $overrideUsers;
+        } elseif ($this->conf['developer_email']) {
+            $user = array();
+            $user['name'] = $this->conf['developer_email'];
+            $user['email'] = $this->conf['developer_email'];
+            $mailTo[] = $user;
+        } else {
+            if (isset($this->ms['MODULES']['DEVELOPER_EMAIL'])) {
+                $user = array();
+                $user['name'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
+                $user['email'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
+                $mailTo[] = $user;
+            }
+        }
+        if ($sendEmail && count($mailTo)) {
+            $subject = $subject;
+            foreach ($mailTo as $mailuser) {
+                mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
             }
         }
     }
@@ -3947,6 +3981,7 @@ class mslib_befe {
         }
         return $f;
     }
+    // utf-8 support
     function getNestedItems($input, $level = array()) {
         $output = array();
         foreach ($input as $key => $item) {
@@ -4113,7 +4148,7 @@ class mslib_befe {
             }
         }
     }
-    // utf-8 support
+    // weight list for shipping costs page
     public function getImportedProductsLockedFields($products_id) {
         if (is_numeric($products_id)) {
             $skip = 0;
@@ -4146,7 +4181,6 @@ class mslib_befe {
             }
         }
     }
-    // weight list for shipping costs page
     public function readPageAccess($id, $perms_clause) {
         if ((string)$id != '') {
             $id = intval($id);
@@ -4279,7 +4313,7 @@ class mslib_befe {
         return $selectbox_str;
     }
     function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix = '', $display_currency_symbol = 1, $table_type = 'invoice') {
-        $template='';
+        $template = '';
         switch ($table_type) {
             case 'invoice':
                 if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
@@ -4299,12 +4333,12 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'])) {
             $params_internal = array(
-                'template' => &$template,
-                'order' => &$order,
-                'invoice_number' => &$invoice_number,
-                'prefix' => &$prefix,
-                'display_currency_symbol' => &$display_currency_symbol,
-                'table_type' => &$table_type
+                    'template' => &$template,
+                    'order' => &$order,
+                    'invoice_number' => &$invoice_number,
+                    'prefix' => &$prefix,
+                    'display_currency_symbol' => &$display_currency_symbol,
+                    'table_type' => &$table_type
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -4469,7 +4503,6 @@ class mslib_befe {
                 if (empty($product['products_name']) && !empty($product_tmp['products_name'])) {
                     $product_name = htmlspecialchars($product_tmp['products_name']);
                 }
-
                 if ($product['products_article_number']) {
                     $product_name .= ' (' . htmlspecialchars($product['products_article_number']) . ')';
                 }
@@ -4491,13 +4524,13 @@ class mslib_befe {
                 $markerArray['ITEM_PRODUCT_NAME'] = $product_name;
                 // Seperate marker version
                 $markerArray['ITEM_SEPERATE_PRODUCTS_NAME'] = htmlspecialchars($product['products_name']);
-                $markerArray['ITEM_SEPERATE_SKU_CODE']='';
-                $product['sku_code']=trim($product['sku_code']);
+                $markerArray['ITEM_SEPERATE_SKU_CODE'] = '';
+                $product['sku_code'] = trim($product['sku_code']);
                 if (!empty($product['sku_code'])) {
                     $markerArray['ITEM_SEPERATE_SKU_CODE'] = '<br/>' . htmlspecialchars($this->pi_getLL('admin_label_sku')) . ': ' . htmlspecialchars($product['sku_code']);
                 }
                 $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '';
-                $product['products_description']=trim($product['products_description']);
+                $product['products_description'] = trim($product['products_description']);
                 if (!empty($product['products_description'])) {
                     $markerArray['ITEM_SEPERATE_PRODUCTS_DESCRIPTION'] = '<br/>' . nl2br(htmlspecialchars($product['products_description']));
                 }
@@ -4874,14 +4907,14 @@ class mslib_befe {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'])) {
             $params_internal = array(
-                'subparts' => &$subparts,
-                'subpartArray' => &$subpartArray,
-                'order' => &$order,
-                'table_type' => $table_type,
-                'real_prefix' => $real_prefix,
-                'prefix' => $prefix,
-                'customer_currency' => $customer_currency,
-                'display_currency_symbol' => $display_currency_symbol
+                    'subparts' => &$subparts,
+                    'subpartArray' => &$subpartArray,
+                    'order' => &$order,
+                    'table_type' => $table_type,
+                    'real_prefix' => $real_prefix,
+                    'prefix' => $prefix,
+                    'customer_currency' => $customer_currency,
+                    'display_currency_symbol' => $display_currency_symbol
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['printInvoiceOrderDetailsSummaryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
@@ -5371,7 +5404,7 @@ class mslib_befe {
     }
     public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array()) {
         if ($select && !is_array($select)) {
-            $select=array($select);
+            $select = array($select);
         }
         if (!count($select)) {
             $select = array();
@@ -5442,7 +5475,7 @@ class mslib_befe {
         if (is_numeric($orders_id)) {
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('crdate, new_value', // SELECT ...
                     'tx_multishop_orders_status_history', // FROM ...
-                    'orders_id=\'' . $orders_id . '\' and new_value=\''.$status_id.'\'', // WHERE.
+                    'orders_id=\'' . $orders_id . '\' and new_value=\'' . $status_id . '\'', // WHERE.
                     '', // GROUP BY...
                     'orders_status_history_id desc', // ORDER BY...
                     '1' // LIMIT ...
@@ -5497,11 +5530,11 @@ class mslib_befe {
                     }
                 }
             }
-            $inlineStyle='';
+            $inlineStyle = '';
             if (isset($settings['inlineStyles']['table']) && is_array($settings['inlineStyles']['table'])) {
                 $inlineStyle .= implode(' ', $settings['inlineStyles']['table']);
             }
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"'.($inlineStyle? ' '.$inlineStyle:'').'>';
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
             $content .= '<thead><tr>';
             if ($settings['keyNameAsHeadingTitle']) {
                 $cellCounter = 0;
@@ -5511,14 +5544,14 @@ class mslib_befe {
                         $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
                     $classes = array();
                     if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                         $classes[] = $settings['cellClasses'][$cellCounter];
                     }
                     $classes[] = 'cell' . ($cellCounter + 1);
-                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colName . '</th>';
+                    $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colName . '</th>';
                     $cellCounter++;
                 }
             } else {
@@ -5529,14 +5562,14 @@ class mslib_befe {
                         $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                     }
                     if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
                     }
                     $classes = array();
                     if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
                         $classes[] = $settings['cellClasses'][$cellCounter];
                     }
                     $classes[] = 'cell' . ($cellCounter + 1);
-                    $content .= '<th' . $inlineStyle . (count($classes)?' class="'.implode(' ',$classes).'"':''). '>' . $colVal . '</th>';
+                    $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colVal . '</th>';
                     $cellCounter++;
                 }
             }
@@ -5545,24 +5578,24 @@ class mslib_befe {
             if ($settings['keyNameAsHeadingTitle']) {
                 $rowCounter = 1;
             }
-            $odd='1';
+            $odd = '1';
             foreach ($rows as $row) {
                 if ($rowCounter) {
                     if ($odd) {
-                        $odd=0;
+                        $odd = 0;
                     } else {
-                        $odd=1;
+                        $odd = 1;
                     }
                     $trClass = array();
                     if (is_array($settings['trClassClass']) && $settings['trClassClass'][($rowCounter + 1)]) {
                         $trClass = array();
                         $trClass[] = $settings['trClassClass'][($rowCounter + 1)];
                     }
-                    $inlineStyle='';
+                    $inlineStyle = '';
                     if (isset($settings['inlineStyles']['trOddEven'][$odd]) && is_array($settings['inlineStyles']['td'][$odd])) {
-                        $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['trOddEven'][$odd]);
+                        $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['trOddEven'][$odd]);
                     }
-                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . ($inlineStyle?' '.$inlineStyle:'').'>';
+                    $content .= '<tr' . (count($trClass) ? ' class="' . implode(' ', $trClass) . '"' : '') . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
                     $cellCounter = 0;
                     foreach ($row as $col => $val) {
                         $classes = array();
@@ -5575,7 +5608,7 @@ class mslib_befe {
                             $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
                         }
                         if (isset($settings['inlineStyles']['td'][$cellCounter]) && is_array($settings['inlineStyles']['td'][$cellCounter])) {
-                            $inlineStyle .= ' '.implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
+                            $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['td'][$cellCounter]);
                         }
                         $content .= '<td' . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . $inlineStyle . '>' . $val . '</td>';
                         $cellCounter++;
@@ -5626,12 +5659,12 @@ class mslib_befe {
             return $content;
         }
     }
-    function bootstrapGrids($gridCols, $columns = 3, $gridClass='') {
+    function bootstrapGrids($gridCols, $columns = 3, $gridClass = '') {
         if (is_array($gridCols) && count($gridCols) && is_numeric($columns)) {
             $array = array_chunk($gridCols, ceil(count($gridCols) / $columns));
-            $col_size=ceil((12 / $columns));
-            if ($columns>=12) {
-                $col_size=2;
+            $col_size = ceil((12 / $columns));
+            if ($columns >= 12) {
+                $col_size = 2;
             }
             $content .= '<div class="row">';
             foreach ($array as $col => $colArray) {
@@ -5678,7 +5711,7 @@ class mslib_befe {
     }
     function tableExists($tableName) {
         if ($tableName) {
-            $query='SELECT 1 FROM '.addslashes($tableName).' LIMIT 1;';
+            $query = 'SELECT 1 FROM ' . addslashes($tableName) . ' LIMIT 1;';
             if ($res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                 return true;
             }
@@ -5693,47 +5726,10 @@ class mslib_befe {
                 $items = array();
                 if (count($cats) > 0) {
                     foreach ($cats as $cat) {
-                        $items[]=$cat['name'];
+                        $items[] = $cat['name'];
                     }
                 }
-                return implode(' > ',$items);
-            }
-        }
-    }
-    function mailDev($subject,$body,$overrideUsers=array()) {
-        $sendEmail=1;
-        //hook to let other plugins further manipulate the settings
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'])) {
-            $params = array(
-                    'subject' => &$subject,
-                    'body' => &$body,
-                    'sendEmail' =>&$sendEmail,
-                    'overrideUsers'=>&$overrideUsers
-            );
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['mailDevPreProc'] as $funcRef) {
-                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-            }
-        }
-        $mailTo=array();
-        if (is_array($overrideUsers) && count($overrideUsers)) {
-            $mailTo=$overrideUsers;
-        } elseif($this->conf['developer_email']) {
-            $user = array();
-            $user['name'] = $this->conf['developer_email'];
-            $user['email'] = $this->conf['developer_email'];
-            $mailTo[] = $user;
-        } else {
-            if (isset($this->ms['MODULES']['DEVELOPER_EMAIL'])) {
-                $user = array();
-                $user['name'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
-                $user['email'] = $this->ms['MODULES']['DEVELOPER_EMAIL'];
-                $mailTo[] = $user;
-            }
-        }
-        if ($sendEmail && count($mailTo)) {
-            $subject = $subject;
-            foreach ($mailTo as $mailuser) {
-                mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+                return implode(' > ', $items);
             }
         }
     }

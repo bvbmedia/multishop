@@ -237,7 +237,7 @@ $headerData .= '
 <script type="text/javascript">
 jQuery(document).ready(function ($) {
 	$(\'#order_date_from_visual\').datetimepicker({
-		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
+		dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
 		showSecond: true,
 		timeFormat: \'HH:mm:ss\',
         altField: "#order_date_from",
@@ -246,7 +246,7 @@ jQuery(document).ready(function ($) {
         altTimeFormat: "HH:mm:ss"
 	});
 	$(\'#order_date_till_visual\').datetimepicker({
-		dateFormat: \''.$this->pi_getLL('locale_date_format_js').'\',
+		dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
 		showSecond: true,
 		timeFormat: \'HH:mm:ss\',
 		hour: 23,

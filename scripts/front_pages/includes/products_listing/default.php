@@ -361,7 +361,7 @@ if (is_array($products) && count($products)) {
         $product_listing_form_content .= '<label for="limitsb">' . $this->pi_getLL('products_per_page', 'Products per page') . ':</label>';
         $product_listing_form_content .= '<select name="tx_multishop_pi1[limitsb]" id="limitsb" class="products_listing_filter">';
         if (!in_array($default_limit_page, $limit_options)) {
-            $limit_options[]=$default_limit_page;
+            $limit_options[] = $default_limit_page;
         }
         sort($limit_options);
         foreach ($limit_options as $limit_option) {

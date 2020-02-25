@@ -2002,10 +2002,10 @@ if ($this->post['action'] == 'category-insert') {
                             $item['manufacturers_id'] = $row['manufacturers_id'];
                         } else {
                             //$str = "insert into tx_multishop_manufacturers (date_added, manufacturers_name, status) VALUES ('" . time() . "','" . addslashes($item['manufacturers_name']) . "',1)";
-                            $insertArrayManufacturer=array();
-                            $insertArrayManufacturer['date_added']=time();
-                            $insertArrayManufacturer['manufacturers_name']=$item['manufacturers_name'];
-                            $insertArrayManufacturer['status']=1;
+                            $insertArrayManufacturer = array();
+                            $insertArrayManufacturer['date_added'] = time();
+                            $insertArrayManufacturer['manufacturers_name'] = $item['manufacturers_name'];
+                            $insertArrayManufacturer['status'] = 1;
                             if ($this->post['prefix_source_name']) {
                                 // save also the feed source name, maybe we need it later
                                 $insertArrayManufacturer['foreign_source_name'] = $this->post['prefix_source_name'];
@@ -2024,14 +2024,14 @@ if ($this->post['action'] == 'category-insert') {
                     if ($item['manufacturers_image']) {
                         if (isset($item['manufacturers_name'])) {
                             $manufacturers_name = $item['manufacturers_name'];
-                        } elseif($item['manufacturers_id']) {
+                        } elseif ($item['manufacturers_id']) {
                             $manufacturers_name = $item['manufacturers_id'];
                         }
                         $image = $item['manufacturers_image'];
-                        $strchk='';
+                        $strchk = '';
                         if (isset($item['manufacturers_id']) && is_numeric($item['manufacturers_id'])) {
                             $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_id='" . addslashes($item['manufacturers_id']) . "'";
-                        } elseif($item['manufacturers_name']) {
+                        } elseif ($item['manufacturers_name']) {
                             $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_name='" . addslashes($item['manufacturers_name']) . "'";
                         }
                         if ($strchk) {
@@ -2643,12 +2643,12 @@ if ($this->post['action'] == 'category-insert') {
                                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
-                            $productsTitle=$item['extid'];
+                            $productsTitle = $item['extid'];
                             if (isset($item['products_name'])) {
-                                $productsTitle=$item['products_name'];
+                                $productsTitle = $item['products_name'];
                             } else {
                                 if (isset($item['updated_products_id'])) {
-                                    $productsTitle=mslib_fe::getProductName($item['updated_products_id']);
+                                    $productsTitle = mslib_fe::getProductName($item['updated_products_id']);
                                 }
                             }
                             $content .= ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))) . ' "<strong>' . htmlspecialchars($productsTitle) . '</strong>" ' . $this->pi_getLL('has_been_adjusted') . '.<br />';
@@ -3290,7 +3290,7 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         // update flat database
                         if ($this->ms['MODULES']['FLAT_DATABASE'] or $this->ms['MODULES']['GLOBAL_MODULES']['FLAT_DATABASE']) {
-                            $updateFlat=1;
+                            $updateFlat = 1;
                             // custom hook that can be controlled by third-party plugin
                             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHookFlat'])) {
                                 $params = array(

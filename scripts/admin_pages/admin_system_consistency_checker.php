@@ -223,12 +223,12 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 }
 $str = "SELECT manufacturers_id from tx_multishop_manufacturers where manufacturers_id NOT IN (SELECT manufacturers_id from tx_multishop_products group by manufacturers_id)";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+$rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         mslib_befe::deleteManufacturer($row['manufacturers_id']);
     }
-    $content .= '<strong>' . number_format($rows,0,'','.') . '</strong> manufacturers deleted.<br/>';
+    $content .= '<strong>' . number_format($rows, 0, '', '.') . '</strong> manufacturers deleted.<br/>';
 }
 if ($unmapped_images) {
     $content .= '<strong>' . $unmapped_images . '</strong> ' . $this->pi_getLL('admin_label_missing_related_images_has_been_adjust_to_the_database') . '.<br />';

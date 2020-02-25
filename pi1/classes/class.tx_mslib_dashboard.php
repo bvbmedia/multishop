@@ -481,7 +481,6 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-
         $content .= '<div class="column-wrapper">';
         //shuffle($layouts);
         if (is_array($pageLayout)) {

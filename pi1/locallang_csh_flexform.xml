@@ -22,7 +22,8 @@
                 &lt;br /&gt;
                 &lt;strong&gt;&lt;em&gt;Content Type: Specials&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
                 This object is to show some specials.&lt;BR /&gt;
-                &lt;BR /&gt;</label>
+                &lt;BR /&gt;
+            </label>
             <label index="params.alttitle">Explanation</label>
             <label index="params.description">Some content objects allow additional parameters.</label>
             <label index="params.details">&lt;strong&gt;&lt;em&gt;Content Type: Core&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
@@ -38,7 +39,8 @@
                 This parameter will limit the results. Example: limit=5&lt;strong&gt;&lt;br /&gt;
                 &lt;br /&gt;
                 Random&lt;/strong&gt;&lt;br /&gt;
-                This parameter will randomize the results. Example: random=1&lt;BR /&gt;&lt;BR /&gt;</label>
+                This parameter will randomize the results. Example: random=1&lt;BR /&gt;&lt;BR /&gt;
+            </label>
             <label index="page_uid.alttitle">Explanation</label>
             <label index="page_uid.description">Some content objects expect a relation to the core shop page.</label>
             <label index="page_uid.details">Some content objects expect a relation to the core shop page.</label>

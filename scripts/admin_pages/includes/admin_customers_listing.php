@@ -112,14 +112,14 @@ foreach ($customers as $customer) {
     $markerArray['CUSTOMERS_LOGINAS'] = htmlspecialchars($this->pi_getLL('login'));
     $markerArray['CUSTOMERS_STATUS'] = $status_html;
     $markerArray['CUSTOMERS_DELETE_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&customer_id=' . $customer['uid'] . '&delete=1&' . mslib_fe::tep_get_all_get_params(array(
-        'customer_id',
-        'delete',
-        'disable',
-        'clearcache'
-    )));
+                    'customer_id',
+                    'delete',
+                    'disable',
+                    'clearcache'
+            )));
     $markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS'] = 'return confirm(\'' . htmlspecialchars($this->pi_getLL('are_you_sure')) . '?\')';
     $markerArray['ADMIN_LABEL_ALT_REMOVE'] = ucfirst($this->pi_getLL('admin_label_alt_remove'));
-    $markerArray['CUSTOMERS_DELETE_ICON']='<a href="'. $markerArray['CUSTOMERS_DELETE_LINK'].'" onclick="'.$markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS'].'" class="text-danger admin_menu_remove" alt="'. $markerArray['ADMIN_LABEL_ALT_REMOVE'].'"><i class="fa fa-trash-o fa-lg"></i></a>';
+    $markerArray['CUSTOMERS_DELETE_ICON'] = '<a href="' . $markerArray['CUSTOMERS_DELETE_LINK'] . '" onclick="' . $markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS'] . '" class="text-danger admin_menu_remove" alt="' . $markerArray['ADMIN_LABEL_ALT_REMOVE'] . '"><i class="fa fa-trash-o fa-lg"></i></a>';
     $markerArray['MASTER_SHOP'] = $master_shop_col;
     $markerArray['CUSTOM_MARKER_0_BODY'] = '';
     $markerArray['CUSTOM_MARKER_1_BODY'] = '';

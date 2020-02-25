@@ -49,7 +49,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
      * @return    The content that is displayed on the website
      */
     function admin_main($content, $conf) {
-        if (isset($GLOBALS['TSFE']->config['config']['sys_language_uid']) && (int) $GLOBALS['TSFE']->config['config']['sys_language_uid'] != 0) {
+        if (isset($GLOBALS['TSFE']->config['config']['sys_language_uid']) && (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'] != 0) {
             // Code for later usage, to prevent opening the admin panel in a foreign language
             // Never allow the admin panel to be opened in a different language
             /*$redirect_url = (isset($_SERVER['HTTPS']) ? "https://" : "http://") . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST') . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');

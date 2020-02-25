@@ -38,8 +38,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         if ($num_rows) {
             if ((isset($this->get['q']) && empty($this->get['q'])) || (!isset($this->get['preselected_id']))) {
                 //$data[] = array(
-                        //'id' => '0',
-                        //'text' => $this->pi_getLL('admin_label_select_feature_highlights')
+                //'id' => '0',
+                //'text' => $this->pi_getLL('admin_label_select_feature_highlights')
                 //);
             }
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -153,7 +153,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 );
             }
         }
-        $content=json_encode($data);
+        $content = json_encode($data);
         break;
     case 'delete_product_attributes':
         if ($this->ADMIN_USER) {

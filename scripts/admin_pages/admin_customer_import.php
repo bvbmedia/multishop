@@ -2,7 +2,6 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-
 set_time_limit(86400);
 ignore_user_abort(true);
 if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
@@ -931,7 +930,6 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             } while (mslib_befe::ifExists($finalUsername, 'fe_users', 'username', $filter));
                             // Copy final username back to the $item array
                             $item['username'] = $finalUsername;
-
                         }
                         // first combine the values to 1 array
                         $usergroups = array();

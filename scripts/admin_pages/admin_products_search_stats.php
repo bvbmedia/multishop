@@ -170,7 +170,7 @@ foreach ($dates as $key => $value) {
     // hook
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_stats.php']['productSearchStatsQueryHookPreProc'])) {
         $params = array(
-            'where' => &$where
+                'where' => &$where
         );
         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_stats.php']['productSearchStatsQueryHookPreProc'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

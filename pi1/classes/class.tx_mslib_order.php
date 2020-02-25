@@ -87,7 +87,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
                     // hook
                     $params = array(
-                            'MODULES'=>&$this->ms['MODULES'],
+                            'MODULES' => &$this->ms['MODULES'],
                             'row' => &$row,
                             'orders_id' => &$orders_id
                     );
@@ -105,7 +105,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                     $tax_rate['total_tax_rate'] = 0;
                     // fetch the 0% tax id
-                    $zero_percent_tax_id=0;
+                    $zero_percent_tax_id = 0;
                     $customer_country = mslib_fe::getCountryByName($row['billing_country']);
                     $sql_tax_sb = $GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
                             'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
@@ -116,9 +116,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     );
                     $qry_tax_sb = $GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
                     while ($rs_tx_sb = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
-                        $rs_tx_sb['rate']=(int)$rs_tx_sb['rate'];
-                        if ($rs_tx_sb['rate']=='0') {
-                            $zero_percent_tax_id=$rs_tx_sb['tax_id'];
+                        $rs_tx_sb['rate'] = (int)$rs_tx_sb['rate'];
+                        if ($rs_tx_sb['rate'] == '0') {
+                            $zero_percent_tax_id = $rs_tx_sb['tax_id'];
                         }
                     }
                 }
@@ -247,15 +247,15 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $sub_total_excluding_vat += ($final_price) * $row_prod['qty'];
                     $grand_total += ($final_price + $tax) * $row_prod['qty'];
                     $serial_prod = serialize($product_tax_data);
-                    $updateOrderProducts=array();
-                    $updateOrderProducts['products_tax_data']=$serial_prod;
+                    $updateOrderProducts = array();
+                    $updateOrderProducts['products_tax_data'] = $serial_prod;
                     if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-                        $updateOrderProducts['products_tax']=0;
-                        if ($zero_percent_tax_id>0) {
-                            $updateOrderProducts['products_tax_id']=$zero_percent_tax_id;
+                        $updateOrderProducts['products_tax'] = 0;
+                        if ($zero_percent_tax_id > 0) {
+                            $updateOrderProducts['products_tax_id'] = $zero_percent_tax_id;
                         }
                     }
-                    $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\''.$row['orders_id'].'\'', $updateOrderProducts);
+                    $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\'' . $row['orders_id'] . '\'', $updateOrderProducts);
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
@@ -322,7 +322,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateArray['orders_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $row['orders_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                 $invoice = mslib_fe::getInvoice($row['orders_id'], 'orders_id');
                 if ($invoice['id']) {
                     $updateInvoicesArray = array();
@@ -342,8 +341,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreProcOrder'])) {
                 $params = array(
-                    'order' => &$order,
-                    'mail_template' => &$mail_template,
+                        'order' => &$order,
+                        'mail_template' => &$mail_template,
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderPreProcOrder'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -603,7 +602,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
                 $array1[] = '###TOTAL_AMOUNT_RAW###';
-                $array2[] = number_format($order['total_amount'],'2','.','');
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';
@@ -671,7 +670,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $array2[] = $order['payment_method_label'];
                 $array1[] = '###EXPECTED_DELIVERY_DATE###';
                 if ($order['expected_delivery_date'] > 0) {
-                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                         $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                     } else {
                         $array2[] = strftime("%x", $order['expected_delivery_date']);
@@ -681,7 +680,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 $array1[] = '###EXPECTED_DELIVERY_DATE_LONG###';
                 if ($order['expected_delivery_date'] > 0) {
-                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE']=='1') {
+                    if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                         $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                     } else {
                         $array2[] = strftime($this->pi_getLL('full_date_format'), $order['expected_delivery_date']);
@@ -731,7 +730,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $mail_attachment = array();
                 $add_invoice_attachment_on_templates = array();
                 $add_invoice_attachment_on_templates[] = 'email_order_paid_letter';
-                $options=array();
+                $options = array();
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
                     $params = array(
                             'this' => &$this,
@@ -747,7 +746,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'mail_attachment' => &$mail_attachment,
                             'loadFromPids' => $loadFromPids,
                             'add_invoice_attachment_on_templates' => &$add_invoice_attachment_on_templates,
-                            'options'=>&$options
+                            'options' => &$options
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -913,7 +912,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $c = true;
         $orders_tax_data = $order['orders_tax_data'];
         foreach ($order['products'] as $product) {
-            $product_db=array();
+            $product_db = array();
             if ($product['products_id']) {
                 $product_db = mslib_fe::getProduct($product['products_id']);
             }
@@ -933,23 +932,22 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $item['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 } else {
                     $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
-
-                    if ($this->ms['page']=='psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl']=='1') {
+                    if ($this->ms['page'] == 'psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl'] == '1') {
                         if ($product['product_link']) {
-                            $item['ITEM_IMAGE'] = '<a href="'.$product['product_link'].'"><img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '"></a>';
+                            $item['ITEM_IMAGE'] = '<a href="' . $product['product_link'] . '"><img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '"></a>';
                         }
                     }
                 }
             }
             // ITEM_NAME
             $tmp_item_name = array();
-            if (strpos($product['products_name'], ' [disabled]')!==false) {
-                $product['products_name']=str_replace(' [disabled]', '', $product['products_name']);
+            if (strpos($product['products_name'], ' [disabled]') !== false) {
+                $product['products_name'] = str_replace(' [disabled]', '', $product['products_name']);
             }
             $tmp_item_name['products_name'] = htmlspecialchars($product['products_name']);
-            if ($this->ms['page']=='psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl']=='1') {
+            if ($this->ms['page'] == 'psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl'] == '1') {
                 if ($product['product_link']) {
-                    $tmp_item_name['products_name']='<a href="'.$product['product_link'].'">'.$tmp_item_name['products_name'].'</a>';
+                    $tmp_item_name['products_name'] = '<a href="' . $product['product_link'] . '">' . $tmp_item_name['products_name'] . '</a>';
                 }
             }
             $tmp_item_name['products_model'] = '';
@@ -1104,7 +1102,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $subProductDelivered = array();
             $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
             $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
-
             $subProductDeliveredPart = array();
             $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
             $subProductDelivered = array();
@@ -1517,12 +1514,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_name'] = preg_replace('/\s+/', ' ', $address['first_name'] . ' ' . $address['middle_name'] . ' ' . $address['last_name']);
             $insertArray['billing_email'] = $address['email'];
             $insertArray['billing_gender'] = $address['gender'];
-            switch($insertArray['billing_gender']) {
+            switch ($insertArray['billing_gender']) {
                 case '0':
-                    $insertArray['billing_gender']='m';
+                    $insertArray['billing_gender'] = 'm';
                     break;
                 case '1':
-                    $insertArray['billing_gender']='f';
+                    $insertArray['billing_gender'] = 'f';
                     break;
             }
             $insertArray['billing_birthday'] = $address['birthday'];
@@ -1535,8 +1532,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['billing_address_ext'] = $address['address_ext'];
             $insertArray['billing_address'] = $address['street_name'] . ' ' . $address['address_number'] . $address['address_ext'];
             if ($address['address'] && !$insertArray['billing_street_name']) {
-                $insertArray['billing_street_name']=$address['address'];
-                $insertArray['billing_address']=$address['address'];
+                $insertArray['billing_street_name'] = $address['address'];
+                $insertArray['billing_address'] = $address['address'];
             }
             $insertArray['billing_address'] = preg_replace('/\s+/', ' ', $insertArray['billing_address']);
             $insertArray['billing_room'] = '';
@@ -1559,12 +1556,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_telephone'] = $insertArray['billing_telephone'];
                 $insertArray['delivery_mobile'] = $insertArray['billing_mobile'];
                 $insertArray['delivery_gender'] = $insertArray['billing_gender'];
-                switch($insertArray['delivery_gender']) {
+                switch ($insertArray['delivery_gender']) {
                     case '0':
-                        $insertArray['delivery_gender']='m';
+                        $insertArray['delivery_gender'] = 'm';
                         break;
                     case '1':
-                        $insertArray['delivery_gender']='f';
+                        $insertArray['delivery_gender'] = 'f';
                         break;
                 }
                 $insertArray['delivery_building'] = $insertArray['billing_building'];
@@ -1589,12 +1586,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_name'] = preg_replace('/\s+/', ' ', $address['delivery_first_name'] . ' ' . $address['delivery_middle_name'] . ' ' . $address['delivery_last_name']);
                 $insertArray['delivery_email'] = $address['delivery_email'];
                 $insertArray['delivery_gender'] = $address['delivery_gender'];
-                switch($insertArray['delivery_gender']) {
+                switch ($insertArray['delivery_gender']) {
                     case '0':
-                        $insertArray['delivery_gender']='m';
+                        $insertArray['delivery_gender'] = 'm';
                         break;
                     case '1':
-                        $insertArray['delivery_gender']='f';
+                        $insertArray['delivery_gender'] = 'f';
                         break;
                 }
                 $insertArray['delivery_building'] = $address['delivery_building'];
@@ -1603,8 +1600,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['delivery_address_ext'] = $address['delivery_address_ext'];
                 $insertArray['delivery_address'] = preg_replace('/\s+/', ' ', $address['delivery_street_name'] . ' ' . $address['delivery_address_number'] . $address['delivery_address_ext']);
                 if ($address['delivery_address'] && !$insertArray['delivery_street_name']) {
-                    $insertArray['delivery_street_name']=$address['delivery_address'];
-                    $insertArray['delivery_address']=$address['delivery_address'];
+                    $insertArray['delivery_street_name'] = $address['delivery_address'];
+                    $insertArray['delivery_address'] = $address['delivery_address'];
                 }
                 $insertArray['delivery_city'] = $address['delivery_city'];
                 $insertArray['delivery_zip'] = $address['delivery_zip'];
@@ -1692,7 +1689,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'])) {
                 $params = array(
                         'insertArray' => &$insertArray,
-                        'address'=>&$address
+                        'address' => &$address
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1728,7 +1725,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['orders_id'] = $orders_id;
             $insertArray['crdate'] = time();
             if ($insertArray['manufacturers_id']) {
-                $manufacturer=mslib_fe::getManufacturer($insertArray['manufacturers_id']);
+                $manufacturer = mslib_fe::getManufacturer($insertArray['manufacturers_id']);
                 $insertArray['manufacturers_name'] = $manufacturer['manufacturers_name'];
             }
             //hook to let other plugins further manipulate the replacers

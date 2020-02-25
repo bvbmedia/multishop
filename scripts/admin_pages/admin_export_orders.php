@@ -121,7 +121,6 @@ $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $array['order_grand_total_tax_' . $row['name']] = sprintf($this->pi_getLL('feed_exporter_fields_label_order_tax_total'), $row['name']);
 }
-
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';
@@ -240,7 +239,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="all"' . ($post_data['shipping_method'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
 		';
         foreach ($shipping_methods as $shipping_method) {
-            $shipping_method_sb .= '<option value="'.$shipping_method['code'].'"' . ($post_data['shipping_method'] == $shipping_method['code'] ? ' selected="selected"' : '') . '>' . $shipping_method['name'] . '</option>';
+            $shipping_method_sb .= '<option value="' . $shipping_method['code'] . '"' . ($post_data['shipping_method'] == $shipping_method['code'] ? ' selected="selected"' : '') . '>' . $shipping_method['name'] . '</option>';
         }
         $shipping_method_sb .= '</select>';
         // payment methods
@@ -250,7 +249,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="all"' . ($post_data['payment_method'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
 		';
         foreach ($payment_methods as $payment_method) {
-            $payment_method_sb .= '<option value="'.$payment_method['code'].'"' . ($post_data['payment_method'] == $payment_method['code'] ? ' selected="selected"' : '') . '>' . $payment_method['name'] . '</option>';
+            $payment_method_sb .= '<option value="' . $payment_method['code'] . '"' . ($post_data['payment_method'] == $payment_method['code'] ? ' selected="selected"' : '') . '>' . $payment_method['name'] . '</option>';
         }
         $payment_method_sb .= '</select>';
         // payment status selectbox
@@ -259,7 +258,6 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="paid"' . ($post_data['payment_status'] == 'paid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('paid') . '</option>
 			<option value="unpaid"' . ($post_data['payment_status'] == 'unpaid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('unpaid') . '</option>
 		</select>';
-
         // order by selectbox
         $order_by_sb = '<select name="order_by" class="form-control">
 			<option value="orders_id"' . ($post_data['order_by'] == 'orders_id' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('orders_id') . '</option>

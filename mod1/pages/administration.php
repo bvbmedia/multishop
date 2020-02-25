@@ -1554,7 +1554,6 @@ $content .= '
 					';
 if (count($multishop_content_objects) > 0) {
 //							<li><a class="buttons" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=full_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
-
     foreach ($multishop_content_objects as $content_object) {
         $pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($content_object['uid'], '');
         if (is_numeric($pageinfo['uid'])) {
