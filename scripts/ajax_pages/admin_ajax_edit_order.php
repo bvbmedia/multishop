@@ -98,14 +98,45 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     //
                     if (mslib_fe::updateOrderStatusToPaid($order_id)) {
                         $return_data['info'] = array(
-                                'status' => 'info',
-                                'message' => 'Order ' . $order_id . ' has been updated to paid.'
+                            'status' => 'info',
+                            'message' => 'Order ' . $order_id . ' has been updated to paid.'
                         );
                         //
                         if (is_numeric($payment_id) && $payment_id > 0) {
                             $payment_method = mslib_fe::getPaymentMethod($payment_id);
+                            if ($payment_method['code'] == $order['payment_method']) {
+                                $payment_method_costs = $order['payment_method_costs'];
+                            } else {
+                                if (strstr($payment_method['handling_costs'], "%")) {
+                                    $percentage = str_replace("%", '', $payment_method['handling_costs']);
+                                    $total_include_vat = 0;
+                                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                        $total_include_vat = 1;
+                                    }
+                                    $subtotal = $order['orders_tax_data']['sub_total_excluding_vat'];
+                                    if ($total_include_vat) {
+                                        $subtotal = $order['orders_tax_data']['sub_total'];
+                                    }
+                                    if ($subtotal) {
+                                        if (isset($order['shipping_method_costs']) && $order['shipping_method_costs'] > 0) {
+                                            if ($total_include_vat) {
+                                                $subtotal += $order['shipping_method_costs'] + $order['orders_tax_data']['shipping_tax'];
+                                            } else {
+                                                $subtotal += $order['shipping_method_costs'];
+                                            }
+                                        }
+                                        $handling_cost = ($subtotal / 100 * $percentage);
+                                        if ($total_include_vat && $payment_method['tax_rate']) {
+                                            $handling_cost = $handling_cost / (1 + $payment_method['tax_rate']);
+                                        }
+                                        $payment_method_costs = $handling_cost;
+                                    }
+                                } else {
+                                    $payment_method_costs = $payment_method['handling_costs'];
+                                }
+                            }
                             $updateArray = array();
-                            $updateArray['payment_method_costs'] = $payment_method['handling_costs'];
+                            $updateArray['payment_method_costs'] = $payment_method_costs;
                             $updateArray['payment_method'] = $payment_method['code'];
                             $updateArray['payment_method_label'] = $payment_method['name'];
                             $updateArray['orders_last_modified'] = time();
