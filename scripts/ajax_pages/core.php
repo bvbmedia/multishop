@@ -1610,9 +1610,17 @@ switch ($this->ms['page']) {
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
+                            $file_name = $_FILES['file']['name'];
                             $file_tmp_name = $_FILES['file']['tmp_name'];
                             if (is_array($_FILES['file']['tmp_name'])) {
+                                $file_name = $_FILES['file']['name'][0];
                                 $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                            }
+                            if (!$this->get['tx_multishop_pi1']['title']) {
+                                $tmp_real_file_name = explode('.', $file_name);
+                                unset($tmp_real_file_name[count($tmp_real_file_name) - 1]);
+                                $real_file_name = implode('.', $tmp_real_file_name);
+                                $this->get['tx_multishop_pi1']['title'] = $real_file_name;
                             }
                             move_uploaded_file($file_tmp_name, $temp_file);
                             $size = getimagesize($temp_file);
@@ -1638,6 +1646,12 @@ switch ($this->ms['page']) {
                     if (is_array($_FILES['file']['tmp_name'])) {
                         $file_name = $_FILES['file']['name'][0];
                         $file_tmp_name = $_FILES['file']['tmp_name'][0];
+                    }
+                    if (!$this->get['tx_multishop_pi1']['title']) {
+                        $tmp_real_file_name = explode('.', $file_name);
+                        unset($tmp_real_file_name[count($tmp_real_file_name) - 1]);
+                        $real_file_name = implode('.', $tmp_real_file_name);
+                        $this->get['tx_multishop_pi1']['title'] = $real_file_name;
                     }
                     move_uploaded_file($file_tmp_name, $temp_file);
                     $filename = $file_name;
