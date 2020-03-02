@@ -1579,7 +1579,8 @@ if ($this->post['action'] == 'category-insert') {
                     $params = array(
                             'item' => &$item,
                             'prefix_source_name' => $this->post['prefix_source_name'],
-                            'skipItem' => &$skipItem
+                            'skipItem' => &$skipItem,
+                            'tmpitem' => &$tmpitem
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
