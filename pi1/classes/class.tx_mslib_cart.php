@@ -1604,6 +1604,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if (isset($address['contact_email']) && !empty($address['contact_email'])) {
                 $insertArray['contact_email'] = $address['contact_email'];
             }
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'])) {
+                $params = array(
+                        'insertArray' => &$insertArray
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
