@@ -362,23 +362,40 @@ switch ($this->ms['page']) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-        }
-        $page = mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
-        if ($page[0]['name']) {
-            if (count($array1) && count($array2)) {
-                $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+            $page = mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
+            if ($page[0]['name']) {
+                if (count($array1) && count($array2)) {
+                    $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+                }
+                $header_label = $page[0]['name'];
+            } else {
+                $header_label = 'Payment';
             }
-            $header_label = $page[0]['name'];
+            $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
+            if ($page[0]['content']) {
+                if (count($array1) && count($array2)) {
+                    $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
+                }
+                $content .= $page[0]['content'];
+            } else {
+                // show standard thank you
+                if ($this->ms['page'] == 'psp_accepturl') {
+                    $content .= $this->pi_getLL('your_payment_has_been_completed');
+                } else if ($this->ms['page'] == 'psp_pendingurl') {
+                    $content .= $this->pi_getLL('your_payment_is_pending');
+                } else if ($this->ms['page'] == 'psp_declineurl') {
+                    $content .= $this->pi_getLL('your_payment_is_declined');
+                } else if ($this->ms['page'] == 'psp_exceptionurl') {
+                    $content .= $this->pi_getLL('your_payment_is_failed_');
+                } else if ($this->ms['page'] == 'psp_cancelurl') {
+                    $content .= $this->pi_getLL('your_payment_has_been_cancelled');
+                } else {
+                    $content .= $this->pi_getLL('your_payment_has_not_been_completed');
+                }
+            }
         } else {
             $header_label = 'Payment';
-        }
-        $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
-        if ($page[0]['content']) {
-            if (count($array1) && count($array2)) {
-                $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
-            }
-            $content .= $page[0]['content'];
-        } else {
+            $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
             // show standard thank you
             if ($this->ms['page'] == 'psp_accepturl') {
                 $content .= $this->pi_getLL('your_payment_has_been_completed');
