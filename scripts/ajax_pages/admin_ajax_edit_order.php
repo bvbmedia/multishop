@@ -493,6 +493,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
         $skip_db = false;
         $pid = 0;
+        $this->get['_q'] = $this->get['q'];
         if (strpos($this->get['q'], '||') !== false) {
             list($search_term, $tmp_pid, $tmp_optid) = explode('||', $this->get['q']);
             $this->get['q'] = $search_term;
@@ -545,6 +546,15 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 'optval2opt.sort_order', // ORDER BY...
                 '' // LIMIT ...
         );
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'])) {
+            $params = array(
+                'str' => &$str
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
