@@ -1175,8 +1175,8 @@ if ($this->post) {
                 $updateArrayCMS['meta_title'] = $this->post['manufacturers_name'];
                 $updateArrayCMS['meta_keywords'] = '';
                 $updateArrayCMS['meta_description'] = '';
-                $updateArray['manufacturers_id'] = $manufacturers_id;
-                $updateArray['language_id'] = $this->sys_language_uid;
+                $updateArrayCMS['manufacturers_id'] = $manufacturers_id;
+                $updateArrayCMS['language_id'] = $this->sys_language_uid;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers_cms', $updateArrayCMS);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
 
