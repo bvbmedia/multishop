@@ -3429,6 +3429,10 @@ if ($this->post['action'] == 'category-insert') {
 //			if ($file_location and file_exists($file_location)) @unlink($file_location);
         }
         $stats['time_finished'] = time();
+        if ($this->msLogFile) {
+            $message='Importer completed.'."\n";
+            file_put_contents($this->msLogFile, $message, FILE_APPEND);
+        }
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'])) {
             $params = array(
