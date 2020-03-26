@@ -843,6 +843,7 @@ class mslib_befe {
                     $flat_product['page_uid'] = $row['page_uid'];
                     $flat_product['starttime'] = $row['starttime'];
                     $flat_product['endtime'] = $row['endtime'];
+                    $flat_product['ignore_stock_level'] = $row['ignore_stock_level'];
                     if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
                         foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id => $array) {
                             if ($option_id) {
