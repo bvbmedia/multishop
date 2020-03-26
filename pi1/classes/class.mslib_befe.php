@@ -2274,6 +2274,7 @@ class mslib_befe {
 		  `vendor_code` varchar(25) default '',
 		  `starttime` int(11) default '0',
 		  `endtime` int(11) default '0',
+		  `ignore_stock_level` tinyint(1) default '0',
 		";
         $additionalColumns = array();
         if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
