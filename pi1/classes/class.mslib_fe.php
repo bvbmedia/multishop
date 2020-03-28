@@ -2406,10 +2406,19 @@ class mslib_fe {
         $query_array['select'][] = 'popt.required';
         $query_array['select'][] = 'popt.products_options_id';
         $query_array['select'][] = 'popt.products_options_name';
+        $query_array['select'][] = 'popt.products_options_descriptions';
         $query_array['select'][] = 'popt.listtype';
         $query_array['select'][] = 'popt.hide';
         $query_array['select'][] = 'popt.products_options_descriptions';
-        $query_array['from'][] = 'tx_multishop_products_options popt';
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+            $query_array['select'][] = 'aog.attributes_options_groups_name';
+            $from='tx_multishop_products_options popt ';
+            $from.='LEFT OUTER JOIN tx_multishop_attributes_options_groups_to_products_options aogtp ON aogtp.products_options_id=popt.products_options_id ';
+            $from.='LEFT OUTER JOIN tx_multishop_attributes_options_groups aog ON aogtp.attributes_options_groups_id=aog.attributes_options_groups_id AND aogtp.attributes_options_groups_id=aog.attributes_options_groups_id AND aog.language_id = \'' . $this->sys_language_uid . '\'';
+            $query_array['from'][] = $from;
+        } else {
+            $query_array['from'][] = 'tx_multishop_products_options popt';
+        }
         $query_array['from'][] = 'tx_multishop_products_attributes patrib';
         $query_array['where'][] = 'patrib.products_id=\'' . (int)$products_id . '\'';
         $query_array['where'][] = 'patrib.page_uid=\'' . (int)$this->showCatalogFromPage . '\'';
@@ -2448,8 +2457,17 @@ class mslib_fe {
                 while ($options = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                     $returnAsArrayData[$options['products_options_id']] = $options;
                     // now get the values
-                    $str = $GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix', // SELECT ...
-                            'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
+                    $select=array();
+                    $select[]='pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix';
+                    $select[]='povdesc.description';
+                    if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+                        $select[]='pa.attribute_image as attribute_local_image, povp.products_options_values_image as attribute_global_image';
+                    }
+                    $from='tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp ';
+                    $from.='LEFT OUTER JOIN tx_multishop_products_options_values_to_products_options_desc povdesc ON povdesc.language_id=\'' . $this->sys_language_uid . '\' AND povdesc.products_options_values_to_products_options_id=povp.products_options_values_to_products_options_id';
+                    //products_options_values_to_products_options_id
+                    $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',',$select), // SELECT ...
+                            $from, // FROM ...
                             'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . $options['products_options_id'] . '\' and pa.page_uid = \'' . $this->showCatalogFromPage . '\' and pov.language_id = \'' . $this->sys_language_uid . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . $options['products_options_id'] . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
                             '', // GROUP BY...
                             'pa.sort_order_option_value asc', // ORDER BY...
@@ -2459,6 +2477,17 @@ class mslib_fe {
                     $total_values = $GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
                     if ($total_values) {
                         while ($products_options_values = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
+                            if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+                                $products_options_values['attribute_image'] = '';
+                                if (!empty($products_options_values['attribute_local_image'])) {
+                                    $products_options_values['attribute_image'] = $products_options_values['attribute_local_image'];
+                                } else if (!empty($products_options_values['attribute_global_image'])) {
+                                    $products_options_values['attribute_image'] = $products_options_values['attribute_global_image'];
+                                }
+                                if (!empty($products_options_values['attribute_image'])) {
+                                    $products_options_values['options_values_image']=mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'normal');
+                                }
+                            }
                             $returnAsArrayData[$options['products_options_id']]['values'][] = $products_options_values;
                         }
                     }
