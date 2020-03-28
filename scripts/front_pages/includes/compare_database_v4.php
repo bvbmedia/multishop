@@ -132,8 +132,8 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
             $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
         }
     }
-    $messages[] = "invoice_grand_total value in tx_multishop_invoices table updated";
-    $messages[] = "invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
+    //$messages[] = "invoice_grand_total value in tx_multishop_invoices table updated";
+    //$messages[] = "invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
 }
 $str = "select id from tx_multishop_feeds_excludelist limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
