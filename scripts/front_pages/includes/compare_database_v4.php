@@ -132,8 +132,8 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_order)) {
             $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
         }
     }
-    $messages[] = "invoice_grand_total value in tx_multishop_invoices table updated";
-    $messages[] = "invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
+    //$messages[] = "invoice_grand_total value in tx_multishop_invoices table updated";
+    //$messages[] = "invoice_grand_total_excluding_vat value in tx_multishop_invoices table updated";
 }
 $str = "select id from tx_multishop_feeds_excludelist limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -593,7 +593,6 @@ if (!$qry) {
 // remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
 $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
-$messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
 /*
 $auto_shipping_costs=mslib_befe::getRecord('DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER', 'tx_multishop_configuration', 'configuration_key');
 if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_value'])) {
