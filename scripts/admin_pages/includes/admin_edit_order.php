@@ -839,6 +839,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                     $this->post['tx_multishop_pi1']['billing_name'] = '';
                     if ($billing_name) {
+                        $billing_name = preg_replace('/\s+/', ' ', $billing_name);
                         $this->post['tx_multishop_pi1']['billing_name'] = $billing_name;
                     }
                     //
@@ -854,6 +855,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                     $this->post['tx_multishop_pi1']['delivery_name'] = '';
                     if ($delivery_name) {
+                        $delivery_name = preg_replace('/\s+/', ' ', $delivery_name);
                         $this->post['tx_multishop_pi1']['delivery_name'] = $delivery_name;
                     }
                     //

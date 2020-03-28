@@ -2166,6 +2166,7 @@ switch ($this->ms['page']) {
                     }
                     $this->post['tx_multishop_pi1']['billing_name'] = '';
                     if ($name) {
+                        $name = preg_replace('/\s+/', ' ', $name);
                         $this->post['tx_multishop_pi1']['billing_name'] = $name;
                     }
                 } else if ($details_type == 'delivery_details') {
@@ -2211,6 +2212,7 @@ switch ($this->ms['page']) {
                     }
                     $this->post['tx_multishop_pi1']['delivery_name'] = '';
                     if ($name) {
+                        $name = preg_replace('/\s+/', ' ', $name);
                         $this->post['tx_multishop_pi1']['delivery_name'] = $name;
                     }
                 }
