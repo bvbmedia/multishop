@@ -84,9 +84,10 @@ if ($this->post) {
                 $updateArray['language_id'] = $key;
                 $updateArray['products_options_id'] = $products_options_id;
                 $updateArray['listtype'] = $default_settings_value;
-                $updateArray['required'] = $this->post['required'][$products_options_id];
-                $updateArray['hide'] = $this->post['hide_in_details_page'][$products_options_id];
-                $updateArray['hide_in_cart'] = $this->post['hide_in_cart'][$products_options_id];
+                $updateArray['required'] = (isset($this->post['required'][$products_options_id]) ? 1 : 0);
+                $updateArray['hide'] = (isset($this->post['hide_in_details_page'][$products_options_id]) ? 1 : 0);
+                $updateArray['hide_in_cart'] = (isset($this->post['hide_in_cart'][$products_options_id]) ? 1 : 0);
+                $updateArray['price_group_id'] = 0;
                 $str = $GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
                         'tx_multishop_products_options', // FROM ...
                         'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', // WHERE...
