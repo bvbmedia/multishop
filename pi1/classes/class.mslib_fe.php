@@ -960,7 +960,7 @@ class mslib_fe {
                     if ($data['categories_name'] && $include_categories) {
                         $output[] = array(
                                 'name' => $data['categories_name'],
-                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
+                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat'),
                                 'id' => $data['categories_id'],
                                 'categories_image' => $data['categories_image'],
                                 'custom_settings' => $data['custom_settings'],
@@ -2346,7 +2346,7 @@ class mslib_fe {
                     if ($data['categories_name']) {
                         $output[] = array(
                                 'name' => $data['categories_name'],
-                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
+                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat'),
                                 'id' => $data['categories_id'],
                                 'custom_settings' => $data['custom_settings'],
                                 'meta_title' => $data['meta_title'],
