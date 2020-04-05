@@ -960,7 +960,7 @@ class mslib_fe {
                     if ($data['categories_name'] && $include_categories) {
                         $output[] = array(
                                 'name' => $data['categories_name'],
-                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
+                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat'),
                                 'id' => $data['categories_id'],
                                 'categories_image' => $data['categories_image'],
                                 'custom_settings' => $data['custom_settings'],
@@ -2346,7 +2346,7 @@ class mslib_fe {
                     if ($data['categories_name']) {
                         $output[] = array(
                                 'name' => $data['categories_name'],
-                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
+                                'url' => mslib_fe::rewritenamein($data['categories_name'], 'cat'),
                                 'id' => $data['categories_id'],
                                 'custom_settings' => $data['custom_settings'],
                                 'meta_title' => $data['meta_title'],
@@ -5921,6 +5921,25 @@ class mslib_fe {
             return $final_price;
         }
     }
+    public function getFrontendPriceInfoArray($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
+        $finalPrice = mslib_fe::final_products_price($product,$quantity,$add_currency,$ignore_minimum_quantity,$priceColumn);
+        $priceInfo=array();
+        if ($product['products_price'] <> $product['final_price']) {
+            if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                $priceInfo['old_price'] = $product['products_price'] * (1 + $product['tax_rate']);
+                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
+            } else {
+                $priceInfo['old_price'] = $product['products_price'];
+                $priceInfo['final_price_incl_tax'] = $finalPrice;
+            }
+        } else {
+            $priceInfo['final_price_incl_tax'] = $finalPrice;
+            if (($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] == '1')) {
+                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
+            }
+        }
+        return $priceInfo;
+    }
     public function rebuildStaffelPrice($staffel_price_list, $product_price) {
         if (empty($staffel_price_list)) {
             return false;
@@ -6868,10 +6887,12 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($id)) {
-            $where = 'products_options_values_id = ' . $id . ' and language_id = ' . $this->sys_language_uid;
+            $filter=array();
+            $filter[] = 'products_options_values_id = ' . $id;
+            $filter[] = 'language_id=' . $this->sys_language_uid;
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                     'tx_multishop_products_options_values', // FROM ...
-                    $where, // WHERE.
+                    implode(' AND ',$filter), // WHERE.
                     '', // GROUP BY...
                     '', // ORDER BY...
                     '' // LIMIT ...
@@ -6886,10 +6907,12 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($id)) {
-            $where = 'products_options_id = ' . $id . ' and language_id = ' . $this->sys_language_uid;
+            $filter=array();
+            $filter[] = 'products_options_id = ' . $id;
+            $filter[] = 'language_id=' . $this->sys_language_uid;
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                     'tx_multishop_products_options', // FROM ...
-                    $where, // WHERE.
+                    implode(' AND ',$filter), // WHERE.
                     '', // GROUP BY...
                     '', // ORDER BY...
                     '' // LIMIT ...
@@ -6904,10 +6927,12 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($id)) {
-            $where = 'products_options_values_id = ' . $id;
+            $filter=array();
+            $filter[] = 'products_options_values_id = ' . $id;
+            $filter[] = 'language_id=' . $this->sys_language_uid;
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                     'tx_multishop_products_options_values_to_products_options', // FROM ...
-                    $where, // WHERE.
+                    implode(' AND ',$filter), // WHERE.
                     '', // GROUP BY...
                     '', // ORDER BY...
                     '' // LIMIT ...
@@ -6922,10 +6947,15 @@ class mslib_fe {
             return false;
         }
         if (is_numeric($option_id)) {
-            $where = 'pov.language_id=0 and pov2po.products_options_id = ' . $option_id . ' and pov.products_options_values_id=pov2po.products_options_values_id';
+            $filter=array();
+            //$filter[] = 'language_id=' . $this->sys_language_uid;
+            // Maybe must be 0 to get the default language data
+            $filter[] = 'language_id=0';
+            $filter[]='pov2po.products_options_id = ' . $option_id;
+            $filter[]='pov.products_options_values_id=pov2po.products_options_values_id';
             $query = $GLOBALS['TYPO3_DB']->SELECTquery('pov.*', // SELECT ...
                     'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options pov2po', // FROM ...
-                    $where, // WHERE.
+                    implode(' AND ',$filter), // WHERE.
                     '', // GROUP BY...
                     '', // ORDER BY...
                     '' // LIMIT ...
