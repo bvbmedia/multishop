@@ -1247,15 +1247,19 @@ switch ($_REQUEST['action']) {
             }
             $company_name = '';
             if ($customer_billing_address['address'] && $customer_billing_address['zip'] && $customer_billing_address['city']) {
-                $company_name = $customer_billing_address['company'];
                 $billing_street_address = $customer_billing_address['address'];
                 $billing_postcode = $customer_billing_address['zip'] . ' ' . $customer_billing_address['city'];
                 $billing_country = ucwords(mslib_befe::strtolower($customer_billing_address['country']));
             } else {
-                $company_name = $user['company'];
                 $billing_street_address = $user['address'];
                 $billing_postcode = $user['zip'] . ' ' . $user['city'];
                 $billing_country = ucwords(mslib_befe::strtolower($user['country']));
+            }
+            if ($user['company']) {
+                $company_name = $user['company'];
+            }
+            if (!$company_name && $customer_billing_address['company']) {
+                $company_name = $customer_billing_address['company'];
             }
             if ($customer_delivery_address['address'] && $customer_delivery_address['zip'] && $customer_delivery_address['city']) {
                 $delivery_street_address = $customer_delivery_address['address'];
