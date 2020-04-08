@@ -43,6 +43,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                if (!$row['billing_country']) {
+                    continue;
+                }
                 $sub_total_tax = 0;
                 $sub_total = 0;
                 $sub_total_excluding_vat = 0;
