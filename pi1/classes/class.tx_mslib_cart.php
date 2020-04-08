@@ -1520,12 +1520,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $customer_id = $tmp_user['uid'];
             }
         }
+        $continue_update_details_info = true;
         //hook to let other plugins further manipulate the create table query
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'])) {
             $params = array(
                     'address' => &$address,
                     'cart' => &$cart,
-                    'customer_id' => &$customer_id
+                    'customer_id' => &$customer_id,
+                    'continue_update_details_info' => &$continue_update_details_info
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1607,7 +1609,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             //hook to let other plugins further manipulate the create table query
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'])) {
                 $params = array(
-                        'insertArray' => &$insertArray
+                    'insertArray' => &$insertArray
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1783,8 +1785,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } else {
                 $updateFEUsers['tx_multishop_newsletter'] = '';
             }
-            $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
-            $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
+            if ($continue_update_details_info) {
+                $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
+                $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
+            }
             // insert tt_address for existing customer if no record found
             $billing_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing');
             // ADD/UPDATE TT_ADDRESS RECORD
@@ -1838,8 +1842,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if ($continue_update_details_info) {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
             // insert delivery into tt_address
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
@@ -1936,8 +1942,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if ($continue_update_details_info) {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
         }
         //hook to let other plugins further manipulate the create table query
