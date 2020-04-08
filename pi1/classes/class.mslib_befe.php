@@ -2826,6 +2826,9 @@ class mslib_befe {
                                 $product_arr_new[$key_p] = $val_p;
                             }
                         } else {
+                            if ($key_p == 'extid' && !empty($val_p)) {
+                                $val_p = md5(uniqid());
+                            }
                             $product_arr_new[$key_p] = $val_p;
                         }
                     }
