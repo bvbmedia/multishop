@@ -853,11 +853,12 @@ if ($this->get['feed_hash']) {
                                 $old_product_price = $old_product_price + $tax_rate;
                             }
                         }
-                        if ($old_product_price != $final_price) {
-                            //$tmpcontent .= round($old_product_price,14);
-                            $tmpcontent .= round($old_product_price, 2) . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                        $final_price=number_format($final_price, 2,'.');
+                        $old_product_price=number_format($old_product_price, 2,'.');
+                        if ($final_price != $old_product_price) {
+                            $tmpcontent .= $old_product_price . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         } else {
-                            $tmpcontent .= number_format($final_price, 2) . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                            $tmpcontent .= $final_price . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         }
                         break;
                     case 'products_sales_price_incl_vat':
