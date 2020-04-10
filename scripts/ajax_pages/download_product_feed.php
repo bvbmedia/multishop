@@ -832,9 +832,11 @@ if ($this->get['feed_hash']) {
                                 $old_product_price = $old_product_price + $tax_rate;
                             }
                         }
+                        $final_price=number_format($final_price, 2,'.');
+                        $old_product_price=number_format($old_product_price, 2,'.');
                         if ($old_product_price != $final_price) {
                             //$tmpcontent .= round($old_product_price,14);
-                            $tmpcontent .= round($old_product_price, 2);
+                            $tmpcontent .= $old_product_price;
                         } else {
                             $tmpcontent .= '';
                         }
