@@ -593,20 +593,21 @@ $search_keys[] = 'search_by_status_last_modified';
 $search_keys[] = 'search_by_telephone_orders';
 $search_keys[] = 'manufacturers_id';
 foreach ($search_keys as $search_key) {
+    // reset the filter cookie
     if ($this->get['tx_multishop_pi1']['action'] == 'reset_filters') {
         unset($this->cookie[$search_key]);
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
         $GLOBALS['TSFE']->storeSessionData();
     }
+    // re-assign new value to cookie
     if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
         $this->cookie[$search_key] = $this->post[$search_key];
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
         $GLOBALS['TSFE']->storeSessionData();
     }
-    if ($this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
-        if (isset($this->cookie[$search_key])) {
-            $this->post[$search_key] = $this->cookie[$search_key];
-        }
+    // if cookie stiill have value, re-assign back to the post filter, so it gave remembering effect
+    if (isset($this->cookie[$search_key]) && $this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
+        $this->post[$search_key] = $this->cookie[$search_key];
     }
 }
 if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
