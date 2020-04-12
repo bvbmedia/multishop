@@ -593,13 +593,20 @@ $search_keys[] = 'search_by_status_last_modified';
 $search_keys[] = 'search_by_telephone_orders';
 $search_keys[] = 'manufacturers_id';
 foreach ($search_keys as $search_key) {
+    if ($this->get['tx_multishop_pi1']['action'] == 'reset_filters') {
+        unset($this->cookie[$search_key]);
+        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+        $GLOBALS['TSFE']->storeSessionData();
+    }
     if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
         $this->cookie[$search_key] = $this->post[$search_key];
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
         $GLOBALS['TSFE']->storeSessionData();
     }
     if ($this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
-        $this->post[$search_key] = $this->cookie[$search_key];
+        if (isset($this->cookie[$search_key])) {
+            $this->post[$search_key] = $this->cookie[$search_key];
+        }
     }
 }
 if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
@@ -1310,7 +1317,7 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
-        location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders') . '";
+        location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[action]=reset_filters') . '";
     });
     ' . (!empty($subpartArray['###SEARCH_IN_SHOP_SELECTBOX###']) ? '
     $("#search_in_shop").select2();
