@@ -5541,7 +5541,7 @@ class mslib_befe {
             }
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
             // If we do not want to parse a th then set skipCellHeading to 1
-            if (!$settings['skipCellHeading']) {
+            if (!$settings['skipTableHeadings']) {
                 $content .= '<thead><tr>';
                 if ($settings['keyNameAsHeadingTitle']) {
                     $cellCounter = 0;
