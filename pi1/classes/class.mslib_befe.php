@@ -5591,7 +5591,7 @@ class mslib_befe {
             $content .= '<tbody>';
             $odd = '1';
             foreach ($rows as $row) {
-                if ($rowCounter || (!$rowCounter && !$settings['skipTableHeadings'])) {
+                if ($rowCounter || (!$rowCounter && $settings['skipTableHeadings'])) {
                     if ($odd) {
                         $odd = 0;
                     } else {
