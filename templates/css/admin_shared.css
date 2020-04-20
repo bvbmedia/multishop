@@ -336,3 +336,25 @@ th.cellContentWithoutSpace { word-break:normal; }
 	#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > span.menu_item { display:none; }
 }
 .highlighted-important { color: red; }
+
+/* BVBSHOPSCR-783 */
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache {
+	float: right;
+	padding: 4px;
+}
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache {
+	border-left: 1px solid rgba(255,255,255,.3);
+	border-right: none;
+	padding-right: 0;
+}
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache a.label,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache a.label {
+	font-weight: normal;
+	line-height: 30px;
+	padding: 0 15px;
+}
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache a.label > .fa,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache a.label > .fa {
+	line-height: 30px;
+}
