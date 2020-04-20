@@ -338,23 +338,36 @@ th.cellContentWithoutSpace { word-break:normal; }
 .highlighted-important { color: red; }
 
 /* BVBSHOPSCR-783 */
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_blog_post,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache {
+	padding: 4px;
+}
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache {
 	float: right;
-	padding: 4px;
 }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache {
 	border-left: 1px solid rgba(255,255,255,.3);
 	border-right: none;
 	padding-right: 0;
 }
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_blog_post a.label,
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket a.label,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache a.label,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache a.label {
 	font-weight: normal;
 	line-height: 30px;
 	padding: 0 15px;
 }
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket a.label {
+	display: inline-block;
+}
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_image_cache a.label > .fa,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_clear_cache a.label > .fa {
 	line-height: 30px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_ticket {
+	line-height: 18px;
+	padding: 4px;
 }
