@@ -511,7 +511,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 $GLOBALS['TSFE']->additionalHeaderData[] = '
-<script type="text/javascript">
+<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers') . '";
@@ -560,7 +560,7 @@ jQuery(document).ready(function($) {
     });
 	jQuery(\'#check_all_1\').click(function() {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
-		$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
 	var originalLeave = $.fn.popover.Constructor.prototype.leave;
 	$.fn.popover.Constructor.prototype.leave = function(obj){
