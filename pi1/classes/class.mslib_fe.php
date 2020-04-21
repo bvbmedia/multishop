@@ -72,6 +72,7 @@ class mslib_fe {
         $this->languages =& $ref->languages;
         $this->defaultLanguageArray =& $ref->defaultLanguageArray;
         $this->hidePagination =& $ref->hidePagination;
+        $this->msLogFile =& $ref->msLogFile;
         $this->initLanguage($ref->LOCAL_LANG);
     }
     /**

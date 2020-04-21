@@ -5540,52 +5540,58 @@ class mslib_befe {
                 $inlineStyle .= implode(' ', $settings['inlineStyles']['table']);
             }
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
-            $content .= '<thead><tr>';
-            if ($settings['keyNameAsHeadingTitle']) {
-                $cellCounter = 0;
-                foreach ($rows[0] as $colName => $colVal) {
-                    $inlineStyle = '';
-                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+            // If we do not want to parse a th then set skipCellHeading to 1
+            if (!$settings['skipTableHeadings']) {
+                $content .= '<thead><tr>';
+                if ($settings['keyNameAsHeadingTitle']) {
+                    $cellCounter = 0;
+                    foreach ($rows[0] as $colName => $colVal) {
+                        $inlineStyle = '';
+                        if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                            $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        }
+                        if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                            $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        }
+                        $classes = array();
+                        if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                            $classes[] = $settings['cellClasses'][$cellCounter];
+                        }
+                        $classes[] = 'cell' . ($cellCounter + 1);
+                        $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colName . '</th>';
+                        $cellCounter++;
                     }
-                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                } else {
+                    $cellCounter = 0;
+                    foreach ($rows[0] as $colName => $colVal) {
+                        $inlineStyle = '';
+                        if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
+                            $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
+                        }
+                        if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
+                            $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
+                        }
+                        $classes = array();
+                        if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
+                            $classes[] = $settings['cellClasses'][$cellCounter];
+                        }
+                        $classes[] = 'cell' . ($cellCounter + 1);
+                        $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colVal . '</th>';
+                        $cellCounter++;
                     }
-                    $classes = array();
-                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
-                        $classes[] = $settings['cellClasses'][$cellCounter];
-                    }
-                    $classes[] = 'cell' . ($cellCounter + 1);
-                    $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colName . '</th>';
-                    $cellCounter++;
+                }
+                $content .= '</tr></thead>';
+                $rowCounter = 0;
+                if ($settings['keyNameAsHeadingTitle']) {
+                    $rowCounter = 1;
                 }
             } else {
-                $cellCounter = 0;
-                foreach ($rows[0] as $colName => $colVal) {
-                    $inlineStyle = '';
-                    if (count($rows[0]) == ($cellCounter + 1) && count($rows[0]) < ($maxCellCounter)) {
-                        $inlineStyle = ' colspan="' . ($maxCellCounter - ($cellCounter + 1)) . '"';
-                    }
-                    if (isset($settings['inlineStyles']['th'][$cellCounter]) && is_array($settings['inlineStyles']['th'][$cellCounter])) {
-                        $inlineStyle .= ' ' . implode(' ', $settings['inlineStyles']['th'][$cellCounter]);
-                    }
-                    $classes = array();
-                    if (is_array($settings['cellClasses']) && isset($settings['cellClasses'][$cellCounter])) {
-                        $classes[] = $settings['cellClasses'][$cellCounter];
-                    }
-                    $classes[] = 'cell' . ($cellCounter + 1);
-                    $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colVal . '</th>';
-                    $cellCounter++;
-                }
+                $rowCounter = 0;
             }
-            $content .= '</tr></thead><tbody>';
-            $rowCounter = 0;
-            if ($settings['keyNameAsHeadingTitle']) {
-                $rowCounter = 1;
-            }
+            $content .= '<tbody>';
             $odd = '1';
             foreach ($rows as $row) {
-                if ($rowCounter) {
+                if ($rowCounter || (!$rowCounter && $settings['skipTableHeadings'])) {
                     if ($odd) {
                         $odd = 0;
                     } else {
