@@ -3304,8 +3304,8 @@ if ($this->post) {
 				<label for="products_meta_description" class="col-md-2 control-label">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
                     <div class="input-group width-fw">
-                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="168">
-                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
+                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="160">
+                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
                     </div>    
 				</div>
 			</div>
@@ -3329,7 +3329,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -3343,7 +3343,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
             });
