@@ -934,8 +934,8 @@ if ($this->post) {
 				<label class="control-label col-md-2" for="meta_description">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
 				    <div class="input-group width-fw">
-				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="320">
-				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
+				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="160">
+				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
                     </div>
 				</div>
 			</div>';
@@ -956,7 +956,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -970,7 +970,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
             });
