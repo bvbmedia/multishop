@@ -934,7 +934,7 @@ if ($this->post) {
 				<label class="control-label col-md-2" for="meta_description">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
 				    <div class="input-group width-fw">
-				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
+				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="320">
 				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
                     </div>
 				</div>
