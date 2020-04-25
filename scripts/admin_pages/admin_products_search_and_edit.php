@@ -717,6 +717,16 @@ if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'
         $filter[] = $prefix . "foreign_source_name = '" . addslashes($this->get['foreign_source_name']) . "'";
     }
 }
+// search products with / without image
+if (isset($this->get['product_image']) && $this->get['product_image'] != '' && $this->get['product_image'] != 'all') {
+    $prefix = 'p.';
+    if ($this->get['product_image'] == 'yes') {
+        $filter[] = $prefix . "products_image != ''";
+    }
+    if ($this->get['product_image'] == 'no') {
+        $filter[] = $prefix . "products_image = ''";
+    }
+}
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'])) {
     $params = array(
@@ -1088,7 +1098,8 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
         (isset($this->get['product_status']) && $this->get['product_status'] != 'all') ||
         (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) ||
         (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) ||
-        (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != 'all') ||
+        (isset($this->get['foreign_source_name']) && !empty($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != 'all') ||
+        (isset($this->get['product_image']) && !empty($this->get['product_image']) && $this->get['product_image'] != 'all') ||
         (isset($this->get['search_engine']) && $this->get['search_engine'] != 'all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
@@ -1122,6 +1133,23 @@ $subpartArray['###LABEL_CONDITION_NEW###'] = $this->pi_getLL('new');
 $subpartArray['###LABEL_CONDITION_USED###'] = $this->pi_getLL('used');
 $subpartArray['###LABEL_CONDITION_REFURBISHED###'] = $this->pi_getLL('refurbished');
 $subpartArray['###LABEL_CONDITION_ALL###'] = $this->pi_getLL('all');
+$subpartArray['###LABEL_PRODUCT_IMAGE###'] = $this->pi_getLL('label_product_image');
+$subpartArray['###LABEL_PRODUCT_IMAGE_ALL###'] = $this->pi_getLL('all');
+$subpartArray['###LABEL_PRODUCT_IMAGE_YES###'] = $this->pi_getLL('yes');
+$subpartArray['###LABEL_PRODUCT_IMAGE_NO###'] = $this->pi_getLL('no');
+$subpartArray['###PRODUCT_IMAGE_ALL_SELECTED###'] = '';
+$subpartArray['###PRODUCT_IMAGE_YES_SELECTED###'] = '';
+$subpartArray['###PRODUCT_IMAGE_NO_SELECTED###'] = '';
+if ($this->get['product_image'] == 'all') {
+    $subpartArray['###PRODUCT_IMAGE_ALL_SELECTED###'] = ' selected="selected"';
+}
+if ($this->get['product_image'] == 'yes') {
+    $subpartArray['###PRODUCT_IMAGE_YES_SELECTED###'] = ' selected="selected"';
+}
+if ($this->get['product_image'] == 'no') {
+    $subpartArray['###PRODUCT_IMAGE_NO_SELECTED###'] = ' selected="selected"';
+}
+
 $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '';
 // add dropdown for foreign source name
 if ($this->ms['MODULES']['ENABLE_FOREIGN_SOURCE_NAME_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT'] == '1') {

@@ -1456,6 +1456,7 @@
             <label index="admin_label_select_feature_highlights">Select attribute option</label>
             <label index="label_foreign_source_name">Foreign source name</label>
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
+            <label index="label_product_image">With image</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2884,6 +2885,8 @@
             <label index="admin_label_select_feature_highlights">Selecteer attribuutoptie</label>
             <label index="label_foreign_source_name">Foreign source name</label>
             <label index="admin_choose_foreign_source_name">Kies een buitenlandse bronnaam</label>
+            <label index="label_product_image">Met afbeelding</label>
+
         </languageKey>
     </data>
 </T3locallang>
