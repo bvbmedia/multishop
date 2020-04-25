@@ -1125,27 +1125,11 @@ $subpartArray['###LABEL_CONDITION_ALL###'] = $this->pi_getLL('all');
 $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '';
 // add dropdown for foreign source name
 if ($this->ms['MODULES']['ENABLE_FOREIGN_SOURCE_NAME_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT'] == '1') {
-    $foreign_source_name_recs = mslib_befe::getRecords('', 'tx_multishop_products', '', array(), 'foreign_source_name', 'foreign_source_name asc', '', array('foreign_source_name'));
-    $option_data = array();
-    $option_data[] = '<option value="all">' . $this->pi_getLL('all') . '</option>';
-    if (is_array($foreign_source_name_recs) && count($foreign_source_name_recs)) {
-        foreach ($foreign_source_name_recs as $foreign_source_name_rec) {
-            if (empty($foreign_source_name_rec['foreign_source_name'])) {
-                $foreign_source_name_rec['foreign_source_name'] = 'blank value';
-            }
-            if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] == $foreign_source_name_rec['foreign_source_name']) {
-                $option_data[] = '<option value="' . $foreign_source_name_rec['foreign_source_name'] . '" selected="selected">' . $foreign_source_name_rec['foreign_source_name'] . '</option>';
-            } else {
-                $option_data[] = '<option value="' . $foreign_source_name_rec['foreign_source_name'] . '">' . $foreign_source_name_rec['foreign_source_name'] . '</option>';
-            }
-        }
-    }
     $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '<div class="form-group">
         <label for="foreign_source_name" class="control-label">'.$this->pi_getLL('label_foreign_source_name').'</label>
-        <select name="foreign_source_name" class="select2">' . implode("", $option_data) . '</select>
+        <input type="hidden" name="foreign_source_name" id="foreign_source_name" value="'.$this->get['foreign_source_name'].'" />
     </div>';
 }
-
 // order unit
 $order_unit_selectbox = '<select name="order_unit_id" class="form-control">';
 $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
@@ -1293,9 +1277,63 @@ $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], arra
 $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shadowBox($content) . '</div>';
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function(){
-    if (jQuery(\'.select2\').length > 0) {
-        jQuery(\'.select2\').select2();
-    }
+    if (jQuery(\'#foreign_source_name\').length > 0) {
+        jQuery(\'#foreign_source_name\').select2({
+            placeholder: \'' . $this->pi_getLL('admin_choose_foreign_source_name') . '\',
+            dropdownCssClass: "", // apply css that makes the dropdown taller
+            width:\'100%\',
+            minimumInputLength: 0,
+            multiple: false,
+            //allowClear: true,
+            query: function(query) {
+                $.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getForeignSourceNameList') . '\', {
+                    data: {
+                        q: query.term
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    query.callback({results: data});
+                });
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=="") {
+                    var split_id=id.split(",");
+                    var callback_data=[];
+                    $.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getForeignSourceNameList') . '\', {
+                        data: {
+                            foreign_source_name: id
+                        },
+                        dataType: "json"
+                    }).done(function(data) {
+                        $.each(data, function(i,val){
+                            callback(val);
+                        });
+    
+                    });
+                }
+            },
+            formatResult: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            escapeMarkup: function (m) { return m; }
+        });
+	}
     $(\'#manufacturers_id_s2\').select2({
 		placeholder: \'' . $this->pi_getLL('admin_choose_manufacturer') . '\',
 		dropdownCssClass: "", // apply css that makes the dropdown taller
