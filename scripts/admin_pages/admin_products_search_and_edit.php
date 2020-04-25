@@ -711,7 +711,7 @@ if (isset($this->get['stock_from']) && $this->get['stock_from'] != '' && isset($
 // search on foreign source name for improted products
 if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != '' && $this->get['foreign_source_name'] != 'all') {
     $prefix = 'p.';
-    if ($this->get['foreign_source_name'] == 'blank value') {
+    if ($this->get['foreign_source_name'] == 'Blank') {
         $filter[] = $prefix . "foreign_source_name = ''";
     } else {
         $filter[] = $prefix . "foreign_source_name = '" . addslashes($this->get['foreign_source_name']) . "'";
