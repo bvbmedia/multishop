@@ -520,7 +520,7 @@ if (isset($this->get['product_date_from']) && !empty($this->get['product_date_fr
         $date_till = strtotime($this->get['product_date_till']);
     }
 }
-if ($date_from && $date_till) {
+if ($date_from || $date_till) {
     switch ($this->get['search_by_product_date']) {
         case 'products_date_added':
             if ($date_from && $date_till) {
@@ -653,13 +653,6 @@ switch ($this->get['tx_multishop_pi1']['order']) {
         break;
 }
 $orderby[] = $order_by . ' ' . $order;
-if (is_numeric($this->get['manufacturers_id'])) {
-    $prefix = 'p.';
-    if ($this->ms['MODULES']['FLAT_DATABASE']) {
-        $prefix = 'pf.';
-    }
-    $filter[] = "(" . $prefix . "manufacturers_id='" . addslashes($this->get['manufacturers_id']) . "')";
-}
 if (is_numeric($this->get['cid']) and $this->get['cid'] > 0) {
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $string = '(';
@@ -1089,7 +1082,7 @@ $subpartArray['###SHOP_PID###'] = $this->shop_pid;
 $subpartArray['###UNFOLD_SEARCH_BOX###'] = '';
 if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
         (isset($this->get['stock_till']) && !empty($this->get['stock_till'])) ||
-        (isset($this->get['manufacturers_id']) && !empty($this->get['manufacturers_id']) && $this->get['manufacturers_id'] != '0') ||
+        (isset($this->get['manufacturers_id']) && !empty($this->get['manufacturers_id']) && $this->get['manufacturers_id'] != '0' && $this->get['manufacturers_id'] != 'all') ||
         (isset($this->get['product_condition']) && !empty($this->get['product_condition']) && $this->get['product_condition'] != 'all') ||
         (isset($this->get['order_unit_id']) && !empty($this->get['order_unit_id']) && $this->get['order_unit_id'] != 'all') ||
         (isset($this->get['tax_id']) && $this->get['tax_id'] != '' && $this->get['tax_id'] != 'all') ||
