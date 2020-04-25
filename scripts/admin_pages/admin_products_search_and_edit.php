@@ -708,6 +708,15 @@ if (isset($this->get['stock_from']) && $this->get['stock_from'] != '' && isset($
     $prefix = 'p.';
     $filter[] = "(" . $prefix . "products_quantity between " . $this->get['stock_from'] . " and " . $this->get['stock_till'] . ")";
 }
+// search on foreign source name for improted products
+if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != '' && $this->get['foreign_source_name'] != 'all') {
+    $prefix = 'p.';
+    if ($this->get['foreign_source_name'] == 'blank value') {
+        $filter[] = $prefix . "foreign_source_name = ''";
+    } else {
+        $filter[] = $prefix . "foreign_source_name = '" . addslashes($this->get['foreign_source_name']) . "'";
+    }
+}
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditGetProductsPagesetFilterPreProc'])) {
     $params = array(
@@ -1079,6 +1088,7 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
         (isset($this->get['product_status']) && $this->get['product_status'] != 'all') ||
         (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) ||
         (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) ||
+        (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != 'all') ||
         (isset($this->get['search_engine']) && $this->get['search_engine'] != 'all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
@@ -1112,6 +1122,30 @@ $subpartArray['###LABEL_CONDITION_NEW###'] = $this->pi_getLL('new');
 $subpartArray['###LABEL_CONDITION_USED###'] = $this->pi_getLL('used');
 $subpartArray['###LABEL_CONDITION_REFURBISHED###'] = $this->pi_getLL('refurbished');
 $subpartArray['###LABEL_CONDITION_ALL###'] = $this->pi_getLL('all');
+$subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '';
+// add dropdown for foreign source name
+if ($this->ms['MODULES']['ENABLE_FOREIGN_SOURCE_NAME_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT'] == '1') {
+    $foreign_source_name_recs = mslib_befe::getRecords('', 'tx_multishop_products', '', array(), 'foreign_source_name', 'foreign_source_name asc', '', array('foreign_source_name'));
+    $option_data = array();
+    $option_data[] = '<option value="all">' . $this->pi_getLL('all') . '</option>';
+    if (is_array($foreign_source_name_recs) && count($foreign_source_name_recs)) {
+        foreach ($foreign_source_name_recs as $foreign_source_name_rec) {
+            if (empty($foreign_source_name_rec['foreign_source_name'])) {
+                $foreign_source_name_rec['foreign_source_name'] = 'blank value';
+            }
+            if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'] == $foreign_source_name_rec['foreign_source_name']) {
+                $option_data[] = '<option value="' . $foreign_source_name_rec['foreign_source_name'] . '" selected="selected">' . $foreign_source_name_rec['foreign_source_name'] . '</option>';
+            } else {
+                $option_data[] = '<option value="' . $foreign_source_name_rec['foreign_source_name'] . '">' . $foreign_source_name_rec['foreign_source_name'] . '</option>';
+            }
+        }
+    }
+    $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '<div class="form-group">
+        <label for="foreign_source_name" class="control-label">'.$this->pi_getLL('label_foreign_source_name').'</label>
+        <select name="foreign_source_name" class="select2">' . implode("", $option_data) . '</select>
+    </div>';
+}
+
 // order unit
 $order_unit_selectbox = '<select name="order_unit_id" class="form-control">';
 $str = "SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
@@ -1259,6 +1293,9 @@ $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], arra
 $content = $prepending_content . '<div class="fullwidth_div">' . mslib_fe::shadowBox($content) . '</div>';
 $GLOBALS['TSFE']->additionalHeaderData[] = '<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function(){
+    if (jQuery(\'.select2\').length > 0) {
+        jQuery(\'.select2\').select2();
+    }
     $(\'#manufacturers_id_s2\').select2({
 		placeholder: \'' . $this->pi_getLL('admin_choose_manufacturer') . '\',
 		dropdownCssClass: "", // apply css that makes the dropdown taller

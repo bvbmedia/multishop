@@ -2914,6 +2914,17 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Enable foreign source name advanced search dropdown on products search and edit.',
+        'configuration_key' => 'ENABLE_FOREIGN_SOURCE_NAME_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT',
+        'configuration_value' => '0',
+        'description' => 'Enable foreign source name advanced search dropdown on products search and edit.',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(
