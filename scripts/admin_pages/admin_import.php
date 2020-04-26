@@ -439,7 +439,7 @@ if ($this->post['action'] == 'category-insert') {
         // copy the previous post data to the current post so it can run the job again
         $this->post = $data[1];
         // Set ignored locked data
-        $this->post['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
+        $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
         $this->post['cid'] = $row['categories_id'];
         // enable file logging
         if ($this->get['relaxed_import']) {
@@ -998,7 +998,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['code'] = md5(uniqid());
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
-        $updateArray['ignored_locked_fields'] = json_encode($this->post['ignored_locked_fields'], JSON_PRETTY_PRINT);
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['tx_multishop_pi1']['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
@@ -1031,7 +1031,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['last_run'] = time();
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
-        $updateArray['ignored_locked_fields'] = json_encode($this->post['ignored_locked_fields'], JSON_PRETTY_PRINT);
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['tx_multishop_pi1']['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
@@ -1064,7 +1064,7 @@ if ($this->post['action'] == 'category-insert') {
             // copy the previous post data to the current post so it can run the job again
             $this->post = $data[1];
             // Set ignored locked data
-            $this->post['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
+            $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
 //			if ($row['categories_id']) $this->post['cid']=$row['categories_id'];
             $this->post['cid'] = $row['categories_id'];
             if ($this->post['cid'] > 0) {
@@ -2307,6 +2307,15 @@ if ($this->post['action'] == 'category-insert') {
                             if ($old_product['imported_product']) {
                                 $item['imported_product'] = 1;
                                 $importedProductsLockedFields = mslib_befe::getImportedProductsLockedFields($products_id);
+                                if (is_array($importedProductsLockedFields) && is_array($this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+                                    // $importedProductsLockedFields contains fields that we should skip from being overwritten
+                                    // ignored_locked_fields contains fields that we should still overwrite
+                                    foreach ($importedProductsLockedFields as $importedLockedFieldKey => $importedLockedFieldName) {
+                                        if (in_array($importedLockedFieldName,$this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+                                            unset($importedProductsLockedFields[$importedLockedFieldKey]);
+                                        }
+                                    }
+                                }
                             }
                             /*
 							if ($old_product['imported_product'] and $old_product['lock_imported_product']) {

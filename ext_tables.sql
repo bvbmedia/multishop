@@ -301,7 +301,7 @@ CREATE TABLE `tx_multishop_import_jobs` (
  `code` varchar(32) default '',
  `prefix_source_name` varchar(50) default '',
  `type` varchar(154) default '',
- `ignored_locked_fields` blob,
+ `ignored_locked_fields` text,
  PRIMARY KEY (`id`),
  KEY `last_run` (`last_run`,`status`,`page_uid`,`categories_id`),
  KEY `code` (`code`),
