@@ -7409,6 +7409,13 @@ class mslib_fe {
             if ($this->get['tx_multishop_pi1']['page_section'] == 'merge_categories' || $this->post['tx_multishop_pi1']['page_section'] == 'merge_categories') {
                 $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['active'] = 1;
             }
+
+            $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_sort_category']['label'] = $this->pi_getLL('admin_sort_categories');
+            $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_sort_category']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_sort_categories');
+            $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_sort_category']['class'] = 'fa fa-sort';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_sort_categories' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_sort_categories') {
+                $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_sort_category']['active'] = 1;
+            }
             // remove incomplete p2c link
             //$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_remove_incomplete_p2c_link']['label']=$this->pi_getLL('remove_incomplete_p2c_link');
             //$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_remove_incomplete_p2c_link']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=remove_incomplete_p2c_link');

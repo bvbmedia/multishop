@@ -1221,6 +1221,7 @@
             <label index="admin_sort_products">Sort products</label>
             <label index="admin_label_please_select_categories_to_display_products">Please select category to display products</label>
             <label index="show_disabled_product">Show disabled products as well</label>
+            <label index="show_disabled_category">Show disabled categories as well</label>
             <label index="create_account">Create account</label>
             <label index="not_required">Not required</label>
             <label index="order_not_found">Order not found</label>
@@ -1457,6 +1458,7 @@
             <label index="label_foreign_source_name">Foreign source name</label>
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
             <label index="label_product_image">With image</label>
+            <label index="admin_sort_categories">Sort categories</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2679,6 +2681,7 @@
             <label index="referrer_toplist">Verwijzende websites</label>
             <label index="admin_sort_products">Producten sorteren</label>
             <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
+            <label index="show_disabled_category">Toon ook uitgeschakelde categorieën</label>
             <label index="call">Bel</label>
             <label index="travel_guide">Routebeschrijving</label>
             <label index="meta_tags">Meta tags</label>
@@ -2886,7 +2889,7 @@
             <label index="label_foreign_source_name">Foreign source name</label>
             <label index="admin_choose_foreign_source_name">Kies een buitenlandse bronnaam</label>
             <label index="label_product_image">Met afbeelding</label>
-
+            <label index="admin_sort_categories">Categorieën sorteren</label>
         </languageKey>
     </data>
 </T3locallang>

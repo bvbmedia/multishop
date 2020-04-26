@@ -147,6 +147,11 @@ if (!$this->ADMIN_USER) {
     }
 }
 switch ($this->ms['page']) {
+    case 'admin_sort_categories':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_sort_categories.php');
+        }
+        break;
     case 'admin_sort_products':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_sort_products.php');

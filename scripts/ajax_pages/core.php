@@ -2781,6 +2781,24 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'categories':
+        if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+            $getPost = $this->post['categorylisting'];
+            $no = 1;
+            foreach ($getPost as $cat_id) {
+                if (is_numeric($cat_id)) {
+                    $where = "categories_id = $cat_id";
+                    $updateArray = array(
+                            'sort_order' => $no
+                    );
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    $no++;
+                }
+            }
+        }
+        exit();
+        break;
     case 'menu':
         if ($this->ADMIN_USER) {
             $getPost = $this->post['sortable_maincat'];
