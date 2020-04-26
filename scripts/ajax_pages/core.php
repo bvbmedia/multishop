@@ -1210,6 +1210,12 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'getProductsModelList':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_products_model_list.php');
+        }
+        exit();
+        break;
     case 'getForeignSourceNameList':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/get_foreign_source_name_list.php');

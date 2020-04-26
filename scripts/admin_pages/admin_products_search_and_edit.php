@@ -710,6 +710,14 @@ if (isset($this->get['foreign_source_name']) && $this->get['foreign_source_name'
         $filter[] = $prefix . "foreign_source_name = '" . addslashes($this->get['foreign_source_name']) . "'";
     }
 }
+if (isset($this->get['product_model']) && $this->get['product_model'] != '' && $this->get['product_model'] != 'all') {
+    $prefix = 'p.';
+    if ($this->get['product_model'] == 'Blank') {
+        $filter[] = $prefix . "products_model = ''";
+    } else {
+        $filter[] = $prefix . "products_model = '" . addslashes($this->get['product_model']) . "'";
+    }
+}
 // search products with / without image
 if (isset($this->get['product_image']) && $this->get['product_image'] != '' && $this->get['product_image'] != 'all') {
     $prefix = 'p.';
@@ -1092,6 +1100,7 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
         (isset($this->get['product_date_from']) && !empty($this->get['product_date_from'])) ||
         (isset($this->get['product_date_till']) && !empty($this->get['product_date_till'])) ||
         (isset($this->get['foreign_source_name']) && !empty($this->get['foreign_source_name']) && $this->get['foreign_source_name'] != 'all') ||
+        (isset($this->get['product_model']) && !empty($this->get['product_model']) && $this->get['product_model'] != 'all') ||
         (isset($this->get['product_image']) && !empty($this->get['product_image']) && $this->get['product_image'] != 'all') ||
         (isset($this->get['search_engine']) && $this->get['search_engine'] != 'all')
 ) {
@@ -1117,6 +1126,8 @@ $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('res
 // advanced search label
 $subpartArray['###LABEL_MANUFACTURERS###'] = $this->pi_getLL('manufacturers');
 $subpartArray['###VALUE_MANUFACTURERS###'] = $this->get['manufacturers_id'];
+$subpartArray['###LABEL_PRODUCT_MODEL###'] = $this->pi_getLL('products_model');
+$subpartArray['###VALUE_PRODUCT_MODEL###'] = $this->get['product_model'];
 $subpartArray['###LABEL_PRODUCT_CONDITION###'] = $this->pi_getLL('feed_exporter_fields_label_products_condition');
 $subpartArray['###PRODUCT_CONDITION_SELECTBOX###'] = $product_condition_selectbox;
 $subpartArray['###CONDITION_NEW_SELECTED###'] = ($this->get['product_condition'] == 'new' ? ' selected' : '');
@@ -1380,6 +1391,61 @@ jQuery(document).ready(function(){
 				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getManufacturersList') . '\', {
 					data: {
 						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					$.each(data, function(i,val){
+						callback(val);
+					});
+
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
+	$(\'#product_model_s2\').select2({
+		placeholder: \'' . $this->pi_getLL('admin_choose_product_model') . '\',
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getProductsModelList') . '\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=getProductsModelList') . '\', {
+					data: {
+						products_model: id
 					},
 					dataType: "json"
 				}).done(function(data) {

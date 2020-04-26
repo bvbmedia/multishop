@@ -68,6 +68,7 @@
             <label index="admin_category">Category</label>
             <label index="admin_choose_attribute">Choose attribute</label>
             <label index="admin_choose_manufacturer">Choose manufacturer</label>
+            <label index="admin_choose_product_model">Choose product model</label>
             <label index="admin_city">City</label>
             <label index="admin_clear_cache">Clear cache</label>
             <label index="admin_clear_cooluri_cache">Clear CoolURI cache</label>
@@ -1523,6 +1524,7 @@
             <label index="admin_category">Categorie</label>
             <label index="admin_choose_attribute">kies attribuut</label>
             <label index="admin_choose_manufacturer">kies fabrikant</label>
+            <label index="admin_choose_product_model">kies productmodel</label>
             <label index="admin_city">Woonplaats</label>
             <label index="admin_clear_cache">Leeg cache/geheugen</label>
             <label index="admin_clear_cooluri_cache">Leeg CoolURI cache</label>
