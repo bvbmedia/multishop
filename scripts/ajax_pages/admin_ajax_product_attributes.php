@@ -6,7 +6,7 @@ $content = '';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
     case 'get_attributes_options':
         $where = array();
-        $where[] = "language_id = '" . $this->sys_language_uid . "'";
+        $where[] = "po.language_id = '" . $this->sys_language_uid . "'";
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (strpos($this->get['q'], 'newopt||') !== false) {
@@ -18,20 +18,35 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                         'text' => $this->get['q']
                 );
             } else if (!is_numeric($this->get['q'])) {
-                $where[] = "products_options_name like '%" . addslashes($this->get['q']) . "%'";
+                $where[] = "po.products_options_name like '%" . addslashes($this->get['q']) . "%'";
             } else {
-                $where[] = "products_options_id = '" . addslashes($this->get['q']) . "'";
+                $where[] = "po.products_options_id = '" . addslashes($this->get['q']) . "'";
             }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = "products_options_id = '" . addslashes($this->get['preselected_id']) . "'";
+            $where[] = "po.products_options_id = '" . addslashes($this->get['preselected_id']) . "'";
         }
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
-                'tx_multishop_products_options', // FROM ...
+        if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id'] > 0) {
+            $where[] = 'p2c.node_id=' . (int) $this->get['tx_multishop_pi1']['categories_id'];
+            $where[] = 'c.categories_id=p2c.node_id';
+            $where[] = 'a.products_id=p2c.products_id';
+            $where[] = 'a.options_id=po.products_options_id';
+            $where[] = 'po.language_id=0';
+            $str = $GLOBALS ['TYPO3_DB']->SELECTquery('po.products_options_id, po.products_options_name', // SELECT ...
+                'tx_multishop_products_attributes a, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_products_options po left join tx_multishop_attributes_options_groups_to_products_options og2po on po.products_options_id=og2po.products_options_id left join tx_multishop_attributes_options_groups og on og.attributes_options_groups_id=og2po.attributes_options_groups_id and og.language_id=0', // FROM ...
+                implode(' and ', $where), // WHERE.
+                'a.options_id', // GROUP BY...
+                'po.sort_order', // ORDER BY...
+                '' // LIMIT ...
+            );
+        } else {
+            $str = $GLOBALS ['TYPO3_DB']->SELECTquery('po.products_options_id, po.products_options_name', // SELECT ...
+                'tx_multishop_products_options po', // FROM ...
                 implode(' and ', $where), // WHERE.
                 '', // GROUP BY...
-                'sort_order', // ORDER BY...
+                'po.sort_order', // ORDER BY...
                 '' // LIMIT ...
-        );
+            );
+        }
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -130,6 +145,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
+            $data[0] = array(
+                'id' => 0,
+                'text' => $this->pi_getLL('skip')
+            );
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 if (isset($this->get['option_id'])) {
                     if ($this->get['option_id'] == $row['products_options_id']) {
@@ -152,6 +171,21 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                         'text' => $this->get['preselected_id']
                 );
             }
+        }
+        if (isset($this->get['preselected_id']) && $this->get['preselected_id'] == '0') {
+            $data = array();
+            $data[0] = array(
+                'id' => 0,
+                'text' => $this->pi_getLL('skip')
+            );
+        }
+        // show only "skip" value if no related option_id
+        if (!isset($this->get['option_id'])) {
+            $data = array();
+            $data[0] = array(
+                    'id' => 0,
+                    'text' => $this->pi_getLL('skip')
+            );
         }
         $content = json_encode($data);
         break;
