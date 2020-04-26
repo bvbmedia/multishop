@@ -438,6 +438,8 @@ if ($this->post['action'] == 'category-insert') {
         $data = unserialize($row['data']);
         // copy the previous post data to the current post so it can run the job again
         $this->post = $data[1];
+        // Set ignored locked data
+        $this->post['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
         $this->post['cid'] = $row['categories_id'];
         // enable file logging
         if ($this->get['relaxed_import']) {
@@ -1015,7 +1017,7 @@ if ($this->post['action'] == 'category-insert') {
         // we have to update the import job
         if (!$this->post['select']) {
             // something is wrong. repair the select of previous job
-            $str = "SELECT * from tx_multishop_import_jobs where id='" . $this->post['job_id'] . "'";
+            $str = "SELECT * from tx_multishop_import_jobs where id='" . addslashes($this->post['job_id']) . "'";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
             $data = unserialize($row['data']);
@@ -1061,6 +1063,8 @@ if ($this->post['action'] == 'category-insert') {
             $data = unserialize($row['data']);
             // copy the previous post data to the current post so it can run the job again
             $this->post = $data[1];
+            // Set ignored locked data
+            $this->post['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
 //			if ($row['categories_id']) $this->post['cid']=$row['categories_id'];
             $this->post['cid'] = $row['categories_id'];
             if ($this->post['cid'] > 0) {
