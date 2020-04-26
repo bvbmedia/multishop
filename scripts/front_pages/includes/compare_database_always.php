@@ -57,4 +57,5 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
         }
     }
 }
+
 ?>

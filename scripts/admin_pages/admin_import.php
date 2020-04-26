@@ -919,6 +919,29 @@ if ($this->post['action'] == 'category-insert') {
 				</select>
 			</div>
 		</div>
+        <div class="form-group multiselect_horizontal">
+			<label for="locked_fields" class="control-label col-md-2">' . $this->pi_getLL('ignore_following_locked_fields', 'Ignore the following locked fields when importing this feed') . '</label>
+			<div class="col-md-10">
+				<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[ignored_locked_fields][]">
+		';
+    $locked_fields = array();
+    $locked_fields['categories_id'] = 'Category';
+    $locked_fields['products_price'] = 'Products price';
+    $locked_fields['products_vat_rate'] = 'Products VAT rate';
+    $locked_fields['products_name'] = 'Products name';
+    $locked_fields['products_quantity'] = 'Products quantity';
+    $locked_fields['products_description'] = 'Products description';
+    foreach ($locked_fields as $key => $val) {
+        if (is_array($this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+            $combinedContent .= '<option value="' . $key . '"' . (in_array($key, $this->post['tx_multishop_pi1']['ignored_locked_fields']) ? ' selected' : '') . '>' . htmlspecialchars($val) . '</option>' . "\n";
+        } else {
+            $combinedContent .= '<option value="' . $key . '">' . htmlspecialchars($val) . '</option>' . "\n";
+        }
+    }
+    $combinedContent .= '
+				</select>
+			</div>
+		</div>		
 		<div class="form-group">
 			<label for="" class="control-label col-md-2">' . $this->pi_getLL('default_vat_rate', 'Default VAT Rate') . '</label>
 			<div class="col-md-10">
@@ -973,6 +996,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['code'] = md5(uniqid());
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
@@ -1005,6 +1029,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['last_run'] = time();
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
