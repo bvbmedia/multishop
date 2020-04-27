@@ -495,19 +495,37 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 
 ul#tx_multishop_countries_checkboxes { padding-left:10px; list-style:none; }
 
-ul.admin_sort_product_listing { display:table; width:100%; padding-left:0; list-style:none; }
-ul.admin_sort_product_listing > li { display:table-row; }
-ul.admin_sort_product_listing > li:first-child > * { padding-top:0; }
-ul.admin_sort_product_listing > li:last-child > * { border-bottom:none; padding-bottom:0; }
-ul.admin_sort_product_listing > li > * { display:table-cell; border-bottom:1px solid #eee; vertical-align:top; padding-right:10px; padding-bottom:15px; padding-top:15px; }
-ul.admin_sort_product_listing > li > strong { width:90%; }
-ul.admin_sort_product_listing > li > .admin_menu { white-space:nowrap; }
-ul.admin_sort_product_listing > li > .admin_menu > a { float:none; display:inline-block; color:#fff; text-align:center; }
-ul.admin_sort_product_listing > li > .admin_menu > a:first-child { padding-right:12px; }
-ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm { font-size:12px; line-height:1.5; }
-ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child { padding-right:10px; }
+ul.admin_sort_product_listing,
+ul.admin_sort_category_listing { display:table; width:100%; padding-left:0; list-style:none; }
+ul.admin_sort_product_listing > li,
+ul.admin_sort_category_listing > li { display:table-row; }
+ul.admin_sort_product_listing > li:first-child > *,
+ul.admin_sort_category_listing > li:first-child > * { padding-top:0; }
+ul.admin_sort_product_listing > li:last-child > *,
+ul.admin_sort_category_listing > li:last-child > * { border-bottom:none; padding-bottom:0; }
+ul.admin_sort_product_listing > li > *,
+ul.admin_sort_category_listing > li > * { display:table-cell; border-bottom:1px solid #eee; vertical-align:top; padding-right:10px; padding-bottom:15px; padding-top:15px; }
+ul.admin_sort_category_listing > li .image img {
+	width: auto;
+	max-width: 50px;
+	height: auto;
+	max-height: 50px;
+}
+ul.admin_sort_product_listing > li > strong,
+ul.admin_sort_category_listing > li > strong { width:90%; }
+ul.admin_sort_product_listing > li > .admin_menu,
+ul.admin_sort_category_listing > li > .admin_menu { white-space:nowrap; }
+ul.admin_sort_product_listing > li > .admin_menu > a,
+ul.admin_sort_category_listing > li > .admin_menu > a { float:none; display:inline-block; color:#fff; text-align:center; }
+ul.admin_sort_product_listing > li > .admin_menu > a:first-child,
+ul.admin_sort_category_listing > li > .admin_menu > a:first-child { padding-right:12px; }
+ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm,
+ul.admin_sort_category_listing > li > .admin_menu > a.btn-sm { font-size:12px; line-height:1.5; }
+ul.admin_sort_product_listing > li > .admin_menu > a.btn-sm:first-child,
+ul.admin_sort_category_listing > li > .admin_menu > a.btn-sm:first-child { padding-right:10px; }
 
-ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
+ul.admin_sort_product_listing > li > .button_wrapper,
+ul.admin_sort_category_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
 #ui-datepicker-div { display:none; z-index:100000000  !important; }
 .jconfirm-noscroll #ui-datepicker-div { z-index:100000000 !important; }
