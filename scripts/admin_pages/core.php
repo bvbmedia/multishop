@@ -4,6 +4,7 @@ header('X-XSS-Protection: 0', true);
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
+
 // custom page hook that can be controlled by third-party plugin
 $settings = array();
 $settings['plugins'] = array();
@@ -813,5 +814,58 @@ switch ($this->ms['page']) {
             // custom page hook that can be controlled by third-party plugin eof
         }
         break;
+}
+// Topnav
+if ($this->ADMIN_USER) {
+    $page_section='';
+    $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
+    $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
+    $data = mslib_fe::jQueryAdminMenu();
+    //echo json_encode($data, ENT_NOQUOTES);
+    //echo '<pre>'.print_r($data,1).'</pre>';
+    foreach ($data as $menuMaincatsKey => $menuMaincats) {
+        foreach ($menuMaincats as $menuMaincatKey => $menuMaincat) {
+            foreach ($menuMaincat['subs'] as $maincatsKey => $maincats) {
+                foreach ($maincats['subs'] as $subcatKey => $subcat) {
+                    //echo print_r($subcat);
+                    parse_str($subcat['link'],$url);
+                    if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
+                        $page_section=$url['tx_multishop_pi1']['page_section'];
+                        // Get menu items
+                        $menuItems=$maincats['subs'];
+                        break 4;
+                    }
+                }
+
+            }
+        }
+    }
+    switch($page_section) {
+        case 'custom_page':
+            // Hook
+            break;
+        case '':
+            break;
+        default:
+            $activeTab='';
+            foreach ($menuItems as $menuItem) {
+                if($menuItem['link'] != '') {
+                    $panelContent = array();
+                    $panelContent['title'] = $menuItem['label'];
+                    if ($menuItem['active']) {
+                        $activeKey='mail_headers_' . md5($menuItem['label']);
+                        $panelContent['class']='active';
+                    }
+                    $tabArray = array();
+                    $tabArray['title'] = $menuItem['label'];
+                    $tabArray['key'] = 'mail_headers_' . md5($menuItem['label']);
+                    $tabArray['tabLink'] = $menuItem['link'];
+                    $tabArray['content'] = $tabContent;
+                    $tabsArray[] = $tabArray;
+                }
+            }
+            $content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
+            break;
+    }
 }
 ?>
