@@ -852,6 +852,7 @@ if ($this->ADMIN_USER) {
             foreach ($menuItems as $menuItem) {
                 if($menuItem['link'] != '') {
                     $label=htmlspecialchars($menuItem['label']);
+                    $menuItem['class']='';
                     if ($menuItem['active']) {
                         $menuItem['class']='active';
                     } else {
@@ -863,7 +864,7 @@ if ($this->ADMIN_USER) {
                 }
             }
             if (count($navItems)) {
-                $content='<ul class="nav nav-tabs">'.implode('',$navItems).'</ul>'.$content;
+                $content='<ul class="navInterface nav-tabsInterface">'.implode('',$navItems).'</ul>'.$content;
             }
             //$content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
             break;
