@@ -847,6 +847,7 @@ if ($this->ADMIN_USER) {
         case '':
             break;
         default:
+            // Render tabbed navigation
             $activeTab='';
             foreach ($menuItems as $menuItem) {
                 if($menuItem['link'] != '') {
