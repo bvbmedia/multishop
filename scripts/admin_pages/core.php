@@ -817,34 +817,34 @@ switch ($this->ms['page']) {
 }
 // Topnav
 if ($this->ADMIN_USER) {
-    $page_section='';
-    $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
-    $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
-    $data = mslib_fe::jQueryAdminMenu();
-    foreach ($data as $menuMaincatsKey => $menuMaincats) {
-        foreach ($menuMaincats as $menuMaincatKey => $menuMaincat) {
-            foreach ($menuMaincat['subs'] as $maincatsKey => $maincats) {
-                foreach ($maincats['subs'] as $subcatKey => $subcat) {
-                    parse_str($subcat['link'],$url);
-                    if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
-                        $page_section=$url['tx_multishop_pi1']['page_section'];
-                        // Get menu items
-                        $menuItems=$maincats['subs'];
-                        break 4;
-                    }
-                }
-
-            }
-        }
-    }
-    switch($page_section) {
+    switch($this->get['tx_multishop_pi1']['page_section']) {
         case 'custom_page':
-            // Hook
+            // Leave it up by third party plugins
             break;
         case '':
             break;
         default:
             // Render sub menu navigation
+            $page_section='';
+            $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
+            $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
+            $data = mslib_fe::jQueryAdminMenu();
+            foreach ($data as $menuMaincatsKey => $menuMaincats) {
+                foreach ($menuMaincats as $menuMaincatKey => $menuMaincat) {
+                    foreach ($menuMaincat['subs'] as $maincatsKey => $maincats) {
+                        foreach ($maincats['subs'] as $subcatKey => $subcat) {
+                            parse_str($subcat['link'],$url);
+                            if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
+                                $page_section=$url['tx_multishop_pi1']['page_section'];
+                                // Get menu items
+                                $menuItems=$maincats['subs'];
+                                break 4;
+                            }
+                        }
+
+                    }
+                }
+            }
             $navItems=array();
             foreach ($menuItems as $menuItem) {
                 if($menuItem['link'] != '') {
