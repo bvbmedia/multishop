@@ -847,25 +847,25 @@ if ($this->ADMIN_USER) {
         case '':
             break;
         default:
-            // Render tabbed navigation
-            $activeTab='';
+            // Render sub menu navigation
+            $navItems=array();
             foreach ($menuItems as $menuItem) {
                 if($menuItem['link'] != '') {
-                    $panelContent = array();
-                    $panelContent['title'] = $menuItem['label'];
+                    $label=htmlspecialchars($menuItem['label']);
                     if ($menuItem['active']) {
-                        $activeKey='mail_headers_' . md5($menuItem['label']);
-                        $panelContent['class']='active';
+                        $menuItem['class']='active';
+                    } else {
+                        if ($menuItem['link']) {
+                            $label='<a href="'.$menuItem['link'].'">'.$label.'</a>';
+                        }
                     }
-                    $tabArray = array();
-                    $tabArray['title'] = $menuItem['label'];
-                    $tabArray['key'] = 'mail_headers_' . md5($menuItem['label']);
-                    $tabArray['tabLink'] = $menuItem['link'];
-                    $tabArray['content'] = $tabContent;
-                    $tabsArray[] = $tabArray;
+                    $navItems[] = '<li'.($menuItem['class']?' class="'.$menuItem['class'].'"':'').'>'.$label.'</li>';
                 }
             }
-            $content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
+            if (count($navItems)) {
+                $content='<ul class="nav nav-tabs">'.implode('',$navItems).'</ul>'.$content;
+            }
+            //$content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
             break;
     }
 }
