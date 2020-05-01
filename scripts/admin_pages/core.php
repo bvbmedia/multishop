@@ -821,13 +821,10 @@ if ($this->ADMIN_USER) {
     $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
     $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
     $data = mslib_fe::jQueryAdminMenu();
-    //echo json_encode($data, ENT_NOQUOTES);
-    //echo '<pre>'.print_r($data,1).'</pre>';
     foreach ($data as $menuMaincatsKey => $menuMaincats) {
         foreach ($menuMaincats as $menuMaincatKey => $menuMaincat) {
             foreach ($menuMaincat['subs'] as $maincatsKey => $maincats) {
                 foreach ($maincats['subs'] as $subcatKey => $subcat) {
-                    //echo print_r($subcat);
                     parse_str($subcat['link'],$url);
                     if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
                         $page_section=$url['tx_multishop_pi1']['page_section'];
