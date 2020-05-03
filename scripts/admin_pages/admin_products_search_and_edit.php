@@ -1133,7 +1133,7 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
 $subpartArray['###LABEL_STOCK_FROM###'] = $this->pi_getLL('from');
-$subpartArray['###LABEL_STOCK###'] = $this->pi_getLL('stock');
+$subpartArray['###LABEL_STOCK###'] = $this->pi_getLL('stock_value');
 $subpartArray['###VALUE_STOCK_FROM###'] = $this->get['stock_from'];
 $subpartArray['###LABEL_STOCK_TO###'] = $this->pi_getLL('to');
 $subpartArray['###VALUE_STOCK_TO###'] = $this->get['stock_till'];
