@@ -870,7 +870,7 @@ if ($this->ADMIN_USER) {
                 $navItems = array();
                 foreach ($menuItems as $menuItem) {
                     if ($menuItem['link'] != '') {
-                        $label = htmlspecialchars($menuItem['label']);
+                        $label = '<span>' . htmlspecialchars($menuItem['label']) . '</span>';
                         $menuItem['class'] = '';
                         if ($menuItem['active']) {
                             $menuItem['class'] = 'active';
