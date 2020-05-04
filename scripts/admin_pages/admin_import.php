@@ -2681,10 +2681,21 @@ if ($this->post['action'] == 'category-insert') {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
-                            } elseif (!isset($item['products_specials_price']) && $item['updated_products_id']) {
-                                // delete any special
-                                $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            } elseif ($item['updated_products_id']) {
+                                if (!isset($item['products_specials_price']) && !isset($item['products_specials_price_including_vat'])) {
+                                    // delete any special
+                                    $cols=array();
+                                    $cols[]='products_price_including_vat';
+                                    $cols[]='products_price';
+                                    foreach ($cols as $col) {
+                                        if (isset($item[$col])) {
+                                            // Current feed contains no specials price, but contains normal prices. Then we have to flush the special
+                                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
+                                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                             $productsTitle = $item['extid'];
                             if (isset($item['products_name'])) {
