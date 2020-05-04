@@ -479,6 +479,9 @@ if (isset($this->get['product_price_from']) && $this->get['product_price_from'] 
         case 'product_capital_price':
             $filter[] = $prefix . 'product_capital_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
             break;
+        case 'manufacturers_advice_price':
+            $filter[] = $prefix . 'manufacturers_advice_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            break;
         case 'specials_new_products_price':
             $prefix = 's.';
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -1283,6 +1286,19 @@ $subpartArray['###LABEL_FILTER_PRODUCTS_CAPITAL_PRICE###'] = $this->pi_getLL('ca
 $subpartArray['###FILTER_BY_PRODUCTS_PRICE_CHECKED###'] = (!isset($this->get['search_by_product_price']) || $this->get['search_by_product_price'] == 'products_price' ? ' checked="checked"' : '');
 $subpartArray['###FILTER_BY_PRODUCTS_SPECIALS_PRICE_CHECKED###'] = ($this->get['search_by_product_price'] == 'specials_new_products_price' ? ' checked="checked"' : '');
 $subpartArray['###FILTER_BY_PRODUCTS_CAPITAL_PRICE_CHECKED###'] = ($this->get['search_by_product_price'] == 'product_capital_price' ? ' checked="checked"' : '');
+$subpartArray['###MANUFACTURERS_ADVICE_PRICE_RADIO###'] = '';
+if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT'] == '1') {
+    $checked_manufacturer_price = '';
+    if (isset($this->get['search_by_product_price']) && $this->get['search_by_product_price'] == 'manufacturers_advice_price') {
+        $checked_manufacturer_price = ' checked="checked"';
+    }
+    $subpartArray['###MANUFACTURERS_ADVICE_PRICE_RADIO###'] = '<div class="col-md-6">
+                    <div class="radio radio radio">
+                        <input type="radio" id="search_by_manufacturers_advice_price" name="search_by_product_price" value="manufacturers_advice_price"' . $checked_manufacturer_price . ' >
+                        <label for="search_by_manufacturers_advice_price">' . $this->pi_getLL('admin_label_manufacturers_advice_price') . '</label>
+                    </div>
+                </div>';
+}
 // product_status
 $product_status_selectbox = '<select name="product_status" id="product_status" class="form-control">';
 $product_status_selectbox .= '<option value="all">' . $this->pi_getLL('all') . '</option>
