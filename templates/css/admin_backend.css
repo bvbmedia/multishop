@@ -1239,3 +1239,13 @@ ul.navInterface > li.active > span::after {
 	color: #fff;
 	font-weight: normal;
 }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul {
+	background-color: #292929;
+}
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li:first-child:after,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after {
+	top: 11px;
+	border-right-color: #292929;
+}
