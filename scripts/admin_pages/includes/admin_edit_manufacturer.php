@@ -103,6 +103,16 @@ if ($this->post) {
 				$updateArray['manufacturers_id'] = $manufacturers_id;
 			}
 		}
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturer.php']['insertManufacturerPostHook'])) {
+			$params = array(
+					'manufacturers_id' => $manufacturers_id
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturer.php']['insertManufacturerPostHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 	} else {
 		if ($this->post['manufacturers_id']) {
 			$updateArray['last_modified'] = time();
@@ -114,6 +124,16 @@ if ($this->post) {
 				);
 			} else {
 				$manufacturers_id = $this->post['manufacturers_id'];
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturer.php']['updateManufacturerPostHook'])) {
+					$params = array(
+							'manufacturers_id' => $manufacturers_id
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturer.php']['updateManufacturerPostHook'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// custom hook that can be controlled by third-party plugin eof
 			}
 		}
 	}
