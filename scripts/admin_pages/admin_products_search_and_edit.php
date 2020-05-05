@@ -1361,12 +1361,18 @@ $interfaceHeaderButtons = $objRef->renderHeaderButtons();
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 // extra input
 $extra_advanced_search_input = array();
+$extra_advanced_search_input_cols = array();
+$extra_advanced_search_input_cols[0] = array();
+$extra_advanced_search_input_cols[1] = array();
+$extra_advanced_search_input_cols[2] = array();
+$extra_advanced_search_input_cols[3] = array();
 $extra_advanced_search_input_new_row = array();
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionMarkerPostProc'])) {
     $params = array(
             'subpartArray' => &$subpartArray,
             'extra_advanced_search_input' => &$extra_advanced_search_input,
+            'extra_advanced_search_input_cols' => &$extra_advanced_search_input_cols,
             'extra_advanced_search_input_new_row' => &$extra_advanced_search_input_new_row
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionMarkerPostProc'] as $funcRef) {
@@ -1374,6 +1380,10 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // custom page hook that can be controlled by third-party plugin eof
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL1###'] = implode('', $extra_advanced_search_input_cols[0]);
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL2###'] = implode('', $extra_advanced_search_input_cols[1]);
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL3###'] = implode('', $extra_advanced_search_input_cols[2]);
+$subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL4###'] = implode('', $extra_advanced_search_input_cols[3]);
 $subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT###'] = implode('', $extra_advanced_search_input);
 $subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_NEW_ROW###'] = implode('', $extra_advanced_search_input_new_row);
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
