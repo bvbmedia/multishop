@@ -5664,29 +5664,43 @@ class mslib_befe {
             return $content;
         }
     }
-    function bootstrapTabs($tabsArray) {
+    function bootstrapTabs($tabsArray,$bodyContent='',$activeKey='') {
         if (is_array($tabsArray) && count($tabsArray)) {
             $content .= '<ul class="tabs nav nav-tabs" role="tablist">';
             $counter = 0;
             foreach ($tabsArray as $col => $tabArray) {
                 $classes = array();
-                if (!$counter) {
+                if ($activeKey && $tabArray['key']==$activeKey) {
                     $classes[] = 'active';
+                } else {
+                    if (!$counter && !$activeKey) {
+                        $classes[] = 'active';
+                    }
                 }
-                $content .= '<li role="presentation"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '><a href="#' . $tabArray['key'] . '" aria-controls="1" role="tab" data-toggle="tab"><span>' . htmlspecialchars($tabArray['title']) . '</span></a></li>';
+                $link='#'.$tabArray['key'];
+                if ($tabArray['tabLink'] != '') {
+                    $link=$tabArray['tabLink'];
+                    $content .= '<li role="presentation"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '><a href="' . $link . '"><span>' . htmlspecialchars($tabArray['title']) . '</span></a></li>';
+                } else {
+                    $content .= '<li role="presentation"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '><a href="' . $link . '" aria-controls="1" role="tab" data-toggle="tab"><span>' . htmlspecialchars($tabArray['title']) . '</span></a></li>';
+                }
                 $counter++;
             }
             $content .= '</ul>';
             $content .= '<div class="tab-content">';
-            $counter = 0;
-            foreach ($tabsArray as $col => $tabArray) {
-                $classes = array();
-                $classes[] = 'tab-pane';
-                if (!$counter) {
-                    $classes[] = 'active';
+            if ($bodyContent) {
+                $content.=$bodyContent;
+            } else {
+                $counter = 0;
+                foreach ($tabsArray as $col => $tabArray) {
+                    $classes = array();
+                    $classes[] = 'tab-pane';
+                    if (!$counter) {
+                        $classes[] = 'active';
+                    }
+                    $content .= '<div role="tabpanel"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . ' id="' . $tabArray['key'] . '">' . $tabArray['content'] . '</div>';
+                    $counter++;
                 }
-                $content .= '<div role="tabpanel"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . ' id="' . $tabArray['key'] . '">' . $tabArray['content'] . '</div>';
-                $counter++;
             }
             $content .= '</div>';
             return $content;
