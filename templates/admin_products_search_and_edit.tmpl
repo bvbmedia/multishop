@@ -248,7 +248,6 @@
 				<!-- ###PRODUCTS_ITEM### end -->
 			</div>
 			<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
-			<div class="text-right mb10"><input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" /> <input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" /></div>
 			<hr>
 			<div class="form-group">
 				###INPUT_ACTION_SELECTBOX###
@@ -258,26 +257,6 @@
 			</div>
 			<div class="form-group">
 				<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
-			</div>
-		</form>
-
-		<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
-			<input type="hidden" name="cid" value="###CATEGORY_ID2###" />
-			###PRODUCTS_PAGINATION###
-			<hr>
-			<div class="form-group">
-				<label class="col-md-2 control-label">###LABEL_UPLOAD_EXCEL_FILE###</label>
-				<div class="col-md-10">
-					<div class="input-group">
-						<input type="file" name="datafile" class="form-control"/>
-						<span class="input-group-btn">
-							<input type="submit" name="Submit" class="btn btn-success" value="###LABEL_ADMIN_UPLOAD###" />
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="clearfix">
-				<a class="btn btn-success msAdminBackToCatalog" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
 			</div>
 		</form>
 		<!-- ###RESULTS### end -->
