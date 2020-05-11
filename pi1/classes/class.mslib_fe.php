@@ -7661,12 +7661,7 @@ class mslib_fe {
 				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_overview']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
 			}
 			*/
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['label'] = $this->pi_getLL('admin_orders_status');
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['class'] = 'fa fa-info';
-            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders_status' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders_status') {
-                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['active'] = 1;
-            }
+
             if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
                 $ms_menu['header']['ms_admin_invoices']['label'] = $this->pi_getLL('admin_invoices');
                 $ms_menu['header']['ms_admin_invoices']['description'] = $this->pi_getLL('admin_invoices_overview_description');
@@ -7986,6 +7981,12 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
 			*/
+            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['label'] = $this->pi_getLL('admin_orders_status');
+            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
+            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['class'] = 'fa fa-info';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders_status' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders_status') {
+                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['active'] = 1;
+            }
             $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['label'] = $this->pi_getLL('admin_system');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['description'] = $this->pi_getLL('admin_system') . '.';
             $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['class'] = 'fa fa-cogs';
