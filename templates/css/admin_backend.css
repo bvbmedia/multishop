@@ -236,19 +236,10 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .panel-success > .panel-heading {
 	position:relative;
 	width:100%;
-	display: -webkit-box;
-	display: -moz-box;
 	display: -ms-flexbox;
-	display: -webkit-flex;
 	display: flex;
-	-webkit-box-pack: space-between;
-	-moz-box-pack: space-between;
-	-webkit-justify-content: space-between;
-	-ms-flex-pack: space-between;
+	-ms-flex-pack: justify;
 	justify-content: space-between;
-	-webkit-box-align: center;
-	-moz-box-align: center;
-	-webkit-align-items: center;
 	-ms-flex-align: center;
 	align-items: center;
 	z-index:0;
@@ -985,7 +976,7 @@ td.print_r_value { word-break:break-word; }
 @media (max-width:1199px) {
 	body { background-position:-40px top; }
 	h1 { font-size:2rem; line-height:2.4rem; }
-	h2 { font-size:1.6remx; line-height:2rem; }
+	h2 { font-size: 1.6rem; line-height:2rem; }
 	h3,
 	.panel-title { font-size:1.4rem; line-height:1.8rem; }
 	h4 { font-size:1.2rem; line-height:1.6rem; }
@@ -1111,7 +1102,7 @@ td.print_r_value { word-break:break-word; }
 ul.navInterface {
 	display: -ms-flexbox;
 	display: flex;
-	-ms-flex-wrap; wrap;
+	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 	margin: 0;
 	padding: 0;
@@ -1288,4 +1279,60 @@ ul.navInterface > li.active > span::after {
 }
 #tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a.label:last-child {
 	margin-right: 22px;
+}
+
+/* OB-787 */
+.product-overview-listing-item {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+.product-overview-listing-item+.product-overview-listing-item {
+	border-top: 1px solid rgba(255,255,255,.1);
+	margin-top: 16px;
+	padding-top: 16px;
+}
+.product-overview-listing-item .cellCheckbox,
+.product-overview-listing-item .cellImage {
+	margin-right: 16px;
+}
+.product-overview-listing-item .pol-image {
+	border: 1px solid rgba(255,255,255,.15);
+	width: 100px;
+	height: 100px;
+}
+.product-overview-listing-item .pol-product {
+	display: -ms-flexbox;
+	display: flex;
+
+}
+.product-overview-listing-item .pol-product > a {
+	border-bottom: 1px solid transparent;
+	font-weight: bold;
+	margin-right: auto;
+}
+.product-overview-listing-item .pol-product > a:hover,
+.product-overview-listing-item .pol-product > a:focus {
+	border-bottom-color: #fff;
+}
+.product-overview-listing-item .pol-productinfo ul.msAdminCategoriesCrum {
+	display: inline-flex;
+}
+.product-overview-listing-item .pol-attributes {
+	display: -ms-flexbox;
+	display: flex;
+	font-size: 13px;
+	margin-bottom: 16px;
+}
+.product-overview-listing-item .pol-attributes > div {
+	-ms-flex: 0 0 25%;
+	flex: 0 0 25%;
+	max-width: 25%;
+}
+.product-overview-listing-item .pol-attributes .cellPrice {
+	text-align: left;
+}
+.product-overview-listing-item .cellAction {
+	text-align: left;
 }
