@@ -69,43 +69,6 @@ if ($this->get['tx_multishop_pi1']['searchByChar']) {
     $this->searchKeywords[] = $this->get['tx_multishop_pi1']['keyword'];
     $this->searchMode = '%keyword%';
 }
-$searchCharNav = '<div id="msAdminSearchByCharNav"><div class="btn-group">';
-$chars = array();
-$chars = array(
-        '0-9',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z',
-        '#',
-        'all'
-);
-foreach ($chars as $char) {
-    $searchCharNav .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[searchByChar]=' . $char . '&tx_multishop_pi1[page_section]=admin_manufacturers') . '" class="btn btn-default">' . mslib_befe::strtoupper($char) . '</a>';
-}
-$searchCharNav .= '</div></div>';
 $limit_search_result_selectbox = '<div class="form-inline pull-right"><div class="form-group"><label>' . $this->pi_getLL('limit_number_of_records_to') . ':</label>';
 $limit_search_result_selectbox .= '<select name="limit" class="form-control">';
 $limits = array();
