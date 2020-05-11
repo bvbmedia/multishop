@@ -1235,7 +1235,7 @@ ul.navInterface > li.active > span::after {
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.active > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.active:hover > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.active > span {
-	background-color: #368cd7;
+	background-color: #368cd7!important;
 	color: #fff;
 	font-weight: normal;
 }
@@ -1248,4 +1248,44 @@ ul.navInterface > li.active > span::after {
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after {
 	top: 11px;
 	border-right-color: #292929;
+}
+
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li:not(.ms_new_ticket) > a,
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li:not(.ms_new_ticket) > span {
+	padding-right: 22px;
+	padding-left: 22px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_admin_has_subs > a,
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_admin_has_subs > span {
+	padding-right: 36px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_admin_has_subs:before {
+	top: 18px;
+	right: 20px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li {
+	border-right: none;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > a:hover {
+	background-color: #292929;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_blog_post {
+	padding: 5px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li.ms_new_blog_post > a.label-md {
+	font-weight: normal;
+	line-height: 28px;
+	padding-right: 12px;
+	padding-left: 12px;
+	transition: background .25s ease-in-out;
+}
+
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > a.label-md:hover {
+	background-color: #369836;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a:not(.label) {
+	padding-left: 22px;
+}
+#tx_multishop_admin_newheader_wrapper ul#tx_multishop_admin_newheader > li > .admin_panel_menu > a.label:last-child {
+	margin-right: 22px;
 }

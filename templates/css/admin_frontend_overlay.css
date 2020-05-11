@@ -246,3 +246,20 @@ ul#ms_admin_maximize li a:focus { background:#000; text-decoration:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after {
 	border-right-color: #292929;
 }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_new_blog_post {
+	padding: 5px;
+}
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_clear_cache > a > .fa,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_clear_image_cache > a > .fa {
+	position: static;
+}
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a.label-md {
+	font-weight: normal;
+	line-height: 28px;
+	padding-right: 12px;
+	padding-left: 12px;
+	transition: background .25s ease-in-out;
+}
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a.label-md:hover {
+	background-color: #369836;
+}
