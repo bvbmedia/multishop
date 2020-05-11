@@ -983,6 +983,11 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['PRODUCT_CATEGORIES_CRUMBAR'] = $cat_crumbar;
         $markerArray['PRODUCT_MODEL'] = $rs['products_model'];
         $markerArray['PRODUCT_STATUS'] = $status;
+        $markerArray['PRODUCT_IMAGE'] = '';
+        if ($rs['products_image']) {
+            $imgUrl = $this->FULL_HTTP_URL . mslib_befe::getImagePath($rs['products_image'], 'products', '50');
+            $markerArray['PRODUCT_IMAGE']='<img src="'.$imgUrl.'" />';
+        }
         $markerArray['LINK_EDIT_CAT'] = $link_edit_cat;
         $markerArray['CATEGORY_NAME'] = $rs['categories_name'];
         $markerArray['VALUE_TAX_ID'] = $rs['tax_id'];
