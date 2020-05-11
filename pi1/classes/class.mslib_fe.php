@@ -7495,13 +7495,6 @@ class mslib_fe {
                     $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['active'] = 1;
                 }
             }
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['label'] = $this->pi_getLL('admin_update_prices');
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['description'] = $this->pi_getLL('admin_update_product_prices_by_percentage') . '.';
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['class'] = 'fa fa-money';
-            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_mass_product_updater' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_mass_product_updater') {
-                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['active'] = 1;
-            }
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_import_products']['label'] = $this->pi_getLL('import');
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_import_products']['description'] = $this->pi_getLL('admin_import_your_custom_productfeed_by_using_this_wizard') . '.';
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_import_products']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_import');
@@ -7515,13 +7508,6 @@ class mslib_fe {
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['class'] = 'fa fa-upload';
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_product_feeds' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_product_feeds') {
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['active'] = 1;
-            }
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['label'] = $this->pi_getLL('admin_order_units');
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_order_units');
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['class'] = 'fa fa-mouse-pointer';
-            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['description'] = '';
-            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_order_units' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_order_units') {
-                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['active'] = 1;
             }
             //
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_sort_product']['label'] = $this->pi_getLL('admin_sort_products');
@@ -7981,11 +7967,27 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
 			*/
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['label'] = $this->pi_getLL('admin_orders_status');
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
-            $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['class'] = 'fa fa-info';
+
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_order_units']['label'] = $this->pi_getLL('admin_order_units');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_order_units']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_order_units');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_order_units']['class'] = 'fa fa-mouse-pointer';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_order_units']['description'] = '';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_order_units' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_order_units') {
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_order_units']['active'] = 1;
+            }
+
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_update_prices']['label'] = $this->pi_getLL('admin_update_prices');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_update_prices']['description'] = $this->pi_getLL('admin_update_product_prices_by_percentage') . '.';
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_update_prices']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_update_prices']['class'] = 'fa fa-money';
+            if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_mass_product_updater' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_mass_product_updater') {
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_update_prices']['active'] = 1;
+            }
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_orders_status']['label'] = $this->pi_getLL('admin_orders_status');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_orders_status']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
+            $ms_menu['footer']['ms_admin_system']['subs']['admin_orders_status']['class'] = 'fa fa-info';
             if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_orders_status' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_orders_status') {
-                $ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['active'] = 1;
+                $ms_menu['footer']['ms_admin_system']['subs']['admin_orders_status']['active'] = 1;
             }
             $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['label'] = $this->pi_getLL('admin_system');
             $ms_menu['footer']['ms_admin_system']['subs']['admin_system']['description'] = $this->pi_getLL('admin_system') . '.';
