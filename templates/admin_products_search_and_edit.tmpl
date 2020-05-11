@@ -64,6 +64,7 @@
 										<label class="control-label" for="tax_rate">###LABEL_TAX_RATE###</label>
 										###TAX_RATE_SELECTBOX###
 									</div>
+									###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL1###
 								</div>
 								<div class="col-sm-3 formfield-wrapper">
 									<div class="panel panel-default">
@@ -96,6 +97,7 @@
 														<label for="search_by_product_capital_price">###LABEL_FILTER_PRODUCTS_CAPITAL_PRICE###</label>
 													</div>
 												</div>
+												###MANUFACTURERS_ADVICE_PRICE_RADIO###
 											</div>
 										</div>
 									</div>
@@ -103,6 +105,7 @@
 										<label for="product_status" class="control-label">###LABEL_PRODUCT_STATUS###</label>
 										###PRODUCT_STATUS_SELECTBOX###
 									</div>
+									###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL2###
 								</div>
 								<div class="col-sm-3 formfield-wrapper">
 									<div class="panel panel-default">
@@ -150,10 +153,11 @@
 										<label for="product_status" class="control-label">###LABEL_SEARCH_ENGINE_INDEXING###</label>
 										###SEARCH_ENGINE_INDEXING_SELECTBOX###
 									</div>
+									###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL3###
 								</div>
 								<div class="col-sm-3 formfield-wrapper">
-									<label class="control-label" for="type_search">###LABEL_STOCK###</label>
-									<div class="form-group">
+									<div class="form-group" id="msProductSearchAndEditFilterStockInput">
+										<label class="control-label" for="type_search">###LABEL_STOCK###</label>
 										<div class="form-inline">
 											<label class="control-label" for="stock_from">###LABEL_STOCK_FROM###</label>
 											<input class="form-control" type="text" name="stock_from" id="stock_from" value="###VALUE_STOCK_FROM###" style="width: 135px">
@@ -170,6 +174,17 @@
 										</select>
 									</div>
 									###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###
+									<div class="form-group">
+										<label for="product_sort">###LABEL_PRODUCT_SORT###</label>
+										<select name="product_sort" id="product_sort" class="form-control">
+											<option value="products_id_desc" ###PRODUCT_SORT_ID_DESC_SELECTED###>Products ID (desc)</option>
+											<option value="products_date_added_desc" ###PRODUCT_SORT_DATE_ADDED_DESC_SELECTED###>Products date added (desc)</option>
+											<option value="products_date_added_asc" ###PRODUCT_SORT_DATE_ADDED_ASC_SELECTED###>Products date added (asc)</option>
+											<option value="products_date_modified_desc" ###PRODUCT_SORT_DATE_MODIFIED_DESC_SELECTED###>Products date modified (desc)</option>
+											<option value="products_date_modified_asc" ###PRODUCT_SORT_DATE_MODIFIED_ASC_SELECTED###>Products date modified (asc)</option>
+										</select>
+									</div>
+									###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL4###
 								</div>
 								###EXTRA_ADVANCED_SEARCH_INPUT###
 							</div>
@@ -203,7 +218,7 @@
 						<th class="cellStatus"><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
 						<th class="cellPrice"><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
 						<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
-						<th class="cellCapitalPrice"><a href="###HEADER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_HEADER_CAPITAL_PRICE###</a></th>
+						<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_CAPITAL_PRICE_LINK###">###LABEL_HEADER_CAPITAL_PRICE###</a></th>
 						<th class="cellStock"><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
 						<th class="cellAction">###LABEL_HEADER_ACTION###</th>
 					</tr>
@@ -240,7 +255,7 @@
 							<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" class="priceInputReal" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
 						</td>
 
-						<td class="cellCapitalPrice">
+						<td class="cellSpecialPrice">
 							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY4###</span><input type="text" id="display_name" name="display_name" class="form-control msCapitalPriceExcludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_EXCL_VAT###" rel="###PID9###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_EXCL_VAT###</span></div></div>
 							<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY5###</span><input type="text" name="display_name" id="display_name" class="form-control msCapitalPriceIncludingVat priceInputDisplay" value="###VALUE_CAPITAL_PRICE_INCL_VAT###" rel="###PID10###"><span class="input-group-addon">###SUFFIX_CAPITAL_PRICE_INCL_VAT###</span></div></div>
 							<div class="msAttributesField hidden"><input type="hidden" name="up[capital_price][###PID11###]" class="priceInputReal" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" style="text-align:right;" size="10px" /></div>

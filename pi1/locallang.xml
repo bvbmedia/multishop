@@ -1075,6 +1075,7 @@
             <label index="status_last_modified">Status last modified</label>
             <label index="step">Step</label>
             <label index="stock">Stock</label>
+            <label index="stock_value">Stock value</label>
             <label index="store">Store</label>
             <label index="street">Street</label>
             <label index="street_address">street address</label>
@@ -1456,7 +1457,7 @@
             <label index="order_on">Order on</label>
             <label index="export_customer_with_discount">Customer with discount</label>
             <label index="admin_label_select_feature_highlights">Select attribute option</label>
-            <label index="label_foreign_source_name">Foreign source name</label>
+            <label index="label_foreign_source_name">Feed source name</label>
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
             <label index="label_product_image">With image</label>
             <label index="admin_sort_categories">Sort categories</label>
@@ -2529,6 +2530,7 @@
             <label index="status_last_modified">Status laatst gewijzigd</label>
             <label index="step">Stap</label>
             <label index="stock">Voorraad</label>
+            <label index="stock_value">Voorraadwaarde</label>
             <label index="store">Winkel</label>
             <label index="street">Straat</label>
             <label index="street_address">straatnaam</label>
@@ -2888,7 +2890,7 @@
             <label index="order_on">Besteld op</label>
             <label index="export_customer_with_discount">Klant met korting</label>
             <label index="admin_label_select_feature_highlights">Selecteer attribuutoptie</label>
-            <label index="label_foreign_source_name">Foreign source name</label>
+            <label index="label_foreign_source_name">Feed source name</label>
             <label index="admin_choose_foreign_source_name">Kies een buitenlandse bronnaam</label>
             <label index="label_product_image">Met afbeelding</label>
             <label index="admin_sort_categories">Categorieën sorteren</label>
