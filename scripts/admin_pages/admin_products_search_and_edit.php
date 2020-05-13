@@ -983,6 +983,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['PRODUCT_CATEGORIES_CRUMBAR'] = $cat_crumbar;
         $markerArray['PRODUCT_MODEL'] = $rs['products_model'];
         $markerArray['PRODUCT_STATUS'] = $status;
+        $markerArray['PRODUCT_STATUS_CHECKED'] = ($rs['products_status'] > 0 ? ' checked="checked"' : '');
         $markerArray['PRODUCT_IMAGE'] = '';
         if ($rs['products_image']) {
             $imgUrl = $this->FULL_HTTP_URL . mslib_befe::getImagePath($rs['products_image'], 'products', '50');
@@ -1005,6 +1006,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
         $markerArray['VALUE_PRICE_EXCL_VAT'] = htmlspecialchars($product_price_display);
         $markerArray['VALUE_PRICE_INCL_VAT'] = htmlspecialchars($product_price_display_incl);
+        $markerArray['INPUT_PRICE_EXCL_VAT'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput'.$rs['products_id'].'" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div>';
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
@@ -1013,6 +1015,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['VALUE_CAPITAL_PRICE_INCL_VAT'] = htmlspecialchars($capital_price_display_incl);
         $markerArray['VALUE_ORIGINAL_CAPITAL_PRICE'] = $rs['product_capital_price'];
         $markerArray['VALUE_PRODUCT_QUANTITY'] = $rs['products_quantity'];
+        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock]['.$rs['products_quantity'].']" class="form-control width-auto productQtyInput'.$rs['products_id'].'" value="'.$rs['products_quantity'].'" style="text-align:right;" />';
         $markerArray['VALUE_PRODUCT_WEIGHT'] = $rs['products_weight'];
         $markerArray['PID0'] = $rs['products_id'];
         $markerArray['PID1'] = $rs['products_id'];
@@ -1551,8 +1554,52 @@ jQuery(document).ready(function(){
 	});
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=') . '";
-    });    
+    });
+    jQuery(document).on(\'click\', \'.hoverEdit\', function(e){
+        e.preventDefault();
+        var pid = jQuery(this).attr(\'data-pid\');
+        if (jQuery(this).hasClass(\'products_price_edit\')) {
+            var data_type = \'products_price\';
+            var value_id=\'.product_price_value_excl_vat_\' + pid;
+            var div_input_id = \'.product_price_input_excl_vat_\' + pid;
+            var text_input_id = \'.productPriceInput\' + pid;
+        }
+        if (jQuery(this).hasClass(\'products_qty_edit\')) {
+            var data_type = \'products_quantity\'; 
+            var value_id=\'.product_qty_value_\' + pid;
+            var div_input_id = \'.product_qty_input_\' + pid;
+            var text_input_id = \'.productQtyInput\' + pid;
+        }
+        if (jQuery(value_id).is(\':visible\')) {
+            jQuery(value_id).hide();
+            jQuery(div_input_id).show();
+        } else {
+            var new_value = jQuery(text_input_id).val();
+            jQuery(value_id).empty();
+            jQuery(value_id).html(new_value);
+            jQuery(value_id).show();
+            jQuery(div_input_id).hide();
+            updateData(new_value, pid, data_type);
+        } 
+    });
+    jQuery(document).on(\'change\', \'.products_status\', function(e){
+        e.preventDefault();
+        var pid = jQuery(this).attr(\'data-pid\');
+        var new_value = (jQuery(this).prop(\'checked\') ? 1 : 0);
+        updateData(new_value, pid, \'products_status\');
+    });
 });
+function updateData(value, pid, data_type) {
+    jQuery.ajax({
+        type: "POST",
+        url: "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=update_product_info&tx_multishop_pi1[update_product_info]=') . '" + data_type,
+        dataType: \'json\',
+        data: "tx_multishop_pi1[value]=" + value + "&tx_multishop_pi1[pid]=" + pid,
+        success: function(d) {
+            
+        }
+    });
+}
 var product_tax_rate_js=[];
 ' . implode("\n", $product_tax_rate_js) . '
 </script>
