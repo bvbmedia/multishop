@@ -6,7 +6,7 @@ if ($this->ADMIN_USER) {
     $return_data = array();
     $limit = 100;
     $filter = array();
-    if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id']) && $this->get['preselected_id'] > 0) {
+    if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id']) && $this->get['preselected_id'] > 0 && $this->get['preselected_id'] != 'all') {
         $filter[] = 'manufacturers_id IN (' . $this->get['preselected_id'] . ')';
     }
     if (!empty($this->get['q'])) {
@@ -22,7 +22,10 @@ if ($this->ADMIN_USER) {
         }
     }
     if (count($filter) || (isset($this->get['q']) && empty($this->get['q']))) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		$return_data[$counter]['text'] = htmlentities($this->pi_getLL('all'));
+		$return_data[$counter]['id'] = 'all';
+		$counter++;
+    	$query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_manufacturers', // FROM ...
                 implode(' and ', $filter), // WHERE...
                 '', // GROUP BY...
@@ -38,6 +41,13 @@ if ($this->ADMIN_USER) {
             }
         }
     }
+	if (isset($this->get['preselected_id'])) {
+		if ($this->get['preselected_id'] == 'all') {
+			$return_data = array();
+			$return_data[0]['text'] = htmlentities($this->pi_getLL('all'));
+			$return_data[0]['id'] = 'all';
+		}
+	}
     echo json_encode($return_data);
     exit;
 }

@@ -27,9 +27,9 @@ if (is_numeric($this->get['manufacturers_id'])) {
             $this->cacheLifeTime = $this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
         }
         $options = array(
-            'caching' => true,
-            'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-            'lifeTime' => $this->cacheLifeTime
+                'caching' => true,
+                'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+                'lifeTime' => $this->cacheLifeTime
         );
         $Cache_Lite = new Cache_Lite($options);
         $string = $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'];
@@ -53,7 +53,6 @@ if (is_numeric($this->get['manufacturers_id'])) {
         } else {
             $extrameta = '';
         }
-
         if ($current['meta_title']) {
             $meta_title = $current['meta_title'];
         } else {
@@ -168,13 +167,11 @@ if (is_numeric($this->get['manufacturers_id'])) {
                 }
                 switch ($this->cookie['sortbysb']) {
                     case 'best_selling_asc':
-                        $select[] = 'SUM(op.qty) as order_total_qty';
-                        $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                        $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
                         $orderby[] = "order_total_qty asc";
                         break;
                     case 'best_selling_desc':
-                        $select[] = 'SUM(op.qty) as order_total_qty';
-                        $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                        $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
                         $orderby[] = "order_total_qty desc";
                         break;
                     case 'price_asc':

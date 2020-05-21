@@ -13,6 +13,13 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
     );
     $Cache_Lite = new Cache_Lite($options);
     $string = md5(serialize($this->conf)) . $this->cObj->data['uid'] . '_' . $this->HTTP_HOST . '_' . $this->server['REQUEST_URI'] . $this->server['QUERY_STRING'] . serialize($this->post);
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingCacheStringKeyPostProc'])) {
+        $params = array('string' => &$string);
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingCacheStringKeyPostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
 }
 $output_array = array();
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->get($string)) {
@@ -36,7 +43,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingCurrentCategoryPreProc'])) {
             $params = array();
-            $params['current'] =&$current;
+            $params['current'] =& $current;
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingCurrentCategoryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
@@ -67,7 +74,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
         } else {
             $meta_keywords = '';
         }
-        if ($this->conf['disableMetatags']=='0') {
+        if ($this->conf['disableMetatags'] == '0') {
             $output_array['meta']['title'] = '<title>' . htmlspecialchars($meta_title) . '</title>';
             if ($meta_description) {
                 $output_array['meta']['description'] = '<meta name="description" content="' . $meta_description . '" />';
@@ -275,14 +282,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                         break;
                 }
             }
-            $doProductQuery=1;
+            $doProductQuery = 1;
             // custom hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPreProc'])) {
                 $params = array(
-                    'doProductQuery' => &$doProductQuery,
-                    'current' => &$current,
-                    'content' => &$content,
-                    'limit_per_page' => &$limit_per_page
+                        'doProductQuery' => &$doProductQuery,
+                        'current' => &$current,
+                        'content' => &$content,
+                        'limit_per_page' => &$limit_per_page
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -311,13 +318,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                     }
                     switch ($this->cookie['sortbysb']) {
                         case 'best_selling_asc':
-                            $select[] = 'SUM(op.qty) as order_total_qty';
-                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            //$select[] = 'SUM(op.qty) as order_total_qty';
+                            $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
+                            //$extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
                             $orderby[] = "order_total_qty asc";
                             break;
                         case 'best_selling_desc':
-                            $select[] = 'SUM(op.qty) as order_total_qty';
-                            $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                            $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
+                            //$extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
                             $orderby[] = "order_total_qty desc";
                             break;
                         case 'price_asc':
@@ -343,18 +351,18 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                 // custom hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'])) {
                     $params = array(
-                        'filter' => &$filter,
-                        'orderby' => &$orderby,
-                        'select' => &$select,
-                        'where' => &$where,
-                        'extra_from' => &$extra_from,
-                        'extra_join' => &$extra_join
+                            'filter' => &$filter,
+                            'orderby' => &$orderby,
+                            'select' => &$select,
+                            'where' => &$where,
+                            'extra_from' => &$extra_from,
+                            'extra_join' => &$extra_join
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['categoriesListingProductQueryPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
-                //$this->msDebug=true;
+                //$this->msDebug=1;
                 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
                 //echo $this->msDebugInfo;
                 //die();
@@ -410,7 +418,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
     }
     if ($this->ms['MODULES']['CACHE_FRONT_END']) {
         $output_array['content'] = $content;
-        $Cache_Lite->save(serialize($output_array));
+        $Cache_Lite->save(serialize($output_array), $string);
     }
 } elseif ($output_array) {
     $output_array = unserialize($output_array);

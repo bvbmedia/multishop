@@ -40,4 +40,22 @@ if (isset($settings['GLOBAL_MODULES'][$key])) {
         }
     }
 }
+// Check if there are no products with non-unique hash
+$str = 'SELECT products_id,extid FROM tx_multishop_products GROUP BY extid HAVING COUNT(extid) > 1';
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+    while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+        $records = mslib_befe::getRecords($row['extid'], 'tx_multishop_products', 'extid');
+        if (is_array($records)) {
+            foreach ($records as $record) {
+                $updateArray = array();
+                $updateArray['extid'] = md5(uniqid());
+                $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $record['products_id'] . '\'', $updateArray);
+                $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+                $messages[] = $query2;
+            }
+        }
+    }
+}
+
 ?>

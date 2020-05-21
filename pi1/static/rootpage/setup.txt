@@ -132,6 +132,7 @@ plugin.tx_multishop_pi1 {
 	adminProductsSearchAndEditStandardCustomSearchOn = {$plugin.multishop.adminProductsSearchAndEditStandardCustomSearchOn}
 	addLinkToProductNameForCancelUrl = {$plugin.multishop.addLinkToProductNameForCancelUrl}
 	adminOrdersListingDisableAutoRememberFilters = {$plugin.multishop.adminOrdersListingDisableAutoRememberFilters}
+	debugPurgeCacheLite = {$plugin.multishop.debugPurgeCacheLite}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

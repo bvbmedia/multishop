@@ -117,7 +117,7 @@ if ($this->ADMIN_USER) {
 				<tr>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('products_id') . '</th>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('qty') . '</th>
-				'.($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<th class="cellFixed cellNoWrap">' . $this->pi_getLL('order_product_qty_delivered') . '</th>' : '').'
+				' . ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<th class="cellFixed cellNoWrap">' . $this->pi_getLL('order_product_qty_delivered') . '</th>' : '') . '
 				<th class="cellFluid">' . $this->pi_getLL('products_name') . '</th>
 				<th class="cellFixed cellNoWrap">' . $this->pi_getLL('price') . '</th>
 				' . ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT'] > 0 ? '<th>' . $this->pi_getLL('discount') . '</th>' : '') . '
@@ -163,7 +163,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '<tr class="' . $tr_subtype . '">
 					<td class="cellFixed cellNoWrap text-right"><a href="' . $productLink . '" target="_blank">' . $product['products_id'] . '</a></td>
 					<td class="cellFixed cellNoWrap text-right">' . round($product['qty'], 13) . '</td>
-					'.($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<td class="cellFixed cellNoWrap text-right">' . round($product['qty_delivered'], 13) . '</td>' : '').'
+					' . ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<td class="cellFixed cellNoWrap text-right">' . round($product['qty_delivered'], 13) . '</td>' : '') . '
 					<td class="cellFluid">' . $productsName . '</td>';
                     $normal_price = $product['final_price'];
                     if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
@@ -188,6 +188,7 @@ if ($this->ADMIN_USER) {
                             $jsonData_content .= '<tr class="' . $tr_subtype . '">
 							<td class="text-right">&nbsp;</td>
 							<td class="text-right">&nbsp;</td>
+							 ' . ($this->ms['MODULES']['SHOW_QTY_DELIVERED'] > 0 ? '<td class="cellFixed cellNoWrap text-right"></td>' : '') . '
 							<td>' . $attributes['products_options'] . ': ' . $attributes['products_options_values'] . '</td>';
                             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
                                 $jsonData_content .= '<td class="text-right noWrap">' . ($attributes['price_prefix'] == '-' ? '- ' : '') . mslib_fe::amount2Cents(($attributes['price_prefix'] . $attributes['options_values_price']) + $attributes['attributes_tax_data']['tax'], $customer_currency, 1, 0) . '</td>';
@@ -351,7 +352,7 @@ if ($this->ADMIN_USER) {
                 $jsonData_content .= '</div>';
             }
             if (!empty($jsonData_content)) {
-                $jsonData['title'] = '<h3 class="popover-title">' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . ' <a href="'.mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order').'" class="btn btn-sm btn-success">'.$this->pi_getLL('go_to_order_details').'</a> <a href="'.mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true').'" class="btn btn-sm btn-primary" target="_blank">'.$this->pi_getLL('admin_label_create_order').'</a></h3>';
+                $jsonData['title'] = '<h3 class="popover-title">' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . ' <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order') . '" class="btn btn-sm btn-success">' . $this->pi_getLL('go_to_order_details') . '</a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true') . '" class="btn btn-sm btn-primary" target="_blank">' . $this->pi_getLL('admin_label_create_order') . '</a></h3>';
                 $jsonData['content'] = '<div class="popover-content">' . $jsonData_content . '</div>';
             }
         } else {

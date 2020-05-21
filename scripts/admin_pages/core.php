@@ -1,21 +1,22 @@
 <?php
-header('X-XSS-Protection: 0');
+header('X-Robots-Tag: noindex', true);
+header('X-XSS-Protection: 0', true);
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 // custom page hook that can be controlled by third-party plugin
-$settings=array();
-$settings['plugins']=array();
-$settings['plugins'][]='table';
-$settings['plugins'][]='alignment';
-$settings['plugins'][]='fontcolor';
-$settings['plugins'][]='fontsize';
-$settings['plugins'][]='filemanager';
-$settings['plugins'][]='imagemanager';
-$settings['plugins'][]='video';
-$settings['plugins'][]='textexpander';
-$settings['plugins'][]='source';
-$settings['plugins'][]='fullscreen';
+$settings = array();
+$settings['plugins'] = array();
+$settings['plugins'][] = 'table';
+$settings['plugins'][] = 'alignment';
+$settings['plugins'][] = 'fontcolor';
+$settings['plugins'][] = 'fontsize';
+$settings['plugins'][] = 'filemanager';
+$settings['plugins'][] = 'imagemanager';
+$settings['plugins'][] = 'video';
+$settings['plugins'][] = 'textexpander';
+$settings['plugins'][] = 'source';
+$settings['plugins'][] = 'fullscreen';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/core.php']['redactorPreProc'])) {
     $params = array(
             'settings' => &$settings
@@ -25,7 +26,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 foreach ($settings['plugins'] as $key => $val) {
-    $settings['plugins'][$key]='\''.$val.'\'';
+    $settings['plugins'][$key] = '\'' . $val . '\'';
 }
 // custom page hook that can be controlled by third-party plugin eof
 $GLOBALS['TSFE']->additionalHeaderData[] = '
@@ -36,24 +37,24 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 </script>
 <script type="text/javascript">
 $(function() {
-    '.($this->conf['loadOldRedactorVersion']=='1' ? '
+    ' . ($this->conf['loadOldRedactorVersion'] == '1' ? '
     $(\'.mceEditor\').redactor({
     ' : '
     $R(\'.mceEditor\', {
-    ').'
+    ') . '
 	    imagePosition: true,
 	    imageResizable: true,
 	    toolbarFixedTopOffset: 38,
 		toolbarFixed: true,
 		focus: false,
 		linkSize: 250,
-		'.($this->conf['loadOldRedactorVersion']=='1' ? '' : 'pasteImages: true,').'
+		' . ($this->conf['loadOldRedactorVersion'] == '1' ? '' : 'pasteImages: true,') . '
 		clipboardUploadUrl: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl', 1) . '\',
 		imageUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload', 1) . '\',
 		fileUpload: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload', 1) . '\',
 		imageGetJson: \'' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson', 1) . '\',
 		minHeight:\'400\',
-		plugins: ['.implode(',',$settings['plugins']).'],
+		plugins: [' . implode(',', $settings['plugins']) . '],
 		callbacks: {
             keydown: function(e) {
                 if (e.ctrlKey && e.keyCode === 13) {
@@ -146,6 +147,11 @@ if (!$this->ADMIN_USER) {
     }
 }
 switch ($this->ms['page']) {
+    case 'admin_sort_categories':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_sort_categories.php');
+        }
+        break;
     case 'admin_sort_products':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_sort_products.php');
@@ -412,12 +418,11 @@ switch ($this->ms['page']) {
                         foreach ($this->post['movecats'] as $move_catid) {
                             $sql_update = 'update tx_multishop_categories set parent_id = ' . $new_parent_id . ' where categories_id = ' . $move_catid;
                             $GLOBALS['TYPO3_DB']->sql_query($sql_update);
-
                             // move product as well
                             $products = mslib_befe::getRecords($move_catid, 'tx_multishop_products_to_categories', 'node_id', array(), 'products_id', '', '', array('products_id, categories_id'));
                             if (is_array($products) && count($products)) {
                                 foreach ($products as $product) {
-                                    $pid=$product['products_id'];
+                                    $pid = $product['products_id'];
                                     $filter = array();
                                     $filter[] = 'products_id=' . $pid;
                                     if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
@@ -809,4 +814,81 @@ switch ($this->ms['page']) {
         }
         break;
 }
-?>
+// Topnav
+/*
+if ($this->ADMIN_USER) {
+    switch ($this->get['tx_multishop_pi1']['page_section']) {
+        case 'custom_page':
+            // Leave it up by third party plugins
+            break;
+        case '':
+            break;
+        default:
+            // Render sub menu navigation
+            $page_section = '';
+            $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
+            $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
+            $data = mslib_fe::jQueryAdminMenu();
+            $itemsToCheck = array();
+            foreach ($data['header'] as $level1Key => $level1Item) {
+                if ($level1Item['link']) {
+                    $itemsToCheck[] = array('check' => $level1Item, 'siblings' => $data['header'][$level1Key]['subs']);
+                }
+                if (is_array($level1Item['subs'])) {
+                    foreach ($level1Item['subs'] as $level2Key => $level2Item) {
+                        if ($level2Item['link']) {
+                            $itemsToCheck[] = array('check' => $level2Item, 'siblings' => $data['header'][$level1Key]['subs']);
+                        }
+                        if (is_array($level2Item['subs'])) {
+                            foreach ($level2Item['subs'] as $level3Key => $level3Item) {
+                                if ($level3Item['link']) {
+                                    $itemsToCheck[] = array('check' => $level3Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs']);
+                                }
+                                if (is_array($level3Item['subs'])) {
+                                    foreach ($level3Item['subs'] as $level4Key => $level4Item) {
+                                        if ($level4Item['link']) {
+                                            $itemsToCheck[] = array('check' => $level4Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs'][$level3Key]['subs']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (count($itemsToCheck)) {
+                $menuItems = array();
+                foreach ($itemsToCheck as $item) {
+                    parse_str($item['check']['link'], $url);
+                    if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
+                        $page_section = $url['tx_multishop_pi1']['page_section'];
+                        // Get menu items
+                        if (is_array($item['siblings'])) {
+                            $menuItems = $item['siblings'];
+                        }
+                    }
+                }
+                $navItems = array();
+                foreach ($menuItems as $menuItem) {
+                    if ($menuItem['link'] != '') {
+                        $label = '<span>' . htmlspecialchars($menuItem['label']) . '</span>';
+                        $menuItem['class'] = '';
+                        if ($menuItem['active']) {
+                            $menuItem['class'] = 'active';
+                        } else {
+                            if ($menuItem['link']) {
+                                $label = '<a href="' . $menuItem['link'] . '">' . $label . '</a>';
+                            }
+                        }
+                        $navItems[] = '<li' . ($menuItem['class'] ? ' class="' . $menuItem['class'] . '"' : '') . '>' . $label . '</li>';
+                    }
+                }
+                if (count($navItems)) {
+                    $content = '<ul class="navInterface nav-tabsInterface">' . implode('', $navItems) . '</ul>' . $content;
+                }
+                //$content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
+            }
+            break;
+    }
+}
+*/

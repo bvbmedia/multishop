@@ -14,8 +14,8 @@ while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
     $enabled_countries[] = $row2;
 }
 // load enabled countries to array eof
-$show_edit_account=0;
-$erno=array();
+$show_edit_account = 0;
+$erno = array();
 if ($this->post) {
     // now verify the posted values
     if (!$this->post['email']) {
@@ -409,7 +409,7 @@ if ($this->post) {
         }
     }
 } else {
-    $show_edit_account=1;
+    $show_edit_account = 1;
 }
 if (count($erno) || $show_edit_account) {
     // begin form

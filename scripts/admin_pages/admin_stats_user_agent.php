@@ -84,11 +84,11 @@ $data_query['order_by'] = array();
 $data_query['where'] = array();
 $data_query['select'] = array();
 if ($this->post['skeyword']) {
-    $orFilter=array();
-    $orFilter[]= "orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
-    $orFilter[]= "delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
-    $orFilter[]= "billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
-    $data_query['filter'][] ='('.implode(' OR ',$orFilter).')';
+    $orFilter = array();
+    $orFilter[] = "orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $orFilter[] = "delivery_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $orFilter[] = "billing_name LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+    $data_query['filter'][] = '(' . implode(' OR ', $orFilter) . ')';
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
     list($from_date, $from_time) = explode(" ", $this->post['order_date_from']);

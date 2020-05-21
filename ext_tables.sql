@@ -301,6 +301,7 @@ CREATE TABLE `tx_multishop_import_jobs` (
  `code` varchar(32) default '',
  `prefix_source_name` varchar(50) default '',
  `type` varchar(154) default '',
+ `ignored_locked_fields` text,
  PRIMARY KEY (`id`),
  KEY `last_run` (`last_run`,`status`,`page_uid`,`categories_id`),
  KEY `code` (`code`),
@@ -529,6 +530,7 @@ CREATE TABLE `tx_multishop_orders` (
  `coupon_discount_value` DECIMAL(24,14) default '0.00000000000000',
  `orders_last_modified` int(11) default '0',
  `track_and_trace_link` varchar(255) default '',
+ `parcel_information_json` blob,
  `orders_paid_timestamp` int(11) default '0',
  `debit_order` tinyint(1) default '0',
  `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000',
@@ -867,13 +869,15 @@ CREATE TABLE `tx_multishop_payment_shipping_mappings` (
 CREATE TABLE `tx_multishop_payment_transactions` (
  `id` int(11) NOT NULL auto_increment,
  `orders_id` int(11) default '0',
+ `orders_id_extra` varchar(256) default '',
  `transaction_id` varchar(150) default '',
  `psp` varchar(25) default '',
  `crdate` int(11) default '0',
  `status` tinyint(1) default '0',
  `code` varchar(35) default '',
  PRIMARY KEY (`id`),
- KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`)
+ KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`),
+ KEY `orders_id_extra` (`orders_id_extra`)
 );
 
 CREATE TABLE `tx_multishop_products` (
@@ -1568,6 +1572,7 @@ CREATE TABLE tt_address (
  tx_multishop_coc_id varchar(127) default '',
  tx_multishop_paypal_account varchar(127) default '',
  department varchar(127) default '',
+ foreign_address_id int(11) default '0',
  PRIMARY KEY (uid),
  KEY parent (pid),
  KEY pid (pid,email),
@@ -1581,7 +1586,8 @@ CREATE TABLE tt_address (
  KEY `tx_multishop_vat_number` (`tx_multishop_vat_number`),
  KEY `tx_multishop_coc_id` (`tx_multishop_coc_id`),
  KEY `tx_multishop_paypal_account` (`tx_multishop_paypal_account`),
- KEY `department` (`department`)
+ KEY `department` (`department`),
+ KEY `foreign_address_id` (`foreign_address_id`)
 );
 
 CREATE TABLE `tx_multishop_products_locked_fields` (

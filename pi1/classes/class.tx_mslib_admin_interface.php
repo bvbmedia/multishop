@@ -96,14 +96,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         mslib_fe::init($that);
         //hook to let other plugins further manipulate the method
         if (!isset($params['interfaceKey']) && isset($this->interfaceKey)) {
-            $params['interfaceKey']=$this->interfaceKey;
+            $params['interfaceKey'] = $this->interfaceKey;
         }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        $tableId=uniqid();
+        $tableId = uniqid();
         // for pagination
         $this->get = $that->get;
         $this->post = $that->post;
@@ -149,7 +149,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         $updateCookie = 0;
         $that->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');
         if (!isset($params['settings']['limit'])) {
-            if ((isset($that->get['Search']) || isset($that->get['submit'])) and (is_numeric($that->get['limit']) && $that->get['limit']>0 && $that->get['limit'] != $that->cookie['limit'])) {
+            if ((isset($that->get['Search']) || isset($that->get['submit'])) and (is_numeric($that->get['limit']) && $that->get['limit'] > 0 && $that->get['limit'] != $that->cookie['limit'])) {
                 $that->cookie['limit'] = $that->get['limit'];
                 $that->get['tx_multishop_pi1']['limit'] = $that->cookie['limit'];
                 $params['settings']['limit'] = $that->cookie['limit'];
@@ -161,7 +161,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $updateCookie = 1;
         }
         if (!isset($params['settings']['limit']) && !$that->get['limit'] && !$that->ms['MODULES']['PAGESET_LIMIT']) {
-            $that->get['limit']=25;
+            $that->get['limit'] = 25;
             $that->cookie['limit'] = $that->get['limit'];
         }
         if ($updateCookie) {
@@ -200,7 +200,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $that->get['limit'] = $params['settings']['limit'];
             }
         }
-
         $that->ms['MODULES']['PAGESET_LIMIT'] = $that->get['limit'];
         if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
             $that->ms['MODULES']['PAGESET_LIMIT'] = $params['settings']['limit'];
@@ -384,9 +383,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<div class="table-responsive">';
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
-                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle tablesorter" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle tablesorter" id="msAdminTableInterface' . $tableId . '">';
             } else {
-                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle" id="msAdminTableInterface'.$tableId.'">';
+                $tableContent .= '<table class="table table-striped table-bordered table-valign-middle" id="msAdminTableInterface' . $tableId . '">';
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
@@ -466,15 +465,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 if (isset($params['settings']['rowsSortable']) && $params['settings']['rowsSortable'] && isset($params['settings']['rowsSortableKey']) && !empty($params['settings']['rowsSortableKey'])) {
                     $row_sortable_id = ' id="row_sortable_' . $row[$params['settings']['rowsSortableKey']] . '"';
                 }
-                $tr_tag='<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
+                $tr_tag = '<tr class="' . $tr_type . '"' . $row_sortable_id . '>';
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'])) {
                     $conf = array(
-                        'row' => &$row,
-                        'rowKey' => &$rowKey,
-                        'interfaceKey' => $this->interfaceKey,
-                        'tr_type' => &$tr_type,
-                        'tr_tag' => &$tr_tag,
-                        'row_sortable_id' => &$row_sortable_id
+                            'row' => &$row,
+                            'rowKey' => &$rowKey,
+                            'interfaceKey' => $this->interfaceKey,
+                            'tr_type' => &$tr_type,
+                            'tr_tag' => &$tr_tag,
+                            'row_sortable_id' => &$row_sortable_id
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsPreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
@@ -505,8 +504,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     switch ($valArray['valueType']) {
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', (float)$row[$col]), '0');
-                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
-                                $row[$col]=substr($row[$col],0,-1);
+                            if (substr($row[$col], (strlen($row[$col]) - 1), 1) == '.') {
+                                $row[$col] = substr($row[$col], 0, -1);
                             }
                             $summarize[$col] += $row[$col];
                             break;
@@ -611,8 +610,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'content':
                             foreach ($row as $tmpCol => $tmpVal) {
-                                $valArray['content'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['content']);
-                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['content']);
+                                $value = $row[$tmpCol];
+                                switch ($valArray['encode_type']) {
+                                    case 'htmlspecialchars':
+                                        $value = htmlspecialchars($value);
+                                        break;
+                                }
+                                $valArray['content'] = str_replace('###shop_pid###', $this->shop_pid, $valArray['content']);
+                                $valArray['content'] = str_replace('###' . $tmpCol . '###', $value, $valArray['content']);
+                                $valArray['content'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $value, $valArray['content']);
                             }
                             $row[$col] = $valArray['content'];
                             break;
@@ -658,7 +664,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                         $valArray['hrefEnableAttributes'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefEnableAttributes']);
                                         $valArray['hrefEnableAttributes'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefEnableAttributes']);
                                     }
-                                    $status_html .= '<a href="' . $valArray['hrefEnable'] . '"'.($valArray['hrefEnableAttributes'] ? ' ' . $valArray['hrefEnableAttributes'] : '').'><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
+                                    $status_html .= '<a href="' . $valArray['hrefEnable'] . '"' . ($valArray['hrefEnableAttributes'] ? ' ' . $valArray['hrefEnableAttributes'] : '') . '><span class="admin_status_green disabled" alt="' . $this->pi_getLL('enabled') . '"></span></a>';
                                 }
                             } else {
                                 if ($valArray['hrefDisable']) {
@@ -669,7 +675,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                         $valArray['hrefDisableAttributes'] = str_replace('###' . $tmpCol . '###', $row[$tmpCol], $valArray['hrefDisableAttributes']);
                                         $valArray['hrefDisableAttributes'] = str_replace('%23%23%23' . $tmpCol . '%23%23%23', $row[$tmpCol], $valArray['hrefDisableAttributes']);
                                     }
-                                    $status_html .= '<a href="' . $valArray['hrefDisable'] . '"'.($valArray['hrefDisableAttributes'] ? ' ' . $valArray['hrefDisableAttributes'] : '').'><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
+                                    $status_html .= '<a href="' . $valArray['hrefDisable'] . '"' . ($valArray['hrefDisableAttributes'] ? ' ' . $valArray['hrefDisableAttributes'] : '') . '><span class="admin_status_red disabled" alt="' . $this->pi_getLL('disabled') . '"></span></a>';
                                 }
                                 $status_html .= '<span class="admin_status_green" alt="' . $this->pi_getLL('enable') . '"></span>';
                             }
@@ -677,12 +683,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = $status_html;
                             break;
                         case 'options_selectbox':
-                            $options_selectbox_html='';
-                            $options_array=$valArray['optionsValue'];
-                            $options_name=(isset($valArray['optionsName']) && !empty($valArray['optionsName']) ? $valArray['optionsName'] : $col);
-                            $options_class=(isset($valArray['optionsClass']) && !empty($valArray['optionsClass']) ? ' ' . $valArray['optionsClass'] : 'change_'.$col);
+                            $options_selectbox_html = '';
+                            $options_array = $valArray['optionsValue'];
+                            $options_name = (isset($valArray['optionsName']) && !empty($valArray['optionsName']) ? $valArray['optionsName'] : $col);
+                            $options_class = (isset($valArray['optionsClass']) && !empty($valArray['optionsClass']) ? ' ' . $valArray['optionsClass'] : 'change_' . $col);
                             if (is_array($options_array) && count($options_array)) {
-                                $options_selectbox_html = '<select name="'.$options_name.'" class="form-control'.$options_class.'">
+                                $options_selectbox_html = '<select name="' . $options_name . '" class="form-control' . $options_class . '">
 		                        <option value="">' . $this->pi_getLL('choose') . '</option>';
                                 if (is_array($options_array)) {
                                     foreach ($options_array as $item) {
@@ -703,18 +709,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = mslib_befe::print_r(unserialize($row[$col]));
                             }
                             break;
+                        case 'json_decode':
+                            if (!empty($row[$col])) {
+                                $row[$col] = mslib_befe::print_r(json_decode($row[$col], true));
+                            }
+                            break;
                         case 'pre':
                             if (!empty($row[$col])) {
-                                $row[$col] = '<pre>'.htmlspecialchars($row[$col]).'</pre>';
+                                $row[$col] = '<pre>' . htmlspecialchars($row[$col]) . '</pre>';
                             }
                             break;
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['prefixValue']) {
-                        $adjustedValue=$valArray['prefixValue'].$adjustedValue;
+                        $adjustedValue = $valArray['prefixValue'] . $adjustedValue;
                     }
                     if ($valArray['suffixValue']) {
-                        $adjustedValue.=$valArray['suffixValue'];
+                        $adjustedValue .= $valArray['suffixValue'];
                     }
                     if ($valArray['href']) {
                         foreach ($row as $tmpCol => $tmpVal) {
@@ -748,7 +759,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     if ($valArray['class']) {
                         $tdClass[] = $valArray['class'];
                     }
-                    $tableContent .= '<td' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $adjustedValue . '</td>';
+                    $tdAttributes = array();
+                    if ($valArray['attributes']) {
+                        $tdAttributes[] = $valArray['attributes'];
+                    }
+                    $tableContent .= '<td' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . (count($tdAttributes) ? ' ' . implode(' ', $tdAttributes) : '') . '>' . $adjustedValue . '</td>';
                 }
                 $tableContent .= '</tr>';
                 if ($params['settings']['returnResultSetAsArray']) {
@@ -773,8 +788,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             break;
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
-                            if (substr($row[$col],(strlen($row[$col])-1),1)=='.') {
-                                $row[$col]=substr($row[$col],0,-1);
+                            if (substr($row[$col], (strlen($row[$col]) - 1), 1) == '.') {
+                                $row[$col] = substr($row[$col], 0, -1);
                             }
                             break;
                         default:
@@ -804,7 +819,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $actions = $params['settings']['tableSelectionActions'];
                 if (count($actions)) {
                     // custom page hook that can be controlled by third-party plugin eof
-                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction'.$tableId.'" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
+                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction' . $tableId . '" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
                     foreach ($actions as $key => $value) {
                         $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
                     }
@@ -826,6 +841,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $tableContent .= '
 			</div>
 			';
+            if ($params['settings']['contentBelowTableDiv']) {
+                $tableContent .= $params['settings']['contentBelowTableDiv'];
+            }
             if (!$params['settings']['disableForm']) {
                 $tableContent .= '</form>';
             }
@@ -909,7 +927,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     </div>
                 </div>';
             }
-						$searchForm .= '
+            $searchForm .= '
 					</div>
 				</div>
 			</form>
@@ -945,15 +963,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if ($params['settings']['skipTotalCount'] || ($params['settings']['skipTotalCountWhenZeroResults'] && !$params['summarizeData']['totalRecordsInTable'])) {
             $skipTotalCount = 1;
         }
-        $recordCountMarkup='';
+        $recordCountMarkup = '';
         if (!$skipRecordCount) {
-            $recordCountMarkup.= $this->pi_getLL('found_records') . ': <strong>' . number_format($pageset['total_rows'], 0, '', '.') . '</strong><br/>';
+            $recordCountMarkup .= $this->pi_getLL('found_records') . ': <strong>' . number_format($pageset['total_rows'], 0, '', '.') . '</strong><br/>';
         }
         if (!$skipTotalCount && isset($params['summarizeData']['totalRecordsInTable'])) {
-            $recordCountMarkup.= $this->pi_getLL('total_records_in_database') . ': <strong>' . number_format($params['summarizeData']['totalRecordsInTable'], 0, '', '.') . '</strong><br/>';
+            $recordCountMarkup .= $this->pi_getLL('total_records_in_database') . ': <strong>' . number_format($params['summarizeData']['totalRecordsInTable'], 0, '', '.') . '</strong><br/>';
         }
         if ($recordCountMarkup) {
-            $content .= '<p class="mt-10 text-center">'.$recordCountMarkup.'</p>';
+            $content .= '<p class="mt-10 text-center">' . $recordCountMarkup . '</p>';
         }
         if (!$params['settings']['skipFooterMarkup']) {
             $content .= '<div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $that->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div>';
@@ -971,9 +989,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
             }
             $GLOBALS['TSFE']->additionalHeaderData['tablesorter_css'] = '<link rel="stylesheet" type="text/css" href="typo3conf/ext/multishop/templates/global/css/tablesorter.css" media="all" />';
-            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js'.$tableId] = '<script type="text/javascript" data-ignore="1">
+            $GLOBALS['TSFE']->additionalHeaderData['tablesorter_js' . $tableId] = '<script type="text/javascript" data-ignore="1">
 			jQuery(document).ready(function ($) {
-				$(\'#msAdminTableInterface'.$tableId.'\').tablesorter({
+				$(\'#msAdminTableInterface' . $tableId . '\').tablesorter({
 				    headers: { ' . implode(', ', $sort_js) . ' }
 				});
 			});

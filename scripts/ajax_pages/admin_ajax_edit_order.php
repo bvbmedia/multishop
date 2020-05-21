@@ -6,7 +6,7 @@ $content = '';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
     case 'get_order_payment_methods':
         $return_data = array();
-        $return_data['payment_method_date_purchased']='';
+        $return_data['payment_method_date_purchased'] = '';
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
             $order_id = $this->post['tx_multishop_pi1']['order_id'];
             if (is_numeric($order_id)) {
@@ -57,17 +57,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     /*} else {
                         $orderDetailsItem.='<div class="col-md-9">'.($order_data['payment_method_label'] ? $order_data['payment_method_label'] : $order_data['payment_method']).'</div>';
                     }*/
-                    $auto_check_mail_sent=' checked="checked"';
-                    if ($this->ms['MODULES']['AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE']=='0') {
-                        $auto_check_mail_sent='';
+                    $auto_check_mail_sent = ' checked="checked"';
+                    if ($this->ms['MODULES']['AUTO_CHECKED_MAIL_SEND_PAID_STATUS_CHANGE'] == '0') {
+                        $auto_check_mail_sent = '';
                     }
                     $orderDetailsItem .= '</div>';
                     $orderDetailsItem .= '<div class="form-group row">
                         <label class="control-label col-md-3">&nbsp;</label>
                         <div class="col-md-9">
                             <div class="checkbox checkbox-inline checkbox-success">
-                                <input type="checkbox" id="send_payment_received_email" value="1"'.$auto_check_mail_sent.'>
-                                <label for="send_payment_received_email">'.$this->pi_getLL('send_payment_received_email').' ('.$this->pi_getLL('language').': '.strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']).')</label>
+                                <input type="checkbox" id="send_payment_received_email" value="1"' . $auto_check_mail_sent . '>
+                                <label for="send_payment_received_email">' . $this->pi_getLL('send_payment_received_email') . ' (' . $this->pi_getLL('language') . ': ' . strtoupper($this->languages[$order_data['language_id']]['lg_iso_2']) . ')</label>
                             </div>
                         </div>
                     </div>
@@ -87,19 +87,56 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             $order = mslib_fe::getOrder($order_id);
             if ($order['orders_id']) {
                 if ($this->post['tx_multishop_pi1']['action'] == 'update_selected_orders_to_paid') {
-                    $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                    $current_date = date('Y-m-d');
+                    $date_paid = $this->post['tx_multishop_pi1']['date_paid'];
+                    if ($current_date == $date_paid) {
+                        $date_paid = strtotime(date('Y-m-d H:i:s', strtotime($this->post['tx_multishop_pi1']['date_paid'])));
+                    } else {
+                        $date_paid = strtotime($this->post['tx_multishop_pi1']['date_paid']);
+                    }
                     $payment_id = $this->post['tx_multishop_pi1']['payment_id'];
                     //
                     if (mslib_fe::updateOrderStatusToPaid($order_id)) {
                         $return_data['info'] = array(
-                                'status' => 'info',
-                                'message' => 'Order ' . $orders_id . ' has been updated to paid.'
+                            'status' => 'info',
+                            'message' => 'Order ' . $order_id . ' has been updated to paid.'
                         );
                         //
                         if (is_numeric($payment_id) && $payment_id > 0) {
                             $payment_method = mslib_fe::getPaymentMethod($payment_id);
+                            if ($payment_method['code'] == $order['payment_method']) {
+                                $payment_method_costs = $order['payment_method_costs'];
+                            } else {
+                                if (strstr($payment_method['handling_costs'], "%")) {
+                                    $percentage = str_replace("%", '', $payment_method['handling_costs']);
+                                    $total_include_vat = 0;
+                                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                        $total_include_vat = 1;
+                                    }
+                                    $subtotal = $order['orders_tax_data']['sub_total_excluding_vat'];
+                                    if ($total_include_vat) {
+                                        $subtotal = $order['orders_tax_data']['sub_total'];
+                                    }
+                                    if ($subtotal) {
+                                        if (isset($order['shipping_method_costs']) && $order['shipping_method_costs'] > 0) {
+                                            if ($total_include_vat) {
+                                                $subtotal += $order['shipping_method_costs'] + $order['orders_tax_data']['shipping_tax'];
+                                            } else {
+                                                $subtotal += $order['shipping_method_costs'];
+                                            }
+                                        }
+                                        $handling_cost = ($subtotal / 100 * $percentage);
+                                        if ($total_include_vat && $payment_method['tax_rate']) {
+                                            $handling_cost = $handling_cost / (1 + $payment_method['tax_rate']);
+                                        }
+                                        $payment_method_costs = $handling_cost;
+                                    }
+                                } else {
+                                    $payment_method_costs = $payment_method['handling_costs'];
+                                }
+                            }
                             $updateArray = array();
-                            $updateArray['payment_method_costs'] = $payment_method['handling_costs'];
+                            $updateArray['payment_method_costs'] = $payment_method_costs;
                             $updateArray['payment_method'] = $payment_method['code'];
                             $updateArray['payment_method_label'] = $payment_method['name'];
                             $updateArray['orders_last_modified'] = time();
@@ -188,7 +225,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     }
                     //
                     if ($this->post['tx_multishop_pi1']['action'] == 'update_selected_invoices_to_paid') {
-                        if ($invoice['reversal_invoice']>0) {
+                        if ($invoice['reversal_invoice'] > 0) {
                             $updateArray = array('paid' => 1);
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=' . $invoice['id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -312,9 +349,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        $limit='';
-        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS']=='1') {
-            $limit=15;
+        $limit = '';
+        if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
+            $limit = 15;
         }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
                 implode(', ', $from), // FROM ...
@@ -339,7 +376,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 }
                 if (!empty($row['products_name'])) {
                     if ($this->ms['MODULES']['DISPLAY_PRODUCTS_MODEL_IN_EDIT_ORDER'] == '1' && !empty($row['products_model'])) {
-                        $row['products_name'] = '('.addslashes($row['products_model']).') ' . $row['products_name'];
+                        $row['products_name'] = '(' . addslashes($row['products_model']) . ') ' . $row['products_name'];
                     }
                     if ($this->ms['MODULES']['DISPLAY_PRODUCTS_ID_IN_EDIT_ORDER'] == '1') {
                         $row['products_name'] .= ' (PID: ' . $row['products_id'] . ')';
@@ -370,17 +407,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             if ($this->ms['MODULES']['DISABLE_EDIT_ORDER_ADD_MANUAL_PRODUCT'] == '0') {
                 if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
                     $data[] = array(
-                        'id' => $this->get['preselected_id'],
-                        'text' => $this->get['preselected_id'],
-                        'products_model' => '',
-                        'sku_code' => ''
+                            'id' => $this->get['preselected_id'],
+                            'text' => $this->get['preselected_id'],
+                            'products_model' => '',
+                            'sku_code' => ''
                     );
                 } else {
                     $data[] = array(
-                        'id' => $this->get['q'],
-                        'text' => $this->get['q'],
-                        'products_model' => '',
-                        'sku_code' => ''
+                            'id' => $this->get['q'],
+                            'text' => $this->get['q'],
+                            'products_model' => '',
+                            'sku_code' => ''
                     );
                 }
             }
@@ -398,6 +435,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             list($search_term, $tmp_pid) = explode('||pid=', $this->get['q']);
             $this->get['q'] = $search_term;
             $pid = $tmp_pid;
+        }
+        if (!$pid) {
+            if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid = $this->get['pid'];
+            }
         }
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (!is_numeric($this->get['q'])) {
@@ -445,13 +487,26 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $content = json_encode($data);
         break;
     case 'get_attributes_values':
+        $from = array();
         $where = array();
+        $from[] = 'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id';
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
         $skip_db = false;
-        if (isset($this->get['q']) && !empty($this->get['q'])) {
-            if (strpos($this->get['q'], '||optid') !== false) {
-                list($search_term, $tmp_optid) = explode('||', $this->get['q']);
-                $search_term = trim($search_term);
+        $pid = 0;
+        $this->get['_q'] = $this->get['q'];
+        if (strpos($this->get['q'], '||') !== false) {
+            list($search_term, $tmp_pid, $tmp_optid) = explode('||', $this->get['q']);
+            $this->get['q'] = $search_term;
+            list(, $pid) = explode('=', $tmp_pid);
+            list(, $optid) = explode('=', $tmp_optid);
+        }
+        if (!$pid) {
+            if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+                $pid = $this->get['pid'];
+            }
+        }
+        if ($optid || (isset($this->get['q']) && !empty($this->get['q']))) {
+            if ($optid) {
                 if (!empty($search_term)) {
                     $where_str = '';
                     if (isset($tmp_optid) && !empty($tmp_optid)) {
@@ -466,11 +521,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         $where[] = "optval.products_options_values_name like '%" . addslashes($search_term) . "%'";
                     }
                 } else {
-                    if (isset($tmp_optid) && !empty($tmp_optid)) {
-                        list(, $optid) = explode('=', $tmp_optid);
-                        if (is_numeric($optid)) {
-                            $where[] = "(optval2opt.products_options_id = '" . $optid . "')";
-                        }
+                    if (is_numeric($optid)) {
+                        $where[] = "optval2opt.products_options_id = '" . $optid . "'";
                     }
                 }
             } else {
@@ -483,13 +535,26 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
             }
         }
+        if (is_numeric($pid) && $pid > 0) {
+            $from[] = 'tx_multishop_products_attributes pa';
+            $where[] = 'pa.products_id=\'' . $pid . '\' and pa.options_id=optval2opt.products_options_id and pa.options_values_id=optval2opt.products_options_values_id';
+        }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT ...
-                'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
+                implode(', ', $from), // FROM ..., // FROM ...
                 implode(' and ', $where), // WHERE.
                 'optval.products_options_values_id', // GROUP BY...
                 'optval2opt.sort_order', // ORDER BY...
                 '' // LIMIT ...
         );
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'])) {
+            $params = array(
+                'str' => &$str
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);

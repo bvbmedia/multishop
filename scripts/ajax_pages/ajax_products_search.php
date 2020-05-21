@@ -194,7 +194,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
             $filter[] = "p2c.categories_id IN (" . implode(",", $cats) . ")";
         }
     }
-    $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'ultra_products_search');
+    $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array('p.products_id'), 'ultra_products_search');
     $products = $pageset['products'];
     if ($pageset['total_rows'] > 0) {
         if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_AUTO_COMPLETE_TYPE'], "..")) {

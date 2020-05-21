@@ -11,12 +11,12 @@ require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multis
 $mslib_cart = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart = $mslib_cart->getCart();
-$vat_id_validate_country=$this->post['b_cc'];
+$vat_id_validate_country = $this->post['b_cc'];
 // hook
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'])) {
     $params = array(
             'cart' => &$cart,
-            'vat_id_validate_country'=>&$vat_id_validate_country
+            'vat_id_validate_country' => &$vat_id_validate_country
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -200,7 +200,7 @@ $data['available_shipping'] = implode(';', $available_sid);
 // rebuilt the shipping cost for available shipping methods based on selected payment
 foreach ($available_sid as $sids) {
     $this->post['caller_segment'] = 'available_shipping_costs';
-    $priceArray=array();
+    $priceArray = array();
     $priceArray = mslib_fe::getShippingCosts($countries_id, $sids);
     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] && !$this->ms['MODULES']['DISABLE_VAT_RATE']) {
         $data['available_shippingcost'][$sids] = '';
@@ -227,6 +227,7 @@ foreach ($available_sid as $sids) {
             $data['available_shippingcost_method_box'][$sids] = '';
         }
     }
+    $data['raw_data'][$sids] = $priceArray['shipping_costs_raw'];
 }
 // we display the shipping costs and payment costs including vat
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multishop_pi1']['sid']) {
@@ -247,9 +248,9 @@ $data['htmlCartContents'] = $mslib_cart->getHtmlCartContents('ajaxGetMethodCosts
 //hook to let other plugins further manipulate the replacers
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPostProc'])) {
     $params = array(
-        'data' => &$data,
-        'available_sid' => &$available_sid,
-        'cart' => &$cart
+            'data' => &$data,
+            'available_sid' => &$available_sid,
+            'cart' => &$cart
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_method_costs.php']['getMethodCostsPostProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

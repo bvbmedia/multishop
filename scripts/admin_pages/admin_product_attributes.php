@@ -84,9 +84,10 @@ if ($this->post) {
                 $updateArray['language_id'] = $key;
                 $updateArray['products_options_id'] = $products_options_id;
                 $updateArray['listtype'] = $default_settings_value;
-                $updateArray['required'] = $this->post['required'][$products_options_id];
-                $updateArray['hide'] = $this->post['hide_in_details_page'][$products_options_id];
-                $updateArray['hide_in_cart'] = $this->post['hide_in_cart'][$products_options_id];
+                $updateArray['required'] = (isset($this->post['required'][$products_options_id]) ? 1 : 0);
+                $updateArray['hide'] = (isset($this->post['hide_in_details_page'][$products_options_id]) ? 1 : 0);
+                $updateArray['hide_in_cart'] = (isset($this->post['hide_in_cart'][$products_options_id]) ? 1 : 0);
+                $updateArray['price_group_id'] = 0;
                 $str = $GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
                         'tx_multishop_products_options', // FROM ...
                         'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', // WHERE...
@@ -109,7 +110,6 @@ if ($this->post) {
                     if (!empty($this->post['options_groups'][$products_options_id])) {
                         $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\'' . $products_options_id . '\'');
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                         $updateArray = array();
                         $updateArray['attributes_options_groups_id'] = $this->post['options_groups'][$products_options_id];
                         $updateArray['products_options_id'] = $products_options_id;
@@ -162,30 +162,30 @@ $content .= '<form action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&t
 $content .= '<div class="attribute_options_sortable" id="attribute_listings">';
 if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
     $attributes_group = mslib_fe::getAttributesOptionsGroup();
-    $selected_options_group=$attributes_group['selected'];
+    $selected_options_group = $attributes_group['selected'];
 }
-$attributes_content=array();
-$counter_panel=array();
+$attributes_content = array();
+$counter_panel = array();
 if ($rows) {
     //$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
 //	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
     //$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
     //$content.='<div class="attribute_options_sortable" id="attribute_listings">';
-    $counter=0;
+    $counter = 0;
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         if (is_array($selected_options_group) && isset($selected_options_group[$row['products_options_id']])) {
-            $identifier_id=$selected_options_group[$row['products_options_id']];
+            $identifier_id = $selected_options_group[$row['products_options_id']];
         } else {
-            $identifier_id=999999;
+            $identifier_id = 999999;
         }
         if (!isset($attributes_content[$identifier_id])) {
             $attributes_content[$identifier_id] = '';
         }
-        $counter_panel[$identifier_id] +=1;
-        $collapsed=' collapsed';
-        $aria_expanded='false';
-        $expand_in='';
-        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']=='0') {
+        $counter_panel[$identifier_id] += 1;
+        $collapsed = ' collapsed';
+        $aria_expanded = 'false';
+        $expand_in = '';
+        if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP'] == '0') {
             if ($counter == '0') {
                 $collapsed = '';
                 $aria_expanded = 'true';
@@ -193,9 +193,9 @@ if ($rows) {
             }
         }
         $attributes_content[$identifier_id] .= '<div class="panel panel-default" id="options_' . $row['products_options_id'] . '">';
-        $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'">
+        $attributes_content[$identifier_id] .= '<div class="panel-heading panel-heading-toggle' . $collapsed . '" data-toggle="collapse" data-target="#productAttributesOption' . $row['products_options_id'] . '" aria-expanded="' . $aria_expanded . '">
                 <h3 class="panel-title"> 
-                    <a role="button" data-toggle="collapse" href="#productAttributesOption'.$row['products_options_id'].'" aria-expanded="'.$aria_expanded.'" class="toggle_class">
+                    <a role="button" data-toggle="collapse" href="#productAttributesOption' . $row['products_options_id'] . '" aria-expanded="' . $aria_expanded . '" class="toggle_class">
                         <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('admin_label_option_name') . ': ' . $row['products_options_name'] . ' (ID: ' . $row['products_options_id'] . ')
                     </a> 
                     <span class="option_edit">
@@ -204,9 +204,8 @@ if ($rows) {
                     </span>
                 </h3> 
             </div> 
-            <div id="productAttributesOption'.$row['products_options_id'].'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+            <div id="productAttributesOption' . $row['products_options_id'] . '" class="panel-collapse collapse' . $expand_in . '" aria-expanded="' . $aria_expanded . '" style=""> 
                 <div class="group_attributes_panel panel-body">';
-
         $options_group = '';
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
             $options_group = mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'class="form-control"');
@@ -274,30 +273,29 @@ if ($rows) {
         $attributes_content[$identifier_id] .= '<input type="hidden" name="values_fetched_' . $row['products_options_id'] . '" id="values_fetched_' . $row['products_options_id'] . '" value="0" />';
         $attributes_content[$identifier_id] .= '</div> 
             </div>';
-
         $attributes_content[$identifier_id] .= '</div>';
         $counter++;
     }
     if (isset($attributes_group['groups']) && count($attributes_group['groups']) > 0) {
-        $counter=0;
-        $collapsed=' collapsed';
-        $aria_expanded='false';
-        $expand_in='';
+        $counter = 0;
+        $collapsed = ' collapsed';
+        $aria_expanded = 'false';
+        $expand_in = '';
         foreach ($attributes_group['groups'] as $group_id => $group_name) {
-            $collapsed=' collapsed';
-            $aria_expanded='false';
-            $expand_in='';
-            if ($counter=='0') {
-                $collapsed='';
-                $aria_expanded='true';
-                $expand_in=' in';
+            $collapsed = ' collapsed';
+            $aria_expanded = 'false';
+            $expand_in = '';
+            if ($counter == '0') {
+                $collapsed = '';
+                $aria_expanded = 'true';
+                $expand_in = ' in';
             }
             $content .= '<div class="panel panel-success" id="group_options_' . $group_id . '">';
-            $content .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
-                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
-                <i class="fa fa-file-text-o"></i> '.$group_name.' ('.$counter_panel[$group_id].')</a> </h3> 
+            $content .= '<div class="panel-heading panel-heading-toggle' . $collapsed . '" data-toggle="collapse" data-target="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '">
+                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '" class="">
+                <i class="fa fa-file-text-o"></i> ' . $group_name . ' (' . $counter_panel[$group_id] . ')</a> </h3> 
             </div> 
-            <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+            <div id="productAttributesOptionGroup' . $group_id . '" class="panel-collapse collapse' . $expand_in . '" aria-expanded="' . $aria_expanded . '" style=""> 
                 <div class="group_attributes_panel panel-body"> 
                 ' . $attributes_content[$group_id] . '
                 </div>
@@ -310,22 +308,21 @@ if ($rows) {
             $counter++;
         }
         if (isset($attributes_content['999999'])) {
-            $collapsed=' collapsed';
-            $aria_expanded='false';
-            $expand_in='';
-            if ($counter=='0') {
-                $collapsed='';
-                $aria_expanded='true';
-                $expand_in=' in';
+            $collapsed = ' collapsed';
+            $aria_expanded = 'false';
+            $expand_in = '';
+            if ($counter == '0') {
+                $collapsed = '';
+                $aria_expanded = 'true';
+                $expand_in = ' in';
             }
-            $group_id='999999';
+            $group_id = '999999';
             $content .= '<div class="panel panel-success" id="group_options_999999">';
-
-            $content .= '<div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
-                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
-                <i class="fa fa-file-text-o"></i> '.$this->pi_getLL('other').' ('.$counter_panel[$group_id].')</a> </h3> 
+            $content .= '<div class="panel-heading panel-heading-toggle' . $collapsed . '" data-toggle="collapse" data-target="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '">
+                <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '" class="">
+                <i class="fa fa-file-text-o"></i> ' . $this->pi_getLL('other') . ' (' . $counter_panel[$group_id] . ')</a> </h3> 
             </div> 
-            <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+            <div id="productAttributesOptionGroup' . $group_id . '" class="panel-collapse collapse' . $expand_in . '" aria-expanded="' . $aria_expanded . '" style=""> 
                 <div class="group_attributes_panel panel-body"> 
                 ' . $attributes_content[$group_id] . '
                 </div> 
@@ -404,7 +401,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options");
-				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion']=='1' ? '
+				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion'] == '1' ? '
 				jQuery(\'.redactor_options\').redactor({
 				' : '
 				$R(\'.redactor_options\', {
@@ -445,7 +442,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options_values");
-				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion']=='1' ? '
+				' . ($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? ($this->conf['loadOldRedactorVersion'] == '1' ? '
 				jQuery(\'.redactor_options\').redactor({
 				' : '
 				$R(\'.redactor_options\', {
@@ -742,7 +739,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 					values_data+=\'<div class="panel-heading">\';
 					values_data+=\'<h3>\';
 					values_data+=\'' . addslashes($this->pi_getLL('admin_label_option_value')) . ': \';
-					values_data+=s.values_name;
+					values_data+=s.values_name + \' (ID: \' + s.values_id + \')\';
                     values_data+=\'<span class="values_edit">\';
 					values_data += \'&nbsp;<a href="#" class="edit_options_values btn btn-primary btn-xs" rel="\' + s.pov2po_id + \'"><i class="fa fa-pencil"></i></a>\';
 					values_data += \'&nbsp;<a href="#" class="delete_options_values btn btn-danger btn-xs" rel="\' + optid + \':\' + s.values_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
@@ -823,7 +820,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 								values_data+=\'<div id="option_values_\' + v.values_id + \'" class="panel panel-default option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">\';
 								values_data+=\'<div class="panel-heading">\';
 								values_data+=\'<h3>' . addslashes($this->pi_getLL('admin_label_option_value')) . ': \';
-								values_data+=v.values_name;
+								values_data+=v.values_name + \' (ID: \' + v.values_id + \')\';
 								values_data+=\'<span class="values_edit">\';
 								values_data += \'&nbsp;<a href="#" class="edit_options_values btn btn-primary btn-xs" rel="\' + v.pov2po_id + \'"><i class="fa fa-pencil"></i></a>\';
 								values_data += \'&nbsp;<a href="#" class="delete_options_values btn btn-danger btn-xs" rel="\' + opt_id + \':\' + v.values_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';

@@ -2,18 +2,18 @@
 if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
-$ajax_page_uid=$this->shop_pid;
-if (isset($this->get['pid']) && is_numeric($this->get['pid']) && $this->get['pid']>0) {
-    $puid_rec=mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products', 'products_id', array(), 'page_uid');
-    if (is_array($puid_rec) && isset($puid_rec['page_uid']) && is_numeric($puid_rec['page_uid']) && $puid_rec['page_uid']>0) {
-        if ($puid_rec['page_uid']!=$this->shop_pid) {
-            $ajax_page_uid=$puid_rec['page_uid'];
+$ajax_page_uid = $this->shop_pid;
+if (isset($this->get['pid']) && is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
+    $puid_rec = mslib_befe::getRecord($this->get['pid'], 'tx_multishop_products', 'products_id', array(), 'page_uid');
+    if (is_array($puid_rec) && isset($puid_rec['page_uid']) && is_numeric($puid_rec['page_uid']) && $puid_rec['page_uid'] > 0) {
+        if ($puid_rec['page_uid'] != $this->shop_pid) {
+            $ajax_page_uid = $puid_rec['page_uid'];
         }
     }
 }
-$catalog_page_uid=$this->showCatalogFromPage;
-if ($ajax_page_uid!=$catalog_page_uid) {
-    $catalog_page_uid=$ajax_page_uid;
+$catalog_page_uid = $this->showCatalogFromPage;
+if ($ajax_page_uid != $catalog_page_uid) {
+    $catalog_page_uid = $ajax_page_uid;
 }
 $jsSelect2InitialValue = array();
 $jsSelect2InitialValue[] = 'var categoriesIdTerm=[];';
@@ -185,7 +185,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]=' . $ajax_page_uid . '&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 				data: {
 					q: query.term
 				},
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				var split_id=id.split(",");
 				var callback_data=[];
-				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$ajax_page_uid.'&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
+				$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]=' . $ajax_page_uid . '&tx_multishop_pi1[calledFrom]=edit_product') . '\', {
 					data: {
 						preselected_id: id
 					},
@@ -277,11 +277,11 @@ jQuery(document).ready(function($) {
 			var tabs_content_li="";
 			tabs_content_li+=buildCustomProductsDescriptionInput(' . $this->shop_pid . ', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
-			'.($this->conf['loadOldRedactorVersion']=='1' ? '
+			' . ($this->conf['loadOldRedactorVersion'] == '1' ? '
             $(\'.mceEditor\').redactor({
             ' : '
             $R(\'.mceEditor\', {
-            ').'
+            ') . '
 			    imagePosition: true,
 	            imageResizable: true,
 			    toolbarFixedTopOffset: 38,
@@ -1081,29 +1081,26 @@ if ($this->post) {
         $this->post['specials_new_products_price'] = str_replace(",", ".", $this->post['specials_new_products_price']);
     }
     if ($this->post['tax_id']) {
-        $tax_rate=mslib_fe::getTaxRuleSet($this->post['tax_id'], 0);
-        $total_tax_rate=$tax_rate['total_tax_rate'];
+        $tax_rate = mslib_fe::getTaxRuleSet($this->post['tax_id'], 0);
+        $total_tax_rate = $tax_rate['total_tax_rate'];
     }
     if ($this->post['product_capital_price'] && $total_tax_rate) {
         $product_price_incl_vat = number_format($this->post['product_capital_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
         $product_price_incl_vat = round($product_price_incl_vat, 2);
-
-        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
-        $this->post['product_capital_price']=$product_price_excl_vat;
+        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+        $this->post['product_capital_price'] = $product_price_excl_vat;
     }
     if ($this->post['products_price'] && $total_tax_rate) {
         $product_price_incl_vat = number_format($this->post['products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
         $product_price_incl_vat = round($product_price_incl_vat, 2);
-
-        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
-        $this->post['products_price']=$product_price_excl_vat;
+        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+        $this->post['products_price'] = $product_price_excl_vat;
     }
     if ($this->post['specials_new_products_price'] && $total_tax_rate) {
         $product_price_incl_vat = number_format($this->post['specials_new_products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
         $product_price_incl_vat = round($product_price_incl_vat, 2);
-
-        $product_price_excl_vat=number_format(($product_price_incl_vat / (100+$total_tax_rate)) * 100, 14, '.', '');
-        $this->post['specials_new_products_price']=$product_price_excl_vat;
+        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+        $this->post['specials_new_products_price'] = $product_price_excl_vat;
     }
     if ($this->post['products_date_available_visitor'] && $this->post['products_date_available']) {
         $updateArray['products_date_available'] = strtotime($this->post['products_date_available']);
@@ -1113,7 +1110,7 @@ if ($this->post) {
     if ($this->post['products_date_added_visitor'] && $this->post['products_date_added']) {
         $updateArray['products_date_added'] = strtotime($this->post['products_date_added']);
     } else {
-        $updateArray['products_date_added'] = '';
+        $updateArray['products_date_added'] = time();
     }
     $updateArray['ean_code'] = '';
     if ($this->post['ean_code']) {
@@ -1134,7 +1131,7 @@ if ($this->post) {
     $updateArray['custom_settings'] = $this->post['custom_settings'];
     $updateArray['products_model'] = $this->post['products_model'];
     $updateArray['products_quantity'] = $this->post['products_quantity'];
-    $updateArray['ignore_stock_level']=0;
+    $updateArray['ignore_stock_level'] = 0;
     if (isset($this->post['ignore_stock_level'])) {
         $updateArray['ignore_stock_level'] = $this->post['ignore_stock_level'];
     }
@@ -1168,6 +1165,21 @@ if ($this->post) {
                 $updateArray2['language_id'] = $this->sys_language_uid;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers_info', $updateArray2);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                $updateArrayCMS = array();
+                $updateArrayCMS['content'] = '';
+                $updateArrayCMS['content_footer'] = '';
+                $updateArrayCMS['content_footer'] = '';
+                $updateArrayCMS['shortdescription'] = '';
+                $updateArrayCMS['manufacturers_title'] = $this->post['manufacturers_name'];
+                $updateArrayCMS['meta_title'] = $this->post['manufacturers_name'];
+                $updateArrayCMS['meta_keywords'] = '';
+                $updateArrayCMS['meta_description'] = '';
+                $updateArrayCMS['manufacturers_id'] = $manufacturers_id;
+                $updateArrayCMS['language_id'] = $this->sys_language_uid;
+                $queryCMS = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers_cms', $updateArrayCMS);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($queryCMS);
+
                 $updateArray['manufacturers_id'] = $manufacturers_id;
             }
         }
@@ -1194,7 +1206,6 @@ if ($this->post) {
                 if ($this->post['staffel_price'][$row_idx] && $total_tax_rate) {
                     $product_price_incl_vat = number_format($this->post['staffel_price'][$row_idx] * (1 + ($total_tax_rate / 100)), '14', '.', '');
                     $product_price_incl_vat = round($product_price_incl_vat, 2);
-
                     $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
                     $this->post['staffel_price'][$row_idx] = $product_price_excl_vat;
                 }
@@ -1237,7 +1248,7 @@ if ($this->post) {
             //if (!$updateArray['products_image']) {
             $image_tstamp = time();
             $product_original = mslib_fe::getProduct($this->post['pid']);
-            $catalog_page_uid=$this->showCatalogFromPage;
+            $catalog_page_uid = $this->showCatalogFromPage;
             $original_images = array();
             foreach ($product_original as $arr_key => $arr_val) {
                 if (strpos($arr_key, 'products_image') !== false && !empty($arr_val)) {
@@ -1264,6 +1275,8 @@ if ($this->post) {
                     $updateArray[$arr_key] = $new_filename;
                 }
             }
+            // Generate new unique hash
+            $updateArray['extid'] = md5(uniqid());
             if ($update_product_images) {
                 foreach ($update_product_images as $key => $value) {
                     if ($original_images[$key] != $value) {
@@ -1394,7 +1407,7 @@ if ($this->post) {
             }
             // copy also the product relation
             if ($product_original) {
-                $related_main_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'products_id');
+                $related_main_recs = mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'products_id');
                 if (is_array($related_main_recs) && count($related_main_recs)) {
                     // copy as main product to relation
                     foreach ($related_main_recs as $related_main_rec) {
@@ -1402,12 +1415,11 @@ if ($this->post) {
                         $relatedMainArray['products_id'] = $prodid;
                         $relatedMainArray['relative_product_id'] = $related_main_rec['relative_product_id'];
                         $relatedMainArray['relation_types'] = $related_main_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedMainArray);
+                        $rel_query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedMainArray);
                         $GLOBALS['TYPO3_DB']->sql_query($rel_query);
                     }
                 }
-
-                $related_sub_recs=mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'relative_product_id');
+                $related_sub_recs = mslib_befe::getRecords($product_original['products_id'], 'tx_multishop_products_to_relative_products', 'relative_product_id');
                 if (is_array($related_sub_recs) && count($related_sub_recs)) {
                     // copy as sub product to relation
                     foreach ($related_sub_recs as $related_sub_rec) {
@@ -1415,7 +1427,7 @@ if ($this->post) {
                         $relatedSubArray['products_id'] = $related_sub_rec['products_id'];
                         $relatedSubArray['relative_product_id'] = $prodid;
                         $relatedSubArray['relation_types'] = $related_sub_rec['relation_types'];
-                        $rel_query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedSubArray);
+                        $rel_query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $relatedSubArray);
                         $GLOBALS['TYPO3_DB']->sql_query($rel_query);
                     }
                 }
@@ -1579,7 +1591,7 @@ if ($this->post) {
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     // remove the custom page desc if the cat id is not related anymore in p2c
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\'' . $prodid . '\' and layered_categories_id=\'' . $catId . '\' and page_uid=' . $page_uid);
-                                    $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
                             }
                         }
@@ -1637,25 +1649,25 @@ if ($this->post) {
                             }
                             if ($catId > 0) {
                                 $p2c_record = mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
-                                    'categories_id=\'' . $catId . '\'',
-                                    '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
+                                        'categories_id=\'' . $catId . '\'',
+                                        '(page_uid=0 or page_uid=\'' . $this->shop_pid . '\')'
                                 ));
                                 //$p2c_record=false;
                                 //if (!is_array($p2c_record)) {
-                                    $updateArray = array();
-                                    $updateArray['categories_id'] = $catId;
-                                    $updateArray['products_id'] = $prodid;
-                                    if (is_array($p2c_record) && is_numeric($p2c_record['sort_order']) && $p2c_record['sort_order'] > 0) {
-                                        $updateArray['sort_order'] = $p2c_record['sort_order'];
-                                    } else {
-                                        $updateArray['sort_order'] = time();
-                                    }
-                                    $updateArray['page_uid'] = $page_uid;
-                                    $updateArray['related_to'] = $relCatId;
-                                    /*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
-                                    // create categories tree linking
-                                    tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
+                                $updateArray = array();
+                                $updateArray['categories_id'] = $catId;
+                                $updateArray['products_id'] = $prodid;
+                                if (is_array($p2c_record) && is_numeric($p2c_record['sort_order']) && $p2c_record['sort_order'] > 0) {
+                                    $updateArray['sort_order'] = $p2c_record['sort_order'];
+                                } else {
+                                    $updateArray['sort_order'] = time();
+                                }
+                                $updateArray['page_uid'] = $page_uid;
+                                $updateArray['related_to'] = $relCatId;
+                                /*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+                                $res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+                                // create categories tree linking
+                                tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
                                 //}
                                 // update the counterpart relation
                                 if ($relCatId > 0) {
@@ -1901,12 +1913,12 @@ if ($this->post) {
                 $updateArray['products_name'] = $this->post['products_name'][$key];
                 $updateArray['delivery_time'] = $this->post['delivery_time'][$key];
                 $updateArray['products_shortdescription'] = $this->post['products_shortdescription'][$key];
-                if ($updateArray['products_shortdescription']=="<p><br></p>\r\n") {
-                    $updateArray['products_shortdescription']='';
+                if ($updateArray['products_shortdescription'] == "<p><br></p>\r\n") {
+                    $updateArray['products_shortdescription'] = '';
                 }
                 $updateArray['products_description'] = $this->post['products_description'][$key];
-                if ($updateArray['products_description']=="<p><br></p>\r\n") {
-                    $updateArray['products_description']='';
+                if ($updateArray['products_description'] == "<p><br></p>\r\n") {
+                    $updateArray['products_description'] = '';
                 }
                 $updateArray['products_meta_keywords'] = $this->post['products_meta_keywords'][$key];
                 $updateArray['products_meta_title'] = $this->post['products_meta_title'][$key];
@@ -1932,8 +1944,8 @@ if ($this->post) {
                     for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
                         $updateArray['products_description_tab_title_' . $i] = $this->post['products_description_tab_title_' . $i][$key];
                         $updateArray['products_description_tab_content_' . $i] = $this->post['products_description_tab_content_' . $i][$key];
-                        if ($updateArray['products_description_tab_content_' . $i]=="<p><br></p>\r\n") {
-                            $updateArray['products_description_tab_content_' . $i]='';
+                        if ($updateArray['products_description_tab_content_' . $i] == "<p><br></p>\r\n") {
+                            $updateArray['products_description_tab_content_' . $i] = '';
                         }
                     }
                 }
@@ -1941,8 +1953,8 @@ if ($this->post) {
                 // clean up the product description value
                 if (count($updateArray)) {
                     foreach ($updateArray as $update_key => $upd_value) {
-                        if ($upd_value=='<p></p>') {
-                            $updateArray[$update_key]='';
+                        if ($upd_value == '<p></p>') {
+                            $updateArray[$update_key] = '';
                         }
                     }
                 }
@@ -1993,7 +2005,7 @@ if ($this->post) {
         if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage'] > 0) {
             $this->post['specials_new_products_price'] = $this->post['products_price'] - (($this->post['products_price'] * $this->post['specials_price_percentage']) / 100);
         }
-        if ($this->post['specials_new_products_price'] && $this->post['specials_new_products_price']>0) {
+        if ($this->post['specials_new_products_price'] && $this->post['specials_new_products_price'] > 0) {
             $specials_start_date = 0;
             $specials_expired_date = 0;
             $current_tstamp = time();
@@ -2425,10 +2437,10 @@ if ($this->post) {
             }
         }
         if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] && isset($this->post['default_path_categories_id'])) {
-            if (isset($this->post['save_as_new']) && $prodid>0) {
-                $pid=$prodid;
+            if (isset($this->post['save_as_new']) && $prodid > 0) {
+                $pid = $prodid;
             } else if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
-                $pid=$this->get['pid'];
+                $pid = $this->get['pid'];
             }
             $updatePreviousValue = array();
             $updatePreviousValue['default_path'] = 0;
@@ -2440,7 +2452,7 @@ if ($this->post) {
                 if (!is_array($product_path)) {
                     $product_path = mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1'), '*', '', 'products_to_categories_id asc', '1');
                     if (is_array($product_path) && count($product_path)) {
-                        $this->post['default_path_categories_id']=$product_path['node_id'];
+                        $this->post['default_path_categories_id'] = $product_path['node_id'];
                     }
                 }
                 $updateArray = array();
@@ -2671,9 +2683,9 @@ if ($this->post) {
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'])) {
             $params = array(
-                'markerArray' => &$markerArray,
-                'product' => &$product,
-                'js_extra' => &$js_extra
+                    'markerArray' => &$markerArray,
+                    'product' => &$product,
+                    'js_extra' => &$js_extra
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2854,11 +2866,11 @@ if ($this->post) {
 							//alert(counter_data);
 							if (counter_data == 0) {
 								counter_data = counter_data + 1;
-                                '.(($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') ? '
+                                ' . (($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') ? '
                                     var readonly=\'\';
                                 ' : '
                                     var readonly=\' readonly="readonly"\';
-                                ').'
+                                ') . '
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
 								elem += \'<div class="input-group"><span class="input-group-addon">' . addslashes($this->pi_getLL('admin_from')) . '</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1"\' + readonly + \' value="1" /></div>\';
@@ -2966,15 +2978,15 @@ if ($this->post) {
                     $staffel_tax = mslib_fe::taxDecimalCrop(($sp_price * $product_tax_rate) / 100);
                     $sp_price_display = mslib_fe::taxDecimalCrop($sp_price, 2, false);
                     $staffel_price_display_incl = mslib_fe::taxDecimalCrop($sp_price + $staffel_tax, 2, false);
-                    $readonly=' readonly="readonly"';
-                    if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
-                        if ($sp_idx=='1') {
-                            $readonly='';
+                    $readonly = ' readonly="readonly"';
+                    if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
+                        if ($sp_idx == '1') {
+                            $readonly = '';
                         }
                     }
                     $staffel_price_block .= '
 						<tr id="sp_' . $sp_idx . '">
-							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1"'.$readonly.' value="' . $sp_col_1 . '" /></span></td>
+							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1"' . $readonly . ' value="' . $sp_col_1 . '" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_till2') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_2" value="' . $sp_col_2 . '" /></span></td>
 							<td>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="' . htmlspecialchars($sp_price_display) . '" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>
@@ -3004,13 +3016,13 @@ if ($this->post) {
         $str = "SELECT o.id, o.is_default, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-            $selected='';
+            $selected = '';
             if ($product['order_unit_id'] > 0) {
                 if ($row['id'] == $product['order_unit_id']) {
-                    $selected=' selected="selected"';
+                    $selected = ' selected="selected"';
                 }
-            } else if ($row['is_default']>0) {
-                $selected=' selected="selected"';
+            } else if ($row['is_default'] > 0) {
+                $selected = ' selected="selected"';
             }
             $order_unit .= '<option value="' . $row['id'] . '"' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
         }
@@ -3142,7 +3154,7 @@ if ($this->post) {
 				<input name="ajax_products_image[]" id="ajax_products_image' . $i . '" type="hidden" value="' . $product['products_image' . $i] . '" />';
             $images_tab_block .= '<div id="image_action' . $i . '" class="image_action">';
             if ($_REQUEST['action'] == 'edit_product' && $product['products_image' . $i]) {
-                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?'.time().'" />';
+                $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?' . time() . '" />';
                 $images_tab_block .= '<div class="image_tools">';
                 if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
                     $images_tab_block .= ' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="' . $product['products_image' . $i] . '"><i class="fa fa-crop"></i></a> ';
@@ -3169,7 +3181,7 @@ if ($this->post) {
 				element: document.getElementById(\'products_image' . $i . '\'),
 				action: \'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images') . '\',
 				params: {
-					image_index: \''.($x+1).'\',
+					image_index: \'' . ($x + 1) . '\',
 					products_name: products_name,
 					file_type: \'products_image' . $i . '\',
 					old_image: $("#ajax_products_image' . $i . '").val()
@@ -3220,7 +3232,7 @@ if ($this->post) {
                     $("#image_action' . $i . '").html(new_image);
                     ' : '') . '
 				},
-				'.($x>0 ? 'multiple: false,' : 'multiple: true,').'
+				' . ($x > 0 ? 'multiple: false,' : 'multiple: true,') . '
 				debug: false
 			});';
         }
@@ -3244,7 +3256,7 @@ if ($this->post) {
 				cursor:     "move",
 				//axis:       "y",
 				update: function(e, ui) {
-					href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[pID]='.$product['products_id'].'&tx_multishop_pi1[page_section]=productImagesSort') . '";
+					href = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[pID]=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=productImagesSort') . '";
 					jQuery(this).sortable("refresh");
 					sorted = jQuery(this).sortable("serialize", "id");
 					jQuery.ajax({
@@ -3292,8 +3304,8 @@ if ($this->post) {
 				<label for="products_meta_description" class="col-md-2 control-label">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
                     <div class="input-group width-fw">
-                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="168">
-                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
+                        <input type="text" class="form-control text meta-desc" name="products_meta_description[' . $language['uid'] . ']" id="products_meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']) . '" maxlength="160">
+                        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
                     </div>    
 				</div>
 			</div>
@@ -3317,7 +3329,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -3331,7 +3343,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
             });
@@ -3628,6 +3640,8 @@ if ($this->post) {
 				    var pa_option_data_id=encodeURIComponent(selected_pa_option_id).replace(/%[0-9A-F]{2}/gi,\'\');
 				    pa_option_data_id=pa_option_data_id.replace(/\'/g,\'\');
 				    pa_option_data_id=pa_option_data_id.replace(/"/g,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/\(/g,\'\');
+				    pa_option_data_id=pa_option_data_id.replace(/\)/g,\'\');
 					var target_liwrapper_id="#products_attributes_item_" + pa_option_data_id + " > div > div > div.items_wrapper";
 					if (selected_pa_option_id != "") {
 						var delete_button_html=\'<button type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
@@ -4026,10 +4040,10 @@ if ($this->post) {
                     $ctr = 1;
                     $options_data = array();
                     $attributes_data = array();
-                    $options_hide_data=array();
+                    $options_hide_data = array();
                     $attribute_values_class_id = array();
                     while (($row = $GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa)) != false) {
-                        $add_to_list=true;
+                        $add_to_list = true;
                         // custom hook that can be controlled by third-party plugin
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesDataCollector'])) {
                             $params = array(
@@ -4056,20 +4070,20 @@ if ($this->post) {
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
                         $attributes_tab_block .= '<td colspan="5" id="products_attributes_items">';
-
-                        $attributes_block_panel=array();
+                        $attributes_block_panel = array();
+                        $hidden_panel_count = array();
                         foreach ($options_data as $option_id => $option_name) {
                             if (!isset($group_row_type) || $group_row_type == 'even_group_row') {
                                 $group_row_type = 'odd_group_row';
                             } else {
                                 $group_row_type = 'even_group_row';
                             }
-                            $hide_row='';
+                            $hide_row = '';
                             if (!$options_hide_data[$option_id]) {
-                                $hide_row=' style="display:none"';
+                                $hide_row = ' style="display:none"';
                             }
                             $attributes_block_panel[$option_id] = '
-                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"'.$hide_row.'>
+                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"' . $hide_row . '>
                                 <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="false" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
                                     <h3 class="panel-title"><i class="fa fa-bars"></i> ' . $option_name . '</h3>
                                 </div>
@@ -4199,60 +4213,65 @@ if ($this->post) {
                                 $attributes_block_panel[$option_id] .= '</table>';
                                 $attributes_block_panel[$option_id] .= '</div>';
                             }
-
                             $attributes_block_panel[$option_id] .= '</div>
                             <div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="' . $this->pi_getLL('admin_add_new_value') . ' [+]" rel="' . $option_id . '" /></div></div></div>';
                             $attributes_block_panel[$option_id] .= '</div>';
                         }
-
                         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-                            $groups_options_list=array();
-                            $group_to_option=array();
-                            $group_name_to_group_id=array();
+                            $groups_options_list = array();
+                            $group_to_option = array();
+                            $group_name_to_group_id = array();
                             if (count($options_data)) {
                                 foreach ($options_data as $option_id => $option_name) {
                                     $str = 'SELECT aog.* from tx_multishop_attributes_options_groups aog, tx_multishop_attributes_options_groups_to_products_options og2po WHERE aog.attributes_options_groups_id=og2po.attributes_options_groups_id AND aog.language_id=0 AND og2po.products_options_id=' . $option_id . ' GROUP BY og2po.products_options_id ORDER BY aog.sort_order ASC';
                                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                                        $groups_options_list[$row['sort_order']]=$row['attributes_options_groups_name'];
-                                        $group_name_to_group_id[$row['attributes_options_groups_name']]=$row['attributes_options_groups_id'];
-                                        $group_to_option[$row['attributes_options_groups_id']][]=$option_id;
+                                        $groups_options_list[$row['sort_order']] = $row['attributes_options_groups_name'];
+                                        $group_name_to_group_id[$row['attributes_options_groups_name']] = $row['attributes_options_groups_id'];
+                                        $group_to_option[$row['attributes_options_groups_id']][] = $option_id;
                                     } else {
-                                        $groups_options_list['999999']=$this->pi_getLL('other');
-                                        $group_name_to_group_id[$this->pi_getLL('other')]='999999';
-                                        $group_to_option['999999'][]=$option_id;
+                                        $groups_options_list['999999'] = $this->pi_getLL('other');
+                                        $group_name_to_group_id[$this->pi_getLL('other')] = '999999';
+                                        $group_to_option['999999'][] = $option_id;
                                     }
                                 }
                             }
-                            if (count($groups_options_list)==1 && isset($groups_options_list['999999'])) {
+                            if (count($groups_options_list) == 1 && isset($groups_options_list['999999'])) {
                                 $attributes_tab_block .= implode("\n", $attributes_block_panel);
                             } else {
                                 ksort($groups_options_list);
-                                $attributes_group_block_panel=array();
-                                $counter=0;
+                                $attributes_group_block_panel = array();
+                                $counter = 0;
                                 foreach ($groups_options_list as $sort_order => $group_name) {
-                                    $group_id=$group_name_to_group_id[$group_name];
-                                    $option_panel=array();
+                                    $group_id = $group_name_to_group_id[$group_name];
+                                    $option_panel = array();
+                                    $count_hidden_panel = 0;
                                     foreach ($group_to_option[$group_id] as $option_id) {
-                                        $option_panel[]=$attributes_block_panel[$option_id];
+                                        $option_panel[] = $attributes_block_panel[$option_id];
+                                        if (!$options_hide_data[$option_id]) {
+                                            $count_hidden_panel += 1;
+                                        }
                                     }
-                                    $panel_count=count($option_panel);
-
-                                    $collapsed=' collapsed';
-                                    $aria_expanded='false';
-                                    $expand_in='';
-                                    if ($counter=='0') {
-                                        $collapsed='';
-                                        $aria_expanded='true';
-                                        $expand_in=' in';
+                                    $panel_count = count($option_panel);
+                                    $collapsed = ' collapsed';
+                                    $aria_expanded = 'false';
+                                    $expand_in = '';
+                                    if ($counter == '0') {
+                                        $collapsed = '';
+                                        $aria_expanded = 'true';
+                                        $expand_in = ' in';
                                     }
-                                    $attributes_group_block_panel[$group_id]='<div class="panel panel-success"> 
-                                        <div class="panel-heading panel-heading-toggle'.$collapsed.'" data-toggle="collapse" data-target="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'">
-                                            <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup'.$group_id.'" aria-expanded="'.$aria_expanded.'" class="">
-                                            <i class="fa fa-file-text-o"></i> '.$group_name.' ('.$panel_count.')</a> </h3> 
+                                    $hide_group_panel = '';
+                                    if ($count_hidden_panel == $panel_count) {
+                                        $hide_group_panel = ' style="display:none"';
+                                    }
+                                    $attributes_group_block_panel[$group_id] = '<div class="panel panel-success"' . $hide_group_panel . '> 
+                                        <div class="panel-heading panel-heading-toggle' . $collapsed . '" data-toggle="collapse" data-target="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '">
+                                            <h3 class="panel-title"> <a role="button" data-toggle="collapse" href="#productAttributesOptionGroup' . $group_id . '" aria-expanded="' . $aria_expanded . '" class="">
+                                            <i class="fa fa-file-text-o"></i> ' . $group_name . ' (' . $panel_count . ')</a> </h3> 
                                         </div> 
-                                        <div id="productAttributesOptionGroup'.$group_id.'" class="panel-collapse collapse'.$expand_in.'" aria-expanded="'.$aria_expanded.'" style=""> 
+                                        <div id="productAttributesOptionGroup' . $group_id . '" class="panel-collapse collapse' . $expand_in . '" aria-expanded="' . $aria_expanded . '" style=""> 
                                             <div class="group_attributes_panel panel-body"> 
                                             ' . implode("\n", $option_panel) . '
                                             </div> 
@@ -4403,23 +4422,21 @@ if ($this->post) {
             // mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
             $product_relatives_block = '<h3>' . $this->pi_getLL('admin_related_products') . '</h3>';
             $product_relatives_block .= $form_category_search;
-            $product_relatives_block .='<hr>';
-            $product_relatives_block .='<div id="load">';
-            $product_relatives_block .='<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
-            $product_relatives_block .='<strong>Loading....</strong>';
-            $product_relatives_block .='</div>';
+            $product_relatives_block .= '<hr>';
+            $product_relatives_block .= '<div id="load">';
+            $product_relatives_block .= '<img src="' . $this->FULL_HTTP_URL_MS . 'templates/images/loading.gif">';
+            $product_relatives_block .= '<strong>Loading....</strong>';
+            $product_relatives_block .= '</div>';
             // main block
             $product_relatives_block .= '<div class="panel panel-default" id="search_block_panel" style="display: none">';
             $product_relatives_block .= '<div class="panel-heading">';
             $product_relatives_block .= '<h4>' . $this->pi_getLL('search_results', 'Search results:') . '</h4>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '<div class="panel-body">';
-            $product_relatives_block .='<div id="search_related_product_placeholder"></div>';
+            $product_relatives_block .= '<div id="search_related_product_placeholder"></div>';
             $product_relatives_block .= '</div>';
             $product_relatives_block .= '</div>';
-
             $product_relatives_block .= '<div class="row" id="block_panel_wrapper" style="display: none">';
-
             // Up-sell block
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="sub_block_panel" style="display: none">';
@@ -4431,7 +4448,6 @@ if ($this->post) {
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
-
             // Cross-sell block
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="both_block_panel" style="display: none">';
@@ -4443,7 +4459,6 @@ if ($this->post) {
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
-
             // Opposite Up-sell block
             $product_relatives_block .= '<div class="col-md-4">';
             $product_relatives_block .= '    <div class="panel panel-default" id="main_block_panel" style="display: none">';
@@ -4455,7 +4470,6 @@ if ($this->post) {
             $product_relatives_block .= '        </div>';
             $product_relatives_block .= '    </div>';
             $product_relatives_block .= '</div>';
-
             $product_relatives_block .= '</div>'; // #block_panel_wrapper
         }
         /*
@@ -4750,10 +4764,8 @@ if ($this->post) {
         $subpartArray['###VALUE_STOCK###'] = $product['products_quantity'];
         $subpartArray['###LABEL_THRESHOLD_QTY###'] = $this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold');
         $subpartArray['###VALUE_THRESHOLD_QTY###'] = $product['alert_quantity_threshold'];
-
         $subpartArray['###LABEL_IGNORE_STOCK_LEVEL###'] = $this->pi_getLL('admin_ignore_stock_level');
-        $subpartArray['###IGNORE_STOCK_LEVEL_CHECKED###'] = ($product['ignore_stock_level']>0 ? ' checked="checked"' : '');
-
+        $subpartArray['###IGNORE_STOCK_LEVEL_CHECKED###'] = ($product['ignore_stock_level'] > 0 ? ' checked="checked"' : '');
         $subpartArray['###LABEL_DATE_AVAILABLE###'] = $this->pi_getLL('products_date_available');
         if ($product['products_date_available'] == 0 || empty($product['products_date_available'])) {
             $product['products_date_available_sys'] = '';

@@ -284,6 +284,8 @@ switch ($this->ms['page']) {
             $array2[] = $this->ms['MODULES']['STORE_NAME'];
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+            $array1[] = '###TOTAL_AMOUNT_RAW###';
+            $array2[] = number_format($order['total_amount'], '2', '.', '');
             require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
             $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
             $mslib_order->init($this);
@@ -336,6 +338,8 @@ switch ($this->ms['page']) {
             $array2[] = $this->ms['MODULES']['STORE_EMAIL'];
             $array1[] = '###TOTAL_AMOUNT###';
             $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+            $array1[] = '###TOTAL_AMOUNT_RAW###';
+            $array2[] = number_format($order['total_amount'], '2', '.', '');
             $array1[] = '###PROPOSAL_NUMBER###';
             $array2[] = $order['orders_id'];
             $array1[] = '###ORDER_NUMBER###';
@@ -358,23 +362,40 @@ switch ($this->ms['page']) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-        }
-        $page = mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
-        if ($page[0]['name']) {
-            if (count($array1) && count($array2)) {
-                $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+            $page = mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
+            if ($page[0]['name']) {
+                if (count($array1) && count($array2)) {
+                    $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
+                }
+                $header_label = $page[0]['name'];
+            } else {
+                $header_label = 'Payment';
             }
-            $header_label = $page[0]['name'];
+            $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
+            if ($page[0]['content']) {
+                if (count($array1) && count($array2)) {
+                    $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
+                }
+                $content .= $page[0]['content'];
+            } else {
+                // show standard thank you
+                if ($this->ms['page'] == 'psp_accepturl') {
+                    $content .= $this->pi_getLL('your_payment_has_been_completed');
+                } else if ($this->ms['page'] == 'psp_pendingurl') {
+                    $content .= $this->pi_getLL('your_payment_is_pending');
+                } else if ($this->ms['page'] == 'psp_declineurl') {
+                    $content .= $this->pi_getLL('your_payment_is_declined');
+                } else if ($this->ms['page'] == 'psp_exceptionurl') {
+                    $content .= $this->pi_getLL('your_payment_is_failed_');
+                } else if ($this->ms['page'] == 'psp_cancelurl') {
+                    $content .= $this->pi_getLL('your_payment_has_been_cancelled');
+                } else {
+                    $content .= $this->pi_getLL('your_payment_has_not_been_completed');
+                }
+            }
         } else {
             $header_label = 'Payment';
-        }
-        $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
-        if ($page[0]['content']) {
-            if (count($array1) && count($array2)) {
-                $page[0]['content'] = str_replace($array1, $array2, $page[0]['content']);
-            }
-            $content .= $page[0]['content'];
-        } else {
+            $content .= '<div class="main-heading"><h2>' . $header_label . '</h2></div>';
             // show standard thank you
             if ($this->ms['page'] == 'psp_accepturl') {
                 $content .= $this->pi_getLL('your_payment_has_been_completed');
@@ -395,6 +416,9 @@ switch ($this->ms['page']) {
             $params = array(
                     'page' => $this->ms['page'],
                     'content' => &$content,
+                    'array1' => &$array1,
+                    'array2' => &$array2,
+                    'order' => &$order,
                     'order_session' => &$order_session
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'] as $funcRef) {
@@ -415,6 +439,15 @@ switch ($this->ms['page']) {
     case 'payment_reminder_checkout':
         if ($this->get['tx_multishop_pi1']['hash']) {
             $tmpArray = mslib_befe::getRecord($this->get['tx_multishop_pi1']['hash'], 'tx_multishop_orders', 'hash');
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'])) {
+                $params = array(
+                        'tmpArray' => &$tmpArray,
+                        'content' => &$content
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentReminderCheckoutPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($tmpArray['orders_id']) {
                 $order = mslib_fe::getOrder($tmpArray['orders_id']);
                 // replacing the variables with dynamic values
@@ -514,6 +547,8 @@ switch ($this->ms['page']) {
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
                 $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
                 $mslib_order->init($this);
@@ -562,6 +597,8 @@ switch ($this->ms['page']) {
                 $array2[] = $this->ms['MODULES']['STORE_NAME'];
                 $array1[] = '###TOTAL_AMOUNT###';
                 $array2[] = mslib_fe::amount2Cents($order['total_amount']);
+                $array1[] = '###TOTAL_AMOUNT_RAW###';
+                $array2[] = number_format($order['total_amount'], '2', '.', '');
                 $array1[] = '###PROPOSAL_NUMBER###';
                 $array2[] = $order['orders_id'];
                 $array1[] = '###ORDER_NUMBER###';

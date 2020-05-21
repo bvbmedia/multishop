@@ -6,21 +6,21 @@ if ($this->get['feed_hash']) {
     set_time_limit(86400);
     ignore_user_abort(true);
     $feed = mslib_fe::getProductFeed($this->get['feed_hash'], 'code');
-    $utms_data=array();
+    $utms_data = array();
     if ($feed['utm_source']) {
-        $utms[]='utm_source=' . $feed['utm_source'];
+        $utms[] = 'utm_source=' . $feed['utm_source'];
     }
     if ($feed['utm_medium']) {
-        $utms[]='utm_medium=' . $feed['utm_medium'];
+        $utms[] = 'utm_medium=' . $feed['utm_medium'];
     }
     if ($feed['utm_term']) {
-        $utms[]='utm_term=' . $feed['utm_term'];
+        $utms[] = 'utm_term=' . $feed['utm_term'];
     }
     if ($feed['utm_content']) {
-        $utms[]='utm_content=' . $feed['utm_content'];
+        $utms[] = 'utm_content=' . $feed['utm_content'];
     }
     if ($feed['utm_campaign']) {
-        $utms[]='utm_campaign=' . $feed['utm_campaign'];
+        $utms[] = 'utm_campaign=' . $feed['utm_campaign'];
     }
     $lifetime = 0;
     if ($this->ADMIN_USER) {
@@ -63,7 +63,7 @@ if ($this->get['feed_hash']) {
         $post_data = unserialize($feed['post_data']);
         $fields_headers = $post_data['fields_headers'];
         $fields_values = $post_data['fields_values'];
-        $global_output=array();
+        $global_output = array();
         if ($feed['include_header']) {
             $total = count($fields);
             $rowCount = 0;
@@ -338,13 +338,13 @@ if ($this->get['feed_hash']) {
                 } else {
                     $includeDisabled = 0;
                 }
-                if (is_numeric($post_data['order_unit_id']) && $post_data['order_unit_id']>0) {
+                if (is_numeric($post_data['order_unit_id']) && $post_data['order_unit_id'] > 0) {
                     if ($this->ms['MODULES']['FLAT_DATABASE']) {
                         $tbl = 'pf.';
                     } else {
                         $tbl = 'p.';
                     }
-                    $where[] = '(' . $tbl . 'order_unit_id = '.$post_data['order_unit_id'].')';
+                    $where[] = '(' . $tbl . 'order_unit_id = ' . $post_data['order_unit_id'] . ')';
                 }
                 if ($post_data['include_only_related_product']) {
                     if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -832,8 +832,7 @@ if ($this->get['feed_hash']) {
                                 $old_product_price = $old_product_price + $tax_rate;
                             }
                         }
-                        if ($old_product_price != $final_price) {
-                            //$tmpcontent .= round($old_product_price,14);
+                        if (round($old_product_price, 2) != round($final_price, 2)) {
                             $tmpcontent .= round($old_product_price, 2);
                         } else {
                             $tmpcontent .= '';
@@ -853,17 +852,17 @@ if ($this->get['feed_hash']) {
                                 $old_product_price = $old_product_price + $tax_rate;
                             }
                         }
-                        if ($old_product_price != $final_price) {
+                        if (round($old_product_price, 2) != round($final_price, 2)) {
                             //$tmpcontent .= round($old_product_price,14);
-                            $tmpcontent .= round($old_product_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                            $tmpcontent .= round($old_product_price, 2) . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         } else {
-                            $tmpcontent .= number_format($final_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                            $tmpcontent .= number_format($final_price, 2) . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         }
                         break;
                     case 'products_sales_price_incl_vat':
                         if ($row['products_price'] != $row['final_price']) {
                             $final_price = mslib_fe::final_products_price($row);
-                            $tmpcontent .= number_format($final_price, 2). ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
+                            $tmpcontent .= number_format($final_price, 2) . ' ' . $this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
                         } else {
                             $tmpcontent .= '';
                         }
@@ -1050,7 +1049,7 @@ if ($this->get['feed_hash']) {
                             }
                             // get all cats to generate multilevel fake url eof
                         }
-                        $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail' . (count($utms)>0 ? '&'.implode('&', $utms) : ''));
+                        $link = mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $row['products_id'] . '&tx_multishop_pi1[page_section]=products_detail' . (count($utms) > 0 ? '&' . implode('&', $utms) : ''));
                         $tmpcontent .= $this->FULL_HTTP_URL . $link;
                         break;
                     case 'products_meta_title':
@@ -1116,12 +1115,12 @@ if ($this->get['feed_hash']) {
                                 }
                             } else {
                                 if (strpos($field, 'products_description_') !== false) {
-                                    $descriptionKeys=array();
+                                    $descriptionKeys = array();
                                     for ($i = 1; $i <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
-                                        $descriptionKeys['products_description_tab_title_' . $i]='products_description_tab_title_' . $i;
-                                        $descriptionKeys['products_description_tab_content_' . $i]='products_description_tab_content_' . $i;
-                                        $descriptionKeys['products_description_encoded_tab_content_' . $i]='products_description_tab_content_' . $i;
-                                        $descriptionKeys['products_description_strip_tags_tab_content_' . $i]='products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_tab_title_' . $i] = 'products_description_tab_title_' . $i;
+                                        $descriptionKeys['products_description_tab_content_' . $i] = 'products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_encoded_tab_content_' . $i] = 'products_description_tab_content_' . $i;
+                                        $descriptionKeys['products_description_strip_tags_tab_content_' . $i] = 'products_description_tab_content_' . $i;
                                     }
                                     if (count($descriptionKeys) && isset($descriptionKeys[$field])) {
                                         if (strpos($field, 'products_description_encoded_') !== false) {
@@ -1181,7 +1180,7 @@ if ($this->get['feed_hash']) {
                                     list($zone_id, $cn_iso_nr) = explode('_', $zone_cn_id);
                                     $product_id = $row['products_id'];
                                     $shipping_method_id = $post_data['shipping_costs_per_product'];
-                                    if ($shipping_method_id>0) {
+                                    if ($shipping_method_id > 0) {
                                         $priceArray = mslib_fe::productFeedGeneratorGetShippingCosts($row, (int)$cn_iso_nr, $shipping_method_id);
                                         $cn_iso_2 = mslib_fe::getCountryName((int)$cn_iso_nr);
                                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1213,23 +1212,23 @@ if ($this->get['feed_hash']) {
                         break;
                 }
                 // custom page hook that can be controlled by third-party plugin
-                $continue_stripping=true;
+                $continue_stripping = true;
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
                     $output = $tmpcontent;
                     $params = array(
-                        'feed' => $feed,
-                        'mode' => $mode,
-                        'field' => $field,
-                        'row' => &$row,
-                        'output' => &$output,
-                        'continue_stripping' => &$continue_stripping
+                            'feed' => $feed,
+                            'mode' => $mode,
+                            'field' => $field,
+                            'row' => &$row,
+                            'output' => &$output,
+                            'continue_stripping' => &$continue_stripping
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                     if ($output) {
                         $tmpcontent = $output;
-                        $global_output[$row['products_id']][]=$output;
+                        $global_output[$row['products_id']][] = $output;
                     }
                 }
                 // custom page hook that can be controlled by third-party plugin eof

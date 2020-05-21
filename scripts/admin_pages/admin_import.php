@@ -438,6 +438,8 @@ if ($this->post['action'] == 'category-insert') {
         $data = unserialize($row['data']);
         // copy the previous post data to the current post so it can run the job again
         $this->post = $data[1];
+        // Set ignored locked data
+        $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
         $this->post['cid'] = $row['categories_id'];
         // enable file logging
         if ($this->get['relaxed_import']) {
@@ -904,6 +906,7 @@ if ($this->post['action'] == 'category-insert') {
     $locked_fields = array();
     $locked_fields['categories_id'] = 'Category';
     $locked_fields['products_price'] = 'Products price';
+    $locked_fields['specials_new_products_price'] = 'Products specials price';
     $locked_fields['products_vat_rate'] = 'Products VAT rate';
     $locked_fields['products_name'] = 'Products name';
     $locked_fields['products_quantity'] = 'Products quantity';
@@ -919,6 +922,30 @@ if ($this->post['action'] == 'category-insert') {
 				</select>
 			</div>
 		</div>
+        <div class="form-group multiselect_horizontal">
+			<label for="locked_fields" class="control-label col-md-2">' . $this->pi_getLL('ignore_following_locked_fields', 'Ignore the following locked fields when importing this feed') . '</label>
+			<div class="col-md-10">
+				<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[ignored_locked_fields][]">
+		';
+    $locked_fields = array();
+    $locked_fields['categories_id'] = 'Category';
+    $locked_fields['products_price'] = 'Products price';
+    $locked_fields['specials_new_products_price'] = 'Products specials price';
+    $locked_fields['products_vat_rate'] = 'Products VAT rate';
+    $locked_fields['products_name'] = 'Products name';
+    $locked_fields['products_quantity'] = 'Products quantity';
+    $locked_fields['products_description'] = 'Products description';
+    foreach ($locked_fields as $key => $val) {
+        if (is_array($this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+            $combinedContent .= '<option value="' . $key . '"' . (in_array($key, $this->post['tx_multishop_pi1']['ignored_locked_fields']) ? ' selected' : '') . '>' . htmlspecialchars($val) . '</option>' . "\n";
+        } else {
+            $combinedContent .= '<option value="' . $key . '">' . htmlspecialchars($val) . '</option>' . "\n";
+        }
+    }
+    $combinedContent .= '
+				</select>
+			</div>
+		</div>		
 		<div class="form-group">
 			<label for="" class="control-label col-md-2">' . $this->pi_getLL('default_vat_rate', 'Default VAT Rate') . '</label>
 			<div class="col-md-10">
@@ -973,6 +1000,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['code'] = md5(uniqid());
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['tx_multishop_pi1']['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
@@ -991,7 +1019,7 @@ if ($this->post['action'] == 'category-insert') {
         // we have to update the import job
         if (!$this->post['select']) {
             // something is wrong. repair the select of previous job
-            $str = "SELECT * from tx_multishop_import_jobs where id='" . $this->post['job_id'] . "'";
+            $str = "SELECT * from tx_multishop_import_jobs where id='" . addslashes($this->post['job_id']) . "'";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
             $data = unserialize($row['data']);
@@ -1005,6 +1033,7 @@ if ($this->post['action'] == 'category-insert') {
         $updateArray['last_run'] = time();
         $updateArray['period'] = $this->post['cron_period'];
         $updateArray['prefix_source_name'] = $this->post['prefix_source_name'];
+        $updateArray['ignored_locked_fields'] = json_encode($this->post['tx_multishop_pi1']['ignored_locked_fields'], JSON_PRETTY_PRINT);
         $cron_data = array();
         $cron_data[0] = unserialize($this->post['cron_period']);
         $this->post['cron_period'] = '';
@@ -1036,6 +1065,8 @@ if ($this->post['action'] == 'category-insert') {
             $data = unserialize($row['data']);
             // copy the previous post data to the current post so it can run the job again
             $this->post = $data[1];
+            // Set ignored locked data
+            $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
 //			if ($row['categories_id']) $this->post['cid']=$row['categories_id'];
             $this->post['cid'] = $row['categories_id'];
             if ($this->post['cid'] > 0) {
@@ -1298,7 +1329,9 @@ if ($this->post['action'] == 'category-insert') {
                     $params = array(
                             'row' => &$row,
                             'prefix_source_name' => $this->post['prefix_source_name'],
-                            'skipRow' => &$skipRow
+                            'skipRow' => &$skipRow,
+                            'stats' => &$stats,
+                            'table_cols' =>&$table_cols
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIteratePreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1579,7 +1612,8 @@ if ($this->post['action'] == 'category-insert') {
                     $params = array(
                             'item' => &$item,
                             'prefix_source_name' => $this->post['prefix_source_name'],
-                            'skipItem' => &$skipItem
+                            'skipItem' => &$skipItem,
+                            'tmpitem' => &$tmpitem
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1837,7 +1871,17 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                             $tel = 0;
-                            $hashed_id = $this->ms['target-cid'];
+                            //$hashed_id = $this->ms['target-cid'];
+                            $hashed_id = '';
+                            if ($this->ms['target-cid'] == '') {
+                                $this->ms['target-cid'] = $this->categoriesStartingPoint;
+                            }
+                            if ($this->ms['target-cid'] == '') {
+                                $this->ms['target-cid'] = 0;
+                            }
+                            if ($this->ms['target-cid']) {
+                                $hashed_id = $this->ms['target-cid'];
+                            }
                             foreach ($cats as $cat) {
                                 $cat = trim($cat);
                                 if ($hashed_id) {
@@ -1992,10 +2036,10 @@ if ($this->post['action'] == 'category-insert') {
                             $item['manufacturers_id'] = $row['manufacturers_id'];
                         } else {
                             //$str = "insert into tx_multishop_manufacturers (date_added, manufacturers_name, status) VALUES ('" . time() . "','" . addslashes($item['manufacturers_name']) . "',1)";
-                            $insertArrayManufacturer=array();
-                            $insertArrayManufacturer['date_added']=time();
-                            $insertArrayManufacturer['manufacturers_name']=$item['manufacturers_name'];
-                            $insertArrayManufacturer['status']=1;
+                            $insertArrayManufacturer = array();
+                            $insertArrayManufacturer['date_added'] = time();
+                            $insertArrayManufacturer['manufacturers_name'] = $item['manufacturers_name'];
+                            $insertArrayManufacturer['status'] = 1;
                             if ($this->post['prefix_source_name']) {
                                 // save also the feed source name, maybe we need it later
                                 $insertArrayManufacturer['foreign_source_name'] = $this->post['prefix_source_name'];
@@ -2014,14 +2058,14 @@ if ($this->post['action'] == 'category-insert') {
                     if ($item['manufacturers_image']) {
                         if (isset($item['manufacturers_name'])) {
                             $manufacturers_name = $item['manufacturers_name'];
-                        } elseif($item['manufacturers_id']) {
+                        } elseif ($item['manufacturers_id']) {
                             $manufacturers_name = $item['manufacturers_id'];
                         }
                         $image = $item['manufacturers_image'];
-                        $strchk='';
+                        $strchk = '';
                         if (isset($item['manufacturers_id']) && is_numeric($item['manufacturers_id'])) {
                             $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_id='" . addslashes($item['manufacturers_id']) . "'";
-                        } elseif($item['manufacturers_name']) {
+                        } elseif ($item['manufacturers_name']) {
                             $strchk = "SELECT * from tx_multishop_manufacturers m where m.manufacturers_name='" . addslashes($item['manufacturers_name']) . "'";
                         }
                         if ($strchk) {
@@ -2265,6 +2309,15 @@ if ($this->post['action'] == 'category-insert') {
                             if ($old_product['imported_product']) {
                                 $item['imported_product'] = 1;
                                 $importedProductsLockedFields = mslib_befe::getImportedProductsLockedFields($products_id);
+                                if (is_array($importedProductsLockedFields) && is_array($this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+                                    // $importedProductsLockedFields contains fields that we should skip from being overwritten
+                                    // ignored_locked_fields contains fields that we should still overwrite
+                                    foreach ($importedProductsLockedFields as $importedLockedFieldKey => $importedLockedFieldName) {
+                                        if (in_array($importedLockedFieldName,$this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+                                            unset($importedProductsLockedFields[$importedLockedFieldKey]);
+                                        }
+                                    }
+                                }
                             }
                             /*
 							if ($old_product['imported_product'] and $old_product['lock_imported_product']) {
@@ -2628,8 +2681,31 @@ if ($this->post['action'] == 'category-insert') {
                                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
+                            } elseif ($item['updated_products_id']) {
+                                if (!isset($item['products_specials_price']) && !isset($item['products_specials_price_including_vat'])) {
+                                    // delete any special
+                                    $cols=array();
+                                    $cols[]='products_price_including_vat';
+                                    $cols[]='products_price';
+                                    foreach ($cols as $col) {
+                                        if (isset($item[$col])) {
+                                            // Current feed contains no specials price, but contains normal prices. Then we have to flush the special
+                                            $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=' . $item['updated_products_id']);
+                                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
-                            $content .= ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))) . ' "<strong>' . ($item['products_name'] ? $item['products_name'] : $item['extid']) . '</strong>" ' . $this->pi_getLL('has_been_adjusted') . '.<br />';
+                            $productsTitle = $item['extid'];
+                            if (isset($item['products_name'])) {
+                                $productsTitle = $item['products_name'];
+                            } else {
+                                if (isset($item['updated_products_id'])) {
+                                    $productsTitle = mslib_fe::getProductName($item['updated_products_id']);
+                                }
+                            }
+                            $content .= ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))) . ' "<strong>' . htmlspecialchars($productsTitle) . '</strong>" ' . $this->pi_getLL('has_been_adjusted') . '.<br />';
                             if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
                                 $this->ms['products_to_categories_array'] = array();
                                 $this->ms['products_to_categories_array'][] = $this->ms['target-cid'];
@@ -3268,7 +3344,7 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         // update flat database
                         if ($this->ms['MODULES']['FLAT_DATABASE'] or $this->ms['MODULES']['GLOBAL_MODULES']['FLAT_DATABASE']) {
-                            $updateFlat=1;
+                            $updateFlat = 1;
                             // custom hook that can be controlled by third-party plugin
                             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHookFlat'])) {
                                 $params = array(
@@ -3329,7 +3405,8 @@ if ($this->post['action'] == 'category-insert') {
                                     'products_id' => ($item['added_products_id'] ? $item['added_products_id'] : $item['updated_products_id']),
                                     'import_data_collector' => &$import_data_collector,
                                     'item' => &$item,
-                                    'prefix_source_name' => $this->post['prefix_source_name']
+                                    'prefix_source_name' => $this->post['prefix_source_name'],
+                                    'stats' => &$stats
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -3406,6 +3483,10 @@ if ($this->post['action'] == 'category-insert') {
 //			if ($file_location and file_exists($file_location)) @unlink($file_location);
         }
         $stats['time_finished'] = time();
+        if ($this->msLogFile) {
+            $message='Importer completed.'."\n";
+            file_put_contents($this->msLogFile, $message, FILE_APPEND);
+        }
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'])) {
             $params = array(

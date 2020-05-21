@@ -14,13 +14,13 @@ switch ($this->post['tx_multishop_pi1']['action']) {
         // send invoices by mail
         if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
             $attachments = array();
-            $disable_merge_attachment_files=false;
-            $selected_invoices=array();
+            $disable_merge_attachment_files = false;
+            $selected_invoices = array();
             foreach ($this->post['selected_invoices'] as $invoice) {
                 if (is_numeric($invoice)) {
                     $invoice = mslib_fe::getInvoice($invoice, 'id');
                     if ($invoice['id']) {
-                        $selected_invoices[]=$invoice['invoice_id'];
+                        $selected_invoices[] = $invoice['invoice_id'];
                         // invoice as attachment
                         $invoice_path = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $invoice['invoice_id'] . '.pdf';
                         $invoice_data = mslib_fe::file_get_contents($this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]=' . $invoice['hash']));
@@ -29,10 +29,10 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                         $attachments[$invoice['invoice_id']] = $invoice_path;
                         //hook to let other plugins further manipulate the pre processed data
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['mailSelectedInvoicesToMerchantAttachments'])) {
-                            $conf=array(
-                                'invoice' => $invoice,
-                                'attachments'=>&$attachments,
-                                'disable_merge_attachment_files' => &$disable_merge_attachment_files
+                            $conf = array(
+                                    'invoice' => $invoice,
+                                    'attachments' => &$attachments,
+                                    'disable_merge_attachment_files' => &$disable_merge_attachment_files
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['mailSelectedInvoicesToMerchantAttachments'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
@@ -80,19 +80,19 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             $user['name'] = $this->ms['MODULES']['STORE_NAME'];
                             $user['email'] = $this->ms['MODULES']['STORE_EMAIL'];
                             if (!$disable_merge_attachment_files) {
-                                $attachments_pdf=array($combinedPdfFile);
+                                $attachments_pdf = array($combinedPdfFile);
                             } else {
-                                $attachments_pdf=$attachments;
+                                $attachments_pdf = $attachments;
                             }
-                            $mail_subject=$this->ms['MODULES']['STORE_NAME'] . ' invoices';
-                            $mail_content=$this->ms['MODULES']['STORE_NAME'] . ' invoices';
+                            $mail_subject = $this->ms['MODULES']['STORE_NAME'] . ' invoices';
+                            $mail_content = $this->ms['MODULES']['STORE_NAME'] . ' invoices';
                             //hook to let other plugins further manipulate the settings
                             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['invoicesMailToMerchantContentBody'])) {
                                 $params = array(
-                                    'invoice' => $invoice,
-                                    'mail_subject' => $mail_subject,
-                                    'mail_content' => &$mail_content,
-                                    'attachments_pdf' => &$attachments_pdf
+                                        'invoice' => $invoice,
+                                        'mail_subject' => $mail_subject,
+                                        'mail_content' => &$mail_content,
+                                        'attachments_pdf' => &$attachments_pdf
                                 );
                                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['invoicesMailToMerchantContentBody'] as $funcRef) {
                                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -100,13 +100,13 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                             }
                             if (mslib_fe::mailUser($user, $mail_subject, $mail_content, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments_pdf)) {
                                 $postErno[] = array(
-                                    'status' => 'info',
-                                    'message' => 'The following invoices are mailed to ' . $user['email'] . ':<ul><li>' . implode('</li><li>', $selected_invoices) . '</li></ul>'
+                                        'status' => 'info',
+                                        'message' => 'The following invoices are mailed to ' . $user['email'] . ':<ul><li>' . implode('</li><li>', $selected_invoices) . '</li></ul>'
                                 );
                             } else {
                                 $postErno[] = array(
-                                    'status' => 'error',
-                                    'message' => 'Failed to mail invoices to: ' . $user['email']
+                                        'status' => 'error',
+                                        'message' => 'Failed to mail invoices to: ' . $user['email']
                                 );
                             }
                             break;
@@ -128,7 +128,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
             //hook to let other plugins further manipulate the settings
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['createReversalInvoiceCustom'])) {
                 $params = array(
-                    'postErno' => &$postErno
+                        'postErno' => &$postErno
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['createReversalInvoiceCustom'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -509,12 +509,8 @@ if ($this->get['skeyword']) {
     }
 }
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->get['invoice_date_from']);
-    list($fd, $fm, $fy) = explode('-', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->get['invoice_date_till']);
-    list($td, $tm, $ty) = explode('-', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->get['invoice_date_from']);
+    $end_time = strtotime($this->get['invoice_date_till']);
     if ($this->cookie['filter_by_paid_date']) {
         $filter[] = ' i.reversal_invoice=0';
         $column = 'o.orders_paid_timestamp';
@@ -523,10 +519,8 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
-    if (!empty($this->post['invoice_date_from'])) {
-        list($from_date, $from_time) = explode(" ", $this->post['invoice_date_from']);
-        list($fd, $fm, $fy) = explode('/', $from_date);
-        $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
+    if (!empty($this->get['invoice_date_from'])) {
+        $start_time = strtotime($this->get['invoice_date_from']);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
             $column = 'o.orders_paid_timestamp';
@@ -535,10 +529,8 @@ if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_t
         }
         $filter[] = $column . " >= '" . $start_time . "'";
     }
-    if (!empty($this->post['invoice_date_till'])) {
-        list($till_date, $till_time) = explode(" ", $this->post['invoice_date_till']);
-        list($td, $tm, $ty) = explode('/', $till_date);
-        $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    if (!empty($this->get['invoice_date_till'])) {
+        $end_time = strtotime($this->get['invoice_date_till']);
         if ($this->cookie['filter_by_paid_date']) {
             $filter[] = ' i.reversal_invoice=0';
             $column = 'o.orders_paid_timestamp';
@@ -654,9 +646,19 @@ $subpartArray['###VALUE_SEARCH###'] = htmlspecialchars($this->pi_getLL('search')
 $subpartArray['###LABEL_FILTER_BY_DATE###'] = $this->pi_getLL('filter_by_date');
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FROM###'] = $this->get['invoice_date_from'];
 $subpartArray['###LABEL_DATE_TO###'] = $this->pi_getLL('to');
-$subpartArray['###VALUE_DATE_TO###'] = $this->get['invoice_date_till'];
+$subpartArray['###VALUE_DATE_FROM_VISUAL###'] = '';
+$subpartArray['###VALUE_DATE_FROM###'] = '';
+if ($this->get['invoice_date_from']) {
+    $subpartArray['###VALUE_DATE_FROM_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_from']));
+    $subpartArray['###VALUE_DATE_FROM###'] = date('Y-m-d H:i:s', strtotime($this->get['invoice_date_from']));
+}
+$subpartArray['###VALUE_DATE_TO_VISUAL###'] = '';
+$subpartArray['###VALUE_DATE_TO###'] = '';
+if ($this->get['invoice_date_till']) {
+    $subpartArray['###VALUE_DATE_TO_VISUAL###'] = date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['invoice_date_till']));
+    $subpartArray['###VALUE_DATE_TO###'] = date('Y-m-d H:i:s', strtotime($this->get['invoice_date_till']));
+}
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###'] = $this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###'] = ($this->cookie['paid_invoices_only'] ? ' checked' : '');
 $subpartArray['###LABEL_FILTER_BY_PAID_DATE_ONLY###'] = $this->pi_getLL('filter_by_paid_date');
@@ -725,7 +727,7 @@ $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) .
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesTmplPostProc'])) {
     $params = array(
-        'content' => &$content
+            'content' => &$content
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesTmplPostProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

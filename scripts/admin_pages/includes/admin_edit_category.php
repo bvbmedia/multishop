@@ -444,18 +444,18 @@ if ($this->post) {
                 $updateArray['meta_keywords'] = $this->post['meta_keywords'][$key];
                 $updateArray['meta_description'] = $this->post['meta_description'][$key];
                 $updateArray['content'] = $this->post['content'][$key];
-                if ($updateArray['content']=="<p><br></p>\r\n") {
-                    $updateArray['content']='';
+                if ($updateArray['content'] == "<p><br></p>\r\n") {
+                    $updateArray['content'] = '';
                 }
                 $updateArray['content_footer'] = $this->post['content_footer'][$key];
-                if ($updateArray['content_footer']=="<p><br></p>\r\n") {
-                    $updateArray['content_footer']='';
+                if ($updateArray['content_footer'] == "<p><br></p>\r\n") {
+                    $updateArray['content_footer'] = '';
                 }
                 $updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
                 if (count($updateArray)) {
                     foreach ($updateArray as $update_key => $upd_value) {
-                        if ($upd_value=='<p></p>') {
-                            $updateArray[$update_key]='';
+                        if ($upd_value == '<p></p>') {
+                            $updateArray[$update_key] = '';
                         }
                     }
                 }
@@ -474,8 +474,8 @@ if ($this->post) {
                 $updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
                 if (count($updateArray)) {
                     foreach ($updateArray as $update_key => $upd_value) {
-                        if ($upd_value=='<p></p>') {
-                            $updateArray[$update_key]='';
+                        if ($upd_value == '<p></p>') {
+                            $updateArray[$update_key] = '';
                         }
                     }
                 }
@@ -902,7 +902,6 @@ if ($this->post) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-
             $categories_content_block .= '</div></div></div>';
         }
         $categories_meta_block = '';
@@ -935,8 +934,8 @@ if ($this->post) {
 				<label class="control-label col-md-2" for="meta_description">' . $this->pi_getLL('admin_label_input_meta_description') . '</label>
 				<div class="col-md-10">
 				    <div class="input-group width-fw">
-				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="168">
-				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">320</span></div>
+				        <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['meta_description']) . '" maxlength="160">
+				        <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
                     </div>
 				</div>
 			</div>';
@@ -957,7 +956,7 @@ if ($this->post) {
                     var lang_id=$(obj).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
                 $(document).on("keydown keyup", ".meta-title", function() {
@@ -971,7 +970,7 @@ if ($this->post) {
                     var lang_id=$(this).attr("data-lang-id");
                     var counter_id="#meta_desc_char_count" + lang_id;
                     var current_counter=$(this).val().length;
-                    var char_left=parseInt(320-current_counter);
+                    var char_left=parseInt(160-current_counter);
                     $(counter_id).html(char_left);
                 });
             });

@@ -32,7 +32,6 @@ if ($this->get['customers_export_hash']) {
             case '':
                 $post_data['delimeter_type'] = ';';
                 break;
-
         }
         $fields_values = $post_data['fields_values'];
         $records = array();
@@ -68,7 +67,6 @@ if ($this->get['customers_export_hash']) {
             case '1':
                 $filter[] = "f.tx_multishop_discount > 0";
                 break;
-
         }
         if (isset($post_data['status'])) {
             if (!$post_data['status']) {
@@ -160,7 +158,7 @@ if ($this->get['customers_export_hash']) {
                         $excelCols[] = $gender;
                         break;
                     case 'customer_salutation':
-                        $salutation='';
+                        $salutation = '';
                         switch ($row['gender']) {
                             case '0':
                                 $salutation = $this->pi_getLL('mr');

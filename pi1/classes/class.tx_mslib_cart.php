@@ -37,7 +37,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         mslib_fe::init($ref);
     }
     function updateCart() {
-        $continue_check_stock=true;
+        $continue_check_stock = true;
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreCheckerHook'])) {
             $params = array(
@@ -239,8 +239,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         $this->post['quantity'] = $product['minimum_quantity'];
                     }
                     $product['qty'] = ($this->post['quantity']);
-                    $product['qty'] = round(number_format($product['qty'], 2,'.',''), 2);
-                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2,'.',''), 2);
+                    $product['qty'] = round(number_format($product['qty'], 2, '.', ''), 2);
+                    $this->post['quantity'] = round(number_format($this->post['quantity'], 2, '.', ''), 2);
                     // chk if the product has staffel price
                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
                         if ($this->post['quantity']) {
@@ -248,17 +248,17 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         } else {
                             $quantity = $cart['products'][$shopping_cart_item]['qty'];
                         }
-                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                             $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
                         }
                         $product['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity) / $quantity);
                     }
-
                     // custom hook that can be controlled by third-party plugin
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPricePostHook'])) {
                         $params = array(
                                 'shopping_cart_item' => $shopping_cart_item,
-                                'product' => &$product
+                                'product' => &$product,
+                                'cart' => &$cart
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPricePostHook'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -523,7 +523,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     }
                                     // chk if the product has staffel price
                                     if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
-                                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                                             $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
                                         }
                                         $product['final_price'] = mslib_fe::calculateStaffelPrice($product['staffel_price'], 1);
@@ -679,7 +679,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         // custom hook that can be controlled by third-party plugin eof
                         // chk if the product has staffel price
                         if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
-                            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE']=='1') {
+                            if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                                 $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
                             }
                             $cart['products'][$shopping_cart_item]['final_price'] = (mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty) / $qty);
@@ -817,13 +817,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     function getCart() {
         $cart = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
         // custom hook that can be controlled by third-party plugin
-        $no_discount=false;
-        $vat_id_validate_country=$this->post['b_cc'];
+        $no_discount = false;
+        $vat_id_validate_country = $this->post['b_cc'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
             $params = array(
                     'cart' => &$cart,
                     'no_discount' => &$no_discount,
-                    'vat_id_validate_country'=>&$vat_id_validate_country
+                    'vat_id_validate_country' => &$vat_id_validate_country
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1049,9 +1049,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 // discount
                 if (!$cart['discount'] and !$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email']) && !$no_discount) {
-                    $guest_email=$cart['user']['email'];
+                    $guest_email = $cart['user']['email'];
                     if (!$guest_email) {
-                        $guest_email=$this->post['tx_multishop_pi1']['email'];
+                        $guest_email = $this->post['tx_multishop_pi1']['email'];
                     }
                     // check if guest user is already in the database and if so add possible group discount
                     $user_check = mslib_fe::getUser($guest_email, 'email');
@@ -1171,7 +1171,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
         }
         // custom hook that can be controlled by third-party plugin eofq
-        $this->cart=$cart;
+        $this->cart = $cart;
         tx_mslib_cart::storeCart($this->cart);
         //if (is_array($this->cart['products']) && count($this->cart['products'])) {
         //tx_mslib_cart::storeCart($this->cart);
@@ -1318,12 +1318,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'])) {
                 $params = array(
-                    'subtract_discount' => &$subtract_discount,
-                    'country_id' => &$country_id,
-                    'include_vat' => &$include_vat,
-                    'cart' => &$cart,
-                    'total_price' => &$total_price,
-                    'return_total_price' => &$return_total_price
+                        'subtract_discount' => &$subtract_discount,
+                        'country_id' => &$country_id,
+                        'include_vat' => &$include_vat,
+                        'cart' => &$cart,
+                        'total_price' => &$total_price,
+                        'return_total_price' => &$return_total_price
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['countCartReturnTotalPricePostHook'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1395,18 +1395,18 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         return $products_tax;
     }
     function convertCartToOrder($cart) {
-        $return_orders_id=false;
-        $orders_id=0;
+        $return_orders_id = false;
+        $orders_id = 0;
         $address = $cart['user'];
-        $vat_id_validate_country=$address['country'];
+        $vat_id_validate_country = $address['country'];
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'])) {
             // hook
             $params = array(
-                'address' => &$address,
-                'cart' => &$cart,
-                'orders_id' => &$orders_id,
-                'return_orders_id' => &$return_orders_id,
-                'vat_id_validate_country'=>&$vat_id_validate_country
+                    'address' => &$address,
+                    'cart' => &$cart,
+                    'orders_id' => &$orders_id,
+                    'return_orders_id' => &$return_orders_id,
+                    'vat_id_validate_country' => &$vat_id_validate_country
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1435,7 +1435,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $this->ms['MODULES']['DISABLE_VAT_RATE'] = 0;
         if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $address['tx_multishop_vat_id']) {
             if (strtolower($vat_id_validate_country) != strtolower($this->tta_shop_info['country'])) {
-               $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
+                $this->ms['MODULES']['DISABLE_VAT_RATE'] = 1;
             }
         }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['convertCartToOrderAddressPostProc'])) {
@@ -1520,12 +1520,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $customer_id = $tmp_user['uid'];
             }
         }
+        $continue_update_details_info = true;
         //hook to let other plugins further manipulate the create table query
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'])) {
             $params = array(
                     'address' => &$address,
                     'cart' => &$cart,
-                    'customer_id' => &$customer_id
+                    'customer_id' => &$customer_id,
+                    'continue_update_details_info' => &$continue_update_details_info
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderGetCustomerIdPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1603,6 +1605,15 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             if (isset($address['contact_email']) && !empty($address['contact_email'])) {
                 $insertArray['contact_email'] = $address['contact_email'];
+            }
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'])) {
+                $params = array(
+                    'insertArray' => &$insertArray
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['convertCartToOrderCreateCustomerIdPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
             }
             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
@@ -1767,17 +1778,19 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
         } else {
             //update fe_users newsletter value
-            $updateFEUsers=array();
-            $updateFEUsers['telephone']=$address['telephone'];
+            $updateFEUsers = array();
+            $updateFEUsers['telephone'] = $address['telephone'];
             if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
                 $updateFEUsers['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
             } else {
                 $updateFEUsers['tx_multishop_newsletter'] = '';
             }
-            $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
-            $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
+            if ($continue_update_details_info) {
+                $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
+                $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
+            }
             // insert tt_address for existing customer if no record found
-            $billing_address=mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing');
+            $billing_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing');
             // ADD/UPDATE TT_ADDRESS RECORD
             $insertArray = array();
             $insertArray['tstamp'] = time();
@@ -1829,11 +1842,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if ($continue_update_details_info) {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
             // insert delivery into tt_address
-            $delivery_address=mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
+            $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
             if (!$address['different_delivery_address']) {
                 $insertArray = array();
                 $insertArray['tstamp'] = time();
@@ -1927,8 +1942,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if ($continue_update_details_info) {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
             }
         }
         //hook to let other plugins further manipulate the create table query
@@ -2113,9 +2130,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $insertArray['expected_delivery_date'] = $address['expected_delivery_date'];
             }
             $user = mslib_fe::getUser($customer_id);
-            $payment_condition='';
+            $payment_condition = '';
             if (is_numeric($user['tx_multishop_payment_condition']) && $user['tx_multishop_payment_condition'] > 0) {
-                $payment_condition=$user['tx_multishop_payment_condition'];
+                $payment_condition = $user['tx_multishop_payment_condition'];
             }
             if (!$payment_condition) {
                 if ($address['payment_method']) {
@@ -2185,7 +2202,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 // hook oef
             }
             if (!$orders_id) {
-                $subject = 'DANGER: '.$this->FULL_HTTP_URL . ' - Convert cart to order failed';
+                $subject = 'DANGER: ' . $this->FULL_HTTP_URL . ' - Convert cart to order failed';
                 $body = 'Warning. Convert cart to order failed.<br/>Website: ' . $this->FULL_HTTP_URL . '<br/>Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . '<br/>Query:<br/>' . $query;
                 $mailuser = array();
                 $mailuser['name'] = $this->ms['MODULES']['STORE_NAME'];
@@ -2362,7 +2379,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             }
                             $insertArray['crdate'] = time();
                             $insertArray['manufacturers_name'] = $value['manufacturers_name'];
-                            $value['product_link']=$insertArray['product_link'];
+                            $value['product_link'] = $insertArray['product_link'];
                             // TYPO3 6.2 LTS NULL FIX
                             $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
@@ -2376,7 +2393,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $updateOrderProductsSortOrder['sort_order'] = $orders_products_id;
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $orders_products_id . '\'', $updateOrderProductsSortOrder);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            if ($this->ms['MODULES']['SUBTRACT_STOCK'] && $this->ms['MODULES']['SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID']=='0') {
+                            if ($this->ms['MODULES']['SUBTRACT_STOCK'] && $this->ms['MODULES']['SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID'] == '0') {
                                 $continue_update_stock = true;
                                 // hook to manipulate the continuity of update stock
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_cart.php']['updateStockPreProc'])) {
@@ -2759,7 +2776,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     // hook oef
                 }
                 $cart['products'] = array();
-                if (!mslib_fe::loggedin() && $this->ms['MODULES']['CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT']>0) {
+                if (!mslib_fe::loggedin() && $this->ms['MODULES']['CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT'] > 0) {
                     unset($cart['user']);
                 }
                 //unset($cart['user']);
@@ -2778,7 +2795,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 $cart2 = $GLOBALS['TSFE']->fe_user->getKey('ses', $plain_cart_key);
                 $cart2['products'] = array();
-                if (!mslib_fe::loggedin() && $this->ms['MODULES']['CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT']>0) {
+                if (!mslib_fe::loggedin() && $this->ms['MODULES']['CLEAR_GUEST_USER_SESSION_DATA_AFTER_CHECKOUT'] > 0) {
                     unset($cart2['user']);
                 }
                 //unset($cart2['user']);
@@ -3180,7 +3197,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         $subPrices .= mslib_fe::amount2Cents(($product['qty'] * ($attribute_item['price_prefix'] . $attribute_item['options_values_price'])));
                                     }
                                     $subPrices .= '<br />';
-                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . $row['products_options_name'] . ':</span><span class="attribute-value">' . $attribute_values['products_options_values_name'] . '</span></div>';
+                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . (isset($attribute_item['products_options_name']) && !empty($attribute_item['products_options_name']) ? $attribute_item['products_options_name'] : $row['products_options_name']) . ': </span><span class="attribute-value">' . $attribute_values['products_options_values_name'] . '</span></div>';
                                     $price = $price + (($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['qty']);
                                 }
                             }
@@ -3234,7 +3251,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 'item' => &$item,
                                 'product' => &$product,
                                 'cart' => &$this->cart,
-                                'shopping_cart_item'=>$shopping_cart_item,
+                                'shopping_cart_item' => $shopping_cart_item,
                                 'c' => &$c,
                                 'sectionTemplateType' => &$sectionTemplateType
                         );
@@ -3278,7 +3295,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $subProductDelivered = array();
                 $subProductDelivered['###ITEMS_HEADER_QUANTITY_DELIVERED_WRAPPER###'] = '';
                 $subparts['ITEMS_HEADER_WRAPPER'] = $this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductDelivered);
-
                 $subProductDeliveredPart = array();
                 $subProductDeliveredPart['ITEM_QUANTITY_DELIVERED_WRAPPER'] = $this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_QUANTITY_DELIVERED_WRAPPER###');
                 $subProductDelivered = array();
@@ -3482,12 +3498,13 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             // finally convert global markers and return output
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'])) {
                 $params = array(
-                    'shopping_cart_item'=>$shopping_cart_item,
-                    'c' => &$c,
-                    'sectionTemplateType' => &$sectionTemplateType,
-                    'subpartArray' => &$subpartArray,
-                    'subparts' => $subparts,
-                    'order' => $order
+                        'shopping_cart_item' => $shopping_cart_item,
+                        'c' => &$c,
+                        'sectionTemplateType' => &$sectionTemplateType,
+                        'subpartArray' => &$subpartArray,
+                        'subparts' => $subparts,
+                        'order' => $order,
+                        'cart' => &$this->cart
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

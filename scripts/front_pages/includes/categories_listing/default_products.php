@@ -101,13 +101,11 @@ if (!is_numeric($categories_id)) {
         }
         switch ($this->cookie['sortbysb']) {
             case 'best_selling_asc':
-                $select[] = 'SUM(op.qty) as order_total_qty';
-                $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
                 $orderby[] = "order_total_qty asc";
                 break;
             case 'best_selling_desc':
-                $select[] = 'SUM(op.qty) as order_total_qty';
-                $extra_join[] = 'LEFT JOIN tx_multishop_orders_products op ON ' . $tbl . 'products_id=op.products_id';
+                $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
                 $orderby[] = "order_total_qty desc";
                 break;
             case 'price_asc':

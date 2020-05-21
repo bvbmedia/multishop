@@ -196,7 +196,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry2);
                 if ($num_rows > 0) {
                     $updateArray = array();
-                    $updateArray['products_options_descriptions'] = $opt_desc;
+                    $updateArray['products_options_descriptions'] = ($opt_desc ? $opt_desc : '');
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\'' . $opt_id . '\' and language_id = ' . $lang_id, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 } else {
@@ -209,20 +209,21 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                     );
                     $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                     $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
+                    $rs['description'] = (string) $rs['description'];
                     // insert new lang desc
                     $insertArray = array();
                     $insertArray['products_options_id'] = $opt_id;
                     $insertArray['language_id'] = $lang_id;
                     $insertArray['products_options_name'] = $rs['products_options_name'];
                     $insertArray['listtype'] = $rs['listtype'];
-                    $insertArray['description'] = $rs['description'];
+                    $insertArray['description'] = ($rs['description'] ? $rs['description'] : '');
                     $insertArray['sort_order'] = $rs['sort_order'];
-                    $insertArray['price_group_id'] = $rs['price_group_id'];
-                    $insertArray['hide'] = $rs['hide'];
+                    $insertArray['price_group_id'] = ($rs['price_group_id'] > 0 ? $rs['price_group_id'] : 0);
+                    $insertArray['hide'] = ($rs['hide'] ? $rs['hide'] : 0);
                     $insertArray['attributes_values'] = $rs['attributes_values'];
-                    $insertArray['hide_in_cart'] = $rs['hide_in_cart'];
-                    $insertArray['required'] = $rs['required'];
-                    $insertArray['products_options_descriptions'] = $opt_desc;
+                    $insertArray['hide_in_cart'] = ($rs['hide_in_cart'] ? $rs['hide_in_cart'] : 0);
+                    $insertArray['required'] = ($rs['required'] ? $rs['required'] : 0);
+                    $insertArray['products_options_descriptions'] = ($opt_desc ? $opt_desc : '');
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -380,8 +381,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
         if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
             $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
         }
-        $from=array();
-        $from=
+        $from = array();
+        $from =
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['q']) . "%'";

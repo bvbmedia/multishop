@@ -205,17 +205,27 @@ jQuery(document).ready(function ($) {
                                     <div class="panel-heading"><h3>###LABEL_BILLING_ADDRESS###</h3></div>
                                     <div class="panel-body">
                                         <div class="form-group">
-                                            <span id="ValidRadio" class="InputGroup">
-                                                <label for="radio" id="account-gender">###LABEL_GENDER###</label>
-                                                <div class="radio radio-success radio-inline">
-                                                    <input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
-                                                    <label for="radio">###LABEL_GENDER_MR###</label>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <span id="ValidRadio" class="InputGroup">
+                                                        <label for="radio" id="account-gender">###LABEL_GENDER###</label>
+                                                        <div class="radio radio-success radio-inline">
+                                                            <input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
+                                                            <label for="radio">###LABEL_GENDER_MR###</label>
+                                                        </div>
+                                                        <div class="radio radio-success radio-inline">
+                                                            <input type="radio" name="gender" value="1" class="InputGroup" id="radio2" ###GENDER_MRS_CHECKED###>
+                                                            <label for="radio2">###LABEL_GENDER_MRS###</label>
+                                                        </div>
+                                                    </span>
                                                 </div>
-                                                <div class="radio radio-success radio-inline">
-                                                    <input type="radio" name="gender" value="1" class="InputGroup" id="radio2" ###GENDER_MRS_CHECKED###>
-                                                    <label for="radio2">###LABEL_GENDER_MRS###</label>
+                                                <div class="col-md-8">
+                                                    <div class="checkbox checkbox-success checkbox-inline">
+                                                        <input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1" ###NEWSLETTER_CHECKED### class="ui-state-valid">
+                                                        <label class="control-label" for="tx_multishop_newsletter">###LABEL_NEWSLETTER###</label>
+                                                    </div>
                                                 </div>
-                                            </span>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">

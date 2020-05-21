@@ -833,6 +833,8 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                     }
                     if ($item['uid']) {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['uid']);
+                    } elseif ($item['foreign_customer_id']) {
+                        $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['foreign_customer_id']);
                     } elseif ($item['tx_multishop_source_id']) {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['tx_multishop_source_id']);
                     } elseif ($item['company']) {
@@ -911,6 +913,10 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 // We want to filter out the iterated user
                                 $filter[] = 'tx_multishop_source_id != \'' . addslashes($item['tx_multishop_source_id']) . '\'';
                                 //$filter[]='tx_multishop_source_id !=\''.addslashes($item['tx_multishop_source_id']).'\'';
+                            } elseif ($item['foreign_customer_id']) {
+                                // We want to filter out the iterated user
+                                $filter[] = 'foreign_customer_id != \'' . addslashes($item['foreign_customer_id']) . '\'';
+                                //$filter[]='foreign_customer_id !=\''.addslashes($item['foreign_customer_id']).'\'';
                             }
                             // Do a loop to increase the prefix number, but do the first loop with empty prefix
                             $counter = 0;
@@ -968,6 +974,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                         $user = array();
                         if (isset($item['tx_multishop_source_id'])) {
                             $user['tx_multishop_source_id'] = $item['tx_multishop_source_id'];
+                            if (!isset($item['foreign_customer_id'])) {
+                                $user['foreign_customer_id'] = $item['tx_multishop_source_id'];
+                            }
                         }
                         if ($item['uid']) {
                             $user['uid'] = $item['uid'];
@@ -1288,8 +1297,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             // custom hook that can be controlled by third-party
                             // plugin eof
                             if (!$skipRecord) {
-                                if (!$user['gender']) {
-                                    $user['gender'] = 0;
+                                if (!isset($user['gender'])) {
+                                    // Unknown
+                                    $user['gender'] = '';
                                 }
                                 // T3 6.2 BUGFIXES
                                 $requiredCols = array();
@@ -1385,6 +1395,17 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $address);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                            }
+                        }
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'])) {
+                            $params = array(
+                                    'user' => &$user,
+                                    'item' => &$item,
+                                    'user_check' => &$user_check,
+                                    'prefix_source_name' => $this->post['prefix_source_name']
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                             }
                         }
                     }

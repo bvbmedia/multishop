@@ -16,7 +16,7 @@ $extrajoin = array();
 if ($contentType == 'specials_listing_page') {
     $limit_per_page = $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
     if ($this->ADMIN_USER) {
-        $limit_per_page=250;
+        $limit_per_page = 250;
     }
     if (is_numeric($this->get['p'])) {
         $p = $this->get['p'];

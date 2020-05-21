@@ -29,7 +29,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
                 $params = array();
                 $params['content'] =& $content;
                 $params['redirectAfterPostProc'] =& $redirectAfterPostProc;
-                $params['postErno']=&$postErno;
+                $params['postErno'] =& $postErno;
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
@@ -220,7 +220,7 @@ if ((isset($this->get['tx_multishop_pi1']['search_by']) && !empty($this->get['tx
         (isset($this->get['country']) && !empty($this->get['country'])) ||
         (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) ||
         (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
-        (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter']!='all') ||
+        (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter'] != 'all') ||
         (isset($this->get['crdate_from']) && !empty($this->get['crdate_from'])) ||
         (isset($this->get['crdate_till']) && !empty($this->get['crdate_till']))
 ) {
@@ -271,19 +271,21 @@ $formTopSearch .= '
 			<label class="control-label" for="type_search">' . $this->pi_getLL('date') . '</label>
 			<div class="form-group">
 				<div class="form-inline">
-					<label class="control-label" for="order_date_from">' . $this->pi_getLL('from') . '</label>
-					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="' . $this->get['crdate_from'] . '">
-					<label for="order_date_till" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
-					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="' . $this->get['crdate_till'] . '">
+					<label class="control-label" for="crdate_from_visual">' . $this->pi_getLL('from') . '</label>
+					<input class="form-control" type="text" name="crdate_from_visual" id="crdate_from_visual" value="' . (!empty($this->get['crdate_from']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_from'])) : '') . '">
+					<label for="crdate_till_visual" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
+					<input class="form-control" type="text" name="crdate_till_visual" id="crdate_till_visual" value="' . (!empty($this->get['crdate_till']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_till'])) : '') . '">
+					<input type="hidden" name="crdate_from" id="crdate_from" value="' . (!empty($this->get['crdate_from']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_from'])) : '') . '">
+                    <input type="hidden" name="crdate_till" id="crdate_till" value="' . (!empty($this->get['crdate_till']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_till'])) : '') . '">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label" for="type_search">' . $this->pi_getLL('admin_customers_subscribed_newsletter') . '</label>
 				<div class="form-inline">
                     <select name="tx_multishop_pi1[subscribed_newsletter]" class="invoice_select2">
-                        <option value="all"'.(!isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) || $this->get['tx_multishop_pi1']['subscribed_newsletter']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('not_applicable_short').'</option>
-                        <option value="y"'.($this->get['tx_multishop_pi1']['subscribed_newsletter']=='y' ? ' selected="selected"' : '').'>'.$this->pi_getLL('yes').'</option>
-                        <option value="n"'.($this->get['tx_multishop_pi1']['subscribed_newsletter']=='n' ? ' selected="selected"' : '').'>'.$this->pi_getLL('no').'</option>
+                        <option value="all"' . (!isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) || $this->get['tx_multishop_pi1']['subscribed_newsletter'] == 'all' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('not_applicable_short') . '</option>
+                        <option value="y"' . ($this->get['tx_multishop_pi1']['subscribed_newsletter'] == 'y' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('yes') . '</option>
+                        <option value="n"' . ($this->get['tx_multishop_pi1']['subscribed_newsletter'] == 'n' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('no') . '</option>
                     </select>
 				</div>
 			</div>
@@ -436,14 +438,21 @@ if (!$this->masterShop) {
 }
 $filter[] = "f.pid='" . $this->conf['fe_customer_pid'] . "'";
 if (!empty($this->get['crdate_from']) && !empty($this->get['crdate_till'])) {
-    list($from_date, $from_time) = explode(" ", $this->get['crdate_from']);
-    list($fd, $fm, $fy) = explode('/', $from_date);
-    list($till_date, $till_time) = explode(" ", $this->get['crdate_till']);
-    list($td, $tm, $ty) = explode('/', $till_date);
-    $start_time = strtotime($fy . '-' . $fm . '-' . $fd . ' ' . $from_time);
-    $end_time = strtotime($ty . '-' . $tm . '-' . $td . ' ' . $till_time);
+    $start_time = strtotime($this->get['crdate_from']);
+    $end_time = strtotime($this->get['crdate_till']);
     $column = 'f.crdate';
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
+} else {
+    if (!empty($this->get['crdate_from'])) {
+        $start_time = strtotime($this->get['crdate_from']);
+        $column = 'f.crdate';
+        $filter[] = $column . " >= '" . $start_time . "'";
+    }
+    if (!empty($this->get['crdate_till'])) {
+        $end_time = strtotime($this->get['crdate_till']);
+        $column = 'f.crdate';
+        $filter[] = $column . " <= '" . $end_time . "'";
+    }
 }
 if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
     $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users');
@@ -451,11 +460,11 @@ if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
     $filter[] = "f.country='" . $this->get['country'] . "'";
 }
-if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!='99999') {
+if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product'] != '99999') {
     $filter[] = "f.uid in (select o.customer_id from tx_multishop_orders o, tx_multishop_orders_products op where op.products_id='" . $this->get['ordered_product'] . "' and o.orders_id=op.orders_id)";
 }
-if (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter']!='all') {
-    switch($this->get['tx_multishop_pi1']['subscribed_newsletter']) {
+if (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get['tx_multishop_pi1']['subscribed_newsletter'] != 'all') {
+    switch ($this->get['tx_multishop_pi1']['subscribed_newsletter']) {
         case 'y':
             $filter[] = "f.tx_multishop_newsletter=1";
             break;
@@ -502,7 +511,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 $GLOBALS['TSFE']->additionalHeaderData[] = '
-<script type="text/javascript">
+<script type="text/javascript" data-ignore="1">
 jQuery(document).ready(function($) {
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_customers') . '";
@@ -518,22 +527,40 @@ jQuery(document).ready(function($) {
 		jQuery(activeTab).fadeIn(0);
 		return false;
 	});
-    jQuery(\'#crdate_from\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
+    jQuery(\'#crdate_from_visual\').datetimepicker({
+    	dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'
+		timeFormat: \'HH:mm:ss\',
+        altField: "#crdate_from",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
     });
-	jQuery(\'#crdate_till\').datetimepicker({
-    	dateFormat: \'dd/mm/yy\',
+	jQuery(\'#crdate_till_visual\').datetimepicker({
+    	dateFormat: \'' . $this->pi_getLL('locale_date_format_js') . '\',
         showSecond: true,
 		timeFormat: \'HH:mm:ss\',
 		hour: 23,
         minute: 59,
-        second: 59
+        second: 59,
+        altField: "#crdate_till",
+        altFormat: "yy-mm-dd",
+        altFieldTimeOnly: false,
+        altTimeFormat: "HH:mm:ss"
+    });
+    $(document).on("change", "#crdate_from_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#crdate_from\').val(\'\');
+        }
+    });
+    $(document).on("change", "#crdate_till_visual", function(){
+        if ($(this).val()==\'\') {
+            $(\'#crdate_till\').val(\'\');
+        }
     });
 	jQuery(\'#check_all_1\').click(function() {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
-		$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
 	var originalLeave = $.fn.popover.Constructor.prototype.leave;
 	$.fn.popover.Constructor.prototype.leave = function(obj){

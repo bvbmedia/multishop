@@ -329,8 +329,8 @@ if ($this->get['edit']) {
     if (strpos($row['handling_costs'], '%') !== false) {
         $percentage_cost = true;
     }
-    $payment_condition_input='';
-    if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD']>0) {
+    $payment_condition_input = '';
+    if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] > 0) {
         $payment_condition_input = '
         <div class="form-group">
             <label class="control-label col-md-2">' . $this->pi_getLL('payment_condition') . '</label>
@@ -424,7 +424,7 @@ if ($this->get['edit']) {
 		</select>
 		</div>
 	</div>
-	    '.$payment_condition_input.'
+	    ' . $payment_condition_input . '
 		' . $inner_content . '
 		<div class="form-group">
 			<label class="control-label col-md-2">' . $this->pi_getLL('admin_label_method_is_enabled_on_default') . '</label>
@@ -483,8 +483,8 @@ if ($this->get['edit']) {
         if (!isset($psp['vars']['order_payment_reminder'])) {
             $psp['vars']['order_payment_reminder']['type'] = 'psp_mail_template_payment_reminder_email_templates';
         }
-        $payment_condition_input='';
-        if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD']>0) {
+        $payment_condition_input = '';
+        if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] > 0) {
             $payment_condition_input = '
         <div class="form-group">
             <label class="control-label col-md-2">' . $this->pi_getLL('payment_condition') . '</label>
@@ -594,7 +594,7 @@ if ($this->get['edit']) {
 		</div>
 	</div>
 		';
-        $tmpcontent.=$payment_condition_input;
+        $tmpcontent .= $payment_condition_input;
         // js definition for tax
         $product_tax_rate_js = array();
         $product_tax_rate_js[] = 'var product_tax_rate_list_js=[];';
@@ -950,7 +950,7 @@ if ($this->ms['show_main']) {
                     $vars = unserialize($payment_method['vars']);
                     if ($payment_method['checked']) {
                         $tmpcontent .= '<tr id="payment_zone_[' . $zone_id . ']_' . $payment_method['id'] . '" class="row_sortable">';
-                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name']  . '</label></td>';
+                        $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" checked="checked" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name'] . '</label></td>';
                     } else {
                         $tmpcontent .= '<tr class="row_unsortable">';
                         $tmpcontent .= '<td><div class="checkbox checkbox-success"><input type="checkbox" id="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" name="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']" onclick="this.form.submit()"><label for="payment_zone[' . $zone_id . '][' . $payment_method['id'] . ']">' . $payment_method['name'] . '</label></td>';

@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 if (is_numeric($this->get['orders_id'])) {
-    $continue_download_invoice=true;
+    $continue_download_invoice = true;
     // post processing by third party plugins
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/admin_edit_order_print.php']['adminOrderDownloadInvoiceController'])) {
         $params = array(
@@ -272,7 +272,7 @@ if (is_numeric($this->get['orders_id'])) {
                 $tr_type = 'even';
             }
             $tmpcontent .= '<tr class="' . $tr_type . '">';
-            $tmpcontent .= '<td class="cellQty">' . number_format($product['qty']) . '</td>';
+            $tmpcontent .= '<td class="cellQty">' . round($product['qty'], 13) . '</td>';
             $tmpcontent .= '<td class="cellID">' . $product['products_id'] . '</td>';
             $tmpcontent .= '<td class="cellModel">' . $product['products_model'] . '</td>';
             $product_tmp = mslib_fe::getProduct($product['products_id']);

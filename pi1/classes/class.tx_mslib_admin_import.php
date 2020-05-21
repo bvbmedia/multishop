@@ -672,16 +672,19 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         file_put_contents($log_file, $that->FULL_HTTP_URL . ' - cron job settings loaded.(' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
                     }
                 }
+                if ($that->post['filename']) {
+                    $filename = $that->post['filename'];
+                    $file = $that->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $filename;
+                } else {
+                    $filename = time();
+                }
                 if ($that->post['file_url']) {
                     if (strstr($that->post['file_url'], "../")) {
                         die();
                     }
-                    $filename = time();
+                    $file = $that->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $filename;
                     $file = $that->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $filename;
                     file_put_contents($file, mslib_fe::file_get_contents($that->post['file_url']));
-                }
-                if ($that->post['filename']) {
-                    $file = $that->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $that->post['filename'];
                 }
                 if (($that->post['database_name'] or $file)) {
                     if ($file) {

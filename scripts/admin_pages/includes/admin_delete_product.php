@@ -24,9 +24,9 @@ if (is_numeric($_REQUEST['pid'])) {
         } else {
             $subpartArray['###VALUE_REFERRER###'] = $_SERVER['HTTP_REFERER'];
         }
-        $categories_id=0;
-        if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid']>0) {
-            $categories_id=$this->get['cid'];
+        $categories_id = 0;
+        if (isset($this->get['cid']) && is_numeric($this->get['cid']) && $this->get['cid'] > 0) {
+            $categories_id = $this->get['cid'];
         } else {
             // use default cat if setting is on and default path is set
             if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH'] > 0) {
@@ -37,19 +37,19 @@ if (is_numeric($_REQUEST['pid'])) {
             }
         }
         // get all cats relation
-        $have_multiple_cats=false;
-        $product_paths = mslib_befe::getRecords($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and page_uid=\''.$this->showCatalogFromPage.'\''), '', 'categories_id asc', '', array('categories_id'));
+        $have_multiple_cats = false;
+        $product_paths = mslib_befe::getRecords($this->get['pid'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and page_uid=\'' . $this->showCatalogFromPage . '\''), '', 'categories_id asc', '', array('categories_id'));
         if (is_array($product_paths)) {
             if (count($product_paths) > 1) {
                 $have_multiple_cats = true;
             }
             if (!$categories_id) {
-                $categories_id=$product_paths[0]['categories_id'];
+                $categories_id = $product_paths[0]['categories_id'];
             }
         }
-        $categories_name='';
-        if ($categories_id>0) {
-            $categories_name=mslib_fe::getCategoryName($categories_id);
+        $categories_name = '';
+        if ($categories_id > 0) {
+            $categories_name = mslib_fe::getCategoryName($categories_id);
         }
         $str = "SELECT * from tx_multishop_products_description where products_id='" . $_REQUEST['pid'] . "'";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);

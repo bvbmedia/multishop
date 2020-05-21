@@ -389,8 +389,8 @@ if ($this->ADMIN_USER) {
                 $p = 0;
                 $offset = $p * $limit;
             }
-            $from=array();
-            $extra_left_join='';
+            $from = array();
+            $extra_left_join = '';
             $filter = $invoices_filter;
             $having = array();
             $match = array();
@@ -398,7 +398,7 @@ if ($this->ADMIN_USER) {
             $where = array();
             $orderby = array();
             $select = array();
-            $group_by='';
+            $group_by = '';
             if (!$this->masterShop) {
                 $filter[] = 'i.page_uid=' . $this->showCatalogFromPage;
             }
@@ -407,13 +407,13 @@ if ($this->ADMIN_USER) {
             // hook to rewrite the whole methods
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'])) {
                 $params_internal = array(
-                    'filter' => &$filter,
-                    'having' => &$having,
-                    'orderby' => &$orderby,
-                    'select' => &$select,
-                    'from' => &$from,
-                    'extra_left_join' => &$extra_left_join,
-                    'group_by' => &$group_by
+                        'filter' => &$filter,
+                        'having' => &$having,
+                        'orderby' => &$orderby,
+                        'select' => &$select,
+                        'from' => &$from,
+                        'extra_left_join' => &$extra_left_join,
+                        'group_by' => &$group_by
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelAjaxSearchInvoiceQueryPostHook'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);

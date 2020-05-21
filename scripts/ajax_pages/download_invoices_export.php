@@ -32,7 +32,6 @@ if ($this->get['invoices_export_hash']) {
             case '':
                 $post_data['delimeter_type'] = ';';
                 break;
-
         }
         $fields_values = $post_data['fields_values'];
         $records = array();
@@ -147,9 +146,9 @@ if ($this->get['invoices_export_hash']) {
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
             $order_tmp = mslib_fe::getOrder($row['orders_id']);
-            $prefix='';
-            if ($row['reversal_invoice']>0) {
-                $prefix='-';
+            $prefix = '';
+            if ($row['reversal_invoice'] > 0) {
+                $prefix = '-';
             }
             $excelCols = array();
             $total = count($fields);
@@ -259,30 +258,30 @@ if ($this->get['invoices_export_hash']) {
                             if ($prod_ctr >= $max_cols_num) {
                                 break;
                             }
-                            $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_id'];
+                            $excelCols['product_id' . $prod_ctr] = $product_tmp['products_id'];
                             if (!empty($product_tmp['products_model'])) {
-                                $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_name'] . ' (' . $product_tmp['products_model'] . ')';
+                                $excelCols['product_name' . $prod_ctr] = $product_tmp['products_name'] . ' (' . $product_tmp['products_model'] . ')';
                             } else {
-                                $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_name'];
+                                $excelCols['product_name' . $prod_ctr] = $product_tmp['products_name'];
                             }
-                            $excelCols[$field.'_'.$prod_ctr] = $prefix . $product_tmp['qty'];
-                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = $prefix . number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
-                            $excelCols[$field.'_'.$prod_ctr] = $product_tmp['products_tax'] . '%';
+                            $excelCols['product_qty' . $prod_ctr] = $product_tmp['qty'];
+                            $excelCols['product_final_price_excl_tax' . $prod_ctr] = number_format($product_tmp['final_price'], 2, ',', '.');
+                            $excelCols['product_final_price_incl_tax' . $prod_ctr] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                            $excelCols['product_price_total_excl_tax' . $prod_ctr] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                            $excelCols['product_price_total_incl_tax' . $prod_ctr] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                            $excelCols['product_tax_rate' . $prod_ctr] = $product_tmp['products_tax'] . '%';
                             $prod_ctr++;
                         }
                         if ($prod_ctr < $max_cols_num) {
                             for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
-                                $excelCols[$field.'_'.$x] = '';
+                                $excelCols['product_id' . $x] = '';
+                                $excelCols['product_name' . $x] = '';
+                                $excelCols['product_qty' . $x] = '';
+                                $excelCols['product_final_price_excl_tax' . $x] = '';
+                                $excelCols['product_final_price_incl_tax' . $x] = '';
+                                $excelCols['product_price_total_excl_tax' . $x] = '';
+                                $excelCols['product_price_total_incl_tax' . $x] = '';
+                                $excelCols['product_tax_rate' . $x] = '';
                             }
                         }
                         break;
@@ -330,10 +329,10 @@ if ($this->get['invoices_export_hash']) {
                 //hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice_export.php']['downloadInvoiceExportFieldIteratorPostProc'])) {
                     $params = array(
-                        'field' => &$field,
-                        'excelCols' => &$excelCols,
-                        'row' => &$row,
-                        'counter' => $counter
+                            'field' => &$field,
+                            'excelCols' => &$excelCols,
+                            'row' => &$row,
+                            'counter' => $counter
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice_export.php']['downloadInvoiceExportFieldIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

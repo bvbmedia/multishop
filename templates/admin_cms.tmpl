@@ -1,30 +1,18 @@
 <!-- ###TEMPLATE### begin -->
 <script type="text/javascript">
     jQuery(document).ready(function($) {
-	$(".tab_content").hide();
-	$("ul.tabs li:first").addClass("active").show();
-	$(".tab_content:first").show();
-	$("ul.tabs li").click(function() {
-		$("ul.tabs li").removeClass("active");
-		$(this).addClass("active");
 		$(".tab_content").hide();
-		var activeTab = $(this).find("a").attr("href");
-		$(activeTab).fadeIn(0);
-		return false;
-	});
-    $('#order_date_from').datetimepicker({
-    	dateFormat: 'dd/mm/yy',
-        showSecond: true,
-        timeFormat: 'hh:mm:ss'
-    });
-	$('#order_date_till').datetimepicker({
-    	dateFormat: 'dd/mm/yy',
-        showSecond: true,
-		timeFormat: 'hh:mm:ss',
-		hour: 23,
-        minute: 59,
-        second: 59
-    });
+		$("ul.tabs li:first").addClass("active").show();
+		$(".tab_content:first").show();
+		$("ul.tabs li").click(function() {
+			$("ul.tabs li").removeClass("active");
+			$(this).addClass("active");
+			$(".tab_content").hide();
+			var activeTab = $(this).find("a").attr("href");
+			$(activeTab).fadeIn(0);
+			return false;
+		});
+
         $(document).on("change", "#checkAllCMS", function () {
             if ($(this).prop("checked") == true) {
                 $(".download_cms_cb").prop("checked", true);

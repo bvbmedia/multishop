@@ -9,11 +9,11 @@ $cart = $mslib_cart->getCart();
 $content = '0%';
 // first check group discount
 if ($GLOBALS["TSFE"]->fe_user->user['uid'] || ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
-    $customer_id=$GLOBALS["TSFE"]->fe_user->user['uid'];
+    $customer_id = $GLOBALS["TSFE"]->fe_user->user['uid'];
     if (!$GLOBALS["TSFE"]->fe_user->user['uid'] and ($cart['user']['email'] || $this->post['tx_multishop_pi1']['email'])) {
-        $guest_email=$cart['user']['email'];
+        $guest_email = $cart['user']['email'];
         if (!$guest_email) {
-            $guest_email=$this->post['tx_multishop_pi1']['email'];
+            $guest_email = $this->post['tx_multishop_pi1']['email'];
         }
         // check if guest user is already in the database and if so add possible group discount
         $user_check = mslib_fe::getUser($guest_email, 'email');
@@ -21,7 +21,7 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid'] || ($cart['user']['email'] || $this->
             $customer_id = $user_check['uid'];
         }
     }
-    if ($customer_id>0) {
+    if ($customer_id > 0) {
         $discount_percentage = mslib_fe::getUserGroupDiscount($customer_id);
         if ($discount_percentage) {
             $cart['coupon_code'] = '';
@@ -45,8 +45,8 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         $continue_calculate_discount = true;
-        $row['max_usage']=(int)$row['max_usage'];
-        $row['times_used']=(int)$row['times_used'];
+        $row['max_usage'] = (int)$row['max_usage'];
+        $row['times_used'] = (int)$row['times_used'];
         if ($row['max_usage'] > 0) {
             if ($row['times_used'] >= $row['max_usage']) {
                 $content = "0%";
@@ -87,7 +87,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
         $cart['discount'] = '';
         $cart['discount_type'] = '';
         $cart['discount_amount'] = '';
-        $cart['discount_from']='';
+        $cart['discount_from'] = '';
         //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
         //$GLOBALS['TSFE']->fe_user->storeSessionData();
         tx_mslib_cart::storeCart($cart);
@@ -103,7 +103,7 @@ if (!empty($_POST['code']) && $_POST['code'] != 'undefined') {
         $cart['discount'] = '';
         $cart['discount_type'] = '';
         $cart['discount_amount'] = '';
-        $cart['discount_from']='';
+        $cart['discount_from'] = '';
         //$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
         //$GLOBALS['TSFE']->fe_user->storeSessionData();
         tx_mslib_cart::storeCart($cart);
@@ -133,8 +133,8 @@ if ($cart['discount'] > 0) {
     }
     tx_mslib_cart::storeCart($cart);
 }
-if (!$cart['discount'] && (!empty($return_data['discount_percentage']) || $return_data['discount_percentage']!='0%')) {
-    $return_data['discount_percentage']='0%';
+if (!$cart['discount'] && (!empty($return_data['discount_percentage']) || $return_data['discount_percentage'] != '0%')) {
+    $return_data['discount_percentage'] = '0%';
 }
 // hook oef
 //
