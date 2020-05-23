@@ -266,8 +266,11 @@ foreach ($fields as $key => $label) {
     $searchby_selectbox .= '<option value="' . $key . '"' . $option_selected . '>' . $label . '</option>' . "\n";
 }
 $searchby_selectbox .= '</select>';
-//$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
-$search_category_selectbox = '<input type="hidden" name="cid" class="categories_select2_top" id="msAdminSelect2Top" value="' . $this->get['cid'] . '">';
+if ($this->ms['MODULES']['PRODUCT_SEARCH_AND_EDIT_DISABLE_SELECT2_FOR_TOP_CAT_INPUT'] == '1') {
+    $search_category_selectbox = mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $this->get['cid'], 'class="form-control"');
+} else {
+    $search_category_selectbox = '<input type="hidden" name="cid" class="categories_select2_top" id="msAdminSelect2Top" value="' . $this->get['cid'] . '">';
+}
 $search_limit = '<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits = array();
 $limits[] = '10';
@@ -983,6 +986,12 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['PRODUCT_CATEGORIES_CRUMBAR'] = $cat_crumbar;
         $markerArray['PRODUCT_MODEL'] = $rs['products_model'];
         $markerArray['PRODUCT_STATUS'] = $status;
+        $markerArray['PRODUCT_STATUS_CHECKED'] = ($rs['products_status'] > 0 ? ' checked="checked"' : '');
+        $markerArray['PRODUCT_IMAGE'] = '';
+        if ($rs['products_image']) {
+            $imgUrl = $this->FULL_HTTP_URL . mslib_befe::getImagePath($rs['products_image'], 'products', '50');
+            $markerArray['PRODUCT_IMAGE']='<img src="'.$imgUrl.'" />';
+        }
         $markerArray['LINK_EDIT_CAT'] = $link_edit_cat;
         $markerArray['CATEGORY_NAME'] = $rs['categories_name'];
         $markerArray['VALUE_TAX_ID'] = $rs['tax_id'];
@@ -1000,6 +1009,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
         $markerArray['VALUE_PRICE_EXCL_VAT'] = htmlspecialchars($product_price_display);
         $markerArray['VALUE_PRICE_INCL_VAT'] = htmlspecialchars($product_price_display_incl);
+        $markerArray['INPUT_PRICE_EXCL_VAT'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput'.$rs['products_id'].'" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div>';
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
@@ -1008,6 +1018,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['VALUE_CAPITAL_PRICE_INCL_VAT'] = htmlspecialchars($capital_price_display_incl);
         $markerArray['VALUE_ORIGINAL_CAPITAL_PRICE'] = $rs['product_capital_price'];
         $markerArray['VALUE_PRODUCT_QUANTITY'] = $rs['products_quantity'];
+        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock]['.$rs['products_quantity'].']" class="form-control width-auto productQtyInput'.$rs['products_id'].'" value="'.$rs['products_quantity'].'" style="text-align:right;" />';
         $markerArray['VALUE_PRODUCT_WEIGHT'] = $rs['products_weight'];
         $markerArray['PID0'] = $rs['products_id'];
         $markerArray['PID1'] = $rs['products_id'];
@@ -1079,16 +1090,16 @@ if ($pageset['total_rows'] > 0) {
     $subpartArray['###INPUT_ACTION_SELECTBOX###'] = $action_selectbox;
     $subpartArray['###INPUT_CATEGORIES_SELECTBOX###'] = $input_categories_selectbox;
     $subpartArray['###LABEL_ADMIN_SUBMIT###'] = $this->pi_getLL('submit_form');
-    $subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###'] = $this->pi_getLL('admin_download_as_excel_file');
-    $subpartArray['###DOWNLOAD_AS_EXCEL_URL###'] = $dlink;
-    $subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###'] = $this->pi_getLL('update_modified_products');
-    $subpartArray['###FORM_UPLOAD_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
-    $subpartArray['###CATEGORY_ID2###'] = $this->get['cid'];
-    $subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
-    $subpartArray['###LABEL_UPLOAD_EXCEL_FILE###'] = $this->pi_getLL('admin_upload_excel_file');
-    $subpartArray['###LABEL_ADMIN_UPLOAD###'] = $this->pi_getLL('admin_upload');
-    $subpartArray['###LABEL_BACK_TO_CATALOG###'] = $this->pi_getLL('admin_close_and_go_back_to_catalog');
-    $subpartArray['###BACK_TO_CATALOG_LINK###'] = mslib_fe::typolink();
+    //$subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###'] = $this->pi_getLL('admin_download_as_excel_file');
+    //$subpartArray['###DOWNLOAD_AS_EXCEL_URL###'] = $dlink;
+    //$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###'] = $this->pi_getLL('update_modified_products');
+    //$subpartArray['###FORM_UPLOAD_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
+    //$subpartArray['###CATEGORY_ID2###'] = $this->get['cid'];
+    //$subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
+    //$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###'] = $this->pi_getLL('admin_upload_excel_file');
+    //$subpartArray['###LABEL_ADMIN_UPLOAD###'] = $this->pi_getLL('admin_upload');
+    //$subpartArray['###LABEL_BACK_TO_CATALOG###'] = $this->pi_getLL('admin_close_and_go_back_to_catalog');
+    //$subpartArray['###BACK_TO_CATALOG_LINK###'] = mslib_fe::typolink();
     $subpartArray['###LABEL_ADMIN_YES###'] = $this->pi_getLL('admin_yes');
     $subpartArray['###LABEL_ADMIN_NO###'] = $this->pi_getLL('admin_no');
     $subpartArray['###ADMIN_LABEL_ENABLE0###'] = $this->pi_getLL('admin_label_enable');
@@ -1340,19 +1351,6 @@ $headingButton['fa_class'] = 'fa fa-plus-circle';
 $headingButton['title'] = $this->pi_getLL('admin_create_new_products_here');
 $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=add_product&action=add_product');
 $headerButtons[] = $headingButton;
-// Create category button
-$headingButton['btn_class'] = 'btn btn-primary';
-$headingButton['fa_class'] = 'fa fa-plus-circle';
-$headingButton['title'] = $this->pi_getLL('admin_add_new_category_to_the_catalog');
-$headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=add_category&action=add_category');
-$headerButtons[] = $headingButton;
-// Create multiple categories button
-$headingButton = array();
-$headingButton['btn_class'] = 'btn btn-primary';
-$headingButton['fa_class'] = 'fa fa-plus-circle';
-$headingButton['title'] = $this->pi_getLL('admin_add_new_multiple_category_to_the_catalog', 'Add new categories simultaneous');
-$headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=add_multiple_category&action=add_multiple_category');
-$headerButtons[] = $headingButton;
 // Set header buttons through interface class so other plugins can adjust it
 $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
@@ -1559,8 +1557,52 @@ jQuery(document).ready(function(){
 	});
     $(document).on("click", "#reset-advanced-search", function(e){
         location.href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid=') . '";
-    });    
+    });
+    jQuery(document).on(\'click\', \'.hoverEdit\', function(e){
+        e.preventDefault();
+        var pid = jQuery(this).attr(\'data-pid\');
+        if (jQuery(this).hasClass(\'products_price_edit\')) {
+            var data_type = \'products_price\';
+            var value_id=\'.product_price_value_excl_vat_\' + pid;
+            var div_input_id = \'.product_price_input_excl_vat_\' + pid;
+            var text_input_id = \'.productPriceInput\' + pid;
+        }
+        if (jQuery(this).hasClass(\'products_qty_edit\')) {
+            var data_type = \'products_quantity\'; 
+            var value_id=\'.product_qty_value_\' + pid;
+            var div_input_id = \'.product_qty_input_\' + pid;
+            var text_input_id = \'.productQtyInput\' + pid;
+        }
+        if (jQuery(value_id).is(\':visible\')) {
+            jQuery(value_id).hide();
+            jQuery(div_input_id).show();
+        } else {
+            var new_value = jQuery(text_input_id).val();
+            jQuery(value_id).empty();
+            jQuery(value_id).html(new_value);
+            jQuery(value_id).show();
+            jQuery(div_input_id).hide();
+            updateData(new_value, pid, data_type);
+        } 
+    });
+    jQuery(document).on(\'change\', \'.products_status\', function(e){
+        e.preventDefault();
+        var pid = jQuery(this).attr(\'data-pid\');
+        var new_value = (jQuery(this).prop(\'checked\') ? 1 : 0);
+        updateData(new_value, pid, \'products_status\');
+    });
 });
+function updateData(value, pid, data_type) {
+    jQuery.ajax({
+        type: "POST",
+        url: "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=update_product_info&tx_multishop_pi1[update_product_info]=') . '" + data_type,
+        dataType: \'json\',
+        data: "tx_multishop_pi1[value]=" + value + "&tx_multishop_pi1[pid]=" + pid,
+        success: function(d) {
+            
+        }
+    });
+}
 var product_tax_rate_js=[];
 ' . implode("\n", $product_tax_rate_js) . '
 </script>

@@ -91,9 +91,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $where = array();
         $orderby = array();
         $where[] = "optval.language_id = '" . $this->sys_language_uid . "'";
-        if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
-            $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
-        }
         $skip_db = false;
         if (isset($this->get['q']) && !empty($this->get['q'])) {
             if (strpos($this->get['q'], '||optid') !== false) {
@@ -104,6 +101,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                     if (isset($tmp_optid) && !empty($tmp_optid)) {
                         list(, $optid) = explode('=', $tmp_optid);
                         if (is_numeric($optid)) {
+                            $this->get['option_id'] = $optid;
                             $where_str = "optval2opt.products_options_id = '" . $optid . "'";
                         }
                     }
@@ -117,6 +115,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                     if (isset($tmp_optid) && !empty($tmp_optid)) {
                         list(, $optid) = explode('=', $tmp_optid);
                         if (is_numeric($optid)) {
+                            $this->get['option_id'] = $optid;
                             $where[] = "(optval2opt.products_options_id = '" . $optid . "')";
                         }
                     }
@@ -133,6 +132,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 $orderby[] = "INSTR('optval.products_options_values_name', '" . $this->get['preselected_id'] . "')";
             }
         }
+        if (isset($this->get['option_id']) && is_numeric($this->get['option_id'])) {
+            $where[] = "(optval2opt.products_options_id = '" . $this->get['option_id'] . "')";
+        }
         $orderby[] = "optval.products_options_values_name asc";
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('optval.*, optval2opt.products_options_id', // SELECT ...
                 'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
@@ -145,10 +147,12 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
-            $data[0] = array(
-                'id' => 0,
-                'text' => $this->pi_getLL('skip')
-            );
+            if (!isset($this->get['option_id']) || !isset($this->get['preselected_id'])) {
+                $data[0] = array(
+                        'id' => 0,
+                        'text' => $this->pi_getLL('skip')
+                );
+            }
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                 if (isset($this->get['option_id'])) {
                     if ($this->get['option_id'] == $row['products_options_id']) {
@@ -172,19 +176,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 );
             }
         }
-        if (isset($this->get['preselected_id']) && $this->get['preselected_id'] == '0') {
+        if (!isset($this->get['option_id']) || (isset($this->get['preselected_id']) && $this->get['preselected_id'] == '0')) {
             $data = array();
             $data[0] = array(
                 'id' => 0,
                 'text' => $this->pi_getLL('skip')
-            );
-        }
-        // show only "skip" value if no related option_id
-        if (!isset($this->get['option_id'])) {
-            $data = array();
-            $data[0] = array(
-                    'id' => 0,
-                    'text' => $this->pi_getLL('skip')
             );
         }
         $content = json_encode($data);
