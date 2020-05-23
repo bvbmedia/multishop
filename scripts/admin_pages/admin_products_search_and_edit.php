@@ -266,8 +266,11 @@ foreach ($fields as $key => $label) {
     $searchby_selectbox .= '<option value="' . $key . '"' . $option_selected . '>' . $label . '</option>' . "\n";
 }
 $searchby_selectbox .= '</select>';
-$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $this->get['cid'],'class="form-control"');
-//$search_category_selectbox = '<input type="hidden" name="cid" class="categories_select2_top" id="msAdminSelect2Top" value="' . $this->get['cid'] . '">';
+if ($this->ms['MODULES']['PRODUCT_SEARCH_AND_EDIT_DISABLE_SELECT2_FOR_TOP_CAT_INPUT'] == '1') {
+    $search_category_selectbox = mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $this->get['cid'], 'class="form-control"');
+} else {
+    $search_category_selectbox = '<input type="hidden" name="cid" class="categories_select2_top" id="msAdminSelect2Top" value="' . $this->get['cid'] . '">';
+}
 $search_limit = '<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits = array();
 $limits[] = '10';
