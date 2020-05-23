@@ -7378,13 +7378,13 @@ class mslib_fe {
             if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_category' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_category') {
                 $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_category']['active'] = 1;
             }
-            $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['label'] = $this->pi_getLL('admin_new_multiple_category', 'NEW CATEGORIES');
+           /* $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['label'] = $this->pi_getLL('admin_new_multiple_category', 'NEW CATEGORIES');
             $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['description'] = $this->pi_getLL('admin_add_new_multiple_category_to_the_catalog', 'Add new categories simultaneous') . '.';
             $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=add_multiple_category&cid=' . $this->get['categories_id'] . '&action=add_multiple_category');
             $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['class'] = 'fa fa-plus-circle';
             if ($this->get['tx_multishop_pi1']['page_section'] == 'add_multiple_category' || $this->post['tx_multishop_pi1']['page_section'] == 'add_multiple_category') {
                 $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['active'] = 1;
-            }
+            }*/
             if ($this->get['categories_id']) {
                 $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_edit_category']['label'] = $this->pi_getLL('admin_edit_category');
                 $ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_edit_category']['description'] = $this->pi_getLL('admin_edit_category_description') . '.';

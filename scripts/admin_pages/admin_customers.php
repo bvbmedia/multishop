@@ -127,43 +127,6 @@ if (is_array($groups) and count($groups)) {
     }
 }
 $customer_groups_input .= '</select>' . "\n";
-$searchCharNav = '<div id="msAdminSearchByCharNav" class="no-mb"><ul class="pagination">';
-$chars = array();
-$chars = array(
-        '0-9',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z',
-        '#',
-        'all'
-);
-foreach ($chars as $char) {
-    $searchCharNav .= '<li><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[searchByChar]=' . $char . '&tx_multishop_pi1[page_section]=admin_customers') . '">' . mslib_befe::strtoupper($char) . '</a></li>';
-}
-$searchCharNav .= '</ul></div>';
 $user_countries = mslib_befe::getRecords('', 'fe_users f', '', array(), 'f.country', 'f.country asc');
 $fe_user_country = array();
 foreach ($user_countries as $user_country) {
