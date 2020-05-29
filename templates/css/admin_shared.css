@@ -338,10 +338,6 @@ th.cellContentWithoutSpace { word-break:normal; }
 .highlighted-important { color: red; }
 
 /* BVBMEDIANL-1011 */
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a > span {
-	background-image: url(/typo3conf/ext/multishop/templates/images/admin_logo/logo_ftl.svg)!important;
-	background-size: 147px;
-}
 #tx_multishop_admin_newheader_wrapper,
 #tx_multishop_admin_footer_wrapper {
 	background-color: #191919;
