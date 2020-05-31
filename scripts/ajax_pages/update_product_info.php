@@ -49,6 +49,22 @@ switch ($this->get['tx_multishop_pi1']['update_product_info']) {
         echo json_encode($return_data);
         exit();
         breaks;
+    default:
+        $return_data = array();
+        $return_data['status'] = 'NOTOK';
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/update_product_info.php']['ajaxUpdateProductInfo'])) {
+            $params = array(
+                'return_data' => &$return_data
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/update_product_info.php']['ajaxUpdateProductInfo'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom page hook that can be controlled by third-party plugin eof
+        echo json_encode($return_data);
+        exit();
+        breaks;
 }
 echo $content;
 exit();
