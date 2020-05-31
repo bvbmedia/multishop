@@ -1007,9 +1007,15 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['SUFFIX_SPECIAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_EXCL_VAT'] = $this->pi_getLL('excluding_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
-        $markerArray['VALUE_PRICE_EXCL_VAT'] = htmlspecialchars($product_price_display);
-        $markerArray['VALUE_PRICE_INCL_VAT'] = htmlspecialchars($product_price_display_incl);
-        $markerArray['INPUT_PRICE_EXCL_VAT'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput'.$rs['products_id'].'" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div>';
+
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display_incl);
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display_incl . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div>';
+        } else {
+            $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display);
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
+        }
+
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
@@ -1582,6 +1588,7 @@ jQuery(document).ready(function(){
         if (jQuery(value_id).is(\':visible\')) {
             jQuery(value_id).hide();
             jQuery(div_input_id).show();
+            jQuery(text_input_id).focus();
         } else {
             var new_value = jQuery(text_input_id).val();
             jQuery(value_id).empty();
