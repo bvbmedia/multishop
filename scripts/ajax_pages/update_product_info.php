@@ -10,6 +10,14 @@ switch ($this->get['tx_multishop_pi1']['update_product_info']) {
         $return_data = array();
         $return_data['status'] = 'NOTOK';
         if ($product_id > 0 && $new_value) {
+            if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] == '1') {
+                $product = mslib_befe::getRecord($product_id, 'tx_multishop_products', 'products_id', array(), 'tax_id');
+                if ($product['tax_id'] > 0) {
+                    $data = mslib_fe::getTaxRuleSet($product['tax_id'], 0);
+                    $product_tax_rate = $data['total_tax_rate'];
+                    $new_value = ($new_value / (100 + $product_tax_rate)) * 100;
+                }
+            }
             $updateArray = array();
             $updateArray['products_price'] = addslashes($new_value);
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $product_id . '\'', $updateArray);
