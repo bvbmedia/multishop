@@ -1107,7 +1107,7 @@ if ($pageset['total_rows'] > 0) {
     //$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###'] = $this->pi_getLL('update_modified_products');
     //$subpartArray['###FORM_UPLOAD_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
     //$subpartArray['###CATEGORY_ID2###'] = $this->get['cid'];
-    //$subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
+    $subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
     //$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###'] = $this->pi_getLL('admin_upload_excel_file');
     //$subpartArray['###LABEL_ADMIN_UPLOAD###'] = $this->pi_getLL('admin_upload');
     //$subpartArray['###LABEL_BACK_TO_CATALOG###'] = $this->pi_getLL('admin_close_and_go_back_to_catalog');
