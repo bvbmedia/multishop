@@ -4223,6 +4223,30 @@ class mslib_befe {
         }
         return false;
     }
+    public function convertLocaleDateToInternationalDateFormat($date_input) {
+        if (!empty($date_input)) {
+            $have_time = false;
+            $date_delimeter = '-';
+            if (strpos($date_input, '/') !== false) {
+                $date_delimeter = '/';
+            }
+            if (strpos($date_input, ':') !== false) {
+                $have_time = true;
+            }
+            $time = '';
+            $date = $date_input;
+            if ($have_time) {
+                list($date, $time) = explode(" ", $date_input);
+            }
+            list($d,$m,$y) = explode($date_delimeter, $date);
+            $date_input = $y . '-' . $m . '-' . $d;
+            if ($have_time) {
+                $date_input .= ' ' . $time;
+            }
+            return $date_input;
+        }
+        return false;
+    }
     public function ucfirst($value) {
         $csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
         $charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);

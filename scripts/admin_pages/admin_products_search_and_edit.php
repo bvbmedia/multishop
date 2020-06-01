@@ -1007,9 +1007,15 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['SUFFIX_SPECIAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_EXCL_VAT'] = $this->pi_getLL('excluding_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
-        $markerArray['VALUE_PRICE_EXCL_VAT'] = htmlspecialchars($product_price_display);
-        $markerArray['VALUE_PRICE_INCL_VAT'] = htmlspecialchars($product_price_display_incl);
-        $markerArray['INPUT_PRICE_EXCL_VAT'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput'.$rs['products_id'].'" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div>';
+
+        if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display_incl);
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display_incl . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div>';
+        } else {
+            $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display);
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
+        }
+
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
@@ -1036,15 +1042,21 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['EDIT_PRODUCT_LINK1'] = $link_edit_prod;
         $markerArray['PRODUCT_DETAIL_LINK'] = $product_detail_link;
         $markerArray['DELETE_PRODUCT_LINK'] = $link_delete_prod;
+        $markerArray['PLUGINS_QUICK_EDIT_PRODUCT_EXTRA_CONTENT'] = '';
+        $plugins_quick_edit_product_extra_content = array();
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditTmplIteratorPreProc'])) {
             $params = array(
                     'markerArray' => &$markerArray,
+                    'plugins_quick_edit_product_extra_content' => &$plugins_quick_edit_product_extra_content,
                     'rs' => &$rs
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditTmplIteratorPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
+        }
+        if (is_array($plugins_quick_edit_product_extra_content) && count($plugins_quick_edit_product_extra_content)) {
+            $markerArray['PLUGINS_QUICK_EDIT_PRODUCT_EXTRA_CONTENT'] = implode("\n", $plugins_quick_edit_product_extra_content);
         }
         // custom page hook that can be controlled by third-party plugin eof
         $productsItem .= $this->cObj->substituteMarkerArray($subparts['products_item'], $markerArray, '###|###');
@@ -1095,7 +1107,7 @@ if ($pageset['total_rows'] > 0) {
     //$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###'] = $this->pi_getLL('update_modified_products');
     //$subpartArray['###FORM_UPLOAD_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
     //$subpartArray['###CATEGORY_ID2###'] = $this->get['cid'];
-    //$subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
+    $subpartArray['###PRODUCTS_PAGINATION###'] = $pagination;
     //$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###'] = $this->pi_getLL('admin_upload_excel_file');
     //$subpartArray['###LABEL_ADMIN_UPLOAD###'] = $this->pi_getLL('admin_upload');
     //$subpartArray['###LABEL_BACK_TO_CATALOG###'] = $this->pi_getLL('admin_close_and_go_back_to_catalog');
@@ -1576,6 +1588,7 @@ jQuery(document).ready(function(){
         if (jQuery(value_id).is(\':visible\')) {
             jQuery(value_id).hide();
             jQuery(div_input_id).show();
+            jQuery(text_input_id).focus();
         } else {
             var new_value = jQuery(text_input_id).val();
             jQuery(value_id).empty();
@@ -1583,7 +1596,7 @@ jQuery(document).ready(function(){
             jQuery(value_id).show();
             jQuery(div_input_id).hide();
             updateData(new_value, pid, data_type);
-        } 
+        }
     });
     jQuery(document).on(\'change\', \'.products_status\', function(e){
         e.preventDefault();
