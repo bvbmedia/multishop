@@ -16,7 +16,7 @@ if ($this->post) {
     if (!count($erno)) {
         $this->post['store_details']['name'] = 'Store';//preg_replace('/\s+/', ' ', $this->post['store_details']['first_name'].' '.$this->post['store_details']['middle_name'].' '.$this->post['store_details']['last_name']);
         $this->post['store_details']['address'] = $this->post['store_details']['street_name'] . ' ' . $this->post['store_details']['address_number'];
-        if ($user['address_ext']) {
+        if ($this->post['store_details']['address_ext']) {
             $this->post['store_details']['address'] .= '-' . $this->post['store_details']['address_ext'];
         }
         $this->post['store_details']['address'] = preg_replace('/\s+/', ' ', $this->post['store_details']['address']);
