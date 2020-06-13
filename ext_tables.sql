@@ -715,6 +715,7 @@ CREATE TABLE `tx_multishop_orders_status` (
  `crdate` int(11) default '0',
  `default_status` tinyint(1) default '0',
  `page_uid` int(11) default '0',
+ `sort_order` int(11) default '0',
  PRIMARY KEY (`id`),
  KEY `default_status` (`default_status`),
  KEY `page_uid` (`page_uid`)

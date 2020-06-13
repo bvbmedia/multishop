@@ -2967,6 +2967,25 @@ switch ($this->ms['page']) {
             die();
         }
         break;
+    case 'update_order_status_sort':
+        // this is the AJAX server for changing the sort order of the order status
+        if ($this->ADMIN_USER) {
+            $no = 1;
+            foreach ($this->post['orderstatus'] as $status_id) {
+                if (is_numeric($status_id)) {
+                    $where = "id= " . $status_id;
+                    $updateArray = array(
+                            'sort_order' => $no
+                    );
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', $where, $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    $no++;
+                }
+            }
+        }
+        exit();
+        break;
+
     case 'custom_page':
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAjaxPage'])) {

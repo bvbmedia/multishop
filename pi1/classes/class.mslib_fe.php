@@ -4290,7 +4290,7 @@ class mslib_fe {
         return $content;
     }
     public function getAllOrderStatus($language_id = 0) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'od.name', '');
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name, IF(o.sort_order > 0, o.sort_order, o.id) as os_sort_order', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'os_sort_order', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $status = array();
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
