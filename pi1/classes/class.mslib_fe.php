@@ -2143,6 +2143,22 @@ class mslib_fe {
                 }
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
+            //hook to let other plugins further manipulate the query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'])) {
+                $params = array(
+                        'user' => &$user,
+                        'subject' => &$subject,
+                        'body' => &$body,
+                        'from_email' => &$from_email,
+                        'from_name' => &$from_name,
+                        'attachments' => &$attachments,
+                        'options' => &$options,
+                        'mailObj' => &$mail
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if (isset($options['sender'])) {
                 $mail->Sender = $options['sender'];
             }
@@ -2179,22 +2195,6 @@ class mslib_fe {
             }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
-            }
-            //hook to let other plugins further manipulate the query
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'])) {
-                $params = array(
-                        'user' => &$user,
-                        'subject' => &$subject,
-                        'body' => &$body,
-                        'from_email' => &$from_email,
-                        'from_name' => &$from_name,
-                        'attachments' => &$attachments,
-                        'options' => &$options,
-                        'mailObj' => &$mail
-                );
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailUserSendPreProc'] as $funcRef) {
-                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                }
             }
             // Sometims the dispatcher is using name instead of username
             if (!$user['username'] && $user['name']) {
