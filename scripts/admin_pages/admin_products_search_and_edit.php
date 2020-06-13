@@ -1572,6 +1572,8 @@ jQuery(document).ready(function(){
     });
     jQuery(document).on(\'click\', \'.hoverEdit\', function(e){
         e.preventDefault();
+        jQuery(this).empty();
+        jQuery(this).html(\'<i class="fa fa-save"></i>\');
         var pid = jQuery(this).attr(\'data-pid\');
         if (jQuery(this).hasClass(\'products_price_edit\')) {
             var data_type = \'products_price\';
@@ -1596,6 +1598,8 @@ jQuery(document).ready(function(){
             jQuery(value_id).show();
             jQuery(div_input_id).hide();
             updateData(new_value, pid, data_type);
+            jQuery(this).empty();
+            jQuery(this).html(\'<i class="fa fa-pencil"></i>\');
         }
     });
     jQuery(document).on(\'change\', \'.products_status\', function(e){
