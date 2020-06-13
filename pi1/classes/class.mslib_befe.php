@@ -4580,8 +4580,10 @@ class mslib_befe {
                 if ($table_type == 'invoice' && $prefix == '-') {
                     if (strpos($product['final_price'], '-') !== false) {
                         $product['final_price'] = str_replace('-', '', $product['final_price']);
+                        $product['products_tax_data']['total_tax'] = str_replace('-', '', $product['products_tax_data']['total_tax']);
                     } else {
                         $product['final_price'] = $prefix . $product['final_price'];
+                        $product['products_tax_data']['total_tax'] = $prefix . $product['products_tax_data']['total_tax'];
                     }
                 }
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
