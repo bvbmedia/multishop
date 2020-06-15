@@ -815,7 +815,6 @@ switch ($this->ms['page']) {
         break;
 }
 // Topnav
-/*
 if ($this->ADMIN_USER) {
     switch ($this->get['tx_multishop_pi1']['page_section']) {
         case 'custom_page':
@@ -891,4 +890,3 @@ if ($this->ADMIN_USER) {
             break;
     }
 }
-*/
