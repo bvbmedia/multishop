@@ -8366,18 +8366,37 @@ class mslib_fe {
             }
         }
     }
-    public function getProductsOptionValues($option_id, $products_id = '') {
+    public function getProductsOptionValues($option_id, $products_id = '', $ignorePageUid=0) {
         if (!is_numeric($option_id)) {
             return false;
         }
         if (is_numeric($option_id)) {
             //language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
-            $str = "select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where ";
+            $select=array();
+            $select[]='pa.options_values_id';
+            $select[]='pov.products_options_values_name';
+            $from=array();
+            $from[]='tx_multishop_products_attributes pa';
+            $from[]='tx_multishop_products_options_values pov';
+            $where=array();
             if (is_numeric($products_id)) {
-                $str .= "pa.products_id='" . $products_id . "' and ";
+                $where[]= 'pa.products_id = \'' . $products_id . '\'';
             }
-            $str .= "pa.options_id='" . $option_id . "' and pa.page_uid = '" . $this->showCatalogFromPage . "' and pa.options_values_id=pov.products_options_values_id order by pa.sort_order_option_value";
-            $res = $GLOBALS['TYPO3_DB']->sql_query($str);
+            if (!$ignorePageUid) {
+                $where[]= 'pa.page_uid = \'' . $this->showCatalogFromPage . '\'';
+            }
+            $where[]= 'pa.options_id=\'' . $option_id . '\'';
+            $where[]= 'pa.options_values_id=pov.products_options_values_id';
+            $orderby=array();
+            $orderby[]='pa.sort_order_option_value';
+            $sql = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
+                    (is_array($from) && count($from) ? implode(',', $from) : ''), // FROM ...
+                    (is_array($where) && count($where) ? implode(' AND ', $where) : ''), // WHERE...
+                    '', // GROUP BY...
+                    (is_array($orderby) && count($orderby) ? implode(',', $orderby) : ''), // ORDER BY...
+                    '' // LIMIT ...
+            );
+            $res = $GLOBALS['TYPO3_DB']->sql_query($sql);
             if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
                 $array = array();
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
@@ -8944,7 +8963,7 @@ class mslib_fe {
             }
             $sql = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
                     (is_array($from) && count($from) ? implode(',', $from) : ''), // FROM ...
-                    (is_array($where) && count($where) ? implode(',', $where) : ''), // WHERE...
+                    (is_array($where) && count($where) ? implode(' AND ', $where) : ''), // WHERE...
                     (is_array($groupby) && count($groupby) ? implode(',', $groupby) : ''), // GROUP BY...
                     (is_array($orderby) && count($orderby) ? implode(',', $orderby) : ''), // ORDER BY...
                     $limit // LIMIT ...

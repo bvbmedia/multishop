@@ -530,6 +530,7 @@ CREATE TABLE `tx_multishop_orders` (
  `coupon_discount_value` DECIMAL(24,14) default '0.00000000000000',
  `orders_last_modified` int(11) default '0',
  `track_and_trace_link` varchar(255) default '',
+ `parcel_information_json` blob,
  `orders_paid_timestamp` int(11) default '0',
  `debit_order` tinyint(1) default '0',
  `grand_total_excluding_vat` decimal(24,14) default '0.00000000000000',
