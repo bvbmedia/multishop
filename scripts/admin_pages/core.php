@@ -880,7 +880,7 @@ if ($this->ADMIN_USER) {
                         }
                     }
                 }
-                $content = '<ul class="navInterface nav-tabsInterface">' . implode(' > ', $winner['crumArray']) . '</ul>' . $content;
+                $content = '<ul class="crumbar"><li>' . implode('</li><li>', $winner['crumArray']) . '</li></ul>' . $content;
 
                 /*$navItems = array();
                 foreach ($menuItems as $menuItem) {
