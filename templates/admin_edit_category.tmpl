@@ -63,31 +63,40 @@ jQuery(document).ready(function ($) {
                 <div class="form-group" id="msEditCategoryInputVisibility">
                     <label class="control-label col-md-2" for="status">###LABEL_VISIBILITY###</label>
                     <div class="col-md-10">
-                    <div class="radio radio-success radio-inline">
-                    <input name="status" id="status1" type="radio" value="1" ###CATEGORY_STATUS_YES### /><label for="status1">###LABEL_STATUS_YES###</label>
-                    </div>
-                    <div class="radio radio-success radio-inline">
-                    <input name="status" id="status2" type="radio" value="0" ###CATEGORY_STATUS_NO### /><label for="status2">###LABEL_STATUS_NO###</label>
-                    </div>
+						<div class="toggleButton">
+							<input type="checkbox" id="status1" name="status" ###CATEGORY_STATUS_YES###>
+							<label for="status1">
+								<span class="toggleButtonTextEnable"></span>
+								<span class="toggleButtonTextDisable"></span>
+								<span class="toggleButtonHandler"></span>
+							</label>
+						</div>
                     </div>
                 </div>
                 <div class="form-group" id="msEditCategoryInputSearchEngineIndexing">
                     <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING###</label>
                     <div class="col-md-10">
-                    <div class="radio radio-success radio-inline">
-                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing1" type="radio" value="1" ###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING_ON_CHECKED### /><label for="search_engines_allow_indexing1">###LABEL_ADMIN_YES_INDEXING###</label>
-                    </div>
-                    <div class="radio radio-success radio-inline">
-                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing2" type="radio" value="0" ###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /><label for="search_engines_allow_indexing2">###LABEL_ADMIN_NO_INDEXING###</label>
-                    </div>
+                    	<div class="toggleButton">
+							<input type="checkbox" id="search_engines_allow_indexing1" name="search_engines_allow_indexing" ###LABEL_CATEGORY_SEARCH_ENGINE_INDEXING_ON_CHECKED###>
+							<label for="search_engines_allow_indexing1">
+								<span class="toggleButtonTextEnable"></span>
+								<span class="toggleButtonTextDisable"></span>
+								<span class="toggleButtonHandler"></span>
+							</label>
+						</div>
                     </div>
                 </div>
                 <div class="form-group" id="msEditCategoryInputHideInMenu">
                     <label class="control-label col-md-2" for="hide_in_menu">###LABEL_HIDE_IN_MENU###</label>
                     <div class="col-md-10">
-                    <div class="checkbox checkbox-success checkbox-inline">
-                    <input name="hide_in_menu" id="hide_in_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_MENU_CHECKED### /><label></label>
-                    </div>
+						<div class="toggleButton">
+							<input type="checkbox" id="hide_in_menu" name="hide_in_menu" ###CATEGORY_HIDE_IN_MENU_CHECKED###>
+							<label for="hide_in_menu">
+								<span class="toggleButtonTextEnable"></span>
+								<span class="toggleButtonTextDisable"></span>
+								<span class="toggleButtonHandler"></span>
+							</label>
+						</div>
                     </div>
                 </div>
                 <div class="form-group" id="msEditCategoryInputImage">

@@ -593,23 +593,27 @@
                         <div class="form-group" id="msEditProductInputStatus">
                             <label for="products_status" class="col-md-2 control-label">###LABEL_PRODUCT_STATUS###</label>
                             <div class="col-md-10">
-                                <div class="radio radio-success radio-inline">
-                                    <input name="products_status" id="products_status1" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /><label for="products_status1">###LABEL_ADMIN_YES###</label>
-                                </div>
-                                <div class="radio radio-success radio-inline">
-                                    <input name="products_status" id="products_status2" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /><label for="products_status2">###LABEL_ADMIN_NO###</label>
-                                </div>
+                            	<div class="toggleButton">
+                            		<input type="checkbox" id="products_status1" name="products_status" ###LABEL_PRODUCT_STATUS_ON_CHECKED###>
+									<label for="products_status1">
+										<span class="toggleButtonTextEnable"></span>
+										<span class="toggleButtonTextDisable"></span>
+										<span class="toggleButtonHandler"></span>
+									</label>
+								</div>
                             </div>
                         </div>
                         <div class="form-group" id="msEditProductInputSearchEngineIndexing">
                             <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
                             <div class="col-md-10">
-                                <div class="radio radio-success radio-inline">
-                                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing1" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /><label for="search_engines_allow_indexing1">###LABEL_ADMIN_YES_INDEXING###</label>
-                                </div>
-                                <div class="radio radio-success radio-inline">
-                                    <input name="search_engines_allow_indexing" id="search_engines_allow_indexing2" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /><label for="search_engines_allow_indexing2">###LABEL_ADMIN_NO_INDEXING###</label>
-                                </div>
+								<div class="toggleButton">
+									<input type="checkbox" id="search_engines_allow_indexing1" name="search_engines_allow_indexing" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED###>
+									<label for="search_engines_allow_indexing1">
+										<span class="toggleButtonTextEnable"></span>
+										<span class="toggleButtonTextDisable"></span>
+										<span class="toggleButtonHandler"></span>
+									</label>
+								</div>
                             </div>
                         </div>
                         <div class="form-group" id="msEditProductInputCategory">
@@ -748,8 +752,15 @@
                         <div class="form-group" id="msEditProductInputIgnoreQuantity">
                             <label for="ignore_stock_level" class="col-md-2 control-label"></label>
                             <div class="col-md-10">
-                                <div class="checkbox checkbox-success checkbox-inline">
-                                    <input id="ignore_stock_level" name="ignore_stock_level" type="checkbox" value="1"###IGNORE_STOCK_LEVEL_CHECKED###><label for="ignore_stock_level">###LABEL_IGNORE_STOCK_LEVEL###</label></div>
+								<div class="toggleButton toggleButtonLabel">
+									<input type="checkbox" id="ignore_stock_level" name="ignore_stock_level" ###IGNORE_STOCK_LEVEL_CHECKED###>
+									<label for="ignore_stock_level">
+										<span class="toggleButtonTextEnable">Ja</span>
+										<span class="toggleButtonTextDisable">Nee</span>
+										<span class="toggleButtonHandler"></span>
+									</label>
+									<span class="toggleButtonRightText">###LABEL_IGNORE_STOCK_LEVEL###</label>
+								</div>
                             </div>
                         </div>
                         <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
