@@ -706,25 +706,10 @@ $orders_status_list .= '</select>';
 $limit_selectbox = '<select name="limit" id="limit" class="form-control">';
 $limits = array();
 $limits[] = '10';
-$limits[] = '15';
-$limits[] = '20';
 $limits[] = '25';
-$limits[] = '30';
-$limits[] = '40';
-$limits[] = '48';
 $limits[] = '50';
 $limits[] = '100';
-$limits[] = '150';
 $limits[] = '200';
-$limits[] = '250';
-$limits[] = '300';
-$limits[] = '350';
-$limits[] = '400';
-$limits[] = '450';
-$limits[] = '500';
-if (!in_array($this->get['limit'], $limits)) {
-    $limits[] = $this->get['limit'];
-}
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }
@@ -1247,14 +1232,14 @@ $subpartArray['###EXCLUDING_VAT_LABEL###'] = htmlspecialchars($this->pi_getLL('e
 $subpartArray['###EXCLUDING_VAT_CHECKED###'] = ($this->post['tx_multishop_pi1']['excluding_vat'] ? ' checked' : '');
 $subpartArray['###LABEL_PAYMENT_STATUS###'] = $this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###'] = $payment_status_select;
-$subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###'] = $this->pi_getLL('limit_number_of_records_to');
-$subpartArray['###LABEL_ADVANCED_SEARCH###'] = $this->pi_getLL('advanced_search');
+$subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###'] = '';
+$subpartArray['###LABEL_ADVANCED_SEARCH###'] = '<i class="fa fa-cogs" aria-hidden="true"></i>';
 $subpartArray['###LABEL_ORDERED_PRODUCT###'] = $this->pi_getLL('admin_ordered_product');
 $subpartArray['###VALUE_ORDERED_PRODUCT###'] = $this->post['ordered_product'];
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###'] = $limit_selectbox;
 $subpartArray['###RESULTS###'] = $order_results;
 $subpartArray['###NORESULTS###'] = $no_results;
-$subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders');
+$subpartArray['###ADMIN_LABEL_TABS_ORDERS###'] = $this->pi_getLL('admin_label_tabs_orders') . ' ' . $this->ms['MODULES']['STORE_NAME'];
 $subpartArray['###LABEL_RESET_ADVANCED_SEARCH_FILTER###'] = $this->pi_getLL('reset_advanced_search_filter');
 $subpartArray['###ADMIN_LABEL_YES###'] = $this->pi_getLL('yes');
 $subpartArray['###ADMIN_LABEL_NO###'] = $this->pi_getLL('no');
@@ -1292,6 +1277,7 @@ if ($this->conf['masterShop']) {
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);
 $objRef->setInterfaceKey('admin_orders');
+/*
 // Header buttons
 $headerButtons = array();
 $headingButton = array();
@@ -1305,6 +1291,8 @@ $headerButtons[] = $headingButton;
 $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
+*/
+$subpartArray['###INTERFACE_HEADER_BUTTONS###'] = '';
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###'] = $this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###'] = $billing_countries_selectbox;
 $subpartArray['###LABEL_MANUFACTURERS_SELECTBOX###'] = $this->pi_getLL('manufacturers');
