@@ -815,7 +815,6 @@ switch ($this->ms['page']) {
         break;
 }
 // Topnav
-/*
 if ($this->ADMIN_USER) {
     switch ($this->get['tx_multishop_pi1']['page_section']) {
         case 'custom_page':
@@ -837,17 +836,29 @@ if ($this->ADMIN_USER) {
                 if (is_array($level1Item['subs'])) {
                     foreach ($level1Item['subs'] as $level2Key => $level2Item) {
                         if ($level2Item['link']) {
-                            $itemsToCheck[] = array('check' => $level2Item, 'siblings' => $data['header'][$level1Key]['subs']);
+                            $crumArray=array();
+                            $crumArray[]=$level1Item['label'];
+                            $crumArray[]=$level2Item['label'];
+                            $itemsToCheck[] = array('check' => $level2Item, 'siblings' => $data['header'][$level1Key]['subs'],'crumArray'=>$crumArray);
                         }
                         if (is_array($level2Item['subs'])) {
                             foreach ($level2Item['subs'] as $level3Key => $level3Item) {
                                 if ($level3Item['link']) {
-                                    $itemsToCheck[] = array('check' => $level3Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs']);
+                                    $crumArray=array();
+                                    $crumArray[]=$level1Item['label'];
+                                    $crumArray[]=$level2Item['label'];
+                                    $crumArray[]=$level3Item['label'];
+                                    $itemsToCheck[] = array('check' => $level3Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs'],'crumArray'=>$crumArray);
                                 }
                                 if (is_array($level3Item['subs'])) {
                                     foreach ($level3Item['subs'] as $level4Key => $level4Item) {
                                         if ($level4Item['link']) {
-                                            $itemsToCheck[] = array('check' => $level4Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs'][$level3Key]['subs']);
+                                            $crumArray=array();
+                                            $crumArray[]=$level1Item['label'];
+                                            $crumArray[]=$level2Item['label'];
+                                            $crumArray[]=$level3Item['label'];
+                                            $crumArray[]=$level4Item['label'];
+                                            $itemsToCheck[] = array('check' => $level4Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs'][$level3Key]['subs'],'crumArray'=>$crumArray);
                                         }
                                     }
                                 }
@@ -863,12 +874,15 @@ if ($this->ADMIN_USER) {
                     if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
                         $page_section = $url['tx_multishop_pi1']['page_section'];
                         // Get menu items
+                        $winner=$item;
                         if (is_array($item['siblings'])) {
                             $menuItems = $item['siblings'];
                         }
                     }
                 }
-                $navItems = array();
+                $content = '<ul class="crumbar"><li>' . implode('</li><li>', $winner['crumArray']) . '</li></ul>' . $content;
+
+                /*$navItems = array();
                 foreach ($menuItems as $menuItem) {
                     if ($menuItem['link'] != '') {
                         $label = '<span>' . htmlspecialchars($menuItem['label']) . '</span>';
@@ -885,10 +899,9 @@ if ($this->ADMIN_USER) {
                 }
                 if (count($navItems)) {
                     $content = '<ul class="navInterface nav-tabsInterface">' . implode('', $navItems) . '</ul>' . $content;
-                }
+                }*/
                 //$content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
             }
             break;
     }
 }
-*/

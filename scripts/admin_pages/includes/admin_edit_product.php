@@ -2678,7 +2678,7 @@ if ($this->post) {
             $objRef->setHeaderButtons($headerButtons);
             // Get header buttons through interface class so we can render them
             $interfaceHeaderButtons = $objRef->renderHeaderButtons();
-            $heading_page = '<h3>' . $this->pi_getLL('admin_edit_product') . ' (ID: ' . $product['products_id'] . ')</h3>
+            $heading_page = '<h3>Product <strong>' . htmlspecialchars($lngproduct[0]['products_name']) . ' (ID: ' . $product['products_id'] . ')</strong> bewerken</h3>
 			<div class="form-inline">
 				' . $interfaceHeaderButtons . '
 			</div>

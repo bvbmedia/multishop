@@ -6,13 +6,15 @@
 		###INTERFACE_HEADER_BUTTONS###
 	</div>
 	<div class="panel-body">
-		<form name="search" method="get" action="index.php">
+		<form name="search" method="get" action="index.php" class="search-merged">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="form-inline">
 						<div class="form-group">
-							<input type="text" class="form-control skeyword" name="keyword" placeholder="###LABEL_SEARCH_KEYWORD###" value="###VALUE_SEARCH_KEYWORD###" />
+							<input type="text" class="form-control search-merged-input skeyword" name="keyword" placeholder="###LABEL_SEARCH_KEYWORD###" value="###VALUE_SEARCH_KEYWORD###" />
+							<button type="submit" name="submit" class="search-merged-submit"><i class="fa fa-search" aria-hidden="true"></i></button>
 						</div>
+						<!--
 						<div class="form-group">
 							<label>###LABEL_SEARCH_BY###</label>
 							###SEARCH_BY_SELECTBOX###
@@ -21,10 +23,12 @@
 							<label>###LABEL_SEARCH_IN###</label>
 							###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
 						</div>
-						<input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
-						<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">###LABEL_ADVANCED_SEARCH###</a>
+						-->
+						<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="btn btn-info advanceSearch">
+							<i class="fa fa-cog" aria-hidden="true"></i>
+						</a>
 					</div>
-					<div class="form-group pull-right">
+					<div class="form-group pull-right mb-0">
 						###SEARCH_LIMIT###
 					</div>
 				</div>
@@ -223,25 +227,39 @@
 							<div class="cellPrice">
 								<div class="pol-label">Prijs</div>
 								<span class="product_price_value_excl_vat_###PID1###">###VALUE_PRICE###</span>
-								<div class="form-group msAttributesField product_price_input_excl_vat_###PID2###" style="display:none">###INPUT_PRICE###</div>
+								<div class="form-group msAttributesField product_price_input product_price_input_excl_vat_###PID2###" style="display:none">
+									###INPUT_PRICE###
+									<div class="hover-action">
+										<a href="#" class="hoverSave products_price_save text-success"><i class="fa fa-save" aria-hidden="true"></i></i></a>
+										<a href="#" class="hoverCancel products_price_cancel text-danger"><i class="fa fa-ban" aria-hidden="true"></i></i></a>
+									</div>
+								</div>
 								<a href="#" class="hoverEdit products_price_edit" data-pid="###PID3###"><i class="fa fa-pencil"></i></a>
 							</div>
 							<div class="cellStock">
 								<div class="pol-label">Vrije voorraad</div>
 								<span class="product_qty_value_###PID4###">###VALUE_PRODUCT_QUANTITY###</span>
-								<span class="product_qty_input_###PID5###" style="display:none">###INPUT_PRODUCT_QUANTITY###</span>
+								<span class="product_price_input product_qty_input_###PID5###" style="display:none">
+									###INPUT_PRODUCT_QUANTITY###
+									<div class="hover-action">
+										<a href="#" class="hoverSave products_price_save text-success"><i class="fa fa-save" aria-hidden="true"></i></i></a>
+										<a href="#" class="hoverCancel products_price_cancel text-danger"><i class="fa fa-ban" aria-hidden="true"></i></i></a>
+									</div>
+								</span>
 								<a href="#" class="hoverEdit products_qty_edit" data-pid="###PID6###"><i class="fa fa-pencil"></i></a>
 							</div>
 							###PLUGINS_QUICK_EDIT_PRODUCT_EXTRA_CONTENT###
 						</div>
+						<!--
 						<div class="cellAction">
 							<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
 							<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
 							<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
 						</div>
+						-->
 					</div>
 					<div class="cellStatus">
-						<div class="toggleButtonLabel">Status</div>
+						<div class="toggleButtonLabel">Zichtbaar</div>
 						<div class="toggleButton">
 							<input type="checkbox" class="products_status" id="products_status###PID7###" name="products_status###PID7###" data-pid="###PID8###"###PRODUCT_STATUS_CHECKED###>
 								<label for="products_status###PID7###">
