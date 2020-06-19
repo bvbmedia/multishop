@@ -18,6 +18,14 @@ if (isset($settings['GLOBAL_MODULES'][$key])) {
             $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
             $messages[] = $str;
         }
+        $field = 'products_image_title' . $i;
+        $str = "select " . $field . " from tx_multishop_products limit 1";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if (!$qry) {
+            $str = "ALTER TABLE  `tx_multishop_products` ADD `products_image_title" . $i . "` varchar(250) NULL";
+            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+            $messages[] = $str;
+        }
     }
 }
 $key = 'PRODUCTS_DETAIL_NUMBER_OF_TABS';

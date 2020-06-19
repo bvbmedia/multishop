@@ -1061,6 +1061,23 @@ if ($this->post) {
             }
         }
     }
+    if (isset($this->post['ajax_products_image'][0])) {
+        $update_product_images_title = array();
+        if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
+            $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES'] = 5;
+        }
+        for ($x = 0; $x < $this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+            // hidden filename that is retrieved from the ajax upload
+            $i = $x;
+            if ($i == 0) {
+                $i = '';
+            }
+            $update_product_images_title['products_image_title' . $i] = '';
+            if ($this->post['ajax_products_image_title'][$x] && $update_product_images['products_image' . $i]) {
+                $update_product_images_title['products_image_title' . $i] = $this->post['ajax_products_image_title'][$x];
+            }
+        }
+    }
     // custom hook that can be controlled by third-party plugin eof
     // updating products table
     $updateArray = array();
@@ -1188,6 +1205,11 @@ if ($this->post) {
     }
     if ($update_product_images) {
         foreach ($update_product_images as $key => $value) {
+            $updateArray[$key] = $value;
+        }
+    }
+    if ($update_product_images_title) {
+        foreach ($update_product_images_title as $key => $value) {
             $updateArray[$key] = $value;
         }
     }
@@ -3164,6 +3186,15 @@ if ($this->post) {
             }
             $images_tab_block .= '</div>';
             $images_tab_block .= '</div></div>';
+
+            // image alt title input
+            $images_tab_block .= '
+			<div class="form-group" id="msEditProductInputImageAltTitle_' . $x . '">
+				<label for="ajax_products_image_title' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' title ' . ($i + 1) . '</label>
+				<div class="col-md-10">
+				    <input name="ajax_products_image_title[]" id="ajax_products_image_title' . $i . '" type="text" class="form-control" value="' . $product['products_image_title' . $i] . '" />';
+            $images_tab_block .= '</div>';
+            $images_tab_block .= '</div>';
         }
         $images_tab_block .= '</div>
         <script type="text/javascript" data-ignore="1">
