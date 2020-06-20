@@ -352,7 +352,25 @@ if ($this->ADMIN_USER) {
                 $jsonData_content .= '</div>';
             }
             if (!empty($jsonData_content)) {
-                $jsonData['title'] = '<h3 class="popover-title">' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . ' <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order') . '" class="btn btn-sm btn-success">' . $this->pi_getLL('go_to_order_details') . '</a> <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true') . '" class="btn btn-sm btn-primary" target="_blank">' . $this->pi_getLL('admin_label_create_order') . '</a></h3>';
+                $links = array();
+                if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+                    if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+                        $links['invoice'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&print=invoice', 1) . '" class="btn btn-primary btn-sm"' . ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '') . '>' . htmlspecialchars($this->pi_getLL('invoice')) . '</a>';
+                    }
+                    if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
+                        if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
+                            $links['pakbon'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]=' . $order['orders_id']) . '" class="btn btn-primary btn-sm" target="_blank">' . htmlspecialchars($this->pi_getLL('packing_list')) . '</a>';
+                        } else {
+                            $links['pakbon'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&print=packing', 1) . '" class="btn btn-primary btn-sm">' . htmlspecialchars($this->pi_getLL('packing_list')) . '</a>';
+                        }
+                    }
+                }
+                //$links[] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order') . '" class="btn btn-sm btn-success">' . $this->pi_getLL('go_to_order_details') . '</a>';
+                //$links[] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id=' . $order['orders_id'] . '&action=edit_order&tx_multishop_pi1[new_order]=true') . '" class="btn btn-sm btn-primary" target="_blank">' . $this->pi_getLL('admin_label_create_order') . '</a>';
+                $jsonData['title'] = '<h3 class="popover-title">
+                    ' . $this->pi_getLL('admin_label_cms_marker_order_number') . ': ' . $order['orders_id'] . ' 
+                    ' . implode("", $links) . '
+                </h3>';
                 $jsonData['content'] = '<div class="popover-content">' . $jsonData_content . '</div>';
             }
         } else {

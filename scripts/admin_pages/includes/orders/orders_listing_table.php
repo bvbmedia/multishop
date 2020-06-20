@@ -93,9 +93,9 @@ foreach ($tmporders as $order) {
     $order_list_button_extra = '';
     if (count($orderlist_buttons)) {
         //button area
-        $order_list_button_extra .= '<td class="cellActionFluid">';
+        /*$order_list_button_extra .= '<td class="cellActionFluid">';
         $order_list_button_extra .= implode(' ', $orderlist_buttons);
-        $order_list_button_extra .= '</td>';
+        $order_list_button_extra .= '</td>';*/
     }
     $markerArray = array();
     $markerArray['ROW_TYPE'] = $tr_type;
@@ -169,6 +169,8 @@ foreach ($tmporders as $order) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
     }
+    // reset the icon value
+    $markerArray['MANUAL_ORDER_ICON'] = '';
     // custom page hook that can be controlled by third-party plugin eof
     if (strpos($order[$grandTotalColumnName], '-') !== false) {
         $totalAmount -= str_replace('-', '', $order[$grandTotalColumnName]);
@@ -317,10 +319,10 @@ $subpartArray['###LABEL_HEADER_PAID###'] = $this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###'] = $this->pi_getLL('admin_paid');
 $extra_header = '';
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-    $extra_header = '<th class="cellActionFluid">&nbsp;</th>';
+    //$extra_header = '<th class="cellActionFluid">&nbsp;</th>';
 }
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type == 'proposals') {
-    $extra_header = '<th class="cellActionFluid">&nbsp;</th>';
+    //$extra_header = '<th class="cellActionFluid">&nbsp;</th>';
 }
 $subpartArray['###EXTRA_RIGHT_HEADER###'] = $extra_header;
 $subpartArray['###EXTRA_RIGHT_FOOTER###'] = $extra_header;
