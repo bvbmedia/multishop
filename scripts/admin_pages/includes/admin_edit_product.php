@@ -2653,27 +2653,27 @@ if ($this->post) {
             $headingButton['fa_class'] = 'fa fa-remove';
             $headingButton['title'] = $this->pi_getLL('admin_delete_product');
             $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id']);
-            $headerButtons[] = $headingButton;
+            $headerButtons['delete_product'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-primary viewfront';
             $headingButton['fa_class'] = 'fa fa-eye';
             $headingButton['title'] = $this->pi_getLL('admin_edit_view_front_product', 'View in front');
             $headingButton['href'] = $details_link;
-            $headerButtons[] = $headingButton;
+            $headerButtons['preview_product'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-success';
             $headingButton['fa_class'] = 'fa fa-check-circle';
             $headingButton['title'] = ($this->get['action'] == 'edit_product') ? $this->pi_getLL('update') : $this->pi_getLL('save');
             $headingButton['href'] = '#';
             $headingButton['attributes'] = 'onclick="$(\'#btnSave\').click(); return false;"';
-            $headerButtons[] = $headingButton;
+            $headerButtons['product_save'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-success';
             $headingButton['fa_class'] = 'fa fa-check-circle';
             $headingButton['title'] = ($this->get['action'] == 'edit_product') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
             $headingButton['href'] = '#';
             $headingButton['attributes'] = 'onclick="$(\'#btnSaveClose\').click(); return false;"';
-            $headerButtons[] = $headingButton;
+            $headerButtons['product_save_close'] = $headingButton;
             // Set header buttons through interface class so other plugins can adjust it
             $objRef->setHeaderButtons($headerButtons);
             // Get header buttons through interface class so we can render them
