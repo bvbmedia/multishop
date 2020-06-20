@@ -1297,7 +1297,7 @@ $subpartArray['###LABEL_COUNTRIES_SELECTBOX###'] = $this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###'] = $billing_countries_selectbox;
 $subpartArray['###LABEL_MANUFACTURERS_SELECTBOX###'] = $this->pi_getLL('manufacturers');
 $subpartArray['###VALUE_MANUFACTURERS_ID###'] = $this->post['manufacturers_id'];
-$subpartArray['###BACK_BUTTON###'] = '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
+$subpartArray['###BACK_BUTTON###'] = '<hr><div class="clearfix"></div></div></div>';
 $subpartArray['###LABEL_ORDERED_CATEGORY###'] = $this->pi_getLL('admin_ordered_category');
 $subpartArray['###VALUE_ORDERED_CATEGORY###'] = $this->get['ordered_category'];
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainTemplatePreProc'])) {

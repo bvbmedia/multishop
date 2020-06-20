@@ -256,7 +256,6 @@ $content .= '</tr>';
 $content .= '
 </table>';
 $content .= '<p class="extra_padding_bottom">';
-$content .= '<a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '">' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a>';
 $content .= '
 </p>';
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';

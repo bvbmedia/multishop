@@ -220,6 +220,6 @@ foreach ($dates as $key => $value) {
 }
 $content .= '</table>';
 // LAST MONTHS EOF
-$content .= '<div class="clearfix"><hr><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div>';
+$content .= '<div class="clearfix"><hr></div></div>';
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
 ?>
