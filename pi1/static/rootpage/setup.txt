@@ -501,6 +501,10 @@ multishop_ajax_server {
 	}
 
 	multishop_admin_page {
+		# progressBar.js
+		includeJS.progressBarJs = EXT:multishop/js/progressbar/progressbar.min.js
+		includeJS.progressBarJs.compress = 1
+
 		# TreeView
 		includeJS.msTreeView = EXT:multishop/js/jquery.treeview/jquery.treeview.js
 		includeJS.msTreeView.compress = 1

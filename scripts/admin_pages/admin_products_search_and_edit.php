@@ -1357,12 +1357,14 @@ $objRef->init($this);
 $objRef->setInterfaceKey('admin_products');
 // Header buttons
 $headerButtons = array();
+/*
 $headingButton = array();
 $headingButton['btn_class'] = 'btn btn-primary';
 $headingButton['fa_class'] = 'fa fa-plus-circle';
 $headingButton['title'] = $this->pi_getLL('admin_create_new_products_here');
 $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=add_product&action=add_product');
 $headerButtons[] = $headingButton;
+*/
 // Set header buttons through interface class so other plugins can adjust it
 $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
@@ -1588,6 +1590,8 @@ jQuery(document).ready(function(){
             var text_input_id = \'.productQtyInput\' + pid;
         }
         if (jQuery(value_id).is(\':visible\')) {
+            jQuery(".edit-value").hide();
+            jQuery(".visual-value").show();
             jQuery(value_id).hide();
             jQuery(div_input_id).show();
             jQuery(text_input_id).focus();
