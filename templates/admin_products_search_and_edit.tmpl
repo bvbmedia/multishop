@@ -8,24 +8,31 @@
 		<form name="search" method="get" action="index.php" class="search-merged">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="form-inline">
-						<div class="form-group">
-							<input type="text" class="form-control search-merged-input skeyword" name="keyword" placeholder="###LABEL_SEARCH_KEYWORD###" value="###VALUE_SEARCH_KEYWORD###" />
-							<button type="submit" name="submit" class="search-merged-submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+					<div class="form-inline form-collapse">
+						<button class="search-expander collapsed" role="button" data-toggle="collapse" href="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+						<div class="collapse" id="search-collapse">
+							<div class="search-collapse-container">
+								<div class="form-group">
+									<input type="text" class="form-control search-merged-input skeyword" name="keyword" placeholder="###LABEL_SEARCH_KEYWORD###" value="###VALUE_SEARCH_KEYWORD###" />
+									<button type="submit" name="submit" class="search-merged-submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+								</div>
+								<!--
+								<div class="form-group">
+									<label>###LABEL_SEARCH_BY###</label>
+									###SEARCH_BY_SELECTBOX###
+								</div>
+								<div class="form-group">
+									<label>###LABEL_SEARCH_IN###</label>
+									###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
+								</div>
+								-->
+								<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="btn btn-info advanceSearch">
+									<i class="fa fa-cog" aria-hidden="true"></i>
+								</a>
+							</div>
 						</div>
-						<!--
-						<div class="form-group">
-							<label>###LABEL_SEARCH_BY###</label>
-							###SEARCH_BY_SELECTBOX###
-						</div>
-						<div class="form-group">
-							<label>###LABEL_SEARCH_IN###</label>
-							###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
-						</div>
-						-->
-						<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="btn btn-info advanceSearch">
-							<i class="fa fa-cog" aria-hidden="true"></i>
-						</a>
 					</div>
 					<div class="form-group pull-right mb-0">
 						###SEARCH_LIMIT###
