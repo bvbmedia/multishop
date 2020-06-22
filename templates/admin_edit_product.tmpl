@@ -1,6 +1,23 @@
 <!-- ###TEMPLATE### begin -->
 <!-- ###JS_HEADER### begin -->
 <script type="text/javascript">
+    function progressBarInit(container, progress) {
+        var bar = new ProgressBar.Line(container, {
+            strokeWidth: 0.2,
+            easing: 'easeInOut',
+            duration: 1000,
+            color: '#ED6A5A',
+            trailColor: '#eee',
+            trailWidth: 1,
+            svgStyle: {width: '100%', height: '100%'},
+            from: {color: '#ED6A5A'},
+            to: {color: '#00AB44'},
+            step: (state, bar) => {
+                bar.path.setAttribute('stroke', state.color);
+            }
+        });
+        bar.animate(progress);
+    }
     function populateRelatedProduct(data) {
         var relations_type=['main','sub','both','search'];
         if (data.related_product!=undefined) {
@@ -157,6 +174,7 @@
     }
     ###JS_FUNCTIONS_EXTRA###
     jQuery(document).ready(function ($) {
+        ###PROGRESSBAR_CONTAINER###
         $('input').keypress(function (event) {
             if (event.keyCode == 13) {
                 $('.save_as_new').attr('name', 'Submit');
@@ -575,6 +593,7 @@
 <div class="panel panel-default">
     <div class="panel-heading" data-spy="affix" data-offset-top="10">###LABEL_HEADING_EDIT_PRODUCT###</div>
     <div class="panel-body">
+        <div class="progressBarContainer" id="progressBar"></div>
         <div id="tab-container" class="msadminVerticalTabs">
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" id="product_detailsWrapper"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>

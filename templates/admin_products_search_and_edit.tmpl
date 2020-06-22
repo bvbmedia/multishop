@@ -207,6 +207,7 @@
 
 				<!-- ###PRODUCTS_ITEM### begin -->
 				<div class="product-overview-listing-item">
+					<div class="progressBarContainer" id="progressBar###PID1###"></div>
 					<div class="cellCheckbox">
 						<div class="checkbox checkbox-success checkbox-inline">
 							<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
@@ -225,27 +226,27 @@
 						<div class="pol-attributes">
 							<div class="cellPrice">
 								<div class="pol-label">Prijs</div>
-								<span class="product_price_value_excl_vat_###PID1### visual-value">###VALUE_PRICE###</span>
-								<div class="form-group msAttributesField product_price_input product_price_input_excl_vat_###PID2### edit-value" style="display:none">
+								<span class="product_price_value_excl_vat_###PID2### visual-value">###VALUE_PRICE###</span>
+								<div class="form-group msAttributesField product_price_input product_price_input_excl_vat_###PID3### edit-value" style="display:none">
 									###INPUT_PRICE###
 									<div class="hover-action">
-										<a href="#" class="hoverSave products_price_save text-success"><i class="fa fa-save" aria-hidden="true"></i></i></a>
+										<a href="#" class="hoverSave products_price_save products_price_edit text-success" data-pid="###PID4###"><i class="fa fa-save" aria-hidden="true"></i></i></a>
 										<a href="#" class="hoverCancel products_price_cancel text-danger"><i class="fa fa-ban" aria-hidden="true"></i></i></a>
 									</div>
 								</div>
-								<a href="#" class="hoverEdit products_price_edit" data-pid="###PID3###"><i class="fa fa-pencil"></i></a>
+								<a href="#" class="editPencil hoverEdit products_price_edit" data-pid="###PID5###"><i class="fa fa-pencil"></i></a>
 							</div>
 							<div class="cellStock">
 								<div class="pol-label">Vrije voorraad</div>
-								<span class="product_qty_value_###PID4### visual-value">###VALUE_PRODUCT_QUANTITY###</span>
-								<span class="product_price_input product_qty_input_###PID5### edit-value" style="display:none">
+								<span class="product_qty_value_###PID6### visual-value">###VALUE_PRODUCT_QUANTITY###</span>
+								<span class="product_price_input product_qty_input_###PID7### edit-value" style="display:none">
 									###INPUT_PRODUCT_QUANTITY###
 									<div class="hover-action">
-										<a href="#" class="hoverSave products_price_save text-success"><i class="fa fa-save" aria-hidden="true"></i></i></a>
+										<a href="#" class="hoverSave products_price_save text-success products_qty_edit" data-pid="###PID8###"><i class="fa fa-save" aria-hidden="true"></i></i></a>
 										<a href="#" class="hoverCancel products_price_cancel text-danger"><i class="fa fa-ban" aria-hidden="true"></i></i></a>
 									</div>
 								</span>
-								<a href="#" class="hoverEdit products_qty_edit" data-pid="###PID6###"><i class="fa fa-pencil"></i></a>
+								<a href="#" class="editPencil hoverEdit products_qty_edit" data-pid="###PID9###"><i class="fa fa-pencil"></i></a>
 							</div>
 							###PLUGINS_QUICK_EDIT_PRODUCT_EXTRA_CONTENT###
 						</div>
@@ -296,7 +297,25 @@
 		<!-- ###NORESULTS### end -->
 	</div></div>
 <script type="text/javascript">
+	function progressBarInit(container, progress) {
+        var bar = new ProgressBar.Line(container, {
+            strokeWidth: 0.2,
+            easing: 'easeInOut',
+            duration: 1000,
+            color: '#ED6A5A',
+            trailColor: '#eee',
+            trailWidth: 1,
+            svgStyle: {width: '100%', height: '100%'},
+            from: {color: '#ED6A5A'},
+            to: {color: '#00AB44'},
+            step: (state, bar) => {
+                bar.path.setAttribute('stroke', state.color);
+            }
+        });
+        bar.animate(progress);
+    }
     jQuery(document).ready(function($) {
+        ###PROGRESSBAR_CONTAINER###
         $('#product_date_from_visual').datetimepicker({
 			 dateFormat: '###DATE_TIME_JS_FORMAT0###',
 			 showSecond: true,

@@ -769,6 +769,21 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // custom page hook that can be controlled by third-party plugin eof
+$prefix = 'p.';
+if ($this->ms['MODULES']['FLAT_DATABASE']) {
+    $prefix = 'pf.';
+}
+$select[] = $prefix . "ean_code";
+$select[] = $prefix . "sku_code";
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_google_shopping')) {
+    $select[] = $prefix . "product_taxonomy_id";
+}
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_feature_highlights')) {
+    $select[] = $prefix . "products_feature_highlights_1";
+    $select[] = $prefix . "products_feature_highlights_2";
+    $select[] = $prefix . "products_feature_highlights_3";
+    $select[] = $prefix . "products_feature_highlights_4";
+}
 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
 $products = $pageset['products'];
 $product_tax_rate_js = array();
@@ -897,7 +912,10 @@ if ($pageset['total_rows'] > 0) {
     // custom page hook that can be controlled by third-party plugin eof
     $s = 0;
     $productsItem = '';
+    $progressBarData = array();
     foreach ($products as $rs) {
+        $progress_item_point = mslib_befe::getProductProgressBarPoint($rs);
+        $progressBarData[] = 'progressBarInit(\'#progressBar' . $rs['products_id'] . '\', '.$progress_item_point.');';
         if ($switch == 'odd') {
             $switch = 'even';
         } else {
@@ -1010,10 +1028,10 @@ if ($pageset['total_rows'] > 0) {
 
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
             $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display_incl);
-            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display_incl . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div>';
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control input-value msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display_incl . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div>';
         } else {
             $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display);
-            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
+            $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control input-value msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
         }
 
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
@@ -1024,7 +1042,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['VALUE_CAPITAL_PRICE_INCL_VAT'] = htmlspecialchars($capital_price_display_incl);
         $markerArray['VALUE_ORIGINAL_CAPITAL_PRICE'] = $rs['product_capital_price'];
         $markerArray['VALUE_PRODUCT_QUANTITY'] = $rs['products_quantity'];
-        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock]['.$rs['products_quantity'].']" class="form-control width-auto productQtyInput'.$rs['products_id'].'" value="'.$rs['products_quantity'].'" style="text-align:right;" />';
+        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock]['.$rs['products_quantity'].']" class="form-control input-value width-auto productQtyInput'.$rs['products_id'].'" value="'.$rs['products_quantity'].'" style="text-align:right;" />';
         $markerArray['VALUE_PRODUCT_WEIGHT'] = $rs['products_weight'];
         $markerArray['PID0'] = $rs['products_id'];
         $markerArray['PID1'] = $rs['products_id'];
@@ -1392,6 +1410,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // custom page hook that can be controlled by third-party plugin eof
+$subpartArray['###PROGRESSBAR_CONTAINER###'] = implode("\n", $progressBarData);
 $subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL1###'] = implode('', $extra_advanced_search_input_cols[0]);
 $subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL2###'] = implode('', $extra_advanced_search_input_cols[1]);
 $subpartArray['###EXTRA_ADVANCED_SEARCH_INPUT_FILTER_COL3###'] = implode('', $extra_advanced_search_input_cols[2]);
@@ -1574,8 +1593,8 @@ jQuery(document).ready(function(){
     });
     jQuery(document).on(\'click\', \'.hoverEdit\', function(e){
         e.preventDefault();
-        jQuery(this).empty();
-        jQuery(this).html(\'<i class="fa fa-save"></i>\');
+        jQuery(this).hide();
+        jQuery(\'.editPencil\').show();
         var pid = jQuery(this).attr(\'data-pid\');
         if (jQuery(this).hasClass(\'products_price_edit\')) {
             var data_type = \'products_price\';
@@ -1595,6 +1614,7 @@ jQuery(document).ready(function(){
             jQuery(value_id).hide();
             jQuery(div_input_id).show();
             jQuery(text_input_id).focus();
+            jQuery(this).hide();
         } else {
             var new_value = jQuery(text_input_id).val();
             jQuery(value_id).empty();
@@ -1602,10 +1622,49 @@ jQuery(document).ready(function(){
             jQuery(value_id).show();
             jQuery(div_input_id).hide();
             updateData(new_value, pid, data_type);
-            jQuery(this).empty();
-            jQuery(this).html(\'<i class="fa fa-pencil"></i>\');
+            jQuery(this).show();
         }
     });
+    jQuery(document).on(\'click\', \'.hoverSave\', function(e){
+        e.preventDefault();
+        jQuery(this).hide();
+        jQuery(\'.editPencil\').show();
+        var pid = jQuery(this).attr(\'data-pid\');
+        if (jQuery(this).hasClass(\'products_price_edit\')) {
+            var data_type = \'products_price\';
+            var value_id=\'.product_price_value_excl_vat_\' + pid;
+            var div_input_id = \'.product_price_input_excl_vat_\' + pid;
+            var text_input_id = \'.productPriceInput\' + pid;
+        }
+        if (jQuery(this).hasClass(\'products_qty_edit\')) {
+            var data_type = \'products_quantity\'; 
+            var value_id=\'.product_qty_value_\' + pid;
+            var div_input_id = \'.product_qty_input_\' + pid;
+            var text_input_id = \'.productQtyInput\' + pid;
+        }
+        if (jQuery(value_id).is(\':visible\')) {
+            jQuery(".edit-value").hide();
+            jQuery(".visual-value").show();
+            jQuery(value_id).hide();
+            jQuery(div_input_id).show();
+            jQuery(text_input_id).focus();
+            jQuery(this).hide();
+        } else {
+            var new_value = jQuery(text_input_id).val();
+            jQuery(value_id).empty();
+            jQuery(value_id).html(new_value);
+            jQuery(value_id).show();
+            jQuery(div_input_id).hide();
+            updateData(new_value, pid, data_type);
+            jQuery(this).show();
+        }
+    });
+    jQuery(document).on(\'click\', \'.hoverCancel\', function(e){
+        e.preventDefault();
+        jQuery(\'.editPencil\').show();
+        jQuery(".edit-value").hide();
+        jQuery(".visual-value").show();
+    }); 
     jQuery(document).on(\'change\', \'.products_status\', function(e){
         e.preventDefault();
         var pid = jQuery(this).attr(\'data-pid\');

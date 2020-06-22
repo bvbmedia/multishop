@@ -5761,6 +5761,70 @@ class mslib_befe {
             }
         }
     }
+    function getProductProgressBarPoint($product) {
+        $product_data = mslib_fe::getProduct((int) $product['products_id'], '', '', 1);
+        $progress_point = 0.0833333333333333;
+        $progress_item_point = 0;
+        if (!empty($product_data['products_name'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['products_description'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['products_model'])) {
+            $progress_item_point += $progress_point;
+        }
+        if ($product_data['manufacturers_id'] > 0) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['ean_code'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['sku_code'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['products_image'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['products_meta_title'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (!empty($product_data['products_meta_description'])) {
+            $progress_item_point += $progress_point;
+        }
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_google_shopping')) {
+            if (!$product_data['product_taxonomy_id']) {
+                $sql = "select c.category_taxonomy_id from tx_multishop_categories c, tx_multishop_products_to_categories p2c where c.categories_id = p2c.categories_id and p2c.products_id = " . $product_data['products_id'];
+                $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
+                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                if ($row['category_taxonomy_id'] > 0) {
+                    $product_data['product_taxonomy_id'] = $row['category_taxonomy_id'];
+                }
+            }
+            if ($product_data['product_taxonomy_id'] > 0) {
+                $progress_item_point += $progress_point;
+            }
+        }
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_feature_highlights')) {
+            $feature_data=tx_multishop_product_feature_highlights_methods::getProductFeatureHighlightValues($product_data['products_id'], $product_data['categories_id']);
+            if (!$product_data['products_feature_highlights_1']) {
+                $product_data['products_feature_highlights_1']=$feature_data['c_products_feature_highlights_1'];
+            }
+            if (!$product_data['products_feature_highlights_2']) {
+                $product_data['products_feature_highlights_2']=$feature_data['c_products_feature_highlights_2'];
+            }
+            if (!$product_data['products_feature_highlights_3']) {
+                $product_data['products_feature_highlights_3']=$feature_data['c_products_feature_highlights_3'];
+            }
+            if (!$product_data['products_feature_highlights_4']) {
+                $product_data['products_feature_highlights_4']=$feature_data['c_products_feature_highlights_4'];
+            }
+            if ($product_data['products_feature_highlights_1'] && $product_data['products_feature_highlights_2'] && $product_data['products_feature_highlights_3']) {
+                $progress_item_point += $progress_point;
+            }
+        }
+        return $progress_item_point;
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

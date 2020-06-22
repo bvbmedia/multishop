@@ -2724,6 +2724,9 @@ if ($this->post) {
         } else {
             $markerArray['JS_TRIGGERS_EXTRA'] = implode("\n", $js_extra['triggers']);
         }
+        $progress_item_point = mslib_befe::getProductProgressBarPoint($product);
+        $progressBarData = 'progressBarInit(\'#progressBar\', '.$progress_item_point.');';
+        $markerArray['PROGRESSBAR_CONTAINER'] = $progressBarData;
         $js_header .= $this->cObj->substituteMarkerArray($subparts['js_header'], $markerArray, '###|###');
         /*
 		 * details tab
