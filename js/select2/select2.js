@@ -3218,7 +3218,7 @@ the specific language governing permissions and limitations under the Apache Lic
         formatSelectionTooBig: function (limit) { return "You can only select " + limit + " item" + (limit == 1 ? "" : "s"); },
         formatLoadMore: function (pageNumber) { return "Loading more results..."; },
         formatSearching: function () { return "Searching..."; },
-        minimumResultsForSearch: 0,
+        minimumResultsForSearch: -1,
         minimumInputLength: 0,
         maximumInputLength: null,
         maximumSelectionSize: 0,
