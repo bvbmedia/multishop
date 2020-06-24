@@ -7494,6 +7494,15 @@ class mslib_fe {
                 if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_groups' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_groups') {
                     $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['active'] = 1;
                 }
+                if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['label'] = $this->pi_getLL('admin_attributes_options_values_groups');
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['description'] = $this->pi_getLL('admin_maintain_attributes_options_values_groups') . '.';
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_attributes_options_values_groups');
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['class'] = 'fa fa-object-group';
+                    if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_values_groups' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_values_groups') {
+                        $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['active'] = 1;
+                    }
+                }
             }
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['label'] = $this->pi_getLL('admin_update_prices');
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['description'] = $this->pi_getLL('admin_update_product_prices_by_percentage') . '.';

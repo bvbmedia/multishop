@@ -297,4 +297,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable auto-remember orders listing filters
 	adminOrdersListingDisableAutoRememberFilters = 0
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable attributes option values group
+	enableAttributeOptionValuesGroup = 0
 }
