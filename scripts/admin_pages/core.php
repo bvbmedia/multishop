@@ -819,4 +819,81 @@ switch ($this->ms['page']) {
         }
         break;
 }
-?>
+// Topnav
+/*
+if ($this->ADMIN_USER) {
+    switch ($this->get['tx_multishop_pi1']['page_section']) {
+        case 'custom_page':
+            // Leave it up by third party plugins
+            break;
+        case '':
+            break;
+        default:
+            // Render sub menu navigation
+            $page_section = '';
+            $this->get['categories_id'] = $this->get['tx_multishop_pi1']['categories_id'];
+            $this->get['products_id'] = $this->get['tx_multishop_pi1']['products_id'];
+            $data = mslib_fe::jQueryAdminMenu();
+            $itemsToCheck = array();
+            foreach ($data['header'] as $level1Key => $level1Item) {
+                if ($level1Item['link']) {
+                    $itemsToCheck[] = array('check' => $level1Item, 'siblings' => $data['header'][$level1Key]['subs']);
+                }
+                if (is_array($level1Item['subs'])) {
+                    foreach ($level1Item['subs'] as $level2Key => $level2Item) {
+                        if ($level2Item['link']) {
+                            $itemsToCheck[] = array('check' => $level2Item, 'siblings' => $data['header'][$level1Key]['subs']);
+                        }
+                        if (is_array($level2Item['subs'])) {
+                            foreach ($level2Item['subs'] as $level3Key => $level3Item) {
+                                if ($level3Item['link']) {
+                                    $itemsToCheck[] = array('check' => $level3Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs']);
+                                }
+                                if (is_array($level3Item['subs'])) {
+                                    foreach ($level3Item['subs'] as $level4Key => $level4Item) {
+                                        if ($level4Item['link']) {
+                                            $itemsToCheck[] = array('check' => $level4Item, 'siblings' => $data['header'][$level1Key]['subs'][$level2Key]['subs'][$level3Key]['subs']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (count($itemsToCheck)) {
+                $menuItems = array();
+                foreach ($itemsToCheck as $item) {
+                    parse_str($item['check']['link'], $url);
+                    if ($url['tx_multishop_pi1']['page_section'] == $this->get['tx_multishop_pi1']['page_section']) {
+                        $page_section = $url['tx_multishop_pi1']['page_section'];
+                        // Get menu items
+                        if (is_array($item['siblings'])) {
+                            $menuItems = $item['siblings'];
+                        }
+                    }
+                }
+                $navItems = array();
+                foreach ($menuItems as $menuItem) {
+                    if ($menuItem['link'] != '') {
+                        $label = '<span>' . htmlspecialchars($menuItem['label']) . '</span>';
+                        $menuItem['class'] = '';
+                        if ($menuItem['active']) {
+                            $menuItem['class'] = 'active';
+                        } else {
+                            if ($menuItem['link']) {
+                                $label = '<a href="' . $menuItem['link'] . '">' . $label . '</a>';
+                            }
+                        }
+                        $navItems[] = '<li' . ($menuItem['class'] ? ' class="' . $menuItem['class'] . '"' : '') . '>' . $label . '</li>';
+                    }
+                }
+                if (count($navItems)) {
+                    $content = '<ul class="navInterface nav-tabsInterface">' . implode('', $navItems) . '</ul>' . $content;
+                }
+                //$content = mslib_befe::bootstrapTabs($tabsArray,$content,$activeKey);
+            }
+            break;
+    }
+}
+*/

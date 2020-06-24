@@ -2925,6 +2925,17 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Disable select2 dropdown for top categories input in product search and edit overview.',
+        'configuration_key' => 'PRODUCT_SEARCH_AND_EDIT_DISABLE_SELECT2_FOR_TOP_CAT_INPUT',
+        'configuration_value' => '1',
+        'description' => 'Disable select2 dropdown for top categories input in product search and edit overview.',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

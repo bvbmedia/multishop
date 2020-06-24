@@ -869,7 +869,10 @@ if ($this->post['skeyword']) {
             break;
     }
 }
+// convert to international format
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
+    $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
+    $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
     $start_time = strtotime($this->post['order_date_from']);
     $end_time = strtotime($this->post['order_date_till']);
     if ($this->post['search_by_status_last_modified']) {
@@ -880,6 +883,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
     if (!empty($this->post['order_date_from'])) {
+        $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
         $start_time = strtotime($this->post['order_date_from']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
@@ -889,6 +893,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         $filter[] = $column . " >= '" . $start_time . "'";
     }
     if (!empty($this->post['order_date_till'])) {
+        $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
         $end_time = strtotime($this->post['order_date_till']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
@@ -899,17 +904,21 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     }
 }
 if (!empty($this->post['order_expected_delivery_date_from']) && !empty($this->post['order_expected_delivery_date_till'])) {
+    $this->post['order_expected_delivery_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_expected_delivery_date_from']);
+    $this->post['order_expected_delivery_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_expected_delivery_date_till']);
     $start_time = strtotime($this->post['order_expected_delivery_date_from']);
     $end_time = strtotime($this->post['order_expected_delivery_date_till']);
     $column = 'o.expected_delivery_date';
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
     if (!empty($this->post['order_expected_delivery_date_from'])) {
+        $this->post['order_expected_delivery_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_expected_delivery_date_from']);
         $start_time = strtotime($this->post['order_expected_delivery_date_from']);
         $column = 'o.expected_delivery_date';
         $filter[] = $column . " >= '" . $start_time . "'";
     }
     if (!empty($this->post['order_expected_delivery_date_till'])) {
+        $this->post['order_expected_delivery_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_expected_delivery_date_till']);
         $end_time = strtotime($this->post['order_expected_delivery_date_till']);
         $column = 'o.expected_delivery_date';
         $filter[] = $column . " <= '" . $end_time . "'";

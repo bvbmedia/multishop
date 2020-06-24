@@ -859,6 +859,12 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'update_product_info':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/ajax_pages/update_product_info.php');
+        }
+        exit();
+        break;
     case 'get_order_territories':
         $where = array();
         $skip_db = false;
