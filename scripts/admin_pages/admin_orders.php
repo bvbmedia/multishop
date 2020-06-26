@@ -706,10 +706,17 @@ $orders_status_list .= '</select>';
 $limit_selectbox = '<select name="limit" id="limit" class="form-control">';
 $limits = array();
 $limits[] = '10';
+$limits[] = '15';
+$limits[] = '20';
 $limits[] = '25';
+$limits[] = '30';
+$limits[] = '40';
 $limits[] = '50';
 $limits[] = '100';
-$limits[] = '200';
+$limits[] = '150';
+$limits[] = '300';
+$limits[] = '500';
+$limits[] = '750';
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }

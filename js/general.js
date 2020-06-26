@@ -354,14 +354,12 @@ jQuery(document).ready(function ($) {
             });
         }
     }
-    /*
     if ($('select[name="limit"]').length>0) {
         replacePageLimitSelectBox('limit');
     }
     if ($('select[name="tx_multishop_pi1[limit]"]').length>0) {
         replacePageLimitSelectBox('tx_multishop_pi1[limit]');
     }
-    */
     $('textarea').live('keydown', function(e) {
         if (e.ctrlKey && e.keyCode === 13) {
             e.preventDefault();
