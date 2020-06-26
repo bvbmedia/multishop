@@ -623,11 +623,6 @@ if ($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) 
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
-if ($this->cookie['limit']) {
-    $this->post['limit'] = $this->cookie['limit'];
-} else {
-    $this->post['limit'] = 10;
-}
 /*
 <label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
 <label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
@@ -717,6 +712,9 @@ $limits[] = '150';
 $limits[] = '300';
 $limits[] = '500';
 $limits[] = '750';
+if (isset($this->get['limit']) && !empty($this->get['limit']) && !in_array($this->get['limit'], $limits)) {
+    $limits[] = $this->get['limit'];
+}
 foreach ($limits as $limit) {
     $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
 }
