@@ -3472,8 +3472,8 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                     $percentage_sb .= '</select>
 							</div>';
-                    $order_products_body_data['products_discount']['value'] = $percentage_sb . '<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>';
-                    $order_products_body_data['products_discount']['value'] .= '<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderProductPriceIncludingVat priceInputDisplay" value="0" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>';
+                    $order_products_body_data['products_discount']['value'] = $percentage_sb . '<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="manual_display_name_discount_excluding_vat" name="manual_display_name_discount_excluding_vat" class="form-control msOrderManualProductPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>';
+                    $order_products_body_data['products_discount']['value'] .= '<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="manual_display_name_discount_including_vat" id="manual_display_name_discount_including_vat" class="form-control msOrderManualProductPriceIncludingVat priceInputDisplay" value="0" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>';
                     $order_products_body_data['products_discount']['value'] .= '<div class="msAttributesField hidden"><input class="priceInputReal text" type="hidden" name="manual_product_discount_amount" id="manual_product_discount_amount" value="0" /></div>';
                 }
                 // product final price col
@@ -5066,6 +5066,17 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
             });
+            $(document).on("keyup", ".msOrderManualProductPriceExcludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	priceEditRealtimeCalc(true, $(this), "#manual_product_tax");
+                }
+            });
+            $(document).on("keyup", ".msOrderManualProductPriceIncludingVat", function(e) {
+                if (e.keyCode!=9) {
+                	priceEditRealtimeCalc(false, $(this), "#manual_product_tax");
+                }
+            });
+            
             $(document).on("keyup", ".msOrderProductPriceExcludingVat", function(e) {
             	if (e.keyCode!=9) {
                 	priceEditRealtimeCalc(true, $(this), "#product_tax");
