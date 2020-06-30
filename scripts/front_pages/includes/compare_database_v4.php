@@ -652,6 +652,38 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+
+if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+    $str = "select attributes_options_values_groups_id from tx_multishop_attributes_options_values_groups";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    if (!$qry) {
+        $str = "CREATE TABLE `tx_multishop_attributes_options_values_groups` (
+ `attributes_options_values_groups_id` int(11) NOT NULL auto_increment,
+ `language_id` int(11) default '0',
+ `attributes_options_values_groups_name` varchar (127) default '',
+ `sort_order` int(11) default '0',
+ PRIMARY KEY (`attributes_options_values_groups_id`),
+ KEY `language_id` (`language_id`),
+ KEY `attributes_options_values_groups_name` (`attributes_options_values_groups_name`),
+ KEY `sort_order` (`sort_order`)
+);";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+    $str = "select attributes_options_values_groups_to_products_options_values_id from tx_multishop_attributes_options_values_groups_to_options_values";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    if (!$qry) {
+        $str = "CREATE TABLE `tx_multishop_attributes_options_values_groups_to_options_values` (
+ `attributes_options_values_groups_to_products_options_values_id` int(11) NOT NULL auto_increment,
+ `attributes_options_values_groups_id` int(11) default '0',
+ `products_options_values_id` int (11) default '0',
+ PRIMARY KEY (`attributes_options_values_groups_to_products_options_values_id`)
+);";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
+
 $str = "select stock_subtracted from tx_multishop_orders_products limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {

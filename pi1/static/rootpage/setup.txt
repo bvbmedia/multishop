@@ -133,6 +133,7 @@ plugin.tx_multishop_pi1 {
 	addLinkToProductNameForCancelUrl = {$plugin.multishop.addLinkToProductNameForCancelUrl}
 	adminOrdersListingDisableAutoRememberFilters = {$plugin.multishop.adminOrdersListingDisableAutoRememberFilters}
 	debugPurgeCacheLite = {$plugin.multishop.debugPurgeCacheLite}
+	enableAttributeOptionValuesGroup = {$plugin.multishop.enableAttributeOptionValuesGroup}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

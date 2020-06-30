@@ -1623,6 +1623,24 @@ CREATE TABLE `tx_multishop_attributes_options_groups_to_products_options` (
  PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
 );
 
+CREATE TABLE `tx_multishop_attributes_options_values_groups` (
+ `attributes_options_values_groups_id` int(11) NOT NULL default '0',
+ `language_id` int(11) NOT NULL default '0',
+ `attributes_options_values_groups_name` varchar(127) default '',
+ `sort_order` int(11) default '0',
+ PRIMARY KEY (attributes_options_values_groups_id,language_id),
+ KEY `attributes_options_values_groups_name` (`attributes_options_values_groups_name`),
+ KEY `attributes_options_values_groups_id` (`attributes_options_values_groups_id`),
+ KEY `sort_order` (`sort_order`)
+);
+
+CREATE TABLE `tx_multishop_attributes_options_values_groups_to_options_values` (
+ `attributes_options_values_groups_to_products_options_values_id` int(11) NOT NULL auto_increment,
+ `attributes_options_values_groups_id` int(11) default '0',
+ `products_options_values_id` int(11) default '0',
+ PRIMARY KEY (`attributes_options_values_groups_to_products_options_id`)
+);
+
 CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
  `id` int(11) NOT NULL auto_increment,
  `zone_id` int(4) default '0',

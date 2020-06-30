@@ -807,6 +807,22 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'delete_options_values_group':
+        if ($this->ADMIN_USER && $this->conf['enableAttributeOptionValuesGroup'] == '1') {
+            if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {
+                $group_id = $this->post['tx_multishop_pi1']['group_id'];
+                $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups', 'attributes_options_values_groups_id=' . $group_id);
+                if ($qry) {
+                    $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups_to_options_values', 'attributes_options_values_groups_id=' . $group_id);
+                    $data = array();
+                    $data['result'] = 'OK';
+                    echo json_encode($data);
+                    exit();
+                }
+            }
+        }
+        exit();
+        break;
     case 'admin_categories_sorting':
         if ($this->ADMIN_USER) {
             $no = 1;
@@ -2120,6 +2136,30 @@ switch ($this->ms['page']) {
                                         'sort_order' => $no
                                 );
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups', $where, $updateArray);
+                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                $no++;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+        exit();
+        break;
+    case 'update_attributes_options_values_groups_sortable':
+        // this is the AJAX server for changing the sort order of the product attributes values group
+        if ($this->ADMIN_USER && $this->conf['enableAttributeOptionValuesGroup'] == '1') {
+            switch ($this->get['tx_multishop_pi1']['type']) {
+                case 'options_values_groups':
+                    if (is_array($this->post['options_values_groups']) and count($this->post['options_values_groups'])) {
+                        $no = 1;
+                        foreach ($this->post['options_values_groups'] as $prod_id) {
+                            if (is_numeric($prod_id)) {
+                                $where = "attributes_options_values_groups_id = " . $prod_id;
+                                $updateArray = array (
+                                    'sort_order' => $no
+                                );
+                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_values_groups', $where, $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 $no++;
                             }

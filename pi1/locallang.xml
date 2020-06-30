@@ -62,6 +62,7 @@
             <label index="admin_attribute">Attribute</label>
             <label index="admin_attributes">Attributes</label>
             <label index="admin_attributes_options_groups">Product attributes option groups</label>
+            <label index="admin_attributes_options_values_groups">Product attributes option value groups</label>
             <label index="admin_cancel">Cancel</label>
             <label index="admin_catalog">Catalog</label>
             <label index="admin_categories">Categories</label>
@@ -281,6 +282,7 @@
             <label index="admin_label_nothing_updated_already_using_latest_version">Nothing updated. You are already using the latest version.</label>
             <label index="admin_label_option">Option</label>
             <label index="admin_label_option_group_name">Option group name</label>
+            <label index="admin_label_option_value_group_name">Option value group name</label>
             <label index="admin_label_option_id">Option ID</label>
             <label index="admin_label_option_main_category">Main category</label>
             <label index="admin_label_option_name">Option name</label>
@@ -349,6 +351,7 @@
             <label index="admin_log_out">Log out</label>
             <label index="admin_main_category">Main category</label>
             <label index="admin_maintain_attributes_options_groups">Maintain attributes options groups</label>
+            <label index="admin_maintain_attributes_options_values_groups">Maintain attributes options values groups</label>
             <label index="admin_maintain_product_attributes">Maintain product attributes</label>
             <label index="admin_manual_order">Create order</label>
             <label index="admin_manufacturer">Manufacturer</label>
@@ -1519,6 +1522,7 @@
             <label index="admin_attribute">Attribuut</label>
             <label index="admin_attributes">Attributen</label>
             <label index="admin_attributes_options_groups">Attribuutgroepen</label>
+            <label index="admin_attributes_options_values_groups">Attribuut waarde groepen</label>
             <label index="admin_cancel">Annuleren</label>
             <label index="admin_catalog">Assortiment</label>
             <label index="admin_categories">Categorieën</label>
@@ -1738,6 +1742,7 @@
             <label index="admin_label_nothing_updated_already_using_latest_version">Er is niets ge-update. De webshop database is up-to-date.</label>
             <label index="admin_label_option">Optie</label>
             <label index="admin_label_option_group_name">Optie groepnaam</label>
+            <label index="admin_label_option_value_group_name">Optie waarde groepnaam</label>
             <label index="admin_label_option_id">Optie ID</label>
             <label index="admin_label_option_main_category">Hoofdcategorie</label>
             <label index="admin_label_option_name">Optie naam</label>
@@ -1806,6 +1811,7 @@
             <label index="admin_log_out">Uitloggen</label>
             <label index="admin_main_category">Hoofdcategorie</label>
             <label index="admin_maintain_attributes_options_groups">Beheer hier de groepen van de attributen</label>
+            <label index="admin_maintain_attributes_options_values_groups">Beheer hier de groepen van de attributen waardes</label>
             <label index="admin_maintain_product_attributes">Beheer hier de product attributen</label>
             <label index="admin_manual_order">Handmatige bestelling</label>
             <label index="admin_manufacturer">Fabrikant</label>
