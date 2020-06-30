@@ -1763,6 +1763,7 @@ if ($this->post) {
         $updateArray['page_uid'] = $this->showCatalogFromPage;
         $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $updateArray['products_last_modified'] = time();
+        $updateArray['extid'] = md5(uniqid());
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
