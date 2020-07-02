@@ -1314,6 +1314,7 @@ if ($this->post) {
             $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
             $updateArray['products_date_added'] = time();
             $updateArray['products_last_modified'] = time();
+            $updateArray['extid'] = md5(uniqid());
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1762,6 +1763,7 @@ if ($this->post) {
         $updateArray['page_uid'] = $this->showCatalogFromPage;
         $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $updateArray['products_last_modified'] = time();
+        $updateArray['extid'] = md5(uniqid());
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2671,7 +2673,7 @@ if ($this->post) {
             $objRef->setHeaderButtons($headerButtons);
             // Get header buttons through interface class so we can render them
             $interfaceHeaderButtons = $objRef->renderHeaderButtons();
-            $heading_page = '<h3>Product <strong>' . htmlspecialchars($lngproduct[0]['products_name']) . ' (ID: ' . $product['products_id'] . ')</strong> bewerken</h3>
+            $heading_page = '<h3><strong>' . htmlspecialchars($lngproduct[0]['products_name']) . ' (ID: ' . $product['products_id'] . ')</strong> bewerken</h3>
 			<div class="form-inline">
 				' . $interfaceHeaderButtons . '
 			</div>
