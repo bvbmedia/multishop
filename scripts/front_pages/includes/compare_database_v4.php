@@ -789,10 +789,10 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-$str = "select parcel_information_json from tx_multishop_orders limit 1";
+$str = "select configuration_key from tx_multishop_configuration where configuration_key = 'ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT' and configuration_title = 'Eanble discount on edit product level' limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-if (!$qry) {
-    $str = "ALTER TABLE `tx_multishop_orders` ADD `parcel_information_json` blob";
+if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+    $str = "UPDATE tx_multishop_configuration set configuration_title = 'Enable discount on edit product level', description = 'Enable discount on edit product level' where  configuration_key = 'ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT'";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
