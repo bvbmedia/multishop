@@ -1971,6 +1971,7 @@ switch ($this->ms['page']) {
                                                 $result['filename'] = $filename;
                                                 $result['fileLocation'] = $fileLocation . '?' . time();
                                                 $result['fileOriginal'] = $this->get['qqfile'];
+                                                $result['fileIndex'] = $x;
                                                 echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                                 exit();
                                             }

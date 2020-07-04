@@ -3163,9 +3163,10 @@ if ($this->post) {
                 $i = '';
             }
             $images_tab_block .= '
-			<div class="form-group" id="msEditProductInputImage_' . $x . '">
+            <div class="msEditProductInputImageItemWrapper" id="msEditProductInputImageWrapper_' . $x . '">
+			<div class="form-group msEditProductInputImageItem" id="msEditProductInputImage_' . $x . '">
 				<label for="products_image' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' ' . ($i + 1) . '</label>
-				<div class="col-md-10">
+				<div class="col-md-10 products_image_body">
 				<div id="products_image' . $i . '" class="products_image">
 					<noscript>
 						<input name="products_image' . $i . '" type="file" />
@@ -3187,16 +3188,17 @@ if ($this->post) {
 
             // image alt title input
             $images_tab_block .= '
-			<div class="form-group" id="msEditProductInputImageAltTitle_' . $x . '">
+			<div class="form-group msEditProductInputImageAlTitleItem" id="msEditProductInputImageAltTitle_' . $x . '">
 				<label for="ajax_products_image_title' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' title ' . ($i + 1) . '</label>
 				<div class="col-md-10">
 				    <input name="ajax_products_image_title[]" id="ajax_products_image_title' . $i . '" type="text" class="form-control" value="' . $product['products_image_title' . $i] . '" />';
             $images_tab_block .= '</div>';
             $images_tab_block .= '</div>';
+            $images_tab_block .= '</div>';
         }
         $images_tab_block .= '</div>
         <script type="text/javascript" data-ignore="1">
-		jQuery(document).ready(function($) {
+        jQuery(document).ready(function($) {
 		    var products_name=$("#products_name_0").val();
 		    var filledFilenameIndex={};
 		';
@@ -3217,7 +3219,7 @@ if ($this->post) {
 				},
 				template: \'<div class="qq-uploader">\' +
 						  \'<div class="qq-upload-drop-area"><span>' . $this->pi_getLL('admin_label_drop_files_here_to_upload') . '</span></div>\' +
-						  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> ' . addslashes(htmlspecialchars($this->pi_getLL('choose_image'))) . '</div>\' +
+						  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> <span class="upload_btn_label">' . addslashes(htmlspecialchars($this->pi_getLL('choose_image'))) . '</span></div>\' +
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul' . $i . '"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
