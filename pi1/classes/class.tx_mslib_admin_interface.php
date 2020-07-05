@@ -375,7 +375,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         if (count($pageset['dataset'])) {
             $tr_type = 'even';
             if (!$params['settings']['disableForm']) {
-                $tableContent .= '<form method="post" action="' . $params['postForm']['actionUrl'] . '" enctype="multipart/form-data">';
+                $tableContent .= '<form method="post" action="' . $params['postForm']['actionUrl'] . '"'.(isset($params['postForm']['name']) && !empty($params['postForm']['name']) ? ' name="'.$params['postForm']['name'].'"' : '').(isset($params['postForm']['id']) && !empty($params['postForm']['id']) ? ' id="'.$params['postForm']['id'].'"' : '').' enctype="multipart/form-data">';
             }
             $columnSorterData = array();
             if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
