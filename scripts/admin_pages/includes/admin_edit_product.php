@@ -3166,7 +3166,7 @@ if ($this->post) {
             <div class="msEditProductInputImageItemWrapper" id="msEditProductInputImageWrapper_' . $x . '">
 			<div class="form-group msEditProductInputImageItem" id="msEditProductInputImage_' . $x . '">
 				<label for="products_image' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' ' . ($i + 1) . '</label>
-				<div class="col-md-10 products_image_body">
+				<div class="col-md-12 products_image_body">
 				<div id="products_image' . $i . '" class="products_image">
 					<noscript>
 						<input name="products_image' . $i . '" type="file" />
@@ -3188,11 +3188,9 @@ if ($this->post) {
 
             // image alt title input
             $images_tab_block .= '
-			<div class="form-group msEditProductInputImageAlTitleItem" id="msEditProductInputImageAltTitle_' . $x . '">
+			<div class="msEditProductInputImageAlTitleItem" id="msEditProductInputImageAltTitle_' . $x . '">
 				<label for="ajax_products_image_title' . $i . '" class="col-md-2 control-label">' . $this->pi_getLL('admin_image') . ' title ' . ($i + 1) . '</label>
-				<div class="col-md-10">
 				    <input name="ajax_products_image_title[]" id="ajax_products_image_title' . $i . '" type="text" class="form-control" value="' . $product['products_image_title' . $i] . '" />';
-            $images_tab_block .= '</div>';
             $images_tab_block .= '</div>';
             $images_tab_block .= '</div>';
         }
