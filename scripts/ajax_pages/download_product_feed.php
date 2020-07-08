@@ -1065,13 +1065,19 @@ if ($this->get['feed_hash']) {
                         $tmpcontent .= strftime('%x', time());
                         break;
                     case 'products_date_added':
-                        $tmpcontent .= strftime('%x', $row['products_date_added']);
+                        if ($row['products_date_added'] > 0) {
+                            $tmpcontent .= strftime('%x', $row['products_date_added']);
+                        }
                         break;
                     case 'products_date_available':
-                        $tmpcontent .= strftime('%x', $row['products_date_available']);
+                        if ($row['products_date_available'] > 0) {
+                            $tmpcontent .= strftime('%x', $row['products_date_available']);
+                        }
                         break;
                     case 'products_last_modified':
-                        $tmpcontent .= strftime('%x', $row['products_last_modified']);
+                        if ($row['products_last_modified'] > 0) {
+                            $tmpcontent .= strftime('%x', $row['products_last_modified']);
+                        }
                         break;
                     default:
                         if ($field) {
