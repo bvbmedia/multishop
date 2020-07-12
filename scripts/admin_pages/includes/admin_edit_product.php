@@ -2652,20 +2652,23 @@ if ($this->post) {
             $details_link = $this->FULL_HTTP_URL . mslib_fe::typolink($this->conf['products_detail_page_pid'], $where . '&products_id=' . $product['products_id'] . '&tx_multishop_pi1[page_section]=products_detail');
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-danger';
-            $headingButton['fa_class'] = 'fa fa-remove';
+            $headingButton['fa_class'] = 'fa fa-trash';
             $headingButton['title'] = ''; //$this->pi_getLL('admin_delete_product');
+            $headingButton['alt'] = 'Product verwijderen';
             $headingButton['href'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_product&pid=' . $product['products_id'] . '&action=delete_product&cid=' . $product['categories_id']);
             $headerButtons['delete_product'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-primary viewfront';
             $headingButton['fa_class'] = 'fa fa-eye';
             $headingButton['title'] = ''; //$this->pi_getLL('admin_edit_view_front_product', 'View in front');
+            $headingButton['alt'] = 'Product aan de voorkant bekijken';
             $headingButton['href'] = $details_link;
             $headerButtons['preview_product'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-success';
             $headingButton['fa_class'] = 'fa fa-check-circle';
             $headingButton['title'] = ''; //($this->get['action'] == 'edit_product') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
+            $headingButton['alt'] = 'Opslaan en sluiten';
             $headingButton['href'] = '#';
             $headingButton['attributes'] = 'onclick="$(\'#btnSaveClose\').click(); return false;"';
             $headerButtons['product_save_close'] = $headingButton;
@@ -3177,10 +3180,10 @@ if ($this->post) {
             if ($_REQUEST['action'] == 'edit_product' && $product['products_image' . $i]) {
                 $images_tab_block .= '<img src="' . mslib_befe::getImagePath($product['products_image' . $i], 'products', '50') . '?' . time() . '" />';
                 $images_tab_block .= '<div class="image_tools">';
+                $images_tab_block .= ' <a href="#" class="btn btn-danger btn-sm delete_product_images" rel="' . $i . ':' . $product['products_image' . $i] . '"><i class="fa fa-trash-o"></i></a>';
                 if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
                     $images_tab_block .= ' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="' . $product['products_image' . $i] . '"><i class="fa fa-crop"></i></a> ';
                 }
-                $images_tab_block .= ' <a href="#" class="btn btn-danger btn-sm delete_product_images" rel="' . $i . ':' . $product['products_image' . $i] . '"><i class="fa fa-trash-o"></i></a>';
                 $images_tab_block .= '</div>';
             }
             $images_tab_block .= '</div>';
