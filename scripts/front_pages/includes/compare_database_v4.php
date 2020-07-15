@@ -789,3 +789,10 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select group_dropdown_label from tx_multishop_products_options_values limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_products_options_values` ADD `group_dropdown_label` varchar(150) default ''";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}

@@ -68,7 +68,7 @@ if ($rows) {
         $content .= '<div class="form-group" id="options_values_groups_' . $row['attributes_options_values_groups_id'] . '">
 		<label class="option_group_id control-label col-md-2">' . $this->pi_getLL('admin_label_option_value_group_name') . ':</label>
 		<div class="col-md-10 form-inline">
-		<input name="option_values_groups_names[' . $row['attributes_options_values_groups_id'] . '][0]" type="text" class="form-control" value="' . htmlspecialchars($row['attributes_options_values_groups_name']) . '" />';
+		<input name="option_values_groups_names[' . $row['attributes_options_values_groups_id'] . '][0]" type="text" class="form-control" value="' . htmlspecialchars($row['attributes_options_values_groups_name']) . '" style="width: 400px" />';
         foreach ($this->languages as $key => $language) {
             if ($key > 0) {
                 $str3 = "select attributes_options_values_groups_name from tx_multishop_attributes_options_values_groups where attributes_options_values_groups_id='" . $row['attributes_options_values_groups_id'] . "' and language_id='" . $key . "'";

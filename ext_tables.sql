@@ -1117,6 +1117,7 @@ CREATE TABLE `tx_multishop_products_options_values` (
  `language_id` int(11) NOT NULL default '0',
  `products_options_values_name` varchar(150) default '',
  `hide` tinyint(1) default '0',
+ `group_dropdown_label` varchar(150) default '0',
  PRIMARY KEY (`products_options_values_id`,`language_id`),
  KEY `products_options_values_id` (`products_options_values_id`),
  KEY `products_options_values_name` (`products_options_values_name`),
