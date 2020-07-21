@@ -1257,6 +1257,13 @@ $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_forma
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT2###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT3###'] = $this->pi_getLL('locale_date_format_js');
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['type_search']) && !empty($this->get['type_search'])) {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
+}
 // search on shop
 $subpartArray['###SEARCH_IN_SHOP_SELECTBOX###'] = '';
 if ($this->conf['masterShop']) {
