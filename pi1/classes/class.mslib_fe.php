@@ -7439,7 +7439,7 @@ class mslib_fe {
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['active'] = 1;
             }
             if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_product' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_product') {
-                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['active'] = 1;
+                $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['active'] = 1;
             }
             if ($this->get['products_id']) {
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_edit_product']['label'] = $this->pi_getLL('admin_edit_product');
@@ -7448,7 +7448,7 @@ class mslib_fe {
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_edit_product']['link_params'] = '';
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_edit_product']['class'] = 'fa fa-pencil';
                 if ($this->get['tx_multishop_pi1']['page_section'] == 'edit_product' || $this->post['tx_multishop_pi1']['page_section'] == 'edit_product') {
-                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_edit_product']['active'] = 1;
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['active'] = 1;
                 }
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['label'] = $this->pi_getLL('admin_delete_product');
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_delete_product']['description'] = $this->pi_getLL('admin_delete_product_description') . '.';
