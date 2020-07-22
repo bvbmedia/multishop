@@ -311,9 +311,6 @@ if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 }
 //$filter[]='p.page_uid='.$this->shop_pid; is already inside the getProductsPageSet
 if (isset($this->get['keyword']) and strlen($this->get['keyword']) > 0) {
-    if (!isset($this->get['tx_multishop_pi1']['search_by'])) {
-        $this->get['tx_multishop_pi1']['search_by'] = 'products_name';
-    }
     switch ($this->get['tx_multishop_pi1']['search_by']) {
         case 'default':
             $search_on_fields = explode(',', $this->conf['adminProductsSearchAndEditStandardCustomSearchOn']);
@@ -1263,6 +1260,13 @@ if (isset($this->get['product_sort']) && !empty($this->get['product_sort'])) {
             $subpartArray['###PRODUCT_SORT_DATE_MODIFIED_ASC_SELECTED###'] = 'selected="selected"';
             break;
     }
+}
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['search']) && $this->get['search'] == '1') {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
 }
 // order unit
 $order_unit_selectbox = '<select name="order_unit_id" class="form-control">';
