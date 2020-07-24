@@ -1172,6 +1172,7 @@ if ((isset($this->get['stock_from']) && !empty($this->get['stock_from'])) ||
         (isset($this->get['product_model']) && !empty($this->get['product_model']) && $this->get['product_model'] != 'all') ||
         (isset($this->get['product_image']) && !empty($this->get['product_image']) && $this->get['product_image'] != 'all') ||
         (isset($this->get['product_sort']) && !empty($this->get['product_sort']) && $this->get['product_sort'] != 'products_id_desc') ||
+        (isset($this->get['tx_multishop_pi1']['search_by']) && !empty($this->get['tx_multishop_pi1']['search_by']) && $this->get['tx_multishop_pi1']['search_by'] != 'products_name') ||
         (isset($this->get['search_engine']) && $this->get['search_engine'] != 'all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
