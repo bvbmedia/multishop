@@ -18,12 +18,6 @@
 									<input type="text" class="form-control search-merged-input skeyword" name="keyword" placeholder="###LABEL_SEARCH_KEYWORD###" value="###VALUE_SEARCH_KEYWORD###" />
 									<button type="submit" name="submit" class="search-merged-submit"><i class="fa fa-search" aria-hidden="true"></i></button>
 								</div>
-								<!--
-								<div class="form-group">
-									<label>###LABEL_SEARCH_IN###</label>
-									###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
-								</div>
-								-->
 								<a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="btn btn-info advanceSearch">
 									<i class="fa fa-cog" aria-hidden="true"></i>
 								</a>
@@ -46,6 +40,10 @@
 									<div class="form-group">
 										<label>###LABEL_SEARCH_BY###</label>
 										###SEARCH_BY_SELECTBOX###
+									</div>
+									<div class="form-group">
+										<label>###LABEL_SEARCH_IN###</label>
+										###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
 									</div>
 									<div class="form-group">
 										<label for="manufacturers" class="control-label">###LABEL_MANUFACTURERS###</label>
@@ -361,6 +359,7 @@
 				 dropdownCssClass: "", // apply css that makes the dropdown taller
 				 minimumInputLength: 0,
 				 multiple: false,
+                 width:'100%',
 				 //allowClear: true,
 				 query: function (query) {
 					 $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
