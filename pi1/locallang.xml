@@ -1464,6 +1464,7 @@
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
             <label index="label_product_image">With image</label>
             <label index="admin_sort_categories">Sort categories</label>
+            <label index="admin_label_guest_checkout">Logged in during order?</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2900,6 +2901,7 @@
             <label index="admin_choose_foreign_source_name">Kies een buitenlandse bronnaam</label>
             <label index="label_product_image">Met afbeelding</label>
             <label index="admin_sort_categories">Categorieën sorteren</label>
+            <label index="admin_label_guest_checkout">Logged in tijdens bestelling?</label>
         </languageKey>
     </data>
 </T3locallang>

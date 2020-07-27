@@ -2277,6 +2277,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $extraDetails[$this->pi_getLL('referrer', 'Referrer')] = '<a href="' . $order['http_referer'] . '" target="_blank" rel="noreferrer">' . $domain['host'] . '</a>';
                 }
             }
+            if (isset($order['guest_checkout'])) {
+                $extraDetails[$this->pi_getLL('admin_label_guest_checkout', 'Logged in tijdens bestelling?')] = ($order['guest_checkout'] > 0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));
+            }
             // hook for adding new items to details fieldset
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
                 // hook
