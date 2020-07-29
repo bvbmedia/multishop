@@ -2399,6 +2399,13 @@ class mslib_befe {
         }
         $str = "ANALYZE TABLE `tx_multishop_products_flat_tmp`";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        //hook to let other plugins further manipulate the create table query
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreRenameProc'])) {
+            $params = array();
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreRenameProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $str = "drop table `tx_multishop_products_flat`;";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         // convert to memory table
