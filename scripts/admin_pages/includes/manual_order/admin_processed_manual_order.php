@@ -13,23 +13,12 @@ if ($this->post['proceed_order']) {
             $this->post['tx_multishop_pi1']['telephone'] = $this->post['telephone'];
         }
     } else {
-        if ($this->post['email']) {
-            $str = "SELECT uid from fe_users where (username='" . addslashes($this->post['email']) . "')";
-            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                // use current account
-                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                $customer_id = $row['uid'];
-            }
-        }
-        if (!$customer_id) {
-            $str = "SELECT uid from fe_users where (username='" . addslashes($unique_id) . "')";
-            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                // use current account
-                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                $customer_id = $row['uid'];
-            }
+        $str = "SELECT uid from fe_users where (username='" . addslashes($unique_id) . "')";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+            // use current account
+            $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            $customer_id = $row['uid'];
         }
     }
     if (!$customer_id) {
@@ -61,7 +50,6 @@ if ($this->post['proceed_order']) {
         $insertArray['last_name'] = $this->post['last_name'];
         $insertArray['username'] = $unique_id;
         $insertArray['email'] = $this->post['email'];
-        $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
         $insertArray['department'] = ($this->post['department'] ? $this->post['department'] : '');
         $insertArray['street_name'] = $this->post['street_name'];
