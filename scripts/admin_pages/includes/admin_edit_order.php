@@ -2307,16 +2307,16 @@ if (is_numeric($this->get['orders_id'])) {
                         </div>';
                     } else {
                     */
-                    $extraDetailsData[] = '<div class="col-md-4">
-                            <label class="control-label">' . $ed_label . '</label>
-                            <p class="form-control-static">' . $ed_value . '</p>
+                    $extraDetailsData[] = '<div class="form-group">
+                            <label class="control-label col-md-3">' . $ed_label . '</label>
+                            <div class="col-md-9"><p class="form-control-static">' . $ed_value . '</p></div>
                         </div>';
                     //}
                     $ed_counter++;
                 }
                 $orderDetails[] = '
                     <hr/>
-                    <div class="form-group edit-order-info">
+                    <div class="edit-order-info">
                         ' . implode('', $extraDetailsData) . '
                     </div>
                 ';
