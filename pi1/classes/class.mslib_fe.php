@@ -2601,13 +2601,31 @@ class mslib_fe {
                         if ($readonly) {
                             $output_html[$options['products_options_id']] .= '<ul>';
                         }
+                        $attribute_option_value_group = array();
+                        $attribute_option_value_to_group = array();
+                        if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+                            // now get the values group
+                            $str_ovg = $GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix, povg2ov.attributes_options_values_groups_id as value_group_id', // SELECT ...
+                                    'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_attributes_options_values_groups_to_options_values povg2ov', // FROM ...
+                                    'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . $options['products_options_id'] . '\' and pa.page_uid = \'' . $this->showCatalogFromPage . '\' and pov.language_id = \'' . $this->sys_language_uid . '\' and pa.options_values_id = pov.products_options_values_id and pov.products_options_values_id = povg2ov.products_options_values_id and povp.products_options_id=\'' . $options['products_options_id'] . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
+                                    '', // GROUP BY...
+                                    'pa.sort_order_option_value asc', // ORDER BY...
+                                    '' // LIMIT ...
+                            );
+                            $option_value_groups = $GLOBALS['TYPO3_DB']->sql_query($str_ovg);
+                            while ($option_value_group_data = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($option_value_groups)) {
+                                if (!isset($attribute_option_value_group[$option_value_group_data['value_group_id']])) {
+                                    $attribute_option_value_group[$option_value_group_data['value_group_id']] = array();
+                                }
+                                if (!in_array($option_value_group_data['products_options_values_id'], $attribute_option_value_group[$option_value_group_data['value_group_id']])) {
+                                    $attribute_option_value_group[$option_value_group_data['value_group_id']][] = $option_value_group_data['products_options_values_id'];
+                                    $attribute_option_value_to_group[$option_value_group_data['products_options_values_id']] = $option_value_group_data['value_group_id'];
+                                }
+                            }
+                        }
                         $attribute_value_image_select = '';
                         if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
                             $attribute_value_image_select = ', pa.attribute_image as attribute_local_image, povp.products_options_values_image as attribute_global_image';
-                        }
-                        $attribute_option_value_group_select = '';
-                        if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
-                            $attribute_option_value_group_select = '';
                         }
                         // now get the values
                         $str = $GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix' . $attribute_value_image_select, // SELECT ...
