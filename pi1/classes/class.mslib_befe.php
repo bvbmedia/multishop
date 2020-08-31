@@ -935,6 +935,16 @@ class mslib_befe {
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
                 $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_flat', 'products_id=' . $products_id);
             }
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPostHook'])) {
+                $params = array(
+                        'products_id' => &$products_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            //hook to let other plugins further manipulate the create table query eol
         }
     }
     public function enableCustomer($uid) {
