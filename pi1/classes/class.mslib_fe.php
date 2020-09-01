@@ -2601,17 +2601,39 @@ class mslib_fe {
                         if ($readonly) {
                             $output_html[$options['products_options_id']] .= '<ul>';
                         }
+                        $attribute_option_value_group = array();
+                        $attribute_option_value_to_group = array();
+                        if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+                            // now get the values group
+                            $str_ovg = $GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix, povg2ov.attributes_options_values_groups_id as value_group_id', // SELECT ...
+                                    'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_attributes_options_values_groups_to_options_values povg2ov', // FROM ...
+                                    'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . $options['products_options_id'] . '\' and pa.page_uid = \'' . $this->showCatalogFromPage . '\' and pov.language_id = \'' . $this->sys_language_uid . '\' and pa.options_values_id = pov.products_options_values_id and pov.products_options_values_id = povg2ov.products_options_values_id and povp.products_options_id=\'' . $options['products_options_id'] . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
+                                    '', // GROUP BY...
+                                    'pa.sort_order_option_value asc', // ORDER BY...
+                                    '' // LIMIT ...
+                            );
+                            $option_value_groups = $GLOBALS['TYPO3_DB']->sql_query($str_ovg);
+                            while ($option_value_group_data = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($option_value_groups)) {
+                                if (!isset($attribute_option_value_group[$option_value_group_data['value_group_id']])) {
+                                    $attribute_option_value_group[$option_value_group_data['value_group_id']] = array();
+                                }
+                                if (!in_array($option_value_group_data['products_options_values_id'], $attribute_option_value_group[$option_value_group_data['value_group_id']])) {
+                                    $attribute_option_value_group[$option_value_group_data['value_group_id']][] = $option_value_group_data['products_options_values_id'];
+                                    $attribute_option_value_to_group[$option_value_group_data['products_options_values_id']] = $option_value_group_data['value_group_id'];
+                                }
+                            }
+                        }
                         $attribute_value_image_select = '';
                         if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
                             $attribute_value_image_select = ', pa.attribute_image as attribute_local_image, povp.products_options_values_image as attribute_global_image';
                         }
                         // now get the values
                         $str = $GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix' . $attribute_value_image_select, // SELECT ...
-                                'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
-                                'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . $options['products_options_id'] . '\' and pa.page_uid = \'' . $this->showCatalogFromPage . '\' and pov.language_id = \'' . $this->sys_language_uid . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . $options['products_options_id'] . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
-                                '', // GROUP BY...
-                                'pa.sort_order_option_value asc', // ORDER BY...
-                                '' // LIMIT ...
+                            'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
+                            'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . $options['products_options_id'] . '\' and pa.page_uid = \'' . $this->showCatalogFromPage . '\' and pov.language_id = \'' . $this->sys_language_uid . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . $options['products_options_id'] . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
+                            '', // GROUP BY...
+                            'pa.sort_order_option_value asc', // ORDER BY...
+                            '' // LIMIT ...
                         );
                         $products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
                         $total_values = $GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
@@ -7493,6 +7515,15 @@ class mslib_fe {
                 $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['class'] = 'fa fa-object-group';
                 if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_groups' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_groups') {
                     $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['active'] = 1;
+                }
+                if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['label'] = $this->pi_getLL('admin_attributes_options_values_groups');
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['description'] = $this->pi_getLL('admin_maintain_attributes_options_values_groups') . '.';
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['link'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_attributes_options_values_groups');
+                    $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['class'] = 'fa fa-object-group';
+                    if ($this->get['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_values_groups' || $this->post['tx_multishop_pi1']['page_section'] == 'admin_attributes_options_values_groups') {
+                        $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_values_groups']['active'] = 1;
+                    }
                 }
             }
             $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_import_products']['label'] = $this->pi_getLL('import');

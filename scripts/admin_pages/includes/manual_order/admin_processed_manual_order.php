@@ -50,7 +50,6 @@ if ($this->post['proceed_order']) {
         $insertArray['last_name'] = $this->post['last_name'];
         $insertArray['username'] = $unique_id;
         $insertArray['email'] = $this->post['email'];
-        $insertArray['username'] = $username;
         $insertArray['building'] = $this->post['building'];
         $insertArray['department'] = ($this->post['department'] ? $this->post['department'] : '');
         $insertArray['street_name'] = $this->post['street_name'];

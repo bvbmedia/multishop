@@ -247,10 +247,22 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
             $return_data['options_id'] = $row2['products_options_id'];
             $return_data['options_values_id'] = $row2['products_options_values_id'];
             $return_data['options_values_name'] = htmlspecialchars($row2['products_options_values_name']);
+            // options values
+            $str_valgroup = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+                'tx_multishop_attributes_options_values_groups_to_options_values', // FROM ...
+                'products_options_values_id=\'' . $row2['products_options_values_id'] . '\'', // WHERE...
+                '', // GROUP BY...
+                '', // ORDER BY...
+                '' // LIMIT ...
+            );
+            $qry_valgroup = $GLOBALS['TYPO3_DB']->sql_query($str_valgroup);
+            $row_valgroup = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_valgroup);
+            $return_data['options_values_group_id'] = htmlspecialchars($row_valgroup['attributes_options_values_groups_id']);
+
             $lang_counter = 0;
             foreach ($this->languages as $key => $language) {
                 // options values
-                $str3 = $GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_name', // SELECT ...
+                $str3 = $GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_name, group_dropdown_label', // SELECT ...
                         'tx_multishop_products_options_values pov', // FROM ...
                         'pov.products_options_values_id=\'' . $row2['products_options_values_id'] . '\' and pov.language_id=\'' . $key . '\'', // WHERE...
                         '', // GROUP BY...
@@ -260,12 +272,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
                 $row3 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
                 $value = '';
+                $dropdown_label = '';
                 if ($row3['products_options_values_name']) {
                     $value = htmlspecialchars($row3['products_options_values_name']);
+                }
+                if ($row3['group_dropdown_label']) {
+                    $dropdown_label = htmlspecialchars($row3['group_dropdown_label']);
                 }
                 $return_data['results'][$key]['lang_title'] = $this->languages[$key]['title'];
                 $return_data['results'][$key]['lang_id'] = $key;
                 $return_data['results'][$key]['lang_values'] = $value;
+                $return_data['results'][$key]['lang_dropdown_label'] = $dropdown_label;
                 // options values description
                 $str4 = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                         'tx_multishop_products_options_values_to_products_options_desc pov2pod', // FROM ...
@@ -306,6 +323,18 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                         $insert_new = true;
                     }
                 }
+                $group_id = 0;
+                $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_attributes_options_values_groups_to_options_values', 'products_options_values_id=\'' . $products_options_values_id . '\'');
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (isset($this->post['option_values_group'][$products_options_values_id])) {
+                    $group_id = $this->post['option_values_group'][$products_options_values_id];
+
+                    $insertArray = array();
+                    $insertArray['products_options_values_id'] = $products_options_values_id;
+                    $insertArray['attributes_options_values_groups_id'] = $group_id;
+                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_values_groups_to_options_values', $insertArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
                 foreach ($array as $language_id => $value) {
                     if ($insert_new) {
                         $value_record = mslib_befe::getRecord($products_options_values_id, 'tx_multishop_products_options_values', 'products_options_values_id');
@@ -315,6 +344,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                                 $insertArray = array();
                                 $insertArray['language_id'] = $language_id;
                                 $insertArray['products_options_values_name'] = $value;
+                                $insertArray['group_dropdown_label'] = $this->post['option_values_dropdown_title'][$products_options_values_id][$language_id];
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 $new_products_options_values_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -334,6 +364,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                         $updateArray = array();
                         $updateArray['language_id'] = $language_id;
                         $updateArray['products_options_values_name'] = $value;
+                        $updateArray['group_dropdown_label'] = $this->post['option_values_dropdown_title'][$products_options_values_id][$language_id];
                         $str = "select 1 from tx_multishop_products_options_values where products_options_values_id='" . $products_options_values_id . "' and language_id='" . $language_id . "'";
                         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                         if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {

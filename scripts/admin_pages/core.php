@@ -276,6 +276,11 @@ switch ($this->ms['page']) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_attributes_options_groups.php');
         }
         break;
+    case 'admin_attributes_options_values_groups':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_attributes_options_values_groups.php');
+        }
+        break;
     case 'admin_manufacturers':
         if ($this->ADMIN_USER) {
             require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_manufacturers.php');

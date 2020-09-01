@@ -935,6 +935,16 @@ class mslib_befe {
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
                 $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_flat', 'products_id=' . $products_id);
             }
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPostHook'])) {
+                $params = array(
+                        'products_id' => &$products_id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            //hook to let other plugins further manipulate the create table query eol
         }
     }
     public function enableCustomer($uid) {
@@ -2399,6 +2409,13 @@ class mslib_befe {
         }
         $str = "ANALYZE TABLE `tx_multishop_products_flat_tmp`";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        //hook to let other plugins further manipulate the create table query
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreRenameProc'])) {
+            $params = array();
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreRenameProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $str = "drop table `tx_multishop_products_flat`;";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         // convert to memory table
@@ -4223,6 +4240,30 @@ class mslib_befe {
         }
         return false;
     }
+    public function convertLocaleDateToInternationalDateFormat($date_input) {
+        if (!empty($date_input)) {
+            $have_time = false;
+            $date_delimeter = '-';
+            if (strpos($date_input, '/') !== false) {
+                $date_delimeter = '/';
+            }
+            if (strpos($date_input, ':') !== false) {
+                $have_time = true;
+            }
+            $time = '';
+            $date = $date_input;
+            if ($have_time) {
+                list($date, $time) = explode(" ", $date_input);
+            }
+            list($d,$m,$y) = explode($date_delimeter, $date);
+            $date_input = $y . '-' . $m . '-' . $d;
+            if ($have_time) {
+                $date_input .= ' ' . $time;
+            }
+            return $date_input;
+        }
+        return false;
+    }
     public function ucfirst($value) {
         $csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
         $charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
@@ -4549,7 +4590,7 @@ class mslib_befe {
                     if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
                         $product_tmp['products_image'] = $image_path;
                     }
-                    $markerArray['ITEM_IMAGE'] = '<img src="' . $product_tmp['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+                    $markerArray['ITEM_IMAGE'] = '<img src="' . $product_tmp['products_image'] . '" alt="' . htmlspecialchars($product['products_name']) . '">';
                 } else {
                     $markerArray['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 }
