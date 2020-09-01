@@ -934,7 +934,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if (!file_exists($product_db['products_image'])) {
                     $item['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 } else {
-                    $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+                    $item['ITEM_IMAGE'] = '<img src="' . $product_db['products_image'] . '" alt="' . htmlspecialchars($product['products_name']) . '">';
                     if ($this->ms['page'] == 'psp_cancelurl' && $this->conf['addLinkToProductNameForCancelUrl'] == '1') {
                         if ($product['product_link']) {
                             $item['ITEM_IMAGE'] = '<a href="' . $product['product_link'] . '"><img src="' . $product_db['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '"></a>';
