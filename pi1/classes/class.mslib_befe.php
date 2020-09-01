@@ -4590,7 +4590,7 @@ class mslib_befe {
                     if (!strstr(mslib_befe::strtolower($product_tmp['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_tmp['products_image']), 'https://')) {
                         $product_tmp['products_image'] = $image_path;
                     }
-                    $markerArray['ITEM_IMAGE'] = '<img src="' . $product_tmp['products_image'] . '" title="' . htmlspecialchars($product['products_name']) . '">';
+                    $markerArray['ITEM_IMAGE'] = '<img src="' . $product_tmp['products_image'] . '" alt="' . htmlspecialchars($product['products_name']) . '">';
                 } else {
                     $markerArray['ITEM_IMAGE'] = '<div class="no_image_50"></div>';
                 }
