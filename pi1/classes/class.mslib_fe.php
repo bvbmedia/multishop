@@ -2618,8 +2618,8 @@ class mslib_fe {
                                     $attribute_option_value_group[$option_value_group_data['value_group_id']] = array();
                                 }
                                 if (!in_array($option_value_group_data['products_options_values_id'], $attribute_option_value_group[$option_value_group_data['value_group_id']])) {
-                                    $attribute_option_value_group[$option_value_group_data['value_group_id']][] = $option_value_group_data['products_options_values_id'];
-                                    $attribute_option_value_to_group[$option_value_group_data['products_options_values_id']] = $option_value_group_data['value_group_id'];
+                                    $attribute_option_value_group[$option_value_group_data['value_group_id']][] = $options['products_options_id'] . '_' . $option_value_group_data['products_options_values_id'];
+                                    $attribute_option_value_to_group[$options['products_options_id'] . '_' . $option_value_group_data['products_options_values_id']] = $option_value_group_data['value_group_id'];
                                 }
                             }
                         }
@@ -2719,33 +2719,39 @@ class mslib_fe {
                                 } else {
                                     switch ($options['listtype']) {
                                         case 'radio':
-                                            $items .= "\n" . '
-										<div class="attribute_item" id="attribute_item_wrapper_' . $options['products_options_id'] . '_' . $products_options_values['products_options_values_id'] . '">
-										<div class="radio radio-success radio-inline">
-										<input name="attributes[' . $options['products_options_id'] . ']" id="attributes' . $options['products_options_id'] . '_' . $option_value_counter . '" type="radio" value="' . $products_options_values['products_options_values_id'] . '"';
-                                            if (count($sessionData['attributes'][$options['products_options_id']])) {
-                                                foreach ($sessionData['attributes'] as $options_id => $item) {
-                                                    if ($options_id == $options['products_options_id']) {
-                                                        if ($item['products_options_values_id'] == $products_options_values['products_options_values_id']) {
-                                                            $items .= ' checked="checked"';
+                                            if ($this->conf['enableAttributeOptionValuesGroup'] == '0' || ($this->conf['enableAttributeOptionValuesGroup'] == '1' && (!isset($attribute_option_value_to_group[$options['products_options_id'] . '_' . $products_options_values['products_options_values_id']]) || !count($attribute_option_value_to_group)))) {
+                                                $items .= "\n" . '
+                                                <div class="attribute_item" id="attribute_item_wrapper_' . $options['products_options_id'] . '_' . $products_options_values['products_options_values_id'] . '">
+                                                <div class="radio radio-success radio-inline">
+                                                <input name="attributes[' . $options['products_options_id'] . ']" id="attributes' . $options['products_options_id'] . '_' . $option_value_counter . '" type="radio" value="' . $products_options_values['products_options_values_id'] . '"';
+                                                if (count($sessionData['attributes'][$options['products_options_id']])) {
+                                                    foreach ($sessionData['attributes'] as $options_id => $item) {
+                                                        if ($options_id == $options['products_options_id']) {
+                                                            if ($item['products_options_values_id'] == $products_options_values['products_options_values_id']) {
+                                                                $items .= ' checked="checked"';
+                                                            }
                                                         }
                                                     }
+                                                } else {
+                                                    if ($value_counter === 1 && !$options['required']) {
+                                                        $items .= ' checked="checked"';
+                                                    }
                                                 }
+                                                $items .= ' class="attributes' . $options['products_options_id'] . ' attribute-value-radio" ' . ($options['required'] ? 'required="required"' : '') . ' data-sort="' . $index_key . '" rel="attributes' . $options['products_options_id'] . '" />
+                                                    <label for="attributes' . $options['products_options_id'] . '_' . $option_value_counter . '">
+                                                    ' . $attribute_value_image . '
+                                                    <span class="attribute_value_label">' . $products_options_values['products_options_values_name'] . $value_desc . '</span>
+                                                </label>
+                                                <div class="attribute_item_price">';
+                                                if ($products_options_values['options_values_price'] != '0') {
+                                                    $items .= $products_options_values['price_prefix'] . ' ' . mslib_fe::currency() . mslib_fe::amount2Cents2($products_options_values['options_values_price']);
+                                                }
+                                                $items .= '</div></div></div>';
                                             } else {
-                                                if ($value_counter === 1 && !$options['required']) {
-                                                    $items .= ' checked="checked"';
+                                                if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
+                                                    $items .= '###ATTRIBUTE_VALUES_GROUP_' . $options['products_options_id'] . '_' . $products_options_values['products_options_values_id'] . '###';
                                                 }
                                             }
-                                            $items .= ' class="attributes' . $options['products_options_id'] . ' attribute-value-radio" ' . ($options['required'] ? 'required="required"' : '') . ' data-sort="' . $index_key . '" rel="attributes' . $options['products_options_id'] . '" />
-											<label for="attributes' . $options['products_options_id'] . '_' . $option_value_counter . '">
-											' . $attribute_value_image . '
-											<span class="attribute_value_label">' . $products_options_values['products_options_values_name'] . $value_desc . '</span>
-										</label>
-										<div class="attribute_item_price">';
-                                            if ($products_options_values['options_values_price'] != '0') {
-                                                $items .= $products_options_values['price_prefix'] . ' ' . mslib_fe::currency() . mslib_fe::amount2Cents2($products_options_values['options_values_price']);
-                                            }
-                                            $items .= '</div></div></div>';
                                             break;
                                         case 'checkbox':
                                             $items .= "\n" . '
@@ -2800,6 +2806,13 @@ class mslib_fe {
                             }
                             $next_index2++;
                             $value_counter++;
+                        }
+                        if ($this->conf['enableAttributeOptionValuesGroup'] == '1' && count($attribute_option_value_to_group)) {
+                            foreach ($attribute_option_value_to_group as $idx_key => $group_id) {
+                                list($option_id, $option_value_id) = explode('_', $idx_key);
+
+
+                            }
                         }
                         if ($total_values > 0) {
                             if (!$readonly) {
