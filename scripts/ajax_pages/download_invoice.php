@@ -127,10 +127,11 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $markerArray['###BILLING_DEPARTMENT###'] = htmlspecialchars($order['billing_department']) . '<br/>';
         }
         $markerArray['###BILLING_BUILDING###'] = htmlspecialchars($order['billing_building']);
+        $order['billing_address'] = htmlspecialchars($order['billing_address']);
         if (strpos($template, '###BILLING_BUILDING###') === false && $order['billing_building'] != '') {
-            $order['billing_address'] = $order['billing_building'] . '<br/>' . $order['billing_address'];
+            $order['billing_address'] = htmlspecialchars($order['billing_building']) . '<br/>' . $order['billing_address'];
         }
-        $markerArray['###BILLING_ADDRESS###'] = htmlspecialchars($order['billing_address']);
+        $markerArray['###BILLING_ADDRESS###'] = $order['billing_address'];
         $markerArray['###BILLING_ZIP###'] = ($order['billing_zip']);
         $markerArray['###BILLING_CITY###'] = mslib_befe::strtoupper($order['billing_city']);
         $markerArray['###BILLING_COUNTRY###'] = '';
