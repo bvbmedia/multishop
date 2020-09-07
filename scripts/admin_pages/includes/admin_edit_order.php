@@ -1679,38 +1679,38 @@ if (is_numeric($this->get['orders_id'])) {
                 $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_company']) . '</strong><br />';
             }
             if ($orders['delivery_department']) {
-                $tmpcontent .= '<strong>' . $orders['delivery_department'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_department']) . '</strong><br />';
             }
             $address_data = array();
             $address_data = $orders;
-            $address_data['building'] = $orders['delivery_building'];
-            $address_data['address'] = $orders['delivery_address'];
-            $address_data['zip'] = $orders['delivery_zip'];
-            $address_data['city'] = $orders['delivery_city'];
+            $address_data['building'] = htmlspecialchars($orders['delivery_building']);
+            $address_data['address'] = htmlspecialchars($orders['delivery_address']);
+            $address_data['zip'] = htmlspecialchars($orders['delivery_zip']);
+            $address_data['city'] = htmlspecialchars($orders['delivery_city']);
             $address_data['country'] = $orders['delivery_country'];
             $delivery_address_value = mslib_befe::customerAddressFormat($address_data, 'delivery');
-            $tmpcontent .= $orders['delivery_name'] . '<br />
+            $tmpcontent .= htmlspecialchars($orders['delivery_name']) . '<br />
               ' . $delivery_address_value . '<br /><br />';
             if ($orders['delivery_email']) {
-                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . $orders['delivery_email'] . '</a><br />';
+                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . htmlspecialchars($orders['delivery_email']) . '</a><br />';
             }
             if ($orders['delivery_telephone']) {
-                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['delivery_telephone'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['delivery_telephone']) . '<br />';
             }
             if ($orders['delivery_mobile']) {
-                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['delivery_mobile'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['delivery_mobile']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_vat_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['delivery_vat_id'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['delivery_vat_id']) . '</strong><br />';
             }
             if ($orders['delivery_coc_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['delivery_coc_id'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['delivery_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
