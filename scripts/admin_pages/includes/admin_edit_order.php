@@ -1437,30 +1437,30 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $billing_details_info = '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['billing_company']) {
-                $billing_details_info .= '<strong>' . $orders['billing_company'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_company']) . '</strong><br />';
             }
             if ($orders['billing_department']) {
-                $billing_details_info .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_department']) . '</strong><br />';
             }
-            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
+            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . htmlspecialchars($orders['billing_name']) . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
-                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
+                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . htmlspecialchars($orders['billing_email']) . '">' . htmlspecialchars($orders['billing_email']) . '</a><br />';
             }
             if ($orders['billing_telephone']) {
-                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['billing_telephone']) . '<br />';
             }
             if ($orders['billing_mobile']) {
-                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['billing_mobile']) . '<br />';
             }
             if ($orders['billing_fax']) {
-                $billing_details_info .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['billing_fax']) . '<br />';
             }
             if ($orders['billing_vat_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['billing_vat_id']) . '</strong><br />';
             }
             if ($orders['billing_coc_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['billing_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $billing_details_info .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -1676,7 +1676,7 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $tmpcontent .= '<div class="address_details_container" id="delivery_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['delivery_company']) {
-                $tmpcontent .= '<strong>' . $orders['delivery_company'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_company']) . '</strong><br />';
             }
             if ($orders['delivery_department']) {
                 $tmpcontent .= '<strong>' . $orders['delivery_department'] . '</strong><br />';
