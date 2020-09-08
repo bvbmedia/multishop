@@ -143,7 +143,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     //
                     $query = $GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
                             'tx_multishop_products_attributes pa, tx_multishop_products_options po', // FROM ...
-                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . $this->showCatalogFromPage . '\' and po.required=1 and (po.hide=0 or po.hide is null) and (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id=' . $this->sys_language_uid . ' and po.products_options_id=pa.options_id', // WHERE...
+                            'pa.products_id="' . addslashes($product['products_id']) . '" and pa.page_uid=\'' . addslashes($this->showCatalogFromPage) . '\' and po.required=1 and (po.hide=0 or po.hide is null) and (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id=' . addslashes($this->sys_language_uid) . ' and po.products_options_id=pa.options_id', // WHERE...
                             '', // GROUP BY...
                             'pa.sort_order_option_name asc, pa.sort_order_option_value asc', // ORDER BY...
                             '' // LIMIT ...
@@ -290,7 +290,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                     $cart['products'][$shopping_cart_item] = $product;
                     // add possible micro download
-                    $str = "select p.file_number_of_downloads, pd.file_remote_location, pd.file_label, pd.file_location from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='" . $product['products_id'] . "' and pd.language_id='" . $this->sys_language_uid . "' and p.products_id=pd.products_id";
+                    $str = "select p.file_number_of_downloads, pd.file_remote_location, pd.file_label, pd.file_location from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='" . addslashes($product['products_id']) . "' and pd.language_id='" . addslashes($this->sys_language_uid) . "' and p.products_id=pd.products_id";
                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
                         // use current account
@@ -305,7 +305,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     if (is_array($this->post['attributes'])) {
                         foreach ($this->post['attributes'] as $key => $value) {
                             if (is_numeric($key)) {
-                                $str = "SELECT * from tx_multishop_products_options o where o.products_options_id='" . $key . "' and language_id='" . $this->sys_language_uid . "'";
+                                $str = "SELECT * from tx_multishop_products_options o where o.products_options_id='" . addslashes($key) . "' and language_id='" . addslashes($this->sys_language_uid) . "'";
                                 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
                                 $continue = 0;
@@ -357,49 +357,50 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         // hook
                                         foreach ($array as $item) {
-                                            //$str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and a.page_uid='" . $this->showCatalogFromPage . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
-                                            $str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
-                                            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                                                $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                                                // hook to let other plugins further manipulate the option values display
-                                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'])) {
-                                                    $params = array(
-                                                            'product_id' => $getAtributesFromProductsId,
-                                                            'options_id' => &$key,
-                                                            'row' => &$row
-                                                    );
-                                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'] as $funcRef) {
-                                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                            if (is_numeric($item)) {
+                                                //$str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $getAtributesFromProductsId . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and a.page_uid='" . $this->showCatalogFromPage . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
+                                                $str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . addslashes($getAtributesFromProductsId) . "' and a.options_id='" . addslashes($key) . "' and a.options_values_id='" . addslashes($item) . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . addslashes($this->sys_language_uid) . "' and ov.language_id='" . addslashes($this->sys_language_uid) . "' and a.options_values_id=ov.products_options_values_id";
+                                                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                                                if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+                                                    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                                                    // hook to let other plugins further manipulate the option values display
+                                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'])) {
+                                                        $params = array(
+                                                                'product_id' => $getAtributesFromProductsId,
+                                                                'options_id' => &$key,
+                                                                'row' => &$row
+                                                        );
+                                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'] as $funcRef) {
+                                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                                        }
                                                     }
-                                                }
-                                                // hook
-                                                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                                                    $row['country_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate']);
-                                                    $row['region_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate']);
-                                                    if ($row['country_tax'] && $row['region_tax']) {
-                                                        $row['tax'] = $row['country_tax'] + $row['region_tax'];
+                                                    // hook
+                                                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+                                                        $row['country_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate']);
+                                                        $row['region_tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate']);
+                                                        if ($row['country_tax'] && $row['region_tax']) {
+                                                            $row['tax'] = $row['country_tax'] + $row['region_tax'];
+                                                        } else {
+                                                            $row['tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']));
+                                                        }
+                                                    } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                                                        //$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2, false);
+                                                        //$row['region_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2, false);
+                                                        $row['country_tax'] = round(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate'], 2);
+                                                        $row['region_tax'] = round(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate'], 2);
+                                                        if ($row['country_tax'] && $row['region_tax']) {
+                                                            $row['tax'] = $row['country_tax'] + $row['region_tax'];
+                                                        } else {
+                                                            //$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2, false);
+                                                            $row['tax'] = round(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']), 2);
+                                                        }
+                                                    }
+                                                    $attributes_tax += $row['tax'];
+                                                    if ($multiple) {
+                                                        $cart['products'][$shopping_cart_item]['attributes'][$key][] = $row;
                                                     } else {
-                                                        $row['tax'] = mslib_fe::taxDecimalCrop(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']));
+                                                        $cart['products'][$shopping_cart_item]['attributes'][$key] = $row;
                                                     }
-                                                } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-                                                    //$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2, false);
-                                                    //$row['region_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2, false);
-                                                    $row['country_tax'] = round(($row['price_prefix'] . $row['options_values_price']) * $product['country_tax_rate'], 2);
-                                                    $row['region_tax'] = round(($row['price_prefix'] . $row['options_values_price']) * $product['region_tax_rate'], 2);
-                                                    if ($row['country_tax'] && $row['region_tax']) {
-                                                        $row['tax'] = $row['country_tax'] + $row['region_tax'];
-                                                    } else {
-                                                        //$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2, false);
-                                                        $row['tax'] = round(($row['price_prefix'] . $row['options_values_price']) * ($product['tax_rate']), 2);
-                                                    }
-                                                }
-//											$attributes_tax += $row['tax'] * $product['qty'];
-                                                $attributes_tax += $row['tax'];
-                                                if ($multiple) {
-                                                    $cart['products'][$shopping_cart_item]['attributes'][$key][] = $row;
-                                                } else {
-                                                    $cart['products'][$shopping_cart_item]['attributes'][$key] = $row;
                                                 }
                                             }
                                         }
@@ -412,7 +413,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         foreach ($_FILES['attributes'] as $file_key => $file_data) {
                             foreach ($file_data as $optid => $val) {
                                 if (is_numeric($optid) && $_FILES['attributes']['error'][$optid] == 0 && $file_key == 'name') {
-                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . $optid . "' and language_id='" . $this->sys_language_uid . "'";
+                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . addslashes($optid) . "' and language_id='" . addslashes($this->sys_language_uid) . "'";
                                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
                                     if ($row['products_options_name']) {
@@ -914,7 +915,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             foreach ($product['attributes'] as $attribute_key => $attribute_values) {
                                 $continue = 0;
                                 if (is_numeric($attribute_key)) {
-                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . $attribute_key . "' ";
+                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . addslashes($attribute_key) . "' ";
                                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
                                 }
@@ -1126,22 +1127,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
                 }
-                //echo "<pre>";
-                //echo $subtotal."<br/>".$subtotal_tax;
-                //print_r($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc']);
-                //print_r($product);
-                //die();
-                // custom hook that can be controlled by third-party plugin eof
-                // calculate totals
-                /*echo $subtotal."<br/>";
-				echo $subtotal_tax."<br/>";
-				echo $this->cart['user']['shipping_method_costs_including_vat']."<br/>";
-				echo $this->cart['user']['payment_method_costs_including_vat']."<br/><br/>";
-				echo $subtotal_tax."<br/>";
-				echo $payment_tax."<br/>";
-				echo $shipping_tax;
-
-				die();*/
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                     $cart['summarize']['grand_total_excluding_vat'] = ($subtotal - $subtotal_tax) + $cart['user']['shipping_method_costs'] + $cart['user']['payment_method_costs'];
                     $cart['summarize']['grand_total'] = ($subtotal) + ($cart['user']['shipping_method_costs_including_vat'] + $cart['user']['payment_method_costs_including_vat']);
@@ -1786,7 +1771,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateFEUsers['tx_multishop_newsletter'] = '';
             }
             if ($continue_update_details_info) {
-                $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $customer_id, $updateFEUsers);
+                $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . addslashes($customer_id), $updateFEUsers);
                 $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
             }
             // insert tt_address for existing customer if no record found
@@ -1843,7 +1828,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
                 if ($continue_update_details_info) {
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $billing_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'billing\'', $insertArray);
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . addslashes($billing_address['uid']) . '\' and tx_multishop_customer_id= ' . addslashes($customer_id) . ' and tx_multishop_address_type = \'billing\'', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
             }
@@ -1943,7 +1928,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
                 if ($continue_update_details_info) {
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . $delivery_address['uid'] . '\' and tx_multishop_customer_id= ' . $customer_id . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid=\'' . addslashes($delivery_address['uid']) . '\' and tx_multishop_customer_id= ' . addslashes($customer_id) . ' and tx_multishop_address_type = \'delivery\'', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
             }
@@ -2160,7 +2145,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query2);
                     $insertArray[$addresstype . '_tr_iso_nr'] = $row2['tr_iso_nr'];
                     $insertArray[$addresstype . '_tr_name_en'] = $row2['tr_name_en'];
-                    $str2 = 'select * from static_territories where tr_iso_nr=' . $row2['tr_parent_iso_nr'];
+                    $str2 = 'select * from static_territories where tr_iso_nr=' . addslashes($row2['tr_parent_iso_nr']);
                     $query2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                     $rows2 = $GLOBALS['TYPO3_DB']->sql_num_rows($query2);
                     if ($rows2) {
@@ -2391,7 +2376,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             // update orders_products sort_order
                             $updateOrderProductsSortOrder = array();
                             $updateOrderProductsSortOrder['sort_order'] = $orders_products_id;
-                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $orders_products_id . '\'', $updateOrderProductsSortOrder);
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . addslashes($orders_products_id) . '\'', $updateOrderProductsSortOrder);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->ms['MODULES']['SUBTRACT_STOCK'] && $this->ms['MODULES']['SUBTRACT_PRODUCT_STOCK_WHEN_ORDER_PAID'] == '0') {
                                 $continue_update_stock = true;
@@ -2418,7 +2403,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         foreach ($value['attributes'] as $attribute_key => $attribute_values) {
                                             $sql_as_data[] = '(pas.options_id = ' . $attribute_values['options_id'] . ' and pas.options_values_id = ' . $attribute_values['options_values_id'] . ')';
                                         }
-                                        $sql_as = "select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = " . $value['products_id'] . " and (" . implode(' or ', $sql_as_data) . ") and pasg.group_id = pas.group_id";
+                                        $sql_as = "select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = " . addslashes($value['products_id']) . " and (" . addslashes(implode(' or ', $sql_as_data)) . ") and pasg.group_id = pas.group_id";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($sql_as);
                                         $total_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
                                         $used_group = 0;
@@ -2438,12 +2423,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                             $used_group = $rs_as['group_id'];
                                         }
                                         if ($used_group > 0) {
-                                            $str = "update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-" . $value['qty'] . ") where group_id='" . $used_group . "'";
+                                            $str = "update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-" . addslashes($value['qty']) . ") where group_id='" . addslashes($used_group) . "'";
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         }
-                                        $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
+                                        $str = "update tx_multishop_products set products_quantity=(products_quantity-" . addslashes($value['qty']) . ") where products_id='" . addslashes($value['products_id']) . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . addslashes($value['products_id']) . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2497,14 +2482,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         }
                                         if ($row['products_quantity'] < 1 && !$row['ignore_stock_level']) {
                                             // stock is negative or zero. lets disable the product
-                                            $str = "update tx_multishop_products set products_status=0 where products_id='" . $value['products_id'] . "'";
+                                            $str = "update tx_multishop_products set products_status=0 where products_id='" . addslashes($value['products_id']) . "'";
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         }
                                     } else {
                                         // now decrease the stocklevel
-                                        $str = "update tx_multishop_products set products_quantity=(products_quantity-" . $value['qty'] . ") where products_id='" . $value['products_id'] . "'";
+                                        $str = "update tx_multishop_products set products_quantity=(products_quantity-" . addslashes($value['qty']) . ") where products_id='" . addslashes($value['products_id']) . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . $value['products_id'] . "'";
+                                        $str = "select ignore_stock_level, products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='" . addslashes($value['products_id']) . "'";
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($str);
                                         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
                                         if ($row['products_quantity'] <= $row['alert_quantity_threshold']) {
@@ -2585,7 +2570,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             }
                             if ($orders_products_id and is_array($value['attributes'])) {
                                 foreach ($value['attributes'] as $attribute_key => $attribute_values) {
-                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . $attribute_key . "' ";
+                                    $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . addslashes($attribute_key) . "' ";
                                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 //								print_r($row['listtype']);
@@ -2738,7 +2723,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $updateArray['coupon_discount_value'] = $cart['discount'];
                 };
                 $updateArray['orders_last_modified'] = time();
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $orders_id . '\'', $updateArray);
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . addslashes($orders_id) . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderDiscountPreProc'])) {
                     // hook
@@ -3118,7 +3103,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         foreach ($product['attributes'] as $attribute_key => $attribute_values) {
                             $continue = 0;
                             if (is_numeric($attribute_key)) {
-                                $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . $attribute_key . "' ";
+                                $str = "SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='" . addslashes($attribute_key) . "' ";
                                 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                                 $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
                             }
