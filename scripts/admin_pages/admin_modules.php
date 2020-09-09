@@ -126,4 +126,3 @@ $content .= '
 </div>';
 $content .= '<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '">' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
-?>

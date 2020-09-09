@@ -21,4 +21,3 @@ $content .= '
 	</div>
 	';
 $this->content .= $this->doc->section($title, $content, 0, 1);
-?>

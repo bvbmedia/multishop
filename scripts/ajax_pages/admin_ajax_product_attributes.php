@@ -238,4 +238,3 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 }
 echo $content;
 exit();
-?>

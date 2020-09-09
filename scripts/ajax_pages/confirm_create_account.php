@@ -96,4 +96,3 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
     exit();
 }
 exit();
-?>

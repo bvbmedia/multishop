@@ -64,4 +64,3 @@ if (count($files) > 0) {
 if (!$updated) {
     $content .= 'No files need to be repaired.';
 }
-?>

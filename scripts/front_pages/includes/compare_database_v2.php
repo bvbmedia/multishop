@@ -4753,4 +4753,3 @@ $keys[] = 'DISABLE_VAT_RATE_WHEN_CROSS_BORDERS';
 foreach ($keys as $key) {
     $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\'' . addslashes($key) . '\'');
 }
-?>

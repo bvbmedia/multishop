@@ -130,4 +130,3 @@ class tx_multishop_configuration {
         return $this->configurationArray;
     }
 }
-?>

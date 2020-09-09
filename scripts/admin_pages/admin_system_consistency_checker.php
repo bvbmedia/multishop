@@ -242,4 +242,3 @@ if ($unmapped_images) {
 } else {
     $content .= $this->pi_getLL('admin_label_everything_is_fine');
 }
-?>

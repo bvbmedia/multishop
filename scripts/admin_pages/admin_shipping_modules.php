@@ -1036,4 +1036,3 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
 
 });
 </script>';
-?>

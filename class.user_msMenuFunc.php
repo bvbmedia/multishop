@@ -348,4 +348,3 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     */
 }
-?>

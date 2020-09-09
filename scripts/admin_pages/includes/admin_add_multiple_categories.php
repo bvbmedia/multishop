@@ -210,4 +210,3 @@ if ($this->post) {
 	</form></div></div>';
     $content .= '';
 }
-?>

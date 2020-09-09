@@ -9,4 +9,3 @@ $mslib_dashboard->setSection('admin_home');
 $mslib_dashboard->renderWidgets();
 $content .= $mslib_dashboard->displayDashboard();
 $content .= '<p class="extra_padding_bottom"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '">' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></p>';
-?>

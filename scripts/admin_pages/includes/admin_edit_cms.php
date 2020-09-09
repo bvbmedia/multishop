@@ -456,4 +456,3 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 	});
 </script>
 ';
-?>

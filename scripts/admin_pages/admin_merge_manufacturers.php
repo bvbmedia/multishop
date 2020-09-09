@@ -76,4 +76,3 @@ $content .= '
 </div>
 </div>
 ';
-?>

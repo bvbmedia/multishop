@@ -374,4 +374,3 @@ if ($this->get['invoices_export_hash']) {
     exit();
 }
 exit();
-?>

@@ -102,4 +102,3 @@ if ((($p + 1) * $this->ms['MODULES']['ORDERS_LISTING_LIMIT']) < $pageset['total_
 }
 $tmp .= '</li>';
 $tmp .= '</ul></div>';
-?>

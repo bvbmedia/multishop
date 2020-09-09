@@ -180,4 +180,3 @@ ob_end_clean();
 
 draw_shell();
 
-?>

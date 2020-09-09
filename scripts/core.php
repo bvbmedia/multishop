@@ -771,4 +771,3 @@ if (!$this->ms['MODULES']['DISABLE_CRUMBAR'] and $GLOBALS['TYPO3_CONF_VARS']["tx
     $content = $GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html'] . $content;
 }
 $content = '<div id="tx_multishop_pi1_core">' . $content . '</div>';
-?>

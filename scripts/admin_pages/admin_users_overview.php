@@ -62,4 +62,3 @@ if (is_array($users)) {
     }
     $content .= mslib_befe::bootstrapPanel('Admin users overview', mslib_befe::arrayToTable($tblRows, $idName, $settings), 'success');
 }
-?>

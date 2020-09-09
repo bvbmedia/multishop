@@ -161,4 +161,3 @@ foreach ($year_total_amount as $years => $year_total) {
 $content .= '</tbody></table>';
 // LAST MONTHS EOF
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';
-?>

@@ -567,4 +567,3 @@ if (is_array($SOBE->include_once) && count($SOBE->include_once)) {
 }
 $SOBE->main();
 $SOBE->printContent();
-?>

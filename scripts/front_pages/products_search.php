@@ -697,4 +697,3 @@ if (is_array($output_array['meta']) && count($output_array['meta'])) {
     $GLOBALS['TSFE']->additionalHeaderData = array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
 }
 unset($output_array);
-?>

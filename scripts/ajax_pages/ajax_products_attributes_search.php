@@ -95,4 +95,3 @@ if ($this->ADMIN_USER) {
     echo $content;
     exit;
 }
-?>

@@ -40,4 +40,3 @@ if (is_numeric($_REQUEST['cid'])) {
         }
     }
 }
-?>

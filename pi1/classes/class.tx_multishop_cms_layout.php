@@ -136,4 +136,3 @@ class tx_multishop {
         return $result;
     }
 }
-?>

@@ -188,4 +188,3 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE'] > 0) {
 }
 echo json_encode($return_data);
 exit();
-?>

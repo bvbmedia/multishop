@@ -370,4 +370,3 @@ if(PHP_SAPI=='cli')
 		$embed = true;
 	MakeFont($fontfile, $enc, $embed);
 }
-?>

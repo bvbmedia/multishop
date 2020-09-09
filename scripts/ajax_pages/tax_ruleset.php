@@ -39,4 +39,3 @@ if (strpos($current_price, ':') !== false) {
 $json_data = json_encode($data, ENT_NOQUOTES);
 echo $json_data;
 exit();
-?>

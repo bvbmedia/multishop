@@ -649,4 +649,3 @@ jQuery(document).ready(function ($) {
 $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
 $headerData = '';
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';
-?>
