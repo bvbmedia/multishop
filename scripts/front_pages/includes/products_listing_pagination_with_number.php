@@ -112,4 +112,3 @@ if (is_numeric($pageset['total_rows']) && is_numeric($limit_per_page)) {
 ';
     $content .= $tmp;
 }
-?>

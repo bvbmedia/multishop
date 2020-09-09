@@ -11,4 +11,3 @@ switch ($this->get['tx_multishop_pi1']['stats_section']) {
         require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php');
         break;
 }
-?>

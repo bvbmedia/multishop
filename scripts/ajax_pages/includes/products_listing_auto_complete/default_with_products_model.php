@@ -63,4 +63,3 @@ if (isset($this->get['page'])) {
 }
 $content = array("products" => $data);
 //print_r($alldata);
-?>

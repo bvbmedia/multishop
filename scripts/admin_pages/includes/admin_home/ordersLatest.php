@@ -382,4 +382,3 @@ if ($pageset['total_rows'] > 0) {
     }
     $compiledWidget['content'] .= '</table></div>';
 }
-?>

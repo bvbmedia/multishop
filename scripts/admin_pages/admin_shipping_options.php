@@ -47,4 +47,3 @@ foreach ($shipping_options as $option) {
 }
 $content .= '</table>';
 $content .= '</fieldset>';
-?>

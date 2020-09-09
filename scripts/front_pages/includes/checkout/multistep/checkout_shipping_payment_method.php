@@ -334,4 +334,3 @@ if ($erno or $show_shipping_payment_method) {
     $content .= $jquery_content;
 // jquery mapping table eof
 }
-?>

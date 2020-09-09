@@ -14,4 +14,3 @@ if ($this->ADMIN_USER) {
     echo json_encode($data, ENT_NOQUOTES);
     exit();
 }
-?>

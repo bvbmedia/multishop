@@ -138,4 +138,3 @@ if ($rows) {
 }
 $content .= '<hr><div class="clearfix"></div></div>';
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
-?>

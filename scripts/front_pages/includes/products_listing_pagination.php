@@ -71,4 +71,3 @@ if ((($p + 1) * $limit_per_page) < $pageset['total_rows']) {
 $tmp .= '</td></tr></table></td></tr>
 </table>';
 $content .= $tmp;
-?>

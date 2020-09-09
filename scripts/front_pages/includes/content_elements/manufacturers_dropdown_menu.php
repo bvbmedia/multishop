@@ -30,4 +30,3 @@ $content .= '</select>
 		window.location = jQuery(this).val();
 	});						
 </script>';
-?>

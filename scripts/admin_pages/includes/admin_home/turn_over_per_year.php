@@ -109,4 +109,3 @@ if (!$row_year['crdate']) {
         $compiledWidget['content'] = '<p>' . $this->pi_getLL('admin_label_data_not_available') . '</p>';
     }
 }
-?>

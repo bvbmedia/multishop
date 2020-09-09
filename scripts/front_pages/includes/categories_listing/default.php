@@ -138,4 +138,3 @@ if (is_array($categories) && count($categories)) {
         $content .= $page[0]['content'];
     }
 }
-?>

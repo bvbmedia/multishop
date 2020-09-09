@@ -17,4 +17,3 @@ if ($this->post['itemKey']) {
     }
 }
 exit();
-?>

@@ -198,4 +198,3 @@ header('Cache-Control: max-age=0');
 $objWriter = PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
 $objWriter->save('php://output');
 exit;
-?>

@@ -77,4 +77,3 @@ $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1
 $objRef->setInterfaceKey('admin_psp_transactions_overview');
 //$conf['msDebug']=1;
 $content = $objRef->renderInterface($conf, $this);
-?>

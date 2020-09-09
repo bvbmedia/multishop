@@ -62,4 +62,3 @@ switch ($this->get['tx_multishop_pi1']['sortItem']) {
         }
         break;
 }
-?>

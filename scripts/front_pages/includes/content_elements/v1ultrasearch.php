@@ -533,4 +533,3 @@ $content.='
     <div id="switcher"></div>
 ';
 */
-?>

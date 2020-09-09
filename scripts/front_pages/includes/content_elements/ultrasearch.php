@@ -146,4 +146,3 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	<input name="locationHash" type="hidden" value="" id="locationHash" />
 	</form>';
 }
-?>

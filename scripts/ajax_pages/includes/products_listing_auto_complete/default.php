@@ -85,4 +85,3 @@ if (isset($p)) {
 }
 $content = array("products" => $data);
 //print_r($alldata);
-?>

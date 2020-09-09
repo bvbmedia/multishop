@@ -123,4 +123,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 // custom page hook that can be controlled by third-party plugin eof
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-?>

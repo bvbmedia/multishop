@@ -74,4 +74,3 @@ if (count($data) == 1) {
     }
     $compiledWidget['content'] .= '</table>';
 }
-?>

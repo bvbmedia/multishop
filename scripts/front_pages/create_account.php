@@ -12,4 +12,3 @@ if (strstr($this->ms['MODULES']['CREATE_ACCOUNT_TYPE'], "/")) {
         require_once('includes/create_account/default.php');
     }
 }
-?>

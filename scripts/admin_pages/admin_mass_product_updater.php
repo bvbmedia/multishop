@@ -196,4 +196,3 @@ if ($this->post) {
 }
 $content .= '</div>
 </div>';
-?>

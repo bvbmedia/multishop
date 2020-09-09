@@ -83,4 +83,3 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
         }
     }
 }
-?>

@@ -174,4 +174,3 @@ if (!is_numeric($categories_id)) {
     }
     // load products listing eof
 }
-?>

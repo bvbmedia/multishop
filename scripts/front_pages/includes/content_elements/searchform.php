@@ -125,4 +125,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 }
 // completed the template expansion by replacing the "item" marker in the template
 $content = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-?>

@@ -265,4 +265,3 @@ if (is_array($this->tta_shop_info) && $this->tta_shop_info['tt_uid'] == $this->c
 } else {
     $content .= $this->pi_getLL('store_address_record_not_found');
 }
-?>

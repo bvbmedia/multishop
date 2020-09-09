@@ -211,4 +211,3 @@ $(document).ready(function () {
 });
 </script>
 <div id="chartTurnoverThisWeekLastWeek"></div>';
-?>

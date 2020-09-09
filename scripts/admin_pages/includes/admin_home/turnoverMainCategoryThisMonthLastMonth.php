@@ -181,4 +181,3 @@ if (is_array($jqplot_array['current_month_turnover']) && count($jqplot_array['cu
 } else {
     $compiledWidget['content'] = 'No record';
 }
-?>

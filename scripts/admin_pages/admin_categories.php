@@ -210,4 +210,3 @@ $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
 $subpartArray['###INTERFACE_HEADER_BUTTONS###'] = $objRef->renderHeaderButtons();
 $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-?>

@@ -109,4 +109,3 @@ if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($
 		  </script>					
 		';
 }
-?>
