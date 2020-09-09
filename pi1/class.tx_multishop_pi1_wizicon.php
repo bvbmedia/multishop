@@ -29,7 +29,7 @@
 class tx_multishop_pi1_wizicon {
     /**
      * Processing the wizard items array
-     * @param    array $wizardItems : The wizard items
+     * @param array $wizardItems : The wizard items
      * @return    Modified array with wizard items
      */
     function proc($wizardItems) {

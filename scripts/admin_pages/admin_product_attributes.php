@@ -147,7 +147,6 @@ $js_select2_cache = '<script type="text/javascript">
 	var attributesSearchValues=[];
 	var attributesValues=[];
     var attributesGroupsValues=[];' . "\n";
-
 $str_valgroup = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
         'tx_multishop_attributes_options_values_groups', // FROM ...
         'language_id=\'0\'', // WHERE...
@@ -457,7 +456,7 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				var dialog_body=\'<div class="edit_dialog_input_wrapper">\';
 				dialog_body+=\'<input type="hidden" class="edit_option_values_inputs" value="\' + relation_id + \'" name="data_id">\';
 				dialog_body+=\'<div class="form-group">\';
-                dialog_body+=\'<label for="option_values_group_\' + s.options_values_id + \'">'.$this->pi_getLL('group', 'Group').' : </label>\';
+                dialog_body+=\'<label for="option_values_group_\' + s.options_values_id + \'">' . $this->pi_getLL('group', 'Group') . ' : </label>\';
                 dialog_body+=\'<select class="form-control edit_option_values_inputs" id="option_values_group_\' + s.options_values_id + \'" name="option_values_group[\' + s.options_values_id + \']">\' + group_dropdown_option + \'</select>\';
                 dialog_body+=\'</div>\';
 				$.each(s.results, function(i, v) {
@@ -467,12 +466,12 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				    dialog_body+=\'</div>\';
 				    dialog_body+=\'<div class="panel-body">\';
 				    dialog_body+=\'<div class="form-group">\';
-				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'">'.$this->pi_getLL('title').' : </label>\';
+				    dialog_body+=\'<label for="option_values_\' + s.options_values_id + \'_\' + i + \'">' . $this->pi_getLL('title') . ' : </label>\';
 				    dialog_body+=\'<input type="text" class="form-control text edit_option_values_inputs" id="option_values_\' + s.options_values_id + \'_\' + i + \'" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/>\';
 				    dialog_body+=\'</div>\';
 				   
 				    dialog_body+=\'<div class="form-group">\';
-				    dialog_body+=\'<label for="option_values_dropdown_title_\' + s.options_values_id + \'_\' + i + \'">'.$this->pi_getLL('dropdown_title', 'Dropdown title').' : </label>\';
+				    dialog_body+=\'<label for="option_values_dropdown_title_\' + s.options_values_id + \'_\' + i + \'">' . $this->pi_getLL('dropdown_title', 'Dropdown title') . ' : </label>\';
 				    dialog_body+=\'<input type="text" class="form-control text edit_option_values_inputs" id="option_values_dropdown_title_\' + s.options_values_id + \'_\' + i + \'" name="option_values_dropdown_title[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_dropdown_label + \'"/>\';
 				    dialog_body+=\'</div>\';
                     dialog_body+=\'<div class="form-group">\';

@@ -1165,7 +1165,6 @@ if ($this->post) {
                 $updateArray2['language_id'] = $this->sys_language_uid;
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers_info', $updateArray2);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-
                 $updateArrayCMS = array();
                 $updateArrayCMS['content'] = '';
                 $updateArrayCMS['content_footer'] = '';
@@ -1179,7 +1178,6 @@ if ($this->post) {
                 $updateArrayCMS['language_id'] = $this->sys_language_uid;
                 $queryCMS = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers_cms', $updateArrayCMS);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($queryCMS);
-
                 $updateArray['manufacturers_id'] = $manufacturers_id;
             }
         }

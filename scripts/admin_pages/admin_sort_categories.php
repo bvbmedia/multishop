@@ -6,7 +6,7 @@ $content .= '<div class="panel-heading"><h3>' . strtoupper($this->pi_getLL('admi
 //
 $parent_id = 0;
 if (isset($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id'] > 0) {
-	$parent_id = $this->get['tx_multishop_pi1']['categories_id'];
+    $parent_id = $this->get['tx_multishop_pi1']['categories_id'];
 }
 $where_status = '';
 $query_c = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
@@ -64,78 +64,78 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
     $categories_id = (int)$this->get['tx_multishop_pi1']['categories_id'];
     $filter[] = 'c.parent_id=' . $categories_id;
 } else {
-	$filter[] = 'c.parent_id=0';
+    $filter[] = 'c.parent_id=0';
 }
 if (!isset($this->get['tx_multishop_pi1']['show_disabled_category'])) {
     $filter[] = 'c.status=1';
 }
 //if ($categories_id > 0) {
-    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_categories.php']['adminSortCategoriesQuesryFilter'])) {
-        $params = array(
-                'filter' => &$filter,
-        );
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_categories.php']['adminSortCategoriesQuesryFilter'] as $funcRef) {
-            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-        }
-    }
-    $query_c = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, c.categories_image, cd.categories_name', // SELECT ...
-            'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-            implode(' and ', $filter), // WHERE...
-            'c.categories_id', // GROUP BY...
-            'c.sort_order asc', // ORDER BY...
-            '' // LIMIT ...
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_categories.php']['adminSortCategoriesQuesryFilter'])) {
+    $params = array(
+            'filter' => &$filter,
     );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_categories.php']['adminSortCategoriesQuesryFilter'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+$query_c = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, c.categories_image, cd.categories_name', // SELECT ...
+        'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+        implode(' and ', $filter), // WHERE...
+        'c.categories_id', // GROUP BY...
+        'c.sort_order asc', // ORDER BY...
+        '' // LIMIT ...
+);
 //
-    $res_c = $GLOBALS['TYPO3_DB']->sql_query($query_c);
-    if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_c)) {
-        $categories_list = array();
-        while ($row_c = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_c)) {
-            $tmp_category = '';
-            //
-            if ($categories_id) {
-                // get all cats to generate multilevel fake url
-                $level = 0;
-                $cats = mslib_fe::Crumbar($categories_id);
-                $cats = array_reverse($cats);
-                $where = '';
-                if (count($cats) > 0) {
-                    foreach ($cats as $cat) {
-                        $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
-                        $level++;
-                    }
-                    $where = substr($where, 0, (strlen($where) - 1));
-                    $where .= '&';
+$res_c = $GLOBALS['TYPO3_DB']->sql_query($query_c);
+if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_c)) {
+    $categories_list = array();
+    while ($row_c = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_c)) {
+        $tmp_category = '';
+        //
+        if ($categories_id) {
+            // get all cats to generate multilevel fake url
+            $level = 0;
+            $cats = mslib_fe::Crumbar($categories_id);
+            $cats = array_reverse($cats);
+            $where = '';
+            if (count($cats) > 0) {
+                foreach ($cats as $cat) {
+                    $where .= "categories_id[" . $level . "]=" . $cat['id'] . "&";
+                    $level++;
                 }
-                // get all cats to generate multilevel fake url eof
+                $where = substr($where, 0, (strlen($where) - 1));
+                $where .= '&';
             }
-            $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
-            //
-            $imagePath = '<div class="no_image"></div>';
-            if ($row_c['categories_image']) {
-                $imagePath = '<a href="' . $link . '" target="_blank"><img src="' . mslib_befe::getImagePath($row_c['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($row_c['categories_name']) . '" /></a>';
-            }
-            $tmp_category .= '<div class="image">
+            // get all cats to generate multilevel fake url eof
+        }
+        $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
+        //
+        $imagePath = '<div class="no_image"></div>';
+        if ($row_c['categories_image']) {
+            $imagePath = '<a href="' . $link . '" target="_blank"><img src="' . mslib_befe::getImagePath($row_c['categories_image'], 'categories', 'normal') . '" alt="' . htmlspecialchars($row_c['categories_name']) . '" /></a>';
+        }
+        $tmp_category .= '<div class="image">
        ' . $imagePath . '
     </div>';
-            //
-            $tmp_category .= '<strong><a href="' . $link . '" target="_blank">' . htmlspecialchars($row_c['categories_name']) . '</a> (ID: ' . $row_c['categories_id'] . ')</strong>';
-            //
-            if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
-                $tmp_category .= '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $row_c['categories_id'] . '&action=edit_category', 1) . '" class="admin_menu_edit btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a> </div>';
-            }
-            $tmp_category .= '<div class="button_wrapper">
+        //
+        $tmp_category .= '<strong><a href="' . $link . '" target="_blank">' . htmlspecialchars($row_c['categories_name']) . '</a> (ID: ' . $row_c['categories_id'] . ')</strong>';
+        //
+        if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
+            $tmp_category .= '<div class="admin_menu"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $row_c['categories_id'] . '&action=edit_category', 1) . '" class="admin_menu_edit btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a> </div>';
+        }
+        $tmp_category .= '<div class="button_wrapper">
        <button type="button" class="btnTop btn btn-default btn-sm" rel="#categorylisting_' . $row_c['categories_id'] . '"><i class="fa fa-arrow-up"></i> Top</button>
        <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#categorylisting_' . $row_c['categories_id'] . '"><i class="fa fa-arrow-circle-up"></i> Up</button>
        <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#categorylisting_' . $row_c['categories_id'] . '"><i class="fa fa-arrow-circle-down"></i> Down</button>
        <button type="button" class="btnBottom btn btn-default btn-sm" rel="#categorylisting_' . $row_c['categories_id'] . '"><i class="fa fa-arrow-down"></i> Bottom</button>
     </div>';
-            $categories_list[] = '<li id="categorylisting_' . $row_c['categories_id'] . '">' . $tmp_category . '</li>';
-        }
-        if (count($categories_list)) {
-            $content .= '<ul class="admin_sort_category_listing">';
-            $content .= implode("\n", $categories_list);
-            $content .= '</ul>';
-            $content .= '
+        $categories_list[] = '<li id="categorylisting_' . $row_c['categories_id'] . '">' . $tmp_category . '</li>';
+    }
+    if (count($categories_list)) {
+        $content .= '<ul class="admin_sort_category_listing">';
+        $content .= implode("\n", $categories_list);
+        $content .= '</ul>';
+        $content .= '
     <script type="text/javascript">
     function AJAXSortCategories() {
 		jQuery(".admin_sort_category_listing").sortable("refresh");
@@ -195,8 +195,8 @@ if (!isset($this->get['tx_multishop_pi1']['show_disabled_category'])) {
 		});
     });
     </script>';
-        }
     }
+}
 //} else {
 //    $content .= '<p>' . $this->pi_getLL('admin_label_please_select_categories_to_display_products') . '</p>';
 //}

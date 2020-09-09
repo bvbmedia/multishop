@@ -439,7 +439,7 @@ if ($this->post['action'] == 'category-insert') {
         // copy the previous post data to the current post so it can run the job again
         $this->post = $data[1];
         // Set ignored locked data
-        $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
+        $this->post['tx_multishop_pi1']['ignored_locked_fields'] = json_decode($row['ignored_locked_fields'], true);
         $this->post['cid'] = $row['categories_id'];
         // enable file logging
         if ($this->get['relaxed_import']) {
@@ -1066,7 +1066,7 @@ if ($this->post['action'] == 'category-insert') {
             // copy the previous post data to the current post so it can run the job again
             $this->post = $data[1];
             // Set ignored locked data
-            $this->post['tx_multishop_pi1']['ignored_locked_fields']=json_decode($row['ignored_locked_fields'],true);
+            $this->post['tx_multishop_pi1']['ignored_locked_fields'] = json_decode($row['ignored_locked_fields'], true);
 //			if ($row['categories_id']) $this->post['cid']=$row['categories_id'];
             $this->post['cid'] = $row['categories_id'];
             if ($this->post['cid'] > 0) {
@@ -1331,7 +1331,7 @@ if ($this->post['action'] == 'category-insert') {
                             'prefix_source_name' => $this->post['prefix_source_name'],
                             'skipRow' => &$skipRow,
                             'stats' => &$stats,
-                            'table_cols' =>&$table_cols
+                            'table_cols' => &$table_cols
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIteratePreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -2315,7 +2315,7 @@ if ($this->post['action'] == 'category-insert') {
                                     // $importedProductsLockedFields contains fields that we should skip from being overwritten
                                     // ignored_locked_fields contains fields that we should still overwrite
                                     foreach ($importedProductsLockedFields as $importedLockedFieldKey => $importedLockedFieldName) {
-                                        if (in_array($importedLockedFieldName,$this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
+                                        if (in_array($importedLockedFieldName, $this->post['tx_multishop_pi1']['ignored_locked_fields'])) {
                                             unset($importedProductsLockedFields[$importedLockedFieldKey]);
                                         }
                                     }
@@ -2686,9 +2686,9 @@ if ($this->post['action'] == 'category-insert') {
                             } elseif ($item['updated_products_id']) {
                                 if (!isset($item['products_specials_price']) && !isset($item['products_specials_price_including_vat'])) {
                                     // delete any special
-                                    $cols=array();
-                                    $cols[]='products_price_including_vat';
-                                    $cols[]='products_price';
+                                    $cols = array();
+                                    $cols[] = 'products_price_including_vat';
+                                    $cols[] = 'products_price';
                                     foreach ($cols as $col) {
                                         if (isset($item[$col])) {
                                             // Current feed contains no specials price, but contains normal prices. Then we have to flush the special
@@ -3486,7 +3486,7 @@ if ($this->post['action'] == 'category-insert') {
         }
         $stats['time_finished'] = time();
         if ($this->msLogFile) {
-            $message='Importer completed.'."\n";
+            $message = 'Importer completed.' . "\n";
             file_put_contents($this->msLogFile, $message, FILE_APPEND);
         }
         // custom hook that can be controlled by third-party plugin

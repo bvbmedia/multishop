@@ -2156,8 +2156,8 @@ switch ($this->ms['page']) {
                         foreach ($this->post['options_values_groups'] as $prod_id) {
                             if (is_numeric($prod_id)) {
                                 $where = "attributes_options_values_groups_id = " . $prod_id;
-                                $updateArray = array (
-                                    'sort_order' => $no
+                                $updateArray = array(
+                                        'sort_order' => $no
                                 );
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_values_groups', $where, $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);

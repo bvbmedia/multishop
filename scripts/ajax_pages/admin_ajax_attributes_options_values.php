@@ -209,7 +209,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                     );
                     $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
                     $rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
-                    $rs['description'] = (string) $rs['description'];
+                    $rs['description'] = (string)$rs['description'];
                     // insert new lang desc
                     $insertArray = array();
                     $insertArray['products_options_id'] = $opt_id;
@@ -249,16 +249,15 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
             $return_data['options_values_name'] = htmlspecialchars($row2['products_options_values_name']);
             // options values
             $str_valgroup = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-                'tx_multishop_attributes_options_values_groups_to_options_values', // FROM ...
-                'products_options_values_id=\'' . $row2['products_options_values_id'] . '\'', // WHERE...
-                '', // GROUP BY...
-                '', // ORDER BY...
-                '' // LIMIT ...
+                    'tx_multishop_attributes_options_values_groups_to_options_values', // FROM ...
+                    'products_options_values_id=\'' . $row2['products_options_values_id'] . '\'', // WHERE...
+                    '', // GROUP BY...
+                    '', // ORDER BY...
+                    '' // LIMIT ...
             );
             $qry_valgroup = $GLOBALS['TYPO3_DB']->sql_query($str_valgroup);
             $row_valgroup = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_valgroup);
             $return_data['options_values_group_id'] = htmlspecialchars($row_valgroup['attributes_options_values_groups_id']);
-
             $lang_counter = 0;
             foreach ($this->languages as $key => $language) {
                 // options values
@@ -328,7 +327,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 if (isset($this->post['option_values_group'][$products_options_values_id])) {
                     $group_id = $this->post['option_values_group'][$products_options_values_id];
-
                     $insertArray = array();
                     $insertArray['products_options_values_id'] = $products_options_values_id;
                     $insertArray['attributes_options_values_groups_id'] = $group_id;

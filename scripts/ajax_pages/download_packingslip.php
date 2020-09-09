@@ -81,7 +81,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###DELIVERY_BUILDING###'] = htmlspecialchars($order['delivery_building']);
         $order['delivery_address'] = htmlspecialchars($order['delivery_address']);
         if (strpos($template, '###DELIVERY_BUILDING###') === false && $order['delivery_building'] != '') {
-            $order['delivery_address'] = htmlspecialchars($order['delivery_building']). '<br/>' . $order['delivery_address'];
+            $order['delivery_address'] = htmlspecialchars($order['delivery_building']) . '<br/>' . $order['delivery_address'];
         }
         $markerArray['###DELIVERY_ADDRESS###'] = $order['delivery_address'];
         $markerArray['###DELIVERY_ZIP###'] = htmlspecialchars($order['delivery_zip']);

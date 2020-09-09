@@ -44,8 +44,8 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     var $cookie = array();
     /**
      * The main method of the PlugIn
-     * @param    string $content : The PlugIn content
-     * @param    array $conf : The PlugIn configuration
+     * @param string $content : The PlugIn content
+     * @param array $conf : The PlugIn configuration
      * @return    The content that is displayed on the website
      */
     function admin_main($content, $conf) {
@@ -71,7 +71,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     /**
      * Init Function: here all the needed configuration values are stored in class variables
-     * @param    array $conf : configuration array from TS
+     * @param array $conf : configuration array from TS
      * @return   void
      */
     function construct($conf) {
@@ -167,7 +167,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         setlocale(LC_TIME, $GLOBALS['TSFE']->config['config']['locale_all']);
         // In TYPO3 7.6.5 suddenly caused buggy calculations, because the dot is returned as a comma. Below line is added to force numeric to be in default system locale.
         setlocale(LC_NUMERIC, 'en_US.UTF-8');
-        $this->sys_language_uid = (int) $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+        $this->sys_language_uid = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
         if (!isset($this->sys_language_uid)) {
             $this->sys_language_uid = 0;
         }

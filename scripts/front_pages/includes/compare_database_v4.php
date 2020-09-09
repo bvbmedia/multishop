@@ -645,7 +645,6 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-
 if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
     $str = "select attributes_options_values_groups_id from tx_multishop_attributes_options_values_groups";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -676,7 +675,6 @@ if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
         $messages[] = $str;
     }
 }
-
 $str = "select stock_subtracted from tx_multishop_orders_products limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {

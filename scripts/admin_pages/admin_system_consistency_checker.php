@@ -127,14 +127,14 @@ foreach ($products as $row) {
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
 }
 $content .= '<strong>' . count($products) . '</strong> ' . $this->pi_getLL('admin_label_x_orphanned_products_to_categories_relations_has_been_deleted') . '.<br />';
-$filter=array();
+$filter = array();
 // Do not delete categories that are having CMS content or having an external URL
-$filter[]='cd.language_id=0';
-$filter[]='cd.content = \'\'';
-$filter[]='cd.content_footer = \'\'';
-$filter[]='cd.categories_external_url = \'\'';
-$filter[]='c.categories_id=cd.categories_id';
-$str = "SELECT c.categories_id from tx_multishop_categories c, tx_multishop_categories_description cd where ".implode(' AND ',$filter);
+$filter[] = 'cd.language_id=0';
+$filter[] = 'cd.content = \'\'';
+$filter[] = 'cd.content_footer = \'\'';
+$filter[] = 'cd.categories_external_url = \'\'';
+$filter[] = 'c.categories_id=cd.categories_id';
+$str = "SELECT c.categories_id from tx_multishop_categories c, tx_multishop_categories_description cd where " . implode(' AND ', $filter);
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $cats = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -143,7 +143,7 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     }
 }
 foreach ($cats as $row) {
-    if ($row['categories_id'] && ! $row['categories_id']) {
+    if ($row['categories_id'] && !$row['categories_id']) {
         mslib_befe::deleteCategory($row['categories_id']);
     }
 }

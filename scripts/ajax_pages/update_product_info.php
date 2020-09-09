@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 $content = '';
-$product_id = (int) $this->post['tx_multishop_pi1']['pid'];
+$product_id = (int)$this->post['tx_multishop_pi1']['pid'];
 $new_value = $this->post['tx_multishop_pi1']['value'];
 switch ($this->get['tx_multishop_pi1']['update_product_info']) {
     case 'products_price':
@@ -45,7 +45,7 @@ switch ($this->get['tx_multishop_pi1']['update_product_info']) {
     case 'products_status':
         $return_data = array();
         $return_data['status'] = 'NOTOK';
-        $new_value = (string) $new_value;
+        $new_value = (string)$new_value;
         if ($product_id > 0 && $new_value != '') {
             $updateArray = array();
             $updateArray['products_status'] = addslashes($new_value);
@@ -63,7 +63,7 @@ switch ($this->get['tx_multishop_pi1']['update_product_info']) {
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/update_product_info.php']['ajaxUpdateProductInfo'])) {
             $params = array(
-                'return_data' => &$return_data
+                    'return_data' => &$return_data
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/update_product_info.php']['ajaxUpdateProductInfo'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
