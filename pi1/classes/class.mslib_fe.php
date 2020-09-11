@@ -698,6 +698,23 @@ class mslib_fe {
             $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
             $array['total_rows'] = $row['total'];
         }
+        //hook to let other plugins further manipulate the query
+        $query_elements = array();
+        $query_elements['select'] =& $select_total_count;
+        $query_elements['from'] =& $from_clause;
+        $query_elements['where'] =& $where_clause;
+        $query_elements['having'] =& $having_clause;
+        $query_elements['groupby'] =& $groupby;
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetCountPostProc'])) {
+            $params = array(
+                    'array' => &$array,
+                    'query_elements' => &$query_elements,
+                    'search_section' => &$search_section
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetCountPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if ($this->conf['debugEnabled'] == '1') {
             $logString = 'getProductsPageSet query 1 number of records: ' . $array['total_rows'] . '. Query: ' . $str . '.';
             \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
