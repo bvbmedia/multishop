@@ -827,7 +827,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
                                 }
                             }
-                        } else {
+                        } else if ($this->ms['MODULES']['DISABLE_SEND_ORDER_CONFIRMATION_LETTER_TO_STORE_EMAIL'] == '0') {
                             // now mail a copy to the merchant
                             $merchant = array();
                             $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
