@@ -39,7 +39,8 @@ if (is_array($users)) {
     // Collect table body rows
     foreach ($users as $user) {
         $tblRow = array();
-        $tblRow[] = $user['username'];
+        $editCustomerLink = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $user['uid'] . '&action=edit_customer', 1);
+        $tblRow[] = '<a href="'.$editCustomerLink.'">'.htmlspecialchars($user['username']).'</a>';
         $usergroupUids = explode(',', $user['usergroup']);
         foreach ($sortedUsergroups as $uid => $sortedUsergroup) {
             $value = '';
