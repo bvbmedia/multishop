@@ -168,7 +168,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $product_tax_data['region_tax'] = '0';
                 $product_tax_data['total_tax'] = '0';
                 $product_tax_data['total_attributes_tax'] = '0';
-                $sql_prod = "select * from tx_multishop_orders_products where orders_id = " . $row['orders_id'];
+                $sql_prod = "select * from tx_multishop_orders_products where orders_id = " . addslashes($row['orders_id']);
                 $qry_prod = $GLOBALS['TYPO3_DB']->sql_query($sql_prod);
                 while ($row_prod = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_prod)) {
                     $tax_rate = $row_prod['products_tax'] / 100;
@@ -177,7 +177,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                     $product_tax = unserialize($row_prod['products_tax_data']);
                     // attributes tax
-                    $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row_prod['orders_id'];
+                    $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . addslashes($row_prod['orders_products_id']) . " and orders_id = " . addslashes($row_prod['orders_id']);
                     $qry_attr = $GLOBALS['TYPO3_DB']->sql_query($sql_attr);
                     $attributes_tax = 0;
                     $tmp_attributes_price = 0;
