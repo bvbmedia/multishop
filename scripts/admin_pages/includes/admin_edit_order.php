@@ -142,9 +142,9 @@ if (is_numeric($this->get['orders_id'])) {
                 // delete single item in order
                 if (isset($this->get['delete_product']) && $this->get['delete_product'] == 1) {
                     if (isset($this->get['order_pid']) && $this->get['order_pid'] > 0) {
-                        $sql = "delete from tx_multishop_orders_products where orders_products_id = " . $this->get['order_pid'] . " limit 1";
+                        $sql = "delete from tx_multishop_orders_products where orders_products_id = " . addslashes($this->get['order_pid']) . " limit 1";
                         $GLOBALS['TYPO3_DB']->sql_query($sql);
-                        $sql = "delete from tx_multishop_orders_products_attributes where orders_products_id = " . $this->get['order_pid'];
+                        $sql = "delete from tx_multishop_orders_products_attributes where orders_products_id = " . addslashes($this->get['order_pid']);
                         $GLOBALS['TYPO3_DB']->sql_query($sql);
                         // repair tax stuff
                         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
@@ -393,7 +393,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 //$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // clean up the order product attributes to prepare the update
-                                $sql = "delete from tx_multishop_orders_products_attributes where orders_id = " . $this->get['orders_id'] . " and orders_products_id = " . $this->post['orders_products_id'];
+                                $sql = "delete from tx_multishop_orders_products_attributes where orders_id = " . addslashes($this->get['orders_id']) . " and orders_products_id = " . addslashes($this->post['orders_products_id']);
                                 $GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // insert the update attributes
                                 $count_manual_attributes = count($this->post['edit_manual_option']);
@@ -1153,13 +1153,13 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>';
             // count total products
             $total_amount = 0;
-            $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . $orders['orders_id'] . "' order by sort_order asc";
+            $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . addslashes($orders['orders_id']) . "' order by sort_order asc";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
                 $orders_products[] = $row;
                 $total_amount = ($row['qty'] * $row['final_price']) + $total_amount;
                 // now count the attributes
-                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $row['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . addslashes($row['orders_products_id']) . "' order by orders_products_attributes_id asc";
                 $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
                 while (($row3 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) != false) {
                     if ($row3['price_prefix'] == '+') {
