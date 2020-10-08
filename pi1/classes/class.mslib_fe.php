@@ -178,9 +178,11 @@ class mslib_fe {
         switch ($type) {
             case 'customers_also_bought':
                 $product_ids = array();
-                $orders = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('orders_id', 'tx_multishop_orders_products', "products_id = '" . $product['products_id'] . "'", 'orders_id');
+                // Group by is 3 times slower than DISTINCT
+                //$orders = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('orders_id', 'tx_multishop_orders_products', "products_id = '" . addslashes($product['products_id']) . "'", 'orders_id');
+                $orders = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT orders_id', 'tx_multishop_orders_products', "products_id = '" . addslashes($product['products_id']) . "'", '');
                 foreach ($orders as $order) {
-                    $data = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id', 'tx_multishop_orders_products', "orders_id = '" . $order['orders_id'] . "' and products_id !='" . $product['products_id'] . "'", '', '', $limit);
+                    $data = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id', 'tx_multishop_orders_products', "orders_id = '" . addslashes($order['orders_id']) . "' and products_id !='" . addslashes($product['products_id']) . "'", '', '', $limit);
                     if (is_array($data) && count($data)) {
                         foreach ($data as $item) {
                             $product_ids[] = $item['products_id'];
