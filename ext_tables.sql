@@ -878,7 +878,12 @@ CREATE TABLE `tx_multishop_payment_transactions` (
  `code` varchar(35) default '',
  PRIMARY KEY (`id`),
  KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`),
- KEY `orders_id_extra` (`orders_id_extra`)
+ KEY `orders_id_extra` (`orders_id_extra`),
+ KEY `orders_id2` (`orders_id`),
+ KEY `transaction_id` (`transaction_id`),
+ KEY `psp` (`psp`),
+ KEY `status` (`status`),
+ KEY `code` (`code`)
 );
 
 CREATE TABLE `tx_multishop_products` (
