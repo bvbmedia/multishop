@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-$str = "select products_id from tx_multishop_orders_products where categories_id=0 group by products_id";
+$str = "select DISTINCT products_id from tx_multishop_orders_products where categories_id=0";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $filter = array();
