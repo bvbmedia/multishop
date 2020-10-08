@@ -661,6 +661,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
  KEY `bill` (`bill`),
+ KEY `products_id` (`products_id`),
  KEY `products_name` (`products_name`),
  KEY `file_download_code` (`file_download_code`),
  KEY `order_unit_id` (`order_unit_id`),

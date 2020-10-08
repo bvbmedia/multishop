@@ -794,3 +794,20 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$indexes = array();
+$table_name = 'tx_multishop_orders_products';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+if (!in_array('products_id', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `products_id` (`products_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+if (!in_array('products_model', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `products_model` (`products_model`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
