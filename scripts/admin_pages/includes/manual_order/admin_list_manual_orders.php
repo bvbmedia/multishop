@@ -10,12 +10,12 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $orders[$row['orders_id']] = $row;
     // count total
     $total_amount = 0;
-    $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . $row['orders_id'] . "'";
+    $str2 = "SELECT qty,final_price,orders_products_id,products_tax from tx_multishop_orders_products where orders_id='" . addslashes($row['orders_id']) . "'";
     $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
     while (($orders_products = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
         $item_price = ($orders_products['qty'] * $orders_products['final_price']);
         // now count the attributes
-        $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $orders_products['orders_products_id'] . "'";
+        $str3 = "SELECT price_prefix, options_values_price from tx_multishop_orders_products_attributes where orders_products_id='" . addslashes($orders_products['orders_products_id']) . "'";
         $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
         while (($row3 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) != false) {
             if ($row3['price_prefix'] == '+') {
