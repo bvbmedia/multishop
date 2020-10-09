@@ -9,7 +9,7 @@ if (!$this->masterShop) {
 }
 $select=array();
 $select[]='DISTINCT billing_country';
-$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'billing_country', 'billing_country asc',99999, $select);
+$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, '', 'billing_country asc',99999, $select);
 $order_billing_country = array();
 foreach ($order_countries as $order_country) {
     $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
