@@ -831,3 +831,19 @@ foreach($indexToCheck as $index) {
         $messages[] = $str;
     }
 }
+$indexToCheck=array();
+$indexToCheck[]='billing_country';
+$indexes = array();
+$table_name = 'tx_multishop_orders';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
