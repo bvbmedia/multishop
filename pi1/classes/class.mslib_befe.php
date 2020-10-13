@@ -185,7 +185,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -361,7 +361,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -1612,7 +1612,7 @@ class mslib_befe {
                 $commands = array();
                 $imParams = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $imParams .= '-strip';
+                    $imParams .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -1936,7 +1936,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
