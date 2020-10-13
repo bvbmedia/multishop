@@ -580,7 +580,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `coupon_discount_value` (`coupon_discount_value`),
  KEY `date_mail_last_sent` (`date_mail_last_sent`),
  KEY `orders_paid_timestamp` (`orders_paid_timestamp`),
- KEY `debit_order` (`debit_order`),
+ KEY `billing_country` (`billing_country`),
  KEY `combined` (`page_uid`,`deleted`),
  KEY `combined_payment_method` (`payment_method`(75),`payment_method_label`(75)),
  KEY `combined_shipping_method` (`shipping_method`(75),`shipping_method_label`(75)),
@@ -661,6 +661,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
  KEY `bill` (`bill`),
+ KEY `products_id` (`products_id`),
  KEY `products_name` (`products_name`),
  KEY `file_download_code` (`file_download_code`),
  KEY `order_unit_id` (`order_unit_id`),
@@ -877,7 +878,12 @@ CREATE TABLE `tx_multishop_payment_transactions` (
  `code` varchar(35) default '',
  PRIMARY KEY (`id`),
  KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`),
- KEY `orders_id_extra` (`orders_id_extra`)
+ KEY `orders_id_extra` (`orders_id_extra`),
+ KEY `orders_id2` (`orders_id`),
+ KEY `transaction_id` (`transaction_id`),
+ KEY `psp` (`psp`),
+ KEY `status` (`status`),
+ KEY `code` (`code`)
 );
 
 CREATE TABLE `tx_multishop_products` (

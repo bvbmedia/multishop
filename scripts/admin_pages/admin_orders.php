@@ -1159,7 +1159,9 @@ if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
 }
 $shipping_method_input .= '</select>' . "\n";
 // billing country
-$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
+$select=array();
+$select[]='DISTINCT billing_country';
+$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, '', 'billing_country asc',99999, $select);
 $order_billing_country = array();
 if (is_array($order_countries) && count($order_countries)) {
     foreach ($order_countries as $order_country) {
