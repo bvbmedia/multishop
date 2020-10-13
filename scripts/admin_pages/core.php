@@ -738,7 +738,16 @@ switch ($this->ms['page']) {
         require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_module.php');
         break;
     case 'edit_cms':
-        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_cms.php');
+        if (strstr($this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'], "..")) {
+            die('error in ADMIN_CMS_EDIT_TYPE value');
+        } else {
+            if (strstr($this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'], "/")) {
+                // relative mode
+                require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'] . '.php');
+            } else {
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_cms.php');
+            }
+        }
         break;
     case 'add_manufacturer':
     case 'edit_manufacturer':
