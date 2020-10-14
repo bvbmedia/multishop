@@ -847,6 +847,22 @@ foreach($indexToCheck as $index) {
         $messages[] = $str;
     }
 }
+$indexToCheck=array();
+$indexToCheck[]='products_id';
+$indexes = array();
+$table_name = 'tx_multishop_orders_products';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
 // Drop some unneeded indexes on the orders table to prevent reaching the maximum number of indexes
 $indexToCheck=array();
 $indexToCheck[]='coupon_discount_value';
