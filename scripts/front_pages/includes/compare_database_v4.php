@@ -866,3 +866,21 @@ foreach($indexToCheck as $index) {
         $messages[] = $str;
     }
 }
+// Add some indexes
+$indexToCheck=array();
+$indexToCheck[]='transaction_id';
+$indexToCheck[]='psp';
+$indexes = array();
+$table_name = 'tx_multishop_payment_transactions';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
