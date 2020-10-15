@@ -227,6 +227,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</select>';
         // order by selectbox
         $order_by_sb = '<select class="form-control" name="order_by">
+			<option value="invoice_number"' . ($post_data['order_by'] == 'invoice_number' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('invoice_number') . '</option>
 			<option value="orders_id"' . ($post_data['order_by'] == 'orders_id' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('orders_id') . '</option>
 			<option value="status_last_modified"' . ($post_data['order_by'] == 'status_last_modified' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('status_last_modified') . '</option>
 			<option value="billing_name"' . ($post_data['order_by'] == 'billing_name' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('billing_name') . '</option>
@@ -242,7 +243,8 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</select>';
         // order type selectbox
         $order_type_sb = '<select class="form-control" name="order_type">
-			<option value="all"' . ($post_data['order_type'] == 'desc' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('orders') . '</option>
+			<option value="all">' . $this->pi_getLL('all') . '</option>
+			<option value="orders"' . ($post_data['order_type'] == 'orders' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('orders') . '</option>
 			<option value="by_phone"' . ($post_data['order_type'] == 'by_phone' ? ' selected="selected"' : '') . '>' . ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))) . '</option>
 			<option value="proposal"' . ($post_data['order_type'] == 'proposal' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('admin_proposals') . '</option>
 		</select>';
@@ -296,6 +298,37 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<div class="col-md-10">
 				' . $payment_status_sb . '
 			</div>
+		</div>';
+        // load enabled countries to array
+        $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and c2z.hide_in_frontend=0 and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+        //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+        $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+        $enabled_countries = array();
+        while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+            $enabled_countries[] = $row2;
+        }
+        $tmpcontent_con = '<select name="billing_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        $tmpcontent_con_delivery = '<select name="delivery_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        foreach ($enabled_countries as $country) {
+            $tmpcontent_con .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['billing_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+            $tmpcontent_con_delivery .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['delivery_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+        }
+        $tmpcontent_con .= '/<select>';
+        $tmpcontent_con_delivery .= '/<select>';
+
+        $content .= '<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_billing_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_delivery_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con_delivery . '
+			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_by')) . '</label>
@@ -348,17 +381,16 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         if (is_array($this->post['fields']) and count($this->post['fields'])) {
             foreach ($this->post['fields'] as $field) {
                 $counter++;
-                $content .= '<div><div class="form-group"><label>' . htmlspecialchars($this->pi_getLL('type')) . ': </label><select name="fields[' . $counter . ']" rel="' . $counter . '" class="msAdminInvoicesExportSelectField">';
+                $content .= '<div class="form-group"><label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('type')) . '</label><div class="col-md-10"><select name="fields[' . $counter . ']" rel="' . $counter . '" class="msAdminInvoicesExportSelectField">';
                 foreach ($array as $key => $option) {
                     $content .= '<option value="' . $key . '"' . ($field == $key ? ' selected' : '') . '>' . htmlspecialchars($option) . '</option>';
                 }
-                $content .= '</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '" /></div>';
+                $content .= '</select> <button class="delete_field btn btn-danger" name="delete_field" type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '"><i class="fa fa-trash-o"></i></button></div></div>';
                 // custom field
                 if ($field == 'custom_field') {
                     $content .= '<div class="form-group"><label></label><span class="key">Key</span><input name="fields_headers[' . $counter . ']" type="text" value="' . $this->post['fields_headers'][$counter] . '" /><span class="value">Value</span><input name="fields_values[' . $counter . ']" type="text" value="' . $this->post['fields_values'][$counter] . '" /></div>';
                 }
-                $content .= '
-				</div>';
+                $content .= '';
             }
         }
         $content .= '
@@ -410,11 +442,13 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 					$(".hide_pf").show();
 				}
 			});
+			
+			
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div><div class="form-group"><label>Type: </label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminInvoicesExportSelectField">';
+				var item=\'<div class="form-group"><label class="control-label col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminInvoicesExportSelectField">';
         foreach ($array as $key => $option) {
-            $content .= '<option value="' . $key . '">' . addslashes(htmlspecialchars($option)) . '</option>';
+            $content .= '<option value="' . $key . '">' . htmlspecialchars(addslashes($option)) . '</option>';
         }
         $content .= '</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="' . htmlspecialchars($this->pi_getLL('delete')) . '" /></div></div>\';
 				$(\'#admin_invoices_exports_fields\').append(item);
@@ -423,7 +457,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				});
 			});
 			$(document).on("click", ".delete_field", function() {
-				jQuery(this).parent().remove();
+				jQuery(this).parent().parent().remove();
 			});
 			$(\'.msAdminInvoicesExportSelectField\').select2({
 					width:\'650px\'

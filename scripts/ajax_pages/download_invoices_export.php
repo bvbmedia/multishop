@@ -68,6 +68,12 @@ if ($this->get['invoices_export_hash']) {
         } else if ($post_data['payment_status'] == 'unpaid') {
             $filter[] = "(o.paid='0')";
         }
+        if (isset($post_data['billing_country']) && !empty($post_data['billing_country']) && $post_data['billing_country'] != 'all') {
+            $filter[] = "(o.billing_country='" . addslashes($post_data['billing_country']) . "')";
+        }
+        if (isset($post_data['delivery_country']) && !empty($post_data['delivery_country']) && $post_data['delivery_country'] != 'all') {
+            $filter[] = "(o.delivery_country='" . addslashes($post_data['delivery_country']) . "')";
+        }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
         }
@@ -91,6 +97,9 @@ if ($this->get['invoices_export_hash']) {
             case 'status_last_modified':
                 $order_by = 'o.status_last_modified';
                 break;
+            case 'invoice_number':
+                $order_by = 'i.invoice_id';
+                break;
             case 'orders_id':
             default:
                 $order_by = 'o.orders_id';
@@ -106,6 +115,16 @@ if ($this->get['invoices_export_hash']) {
                 break;
         }
         $orderby[] = $order_by . ' ' . $order;
+        if ($post_data['order_type'] == 'orders') {
+            $filter[] = 'o.by_phone=0';
+            $filter[] = 'o.is_proposal=0';
+        }
+        if ($post_data['order_type'] == 'by_phone') {
+            $filter[] = 'o.by_phone=1';
+        }
+        if ($post_data['order_type'] == 'proposal') {
+            $filter[] = 'o.is_proposal=1';
+        }
         /*if ($post_data['order_type'] == 'by_phone') {
             $filter[] = 'o.by_phone=1';
         } else {

@@ -332,6 +332,38 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<div class="col-md-10">
 			' . $payment_status_sb . '
 			</div>
+		</div>';
+
+        // load enabled countries to array
+        $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and c2z.hide_in_frontend=0 and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+        //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+        $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+        $enabled_countries = array();
+        while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+            $enabled_countries[] = $row2;
+        }
+        $tmpcontent_con = '<select name="billing_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        $tmpcontent_con_delivery = '<select name="delivery_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        foreach ($enabled_countries as $country) {
+            $tmpcontent_con .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['billing_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+            $tmpcontent_con_delivery .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['delivery_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+        }
+        $tmpcontent_con .= '/<select>';
+        $tmpcontent_con_delivery .= '/<select>';
+
+        $content .= '<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_billing_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_delivery_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con_delivery . '
+			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delivery_date')) . '</label>

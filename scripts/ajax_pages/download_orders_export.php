@@ -80,6 +80,12 @@ if ($this->get['orders_export_hash']) {
         if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method'] != 'all') {
             $filter[] = "(o.payment_method='" . addslashes($post_data['payment_method']) . "')";
         }
+        if (isset($post_data['billing_country']) && !empty($post_data['billing_country']) && $post_data['billing_country'] != 'all') {
+            $filter[] = "(o.billing_country='" . addslashes($post_data['billing_country']) . "')";
+        }
+        if (isset($post_data['delivery_country']) && !empty($post_data['delivery_country']) && $post_data['delivery_country'] != 'all') {
+            $filter[] = "(o.delivery_country='" . addslashes($post_data['delivery_country']) . "')";
+        }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
         }
