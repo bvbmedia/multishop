@@ -47,7 +47,7 @@ if ($this->get['invoices_export_hash']) {
         if (!empty($post_data['invoice_date_from']) && !empty($post_data['invoice_date_till'])) {
             $start_time = strtotime($post_data['invoice_date_from']);
             $end_time = strtotime($post_data['invoice_date_till']);
-            $column = 'invoice_crdate';
+            $column = 'i.crdate';
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
         if (!empty($post_data['start_duration'])) {
@@ -57,7 +57,7 @@ if ($this->get['invoices_export_hash']) {
             } else {
                 $end_duration = strtotime(date('Y-m-d 23:59:59', time()));
             }
-            $column = 'invoice_crdate';
+            $column = 'i.crdate';
             $filter[] = $column . " BETWEEN '" . $start_duration . "' and '" . $end_duration . "'";
         }
         if ($post_data['order_status'] !== 'all') {
