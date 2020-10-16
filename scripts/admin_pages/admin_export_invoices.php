@@ -255,6 +255,18 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
 			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_orders_archiver')) {
+            $content .= '
+                <div class="form-group">
+                    <label class="control-label col-md-2">Order table type</label>
+                    <div class="col-md-10">
+                        <select name="order_table_type" class="form-control">
+                            <option value="active"' . ($post_data['order_table_type'] == 'active' ? ' selected="selected"' : '') . '>Active</option>
+                            <option value="archive"' . ($post_data['order_table_type'] == 'archive' ? ' selected="selected"' : '') . '>Archive</option>
+                        </select>
+                    </div>
+                </div>';
+        }
         $content .= '
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_type')) . '</label>

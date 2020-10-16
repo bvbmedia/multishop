@@ -9757,7 +9757,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getOrdersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $section = '') {
+    public function getOrdersPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $section = '', $orders_table = 'active') {
         if (!$limit) {
             $limit = 20;
         }
@@ -9770,7 +9770,11 @@ class mslib_fe {
             $select_clause .= implode(',', $select);
         }
 //		$from_clause.="	from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id ";
-        $from_clause = ' from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) ';
+        $active_order_table = 'tx_multishop_orders o';
+        if ($orders_table == 'archive') {
+            $active_order_table = 'tx_multishop_archive_orders o';
+        }
+        $from_clause = ' from ' . $active_order_table . ' left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) ';
         if (count($from) > 0) {
             $from_clause .= ', ';
             $from_clause .= implode(',', $from);
@@ -9820,7 +9824,7 @@ class mslib_fe {
         }
         return $array;
     }
-    public function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $extra_left_join = '', $group_by = '') {
+    public function getInvoicesPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $from = array(), $extra_left_join = '', $group_by = '', $orders_table = 'active') {
         if (!$limit) {
             $limit = 20;
         }
@@ -9833,7 +9837,11 @@ class mslib_fe {
         if (count($select) > 0) {
             $select_clause .= implode(',', $select);
         }
-        $from_clause = ' from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id' . $extra_left_join;
+        $active_order_table = 'tx_multishop_orders o';
+        if ($orders_table == 'archive') {
+            $active_order_table = 'tx_multishop_archive_orders o';
+        }
+        $from_clause = ' from tx_multishop_invoices i left join ' . $active_order_table . ' on o.orders_id=i.orders_id' . $extra_left_join;
         if (count($from) > 0) {
             $from_clause .= ', ';
             $from_clause .= implode(',', $from);

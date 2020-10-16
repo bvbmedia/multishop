@@ -132,7 +132,11 @@ if ($this->get['orders_export_hash']) {
         //} else {
             $ox_limit = 500000;
         //}
-        $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from);
+        $order_table_type = 'active';
+        if (isset($post_data['order_table_type']) && $post_data['order_table_type']) {
+            $order_table_type = $post_data['order_table_type'];
+        }
+        $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from, '', $order_table_type);
         //print_r($pageset);
         //die();
         $records = $pageset['orders'];
@@ -493,7 +497,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $options_attributes_tax_data = unserialize($order_product_attributes['attributes_tax_data']);
@@ -520,7 +528,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += $product_tmp['final_price'] * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price'])) * $product_tmp['qty'];
@@ -546,7 +558,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $options_attributes_tax_data = unserialize($order_product_attributes['attributes_tax_data']);
@@ -573,7 +589,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += $product_tmp['final_price'] * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price'])) * $product_tmp['qty'];

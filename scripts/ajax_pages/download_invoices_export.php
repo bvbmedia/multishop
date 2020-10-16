@@ -140,7 +140,11 @@ if ($this->get['invoices_export_hash']) {
         //} else {
             $ox_limit = 500000;
         //}
-        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from);
+        $order_table_type = 'active';
+        if (isset($post_data['order_table_type']) && $post_data['order_table_type']) {
+            $order_table_type = $post_data['order_table_type'];
+        }
+        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from, '', '', $order_table_type);
         $records = $pageset['invoices'];
         // load all products
         $excelRows = array();
