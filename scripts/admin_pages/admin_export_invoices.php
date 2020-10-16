@@ -136,11 +136,11 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
                 $erno[] = $this->pi_getLL('feed_exporter_label_error_no_fields_defined');
             }
         }
-        if (empty($this->post['visual_orders_date_from'])) {
-            $this->post['orders_date_from'] = '';
+        if (empty($this->post['visual_invoice_date_from'])) {
+            $this->post['invoice_date_from'] = '';
         }
-        if (empty($this->post['visual_orders_date_till'])) {
-            $this->post['orders_date_till'] = '';
+        if (empty($this->post['visual_invoice_date_till'])) {
+            $this->post['invoice_date_till'] = '';
         }
         if (is_array($erno) and count($erno) > 0) {
             $content .= '<div class="alert alert-danger">';
@@ -265,12 +265,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_date')) . '</label>
 			<div class="col-md-10 form-inline">
-				<label class="form-control-static" for="visual_orders_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>&nbsp;
-				<input class="form-control" name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="' . $post_data['visual_orders_date_from'] . '" />&nbsp;
-				<input name="orders_date_from" id="orders_date_from" type="hidden" value="' . $post_data['orders_date_from'] . '" />
-				<label class="form-control-static" for="visual_orders_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>&nbsp;
-				<input class="form-control" name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="' . $post_data['visual_orders_date_till'] . '" />&nbsp;
-				<input name="orders_date_till" id="orders_date_till" type="hidden" value="' . $post_data['orders_date_till'] . '" />
+				<label class="form-control-static" for="visual_invoice_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>&nbsp;
+				<input class="form-control" name="visual_invoice_date_from" id="visual_invoice_date_from" type="text" value="' . $post_data['visual_invoice_date_from'] . '" />&nbsp;
+				<input name="invoice_date_from" id="invoice_date_from" type="hidden" value="' . $post_data['invoice_date_from'] . '" />
+				<label class="form-control-static" for="visual_invoice_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>&nbsp;
+				<input class="form-control" name="visual_invoice_date_till" id="visual_invoice_date_till" type="text" value="' . $post_data['visual_invoice_date_till'] . '" />&nbsp;
+				<input name="invoice_date_till" id="invoice_date_till" type="hidden" value="' . $post_data['invoice_date_till'] . '" />
 			</div>
 		</div>
 		<div class="form-group">
@@ -406,18 +406,18 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		<input name="section" type="hidden" value="' . $_REQUEST['section'] . '" />
 		</form>
 		<script type="text/javascript">
-		 $("#visual_orders_date_from").datepicker({
+		 $("#visual_invoice_date_from").datepicker({
 			dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
-			altField: "#orders_date_from",
+			altField: "#invoice_date_from",
         	altFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
 			showOtherMonths: true,
 			yearRange: "' . $first_year . ':' . (date('Y') + 1) . '"
 		});
-		$("#visual_orders_date_till").datepicker({
+		$("#visual_invoice_date_till").datepicker({
 			dateFormat: "' . $this->pi_getLL('locale_date_format_js', 'yy/mm/dd') . '",
-			altField: "#orders_date_till",
+			altField: "#invoice_date_till",
         	altFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
