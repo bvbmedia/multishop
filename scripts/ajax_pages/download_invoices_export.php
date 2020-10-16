@@ -135,7 +135,12 @@ if ($this->get['invoices_export_hash']) {
         } else {
             $filter[] = 'o.is_proposal=0';
         }*/
-        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
+        //if ($this->get['format'] == 'excel') {
+        //    $ox_limit = 65000;
+        //} else {
+            $ox_limit = 500000;
+        //}
+        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from);
         $records = $pageset['invoices'];
         // load all products
         $excelRows = array();

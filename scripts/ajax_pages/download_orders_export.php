@@ -127,11 +127,11 @@ if ($this->get['orders_export_hash']) {
         if ($post_data['order_type'] == 'by_phone') {
             $filter[] = 'o.by_phone=1';
         }
-        if ($this->get['format'] == 'excel') {
-            $ox_limit = 65000;
-        } else {
+        //if ($this->get['format'] == 'excel') {
+        //    $ox_limit = 65000;
+        //} else {
             $ox_limit = 500000;
-        }
+        //}
         $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from);
         //print_r($pageset);
         //die();
