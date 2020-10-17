@@ -446,6 +446,18 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	</div>';
     // tabs eof
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCmsPostProc'])) {
+    $params = array(
+            'content' => &$content,
+            'tabs' => &$tabs,
+            'cms' => $cms
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCmsPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// hook eof
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
