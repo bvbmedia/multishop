@@ -174,7 +174,7 @@ if ($this->get['invoices_export_hash']) {
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
             if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
-                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($row['orders_id']);
+                $order_tmp = tx_multishop_orders_archiver::getOrderArchive($row['orders_id']);
             } else {
                 $order_tmp = mslib_fe::getOrder($row['orders_id']);
             }
