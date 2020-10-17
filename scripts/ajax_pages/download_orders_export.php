@@ -174,7 +174,11 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_category_incl_vat':
                         $categories_data_incl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name'];
                                 if (!$category_name) {
@@ -196,7 +200,11 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_category_excl_vat':
                         $categories_data_excl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name'];
                                 if (!$category_name) {
@@ -218,7 +226,11 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_main_category_incl_vat':
                         $main_categories_data_incl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -240,7 +252,11 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_main_category_excl_vat':
                         $main_categories_data_excl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -262,7 +278,11 @@ if ($this->get['orders_export_hash']) {
                     case 'bought_products_per_main_category':
                         $main_categories_data_bought_products = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -291,7 +311,11 @@ if ($this->get['orders_export_hash']) {
         }
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
-            $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                $order_tmp = tx_multishop_orders_archiver::getArchiveOrder($row['orders_id']);
+            } else {
+                $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            }
             $excelCols = array();
             $total = count($fields);
             $count = 0;
