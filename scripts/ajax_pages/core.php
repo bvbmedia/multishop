@@ -1095,6 +1095,44 @@ switch ($this->ms['page']) {
         echo $content;
         exit();
         break;
+    case 'get_ordered_country':
+        $where = array();
+        $skip_db = false;
+        $limit = 50;
+        $additional_where = array();
+        if (isset($this->get['q']) && !empty($this->get['q'])) {
+            $additional_where[] = 'billing_country like \'%' . addslashes($this->get['q']) . '%\'';
+        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            $additional_where[] = 'billing_country = \'' . addslashes($this->get['preselected_id']) . '\'';
+        }
+        $select=array();
+        $select[]='DISTINCT billing_country';
+        $order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, '', 'billing_country asc',99999, $select);
+        $order_billing_country = array();
+        $data = array();
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == 'all') {
+            $data[] = array(
+                    'id' => 'all',
+                    'text' => $this->pi_getLL('all')
+            );
+        }
+        if (is_array($order_countries) && count($order_countries)) {
+            foreach ($order_countries as $order_country) {
+                $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
+                $order_billing_country[$cn_localized_name] = $order_country['billing_country'];
+            }
+            ksort($order_billing_country);
+        }
+        foreach ($order_billing_country as $label => $value) {
+            $data[] = array(
+                    'id' => $value,
+                    'text' => $label
+            );
+        }
+        $content = json_encode($data);
+        echo $content;
+        exit();
+        break;
     case 'get_ordered_products':
         $where = array();
         $skip_db = false;

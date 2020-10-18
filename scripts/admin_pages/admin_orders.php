@@ -1170,7 +1170,8 @@ if (is_array($order_countries) && count($order_countries)) {
     }
     ksort($order_billing_country);
 }
-$billing_countries_selectbox = '<select class="order_select2" name="country" id="country"><option value="">' . $this->pi_getLL('all_countries') . '</option>' . implode("\n", $order_billing_country) . '</select>';
+//$billing_countries_selectbox = '<select class="order_select2" name="country" id="country"><option value="">' . $this->pi_getLL('all_countries') . '</option>' . implode("\n", $order_billing_country) . '</select>';
+$billing_countries_selectbox = '<input type="hidden" class="order_country_select2" name="country" id="country" value="' . $this->post['country'] . '" />';
 $subpartArray = array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders');
@@ -1390,6 +1391,51 @@ jQuery(document).ready(function($) {
 		escapeMarkup: function (m) { return m; }
 	});
 	$(".order_select2").select2();
+	$(".order_country_select2").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",
 		minimumInputLength: 0,
