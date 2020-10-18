@@ -128,13 +128,26 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 asort($array);
 if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
     if ($this->post) {
+        // As fast as we can convert date field back to integer so if we have an error the error post form still rebuild corectly
+        $dateFields = array();
+        $dateFields[] = 'invoice_date_from';
+        $dateFields[] = 'invoice_date_till';
+        foreach ($dateFields as $dateField) {
+            if (isset($this->post[$dateField]) && mslib_befe::isValidDate($this->post[$dateField])) {
+                if ($dateField == 'invoice_date_from' || $dateField == 'invoice_date_till') {
+                    $this->post[$dateField] = date('Y-m-d', strtotime($this->post[$dateField]));
+                }
+            } else {
+                unset($this->post['visual_'.$dateField]);
+                unset($this->post[$dateField]);
+            }
+        }
         $erno = array();
         if (!$this->post['name']) {
             $erno[] = $this->pi_getLL('feed_exporter_label_error_name_is_required');
-        } else {
-            if (!is_array($this->post['fields']) || !count($this->post['fields'])) {
-                $erno[] = $this->pi_getLL('feed_exporter_label_error_no_fields_defined');
-            }
+        }
+        if (!is_array($this->post['fields']) || !count($this->post['fields'])) {
+            $erno[] = $this->pi_getLL('feed_exporter_label_error_no_fields_defined');
         }
         if (empty($this->post['visual_invoice_date_from'])) {
             $this->post['invoice_date_from'] = '';
@@ -150,6 +163,8 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
             }
             $content .= '</ul>';
             $content .= '</div>';
+            // re-assign back so it's prefilled when error occured
+            $post_data = $this->post;
         } else {
             // lets save it
             $updateArray = array();

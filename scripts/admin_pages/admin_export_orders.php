@@ -142,6 +142,20 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 asort($array);
 if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
     if ($this->post) {
+        // As fast as we can convert date field back to integer so if we have an error the error post form still rebuild corectly
+        $dateFields = array();
+        $dateFields[] = 'orders_date_from';
+        $dateFields[] = 'orders_date_till';
+        foreach ($dateFields as $dateField) {
+            if (isset($this->post[$dateField]) && mslib_befe::isValidDate($this->post[$dateField])) {
+                if ($dateField == 'invoice_date_from' || $dateField == 'invoice_date_till') {
+                    $this->post[$dateField] = date('Y-m-d', strtotime($this->post[$dateField]));
+                }
+            } else {
+                unset($this->post['visual_'.$dateField]);
+                unset($this->post[$dateField]);
+            }
+        }
         $erno = array();
         if (!$this->post['name']) {
             $erno[] = $this->pi_getLL('feed_exporter_label_error_name_is_required');
@@ -164,6 +178,8 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
             }
             $content .= '</ul>';
             $content .= '</div>';
+            // re-assign back so it's prefilled when error occured
+            $post_data = $this->post;
         } else {
             // lets save it
             $updateArray = array();
@@ -466,11 +482,10 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         $content .= '
 		</div>
 		<hr>
-		<div class="form-group">
-				<label class="col-md-2"></label>
-				<div class="col-md-10">
-				<input name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('save')) . '" class="btn btn-success" />
-				</div>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . htmlspecialchars($this->pi_getLL('save')) . '</button>
+			</div>
 		</div>
 		<input name="orders_export_id" type="hidden" value="' . $this->get['orders_export_id'] . '" />
 		<input name="section" type="hidden" value="' . $_REQUEST['section'] . '" />
