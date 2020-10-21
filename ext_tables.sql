@@ -1642,7 +1642,7 @@ CREATE TABLE `tx_multishop_attributes_options_values_groups_to_options_values` (
  `attributes_options_values_groups_to_products_options_values_id` int(11) NOT NULL auto_increment,
  `attributes_options_values_groups_id` int(11) default '0',
  `products_options_values_id` int(11) default '0',
- PRIMARY KEY (`attributes_options_values_groups_to_products_options_values_id`)
+ PRIMARY KEY (attributes_options_values_groups_to_products_options_values_id)
 );
 
 CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
