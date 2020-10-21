@@ -1012,7 +1012,7 @@ $orderby[] = $order_by . ' ' . $order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
     $filter[] = 'o.by_phone=1';
 }
-if (isset($this->post['country']) && !empty($this->post['country'])) {
+if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != 'all') {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
 if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {
