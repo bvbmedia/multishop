@@ -3012,19 +3012,37 @@ if ($this->post) {
 		$manufacturer_input.='</select>';
 		*/
         //
-        $order_unit = '<select name="order_unit_id" class="form-control"><option value="">' . $this->pi_getLL('default') . '</option>';
+        $order_unit_ids = array();
+        $order_unit_ids[0]['name'] = $this->pi_getLL('default');
+        $order_unit_ids[0]['id'] = '';
+        $order_unit_ids[0]['is_default'] = 0;
         $str = "SELECT o.id, o.is_default, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where (o.page_uid='" . $this->shop_pid . "' or o.page_uid=0) and o.id=od.order_unit_id and od.language_id='0' order by od.name asc";
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+            $order_unit_ids[$row['id']] = $row;
+        }
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['productOrderUnitDataPostProc'])) {
+            $params = array(
+                'order_unit_ids' => &$order_unit_ids
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['productOrderUnitDataPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
+        $order_unit = '<select name="order_unit_id" class="form-control">';
+        foreach ($order_unit_ids as $idx => $order_unit_row) {
+            $unit_id = $order_unit_row['id'];
             $selected = '';
             if ($product['order_unit_id'] > 0) {
-                if ($row['id'] == $product['order_unit_id']) {
+                if ($order_unit_row['id'] == $product['order_unit_id']) {
                     $selected = ' selected="selected"';
                 }
-            } else if ($row['is_default'] > 0) {
+            } else if ($order_unit_row['is_default'] > 0) {
                 $selected = ' selected="selected"';
             }
-            $order_unit .= '<option value="' . $row['id'] . '"' . $selected . '>' . htmlspecialchars($row['name']) . '</option>';
+            $order_unit .= '<option value="' . $unit_id . '"' . $selected . '>' . htmlspecialchars($order_unit_row['name']) . '</option>';
         }
         $order_unit .= '</select>';
         $options_tab_virtual_product = '';
