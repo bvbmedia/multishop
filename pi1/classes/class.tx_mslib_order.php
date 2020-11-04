@@ -191,10 +191,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $tmp_attributes_tax = ($row_attr['price_prefix'] . $row_attr['options_values_price']) * ($tax_rate);
                         }
                         $attributes_tax += $tmp_attributes_tax;
-                        $tmp_attributes_price += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
+                        $tmp_attributes_price += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
                         $sub_total += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
-                        $sub_total_excluding_vat += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
-                        $grand_total += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
+                        $sub_total_excluding_vat += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
+                        $grand_total += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
                         // set the attributes tax data
                         $attributes_tax_data = array();
                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
