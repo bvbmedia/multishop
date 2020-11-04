@@ -3119,10 +3119,10 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             }
                             switch ($row['listtype']) {
                                 case 'checkbox':
-                                    $item['ITEM_NAME'] .= '<br />' . $row['products_options_name'] . ': ' . $attribute_values['products_options_values_name'];
                                     $continue = 0;
                                     $total = count($attribute_values);
                                     $counter = 0;
+                                    $attributes_values_name = array();
                                     foreach ($attribute_values as $attribute_item) {
                                         $counter++;
                                         if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -3130,16 +3130,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                         } else {
                                             $attribute_item['options_values_price'] = round($attribute_item['options_values_price'], 2);
                                         }
-                                        $item['ITEM_NAME'] .= trim($attribute_item['products_options_values_name']);
+                                        $attributes_values_name[] = trim($attribute_item['products_options_values_name']);
                                         $price = $price + (($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['qty']);
                                         if ($attribute_item['options_values_price'] > 0) {
                                             $subPrices .= mslib_fe::amount2Cents((($attribute_item['price_prefix'] . $attribute_item['options_values_price']) * $product['qty']));
                                         }
                                         $subPrices .= '<br />';
-                                        if (isset($attribute_values[$counter])) {
-                                            $item['ITEM_NAME'] .= ', ';
-                                        }
                                     }
+                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . $row['products_options_name'] . ': </span><span class="attribute-value">' . implode(', ', $attributes_values_name) . '</span></div>';
                                     break;
                                 case 'input':
                                     $item['ITEM_NAME'] .= '<br />' . $row['products_options_name'] . ': ' . $attribute_values['products_options_values_name'];
