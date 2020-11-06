@@ -65,12 +65,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
             $meta_title = $meta_title . $this->ms['MODULES']['PAGE_TITLE_DELIMETER'] . $this->ms['MODULES']['STORE_NAME'];
         }
         if ($current['meta_description']) {
-            $meta_description = $current['meta_description'];
+            $meta_description = htmlspecialchars($current['meta_description']);
         } else {
             $meta_description = '';
         }
         if ($current['meta_keywords']) {
-            $meta_keywords = $current['meta_keywords'];
+            $meta_keywords = htmlspecialchars($current['meta_keywords']);
         } else {
             $meta_keywords = '';
         }
