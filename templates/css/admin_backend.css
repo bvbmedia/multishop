@@ -1511,3 +1511,8 @@ ul.navInterface > li.active > span::after {
 	color: #286090;
 	border-bottom: none;
 }
+
+#msadmin_content .nav.nav-pills.nav-stacked > li > a:hover,
+#msadmin_content .nav.nav-pills.nav-stacked > li > a:focus {
+	border-bottom: none;
+}
