@@ -1051,7 +1051,9 @@ $data['section'] = 'admin_orders';
 if ($this->get['tx_multishop_pi1']['group_by']) {
     $data['group_by'][] = addslashes($this->get['tx_multishop_pi1']['group_by']);
 }
+//$this->msDebug=1;
 $pageset = mslib_fe::getRecordsPageSet($data);
+//echo $this->msDebugInfo;
 $tmporders = $pageset['dataset'];
 if ($pageset['total_rows'] > 0) {
     require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/orders/orders_listing_table.php');
