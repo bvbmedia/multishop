@@ -837,7 +837,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {
                 $tableContent .= '<div class="input-group-btn">
-                    <input class="btn btn-success" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
+                    <input class="btn btn-success btn-disable-after-click" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
                 </div>';
             }
             if ($params['settings']['enableActionSelectionForm']) {
