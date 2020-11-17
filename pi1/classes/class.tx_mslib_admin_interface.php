@@ -616,9 +616,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                         $value = htmlspecialchars($value);
                                         break;
                                 }
-                                if (isset($valArray['limitchar']) && $valArray['limitchar'] > 0) {
-                                    if (!empty($value) && strlen($value) > $valArray['limitchar']) {
-                                        $value = substr($value, 0, $valArray['limitchar']) . '...';
+                                if (isset($valArray['maxChars']) && $valArray['maxChars'] > 0) {
+                                    if (!empty($value) && strlen($value) > $valArray['maxChars']) {
+                                        $value = substr($value, 0, $valArray['maxChars']) . '...';
                                     }
                                 }
                                 $valArray['content'] = str_replace('###shop_pid###', $this->shop_pid, $valArray['content']);
