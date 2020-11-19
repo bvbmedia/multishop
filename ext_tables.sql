@@ -205,11 +205,15 @@ CREATE TABLE `tx_multishop_cms_description` (
  `extra_heading` varchar(127) default '',
  `negative_keywords` text,
  `sqlstr` text,
+ `meta_title` varchar(254) default '',
+ `meta_description` text,
  PRIMARY KEY (`id`,`language_id`),
  KEY `pagina` (`name`),
  KEY `id` (`id`),
  KEY `language_id` (`language_id`),
- KEY `negative_keywords` (`negative_keywords`(250))
+ KEY `negative_keywords` (`negative_keywords`(250)),
+ KEY `meta_title` (`meta_title`),
+ KEY `meta_description` (`meta_description`(250))
 );
 
 CREATE TABLE `tx_multishop_configuration` (

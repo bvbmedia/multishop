@@ -794,6 +794,20 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select meta_title from tx_multishop_cms_description limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_cms_description` ADD `meta_title` varchar(254) default '', ADD KEY `meta_title` (`meta_title`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select meta_description from tx_multishop_cms_description limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_cms_description` ADD `meta_description` text, ADD KEY `meta_description` (`meta_description`(250))";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
 $indexes = array();
 $table_name = 'tx_multishop_orders_products';
 $str = "show indexes from `" . $table_name . "`";
