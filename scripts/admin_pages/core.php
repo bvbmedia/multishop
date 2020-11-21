@@ -58,7 +58,10 @@ $(function() {
 		callbacks: {
             keydown: function(e) {
                 if (e.ctrlKey && e.keyCode === 13) {
-                    if ($(\'#btnSave\').length>0) {
+                    if ($(\'button[data-ctrl-enter-trigger="1"]\').length>0) {
+                        $(\'button[data-ctrl-enter-trigger="1"]\').click();
+                        $(\'button[data-ctrl-enter-trigger="1"]\').prop(\'disabled\', \'disabled\');
+                    } else if ($(\'#btnSave\').length>0) {
                         $(\'#btnSave\').click();
                         $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                     } else if ($(\'#btnSaveClose\').length>0) {
