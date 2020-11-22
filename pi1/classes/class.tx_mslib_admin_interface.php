@@ -293,10 +293,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $queryData['where'][] = $params['query']['where'];
             }
         }
+        $sortOnColumn = array();
+        foreach ($params['tableColumns'] as $col => $valArray) {
+            if (isset($valArray['enableSortDbOnColumn']) && !empty($valArray['enableSortDbOnColumn']))
+            $sortOnColumn[$col] = $valArray['enableSortDbOnColumn'];
+        }
         switch ($that->get['tx_multishop_pi1']['order_by']) {
             default:
-                if (is_array($params['query']['defaultOrderByColumns']) && count($params['query']['defaultOrderByColumns'])) {
-                    $order_by = implode(',', $params['query']['defaultOrderByColumns']);
+                if (isset($that->get['tx_multishop_pi1']['order_by']) && !empty($that->get['tx_multishop_pi1']['order_by'])) {
+                    $sortColumn = $that->get['tx_multishop_pi1']['order_by'];
+                    if (isset($sortOnColumn[$sortColumn]) && !empty($sortOnColumn[$sortColumn])) {
+                        $sortColumn = $sortOnColumn[$sortColumn];
+                    }
+                    $order_by = addslashes($sortColumn);
+                } else {
+                    if (is_array($params['query']['defaultOrderByColumns']) && count($params['query']['defaultOrderByColumns'])) {
+                        $order_by = implode(',', $params['query']['defaultOrderByColumns']);
+                    }
                 }
                 break;
         }
@@ -444,6 +457,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
                 if ($valArray['class']) {
                     $tdClass[] = $valArray['class'];
+                }
+                if (isset($valArray['enableSortDbOnHeader']) && $valArray['enableSortDbOnHeader']) {
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'])) {
+                        $conf = array(
+                            'col' => $col,
+                            'valArray' => &$valArray,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
+                        }
+                    }
                 }
                 $tableContent .= '<th' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $valArray['title'] . '</th>';
             }
