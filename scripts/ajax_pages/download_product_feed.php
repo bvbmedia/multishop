@@ -812,6 +812,9 @@ if ($this->get['feed_hash']) {
                     case 'products_id':
                         $tmpcontent .= $row['products_id'];
                         break;
+                    case 'page_uid':
+                        $tmpcontent .= $row['page_uid'];
+                        break;
                     case 'products_weight':
                         $tmpcontent .= $row['products_weight'];
                         break;
