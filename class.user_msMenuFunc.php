@@ -317,8 +317,8 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
     /**
      * Used in the menu item state example of the "testsite" package at page-path "/Intro/TypoScript examples/Menu object examples/Menu state test/"
-     * @param    array        The menu item array, $this->I (in the parent object)
-     * @param    array        TypoScript configuration for the function. Notice that the property "parentObj" is a reference to the parent (calling) object (the tslib_Xmenu class instantiated)
+     * @param array        The menu item array, $this->I (in the parent object)
+     * @param array        TypoScript configuration for the function. Notice that the property "parentObj" is a reference to the parent (calling) object (the tslib_Xmenu class instantiated)
      * @return    array        The processed $I array returned (and stored in $this->I of the parent object again)
      * @see tslib_menu::userProcess(), tslib_tmenu::writeMenu(), tslib_gmenu::writeMenu()
      */
@@ -348,4 +348,3 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
     }
     */
 }
-?>

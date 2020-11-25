@@ -286,4 +286,3 @@ class TTFParser
 		return $a['N'];
 	}
 }
-?>

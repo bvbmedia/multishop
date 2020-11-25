@@ -104,4 +104,3 @@ if (count($cart['last_visited'])) {
         $content .= '<a href="' . $link . '" class="btn btn-default btnClearList"><span class="glyphicon glyphicon-remove"></span> ' . $this->pi_getLL('clear_list') . '</a>';
     }
 }
-?>

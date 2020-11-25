@@ -312,7 +312,7 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     }
     /**
      * Gets information for an extension, eg. version and most-recently-edited-script
-     * @param    string        Extension key
+     * @param string        Extension key
      * @return    array        Information array (unless an error occured)
      */
     function getExtensionInfo($extKey) {
@@ -386,9 +386,9 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     /**
      * This function creates a zip file
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    string        File/Directory to pack
-     * @param    string        Zip-file target directory
-     * @param    string        Zip-file target name
+     * @param string        File/Directory to pack
+     * @param string        Zip-file target directory
+     * @param string        Zip-file target name
      * @return    array        Files packed
      */
     function zipPack($file, $targetFile) {
@@ -426,8 +426,8 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     /**
      * This method helps filtering the output of the various archive binaries to get a clean php array
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    array        The output of the executed archive binary
-     * @param    string        The type/configuration for which to parse the output
+     * @param array        The output of the executed archive binary
+     * @param string        The type/configuration for which to parse the output
      * @return    array        A clean list of the filenames returned by the binary
      */
     function getFileResult($list, $type = 'zip') {
@@ -474,7 +474,7 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     /**
      * This function unpacks a zip file
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    string        File to unpack
+     * @param string        File to unpack
      * @return    array        Files unpacked
      */
     function zipUnpack($file) {
@@ -511,7 +511,7 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
     }
     /**
      * This method recursively deletes folders
-     * @param    string        The path of the folder to delete
+     * @param string        The path of the folder to delete
      * @return    boolean        True or False
      */
     function deltree($path) {
@@ -567,4 +567,3 @@ if (is_array($SOBE->include_once) && count($SOBE->include_once)) {
 }
 $SOBE->main();
 $SOBE->printContent();
-?>

@@ -24,4 +24,3 @@ function typolink ($page_id='', $vars='')
 	return $url;
 }
 */
-?>

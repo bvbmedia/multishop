@@ -216,4 +216,3 @@ if ($specials_items and $this->ajax_content) {
 	  </ul>
 	';
 }
-?>

@@ -96,4 +96,3 @@ if ((($p + 1) * $this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows'])
 $tmp .= '</ul>
 </div>
 ';
-?>

@@ -363,4 +363,3 @@ if ($this->ADMIN_USER) {
     echo json_encode($jsonData, ENT_NOQUOTES);
 }
 exit();
-?>

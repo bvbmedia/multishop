@@ -54,6 +54,8 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
                 $array = array();
                 $array['name'] = $value;
                 $array['content'] = $this->post['cms_content'][$key];
+                $array['meta_title'] = $this->post['meta_title'][$key];
+                $array['meta_description'] = $this->post['meta_description'][$key];
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms_description', 'id=\'' . addslashes($cms_id) . '\' and language_id=\'' . $key . '\'', $array);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
             } else {
@@ -62,6 +64,8 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
                 $array['language_id'] = $key;
                 $array['name'] = $value;
                 $array['content'] = $this->post['cms_content'][$key];
+                $array['meta_title'] = $this->post['meta_title'][$key];
+                $array['meta_description'] = $this->post['meta_description'][$key];
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms_description', $array);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
             }
@@ -380,6 +384,24 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 			<div class="col-md-10">
 			<textarea spellcheck="true" name="cms_content[' . $language['uid'] . ']" id="cms_content[' . $language['uid'] . ']" class="mceEditor" rows="4">' . htmlspecialchars($cms[$language['uid']]['content']) . '</textarea>
 			</div>
+		</div>
+		<div class="form-group">
+			<label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_title')) . '</label>
+			<div class="col-md-10">
+			    <div class="input-group width-fw">
+                    <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_title']) . '" maxlength="60">
+                    <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
+                </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_description')) . '</label>
+			<div class="col-md-10">
+			    <div class="input-group width-fw">
+                    <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_description']) . '" maxlength="160">
+                    <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
+                </div>
+			</div>
 		</div>';
     }
     $tabs['cms_details'] = array(
@@ -424,6 +446,34 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 		' . (isset($this->get['tx_multishop_pi1']['force_cms_type']) && !empty($this->get['tx_multishop_pi1']['force_cms_type']) ? '
 		$(\'#selected_type\').select2("val", "' . $this->get['tx_multishop_pi1']['force_cms_type'] . '");
 		' : '') . '
+		$(".meta-title").each(function(idx, obj) {
+            var lang_id=$(obj).attr("data-lang-id");
+            var counter_id="#meta_title_char_count" + lang_id;
+            var current_counter=$(this).val().length;
+            var char_left=parseInt(60-current_counter);
+            $(counter_id).html(char_left);
+        });
+        $(".meta-desc").each(function(idx, obj) {
+            var lang_id=$(obj).attr("data-lang-id");
+            var counter_id="#meta_desc_char_count" + lang_id;
+            var current_counter=$(this).val().length;
+            var char_left=parseInt(160-current_counter);
+            $(counter_id).html(char_left);
+        });
+        $(document).on("keydown keyup", ".meta-title", function() {
+            var lang_id=$(this).attr("data-lang-id");
+            var counter_id="#meta_title_char_count" + lang_id;
+            var current_counter=$(this).val().length;
+            var char_left=parseInt(60-current_counter);
+            $(counter_id).html(char_left);
+        });
+        $(document).on("keydown keyup", ".meta-desc", function() {
+            var lang_id=$(this).attr("data-lang-id");
+            var counter_id="#meta_desc_char_count" + lang_id;
+            var current_counter=$(this).val().length;
+            var char_left=parseInt(160-current_counter);
+            $(counter_id).html(char_left);
+        });
 	});
 	</script>
 	<div class="panel panel-default">
@@ -446,6 +496,18 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	</div>';
     // tabs eof
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCmsPostProc'])) {
+    $params = array(
+            'content' => &$content,
+            'tabs' => &$tabs,
+            'cms' => $cms
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCmsPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
+// hook eof
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
@@ -456,4 +518,3 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 	});
 </script>
 ';
-?>

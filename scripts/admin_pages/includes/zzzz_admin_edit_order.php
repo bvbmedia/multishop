@@ -2417,4 +2417,3 @@ if (is_numeric($this->get['orders_id'])) {
 		</div>
 	</div>';
 }
-?>

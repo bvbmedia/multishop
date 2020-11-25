@@ -80,6 +80,12 @@ if ($this->get['orders_export_hash']) {
         if (isset($post_data['payment_method']) && !empty($post_data['payment_method']) && $post_data['payment_method'] != 'all') {
             $filter[] = "(o.payment_method='" . addslashes($post_data['payment_method']) . "')";
         }
+        if (isset($post_data['billing_country']) && !empty($post_data['billing_country']) && $post_data['billing_country'] != 'all') {
+            $filter[] = "(o.billing_country='" . addslashes($post_data['billing_country']) . "')";
+        }
+        if (isset($post_data['delivery_country']) && !empty($post_data['delivery_country']) && $post_data['delivery_country'] != 'all') {
+            $filter[] = "(o.delivery_country='" . addslashes($post_data['delivery_country']) . "')";
+        }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
         }
@@ -121,12 +127,16 @@ if ($this->get['orders_export_hash']) {
         if ($post_data['order_type'] == 'by_phone') {
             $filter[] = 'o.by_phone=1';
         }
-        if ($this->get['format'] == 'excel') {
-            $ox_limit = 65000;
-        } else {
+        //if ($this->get['format'] == 'excel') {
+        //    $ox_limit = 65000;
+        //} else {
             $ox_limit = 500000;
+        //}
+        $order_table_type = 'active';
+        if (isset($post_data['order_table_type']) && $post_data['order_table_type']) {
+            $order_table_type = $post_data['order_table_type'];
         }
-        $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from);
+        $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from, '', $order_table_type);
         //print_r($pageset);
         //die();
         $records = $pageset['orders'];
@@ -164,7 +174,14 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_category_incl_vat':
                         $categories_data_incl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                                $mslib_order->init($this);
+                                $order_tmp = $mslib_order->getOrderArchive($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name'];
                                 if (!$category_name) {
@@ -186,7 +203,14 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_category_excl_vat':
                         $categories_data_excl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                                $mslib_order->init($this);
+                                $order_tmp = $mslib_order->getOrderArchive($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name'];
                                 if (!$category_name) {
@@ -208,7 +232,14 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_main_category_incl_vat':
                         $main_categories_data_incl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                                $mslib_order->init($this);
+                                $order_tmp = $mslib_order->getOrderArchive($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -230,7 +261,14 @@ if ($this->get['orders_export_hash']) {
                     case 'turnover_per_main_category_excl_vat':
                         $main_categories_data_excl_vat = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                                $mslib_order->init($this);
+                                $order_tmp = $mslib_order->getOrderArchive($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -252,7 +290,14 @@ if ($this->get['orders_export_hash']) {
                     case 'bought_products_per_main_category':
                         $main_categories_data_bought_products = array();
                         foreach ($records as $record) {
-                            $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                                $mslib_order->init($this);
+                                $order_tmp = $mslib_order->getOrderArchive($record['orders_id']);
+                            } else {
+                                $order_tmp = mslib_fe::getOrder($record['orders_id']);
+                            }
                             foreach ($order_tmp['products'] as $product) {
                                 $category_name = $product['categories_name_0'];
                                 if (!$category_name) {
@@ -281,7 +326,14 @@ if ($this->get['orders_export_hash']) {
         }
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
-            $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                $mslib_order->init($this);
+                $order_tmp = $mslib_order->getOrderArchive($row['orders_id']);
+            } else {
+                $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            }
             $excelCols = array();
             $total = count($fields);
             $count = 0;
@@ -487,7 +539,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $options_attributes_tax_data = unserialize($order_product_attributes['attributes_tax_data']);
@@ -514,7 +570,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += $product_tmp['final_price'] * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price'])) * $product_tmp['qty'];
@@ -540,7 +600,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$category_name] += ($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $options_attributes_tax_data = unserialize($order_product_attributes['attributes_tax_data']);
@@ -567,7 +631,11 @@ if ($this->get['orders_export_hash']) {
                                 }
                                 $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += $product_tmp['final_price'] * $product_tmp['qty'];
                                 // fetch attributes
-                                $str_opa = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                                $active_table = 'tx_multishop_orders_products_attributes';
+                                if ($post_data['order_table_type'] == 'archive') {
+                                    $active_table = 'tx_multishop_archive_orders_products_attributes';
+                                }
+                                $str_opa = "SELECT * from ' . $active_table . ' where orders_products_id='" . $product_tmp['orders_products_id'] . "' order by orders_products_attributes_id asc";
                                 $qry_opa = $GLOBALS['TYPO3_DB']->sql_query($str_opa);
                                 while (($order_product_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opa)) != false) {
                                     $main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$category_name] += (($order_product_attributes['price_prefix'] . $order_product_attributes['options_values_price'])) * $product_tmp['qty'];
@@ -697,4 +765,3 @@ if ($this->get['orders_export_hash']) {
     exit();
 }
 exit();
-?>

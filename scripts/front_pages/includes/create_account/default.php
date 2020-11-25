@@ -491,4 +491,3 @@ if (mslib_fe::loggedin()) {
     }
 }
 $content = '<div id="tx_multishop_pi1_core">' . $content . '</div>';
-?>

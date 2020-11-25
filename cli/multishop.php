@@ -111,4 +111,3 @@ ignore_user_abort(true);
 $object = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop');
 $object->setShopPid($commands_array['shop_pid']);
 $object->execute($commands_array);
-?>

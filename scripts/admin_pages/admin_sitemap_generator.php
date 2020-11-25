@@ -353,4 +353,3 @@ XML: <a href="' . $web_xml_path . '" target="_blank">' . $web_xml_path . '</a><b
 XML: <a href="' . $sitemap_xml_file_web_path . '" target="_blank">' . $sitemap_xml_file_web_path . '</a><br/>
 ';
 }
-?>

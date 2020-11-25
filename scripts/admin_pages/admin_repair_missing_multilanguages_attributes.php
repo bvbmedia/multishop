@@ -105,4 +105,3 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk) > 0) {
 }
 $content .= '<div class="main-heading"><h1>' . $this->pi_getLL('repair_missing_attribute_language_values') . '</h1></div>';
 $content .= '<p>' . $this->pi_getLL('admin_label_missing_attribute_languages_values_fixed') . '</p>';
-?>

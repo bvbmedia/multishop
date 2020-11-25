@@ -69,4 +69,3 @@ $content .= '</div>';
 if ($current['content_footer']) {
     $content .= '<div class="msCategoriesFooterDescription">' . mslib_fe::htmlBox('', $current['content_footer'], 2) . '</div>';
 }
-?>

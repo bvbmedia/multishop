@@ -741,4 +741,3 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content = $Cache_Lite->get($st
         $Cache_Lite->save($content);
     }
 }
-?>

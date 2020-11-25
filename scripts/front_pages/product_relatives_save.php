@@ -36,4 +36,3 @@ if ($_REQUEST['status'] == "del") {
         }
     }
 }
-?>

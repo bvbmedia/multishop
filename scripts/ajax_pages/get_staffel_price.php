@@ -189,4 +189,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 // hook
 echo json_encode($data, ENT_NOQUOTES);
 exit();
-?>

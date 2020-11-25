@@ -152,4 +152,3 @@ class tx_multishop_realurl {
         return array_merge_recursive($params['config'], $config);
     }
 }
-?>

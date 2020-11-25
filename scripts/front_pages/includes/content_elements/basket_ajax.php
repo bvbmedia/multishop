@@ -74,4 +74,3 @@ $(document).on("click", ".ajax_add_to_cart", function(e) {
 });
 </script>	
 ';
-?>

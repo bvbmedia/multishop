@@ -188,4 +188,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
     }
 }
 require(current($stepCodes) . '.php');
-?>

@@ -57,7 +57,8 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
         foreach ($array as $item) {
             $stepCounter++;
             if ($item != $this->pi_getLL('show_all')) {
-                $label = $item . ' euro';
+                $price_range = str_replace('.', ',', $item);
+                $label = $price_range . ' euro';
             } else {
                 $label = $this->pi_getLL('show_all');
             }
@@ -83,4 +84,3 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
         }
     }
 }
-?>

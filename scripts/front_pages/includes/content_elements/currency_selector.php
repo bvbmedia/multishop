@@ -56,4 +56,3 @@ if ($this->ms['MODULES']['ENABLED_CURRENCIES']) {
 	</script>
 	';
 }
-?>

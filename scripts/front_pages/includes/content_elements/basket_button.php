@@ -20,4 +20,3 @@ if (count($cart['products']) > 0) {
 $content .= '
 <a href="' . mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart') . '" class="multishop_basketbox"><span>' . $totalitems . '</span></a>
 ';
-?>

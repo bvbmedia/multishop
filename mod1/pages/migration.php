@@ -108,4 +108,3 @@ if (count($sourceShops) && count($targetShops)) {
     }
 }
 $this->content .= $this->doc->section('Multishop Administration', $content, 0, 1);
-?>

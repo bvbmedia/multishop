@@ -205,11 +205,15 @@ CREATE TABLE `tx_multishop_cms_description` (
  `extra_heading` varchar(127) default '',
  `negative_keywords` text,
  `sqlstr` text,
+ `meta_title` varchar(254) default '',
+ `meta_description` text,
  PRIMARY KEY (`id`,`language_id`),
  KEY `pagina` (`name`),
  KEY `id` (`id`),
  KEY `language_id` (`language_id`),
- KEY `negative_keywords` (`negative_keywords`(250))
+ KEY `negative_keywords` (`negative_keywords`(250)),
+ KEY `meta_title` (`meta_title`),
+ KEY `meta_description` (`meta_description`(250))
 );
 
 CREATE TABLE `tx_multishop_configuration` (
@@ -576,11 +580,9 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `ip_address` (`ip_address`),
  KEY `user_agent` (`user_agent`),
  KEY `coupon_code` (`coupon_code`),
- KEY `coupon_discount_type` (`coupon_discount_type`),
- KEY `coupon_discount_value` (`coupon_discount_value`),
  KEY `date_mail_last_sent` (`date_mail_last_sent`),
  KEY `orders_paid_timestamp` (`orders_paid_timestamp`),
- KEY `debit_order` (`debit_order`),
+ KEY `billing_country` (`billing_country`),
  KEY `combined` (`page_uid`,`deleted`),
  KEY `combined_payment_method` (`payment_method`(75),`payment_method_label`(75)),
  KEY `combined_shipping_method` (`shipping_method`(75),`shipping_method_label`(75)),
@@ -661,6 +663,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
  KEY `bill` (`bill`),
+ KEY `products_id` (`products_id`),
  KEY `products_name` (`products_name`),
  KEY `file_download_code` (`file_download_code`),
  KEY `order_unit_id` (`order_unit_id`),
@@ -877,7 +880,12 @@ CREATE TABLE `tx_multishop_payment_transactions` (
  `code` varchar(35) default '',
  PRIMARY KEY (`id`),
  KEY `orders_id` (`orders_id`,`transaction_id`,`crdate`,`status`),
- KEY `orders_id_extra` (`orders_id_extra`)
+ KEY `orders_id_extra` (`orders_id_extra`),
+ KEY `orders_id2` (`orders_id`),
+ KEY `transaction_id` (`transaction_id`),
+ KEY `psp` (`psp`),
+ KEY `status` (`status`),
+ KEY `code` (`code`)
 );
 
 CREATE TABLE `tx_multishop_products` (
@@ -1638,7 +1646,7 @@ CREATE TABLE `tx_multishop_attributes_options_values_groups_to_options_values` (
  `attributes_options_values_groups_to_products_options_values_id` int(11) NOT NULL auto_increment,
  `attributes_options_values_groups_id` int(11) default '0',
  `products_options_values_id` int(11) default '0',
- PRIMARY KEY (`attributes_options_values_groups_to_products_options_values_id`)
+ PRIMARY KEY (attributes_options_values_groups_to_products_options_values_id)
 );
 
 CREATE TABLE `tx_multishop_shipping_methods_to_zones` (

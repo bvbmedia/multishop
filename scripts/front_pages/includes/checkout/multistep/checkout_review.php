@@ -157,4 +157,3 @@ if (count($cart['products']) < 1) {
         }
     }
 }
-?>

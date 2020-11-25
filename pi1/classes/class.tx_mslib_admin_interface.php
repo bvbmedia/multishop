@@ -293,10 +293,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $queryData['where'][] = $params['query']['where'];
             }
         }
+        $sortOnColumn = array();
+        foreach ($params['tableColumns'] as $col => $valArray) {
+            if (isset($valArray['enableSortDbOnColumn']) && !empty($valArray['enableSortDbOnColumn']))
+            $sortOnColumn[$col] = $valArray['enableSortDbOnColumn'];
+        }
         switch ($that->get['tx_multishop_pi1']['order_by']) {
             default:
-                if (is_array($params['query']['defaultOrderByColumns']) && count($params['query']['defaultOrderByColumns'])) {
-                    $order_by = implode(',', $params['query']['defaultOrderByColumns']);
+                if (isset($that->get['tx_multishop_pi1']['order_by']) && !empty($that->get['tx_multishop_pi1']['order_by'])) {
+                    $sortColumn = $that->get['tx_multishop_pi1']['order_by'];
+                    if (isset($sortOnColumn[$sortColumn]) && !empty($sortOnColumn[$sortColumn])) {
+                        $sortColumn = $sortOnColumn[$sortColumn];
+                    }
+                    $order_by = addslashes($sortColumn);
+                } else {
+                    if (is_array($params['query']['defaultOrderByColumns']) && count($params['query']['defaultOrderByColumns'])) {
+                        $order_by = implode(',', $params['query']['defaultOrderByColumns']);
+                    }
                 }
                 break;
         }
@@ -444,6 +457,17 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
                 if ($valArray['class']) {
                     $tdClass[] = $valArray['class'];
+                }
+                if (isset($valArray['enableSortDbOnHeader']) && $valArray['enableSortDbOnHeader']) {
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'])) {
+                        $conf = array(
+                            'col' => $col,
+                            'valArray' => &$valArray,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
+                        }
+                    }
                 }
                 $tableContent .= '<th' . (count($tdClass) ? ' class="' . implode(' ', $tdClass) . '"' : '') . '>' . $valArray['title'] . '</th>';
             }
@@ -615,6 +639,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                     case 'htmlspecialchars':
                                         $value = htmlspecialchars($value);
                                         break;
+                                }
+                                if (isset($valArray['maxChars']) && $valArray['maxChars'] > 0) {
+                                    if (!empty($value) && strlen($value) > $valArray['maxChars']) {
+                                        $value = substr($value, 0, $valArray['maxChars']) . '...';
+                                    }
                                 }
                                 $valArray['content'] = str_replace('###shop_pid###', $this->shop_pid, $valArray['content']);
                                 $valArray['content'] = str_replace('###' . $tmpCol . '###', $value, $valArray['content']);
@@ -832,7 +861,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             if ($params['settings']['enableActionSelectionForm'] && is_array($params['settings']['tableSelectionActions']) && count($params['settings']['tableSelectionActions'])) {
                 $tableContent .= '<div class="input-group-btn">
-                    <input class="btn btn-success" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
+                    <input class="btn btn-success btn-disable-after-click" type="submit" name="submit" value="' . htmlspecialchars($this->pi_getLL('submit_form')) . '" />
                 </div>';
             }
             if ($params['settings']['enableActionSelectionForm']) {
@@ -1018,4 +1047,3 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php"]);
 }
-?>

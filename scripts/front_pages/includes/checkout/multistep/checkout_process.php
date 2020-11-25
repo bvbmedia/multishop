@@ -46,4 +46,3 @@ if (!count($cart['products'])) {
         $content .= 'Some error occurred.';
     }
 }
-?>

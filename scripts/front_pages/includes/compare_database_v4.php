@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-$str = "select products_id from tx_multishop_orders_products where categories_id=0 group by products_id";
+$str = "select DISTINCT products_id from tx_multishop_orders_products where categories_id=0";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     $filter = array();
@@ -645,7 +645,6 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
-
 if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
     $str = "select attributes_options_values_groups_id from tx_multishop_attributes_options_values_groups";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -676,7 +675,6 @@ if ($this->conf['enableAttributeOptionValuesGroup'] == '1') {
         $messages[] = $str;
     }
 }
-
 $str = "select stock_subtracted from tx_multishop_orders_products limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
@@ -795,4 +793,124 @@ if (!$qry) {
     $str = "ALTER TABLE `tx_multishop_products_options_values` ADD `group_dropdown_label` varchar(150) default ''";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
+}
+$str = "select meta_title from tx_multishop_cms_description limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_cms_description` ADD `meta_title` varchar(254) default '', ADD KEY `meta_title` (`meta_title`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select meta_description from tx_multishop_cms_description limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_cms_description` ADD `meta_description` text, ADD KEY `meta_description` (`meta_description`(250))";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$indexes = array();
+$table_name = 'tx_multishop_orders_products';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+if (!in_array('products_id', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `products_id` (`products_id`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+if (!in_array('products_model', $indexes)) {
+    $str = "ALTER TABLE `" . $table_name . "` ADD KEY `products_model` (`products_model`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$indexToCheck=array();
+$indexToCheck[]='orders_id';
+$indexToCheck[]='transaction_id';
+$indexToCheck[]='psp';
+$indexToCheck[]='status';
+$indexToCheck[]='code';
+$indexes = array();
+$table_name = 'tx_multishop_payment_transactions';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
+$indexToCheck=array();
+$indexToCheck[]='billing_country';
+$indexes = array();
+$table_name = 'tx_multishop_orders';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
+$indexToCheck=array();
+$indexToCheck[]='products_id';
+$indexes = array();
+$table_name = 'tx_multishop_orders_products';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
+// Drop some unneeded indexes on the orders table to prevent reaching the maximum number of indexes
+$indexToCheck=array();
+$indexToCheck[]='coupon_discount_value';
+$indexToCheck[]='coupon_discount_type';
+$indexToCheck[]='combined';
+$indexes = array();
+$table_name = 'tx_multishop_orders';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` DROP KEY `".$index."`";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
+}
+// Add some indexes
+$indexToCheck=array();
+$indexToCheck[]='transaction_id';
+$indexToCheck[]='psp';
+$indexes = array();
+$table_name = 'tx_multishop_payment_transactions';
+$str = "show indexes from `" . $table_name . "`";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+while (($rs = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+    $indexes[] = $rs['Key_name'];
+}
+foreach($indexToCheck as $index) {
+    if (!in_array($index, $indexes)) {
+        $str = "ALTER TABLE `" . $table_name . "` ADD KEY `".$index."` (`".$index."`)";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $messages[] = $str;
+    }
 }

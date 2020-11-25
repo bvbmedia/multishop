@@ -37,4 +37,3 @@ foreach ($tables as $table => $colkey) {
         $content .= '<strong>' . $table . ' has been updated (' . $counter . ' queries runned).</strong><br />';
     }
 }
-?>

@@ -260,4 +260,3 @@ $content .= '<a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe:
 $content .= '
 </p>';
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';
-?>

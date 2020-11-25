@@ -116,4 +116,3 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
     $content .= '</tbody></table>';
 }
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';
-?>

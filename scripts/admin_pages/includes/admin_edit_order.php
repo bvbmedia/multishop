@@ -142,9 +142,9 @@ if (is_numeric($this->get['orders_id'])) {
                 // delete single item in order
                 if (isset($this->get['delete_product']) && $this->get['delete_product'] == 1) {
                     if (isset($this->get['order_pid']) && $this->get['order_pid'] > 0) {
-                        $sql = "delete from tx_multishop_orders_products where orders_products_id = " . $this->get['order_pid'] . " limit 1";
+                        $sql = "delete from tx_multishop_orders_products where orders_products_id = " . addslashes($this->get['order_pid']) . " limit 1";
                         $GLOBALS['TYPO3_DB']->sql_query($sql);
-                        $sql = "delete from tx_multishop_orders_products_attributes where orders_products_id = " . $this->get['order_pid'];
+                        $sql = "delete from tx_multishop_orders_products_attributes where orders_products_id = " . addslashes($this->get['order_pid']);
                         $GLOBALS['TYPO3_DB']->sql_query($sql);
                         // repair tax stuff
                         require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
@@ -393,7 +393,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 //$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
                                 //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // clean up the order product attributes to prepare the update
-                                $sql = "delete from tx_multishop_orders_products_attributes where orders_id = " . $this->get['orders_id'] . " and orders_products_id = " . $this->post['orders_products_id'];
+                                $sql = "delete from tx_multishop_orders_products_attributes where orders_id = " . addslashes($this->get['orders_id']) . " and orders_products_id = " . addslashes($this->post['orders_products_id']);
                                 $GLOBALS['TYPO3_DB']->sql_query($sql);
                                 // insert the update attributes
                                 $count_manual_attributes = count($this->post['edit_manual_option']);
@@ -1153,13 +1153,13 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>';
             // count total products
             $total_amount = 0;
-            $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . $orders['orders_id'] . "' order by sort_order asc";
+            $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . addslashes($orders['orders_id']) . "' order by sort_order asc";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
             while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
                 $orders_products[] = $row;
                 $total_amount = ($row['qty'] * $row['final_price']) + $total_amount;
                 // now count the attributes
-                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . $row['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . addslashes($row['orders_products_id']) . "' order by orders_products_attributes_id asc";
                 $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
                 while (($row3 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) != false) {
                     if ($row3['price_prefix'] == '+') {
@@ -1437,30 +1437,30 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $billing_details_info = '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['billing_company']) {
-                $billing_details_info .= '<strong>' . $orders['billing_company'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_company']) . '</strong><br />';
             }
             if ($orders['billing_department']) {
-                $billing_details_info .= '<strong>' . $orders['billing_department'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_department']) . '</strong><br />';
             }
-            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['billing_name'] . '</a><br />
+            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . htmlspecialchars($orders['billing_name']) . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
-                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['billing_email'] . '">' . $orders['billing_email'] . '</a><br />';
+                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . htmlspecialchars($orders['billing_email']) . '">' . htmlspecialchars($orders['billing_email']) . '</a><br />';
             }
             if ($orders['billing_telephone']) {
-                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . $orders['billing_telephone'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['billing_telephone']) . '<br />';
             }
             if ($orders['billing_mobile']) {
-                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . $orders['billing_mobile'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['billing_mobile']) . '<br />';
             }
             if ($orders['billing_fax']) {
-                $billing_details_info .= $this->pi_getLL('fax') . ': ' . $orders['billing_fax'] . '<br />';
+                $billing_details_info .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['billing_fax']) . '<br />';
             }
             if ($orders['billing_vat_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['billing_vat_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['billing_vat_id']) . '</strong><br />';
             }
             if ($orders['billing_coc_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['billing_coc_id'] . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['billing_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $billing_details_info .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -1676,41 +1676,41 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $tmpcontent .= '<div class="address_details_container" id="delivery_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['delivery_company']) {
-                $tmpcontent .= '<strong>' . $orders['delivery_company'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_company']) . '</strong><br />';
             }
             if ($orders['delivery_department']) {
-                $tmpcontent .= '<strong>' . $orders['delivery_department'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_department']) . '</strong><br />';
             }
             $address_data = array();
             $address_data = $orders;
-            $address_data['building'] = $orders['delivery_building'];
-            $address_data['address'] = $orders['delivery_address'];
-            $address_data['zip'] = $orders['delivery_zip'];
-            $address_data['city'] = $orders['delivery_city'];
+            $address_data['building'] = htmlspecialchars($orders['delivery_building']);
+            $address_data['address'] = htmlspecialchars($orders['delivery_address']);
+            $address_data['zip'] = htmlspecialchars($orders['delivery_zip']);
+            $address_data['city'] = htmlspecialchars($orders['delivery_city']);
             $address_data['country'] = $orders['delivery_country'];
             $delivery_address_value = mslib_befe::customerAddressFormat($address_data, 'delivery');
-            $tmpcontent .= $orders['delivery_name'] . '<br />
+            $tmpcontent .= htmlspecialchars($orders['delivery_name']) . '<br />
               ' . $delivery_address_value . '<br /><br />';
             if ($orders['delivery_email']) {
-                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . $orders['delivery_email'] . '</a><br />';
+                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . htmlspecialchars($orders['delivery_email']) . '</a><br />';
             }
             if ($orders['delivery_telephone']) {
-                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['delivery_telephone'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['delivery_telephone']) . '<br />';
             }
             if ($orders['delivery_mobile']) {
-                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['delivery_mobile'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['delivery_mobile']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_vat_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['delivery_vat_id'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['delivery_vat_id']) . '</strong><br />';
             }
             if ($orders['delivery_coc_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['delivery_coc_id'] . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['delivery_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';

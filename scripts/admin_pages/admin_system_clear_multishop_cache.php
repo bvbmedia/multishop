@@ -68,4 +68,3 @@ if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['ca
         $content .= '<br /><p><strong>' . $this->pi_getLL('admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly') . '</strong></p>';
     }
 }
-?>

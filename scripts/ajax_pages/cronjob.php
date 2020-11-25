@@ -12,4 +12,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
     }
 }
 // hook oef	
-?>

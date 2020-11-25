@@ -14,4 +14,3 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['GLOBAL']['cliKeys']['multishop'] = array(
         'EXT:multishop/cli/multishop.php',
         '_CLI_multishop'
 );
-?>

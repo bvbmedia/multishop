@@ -122,4 +122,3 @@ if (!$tr_type or $tr_type == 'even') {
 }
 $compiledWidget['content'] .= '
 </table>';
-?>

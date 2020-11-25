@@ -2936,6 +2936,28 @@ $records[] = array(
         'depend_on_configuration_key' => '',
         'use_function' => ''
 );
+$records[] = array(
+        'configuration_title' => 'Disable send order confirmation letter to STORE_EMAIL',
+        'configuration_key' => 'DISABLE_SEND_ORDER_CONFIRMATION_LETTER_TO_STORE_EMAIL',
+        'configuration_value' => '0',
+        'description' => 'Disable send order confirmation letter to STORE_EMAIL',
+        'group_id' => '3',
+        'use_function' => '',
+        'set_function' => 'tep_cfg_select_option(array(\'0\',\'1\'),',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
+        'configuration_title' => 'Admin CMS Edit Type',
+        'configuration_key' => 'ADMIN_CMS_EDIT_TYPE',
+        'configuration_value' => '',
+        'description' => 'Optional field (leave empty to use the default). Use this for customizing the edit cms form. Example value: fileadmin/scripts/admin_edit_cms',
+        'group_id' => '11',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(

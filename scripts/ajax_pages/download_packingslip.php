@@ -65,25 +65,26 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         $markerArray['###LABEL_PACKINGSLIP_HEADER###'] = $this->pi_getLL('packing_list');
         if (!empty($order['delivery_company'])) {
-            $markerArray['###DELIVERY_COMPANY###'] = '<strong>' . $order['delivery_company'] . '</strong><br/>';
+            $markerArray['###DELIVERY_COMPANY###'] = '<strong>' . htmlspecialchars($order['delivery_company']) . '</strong><br/>';
         } else {
             $markerArray['###DELIVERY_COMPANY###'] = '';
         }
         if (!empty($order['delivery_department'])) {
-            $markerArray['###DELIVERY_COMPANY###'] .= '<strong>' . $order['delivery_department'] . '</strong><br/>';
+            $markerArray['###DELIVERY_COMPANY###'] .= '<strong>' . htmlspecialchars($order['delivery_department']) . '</strong><br/>';
         }
         if (!empty($order['delivery_building'])) {
-            $markerArray['###DELIVERY_BUILDING###'] = '<strong>' . $order['delivery_building'] . '</strong><br/>';
+            $markerArray['###DELIVERY_BUILDING###'] = '<strong>' . htmlspecialchars($order['delivery_building']) . '</strong><br/>';
         } else {
             $markerArray['###DELIVERY_BUILDING###'] = '';
         }
-        $markerArray['###DELIVERY_NAME###'] = $order['delivery_name'];
-        $markerArray['###DELIVERY_BUILDING###'] = $order['delivery_building'];
+        $markerArray['###DELIVERY_NAME###'] = htmlspecialchars($order['delivery_name']);
+        $markerArray['###DELIVERY_BUILDING###'] = htmlspecialchars($order['delivery_building']);
+        $order['delivery_address'] = htmlspecialchars($order['delivery_address']);
         if (strpos($template, '###DELIVERY_BUILDING###') === false && $order['delivery_building'] != '') {
-            $order['delivery_address'] = $order['delivery_building'] . '<br/>' . $order['delivery_address'];
+            $order['delivery_address'] = htmlspecialchars($order['delivery_building']) . '<br/>' . $order['delivery_address'];
         }
         $markerArray['###DELIVERY_ADDRESS###'] = $order['delivery_address'];
-        $markerArray['###DELIVERY_ZIP###'] = $order['delivery_zip'];
+        $markerArray['###DELIVERY_ZIP###'] = htmlspecialchars($order['delivery_zip']);
         $markerArray['###DELIVERY_CITY###'] = mslib_befe::strtoupper($order['delivery_city']);
         $markerArray['###DELIVERY_COUNTRY###'] = '';
         if (mslib_befe::strtolower($order['billing_country']) != mslib_befe::strtolower($this->tta_shop_info['country'])) {
@@ -100,7 +101,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###PACKINGSLIP_PAYMENT_METHOD###'] = '';
         if ($order['payment_method_label']) {
             $markerArray['###LABEL_PACKINGSLIP_PAYMENT_METHOD###'] = $this->pi_getLL('payment_method');
-            $markerArray['###PACKINGSLIP_PAYMENT_METHOD###'] = $order['payment_method_label'];
+            $markerArray['###PACKINGSLIP_PAYMENT_METHOD###'] = htmlspecialchars($order['payment_method_label']);
         }
         $markerArray['###LABEL_PACKINGSLIP_SHIPPING_METHOD###'] = '';
         $markerArray['###PACKINGSLIP_SHIPPING_METHOD###'] = '';
@@ -113,13 +114,13 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###YOUR_VAT_ID###'] = '';
         if ($order['billing_vat_id']) {
             $markerArray['###LABEL_YOUR_VAT_ID###'] = $this->pi_getLL('your_vat_id');
-            $markerArray['###YOUR_VAT_ID###'] = $order['billing_vat_id'];
+            $markerArray['###YOUR_VAT_ID###'] = htmlspecialchars($order['billing_vat_id']);
         }
-        $markerArray['###BILLING_TELEPHONE###'] = $order['billing_telephone'];
-        $markerArray['###BILLING_MOBILE###'] = $order['billing_mobile'];
-        $markerArray['###DELIVERY_TELEPHONE###'] = $order['delivery_telephone'];
-        $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'];
-        $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
+        $markerArray['###BILLING_TELEPHONE###'] = htmlspecialchars($order['billing_telephone']);
+        $markerArray['###BILLING_MOBILE###'] = htmlspecialchars($order['billing_mobile']);
+        $markerArray['###DELIVERY_TELEPHONE###'] = htmlspecialchars($order['delivery_telephone']);
+        $markerArray['###DELIVERY_MOBILE###'] = htmlspecialchars($order['delivery_mobile']);
+        $markerArray['###CUSTOMER_COMMENTS###'] = htmlspecialchars($order['customer_comments']);
         $markerArray['###LABEL_EXPECTED_DELIVERY_DATE###'] = $this->pi_getLL('expected_delivery_date');
         $markerArray['###EXPECTED_DELIVERY_DATE###'] = '-';
         if ($order['expected_delivery_date'] > 0) {
@@ -253,7 +254,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
             $array2[] = '';
         }
         $array1[] = '###CUSTOMER_COMMENTS###';
-        $array2[] = $order['customer_comments'];
+        $array2[] = htmlspecialchars($order['customer_comments']);
         $array1[] = '###PAYMENT_CONDITION###';
         if ($order['payment_condition']) {
             $array2[] = $order['payment_condition'] . ' ' . $this->pi_getLL('days');
@@ -364,4 +365,3 @@ if (file_exists($pdfFilePath)) {
     readfile($pdfFilePath);
 }
 exit();
-?>

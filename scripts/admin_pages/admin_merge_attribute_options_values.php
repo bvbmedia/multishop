@@ -324,4 +324,3 @@ if ($this->post) {
     header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
     exit();
 }
-?>

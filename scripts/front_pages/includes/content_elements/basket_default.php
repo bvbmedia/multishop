@@ -36,4 +36,3 @@ $subpartArray['###TOTAL_ITEMS###'] = $output['total_items'];
 $subpartArray['###LINK_TO_SHOPPINGCART###'] = $output['goto_shoppingcart_link'];
 // completed the template expansion by replacing the "item" marker in the template
 $content = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-?>

@@ -185,7 +185,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -361,7 +361,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -1612,7 +1612,7 @@ class mslib_befe {
                 $commands = array();
                 $imParams = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $imParams .= '-strip';
+                    $imParams .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -1936,7 +1936,7 @@ class mslib_befe {
                 $commands = array();
                 $params = '';
                 if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5'] == 'im6') {
-                    $params .= '-strip';
+                    $params .= '-auto-orient -strip';
                 }
                 $imgtype = mslib_befe::exif_imagetype($original_path);
                 if ($imgtype) {
@@ -2676,8 +2676,8 @@ class mslib_befe {
     /**
      * Gets information for an extension, eg. version and
      * most-recently-edited-script
-     * @param    string        Path to local extension folder
-     * @param    string        Extension key
+     * @param string        Path to local extension folder
+     * @param string        Extension key
      * @return    array        Information array (unless an error occured)
      */
     public function getExtensionInfo($path, $extKey) {
@@ -2968,9 +2968,9 @@ class mslib_befe {
     /**
      * This function creates a zip file
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    string        File/Directory to pack
-     * @param    string        Zip-file target directory
-     * @param    string        Zip-file target name
+     * @param string        File/Directory to pack
+     * @param string        Zip-file target directory
+     * @param string        Zip-file target name
      * @return    array        Files packed
      */
     public function zipPack($file, $targetFile) {
@@ -3009,8 +3009,8 @@ class mslib_befe {
     /**
      * This method helps filtering the output of the various archive binaries to get a clean php array
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    array        The output of the executed archive binary
-     * @param    string        The type/configuration for which to parse the output
+     * @param array        The output of the executed archive binary
+     * @param string        The type/configuration for which to parse the output
      * @return    array        A clean list of the filenames returned by the binary
      */
     public function getFileResult($list, $type = 'zip') {
@@ -3060,7 +3060,7 @@ class mslib_befe {
     /**
      * This function unpacks a zip file
      * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-     * @param    string        File to unpack
+     * @param string        File to unpack
      * @return    array        Files unpacked
      */
     public function zipUnpack($file, $overwrite = 0) {
@@ -4255,7 +4255,7 @@ class mslib_befe {
             if ($have_time) {
                 list($date, $time) = explode(" ", $date_input);
             }
-            list($d,$m,$y) = explode($date_delimeter, $date);
+            list($d, $m, $y) = explode($date_delimeter, $date);
             $date_input = $y . '-' . $m . '-' . $d;
             if ($have_time) {
                 $date_input .= ' ' . $time;
@@ -5705,22 +5705,22 @@ class mslib_befe {
             return $content;
         }
     }
-    function bootstrapTabs($tabsArray,$bodyContent='',$activeKey='') {
+    function bootstrapTabs($tabsArray, $bodyContent = '', $activeKey = '') {
         if (is_array($tabsArray) && count($tabsArray)) {
             $content .= '<ul class="tabs nav nav-tabs" role="tablist">';
             $counter = 0;
             foreach ($tabsArray as $col => $tabArray) {
                 $classes = array();
-                if ($activeKey && $tabArray['key']==$activeKey) {
+                if ($activeKey && $tabArray['key'] == $activeKey) {
                     $classes[] = 'active';
                 } else {
                     if (!$counter && !$activeKey) {
                         $classes[] = 'active';
                     }
                 }
-                $link='#'.$tabArray['key'];
+                $link = '#' . $tabArray['key'];
                 if ($tabArray['tabLink'] != '') {
-                    $link=$tabArray['tabLink'];
+                    $link = $tabArray['tabLink'];
                     $content .= '<li role="presentation"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '><a href="' . $link . '"><span>' . htmlspecialchars($tabArray['title']) . '</span></a></li>';
                 } else {
                     $content .= '<li role="presentation"' . (is_array($classes) && count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '><a href="' . $link . '" aria-controls="1" role="tab" data-toggle="tab"><span>' . htmlspecialchars($tabArray['title']) . '</span></a></li>';
@@ -5730,7 +5730,7 @@ class mslib_befe {
             $content .= '</ul>';
             $content .= '<div class="tab-content">';
             if ($bodyContent) {
-                $content.=$bodyContent;
+                $content .= $bodyContent;
             } else {
                 $counter = 0;
                 foreach ($tabsArray as $col => $tabArray) {
@@ -5780,4 +5780,3 @@ class mslib_befe {
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
 }
-?>

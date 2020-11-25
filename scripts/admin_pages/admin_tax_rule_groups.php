@@ -353,4 +353,3 @@ $content .= '<hr>
        </div>
        </div>';
 $content = '' . mslib_fe::shadowBox($content) . '';
-?>

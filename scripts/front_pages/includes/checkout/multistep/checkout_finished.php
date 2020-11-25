@@ -290,4 +290,3 @@ if (!$order_session['orders_id']) {
     }
 }
 $content .= '</div>';
-?>

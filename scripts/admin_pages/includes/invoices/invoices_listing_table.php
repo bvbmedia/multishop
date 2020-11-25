@@ -230,4 +230,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 $invoices_results = $this->cObj->substituteMarkerArrayCached($subparts['invoices_results'], array(), $subpartArray);
-?>

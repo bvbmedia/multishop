@@ -98,8 +98,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                     //
                     if (mslib_fe::updateOrderStatusToPaid($order_id)) {
                         $return_data['info'] = array(
-                            'status' => 'info',
-                            'message' => 'Order ' . $order_id . ' has been updated to paid.'
+                                'status' => 'info',
+                                'message' => 'Order ' . $order_id . ' has been updated to paid.'
                         );
                         //
                         if (is_numeric($payment_id) && $payment_id > 0) {
@@ -549,7 +549,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'])) {
             $params = array(
-                'str' => &$str
+                    'str' => &$str
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getAttributesValuesQueryPostProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

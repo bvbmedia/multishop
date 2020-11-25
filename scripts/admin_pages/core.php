@@ -58,7 +58,10 @@ $(function() {
 		callbacks: {
             keydown: function(e) {
                 if (e.ctrlKey && e.keyCode === 13) {
-                    if ($(\'#btnSave\').length>0) {
+                    if ($(\'button[data-ctrl-enter-trigger="1"]\').length>0) {
+                        $(\'button[data-ctrl-enter-trigger="1"]\').click();
+                        $(\'button[data-ctrl-enter-trigger="1"]\').prop(\'disabled\', \'disabled\');
+                    } else if ($(\'#btnSave\').length>0) {
                         $(\'#btnSave\').click();
                         $(\'input[type="submit"]\').prop(\'disabled\', \'disabled\');
                     } else if ($(\'#btnSaveClose\').length>0) {
@@ -738,7 +741,16 @@ switch ($this->ms['page']) {
         require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_module.php');
         break;
     case 'edit_cms':
-        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_cms.php');
+        if (strstr($this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'], "..")) {
+            die('error in ADMIN_CMS_EDIT_TYPE value');
+        } else {
+            if (strstr($this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'], "/")) {
+                // relative mode
+                require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_CMS_EDIT_TYPE'] . '.php');
+            } else {
+                require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/admin_edit_cms.php');
+            }
+        }
         break;
     case 'add_manufacturer':
     case 'edit_manufacturer':

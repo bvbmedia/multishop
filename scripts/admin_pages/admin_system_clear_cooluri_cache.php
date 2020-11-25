@@ -42,4 +42,3 @@ $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_mult
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('dd_googlesitemap', 0)) {
     $content .= '<a href="' . mslib_fe::typolink($this->shop_pid, 'eID=dd_googlesitemap') . '" target="_blank">Click here to run the TYPO3 sitemap generator to repair all deeplinks</a><br/>';
 }
-?>

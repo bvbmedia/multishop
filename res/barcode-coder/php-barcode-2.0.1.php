@@ -1225,4 +1225,3 @@
       return $datamatrix;
     }
   }
-?>

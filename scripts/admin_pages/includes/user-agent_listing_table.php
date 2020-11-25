@@ -81,4 +81,3 @@ $subpartArray['###PAGINATION###'] = $pagination_listing;
 $subpartArray['###ORDERS_LISTING###'] = $orderItem;
 // custom page hook that can be controlled by third-party plugin eof
 $order_results = $this->cObj->substituteMarkerArrayCached($subparts['useragents_results'], array(), $subpartArray);
-?>

@@ -168,7 +168,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $product_tax_data['region_tax'] = '0';
                 $product_tax_data['total_tax'] = '0';
                 $product_tax_data['total_attributes_tax'] = '0';
-                $sql_prod = "select * from tx_multishop_orders_products where orders_id = " . $row['orders_id'];
+                $sql_prod = "select * from tx_multishop_orders_products where orders_id = " . addslashes($row['orders_id']);
                 $qry_prod = $GLOBALS['TYPO3_DB']->sql_query($sql_prod);
                 while ($row_prod = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_prod)) {
                     $tax_rate = $row_prod['products_tax'] / 100;
@@ -177,7 +177,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     }
                     $product_tax = unserialize($row_prod['products_tax_data']);
                     // attributes tax
-                    $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . $row_prod['orders_products_id'] . " and orders_id = " . $row_prod['orders_id'];
+                    $sql_attr = "select * from tx_multishop_orders_products_attributes where orders_products_id = " . addslashes($row_prod['orders_products_id']) . " and orders_id = " . addslashes($row_prod['orders_id']);
                     $qry_attr = $GLOBALS['TYPO3_DB']->sql_query($sql_attr);
                     $attributes_tax = 0;
                     $tmp_attributes_price = 0;
@@ -191,10 +191,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $tmp_attributes_tax = ($row_attr['price_prefix'] . $row_attr['options_values_price']) * ($tax_rate);
                         }
                         $attributes_tax += $tmp_attributes_tax;
-                        $tmp_attributes_price += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
+                        $tmp_attributes_price += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
                         $sub_total += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
-                        $sub_total_excluding_vat += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
-                        $grand_total += $row_attr['price_prefix'] . $row_attr['options_values_price'] * $row_prod['qty'];
+                        $sub_total_excluding_vat += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
+                        $grand_total += ($row_attr['price_prefix'] . $row_attr['options_values_price']) * $row_prod['qty'];
                         // set the attributes tax data
                         $attributes_tax_data = array();
                         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
@@ -827,7 +827,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     mslib_fe::mailUser($merchant, $mailSubject, $pageCopyToMerchant[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
                                 }
                             }
-                        } else {
+                        } else if ($this->ms['MODULES']['DISABLE_SEND_ORDER_CONFIRMATION_LETTER_TO_STORE_EMAIL'] == '0') {
                             // now mail a copy to the merchant
                             $merchant = array();
                             $merchant['name'] = $this->ms['MODULES']['STORE_NAME'];
@@ -1839,6 +1839,116 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             return $weight;
         }
+    }
+    function getOrderArchive($string, $field = 'orders_id', $includeDeleted = 0) {
+        $filter = array();
+        switch ($field) {
+            case 'orders_id':
+                if (!is_numeric($string)) {
+                    return false;
+                }
+                $filter[] = "o.orders_id='" . addslashes($string) . "'";
+                break;
+            case 'hash':
+                if (!$string) {
+                    return false;
+                }
+                $filter[] = "o.hash='" . addslashes($string) . "'";
+                break;
+        }
+        if (!count($filter)) {
+            return false;
+        }
+        if (!$includeDeleted) {
+            $filter[] = 'o.deleted=0';
+        }
+        $str = $GLOBALS['TYPO3_DB']->SELECTquery('o.*', // SELECT ...
+                'tx_multishop_archive_orders o', // FROM ...
+                implode(" and ", $filter), // WHERE...
+                '', // GROUP BY...
+                '', // ORDER BY...
+                '' // LIMIT ...
+        );
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+            $orders = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+            $orders['orders_tax_data'] = unserialize($orders['orders_tax_data']);
+            $full_customer_name = $orders['billing_first_name'];
+            if ($orders['billing_middle_name']) {
+                $full_customer_name .= ' ' . $orders['billing_middle_name'];
+            }
+            if ($orders['billing_last_name']) {
+                $full_customer_name .= ' ' . $orders['billing_last_name'];
+            }
+            $orders['billing_full_name'] = $full_customer_name;
+            // load products
+            $total_amount = 0;
+            $orders_products = array();
+            $str2 = "SELECT * from tx_multishop_archive_orders_products where orders_id='" . $orders['orders_id'] . "' order by sort_order asc";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+                $row['products_tax_data'] = unserialize($row['products_tax_data']);
+                $product_amount = 0;
+                $final_price = $row['final_price'];
+                /*if ($this->ms['MODULES']['ENABLE_DISCOUNT_ON_EDIT_ORDER_PRODUCT']) {
+					$final_price-=$row['discount_amount'];
+				}*/
+                $product_amount = ($row['qty'] * $final_price);
+                // now count the attributes
+                $str3 = "SELECT * from tx_multishop_archive_orders_products_attributes where orders_products_id='" . $row['orders_products_id'] . "' order by orders_products_attributes_id asc";
+                $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
+                while ($row3 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
+                    $row3['attributes_tax_data'] = unserialize($row3['attributes_tax_data']);
+                    if ($row3['price_prefix'] == '+') {
+                        $product_amount = $product_amount + ($row['qty'] * $row3['options_values_price']);
+                    } else {
+                        $product_amount = $product_amount - ($row['qty'] * $row3['options_values_price']);
+                    }
+                    $row['attributes'][] = $row3;
+                }
+                // now count the attributes eof
+                $total_amount = $total_amount + $product_amount;
+                $row['total_price'] = round($product_amount, 2);
+                $orders_products[$row['orders_products_id']] = $row;
+            }
+            // load products eof
+            $total_tax = 0;
+            foreach ($orders_products as $key => $orders_product) {
+                $total_tax += $orders_product['products_tax_data']['total_tax'] + $orders_product['products_tax_data']['total_attributes_tax'];
+            }
+            $orders['products'] = $orders_products;
+            $orders['subtotal_tax'] = $orders['orders_tax_data']['total_orders_tax'];
+            $orders['subtotal_amount'] = round($total_amount, 2);
+            $orders['shipping_method_costs'] = round($orders['shipping_method_costs'], 2);
+            $orders['payment_method_costs'] = round($orders['payment_method_costs'], 2);
+            /* if ($orders['orders_tax_data']['shipping_tax'] || $orders['orders_tax_data']['payment_tax']) {
+                $extra_vat=0;
+                if ($orders['shipping_method_costs']) 	{
+                    $extra_vat += $orders['orders_tax_data']['shipping_tax'];
+                }
+
+                if ($orders['payment_method_costs']) {
+                    $extra_vat += $orders['orders_tax_data']['payment_tax'];
+                }
+
+                $orders['subtotal_tax'] = ($orders['subtotal_tax'] + $extra_vat);
+            } */
+            $orders['total_amount'] = round($orders['orders_tax_data']['grand_total'], 2);
+            if ($orders['total_amount'] > 0 && $orders['total_amount'] < 0.01) {
+                $orders['total_amount'] = 0;
+            }
+            //hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop_orders_archiver/pi1/classes/class.tx_mslib_order.php']['getOrderArchivePostProc'])) {
+                $params_internal = array(
+                        'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop_orders_archiver/pi1/classes/class.tx_mslib_order.php']['getOrderArchivePostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params_internal, $this);
+                }
+            }
+            return $orders;
+        }
+        return false;
     }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_order.php"]) {

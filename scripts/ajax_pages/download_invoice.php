@@ -117,21 +117,22 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // billing address
         if (!empty($order['billing_company'])) {
-            $markerArray['###BILLING_COMPANY###'] = $order['billing_company'] . '<br/>';
+            $markerArray['###BILLING_COMPANY###'] = htmlspecialchars($order['billing_company']) . '<br/>';
         } else {
             $markerArray['###BILLING_COMPANY###'] = '';
         }
-        $markerArray['###BILLING_NAME###'] = $order['billing_name'];
+        $markerArray['###BILLING_NAME###'] = htmlspecialchars($order['billing_name']);
         $markerArray['###BILLING_DEPARTMENT###'] = '';
         if ($order['billing_department'] != '') {
-            $markerArray['###BILLING_DEPARTMENT###'] = $order['billing_department'] . '<br/>';
+            $markerArray['###BILLING_DEPARTMENT###'] = htmlspecialchars($order['billing_department']) . '<br/>';
         }
-        $markerArray['###BILLING_BUILDING###'] = $order['billing_building'];
+        $markerArray['###BILLING_BUILDING###'] = htmlspecialchars($order['billing_building']);
+        $order['billing_address'] = htmlspecialchars($order['billing_address']);
         if (strpos($template, '###BILLING_BUILDING###') === false && $order['billing_building'] != '') {
-            $order['billing_address'] = $order['billing_building'] . '<br/>' . $order['billing_address'];
+            $order['billing_address'] = htmlspecialchars($order['billing_building']) . '<br/>' . $order['billing_address'];
         }
         $markerArray['###BILLING_ADDRESS###'] = $order['billing_address'];
-        $markerArray['###BILLING_ZIP###'] = $order['billing_zip'];
+        $markerArray['###BILLING_ZIP###'] = ($order['billing_zip']);
         $markerArray['###BILLING_CITY###'] = mslib_befe::strtoupper($order['billing_city']);
         $markerArray['###BILLING_COUNTRY###'] = '';
         if (mslib_befe::strtolower($order['billing_country']) != mslib_befe::strtolower($this->tta_shop_info['country'])) {
@@ -142,18 +143,18 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###BILLING_COUNTRY_RAW###'] = mslib_befe::strtoupper(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country'])) . '<br/>';
         // delivery address
         if (!empty($order['delivery_company'])) {
-            $markerArray['###DELIVERY_COMPANY###'] = $order['delivery_company'] . '<br/>';
+            $markerArray['###DELIVERY_COMPANY###'] = htmlspecialchars($order['delivery_company']) . '<br/>';
         } else {
             $markerArray['###DELIVERY_COMPANY###'] = '';
         }
-        $markerArray['###DELIVERY_NAME###'] = $order['delivery_name'];
-        $markerArray['###DELIVERY_BUILDING###'] = $order['delivery_building'];
+        $markerArray['###DELIVERY_NAME###'] = htmlspecialchars($order['delivery_name']);
+        $markerArray['###DELIVERY_BUILDING###'] = htmlspecialchars($order['delivery_building']);
         if (strpos($template, '###DELIVERY_BUILDING###') === false && $order['delivery_building'] != '') {
             $order['delivery_address'] = $order['delivery_building'] . '<br/>' . $order['delivery_address'];
         }
-        $markerArray['###DELIVERY_ADDRESS###'] = $order['delivery_address'];
-        $markerArray['###DELIVERY_ZIP###'] = $order['delivery_zip'];
-        $markerArray['###DELIVERY_CITY###'] = mslib_befe::strtoupper($order['delivery_city']);
+        $markerArray['###DELIVERY_ADDRESS###'] = htmlspecialchars($order['delivery_address']);
+        $markerArray['###DELIVERY_ZIP###'] = htmlspecialchars($order['delivery_zip']);
+        $markerArray['###DELIVERY_CITY###'] = mslib_befe::strtoupper(htmlspecialchars($order['delivery_city']));
         $markerArray['###DELIVERY_COUNTRY###'] = '';
         if (mslib_befe::strtolower($order['delivery_country']) != mslib_befe::strtolower($this->tta_shop_info['country'])) {
             // ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
@@ -187,37 +188,37 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###YOUR_VAT_ID###'] = '';
         if ($order['billing_vat_id']) {
             $markerArray['###LABEL_YOUR_VAT_ID###'] = $this->pi_getLL('your_vat_id');
-            $markerArray['###YOUR_VAT_ID###'] = strtoupper($order['billing_vat_id']);
+            $markerArray['###YOUR_VAT_ID###'] = htmlspecialchars(strtoupper($order['billing_vat_id']));
         }
         $markerArray['###LABEL_YOUR_COC_ID###'] = '';
         $markerArray['###YOUR_COC_ID###'] = '';
         if ($order['billing_coc_id']) {
             $markerArray['###LABEL_YOUR_COC_ID###'] = $this->pi_getLL('your_coc_id');
-            $markerArray['###YOUR_COC_ID###'] = strtoupper($order['billing_coc_id']);
+            $markerArray['###YOUR_COC_ID###'] = htmlspecialchars(strtoupper($order['billing_coc_id']));
         }
-        $markerArray['###BILLING_EMAIL###'] = $order['billing_email'];
+        $markerArray['###BILLING_EMAIL###'] = htmlspecialchars($order['billing_email']);
         $markerArray['###BILLING_TELEPHONE###'] = '';
         if (!empty($order['billing_telephone'])) {
-            $markerArray['###BILLING_TELEPHONE###'] = $order['billing_telephone'] . '<br/>';
+            $markerArray['###BILLING_TELEPHONE###'] = htmlspecialchars($order['billing_telephone']) . '<br/>';
         }
         $markerArray['###BILLING_MOBILE###'] = '';
         if (!empty($order['billing_mobile'])) {
-            $markerArray['###BILLING_MOBILE###'] = $order['billing_mobile'] . '<br/>';
+            $markerArray['###BILLING_MOBILE###'] = htmlspecialchars($order['billing_mobile']) . '<br/>';
         }
         $markerArray['###DELIVERY_TELEPHONE###'] = '';
         if (!empty($order['delivery_telephone'])) {
-            $markerArray['###DELIVERY_TELEPHONE###'] = $order['delivery_telephone'] . '<br/>';
+            $markerArray['###DELIVERY_TELEPHONE###'] = htmlspecialchars($order['delivery_telephone']) . '<br/>';
         }
         $markerArray['###DELIVERY_MOBILE###'] = '';
         if (!empty($order['delivery_mobile'])) {
-            $markerArray['###DELIVERY_MOBILE###'] = $order['delivery_mobile'] . '<br/>';
+            $markerArray['###DELIVERY_MOBILE###'] = htmlspecialchars($order['delivery_mobile']) . '<br/>';
         }
-        $markerArray['###DELIVERY_EMAIL###'] = $order['delivery_email'];
+        $markerArray['###DELIVERY_EMAIL###'] = htmlspecialchars($order['delivery_email']);
         $markerArray['###DELIVERY_VAT_ID###'] = '';
         if ($order['delivery_vat_id']) {
-            $markerArray['###DELIVERY_VAT_ID###'] = strtoupper($order['delivery_vat_id']);
+            $markerArray['###DELIVERY_VAT_ID###'] = htmlspecialchars(strtoupper($order['delivery_vat_id']));
         }
-        $markerArray['###CUSTOMER_COMMENTS###'] = $order['customer_comments'];
+        $markerArray['###CUSTOMER_COMMENTS###'] = htmlspecialchars($order['customer_comments']);
         // CMS HEADER
         $markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###'] = '';
         $cmsKeys = array();
@@ -565,4 +566,3 @@ if (file_exists($pdfFilePath)) {
     }
 }
 exit();
-?>

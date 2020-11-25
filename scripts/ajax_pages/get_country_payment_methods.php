@@ -128,4 +128,3 @@ ksort($data);
 $json = json_encode($data, ENT_NOQUOTES);
 echo $json;
 exit();
-?>

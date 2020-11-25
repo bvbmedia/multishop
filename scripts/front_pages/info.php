@@ -36,4 +36,3 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
     $content .= '<div class="main-heading"><h1>' . htmlspecialchars($page['name']) . '</h1></div>
 	<div class="content">' . $page['content'] . '</div>';
 }
-?>

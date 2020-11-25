@@ -151,4 +151,3 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
         $Cache_Lite->save($content);
     }
 }
-?>

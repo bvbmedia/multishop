@@ -990,7 +990,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['PRODUCT_IMAGE'] = '';
         if ($rs['products_image']) {
             $imgUrl = $this->FULL_HTTP_URL . mslib_befe::getImagePath($rs['products_image'], 'products', '50');
-            $markerArray['PRODUCT_IMAGE']='<img src="'.$imgUrl.'" />';
+            $markerArray['PRODUCT_IMAGE'] = '<img src="' . $imgUrl . '" />';
         }
         $markerArray['LINK_EDIT_CAT'] = $link_edit_cat;
         $markerArray['CATEGORY_NAME'] = $rs['categories_name'];
@@ -1007,7 +1007,6 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['SUFFIX_SPECIAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_EXCL_VAT'] = $this->pi_getLL('excluding_vat');
         $markerArray['SUFFIX_CAPITAL_PRICE_INCL_VAT'] = $this->pi_getLL('including_vat');
-
         if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
             $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display_incl);
             $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display_incl . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div>';
@@ -1015,7 +1014,6 @@ if ($pageset['total_rows'] > 0) {
             $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display);
             $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
         }
-
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
@@ -1024,7 +1022,7 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['VALUE_CAPITAL_PRICE_INCL_VAT'] = htmlspecialchars($capital_price_display_incl);
         $markerArray['VALUE_ORIGINAL_CAPITAL_PRICE'] = $rs['product_capital_price'];
         $markerArray['VALUE_PRODUCT_QUANTITY'] = $rs['products_quantity'];
-        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock]['.$rs['products_quantity'].']" class="form-control width-auto productQtyInput'.$rs['products_id'].'" value="'.$rs['products_quantity'].'" style="text-align:right;" />';
+        $markerArray['INPUT_PRODUCT_QUANTITY'] = '<input type="text" name="up[stock][' . $rs['products_quantity'] . ']" class="form-control width-auto productQtyInput' . $rs['products_id'] . '" value="' . $rs['products_quantity'] . '" style="text-align:right;" />';
         $markerArray['VALUE_PRODUCT_WEIGHT'] = $rs['products_weight'];
         $markerArray['PID0'] = $rs['products_id'];
         $markerArray['PID1'] = $rs['products_id'];
@@ -1205,13 +1203,12 @@ if ($this->get['product_image'] == 'yes') {
 if ($this->get['product_image'] == 'no') {
     $subpartArray['###PRODUCT_IMAGE_NO_SELECTED###'] = ' selected="selected"';
 }
-
 $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '';
 // add dropdown for foreign source name
 if ($this->ms['MODULES']['ENABLE_FOREIGN_SOURCE_NAME_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT'] == '1') {
     $subpartArray['###FOREIGN_SOURCE_NAME_SEARCH_DROPDOWN###'] = '<div class="form-group">
-        <label for="foreign_source_name" class="control-label">'.$this->pi_getLL('label_foreign_source_name').'</label>
-        <input type="hidden" name="foreign_source_name" id="foreign_source_name" value="'.$this->get['foreign_source_name'].'" />
+        <label for="foreign_source_name" class="control-label">' . $this->pi_getLL('label_foreign_source_name') . '</label>
+        <input type="hidden" name="foreign_source_name" id="foreign_source_name" value="' . $this->get['foreign_source_name'] . '" />
     </div>';
 }
 $subpartArray['###LABEL_PRODUCT_SORT###'] = $this->pi_getLL('order_by');

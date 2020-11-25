@@ -308,7 +308,7 @@ if ($this->get['feed_hash']) {
                             if ($i > 0) {
                                 $string .= " or ";
                             }
-                            $string .= "categories_id_" . $i . " = '" . $parent_id . "'";
+                            $string .= "categories_id_" . $i . " = '" . addslashes($parent_id) . "'";
                         }
                         $string .= ')';
                         if ($string) {
@@ -318,7 +318,27 @@ if ($this->get['feed_hash']) {
                     } else {
                         $cats = mslib_fe::get_subcategory_ids($parent_id);
                         $cats[] = $parent_id;
-                        $filter[] = "p2c.categories_id IN (" . implode(",", $cats) . ")";
+                        $filter[] = "p2c.categories_id IN (" . addslashes(implode(",", $cats)) . ")";
+                    }
+                }
+                if (is_numeric($this->get['exclude_categories_id'])) {
+                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                        $string = '(';
+                        for ($i = 0; $i < 4; $i++) {
+                            if ($i > 0) {
+                                $string .= " AND ";
+                            }
+                            $string .= "categories_id_" . $i . " != '" . addslashes($this->get['exclude_categories_id']) . "'";
+                        }
+                        $string .= ')';
+                        if ($string) {
+                            $filter[] = $string;
+                        }
+                        //
+                    } else {
+                        $cats = mslib_fe::get_subcategory_ids($this->get['exclude_categories_id']);
+                        $cats[] = $this->get['exclude_categories_id'];
+                        $filter[] = "p2c.categories_id NOT IN (" . addslashes(implode(",", $cats)) . ")";
                     }
                 }
                 if ($this->ms['MODULES']['FLAT_DATABASE'] and count($having)) {
@@ -791,6 +811,9 @@ if ($this->get['feed_hash']) {
                         break;
                     case 'products_id':
                         $tmpcontent .= $row['products_id'];
+                        break;
+                    case 'page_uid':
+                        $tmpcontent .= $row['page_uid'];
                         break;
                     case 'products_weight':
                         $tmpcontent .= $row['products_weight'];

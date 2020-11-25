@@ -754,17 +754,17 @@ if ($this->post['skeyword']) {
                         break;
                     case 'order_products':
                         //$items[]="(op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
-                        $items[] = " orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.products_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or op.products_description LIKE '%" . addslashes($this->post['skeyword']) . "%')";
+                        //$items[] = " orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.products_name LIKE '%" . addslashes($this->post['skeyword']) . "%' or op.products_description LIKE '%" . addslashes($this->post['skeyword']) . "%')";
                         break;
                     case 'cruser_id':
-                        $subFilter = array();
+                       /* $subFilter = array();
                         $subFilter[] = 'fe.name LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
                         $subFilter[] = 'fe.first_name LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
                         $subFilter[] = 'fe.middle_name LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
                         $subFilter[] = 'fe.last_name LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
                         $subFilter[] = 'fe.email LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
                         $subFilter[] = 'fe.username LIKE \'%' . addslashes($this->post['skeyword']) . '%\'';
-                        $items[] = "o.cruser_id in (select fe.uid from fe_users fe where (" . implode(' OR ', $subFilter) . "))";
+                        $items[] = "o.cruser_id in (select fe.uid from fe_users fe where (" . implode(' OR ', $subFilter) . "))";*/
                         break;
                     default:
                         $items[] = $fields . " LIKE '%" . addslashes($this->post['skeyword']) . "%'";
@@ -1012,7 +1012,7 @@ $orderby[] = $order_by . ' ' . $order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
     $filter[] = 'o.by_phone=1';
 }
-if (isset($this->post['country']) && !empty($this->post['country'])) {
+if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != 'all') {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
 if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {
@@ -1051,7 +1051,9 @@ $data['section'] = 'admin_orders';
 if ($this->get['tx_multishop_pi1']['group_by']) {
     $data['group_by'][] = addslashes($this->get['tx_multishop_pi1']['group_by']);
 }
+//$this->msDebug=1;
 $pageset = mslib_fe::getRecordsPageSet($data);
+//echo $this->msDebugInfo;
 $tmporders = $pageset['dataset'];
 if ($pageset['total_rows'] > 0) {
     require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/includes/orders/orders_listing_table.php');
@@ -1158,17 +1160,7 @@ if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
     }
 }
 $shipping_method_input .= '</select>' . "\n";
-// billing country
-$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
-$order_billing_country = array();
-if (is_array($order_countries) && count($order_countries)) {
-    foreach ($order_countries as $order_country) {
-        $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-        $order_billing_country[$cn_localized_name] = '<option value="' . mslib_befe::strtolower($order_country['billing_country']) . '" ' . ((mslib_befe::strtolower($this->post['country']) == strtolower($order_country['billing_country'])) ? 'selected' : '') . '>' . $cn_localized_name . '</option>';
-    }
-    ksort($order_billing_country);
-}
-$billing_countries_selectbox = '<select class="order_select2" name="country" id="country"><option value="">' . $this->pi_getLL('all_countries') . '</option>' . implode("\n", $order_billing_country) . '</select>';
+$billing_countries_selectbox = '<input type="hidden" class="order_country_select2" name="country" id="country" value="' . $this->post['country'] . '" />';
 $subpartArray = array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_orders');
@@ -1388,6 +1380,51 @@ jQuery(document).ready(function($) {
 		escapeMarkup: function (m) { return m; }
 	});
 	$(".order_select2").select2();
+	$(".order_country_select2").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
 	$(".ordered_product").select2({
 		placeholder: "' . $this->pi_getLL('all') . '",
 		minimumInputLength: 0,

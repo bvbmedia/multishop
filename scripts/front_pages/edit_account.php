@@ -11,4 +11,3 @@ if (strstr($this->ms['MODULES']['EDIT_ACCOUNT_TYPE'], "/")) {
         require_once('includes/edit_account/default.php');
     }
 }
-?>

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -8,7 +9,8 @@
 <strong><em><u>Content Type</u><br/>
 		<br/>
 		Content Type: Core</em></strong><br/>
-This object is the heart of the webshop and must be added on a page. Adviced to put it in the middle content column of the page.<br/>
+This object is the heart of the webshop and must be added on a page. Adviced to put it in the middle content column of
+the page.<br/>
 <br/>
 <strong><em>Content Type: Basket</em></strong><br/>
 This object is to show the shoppingcart basket. Adviced to put it in the right content column of the page.<br/>

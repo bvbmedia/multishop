@@ -188,4 +188,3 @@ if ($id_category == 0) {
     }
 }
 exit();
-?>

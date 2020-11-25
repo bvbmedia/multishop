@@ -35,9 +35,9 @@ if (!defined('TYPO3_MODE')) {
 class tx_multishop {
     /**
      * Function called from TV, used to generate preview of this plugin
-     * @param  array $row :        tt_content table row
-     * @param  string $table :      usually tt_content
-     * @param  bool $alreadyRendered :  To let TV know we have successfully rendered a preview
+     * @param array $row :        tt_content table row
+     * @param string $table :      usually tt_content
+     * @param bool $alreadyRendered :  To let TV know we have successfully rendered a preview
      * @param object $reference tx_templavoila_module1
      * @return string  $content
      */
@@ -108,8 +108,8 @@ class tx_multishop {
     }
     /**
      * Function called from page view, used to generate preview of this plugin
-     * @param  array $params :  flexform params
-     * @param  array $pObj :    parent object
+     * @param array $params :  flexform params
+     * @param array $pObj :    parent object
      * @return string  $result:  the hghlighted text
      */
     public function getExtensionSummary($params, &$pObj) {
@@ -136,4 +136,3 @@ class tx_multishop {
         return $result;
     }
 }
-?>

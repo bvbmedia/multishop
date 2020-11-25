@@ -142,6 +142,20 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 asort($array);
 if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
     if ($this->post) {
+        // As fast as we can convert date field back to integer so if we have an error the error post form still rebuild corectly
+        $dateFields = array();
+        $dateFields[] = 'orders_date_from';
+        $dateFields[] = 'orders_date_till';
+        foreach ($dateFields as $dateField) {
+            if (isset($this->post[$dateField]) && mslib_befe::isValidDate($this->post[$dateField])) {
+                if ($dateField == 'invoice_date_from' || $dateField == 'invoice_date_till') {
+                    $this->post[$dateField] = date('Y-m-d', strtotime($this->post[$dateField]));
+                }
+            } else {
+                unset($this->post['visual_'.$dateField]);
+                unset($this->post[$dateField]);
+            }
+        }
         $erno = array();
         if (!$this->post['name']) {
             $erno[] = $this->pi_getLL('feed_exporter_label_error_name_is_required');
@@ -164,6 +178,8 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
             }
             $content .= '</ul>';
             $content .= '</div>';
+            // re-assign back so it's prefilled when error occured
+            $post_data = $this->post;
         } else {
             // lets save it
             $updateArray = array();
@@ -285,6 +301,18 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
 			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_orders_archiver')) {
+            $content .= '
+                <div class="form-group">
+                    <label class="control-label col-md-2">Order table type</label>
+                    <div class="col-md-10">
+                        <select name="order_table_type" class="form-control">
+                            <option value="active"' . ($post_data['order_table_type'] == 'active' ? ' selected="selected"' : '') . '>Active</option>
+                            <option value="archive"' . ($post_data['order_table_type'] == 'archive' ? ' selected="selected"' : '') . '>Archive</option>
+                        </select>
+                    </div>
+                </div>';
+        }
         $content .= '
 		 <div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_type')) . '</label>
@@ -331,6 +359,38 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_payment_status')) . '</label>
 			<div class="col-md-10">
 			' . $payment_status_sb . '
+			</div>
+		</div>';
+
+        // load enabled countries to array
+        $str2 = "SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='" . $this->showCatalogFromPage . "' and c2z.hide_in_frontend=0 and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+        //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+        $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+        $enabled_countries = array();
+        while (($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+            $enabled_countries[] = $row2;
+        }
+        $tmpcontent_con = '<select name="billing_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        $tmpcontent_con_delivery = '<select name="delivery_country" class="form-control">
+			<option value="all">' . $this->pi_getLL('all') . '</option>';
+        foreach ($enabled_countries as $country) {
+            $tmpcontent_con .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['billing_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+            $tmpcontent_con_delivery .= '<option value="' . mslib_befe::strtolower($country['cn_short_en']) . '" ' . ((mslib_befe::strtolower($post_data['delivery_country']) == mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '') . '>' . htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])) . '</option>';
+        }
+        $tmpcontent_con .= '/<select>';
+        $tmpcontent_con_delivery .= '/<select>';
+
+        $content .= '<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_billing_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_delivery_country')) . '</label>
+			<div class="col-md-10">
+			' . $tmpcontent_con_delivery . '
 			</div>
 		</div>
 		<div class="form-group">
@@ -422,11 +482,10 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         $content .= '
 		</div>
 		<hr>
-		<div class="form-group">
-				<label class="col-md-2"></label>
-				<div class="col-md-10">
-				<input name="Submit" type="submit" value="' . htmlspecialchars($this->pi_getLL('save')) . '" class="btn btn-success" />
-				</div>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ' . htmlspecialchars($this->pi_getLL('save')) . '</button>
+			</div>
 		</div>
 		<input name="orders_export_id" type="hidden" value="' . $this->get['orders_export_id'] . '" />
 		<input name="section" type="hidden" value="' . $_REQUEST['section'] . '" />

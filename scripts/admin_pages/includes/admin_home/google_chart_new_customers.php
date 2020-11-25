@@ -70,4 +70,3 @@ $compiledWidget['content'] = '
 ';
 $compiledWidget['additionalHeaderData']['key'] = 'google_chart';
 $compiledWidget['additionalHeaderData']['content'] = '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
-?>

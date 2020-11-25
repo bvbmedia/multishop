@@ -48,13 +48,13 @@ if ($this->ADMIN_USER) {
         define('STR_HIGHLIGHT_STRIPLINKS', 8);
         /**
          * Highlight a string in text without corrupting HTML tags
-         * @author      Aidan Lister <aidan@php.net>
-         * @version     3.1.0
-         * @param       string $text Haystack - The text to search
-         * @param       array|string $needle Needle - The string to highlight
-         * @param       bool $options Bitwise set of options
-         * @param       array $highlight Replacement string
+         * @param string $text Haystack - The text to search
+         * @param array|string $needle Needle - The string to highlight
+         * @param bool $options Bitwise set of options
+         * @param array $highlight Replacement string
          * @return      Text with needle highlighted
+         * @version     3.1.0
+         * @author      Aidan Lister <aidan@php.net>
          */
         function str_highlight($text, $needle = '', $options = null, $highlight = null) {
             if (!$needle) {

@@ -294,4 +294,3 @@ if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 	  </script>
 	';
 }
-?>

@@ -46,4 +46,3 @@ $cart = $mslib_cart->getCart();
 $data['cartContents'] = $mslib_cart->getHtmlCartContents('ajaxProductsToBasket');
 echo json_encode($data, ENT_NOQUOTES);
 exit();
-?>

@@ -44,10 +44,10 @@ if ($this->get['invoices_export_hash']) {
         $where = array();
         $orderby = array();
         $select = array();
-        if (!empty($post_data['orders_date_from']) && !empty($post_data['orders_date_till'])) {
-            $start_time = strtotime($post_data['orders_date_from']);
-            $end_time = strtotime($post_data['orders_date_till']);
-            $column = 'o.crdate';
+        if (!empty($post_data['invoice_date_from']) && !empty($post_data['invoice_date_till'])) {
+            $start_time = strtotime($post_data['invoice_date_from']);
+            $end_time = strtotime($post_data['invoice_date_till']);
+            $column = 'i.crdate';
             $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
         }
         if (!empty($post_data['start_duration'])) {
@@ -67,6 +67,12 @@ if ($this->get['invoices_export_hash']) {
             $filter[] = "(o.paid='1')";
         } else if ($post_data['payment_status'] == 'unpaid') {
             $filter[] = "(o.paid='0')";
+        }
+        if (isset($post_data['billing_country']) && !empty($post_data['billing_country']) && $post_data['billing_country'] != 'all') {
+            $filter[] = "(o.billing_country='" . addslashes($post_data['billing_country']) . "')";
+        }
+        if (isset($post_data['delivery_country']) && !empty($post_data['delivery_country']) && $post_data['delivery_country'] != 'all') {
+            $filter[] = "(o.delivery_country='" . addslashes($post_data['delivery_country']) . "')";
         }
         if (!$this->masterShop) {
             $filter[] = 'o.page_uid=' . $this->shop_pid;
@@ -91,6 +97,9 @@ if ($this->get['invoices_export_hash']) {
             case 'status_last_modified':
                 $order_by = 'o.status_last_modified';
                 break;
+            case 'invoice_number':
+                $order_by = 'i.invoice_id';
+                break;
             case 'orders_id':
             default:
                 $order_by = 'o.orders_id';
@@ -106,6 +115,16 @@ if ($this->get['invoices_export_hash']) {
                 break;
         }
         $orderby[] = $order_by . ' ' . $order;
+        if ($post_data['order_type'] == 'orders') {
+            $filter[] = 'o.by_phone=0';
+            $filter[] = 'o.is_proposal=0';
+        }
+        if ($post_data['order_type'] == 'by_phone') {
+            $filter[] = 'o.by_phone=1';
+        }
+        if ($post_data['order_type'] == 'proposal') {
+            $filter[] = 'o.is_proposal=1';
+        }
         /*if ($post_data['order_type'] == 'by_phone') {
             $filter[] = 'o.by_phone=1';
         } else {
@@ -116,7 +135,16 @@ if ($this->get['invoices_export_hash']) {
         } else {
             $filter[] = 'o.is_proposal=0';
         }*/
-        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
+        //if ($this->get['format'] == 'excel') {
+        //    $ox_limit = 65000;
+        //} else {
+            $ox_limit = 500000;
+        //}
+        $order_table_type = 'active';
+        if (isset($post_data['order_table_type']) && $post_data['order_table_type']) {
+            $order_table_type = $post_data['order_table_type'];
+        }
+        $pageset = mslib_fe::getInvoicesPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from, '', '', $order_table_type);
         $records = $pageset['invoices'];
         // load all products
         $excelRows = array();
@@ -145,7 +173,14 @@ if ($this->get['invoices_export_hash']) {
         }
         foreach ($records as $row) {
             $order_tax_data = unserialize($row['orders_tax_data']);
-            $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            if (isset($post_data['order_table_type']) && $post_data['order_table_type'] == 'archive') {
+                require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'pi1/classes/class.tx_mslib_order.php');
+                $mslib_order = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+                $mslib_order->init($this);
+                $order_tmp = $mslib_order->getOrderArchive($row['orders_id']);
+            } else {
+                $order_tmp = mslib_fe::getOrder($row['orders_id']);
+            }
             $prefix = '';
             if ($row['reversal_invoice'] > 0) {
                 $prefix = '-';
@@ -374,4 +409,3 @@ if ($this->get['invoices_export_hash']) {
     exit();
 }
 exit();
-?>

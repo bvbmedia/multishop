@@ -219,4 +219,3 @@ $(document).ready(function () {
 });
 </script>
 <div id="chartProfitThisMonthLastMonth"></div>';
-?>

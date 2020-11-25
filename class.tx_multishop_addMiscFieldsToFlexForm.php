@@ -53,4 +53,3 @@ class tx_multishop_addMiscFieldsToFlexForm {
         return $config;
     }
 }
-?>

@@ -14,7 +14,9 @@ $additional_where = array();
 if (!$this->masterShop) {
     $additional_where[] = 'page_uid=\'' . $this->shop_pid . '\'';
 }
-$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'billing_country', 'billing_country asc');
+$select=array();
+$select[]='DISTINCT billing_country';
+$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, '', 'billing_country asc',99999, $select);
 $order_billing_country = array();
 foreach ($order_countries as $order_country) {
     $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
@@ -649,4 +651,3 @@ jQuery(document).ready(function ($) {
 $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
 $headerData = '';
 $content = '<div class="panel panel-default"><div class="panel-body">' . mslib_fe::shadowBox($content) . '</div></div>';
-?>

@@ -116,4 +116,3 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // custom hook that can be controlled by third-party plugin eof	
-?>

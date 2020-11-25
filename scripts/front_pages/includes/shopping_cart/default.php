@@ -535,4 +535,3 @@ if ($count_product > 0) {
 		<div class="cart"></div>
 	</div>';
 }
-?>

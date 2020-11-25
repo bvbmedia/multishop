@@ -262,4 +262,3 @@ $content .= '
 	<li><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_system_orphan_files&action=delete_orphan_files') . '" onClick="return CONFIRM(\'Are you sure you want to delete the orphan files?\')"><strong>Step 3: Delete found orphan files</strong></a></li>
 </ul>
 ';
-?>

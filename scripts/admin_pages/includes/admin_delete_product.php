@@ -74,4 +74,3 @@ if (is_numeric($_REQUEST['pid'])) {
         }
     }
 }
-?>

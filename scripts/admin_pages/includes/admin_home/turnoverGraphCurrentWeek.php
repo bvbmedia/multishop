@@ -39,4 +39,3 @@ $(document).ready(function(){
 });
 </script>
 <div id="chart1"></div>';
-?>
