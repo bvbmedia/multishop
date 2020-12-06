@@ -1176,6 +1176,7 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                     }
+                    $table_cols=array_keys($datarows[0]);
                     $total_datarows = count($datarows);
                     /*
 					// debug
