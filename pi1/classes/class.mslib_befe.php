@@ -4247,6 +4247,9 @@ class mslib_befe {
             if (strpos($date_input, '/') !== false) {
                 $date_delimeter = '/';
             }
+            if (strpos($date_input, '.') !== false) {
+                $date_delimeter = '.';
+            }
             if (strpos($date_input, ':') !== false) {
                 $have_time = true;
             }
