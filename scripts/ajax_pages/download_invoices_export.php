@@ -299,8 +299,8 @@ if ($this->get['invoices_export_hash']) {
                             $excelCols['product_id' . $prod_ctr] = $product_tmp['products_id'];
                             $excelCols['product_name' . $prod_ctr] = $product_tmp['products_name'];
                             $excelCols['product_model' . $prod_ctr] = $product_tmp['product_model'];
-                            $excelCols['sku_code' . $prod_ctr] = $product_tmp['sku_code'];
                             $excelCols['ean_code' . $prod_ctr] = $product_tmp['ean_code'];
+                            $excelCols['sku_code' . $prod_ctr] = $product_tmp['sku_code'];
                             $excelCols['product_qty' . $prod_ctr] = $product_tmp['qty'];
                             $excelCols['product_final_price_excl_tax' . $prod_ctr] = number_format($product_tmp['final_price'], 2, ',', '.');
                             $excelCols['product_final_price_incl_tax' . $prod_ctr] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
@@ -314,8 +314,8 @@ if ($this->get['invoices_export_hash']) {
                                 $excelCols['product_id' . $x] = '';
                                 $excelCols['product_name' . $x] = '';
                                 $excelCols['product_model' . $x] = '';
-                                $excelCols['sku_code' . $x] = '';
                                 $excelCols['ean_code' . $x] = '';
+                                $excelCols['sku_code' . $x] = '';
                                 $excelCols['product_qty' . $x] = '';
                                 $excelCols['product_final_price_excl_tax' . $x] = '';
                                 $excelCols['product_final_price_incl_tax' . $x] = '';

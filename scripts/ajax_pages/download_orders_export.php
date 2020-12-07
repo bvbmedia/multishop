@@ -153,6 +153,9 @@ if ($this->get['orders_export_hash']) {
                         for ($i = 0; $i < $max_cols_num; $i++) {
                             $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
                             $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
+                            $excelHeaderCols['product_model' . $i] = 'product_model' . $i;
+                            $excelHeaderCols['ean_code' . $i] = 'ean_code' . $i;
+                            $excelHeaderCols['sku_code' . $i] = 'sku_code' . $i;
                             $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
                             $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
                             $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
@@ -436,8 +439,8 @@ if ($this->get['orders_export_hash']) {
                             $excelCols[] = $product_tmp['products_id'];
                             $excelCols[] = $product_tmp['products_name'];
                             $excelCols[] = $product_tmp['product_model'];
-                            $excelCols[] = $product_tmp['sku_code'];
                             $excelCols[] = $product_tmp['ean_code'];
+                            $excelCols[] = $product_tmp['sku_code'];
                             $excelCols[] = $product_tmp['qty'];
                             $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
                             $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
