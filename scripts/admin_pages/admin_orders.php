@@ -726,7 +726,7 @@ if (!in_array($this->get['limit'], $limits)) {
     $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
-    $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
+    $limit_selectbox .= '<option value="' . $limit . '"' . (($limit == $this->post['limit']) || $limit == ($this->get['limit']) ? ' selected' : '') . '>' . $limit . '</option>';
 }
 $limit_selectbox .= '</select>';
 $filter = array();
