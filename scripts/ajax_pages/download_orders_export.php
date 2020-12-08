@@ -153,6 +153,9 @@ if ($this->get['orders_export_hash']) {
                         for ($i = 0; $i < $max_cols_num; $i++) {
                             $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
                             $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
+                            $excelHeaderCols['product_model' . $i] = 'product_model' . $i;
+                            $excelHeaderCols['ean_code' . $i] = 'ean_code' . $i;
+                            $excelHeaderCols['sku_code' . $i] = 'sku_code' . $i;
                             $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
                             $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
                             $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
@@ -434,11 +437,10 @@ if ($this->get['orders_export_hash']) {
                                 break;
                             }
                             $excelCols[] = $product_tmp['products_id'];
-                            if (!empty($product_tmp['products_model'])) {
-                                $excelCols[] = $product_tmp['products_name'] . ' (' . $product_tmp['products_model'] . ')';
-                            } else {
-                                $excelCols[] = $product_tmp['products_name'];
-                            }
+                            $excelCols[] = $product_tmp['products_name'];
+                            $excelCols[] = $product_tmp['product_model'];
+                            $excelCols[] = $product_tmp['ean_code'];
+                            $excelCols[] = $product_tmp['sku_code'];
                             $excelCols[] = $product_tmp['qty'];
                             $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
                             $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
@@ -460,14 +462,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         if ($prod_ctr < $max_cols_num) {
                             for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
-                                $excelCols[] = '';
+                                for ($i=1;$i<=11;$i++) {
+                                    $excelCols[] = '';
+                                }
                                 //hook to let other plugins further manipulate the replacers
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
                                     $params = array(
