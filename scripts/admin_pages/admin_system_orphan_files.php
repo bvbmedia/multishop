@@ -211,10 +211,14 @@ switch ($this->get['action']) {
             }
             if ($objectFolderName && $datarow['path'] and $datarow['file'] && is_array($objectFolders)) {
                 foreach ($objectFolders as $key => $path) {
-                    $path = str_replace('/images/' . $objectFolderName . '/original/', '/images/' . $objectFolderName . '/' . $key . '/', $datarow['path']);
-                    $path .= '/' . $datarow['file'];
-                    if (unlink($path) or !file_exists($path)) {
-                        $deleted = 1;
+                    $path_parts=pathinfo($datarow['file']);
+                    // Only ignore svg and webp because they can be created by tools outside Multishop core system
+                    if ($path_parts['extension'] != 'svg' && $path_parts['extension'] != 'webp') {
+                        $path = str_replace('/images/' . $objectFolderName . '/original/', '/images/' . $objectFolderName . '/' . $key . '/', $datarow['path']);
+                        $path .= '/' . $datarow['file'];
+                        if (unlink($path) or !file_exists($path)) {
+                            $deleted = 1;
+                        }
                     }
                 }
             }
