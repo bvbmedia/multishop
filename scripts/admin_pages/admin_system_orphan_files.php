@@ -48,7 +48,7 @@ switch ($this->get['action']) {
                 foreach ($files as $f) {
                     $path_parts = pathinfo($f);
                     $path = str_replace('/images/' . $objectFolderName . '/' . $key . '/', '/images/' . $objectFolderName . '/original/', $path_parts['dirname']);
-                    if (!$filesToInsert[$path . '/' . $path_parts['basename']]) {
+                    if (!$filesToInsert[$path . '/' . $path_parts['basename']] && $path_parts['extension'] != 'svg' && $path_parts['extension'] != 'webp') {
                         $filesToInsert[$path . '/' . $path_parts['basename']] = 1;
                         $insertArray = array(
                                 'type' => $objectType,
