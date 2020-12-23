@@ -199,7 +199,24 @@ if ($this->get['orders_export_hash']) {
                         }
                         if (is_array($categories_data_incl_vat) && count($categories_data_incl_vat)) {
                             foreach ($categories_data_incl_vat as $category_name => $category_id) {
-                                $excelHeaderCols['categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_category_incl_vat'), $category_name);
+                                $cats = mslib_fe::Crumbar($category_id);
+                                $catPath = array();
+                                if (is_array($cats) && count($cats)) {
+                                    $cats = array_reverse($cats);
+                                    if (count($cats) > 0) {
+                                        $i = 0;
+                                        foreach ($cats as $cat) {
+                                            $catPath[$i] = $cat['name'];
+                                            $i++;
+                                        }
+                                    }
+                                    // get all cats to generate multilevel fake url eof
+                                }
+                                $header_category_name = $category_name;
+                                if (count($catPath)) {
+                                    $header_category_name = implode(' > ', $catPath);
+                                }
+                                $excelHeaderCols['categories_id_' . $category_name . '_incl_vat'] = sprintf($this->pi_getLL('turnover_per_category_incl_vat'), $header_category_name);
                             }
                         }
                         break;
@@ -228,7 +245,24 @@ if ($this->get['orders_export_hash']) {
                         }
                         if (is_array($categories_data_excl_vat) && count($categories_data_excl_vat)) {
                             foreach ($categories_data_excl_vat as $category_name => $category_id) {
-                                $excelHeaderCols['categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_category_excl_vat'), $category_name);
+                                $cats = mslib_fe::Crumbar($category_id);
+                                $catPath = array();
+                                if (is_array($cats) && count($cats)) {
+                                    $cats = array_reverse($cats);
+                                    if (count($cats) > 0) {
+                                        $i = 0;
+                                        foreach ($cats as $cat) {
+                                            $catPath[$i] = $cat['name'];
+                                            $i++;
+                                        }
+                                    }
+                                    // get all cats to generate multilevel fake url eof
+                                }
+                                $header_category_name = $category_name;
+                                if (count($catPath)) {
+                                    $header_category_name = implode(' > ', $catPath);
+                                }
+                                $excelHeaderCols['categories_id_' . $category_name . '_excl_vat'] = sprintf($this->pi_getLL('turnover_per_category_excl_vat'), $header_category_name);
                             }
                         }
                         break;
