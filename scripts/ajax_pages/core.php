@@ -1679,6 +1679,7 @@ switch ($this->ms['page']) {
                         case 'image/gif':
                         case 'image/jpeg':
                         case 'image/pjpeg':
+                        case 'image/svg+xml':
                             $fileUploadPathRelative = 'uploads/tx_multishop/images/cmsimages';
                             $fileUploadPathAbsolute = $this->DOCUMENT_ROOT . $fileUploadPathRelative;
                             $temp_file = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . uniqid();
@@ -1695,6 +1696,15 @@ switch ($this->ms['page']) {
                                 $this->get['tx_multishop_pi1']['title'] = $real_file_name;
                             }
                             move_uploaded_file($file_tmp_name, $temp_file);
+                            if ($file_type=='image/svg+xml') {
+                                // Create a new sanitizer instance
+                                $sanitizer = new Sanitizer();
+                                // Load the dirty svg
+                                $svg_content = file_get_contents($temp_file);
+                                // Pass it to the sanitizer and get it back clean
+                                $cleanSVG = $sanitizer->sanitize($svg_content);
+                                file_put_contents($cleanSVG,$temp_file);
+                            }
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
                                 $imgtype = mslib_befe::exif_imagetype($temp_file);
@@ -1729,7 +1739,7 @@ switch ($this->ms['page']) {
                     $filename = $file_name;
                     $path_parts = pathinfo($file_name);
                     $ext = $path_parts['extension'];
-                    if ($ext) {
+                    if ($ext && $ext != 'php') {
                         $continueUpload = 1;
                     }
                     break;
