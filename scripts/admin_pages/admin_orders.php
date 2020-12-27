@@ -738,6 +738,9 @@ $where = array();
 $orderby = array();
 $select = array();
 if ($this->post['skeyword']) {
+    if (preg_match('/^[0-9]*$/', $this->post['skeyword'])) {
+        $type_search = 'orders_id';
+    }
     switch ($type_search) {
         case 'all':
             $option_fields = $option_search;
