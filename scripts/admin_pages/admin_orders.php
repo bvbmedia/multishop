@@ -610,7 +610,7 @@ foreach ($search_keys as $search_key) {
         $this->post[$search_key] = $this->cookie[$search_key];
     }
 }
-if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
+if (isset($this->post['Search']) and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
     $this->cookie['excluding_vat'] = $this->post['tx_multishop_pi1']['excluding_vat'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
