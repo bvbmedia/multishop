@@ -1503,7 +1503,7 @@ CREATE TABLE `tx_multishop_undo_products` (
  `products_date_added` int(11) default '0',
  `products_last_modified` int(11) default '0',
  `products_date_available` int(11) default '0',
- `products_weight` decimal(5,2) default '0.00',
+ `products_weight` decimal(11,2) default '0.00',
  `products_status` tinyint(1) default '0',
  `tax_id` int(5) default '0',
  `manufacturers_id` int(5) default '0',
