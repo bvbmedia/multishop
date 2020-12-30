@@ -618,7 +618,7 @@ if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] 
 if ($this->cookie['excluding_vat']) {
     $this->post['tx_multishop_pi1']['excluding_vat'] = $this->cookie['excluding_vat'];
 }
-if ($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) {
+if (isset($this->post['Search']) and ($this->post['limit'] != $this->cookie['limit'])) {
     $this->cookie['limit'] = $this->post['limit'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();

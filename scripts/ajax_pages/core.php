@@ -1119,7 +1119,9 @@ switch ($this->ms['page']) {
         if (is_array($order_countries) && count($order_countries)) {
             foreach ($order_countries as $order_country) {
                 $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-                $order_billing_country[$cn_localized_name] = $order_country['billing_country'];
+                if ($cn_localized_name) {
+                    $order_billing_country[$cn_localized_name] = $order_country['billing_country'];
+                }
             }
             ksort($order_billing_country);
         }
