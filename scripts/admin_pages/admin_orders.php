@@ -1257,6 +1257,15 @@ $subpartArray['###UPDATE_ORDER_STATUS###'] = $this->pi_getLL('update_order_statu
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_PRE_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status_pre');
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL2###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
+
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['type_search']) && !empty($this->get['type_search'])) {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
+}
+
 $subpartArray['###LABEL_JS_DO_YOU_WANT_CHANGE_ORDERS_ID_X_TO_STATUS_X###'] = $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x');
 $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');

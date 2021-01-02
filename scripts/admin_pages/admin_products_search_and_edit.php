@@ -1268,6 +1268,15 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 $tax_rate_selectbox .= '</select>';
 $subpartArray['###LABEL_TAX_RATE###'] = $this->pi_getLL('admin_taxes');
 $subpartArray['###TAX_RATE_SELECTBOX###'] = $tax_rate_selectbox;
+
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['search']) && $this->get['search'] == '1') {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
+}
+
 // product date filter
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');
