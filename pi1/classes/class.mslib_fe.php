@@ -2806,8 +2806,12 @@ class mslib_fe {
                             $value_counter++;
                         }
                         if ($this->conf['enableAttributeOptionValuesGroup'] == '1' && count($attribute_option_value_to_group)) {
-                            foreach ($attribute_option_value_to_group as $idx_key => $group_id) {
-                                list($option_id, $option_value_id) = explode('_', $idx_key);
+                            if (strpos($output, '###ATTRIBUTE_VALUES_GROUP') !== false) {
+                                foreach ($attribute_option_value_to_group as $idx_key => $group_id) {
+                                    list($option_id, $option_value_id) = explode('_', $idx_key);
+                                    $current_markers1[] = '###ATTRIBUTE_VALUES_GROUP_' . $option_id . '_' . $option_value_id . '###';
+                                    $current_markers2[] = '';
+                                }
                             }
                         }
                         if ($total_values > 0) {
