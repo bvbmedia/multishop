@@ -233,7 +233,7 @@ class tx_mslib_catalog {
             return $products_options_values_id;
         }
     }
-    function sortCatalog($sortItem, $sortByField, $orderBy = 'asc') {
+    function sortCatalog($sortItem, $sortByField, $orderBy = 'asc', $primaryId='') {
         set_time_limit(86400);
         ignore_user_abort(true);
         switch ($sortItem) {
@@ -719,7 +719,11 @@ class tx_mslib_catalog {
                         break;
                     case 'products_options_values_name_natural':
                         // get all attribute options
-                        $options_ids = mslib_befe::getRecords('0', 'tx_multishop_products_options', 'language_id');
+                        $filter=array();
+                        if (is_numeric($primaryId)) {
+                            $filter[]='products_options_id='.$primaryId;
+                        }
+                        $options_ids = mslib_befe::getRecords('0', 'tx_multishop_products_options', 'language_id', $filter);
                         //$options_ids=array();
                         //test
                         //$options_ids[0]=array('products_options_id'=>'17');
