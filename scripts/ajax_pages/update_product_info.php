@@ -7,7 +7,7 @@ $response['status'] = 'NOTOK';
 if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
     switch ($this->get['tx_multishop_pi1']['update_product_info']) {
         case 'products_price':
-            if ($this->post['tx_multishop_pi1']['pid'] > 0 && is_float($this->post['tx_multishop_pi1']['value'])) {
+            if (is_float($this->post['tx_multishop_pi1']['value'])) {
                 if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] == '1') {
                     $product = mslib_befe::getRecord($this->post['tx_multishop_pi1']['pid'], 'tx_multishop_products', 'products_id', array(), 'tax_id');
                     if ($product['tax_id'] > 0) {
@@ -25,7 +25,7 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
             }
             break;
         case 'products_quantity':
-            if ($this->post['tx_multishop_pi1']['pid'] > 0 && is_float($this->post['tx_multishop_pi1']['value'])) {
+            if (is_float($this->post['tx_multishop_pi1']['value'])) {
                 $updateArray = array();
                 $updateArray['products_quantity'] = $this->post['tx_multishop_pi1']['value'];
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['tx_multishop_pi1']['pid'] . '\'', $updateArray);
@@ -35,7 +35,7 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
             }
             break;
         case 'products_status':
-            if ($this->post['tx_multishop_pi1']['pid'] > 0 && is_numeric($this->post['tx_multishop_pi1']['value'])) {
+            if (is_numeric($this->post['tx_multishop_pi1']['value'])) {
                 $updateArray = array();
                 $updateArray['products_status'] = $this->post['tx_multishop_pi1']['value'];
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['tx_multishop_pi1']['pid'] . '\'', $updateArray);
