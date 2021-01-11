@@ -2637,7 +2637,7 @@ if ($this->post) {
             $headingButton['fa_class'] = 'fa fa-eye';
             $headingButton['title'] = $this->pi_getLL('admin_edit_view_front_product', 'View in front');
             $headingButton['href'] = $details_link;
-            $headerButtons[] = $headingButton;
+            $headerButtons['preview_product'] = $headingButton;
             $headingButton = array();
             $headingButton['btn_class'] = 'btn btn-success';
             $headingButton['fa_class'] = 'fa fa-check-circle';
