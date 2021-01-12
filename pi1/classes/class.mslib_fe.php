@@ -1132,6 +1132,15 @@ class mslib_fe {
                 'Ž' => 'z',
                 '²' => '2',
         );
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['normalizePreProc'])) {
+            $params = array(
+                    'normalizeChars' => &$normalizeChars,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['normalizePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $string = strtr($string, $normalizeChars);
         return $string;
     }
