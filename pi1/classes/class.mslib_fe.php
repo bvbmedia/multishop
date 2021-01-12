@@ -1129,7 +1129,8 @@ class mslib_fe {
                 'Ð' => 'd',
                 'C' => 'c',
                 'C' => 'c',
-                'Ž' => 'z'
+                'Ž' => 'z',
+                '²' => '2',
         );
         $string = strtr($string, $normalizeChars);
         return $string;
