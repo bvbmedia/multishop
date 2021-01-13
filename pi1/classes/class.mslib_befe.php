@@ -433,8 +433,8 @@ class mslib_befe {
                 } else {
                     return false;
                 }
-                $maxwidth = $this->ms['manufacturer_image_formats']['enlarged']['width'];
-                $maxheight = $this->ms['manufacturer_image_formats']['enlarged']['height'];
+                $maxwidth = $this->ms['manufacturer_image_formats']['normal']['width'];
+                $maxheight = $this->ms['manufacturer_image_formats']['normal']['height'];
                 $folder = mslib_befe::getImagePrefixFolder($filename);
                 $dirs = array();
                 $dirs[] = PATH_site . $this->ms['image_paths']['manufacturers']['normal'] . '/' . $folder;
