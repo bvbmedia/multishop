@@ -5921,7 +5921,7 @@ class mslib_fe {
             }
         }
         // hook eof
-        if ($product['staffel_price']) {
+        if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $product['staffel_price']) {
             if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                 $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
             }
