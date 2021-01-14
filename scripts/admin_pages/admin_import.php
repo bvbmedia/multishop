@@ -3459,7 +3459,7 @@ if ($this->post['action'] == 'category-insert') {
                                     } else {
                                         $estimated_time_remaining = number_format($estimated_seconds, 0, '.', '') . ' second(s)';
                                     }
-                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% / ' . number_format($item_counter, 0, '', '.') . ' products imported).' . "\n" . 'Job is running: ' . ($time_running) . ' and the estimated time remaining is: ' . $estimated_time_remaining . '.' . "\n";
+                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% imported, imported products: ' . number_format($item_counter, 0, '', '.') . ').' . "\n" . 'Job is running: ' . ($time_running) . ' and the remaining estimated time is: ' . $estimated_time_remaining . '.' . "\n";
                                     $message .= "----------------------------------\n";
                                 }
                                 // reset timer and subtel
