@@ -46,6 +46,7 @@ if ($this->get['run_as_cron']) {
     $this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
     @unlink($this->msLogFile);
     file_put_contents($this->msLogFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
+    file_put_contents($this->msLogFile, 'Importer: Enabling lock file.'."\n", FILE_APPEND);
     file_put_contents($this->msLockFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
     // start counter for incremental updates on the display
     $subtel = 0;
@@ -3862,6 +3863,7 @@ if (count($erno)) {
     }
 }
 if (isset($this->msLockFile) && file_exists($this->msLockFile)) {
+    file_put_contents($this->msLogFile, 'Importer: Removing lock file.'."\n", FILE_APPEND);
     @unlink($this->msLockFile);
     exit();
 }
