@@ -3861,8 +3861,7 @@ if (count($erno)) {
 		';
     }
 }
-if ($this->get['run_as_cron']) {
+if (isset($this->msLockFile) && file_exists($this->msLockFile)) {
     @unlink($this->msLockFile);
-    die();
+    exit();
 }
-?>
