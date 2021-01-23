@@ -46,6 +46,7 @@ if ($this->get['run_as_cron']) {
     $this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
     @unlink($this->msLogFile);
     file_put_contents($this->msLogFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
+    file_put_contents($this->msLogFile, 'Importer: Enabling lock file.'."\n", FILE_APPEND);
     file_put_contents($this->msLockFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
     // start counter for incremental updates on the display
     $subtel = 0;
@@ -3458,7 +3459,7 @@ if ($this->post['action'] == 'category-insert') {
                                     } else {
                                         $estimated_time_remaining = number_format($estimated_seconds, 0, '.', '') . ' second(s)';
                                     }
-                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% / ' . number_format($item_counter, 0, '', '.') . ' products imported).' . "\n" . 'Job is running: ' . ($time_running) . ' and the estimated time remaining is: ' . $estimated_time_remaining . '.' . "\n";
+                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% imported, imported products: ' . number_format($item_counter, 0, '', '.') . ').' . "\n" . 'Job is running: ' . ($time_running) . ' and the remaining estimated time is: ' . $estimated_time_remaining . '.' . "\n";
                                     $message .= "----------------------------------\n";
                                 }
                                 // reset timer and subtel
@@ -3861,8 +3862,8 @@ if (count($erno)) {
 		';
     }
 }
-if ($this->get['run_as_cron']) {
+if (isset($this->msLockFile) && file_exists($this->msLockFile)) {
+    file_put_contents($this->msLogFile, 'Importer: Removing lock file.'."\n", FILE_APPEND);
     @unlink($this->msLockFile);
-    die();
+    exit();
 }
-?>
