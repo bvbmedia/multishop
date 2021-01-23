@@ -48,11 +48,11 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
             }
             break;
         case 'products_status':
-            if ((float)$this->post['tx_multishop_pi1']['value'] == '') {
+            if ($this->post['tx_multishop_pi1']['value'] === '') {
                 // Error!
                 $erno[] = 'Input is not valid';
             } else {
-                $this->post['tx_multishop_pi1']['value'] = (float)$this->post['tx_multishop_pi1']['value'];
+                $this->post['tx_multishop_pi1']['value'] = (int) $this->post['tx_multishop_pi1']['value'];
             }
             if (!count($erno)) {
                 $updateArray = array();
