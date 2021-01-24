@@ -304,7 +304,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . $this->pi_getLL('included_vat_amount') . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['subtotal_tax'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], $customer_currency, 1, 0) . '</td>
 						</tr>';
                     //}
                 } else {
