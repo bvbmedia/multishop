@@ -2341,6 +2341,17 @@ $records[] = array(
         'use_function' => ''
 );
 $records[] = array(
+        'configuration_title' => 'E-mail address of the finance department',
+        'configuration_key' => 'FINANCE_EMAIL',
+        'configuration_value' => '',
+        'description' => 'The e-mail address of the finance department. When PSP notifaction handler is having an issue it will be mailed to this email.',
+        'group_id' => '3',
+        'use_function' => '',
+        'set_function' => '',
+        'depend_on_configuration_key' => '',
+        'use_function' => ''
+);
+$records[] = array(
         'configuration_title' => 'Use reguler username input in create account',
         'configuration_key' => 'CREATE_ACCOUNT_REGULAR_USERNAME',
         'configuration_value' => '0',
