@@ -1172,7 +1172,7 @@ class tx_mslib_catalog {
         $filter[] = 'c.status=1';
         $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
         $filter[] = 'c.categories_id=cd.categories_id';
-        $orderBy = 'cd.categories_name asc';
+        $orderBy = 'c.sort_order asc';
         $groupBy='';
         $limit=999;
         // Hook
