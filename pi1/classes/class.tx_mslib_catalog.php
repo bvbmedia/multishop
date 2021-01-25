@@ -1192,22 +1192,22 @@ class tx_mslib_catalog {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
             }
         }
-        $rows=mslib_befe::getRecords('',implode(', ',$from),'',$filter,$groupBy,$orderBy,$limit,$select);
-        if (is_array($rows)) {
+        $records=mslib_befe::getRecords('',implode(', ',$from),'',$filter,$groupBy,$orderBy,$limit,$select);
+        if (is_array($records)) {
             $categories=array();
-            foreach ($rows as $row) {
+            foreach ($records as $record) {
                 // custom hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemIteratorPreProc'])) {
                     $conf = array(
-                            'row' => &$row,
+                            'record' => &$record,
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemIteratorPreProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                     }
                 }
-                $categories[]=$row;
+                $categories[]=$record;
             }
-            if (count($rows)) {
+            if (count($records)) {
                 $tree = tx_mslib_catalog::buildCategoryTree($categories);
                 return $tree;
             }
