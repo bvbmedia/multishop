@@ -1138,6 +1138,81 @@ class tx_mslib_catalog {
             return $id;
         }
     }
+    function buildCategoryTree(array $elements, $parentId = 0) {
+        $branch = array();
+        foreach ($elements as $element) {
+            if ($element['parent_id'] == $parentId) {
+                $children = tx_mslib_catalog::buildCategoryTree($elements, $element['categories_id']);
+                if ($children) {
+                    $element['hasProducts']=0;
+                    $element['children'] = $children;
+                } else {
+                    $element['hasProducts']=1;
+                }
+                $branch[] = $element;
+            }
+        }
+        return $branch;
+    }
+    public function getCategoryTree() {
+        $select=array();
+        $select[]='c.categories_image';
+        $select[]='c.categories_id';
+        $select[]='cd.categories_name';
+        $select[]='c.status';
+        $select[]='c.parent_id';
+        $select[]='cd.content as description';
+        $select[]='cd.content_footer as description_bottom';
+        $select[]='c.last_modified';
+        $select[]='c.date_added';
+        $from=array();
+        $from[]='tx_multishop_categories c';
+        $from[]='tx_multishop_categories_description cd';
+        $filter = array();
+        $filter[] = 'c.status=1';
+        $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
+        $filter[] = 'c.categories_id=cd.categories_id';
+        $orderBy = 'c.sort_order asc';
+        $groupBy='';
+        $limit=999;
+        // Hook
+        $query_elements = array();
+        $query_elements['select'] =& $select;
+        $query_elements['from'] =& $from;
+        $query_elements['filter'] =& $filter;
+        $query_elements['orderBy'] =& $orderBy;
+        $query_elements['groupBy'] =& $groupBy;
+        $query_elements['limit'] =& $limit;
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemQryPreProc'])) {
+            $conf = array(
+                    'query_elements' => &$query_elements,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemQryPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+            }
+        }
+        $records=mslib_befe::getRecords('',implode(', ',$from),'',$filter,$groupBy,$orderBy,$limit,$select);
+        if (is_array($records)) {
+            $categories=array();
+            foreach ($records as $record) {
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemIteratorPreProc'])) {
+                    $conf = array(
+                            'record' => &$record,
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['getCategoryTreeItemIteratorPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                    }
+                }
+                $categories[]=$record;
+            }
+            if (count($records)) {
+                $tree = tx_mslib_catalog::buildCategoryTree($categories);
+                return $tree;
+            }
+        }
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_catalog.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_catalog.php"]);

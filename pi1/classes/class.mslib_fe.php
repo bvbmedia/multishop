@@ -5984,12 +5984,10 @@ class mslib_fe {
     }
     public function calculateStaffelPrice($staffel_price, $product_qty) {
         switch ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
-            case 'yes_with_stepping':
-                $mode = 'stepping';
-                break;
             case 'yes_without_stepping':
                 $mode = 'stepless';
                 break;
+            case 'yes_with_stepping':
             default:
                 $mode = 'stepping';
                 break;
@@ -6033,54 +6031,56 @@ class mslib_fe {
                 $plevel = $level;
             }
         }
-        if ($mode == 'stepping') {
-            if ($plevel > 0) {
-                $data_level = array();
-                $real_level = 0;
-                $qty = $product_qty;
-                foreach ($sdata3 as $keys => $values) {
-                    if ($qty < $values['count']) {
-                        $values['count'] = $qty;
+        switch($mode) {
+            case 'stepping':
+                if ($plevel > 0) {
+                    $data_level = array();
+                    $real_level = 0;
+                    $qty = $product_qty;
+                    foreach ($sdata3 as $keys => $values) {
+                        if ($qty < $values['count']) {
+                            $values['count'] = $qty;
+                        }
+                        $data_level['steps'][$keys] = $values['count'];
+                        $qty -= $values['count'];
+                        if ($qty == 0) {
+                            break;
+                        }
                     }
-                    $data_level['steps'][$keys] = $values['count'];
-                    $qty -= $values['count'];
-                    if ($qty == 0) {
-                        break;
+                    for ($xm = 0; $xm < count($data_level['steps']); $xm++) {
+                        $total += ($data_level['steps'][$xm] * $sdata[$xm]);
+                    }
+                    $data_level['steps'] = array();
+                } else {
+                    $plevel = 0;
+                    $gotlevel = false;
+                    foreach ($sdata2 as $level => $range) {
+                        $pqty = $product_qty;
+                        if ($pqty >= $range['min'] && $pqty <= $range['max']) {
+                            $plevel = $level;
+                            $gotlevel = true;
+                        }
+                    }
+                    if ($gotlevel) {
+                        $total = ($sdata[$plevel] * $product_qty);
                     }
                 }
-                for ($xm = 0; $xm < count($data_level['steps']); $xm++) {
-                    $total += ($data_level['steps'][$xm] * $sdata[$xm]);
-                }
-//				error_log(print_r($data_level,1));
-                $data_level['steps'] = array();
-            } else {
+                $final_price = $total;
+                return $final_price;
+                break;
+            case 'stepless':
                 $plevel = 0;
-                $gotlevel = false;
                 foreach ($sdata2 as $level => $range) {
                     $pqty = $product_qty;
                     if ($pqty >= $range['min'] && $pqty <= $range['max']) {
                         $plevel = $level;
-                        $gotlevel = true;
                     }
                 }
-                if ($gotlevel) {
-                    $total = ($sdata[$plevel] * $product_qty);
-                }
-            }
-        } else if ($mode == 'stepless') {
-            $plevel = 0;
-            foreach ($sdata2 as $level => $range) {
-                $pqty = $product_qty;
-                if ($pqty >= $range['min'] && $pqty <= $range['max']) {
-                    $plevel = $level;
-                }
-            }
-            $total = ($sdata[$plevel] * $pqty);
-        } else {
-            $total = 'discount mode not recognized...';
+                $total = ($sdata[$plevel] * $pqty);
+                $final_price = $total;
+                return $final_price;
+                break;
         }
-        $final_price = $total;
-        return $final_price;
     }
     public function getFrontendPriceInfoArray($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
         $finalPrice = mslib_fe::final_products_price($product, $quantity, $add_currency, $ignore_minimum_quantity, $priceColumn);
