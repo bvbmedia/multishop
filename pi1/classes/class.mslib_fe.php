@@ -6082,21 +6082,21 @@ class mslib_fe {
                 break;
         }
     }
+    // Todo we will remove soon because its defined in multishop_api
     public function getFrontendPriceInfoArray($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
-        $finalPrice = mslib_fe::final_products_price($product, $quantity, $add_currency, $ignore_minimum_quantity, $priceColumn);
+        $finalPriceIncludingVat = mslib_fe::final_products_price($product, $quantity, $add_currency, $ignore_minimum_quantity, $priceColumn);
         $priceInfo = array();
-        if ($product['products_price'] <> $product['final_price']) {
-            if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+        if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            // B2C
+            $priceInfo['final_price_incl_tax'] = $finalPriceIncludingVat;
+            if ($product['products_price'] <> $product['final_price']) {
                 $priceInfo['old_price'] = $product['products_price'] * (1 + $product['tax_rate']);
-                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
-            } else {
-                $priceInfo['old_price'] = $product['products_price'];
-                $priceInfo['final_price_incl_tax'] = $finalPrice;
             }
         } else {
-            $priceInfo['final_price_incl_tax'] = $finalPrice;
-            if (($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] == '1')) {
-                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
+            // B2B
+            $priceInfo['final_price_incl_tax'] = $product['final_price'];
+            if ($product['products_price'] <> $product['final_price']) {
+                $priceInfo['old_price'] = $product['products_price'] ;
             }
         }
         return $priceInfo;
