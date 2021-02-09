@@ -244,8 +244,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					*/
                     // DAEMMFTL-407
-                    $tax = number_format($final_price * $tax_rate,2,'.','');
-                    //$tax = $final_price * $tax_rate;
+                    if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                        $tax = number_format($final_price * $tax_rate,2,'.','');
+                    } else {
+                        $tax = $final_price * $tax_rate;
+                    }
                     $product_tax_data['total_tax'] = (string)$tax;
                     //$product_tax_data['total_tax'] = (string)$tax;
                     $sub_total_tax += $tax * $row_prod['qty'];
@@ -265,7 +268,11 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
                     // DAEMMFTL-407
-                    $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += number_format(($tax + $attributes_tax) * $row_prod['qty'],2,'.','');
+                    if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                        $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += number_format(($tax + $attributes_tax) * $row_prod['qty'],2,'.','');
+                    } else {
+                        $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
+                    }
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total_excluding_vat'] += ($final_price + $tmp_attributes_price) * $row_prod['qty'];
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total'] += ($final_price + $tmp_attributes_price) + ($tax + $attributes_tax) * $row_prod['qty'];
                 }
@@ -1037,12 +1044,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } else */
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                 // DAEMMFTL-407
-                $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
-                $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
-                // Total price of all qty + tax
-                //$final_price = ($product['qty'] * $product['final_price']);
-                //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
-                $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(($product['final_price']+$taxPricePerEach));
+                if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                    $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
+                    $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
+                    // Total price of all qty + tax
+                    //$final_price = ($product['qty'] * $product['final_price']);
+                    //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
+                    $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(($product['final_price']+$taxPricePerEach));
+                } else {
+                    $final_price = ($product['qty'] * $product['final_price']);
+                    $final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
+                    $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(round(($product['final_price'] * ($product['products_tax'] / 100)), 4) + $product['final_price']);
+                }
             } else {
                 $final_price = ($product['qty'] * $product['final_price']);
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price']);
