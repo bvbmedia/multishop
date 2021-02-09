@@ -1035,9 +1035,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price'] + $tmp_tax);
             } else */
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                $final_price = ($product['qty'] * $product['final_price']);
-                $final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
-                $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(round(($product['final_price'] * ($product['products_tax'] / 100)), 4) + $product['final_price']);
+                // DAEMMFTL-407
+                $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
+                $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
+                // Total price of all qty + tax
+                //$final_price = ($product['qty'] * $product['final_price']);
+                //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
+                $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(($product['final_price']+$taxPricePerEach));
             } else {
                 $final_price = ($product['qty'] * $product['final_price']);
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price']);
