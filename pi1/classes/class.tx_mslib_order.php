@@ -264,7 +264,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\'' . $row['orders_id'] . '\'', $updateOrderProducts);
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
-                    $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
+                    // DAEMMFTL-407
+                    $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += number_format(($tax + $attributes_tax) * $row_prod['qty'],2,'.','');
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total_excluding_vat'] += ($final_price + $tmp_attributes_price) * $row_prod['qty'];
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total'] += ($final_price + $tmp_attributes_price) + ($tax + $attributes_tax) * $row_prod['qty'];
                 }
