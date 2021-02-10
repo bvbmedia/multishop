@@ -1179,9 +1179,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $products = $cart['products'];
         }
         $quantity = 0;
-        foreach ($products as $products_id => $value) {
-            if (is_numeric($value['products_id'])) {
-                $quantity = ($quantity + $value['qty']);
+        if (is_array($products) && count($products)) {
+            foreach ($products as $products_id => $value) {
+                if (is_numeric($value['products_id'])) {
+                    $quantity = ($quantity + $value['qty']);
+                }
             }
         }
         return $quantity;
