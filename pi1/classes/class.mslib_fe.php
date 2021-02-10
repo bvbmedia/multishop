@@ -4982,16 +4982,18 @@ class mslib_fe {
             $products = $cart['products'];
         }
         $weight = 0;
-        foreach ($products as $products_id => $value) {
-            if (is_numeric($value['products_id'])) {
-                // get the product weight record when in edit order only
-                if (!$value['products_weight'] && $fetch_weight_record) {
-                    $tmp_product = mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
-                    if ($tmp_product['products_weight']) {
-                        $value['products_weight'] = $tmp_product['products_weight'];
+        if (is_array($products) && count($products)) {
+            foreach ($products as $products_id => $value) {
+                if (is_numeric($value['products_id'])) {
+                    // get the product weight record when in edit order only
+                    if (!$value['products_weight'] && $fetch_weight_record) {
+                        $tmp_product = mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
+                        if ($tmp_product['products_weight']) {
+                            $value['products_weight'] = $tmp_product['products_weight'];
+                        }
                     }
+                    $weight = ($weight + ($value['qty'] * $value['products_weight']));
                 }
-                $weight = ($weight + ($value['qty'] * $value['products_weight']));
             }
         }
         return $weight;
