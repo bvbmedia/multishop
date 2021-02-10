@@ -147,7 +147,14 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $data = array();
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
-            if (!isset($this->get['option_id']) || !isset($this->get['preselected_id'])) {
+            $show_skip = false;
+            if (isset($this->get['option_id'])) {
+                $show_skip = true;
+            }
+            if (!isset($this->get['preselected_id'])) {
+                $show_skip = true;
+            }
+            if ($show_skip) {
                 $data[0] = array(
                         'id' => 0,
                         'text' => $this->pi_getLL('skip')
@@ -176,13 +183,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
                 );
             }
         }
-        if (!isset($this->get['option_id']) || (isset($this->get['preselected_id']) && $this->get['preselected_id'] == '0')) {
-            $data = array();
-            $data[0] = array(
-                    'id' => 0,
-                    'text' => $this->pi_getLL('skip')
-            );
-        }
+
         $content = json_encode($data);
         break;
     case 'delete_product_attributes':
