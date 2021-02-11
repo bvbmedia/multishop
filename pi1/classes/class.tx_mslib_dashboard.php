@@ -355,37 +355,39 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             switch ($this->dashboardArray['section']) {
                 case 'admin_home':
                 case 'admin_edit_customer':
-                    $pageLayout[] = array(
-                            'class' => 'layout1col',
-                            'cols' => array(
-                                    0 => array('turnoverPerProduct')
-                            )
-                    );
+                    if ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) {
+                        $pageLayout[] = array(
+                                'class' => 'layout1col',
+                                'cols' => array(
+                                        0 => array('turnoverPerProduct')
+                                )
+                        );
+                    }
                     $pageLayout[] = array(
                             'class' => 'layout1big1small',
                             'cols' => array(
-                                    0 => array('ordersLatest'),
-                                    1 => array(
-                                            'google_chart_orders',
-                                            'google_chart_customers',
-                                            'google_chart_carts',
-                                            'turnoverThisWeekLastWeek',
-                                            'profitThisMonthLastMonth',
-                                            'turnoverMainCategoryThisMonthLastMonth'
+                                    0 => array(
+                                            ($this->ROOTADMIN_USER or ($this->ORDERSADMIN_USER == 1)) ? 'ordersLatest' : '',
+                                            1 => array(
+                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_orders' : '',
+                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_carts' : '',
+                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverThisWeekLastWeek' : '',
+                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'profitThisMonthLastMonth' : '',
+                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverMainCategoryThisMonthLastMonth' : '',
+                                            )
                                     )
-                            )
-                    );
+                            ));
                     $pageLayout[] = array(
                             'class' => 'layout2cols',
                             'cols' => array(
                                     0 => array(
-                                            'searchKeywordsToplist',
-                                            'referrerToplist'
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'searchKeywordsToplist' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'referrerToplist' : '',
                                     ),
                                     1 => array(
-                                            'turnoverPerMonth',
-                                            'ordersPerMonth',
-                                            'customersPerMonth'
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverPerMonth' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'ordersPerMonth' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'customersPerMonth' : '',
                                     )
                             )
                     );
