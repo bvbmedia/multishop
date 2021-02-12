@@ -1084,23 +1084,26 @@ if ($this->post) {
         $tax_rate = mslib_fe::getTaxRuleSet($this->post['tax_id'], 0);
         $total_tax_rate = $tax_rate['total_tax_rate'];
     }
-    if ($this->post['product_capital_price'] && $total_tax_rate) {
-        $product_price_incl_vat = number_format($this->post['product_capital_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
-        $product_price_incl_vat = round($product_price_incl_vat, 2);
-        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
-        $this->post['product_capital_price'] = $product_price_excl_vat;
-    }
-    if ($this->post['products_price'] && $total_tax_rate) {
-        $product_price_incl_vat = number_format($this->post['products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
-        $product_price_incl_vat = round($product_price_incl_vat, 2);
-        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
-        $this->post['products_price'] = $product_price_excl_vat;
-    }
-    if ($this->post['specials_new_products_price'] && $total_tax_rate) {
-        $product_price_incl_vat = number_format($this->post['specials_new_products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
-        $product_price_incl_vat = round($product_price_incl_vat, 2);
-        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
-        $this->post['specials_new_products_price'] = $product_price_excl_vat;
+    // Only do reverse calc when the constant settng setReadOnlyForEditProductPriceIncludeTaxInput is 0
+    if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '0') {
+        if ($this->post['product_capital_price'] && $total_tax_rate) {
+            $product_price_incl_vat = number_format($this->post['product_capital_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+            $product_price_incl_vat = round($product_price_incl_vat, 2);
+            $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+            $this->post['product_capital_price'] = $product_price_excl_vat;
+        }
+        if ($this->post['products_price'] && $total_tax_rate) {
+            $product_price_incl_vat = number_format($this->post['products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+            $product_price_incl_vat = round($product_price_incl_vat, 2);
+            $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+            $this->post['products_price'] = $product_price_excl_vat;
+        }
+        if ($this->post['specials_new_products_price'] && $total_tax_rate) {
+            $product_price_incl_vat = number_format($this->post['specials_new_products_price'] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+            $product_price_incl_vat = round($product_price_incl_vat, 2);
+            $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+            $this->post['specials_new_products_price'] = $product_price_excl_vat;
+        }
     }
     if ($this->post['products_date_available_visitor'] && $this->post['products_date_available']) {
         $updateArray['products_date_available'] = strtotime($this->post['products_date_available']);
@@ -1201,11 +1204,14 @@ if ($this->post) {
                 }
                 $col_val = implode('-', $col_vals);
                 // get excl vat price accurately
-                if ($this->post['staffel_price'][$row_idx] && $total_tax_rate) {
-                    $product_price_incl_vat = number_format($this->post['staffel_price'][$row_idx] * (1 + ($total_tax_rate / 100)), '14', '.', '');
-                    $product_price_incl_vat = round($product_price_incl_vat, 2);
-                    $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
-                    $this->post['staffel_price'][$row_idx] = $product_price_excl_vat;
+                // Only do reverse calc when the constant settng setReadOnlyForEditProductPriceIncludeTaxInput is 0
+                if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '0') {
+                    if ($this->post['staffel_price'][$row_idx] && $total_tax_rate) {
+                        $product_price_incl_vat = number_format($this->post['staffel_price'][$row_idx] * (1 + ($total_tax_rate / 100)), '14', '.', '');
+                        $product_price_incl_vat = round($product_price_incl_vat, 2);
+                        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $total_tax_rate)) * 100, 14, '.', '');
+                        $this->post['staffel_price'][$row_idx] = $product_price_excl_vat;
+                    }
                 }
                 $sprice = $this->post['staffel_price'][$row_idx];
                 $staffel_price_data[$row_idx] = $col_val . ':' . $sprice;
@@ -2880,7 +2886,7 @@ if ($this->post) {
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"' . ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1' ? ' readonly="readonly"' : '') . '><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
 								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
@@ -2905,7 +2911,7 @@ if ($this->post) {
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat priceInputDisplay" value="" autocomplete="off"' . ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1' ? ' readonly="readonly"' : '') . '><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="priceInputReal price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
@@ -4687,6 +4693,9 @@ if ($this->post) {
             $GLOBALS['TSFE']->additionalHeaderData[] = '
             <script type="text/javascript">
             $(document).ready(function(){
+                jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
+                jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
+                msStaffelPriceIncludingVat 
             	$(document).on(\'click\', \'.feed_radio, .feed_stock_radio\', function(){
                     var feed_id=$(this).attr(\'data-feed-id\');
                     var radio_id=$(this).attr(\'id\');
@@ -4951,6 +4960,16 @@ if ($this->post) {
             $subpartArray['###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###'] = $product['manufacturers_advice_price'];
         }
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+        if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
+            $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '
+            <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
+                jQuery(\'.msStaffelPriceIncludingVat\').prop(\'readonly\', \'readonly\'); 
+            });
+            </script>
+            ';
+        }
     } else {
         $content .= $this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
     }

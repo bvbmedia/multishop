@@ -300,4 +300,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable attributes option values group
 	enableAttributeOptionValuesGroup = 0
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable Incl tax price field to read-only mode
+	setReadOnlyForEditProductPriceIncludeTaxInput = 0
 }
