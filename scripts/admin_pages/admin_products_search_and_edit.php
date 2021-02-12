@@ -1033,6 +1033,7 @@ if ($pageset['total_rows'] > 0) {
             $markerArray['EDIT_PRICE_PENCIL_ICON'] = '<a href="#" class="hoverEdit products_price_edit" data-pid="' . $rs['products_id'] . '"><i class="fa fa-pencil"></i></a>';
         }
 
+        $markerArray['PID3'] = $rs['products_id'];
         $markerArray['PID4'] = $rs['products_id'];
         $markerArray['PID5'] = $rs['products_id'];
         $markerArray['PID6'] = $rs['products_id'];
