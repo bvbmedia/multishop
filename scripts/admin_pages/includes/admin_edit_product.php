@@ -3424,7 +3424,7 @@ if ($this->post) {
 			new_attributes_html+=\'<span class="input-group-addon">' . addslashes(htmlspecialchars($this->pi_getLL('excluding_vat'))) . '</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
-			new_attributes_html+=\'<span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" autocomplete="off">\';
+			new_attributes_html+=\'<span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" autocomplete="off"' . ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1' ? ' readonly="readonly"' : '') . '>\';
 			new_attributes_html+=\'<span class="input-group-addon">' . addslashes(htmlspecialchars($this->pi_getLL('including_vat'))) . '</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
@@ -4213,7 +4213,7 @@ if ($this->post) {
                                 $attribute_price_display_incl = mslib_fe::taxDecimalCrop($attribute_data['options_values_price'] + $attributes_tax, 2, false);
                                 $existing_product_attributes_block_columns['attribute_price_col'] = '<td class="cellPrice">
 									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat priceInputDisplay" value="' . $attribute_price_display . '" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" value="' . $attribute_price_display_incl . '" autocomplete="off"><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat priceInputDisplay" value="' . $attribute_price_display_incl . '" autocomplete="off"' . ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1' ? ' readonly="readonly"' : '') . '><span class="input-group-addon">' . $this->pi_getLL('including_vat') . '</span></div></div>
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" class="priceInputReal" value="' . $attribute_data['options_values_price'] . '" /></div>
 								</td>';
                                 $existing_product_attributes_block_columns['attribute_save_col'] = '<td class="cellAction">
@@ -4965,7 +4965,8 @@ if ($this->post) {
             <script type="text/javascript">
             jQuery(document).ready(function(){
                 jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
-                jQuery(\'.msStaffelPriceIncludingVat\').prop(\'readonly\', \'readonly\'); 
+                jQuery(\'.msStaffelPriceIncludingVat\').prop(\'readonly\', \'readonly\');
+                jQuery(\'.msAttributesPriceIncludingVat\').prop(\'readonly\', \'readonly\');
             });
             </script>
             ';

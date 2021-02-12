@@ -7,12 +7,13 @@ if ($this->get['tx_multishop_pi1']['action']) {
         case 'update_default_unit':
             if (intval($this->get['tx_multishop_pi1']['orders_unit_id'])) {
                 $updateArray = array();
+                $updateArray['is_default'] = 0;
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'page_uid=' . $this->showCatalogFromPage, $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                $updateArray = array();
                 $updateArray['is_default'] = 1;
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                $updateArray = array();
-                $updateArray['is_default'] = 0;
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id <> \'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
             break;
