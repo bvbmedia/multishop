@@ -20,7 +20,10 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
                     if ($product['tax_id'] > 0) {
                         $data = mslib_fe::getTaxRuleSet($product['tax_id'], 0);
                         $product_tax_rate = $data['total_tax_rate'];
-                        $this->post['tx_multishop_pi1']['value'] = ($this->post['tx_multishop_pi1']['value'] / (100 + $product_tax_rate)) * 100;
+                        //$product_price_incl_vat = number_format( $this->post['tx_multishop_pi1']['value'] * (1 + ($product_tax_rate / 100)), '14', '.', '');
+                        $product_price_incl_vat = round($this->post['tx_multishop_pi1']['value'], 2);
+                        $product_price_excl_vat = number_format(($product_price_incl_vat / (100 + $product_tax_rate)) * 100, 14, '.', '');
+                        $this->post['tx_multishop_pi1']['value'] = $product_price_excl_vat;
                     }
                 }
                 $updateArray = array();
