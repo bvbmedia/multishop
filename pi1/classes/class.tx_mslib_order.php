@@ -40,7 +40,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($orders_id)) {
             $this->conf['order_id'] = (int)$orders_id;
             $tax_separation = array();
-            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
+            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, discount_amount_excl_tax, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                 if (!$row['billing_country']) {
@@ -306,6 +306,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $sub_total_tax = ((($sub_total - $sub_total_excluding_vat) / 100) * (100 - $discount_percentage));
                         }
                     }
+                    $discount_price_excl_vat = round($row['discount_amount_excl_tax'], 2);
                     if (count($tax_separation) > 1) {
                         $tax_separation = array();
                     }
@@ -320,7 +321,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                     $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 }
-                $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
+                $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price_excl_vat) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
                 //
                 $order_tax_data['tax_separation'] = $tax_separation;
                 //print_r($order_tax_data);
