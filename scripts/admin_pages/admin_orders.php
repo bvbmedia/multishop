@@ -600,11 +600,13 @@ foreach ($search_keys as $search_key) {
         $GLOBALS['TSFE']->storeSessionData();
     }
     // re-assign new value to cookie
-    if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
+    if (isset($this->post[$search_key])) {
         $this->cookie[$search_key] = $this->post[$search_key];
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-        $GLOBALS['TSFE']->storeSessionData();
+    } else {
+        unset($this->cookie[$search_key]);
     }
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
     // if cookie stiill have value, re-assign back to the post filter, so it gave remembering effect
     if (isset($this->cookie[$search_key]) && $this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
         $this->post[$search_key] = $this->cookie[$search_key];
