@@ -1240,7 +1240,9 @@ if ($this->post) {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'])) {
             $params = array(
-                    'products_id' => $this->post['pid']
+                'products_id' => $this->post['pid'],
+                'updateArray' => &$updateArray,
+                'total_tax_rate' => &$total_tax_rate
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1746,6 +1748,17 @@ if ($this->post) {
         $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $updateArray['products_last_modified'] = time();
         $updateArray['extid'] = md5(uniqid());
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveNewProductPreHook'])) {
+            $params = array(
+                'updateArray' => &$updateArray,
+                'total_tax_rate' => &$total_tax_rate
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveNewProductPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
