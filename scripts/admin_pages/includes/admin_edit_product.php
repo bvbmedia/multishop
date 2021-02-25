@@ -1240,7 +1240,9 @@ if ($this->post) {
         // custom hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'])) {
             $params = array(
-                    'products_id' => $this->post['pid']
+                'products_id' => $this->post['pid'],
+                'updateArray' => &$updateArray,
+                'total_tax_rate' => &$total_tax_rate
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1746,6 +1748,17 @@ if ($this->post) {
         $updateArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $updateArray['products_last_modified'] = time();
         $updateArray['extid'] = md5(uniqid());
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveNewProductPreHook'])) {
+            $params = array(
+                'updateArray' => &$updateArray,
+                'total_tax_rate' => &$total_tax_rate
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['saveNewProductPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $prodid = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2857,7 +2870,17 @@ if ($this->post) {
         $capital_price_incl_vat_display = mslib_fe::taxDecimalCrop($product['product_capital_price'] + $capital_price_tax, 2, false);
         $staffel_price_block = '';
         if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
-            $staffel_price_block .= '
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['productStaffelPriceElementCustomProc'])) {
+                $subparams = array(
+                        'staffel_price_block' => &$staffel_price_block,
+                        'product' => &$product,
+                        'product_tax_rate' => $product_tax_rate
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['productStaffelPriceElementCustomProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $subparams, $this);
+                }
+            } else {
+                $staffel_price_block .= '
 				<div class="form-group" id="msEditProductInputStaffelPriceWrapper">
 				<script>
 				jQuery(document).ready(function($) {
@@ -2949,8 +2972,8 @@ if ($this->post) {
 					}
 				});
 				</script>';
-            if (empty($product['staffel_price'])) {
-                $staffel_price_block .= '
+                if (empty($product['staffel_price'])) {
+                    $staffel_price_block .= '
 						<div class="toggle_advanced_option" id="msEditProductInputStaffelPrice">
 							<label for="products_price" class="control-label col-md-2">' . $this->pi_getLL('admin_staffel_price') . '</label>
 							<div class="col-md-10">
@@ -2963,8 +2986,8 @@ if ($this->post) {
 							</div>
 							</div>
 						</div>';
-            } else {
-                $staffel_price_block .= '
+                } else {
+                    $staffel_price_block .= '
 					<div id="msEditProductInputStaffelPrice">
 						<label for="products_price"class="control-label col-md-2">' . $this->pi_getLL('admin_staffel_price') . '</label>
 						<div class="col-md-10 product_staffel_price ">
@@ -2976,21 +2999,21 @@ if ($this->post) {
 									<th>' . mslib_befe::strtolower($this->pi_getLL('admin_price')) . '</th>
 									<th>&nbsp;</th>
 								</tr></thead><tbody>';
-                $sp_rows = explode(';', $product['staffel_price']);
-                foreach ($sp_rows as $sp_idx => $sp_row) {
-                    $sp_idx += 1;
-                    list($sp_col, $sp_price) = explode(':', $sp_row);
-                    list($sp_col_1, $sp_col_2) = explode('-', $sp_col);
-                    $staffel_tax = mslib_fe::taxDecimalCrop(($sp_price * $product_tax_rate) / 100);
-                    $sp_price_display = mslib_fe::taxDecimalCrop($sp_price, 2, false);
-                    $staffel_price_display_incl = mslib_fe::taxDecimalCrop($sp_price + $staffel_tax, 2, false);
-                    $readonly = ' readonly="readonly"';
-                    if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
-                        if ($sp_idx == '1') {
-                            $readonly = '';
+                    $sp_rows = explode(';', $product['staffel_price']);
+                    foreach ($sp_rows as $sp_idx => $sp_row) {
+                        $sp_idx += 1;
+                        list($sp_col, $sp_price) = explode(':', $sp_row);
+                        list($sp_col_1, $sp_col_2) = explode('-', $sp_col);
+                        $staffel_tax = mslib_fe::taxDecimalCrop(($sp_price * $product_tax_rate) / 100);
+                        $sp_price_display = mslib_fe::taxDecimalCrop($sp_price, 2, false);
+                        $staffel_price_display_incl = mslib_fe::taxDecimalCrop($sp_price + $staffel_tax, 2, false);
+                        $readonly = ' readonly="readonly"';
+                        if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
+                            if ($sp_idx == '1') {
+                                $readonly = '';
+                            }
                         }
-                    }
-                    $staffel_price_block .= '
+                        $staffel_price_block .= '
 						<tr id="sp_' . $sp_idx . '">
 							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_from') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_1"' . $readonly . ' value="' . $sp_col_1 . '" /></span></td>
 							<td><div class="input-group"><span class="input-group-addon">' . $this->pi_getLL('admin_till2') . '</span><input type="text" class="form-control price small_input" name="sp[' . $sp_idx . '][]" id="sp_' . $sp_idx . '_qty_2" value="' . $sp_col_2 . '" /></span></td>
@@ -3000,13 +3023,14 @@ if ($this->post) {
 							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[' . $sp_idx . ']" class="priceInputReal price small_input" id="staffel_price" value="' . htmlspecialchars($sp_price) . '"></div>
 							<td><button type="button" value="" onclick="remStaffelInput(\'' . $sp_idx . '\')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button></td>
 						</tr>';
-                }
-                $staffel_price_block .= '</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="' . count($sp_rows) . '" /><button class="btn btn-success btn-sm" type="button" value="' . $this->pi_getLL('admin_add_staffel_price') . '" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
+                    }
+                    $staffel_price_block .= '</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="' . count($sp_rows) . '" /><button class="btn btn-success btn-sm" type="button" value="' . $this->pi_getLL('admin_add_staffel_price') . '" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
 								</table>
 							</div>
 					</div>';
+                }
+                $staffel_price_block .= '</div>';
             }
-            $staffel_price_block .= '</div>';
         }
         $manufacturer_input = '<input type="hidden" name="manufacturers_id" id="manufacturers_id_s2" value="' . $product['manufacturers_id'] . '">';
         /*

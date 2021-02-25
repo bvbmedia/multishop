@@ -152,7 +152,11 @@ if (count($active_shop) > 1) {
     }
     $tmpcontent .= '</div></div>';
 } else {
-    $tmpcontent .= '<input type="hidden" name="tx_multishop_pi1[related_shop_pid]" value="' . $row['page_uid'] . '">';
+    $shop_pid = $row['page_uid'];
+    if (!$shop_pid) {
+        $shop_pid = $this->showCatalogFromPage;
+    }
+    $tmpcontent .= '<input type="hidden" name="tx_multishop_pi1[related_shop_pid]" value="' . $shop_pid . '">';
 }
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $tmpcontent .= '<input type="hidden" class="text" name="tx_multishop_pi1[order_unit_id]" value="' . $this->get['tx_multishop_pi1']['order_unit_id'] . '">';

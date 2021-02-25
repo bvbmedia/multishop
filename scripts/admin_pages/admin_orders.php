@@ -589,8 +589,8 @@ $search_keys[] = 'order_expected_delivery_date_from';
 $search_keys[] = 'order_expected_delivery_date_till';
 $search_keys[] = 'payment_method';
 $search_keys[] = 'shipping_method';
-$search_keys[] = 'search_by_status_last_modified';
-$search_keys[] = 'search_by_telephone_orders';
+//$search_keys[] = 'search_by_status_last_modified';
+//$search_keys[] = 'search_by_telephone_orders';
 $search_keys[] = 'manufacturers_id';
 foreach ($search_keys as $search_key) {
     // reset the filter cookie
@@ -600,15 +600,39 @@ foreach ($search_keys as $search_key) {
         $GLOBALS['TSFE']->storeSessionData();
     }
     // re-assign new value to cookie
-    if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
+    if (isset($this->post[$search_key]) && !empty($this->post[$search_key]) && $this->cookie[$search_key] != $this->post[$search_key]) {
         $this->cookie[$search_key] = $this->post[$search_key];
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-        $GLOBALS['TSFE']->storeSessionData();
     }
-    // if cookie stiill have value, re-assign back to the post filter, so it gave remembering effect
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+    // if cookie still have value, re-assign back to the post filter, so it gave remembering effect
     if (isset($this->cookie[$search_key]) && $this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
         $this->post[$search_key] = $this->cookie[$search_key];
     }
+}
+if (isset($this->post['Search']) and $this->post['customer_type']!=$this->cookie['customer_type']) {
+    $this->cookie['customer_type'] = $this->post['customer_type'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['customer_type']) {
+    $this->post['customer_type']= $this->cookie['customer_type'];
+}
+if (isset($this->post['Search']) and $this->post['search_by_status_last_modified']!=$this->cookie['search_by_status_last_modified']) {
+    $this->cookie['search_by_status_last_modified'] = $this->post['search_by_status_last_modified'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['search_by_status_last_modified']) {
+    $this->post['search_by_status_last_modified']= $this->cookie['search_by_status_last_modified'];
+}
+if (isset($this->post['Search']) and $this->post['search_by_telephone_orders']!=$this->cookie['search_by_telephone_orders']) {
+    $this->cookie['search_by_telephone_orders'] = $this->post['search_by_telephone_orders'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['search_by_telephone_orders']) {
+    $this->post['search_by_telephone_orders'] = $this->cookie['search_by_telephone_orders'];
 }
 if (isset($this->post['Search']) and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
     $this->cookie['excluding_vat'] = $this->post['tx_multishop_pi1']['excluding_vat'];
@@ -1015,7 +1039,7 @@ $orderby[] = $order_by . ' ' . $order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
     $filter[] = 'o.by_phone=1';
 }
-if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != 'all') {
+if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != '' && $this->post['country'] != 'all') {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
 if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {

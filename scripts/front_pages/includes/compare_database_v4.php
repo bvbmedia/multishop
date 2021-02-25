@@ -919,3 +919,10 @@ if (!isset($settings['GLOBAL_MODULES'][$key])) {
     $str = "INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Apply rounding tax amount on product piece price', '" . $key . "', '0', 'Only apply to shops that have defined prices excluding VAT with 2 decimals.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''1'', ''0''),');";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 }
+$str = "select discount_amount_excl_tax from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_orders` ADD discount_amount_excl_tax decimal(8,2) DEFAULT '0.00'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
