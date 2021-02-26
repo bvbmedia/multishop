@@ -2202,7 +2202,7 @@ class mslib_fe {
             } else {
                 $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
-            // Sometims the dispatcher is using name instead of username
+            // Sometimes the dispatcher is using name instead of username
             if (!$user['username'] && $user['name']) {
                 $user['username'] = $user['name'];
             }
