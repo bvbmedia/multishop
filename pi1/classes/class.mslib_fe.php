@@ -2152,9 +2152,6 @@ class mslib_fe {
                 }
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
-            if (isset($options['sender'])) {
-                $mail->Sender = $options['sender'];
-            }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
             if (isset($options['reply_to_email'])) {
@@ -2172,19 +2169,6 @@ class mslib_fe {
                         $mail->AddAttachment($path);
                     }
                 }
-            }
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            if (!$options['withoutImageEmbedding']) {
-                self::MsgHTMLwithEmbedImages($mail, $body);
-            } else {
-                $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
-            }
-            // Plain version
-            if (isset($options['alt_body'])) {
-                $mail->AltBody = $options['alt_body'];
-            } else {
-                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
@@ -2205,7 +2189,20 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            // Sometims the dispatcher is using name instead of username
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            if (!$options['withoutImageEmbedding']) {
+                self::MsgHTMLwithEmbedImages($mail, $body);
+            } else {
+                $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
+            }
+            // Plain version
+            if (isset($options['alt_body'])) {
+                $mail->AltBody = $options['alt_body'];
+            } else {
+                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
+            }
+            // Sometimes the dispatcher is using name instead of username
             if (!$user['username'] && $user['name']) {
                 $user['username'] = $user['name'];
             }
