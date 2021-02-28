@@ -2966,11 +2966,6 @@ if ($this->post) {
 						priceEditRealtimeCalc(true, this);
 					}
 				});
-				$(document).on("keyup", "input,select", function(e) {
-					if (e.keyCode=13) {
-						alert("test");
-					}
-				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
 						priceEditRealtimeCalc(false, this);
