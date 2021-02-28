@@ -2966,6 +2966,11 @@ if ($this->post) {
 						priceEditRealtimeCalc(true, this);
 					}
 				});
+				$(document).on("keyup", "input,select", function(e) {
+					if (e.keyCode=13) {
+						alert("test");
+					}
+				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
 					if (e.keyCode!=9) {
 						priceEditRealtimeCalc(false, this);
@@ -4719,7 +4724,6 @@ if ($this->post) {
             $(document).ready(function(){
                 jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
                 jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
-                msStaffelPriceIncludingVat 
             	$(document).on(\'click\', \'.feed_radio, .feed_stock_radio\', function(){
                     var feed_id=$(this).attr(\'data-feed-id\');
                     var radio_id=$(this).attr(\'id\');
@@ -4995,6 +4999,18 @@ if ($this->post) {
             </script>
             ';
         }
+        $GLOBALS['TSFE']->additionalHeaderData['enter_key_js'] = '
+            <script type="text/javascript">
+            jQuery(document).ready(function(){
+                $(document).on("keyup", "input,select", function(e) {
+                    e.preventDefault();
+                    if (e.keyCode==13) {
+                        jQuery("#btnSave").click();
+                    }
+                });
+            });
+            </script>
+            ';
     } else {
         $content .= $this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
     }
