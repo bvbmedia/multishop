@@ -15,7 +15,14 @@ if ($this->ADMIN_USER) {
 
             $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . addslashes($order['orders_id']) . "' order by sort_order asc";
             $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
-            while (($row_products = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+            while (($row_products = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))) {
+                $row_products['attributes'] = array();
+                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . addslashes($row_products['orders_products_id']) . "' order by orders_products_attributes_id asc";
+                $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
+                while ($row_products_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
+                    $row_products_attributes['attributes_tax_data'] = unserialize($row_products_attributes['attributes_tax_data']);
+                    $row_products['attributes'][] = $row_products_attributes;
+                }
                 $order['products'][] = $row_products;
             }
             $jsonData['content'] = '';
