@@ -1344,7 +1344,8 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     $params = array(
             'subparts' => &$subparts,
             'subpartArray' => &$subpartArray,
-            'headerButtons' => &$headerButtons
+            'headerButtons' => &$headerButtons,
+            'all_orders_status' => &$all_orders_status
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainTemplatePreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
