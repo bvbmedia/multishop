@@ -2472,12 +2472,27 @@ class mslib_fe {
                     }
                     $from = 'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp ';
                     $from .= 'LEFT OUTER JOIN tx_multishop_products_options_values_to_products_options_desc povdesc ON povdesc.language_id=\'' . $this->sys_language_uid . '\' AND povdesc.products_options_values_to_products_options_id=povp.products_options_values_to_products_options_id';
+                    $order_by = 'pa.sort_order_option_value asc';
+                    //$order_by = 'pov.products_options_values_name asc';
+                    // hook to let other plugins further manipulate the option values display
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesReturnAsArrayQryPostProc'])) {
+                        $params = array(
+                                'options' => $options,
+                                'select' => &$select,
+                                'from' => &$from,
+                                'order_by' => &$order_by
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesReturnAsArrayQryPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
+                    // hook
                     //products_options_values_to_products_options_id
                     $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
                             $from, // FROM ...
                             'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . addslashes($options['products_options_id']) . '\' and pa.page_uid = \'' . addslashes($this->showCatalogFromPage) . '\' and pov.language_id = \'' . addslashes($this->sys_language_uid) . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . addslashes($options['products_options_id']) . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
                             '', // GROUP BY...
-                            'pa.sort_order_option_value asc', // ORDER BY...
+                            $order_by, // ORDER BY...
                             '' // LIMIT ...
                     );
                     $products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
