@@ -565,6 +565,16 @@ switch ($this->ms['page']) {
                         }
                         if (count($catpath) > 0) {
                             $cat_link = mslib_fe::typolink($this->conf['products_listing_page_pid'], $where . '&tx_multishop_pi1[page_section]=products_listing');
+                            // hook
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryGetValuesPreselectedLink'])) {
+                                $params = array(
+                                    'preselected_id' => $preselected_id,
+                                    'cat_link' => &$cat_link
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminGetCategoryGetValuesPreselectedLink'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
                             if (isset($this->get['tx_multishop_pi1']['calledFrom']) && $this->get['tx_multishop_pi1']['calledFrom'] == 'edit_product') {
                                 $tmp_return_data[$preselected_id] = '<a href="' . $cat_link . '" target="_blank" class="innerLink">' . implode(' > ', $catpath) . '</a>';
                             } else {
