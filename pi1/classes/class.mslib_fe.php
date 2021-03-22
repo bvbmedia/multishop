@@ -9306,17 +9306,19 @@ class mslib_fe {
                 $mailOrder = 0;
             }
             //hook to let other plugins further manipulate the replacers
+            $copyToMerchant = 1;
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateOrderStatusToPaidPostProc'])) {
                 $params = array(
                         'order' => &$order,
-                        'mailOrder' => &$mailOrder
+                        'mailOrder' => &$mailOrder,
+                        'copyToMerchant' => &$copyToMerchant
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateOrderStatusToPaidPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
             if ($mailOrder) {
-                $tmp = mslib_fe::mailOrder($order['orders_id'], 1, '', 'email_order_paid_letter');
+                $tmp = mslib_fe::mailOrder($order['orders_id'], $copyToMerchant, '', 'email_order_paid_letter');
             }
             return true;
         } else {
