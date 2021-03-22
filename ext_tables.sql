@@ -645,6 +645,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  `categories_name_4` varchar(150) default '',
  `categories_id_5` int(5) default '0',
  `categories_name_5` varchar(150) default '',
+ `categories_id_6` int(5) default '0',
+ `categories_name_6` varchar(150) default '',
  `ean_code` varchar(50) default '',
  `sku_code` varchar(50) default '',
  `vendor_code` varchar(50) default '',
