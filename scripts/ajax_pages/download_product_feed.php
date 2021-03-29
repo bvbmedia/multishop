@@ -700,7 +700,7 @@ if ($this->get['feed_hash']) {
                         if ($row['categories_crum'][($level - 1)]['id']) {
                             $filter = array();
                             $filter[] = 'language_id=' . $GLOBALS['TSFE']->sys_language_uid;
-                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_keywords', 'categories_id', $filter);
+                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
                             $tmpcontent .= $row2['meta_title'];
                         }
                         break;
@@ -713,7 +713,7 @@ if ($this->get['feed_hash']) {
                         if ($row['categories_crum'][($level - 1)]['id']) {
                             $filter = array();
                             $filter[] = 'language_id=' . $GLOBALS['TSFE']->sys_language_uid;
-                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_keywords', 'categories_id', $filter);
+                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
                             $tmpcontent .= $row2['meta_keywords'];
                         }
                         break;
