@@ -19,8 +19,9 @@ $selects['dateofbirth'] = $this->pi_getLL('admin_label_option_type_dateofbirth')
 $selects['datecustom'] = $this->pi_getLL('admin_label_option_type_datecustom');
 // new options
 $options_group = '';
-if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-    $options_group = mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="form-control add_new_attributes_options"');
+if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP'] == '1') {
+    $option_id = '';
+    $options_group = mslib_fe::buildAttributesOptionsGroupSelectBox($option_id, 'id="new_options_groups" class="form-control add_new_attributes_options"');
     if (!empty($options_group)) {
         $options_group = '<div class="form-group"><label class="col-md-2 control-label">' . $this->pi_getLL('admin_label_options_group') . ': </label><div class="col-md-4">' . $options_group . '</div></div>';
     } else {
@@ -45,7 +46,7 @@ $content .= $options_group;
 $content .= '<div class="form-group">';
 $content .= '<label class="col-md-2 control-label">' . $this->pi_getLL('admin_label_listing_type') . ': </label><div class="col-md-4"><select name="listtype" id="new_listtype" class="form-control add_new_attributes_options">';
 foreach ($selects as $key => $value) {
-    $content .= '<option value="' . $key . '"' . ($key == $row['listtype'] ? ' selected' : '') . '>' . htmlspecialchars($value) . '</option>';
+    $content .= '<option value="' . $key . '">' . htmlspecialchars($value) . '</option>';
 }
 $content .= '</select></div>';
 $content .= '</div>';
