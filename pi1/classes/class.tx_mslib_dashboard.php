@@ -368,13 +368,13 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             'cols' => array(
                                     0 => array(
                                             ($this->ROOTADMIN_USER or ($this->ORDERSADMIN_USER == 1)) ? 'ordersLatest' : '',
-                                            1 => array(
-                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_orders' : '',
-                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_carts' : '',
-                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverThisWeekLastWeek' : '',
-                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'profitThisMonthLastMonth' : '',
-                                                    ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverMainCategoryThisMonthLastMonth' : '',
-                                            )
+                                    ),
+                                    1 => array(
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_orders' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'google_chart_carts' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverThisWeekLastWeek' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'profitThisMonthLastMonth' : '',
+                                            ($this->ROOTADMIN_USER or ($this->STATISTICSADMIN_USER == 1 or $this->conf['enableAdminPanelSystem'])) ? 'turnoverMainCategoryThisMonthLastMonth' : '',
                                     )
                             ));
                     $pageLayout[] = array(
@@ -493,10 +493,9 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $colNr++;
                     $content .= '<div class="column columnCol' . ($colNr) . '" id="' . $cols['class'] . '_' . $rowNr . '_' . ($colNr - 1) . '">';
                     foreach ($col as $widget_key) {
-                        if ($widget_key != '') {
+                        if (!is_array($widget_key) && $widget_key != '') {
                             $intCounter++;
                             if ($intCounter == 1) {
-                                //$idName='intro';
                                 $idName = 'widget' . $intCounter;
                             } else {
                                 $idName = 'widget' . $intCounter;
@@ -504,14 +503,14 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             if (is_array($this->compiledWidgets[$widget_key]) && isset($this->compiledWidgets[$widget_key]['content'])) {
                                 $widget = $this->compiledWidgets[$widget_key];
                                 $content .= '<div class="portlet' . ($widget['class'] ? ' ' . $widget['class'] : '') . '" rel="' . $intCounter . '" id="' . $widget_key . '">
-                                <div class="portlet-header">
-                                    <h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
+                                    <div class="portlet-header">
+                                        <h3>' . ($widget['title'] ? $widget['title'] : 'Widget ' . $intCounter) . '</h3>
+                                    </div>
+                                    <div class="portlet-content">
+                                        ' . $widget['content'] . '
+                                    </div>
                                 </div>
-                                <div class="portlet-content">
-                                    ' . $widget['content'] . '
-                                </div>
-					        </div>
-					        ';
+                                ';
                             } else {
                                 if ($widget_key == 'emptyWidget') {
                                     $content .= '<div>&nbsp;</div>';
