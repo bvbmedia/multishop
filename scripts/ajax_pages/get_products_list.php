@@ -23,7 +23,7 @@ if ($this->ADMIN_USER) {
             } else {
                 $prefix = 'pf.';
             }
-            $filter[] = $prefix . 'products_id NOT IN (' . $this->get['exclude_pids'] . ')';
+            $filter[] = $prefix . 'products_id NOT IN (' . addslashes($this->get['exclude_pids']) . ')';
         }
         if (!$this->masterShop) {
             $filter[] = 'p.page_uid=\'' . $this->shop_pid . '\'';
@@ -36,7 +36,7 @@ if ($this->ADMIN_USER) {
             }
         }
         if (!empty($this->get['q'])) {
-            $filter[] = '(p.products_model like \'%' . $this->get['q'] . '%\' OR pd.products_name like \'%' . $this->get['q'] . '%\')';
+            $filter[] = '(p.products_model like \'%' . addslashes($this->get['q']) . '%\' OR pd.products_name like \'%' . addslashes($this->get['q']) . '%\')';
         }
     } else {
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {
@@ -45,7 +45,7 @@ if ($this->ADMIN_USER) {
             } else {
                 $prefix = 'pf.';
             }
-            $filter[] = $prefix . 'products_id NOT IN (' . $this->get['exclude_pids'] . ')';
+            $filter[] = $prefix . 'products_id NOT IN (' . addslashes($this->get['exclude_pids']) . ')';
         }
         if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
             if (!$this->ms['MODULES']['FLAT_DATABASE']) {
@@ -53,7 +53,7 @@ if ($this->ADMIN_USER) {
             } else {
                 $prefix = 'pf.';
             }
-            $filter[] = $prefix . 'products_id IN (' . $this->get['preselected_id'] . ')';
+            $filter[] = $prefix . 'products_id IN (' . addslashes($this->get['preselected_id']) . ')';
         }
         if (!$this->ms['MODULES']['FLAT_DATABASE']) {
             $prefix = 'pd.';
