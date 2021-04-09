@@ -4717,8 +4717,9 @@ if ($this->post) {
             $GLOBALS['TSFE']->additionalHeaderData[] = '
             <script type="text/javascript">
             $(document).ready(function(){
+                ' . ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1' ? '
                 jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
-                jQuery(\'.msPriceIncludingVat\').prop(\'readonly\', \'readonly\');
+                ' : '') . '
             	$(document).on(\'click\', \'.feed_radio, .feed_stock_radio\', function(){
                     var feed_id=$(this).attr(\'data-feed-id\');
                     var radio_id=$(this).attr(\'id\');
