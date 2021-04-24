@@ -2282,7 +2282,9 @@ if (is_numeric($this->get['orders_id'])) {
                 // hook
                 $params = array(
                         'orderDetails' => &$orderDetails,
-                        'orders' => &$orders
+                        'extraDetails' => &$extraDetails,
+                        'orders' => &$orders,
+                        'order' => &$order
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
