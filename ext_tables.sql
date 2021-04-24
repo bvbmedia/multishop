@@ -940,6 +940,7 @@ CREATE TABLE `tx_multishop_products` (
  `import_notes` varchar(250) default '',
  `is_hidden` tinyint(1) default '0',
  `ignore_stock_level` tinyint(1) default '0',
+ `search_engines_allow_indexing` tinyint(1) default '1',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -970,9 +971,9 @@ CREATE TABLE `tx_multishop_products` (
  KEY `foreign_products_id` (`foreign_products_id`),
  KEY `specials_price_percentage` (`specials_price_percentage`),
  KEY `manufacturers_advice_price` (`manufacturers_advice_price`),
- KEY `ignore_stock_level` (`ignore_stock_level`)
-) ;
-
+ KEY `ignore_stock_level` (`ignore_stock_level`),
+ KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)
+);
 
 CREATE TABLE `tx_multishop_products_attributes` (
  `products_attributes_id` int(5) NOT NULL auto_increment,

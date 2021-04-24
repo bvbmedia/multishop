@@ -140,6 +140,7 @@ $coltypes['products_ean'] = 'Products EAN';
 $coltypes['products_unique_identifier'] = 'Products unique identifier (unique products id from feed)';
 $coltypes['products_quantity'] = 'Products stock quantity';
 $coltypes['products_status'] = 'Products status';
+$coltypes['search_engines_allow_indexing'] = 'Search-engine allow indexing';
 $coltypes['products_date_added'] = 'Products date added';
 $coltypes['products_date_available'] = 'Products date available';
 $coltypes['products_date_modified'] = 'Products date modified';
@@ -2416,6 +2417,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_status'])) {
                                 $updateArray['products_status'] = $item['products_status'];
                             }
+                            if (isset($item['search_engines_allow_indexing'])) {
+                                $updateArray['search_engines_allow_indexing'] = $item['search_engines_allow_indexing'];
+                            }
                             if (isset($item['products_sort_order'])) {
                                 $updateArray['sort_order'] = $item['products_sort_order'];
                             }
@@ -2776,6 +2780,9 @@ if ($this->post['action'] == 'category-insert') {
                             }
                             $updateArray['products_model'] = $item['products_model'];
                             $updateArray['products_status'] = $item['products_status'];
+                            if (isset($item['search_engines_allow_indexing'])) {
+                                $updateArray['search_engines_allow_indexing'] = $item['search_engines_allow_indexing'];
+                            }
                             $updateArray['sku_code'] = $item['products_sku'];
                             if (isset($item['manufacturers_products_id'])) {
                                 $updateArray['vendor_code'] = $item['manufacturers_products_id'];
