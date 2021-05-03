@@ -399,6 +399,15 @@ if ($this->get['orders_export_hash']) {
                     case 'customer_billing_address':
                         $excelCols[] = $row['billing_address'];
                         break;
+                    case 'customer_billing_street_name':
+                        $excelCols[] = $row['billing_street_name'];
+                        break;
+                    case 'customer_billing_address_number':
+                        $excelCols[] = $row['billing_address_number'];
+                        break;
+                    case 'customer_billing_address_ext':
+                        $excelCols[] = $row['billing_address_ext'];
+                        break;
                     case 'customer_billing_city':
                         $excelCols[] = $row['billing_city'];
                         break;
@@ -419,6 +428,15 @@ if ($this->get['orders_export_hash']) {
                         break;
                     case 'customer_delivery_address':
                         $excelCols[] = $row['delivery_address'];
+                        break;
+                    case 'customer_delivery_street_name':
+                        $excelCols[] = $row['delivery_street_name'];
+                        break;
+                    case 'customer_delivery_address_number':
+                        $excelCols[] = $row['delivery_address_number'];
+                        break;
+                    case 'customer_delivery_address_ext':
+                        $excelCols[] = $row['delivery_address_ext'];
                         break;
                     case 'customer_delivery_city':
                         $excelCols[] = $row['delivery_city'];

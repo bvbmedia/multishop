@@ -1464,6 +1464,12 @@
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
             <label index="label_product_image">With image</label>
             <label index="admin_sort_categories">Sort categories</label>
+            <label index="feed_exporter_fields_label_customer_billing_street_name">Customer billing street name</label>
+            <label index="feed_exporter_fields_label_customer_billing_address_number">Customer billing address number</label>
+            <label index="feed_exporter_fields_label_customer_billing_address_ext">Customer billing address number ext</label>
+            <label index="feed_exporter_fields_label_customer_delivery_street_name">Customer delivery street name</label>
+            <label index="feed_exporter_fields_label_customer_delivery_address_number">Customer delivery address number</label>
+            <label index="feed_exporter_fields_label_customer_delivery_address_ext">Customer delivery address number ext</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
