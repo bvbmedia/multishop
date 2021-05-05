@@ -148,10 +148,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
         $num_rows = $GLOBALS['TYPO3_DB']->sql_num_rows($qry);
         if ($num_rows) {
             $show_skip = false;
-            if (isset($this->get['option_id'])) {
+            if (isset($this->get['option_id']) && !isset($this->get['preselected_id'])) {
                 $show_skip = true;
             }
-            if (!isset($this->get['preselected_id'])) {
+            if (!empty($search_term)) {
                 $show_skip = true;
             }
             if ($show_skip) {
