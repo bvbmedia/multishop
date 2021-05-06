@@ -810,7 +810,7 @@ if ($this->get['orders_export_hash']) {
         $Cache_Lite->save($content);
     }
     if ($this->get['downloadAsFile']) {
-        $file='export_orders_'.date('Ymd_Hi').'_'.uniqid().'.csv';
+        $file='export_orders_'.date('Ymd_Hi').'.csv';
         $filePath=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/'.$file;
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersDownloadAsFilePreProc'])) {
