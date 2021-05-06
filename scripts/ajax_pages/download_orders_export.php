@@ -812,6 +812,15 @@ if ($this->get['orders_export_hash']) {
     if ($this->get['downloadAsFile']) {
         $file='export_orders_'.date('Ymd_Hi').'_'.uniqid().'.csv';
         $filePath=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/'.$file;
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersDownloadAsFilePreProc'])) {
+            $params = array(
+                    'content' => &$content
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersDownloadAsFilePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         if (file_put_contents($filePath,$content)) {
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
