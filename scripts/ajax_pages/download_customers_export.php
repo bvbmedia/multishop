@@ -297,7 +297,7 @@ if ($this->get['customers_export_hash']) {
         $Cache_Lite->save($content);
     }
     if ($this->get['downloadAsFile']) {
-        $file='export_orders_'.date('Ymd_Hi').'_'.uniqid().'.csv';
+        $file='export_customers_'.date('Ymd_Hi').'_'.uniqid().'.csv';
         $filePath=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/'.$file;
         if (file_put_contents($filePath,$content)) {
             header('Content-Description: File Transfer');
