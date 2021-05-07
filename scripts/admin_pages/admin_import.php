@@ -1575,6 +1575,16 @@ if ($this->post['action'] == 'category-insert') {
                     $fields['products_id'] = 'products_id';
                     $fields['sku_code'] = 'products_sku';
                     $fields['ean_code'] = 'products_ean';
+                    // custom hook that can be controlled by third-party plugin
+                    $skipItem = 0;
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchExistingProductByKeyPreProc'])) {
+                        $conf = array(
+                                'fields' => &$fields,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchExistingProductByKeyPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
+                    }
                     foreach ($fields as $dbField => $itemField) {
                         if ($item[$itemField]) {
                             $str = "select products_id,extid from tx_multishop_products where page_uid=" . $this->showCatalogFromPage . " and " . $dbField . "='" . addslashes($item[$itemField]) . "'";
