@@ -5914,6 +5914,7 @@ class mslib_fe {
         }
     }
     public function final_products_price($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
+        $sum = 0;
         if (!$ignore_minimum_quantity) {
             if ($quantity and $product['minimum_quantity'] > $quantity) {
                 // check if the product has a minimum quantity
@@ -5929,7 +5930,8 @@ class mslib_fe {
                     'quantity' => &$quantity,
                     'add_currency' => &$add_currency,
                     'ignore_minimum_quantity' => &$ignore_minimum_quantity,
-                    'priceColumn' => &$priceColumn
+                    'priceColumn' => &$priceColumn,
+                    'sum' => &$sum
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
