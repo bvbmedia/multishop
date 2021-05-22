@@ -1561,9 +1561,13 @@ class mslib_befe {
                     if ($i == 0) {
                         $i = '';
                     }
+                    $colname = 'products_image' . $i;
                     if ($item['img'][$i]) {
-                        $colname = 'products_image' . $i;
                         $array[$colname] = $item['img'][$i];
+                    }
+                    if ($oldproduct[$colname] && isset($item[$colname]) && $item[$colname] == '') {
+                        // In database we have an image already existing, but in the uploaded the feed the image is set to empty so we have to reset it in the database
+                        $array[$colname] = '';
                     }
                 }
                 if (count($array) > 0) {
