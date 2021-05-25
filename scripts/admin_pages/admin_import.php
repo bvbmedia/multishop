@@ -132,6 +132,7 @@ $coltypes['products_old_price'] = 'Products price (old price, excl. VAT)';
 $coltypes['products_old_price_including_vat'] = 'Products price (old price, incl. VAT)';
 $coltypes['products_specials_price'] = 'Products price (specials price, excl. VAT)';
 $coltypes['products_specials_price_including_vat'] = 'Products price (specials price, incl. VAT)';
+$coltypes['specials_price_percentage'] = 'Specials price percentage';
 $coltypes['products_sku'] = 'Products SKU';
 $coltypes['products_minimum_quantity'] = 'Products minimum order quantity';
 $coltypes['products_maximum_quantity'] = 'Products maximum order quantity';
@@ -2310,6 +2311,20 @@ if ($this->post['action'] == 'category-insert') {
                             }
                             $item['products_price'] = $item['products_old_price'];
                         }
+                        if (isset($item['specials_price_percentage'])) {
+                            if (strstr($item['specials_price_percentage'],'%')) {
+                                $item['specials_price_percentage']=str_replace('%','',$item['specials_price_percentage']);
+                            }
+                            if (!isset($item['products_specials_price']) || isset($item['products_specials_price']) && !$item['products_specials_price']) {
+                                // If feed contains discount percentage and no specials price value, or empty specials price value
+                                if (isset($item['products_price'])) {
+                                    $item['products_specials_price']=($item['products_price']-($item['products_price']/100*$item['specials_price_percentage']));
+                                }
+                                if (isset($item['products_price_including_vat'])) {
+                                    $item['products_specials_price_including_vat']=($item['products_price_including_vat']-($item['products_price_including_vat']/100*$item['specials_price_percentage']));
+                                }
+                            }
+                        }
                         if (!$item['products_description'] and $item['products_shortdescription']) {
                             $item['products_description'] = nl2br($item['products_shortdescription']);
                         }
@@ -2378,7 +2393,10 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_price']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_price', $importedProductsLockedFields))))) {
                                 $updateArray['products_price'] = $item['products_price'];
                             }
-                            if ($item['manufacturers_id']) {
+                            if (isset($item['specials_price_percentage'])) {
+                                $updateArray['specials_price_percentage'] = $item['specials_price_percentage'];
+                            }
+                            if (isset($item['manufacturers_id'])) {
                                 $updateArray['manufacturers_id'] = $item['manufacturers_id'];
                             }
                             if (isset($item['products_staffel_price'])) {
@@ -2856,11 +2874,16 @@ if ($this->post['action'] == 'category-insert') {
                             if (strstr($updateArray['product_capital_price'], ",")) {
                                 $updateArray['product_capital_price'] = str_replace(",", '.', $updateArray['product_capital_price']);
                             }
+                            if (isset($item['specials_price_percentage'])) {
+                                $updateArray['specials_price_percentage'] = $item['specials_price_percentage'];
+                            }
                             $updateArray['products_date_added'] = strtotime($item['products_date_added']);
                             $updateArray['products_date_available'] = strtotime($item['products_date_available']);
                             $updateArray['products_last_modified'] = strtotime($item['products_date_modified']);
                             $updateArray['page_uid'] = $this->showCatalogFromPage;
-                            $updateArray['manufacturers_id'] = $item['manufacturers_id'];
+                            if (isset($item['manufacturers_id'])) {
+                                $updateArray['manufacturers_id'] = $item['manufacturers_id'];
+                            }
                             $updateArray['imported_product'] = 1;
                             if ($this->get['job_id']) {
                                 $updateArray['import_job_id'] = $this->get['job_id'];
