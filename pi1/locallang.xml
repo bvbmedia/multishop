@@ -706,6 +706,7 @@
             <label index="feed_exporter_fields_label_customer_billing_email">Customer billing e-mail</label>
             <label index="feed_exporter_fields_label_customer_billing_name">Customer billing name</label>
             <label index="feed_exporter_fields_label_customer_billing_telephone">Customer billing telephone</label>
+            <label index="feed_exporter_fields_label_customer_billing_mobile">Customer billing mobile</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Customer billing zip</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
             <label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
@@ -2171,6 +2172,7 @@
             <label index="feed_exporter_fields_label_customer_billing_email">Debiteur (factuur) e-mailadres</label>
             <label index="feed_exporter_fields_label_customer_billing_name">Debiteur (factuur) naam</label>
             <label index="feed_exporter_fields_label_customer_billing_telephone">Debiteur (factuur) telefoonnummer</label>
+            <label index="feed_exporter_fields_label_customer_billing_mobile">Debiteur (factuur) mobiel</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Debiteur (factuur) postcode</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Debiteur (aflever) adres</label>
             <label index="feed_exporter_fields_label_customer_delivery_city">Debiteur (aflever) woonplaats</label>

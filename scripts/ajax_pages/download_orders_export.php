@@ -393,8 +393,14 @@ if ($this->get['orders_export_hash']) {
                     case 'customer_billing_telephone':
                         $excelCols[] = $row['billing_telephone'];
                         break;
+                    case 'customer_billing_mobile':
+                        $excelCols[] = $row['billing_mobile'];
+                        break;
                     case 'customer_billing_name':
                         $excelCols[] = $row['billing_name'];
+                        break;
+                    case 'customer_billing_company':
+                        $excelCols[] = $row['billing_company'];
                         break;
                     case 'customer_billing_address':
                         $excelCols[] = $row['billing_address'];
@@ -423,8 +429,14 @@ if ($this->get['orders_export_hash']) {
                     case 'customer_delivery_telephone':
                         $excelCols[] = $row['delivery_telephone'];
                         break;
+                    case 'customer_delivery_mobile':
+                        $excelCols[] = $row['delivery_mobile'];
+                        break;
                     case 'customer_delivery_name':
                         $excelCols[] = $row['delivery_name'];
+                        break;
+                    case 'customer_delivery_company':
+                        $excelCols[] = $row['delivery_company'];
                         break;
                     case 'customer_delivery_address':
                         $excelCols[] = $row['delivery_address'];
