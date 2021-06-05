@@ -1070,7 +1070,7 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        if (!isset($this->get['preselected_id'])) {
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == '99999') {
             $data[] = array(
                     'id' => '99999',
                     'text' => $this->pi_getLL('all')
@@ -1170,7 +1170,7 @@ switch ($this->ms['page']) {
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
         $data = array();
-        if (!isset($this->get['preselected_id'])) {
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == '99999') {
             $data[] = array(
                     'id' => '99999',
                     'text' => $this->pi_getLL('all')

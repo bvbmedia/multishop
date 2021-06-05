@@ -602,6 +602,8 @@ foreach ($search_keys as $search_key) {
     // re-assign new value to cookie
     if (isset($this->post[$search_key]) && !empty($this->post[$search_key]) && $this->cookie[$search_key] != $this->post[$search_key]) {
         $this->cookie[$search_key] = $this->post[$search_key];
+    } else {
+        unset($this->cookie[$search_key]);
     }
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
@@ -897,9 +899,7 @@ if ($this->post['skeyword']) {
     }
 }
 // convert to international format
-if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
-    $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
-    $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
+if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till']) && mslib_befe::isValidDate($this->post['order_date_from']) && mslib_befe::isValidDate($this->post['order_date_till'])) {
     $start_time = strtotime($this->post['order_date_from']);
     $end_time = strtotime($this->post['order_date_till']);
     if ($this->post['search_by_status_last_modified']) {
@@ -909,8 +909,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
-    if (!empty($this->post['order_date_from'])) {
-        $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
+    if (!empty($this->post['order_date_from']) && mslib_befe::isValidDate($this->post['order_date_from'])) {
         $start_time = strtotime($this->post['order_date_from']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
@@ -919,8 +918,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         }
         $filter[] = $column . " >= '" . $start_time . "'";
     }
-    if (!empty($this->post['order_date_till'])) {
-        $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
+    if (!empty($this->post['order_date_till']) && mslib_befe::isValidDate($this->post['order_date_till'])) {
         $end_time = strtotime($this->post['order_date_till']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
