@@ -157,6 +157,8 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                     if ($order['orders_id']) {
                         $updateArray = array();
                         $updateArray['deleted'] = 1;
+                        $updateArray['deleted_by_uid'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                        $updateArray['deleted_tstamp'] = time();
                         $updateArray['orders_last_modified'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $orders_id . '\'', $updateArray);
                         if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
