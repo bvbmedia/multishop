@@ -681,7 +681,22 @@ if (isset($this->get['product_sort']) && $this->get['product_sort'] != '' && $th
         }
         $orderby[] = $order_by . ' ' . $order;
     } else {
-        $orderby[] = $prefix . 'products_id desc';
+        $defaultOrderBy=1;
+        if ($this->ms['ADMIN_PRODUCTS_SEARCH_AND_EDIT_DEFAULT_ORDER_BY']) {
+            switch($this->ms['ADMIN_PRODUCTS_SEARCH_AND_EDIT_DEFAULT_ORDER_BY']) {
+                case 'products_name':
+                    $orderby[] = 'pd.products_name asc';
+                    $defaultOrderBy=0;
+                    break;
+                case 'sort_order':
+                    $orderby[] = 'p2c.sort_order asc';
+                    $defaultOrderBy=0;
+                    break;
+            }
+        }
+        if ($defaultOrderBy) {
+            $orderby[] = 'pd.products_name asc';
+        }
     }
 }
 if (is_numeric($this->get['cid']) and $this->get['cid'] > 0) {
