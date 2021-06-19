@@ -1191,6 +1191,135 @@ switch ($this->ms['page']) {
         echo $content;
         exit();
         break;
+    case 'get_ordered_payment_methods':
+        $where = array();
+        $skip_db = false;
+        $limit = 50;
+        $additional_where = array();
+        $additional_where[] = 'deleted=0';
+        $additional_where[] = 'payment_method!=\'\'';
+        if (!$this->masterShop) {
+            $additional_where[] = 'page_uid=\'' . $this->shop_pid . '\'';
+        }
+        $limit = 20;
+        if (isset($this->get['q']) && !empty($this->get['q'])) {
+            $additional_where[] = '(payment_method_label like \'%' . addslashes($this->get['q']) . '%\' or payment_method like \'%' . addslashes($this->get['q']) . '%\')';
+            $limit = 99999;
+        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            $additional_where[] = 'payment_method = \'' . addslashes($this->get['preselected_id']) . '\'';
+        }
+        $select=array();
+        $select[]='DISTINCT payment_method';
+        $select[]='payment_method_label';
+        $select[]='page_uid';
+        $orders_payment = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'payment_method', 'payment_method_label asc',$limit, $select);
+        $order_billing_country = array();
+        $data = array();
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == 'all') {
+            $data[] = array(
+                    'id' => 'all',
+                    'text' => $this->pi_getLL('all')
+            );
+        }
+        $payment_methods = array();
+        $payment_methods_label = array();
+        if (is_array($orders_payment) && count($orders_payment)) {
+            foreach ($orders_payment as $order_payment) {
+                $payment_method = array();
+                if ($order_payment['payment_method']) {
+                    $payment_method = mslib_fe::getPaymentMethod($order_payment['payment_method'], 'p.code', 0, false);
+                }
+                if (empty($order_payment['payment_method_label'])) {
+                    $order_payment['payment_method'] = 'nopm';
+                    $order_payment['payment_method_label'] = 'Empty payment method';
+                }
+                if ($this->masterShop) {
+                    $pageTitle = mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
+                    $shop_title = '';
+                    if (!empty($pageTitle)) {
+                        $shop_title = ' (' . $pageTitle . ')';
+                    }
+                    $order_payment['payment_method_label'] = $order_payment['payment_method_label'] . $shop_title;
+                }
+                $payment_methods[$order_payment['payment_method']] = $order_payment['payment_method_label'];
+                $payment_methods_label[strtoupper($order_payment['payment_method_label']) . '_' . $order_payment['payment_method']] = $order_payment['payment_method'];
+            }
+            ksort($payment_methods_label);
+        }
+        foreach ($payment_methods_label as $label => $value) {
+            $data[] = array(
+                    'id' => $value,
+                    'text' => $payment_methods[$value]
+            );
+        }
+        $content = json_encode($data);
+        echo $content;
+        exit();
+        break;
+    case 'get_ordered_shipping_methods':
+        $where = array();
+        $skip_db = false;
+        $limit = 50;
+        $additional_where = array();
+        $additional_where[] = 'deleted=0';
+        $additional_where[] = 'shipping_method!=\'\'';
+        if (!$this->masterShop) {
+            $additional_where[] = 'page_uid=\'' . $this->shop_pid . '\'';
+        }
+        $limit = 20;
+        if (isset($this->get['q']) && !empty($this->get['q'])) {
+            $additional_where[] = '(shipping_method_label like \'%' . addslashes($this->get['q']) . '%\' or shipping_method like \'%' . addslashes($this->get['q']) . '%\')';
+            $limit = 99999;
+        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            $additional_where[] = 'shipping_method = \'' . addslashes($this->get['preselected_id']) . '\'';
+        }
+        $select=array();
+        $select[]='DISTINCT shipping_method';
+        $select[]='shipping_method_label';
+        $select[]='page_uid';
+        $orders_shipping = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'shipping_method', 'payment_method_label asc',$limit, $select);
+        $data = array();
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == 'all') {
+            $data[] = array(
+                    'id' => 'all',
+                    'text' => $this->pi_getLL('all')
+            );
+        }
+        $shipping_methods = array();
+        $shipping_methods_label = array();
+        if (is_array($orders_shipping) && count($orders_shipping)) {
+            foreach ($orders_shipping as $order_shipping) {
+                $shipping_method = array();
+                if ($order_shipping['shipping_method']) {
+                    $shipping_method = mslib_fe::getPaymentMethod($order_shipping['shipping_method'], 'p.code', 0, false);
+                }
+                if (empty($order_shipping['shipping_method_label'])) {
+                    $order_shipping['shipping_method'] = 'nopm';
+                    $order_shipping['shipping_method_label'] = 'Empty shipping method';
+                }
+                if ($this->masterShop) {
+                    $pageTitle = mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
+                    $shop_title = '';
+                    if (!empty($pageTitle)) {
+                        $shop_title = ' (' . $pageTitle . ')';
+                    }
+                    $order_shipping['shipping_method_label'] = $order_shipping['shipping_method_label'] . $shop_title;
+                }
+                $shipping_methods[$order_shipping['shipping_method']] = $order_shipping['shipping_method_label'];
+                $shipping_methods_label[strtoupper($order_shipping['shipping_method_label']) . '_' . $order_shipping['shipping_method']] = $order_shipping['shipping_method'];
+            }
+            ksort($shipping_methods_label);
+        }
+        foreach ($shipping_methods_label as $label => $value) {
+            $data[] = array(
+                    'id' => $value,
+                    'text' => $shipping_methods[$value]
+            );
+        }
+        $content = json_encode($data);
+        echo $content;
+        exit();
+        break;
     case 'downloadCategoryTree':
         if ($this->ADMIN_USER) {
             $multishop_category_array = array();

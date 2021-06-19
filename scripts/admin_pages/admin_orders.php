@@ -1105,88 +1105,10 @@ if (is_array($groups) and count($groups)) {
 }
 $customer_groups_input .= '</select>' . "\n";
 // payment method
-$payment_methods = array();
-$payment_methods_label = array();
-$shop_title = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        'deleted=0' . ((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'payment_method', // GROUP BY...
-        'payment_method_label asc', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    $payment_method = array();
-    if ($row['payment_method']) {
-        $payment_method = mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', 0, false);
-    }
-    if (empty($row['payment_method_label'])) {
-        $row['payment_method'] = 'nopm';
-        $row['payment_method_label'] = 'Empty payment method';
-    }
-    if ($this->masterShop) {
-        $pageTitle = mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
-        $shop_title = '';
-        if (!empty($pageTitle)) {
-            $shop_title = ' (' . $pageTitle . ')';
-        }
-        $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
-    }
-    $payment_methods[$row['payment_method']] = $row['payment_method_label'];
-    $payment_methods_label[strtoupper($row['payment_method_label']) . '_' . $row['payment_method']] = $row['payment_method'];
-}
-ksort($payment_methods_label);
-$payment_method_input = '';
-$payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
-$payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
-if (is_array($payment_methods_label) and count($payment_methods_label)) {
-    foreach ($payment_methods_label as $payment_method_label => $payment_method_code) {
-        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_methods[$payment_method_code] . '</option>' . "\n";
-    }
-}
-$payment_method_input .= '</select>' . "\n";
+$payment_method_input = '<input type="hidden" id="payment_method" class="order_select2_payment" name="payment_method" value="' . ($this->post['payment_method'] ? $this->post['payment_method'] : '') . '" />' . "\n";
 // shipping method
-$shipping_methods = array();
-$shipping_methods_label = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        'deleted=0' . ((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'shipping_method', // GROUP BY...
-        'shipping_method_label asc', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    $shipping_method = array();
-    if ($row['shipping_method']) {
-        $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', 0, false);
-    }
-    if (empty($row['shipping_method_label'])) {
-        $row['shipping_method'] = 'nosm';
-        $row['shipping_method_label'] = 'Empty shipping method';
-    }
-    if ($this->masterShop) {
-        $pageTitle = mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
-        $shop_title = '';
-        if (!empty($pageTitle)) {
-            $shop_title = ' (' . $pageTitle . ')';
-        }
-        $row['shipping_method_label'] = $row['shipping_method_label'] . $shop_title;
-    }
-    $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
-    $shipping_methods_label[strtoupper($row['shipping_method_label'])] = $row['shipping_method'];
-}
-ksort($shipping_methods_label);
-$shipping_method_input = '';
-$shipping_method_input .= '<select id="shipping_method" class="order_select2" name="shipping_method">' . "\n";
-$shipping_method_input .= '<option value="all">' . $this->pi_getLL('all_shipping_methods') . '</option>' . "\n";
-if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
-    foreach ($shipping_methods_label as $shipping_method_label => $shipping_method_code) {
-        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_methods[$shipping_method_code] . '</option>' . "\n";
-    }
-}
-$shipping_method_input .= '</select>' . "\n";
+$shipping_method_input = '<input type="hidden" id="shipping_method" class="order_select2_shipping" name="shipping_method" value="' . ($this->post['shipping_method'] ? $this->post['shipping_method'] : '') . '" />' . "\n";
+// billing country
 $billing_countries_selectbox = '<input type="hidden" class="order_country_select2" name="country" id="country" value="' . $this->post['country'] . '" />';
 $subpartArray = array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
@@ -1479,6 +1401,96 @@ jQuery(document).ready(function($) {
 			var id=$(element).val();
 			if (id!=="") {
 				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_products') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
+	$(".order_select2_payment").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
+	$(".order_select2_shipping").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
 					data: {
 						preselected_id: id
 					},
