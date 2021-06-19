@@ -1002,18 +1002,16 @@ switch ($this->ms['page']) {
             if (!is_numeric($this->get['q'])) {
                 $where[] = 'm.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\'';
             } else {
-                $where[] = '(m.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\' or op.manufacturers_id = \'' . addslashes($this->get['q']) . '\')';
+                $where[] = '(m.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\' or m.manufacturers_id = \'' . addslashes($this->get['q']) . '\')';
             }
             $limit = '';
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'op.manufacturers_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'm.manufacturers_id = \'' . addslashes($this->get['preselected_id']) . '\'';
         }
-        $where[] = 'o.page_uid=' . $this->showCatalogFromPage;
         $where[] = 'm.status=1';
-        $where[] = 'm.manufacturers_id=op.manufacturers_id';
-        $where[] = 'o.orders_id=op.orders_id';
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('op.*, m.manufacturers_name', // SELECT ...
-                'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_manufacturers m', // FROM ...
+        $where[] = 'm.manufacturers_id in (select op.manufacturers_id from tx_multishop_orders o, tx_multishop_orders_products op where o.orders_id=op.orders_id and o.deleted=0 and op.page_uid='.$this->showCatalogFromPage.' group by op.manufacturers_id)';
+        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name', // SELECT ...
+                'tx_multishop_manufacturers m', // FROM ...
                 implode(' and ', $where), // WHERE...
                 'm.manufacturers_id', // GROUP BY...
                 'm.manufacturers_name asc', // ORDER BY...
@@ -1048,23 +1046,18 @@ switch ($this->ms['page']) {
             if (!is_numeric($this->get['q'])) {
                 $where[] = 'cd.categories_name like \'%' . addslashes($this->get['q']) . '%\'';
             } else {
-                $where[] = '(cd.categories_name like \'%' . addslashes($this->get['q']) . '%\' or p2c.node_id = \'' . addslashes($this->get['q']) . '\')';
+                $where[] = '(cd.categories_name like \'%' . addslashes($this->get['q']) . '%\' or cd.categories_id = \'' . addslashes($this->get['q']) . '\')';
             }
             $limit = '';
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'p2c.node_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'cd.categories_id = \'' . addslashes($this->get['preselected_id']) . '\'';
         }
-        $where[] = 'o.page_uid=' . $this->showCatalogFromPage;
         $where[] = 'cd.language_id=' . $this->sys_language_uid;
-        $where[] = 'c.status=1';
-        $where[] = 'c.categories_id=cd.categories_id';
-        $where[] = 'c.categories_id=p2c.node_id';
-        $where[] = 'p2c.categories_id=op.categories_id';
-        $where[] = 'o.orders_id=op.orders_id';
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('op.*, cd.categories_name', // SELECT ...
-                'tx_multishop_orders_products op, tx_multishop_products_to_categories p2c, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+        $where[] = 'cd.categories_id in (select op.categories_id from tx_multishop_orders o, tx_multishop_orders_products op where o.orders_id=op.orders_id and o.deleted=0 and op.page_uid='.$this->showCatalogFromPage.' group by op.categories_id)';
+        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('cd.categories_id, cd.categories_name', // SELECT ...
+                'tx_multishop_categories_description cd', // FROM ...
                 implode(' and ', $where), // WHERE.
-                'op.categories_id', // GROUP BY...
+                '', // GROUP BY...
                 'cd.categories_name asc', // ORDER BY...
                 $limit // LIMIT ...
         );
