@@ -1002,18 +1002,16 @@ switch ($this->ms['page']) {
             if (!is_numeric($this->get['q'])) {
                 $where[] = 'm.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\'';
             } else {
-                $where[] = '(m.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\' or op.manufacturers_id = \'' . addslashes($this->get['q']) . '\')';
+                $where[] = '(m.manufacturers_name like \'%' . addslashes($this->get['q']) . '%\' or m.manufacturers_id = \'' . addslashes($this->get['q']) . '\')';
             }
             $limit = '';
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'op.manufacturers_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'm.manufacturers_id = \'' . addslashes($this->get['preselected_id']) . '\'';
         }
-        $where[] = 'o.page_uid=' . $this->showCatalogFromPage;
         $where[] = 'm.status=1';
-        $where[] = 'm.manufacturers_id=op.manufacturers_id';
-        $where[] = 'o.orders_id=op.orders_id';
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('op.*, m.manufacturers_name', // SELECT ...
-                'tx_multishop_orders_products op, tx_multishop_orders o, tx_multishop_manufacturers m', // FROM ...
+        $where[] = 'm.manufacturers_id in (select op.manufacturers_id from tx_multishop_orders o, tx_multishop_orders_products op where o.orders_id=op.orders_id and o.deleted=0 and op.page_uid='.$this->showCatalogFromPage.' group by op.manufacturers_id)';
+        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name', // SELECT ...
+                'tx_multishop_manufacturers m', // FROM ...
                 implode(' and ', $where), // WHERE...
                 'm.manufacturers_id', // GROUP BY...
                 'm.manufacturers_name asc', // ORDER BY...
@@ -1048,23 +1046,18 @@ switch ($this->ms['page']) {
             if (!is_numeric($this->get['q'])) {
                 $where[] = 'cd.categories_name like \'%' . addslashes($this->get['q']) . '%\'';
             } else {
-                $where[] = '(cd.categories_name like \'%' . addslashes($this->get['q']) . '%\' or p2c.node_id = \'' . addslashes($this->get['q']) . '\')';
+                $where[] = '(cd.categories_name like \'%' . addslashes($this->get['q']) . '%\' or cd.categories_id = \'' . addslashes($this->get['q']) . '\')';
             }
             $limit = '';
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'p2c.node_id = \'' . addslashes($this->get['preselected_id']) . '\'';
+            $where[] = 'cd.categories_id = \'' . addslashes($this->get['preselected_id']) . '\'';
         }
-        $where[] = 'o.page_uid=' . $this->showCatalogFromPage;
         $where[] = 'cd.language_id=' . $this->sys_language_uid;
-        $where[] = 'c.status=1';
-        $where[] = 'c.categories_id=cd.categories_id';
-        $where[] = 'c.categories_id=p2c.node_id';
-        $where[] = 'p2c.categories_id=op.categories_id';
-        $where[] = 'o.orders_id=op.orders_id';
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('op.*, cd.categories_name', // SELECT ...
-                'tx_multishop_orders_products op, tx_multishop_products_to_categories p2c, tx_multishop_orders o, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+        $where[] = 'cd.categories_id in (select op.categories_id from tx_multishop_orders o, tx_multishop_orders_products op where o.orders_id=op.orders_id and o.deleted=0 and op.page_uid='.$this->showCatalogFromPage.' group by op.categories_id)';
+        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('cd.categories_id, cd.categories_name', // SELECT ...
+                'tx_multishop_categories_description cd', // FROM ...
                 implode(' and ', $where), // WHERE.
-                'op.categories_id', // GROUP BY...
+                '', // GROUP BY...
                 'cd.categories_name asc', // ORDER BY...
                 $limit // LIMIT ...
         );
@@ -1186,6 +1179,135 @@ switch ($this->ms['page']) {
                     );
                 }
             }
+        }
+        $content = json_encode($data);
+        echo $content;
+        exit();
+        break;
+    case 'get_ordered_payment_methods':
+        $where = array();
+        $skip_db = false;
+        $limit = 50;
+        $additional_where = array();
+        $additional_where[] = 'deleted=0';
+        $additional_where[] = 'payment_method!=\'\'';
+        if (!$this->masterShop) {
+            $additional_where[] = 'page_uid=\'' . $this->shop_pid . '\'';
+        }
+        $limit = 20;
+        if (isset($this->get['q']) && !empty($this->get['q'])) {
+            $additional_where[] = '(payment_method_label like \'%' . addslashes($this->get['q']) . '%\' or payment_method like \'%' . addslashes($this->get['q']) . '%\')';
+            $limit = 99999;
+        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            $additional_where[] = 'payment_method = \'' . addslashes($this->get['preselected_id']) . '\'';
+        }
+        $select=array();
+        $select[]='DISTINCT payment_method';
+        $select[]='payment_method_label';
+        $select[]='page_uid';
+        $orders_payment = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'payment_method', 'payment_method_label asc',$limit, $select);
+        $order_billing_country = array();
+        $data = array();
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == 'all') {
+            $data[] = array(
+                    'id' => 'all',
+                    'text' => $this->pi_getLL('all')
+            );
+        }
+        $payment_methods = array();
+        $payment_methods_label = array();
+        if (is_array($orders_payment) && count($orders_payment)) {
+            foreach ($orders_payment as $order_payment) {
+                $payment_method = array();
+                if ($order_payment['payment_method']) {
+                    $payment_method = mslib_fe::getPaymentMethod($order_payment['payment_method'], 'p.code', 0, false);
+                }
+                if (empty($order_payment['payment_method_label'])) {
+                    $order_payment['payment_method'] = 'nopm';
+                    $order_payment['payment_method_label'] = 'Empty payment method';
+                }
+                if ($this->masterShop) {
+                    $pageTitle = mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
+                    $shop_title = '';
+                    if (!empty($pageTitle)) {
+                        $shop_title = ' (' . $pageTitle . ')';
+                    }
+                    $order_payment['payment_method_label'] = $order_payment['payment_method_label'] . $shop_title;
+                }
+                $payment_methods[$order_payment['payment_method']] = $order_payment['payment_method_label'];
+                $payment_methods_label[strtoupper($order_payment['payment_method_label']) . '_' . $order_payment['payment_method']] = $order_payment['payment_method'];
+            }
+            ksort($payment_methods_label);
+        }
+        foreach ($payment_methods_label as $label => $value) {
+            $data[] = array(
+                    'id' => $value,
+                    'text' => $payment_methods[$value]
+            );
+        }
+        $content = json_encode($data);
+        echo $content;
+        exit();
+        break;
+    case 'get_ordered_shipping_methods':
+        $where = array();
+        $skip_db = false;
+        $limit = 50;
+        $additional_where = array();
+        $additional_where[] = 'deleted=0';
+        $additional_where[] = 'shipping_method!=\'\'';
+        if (!$this->masterShop) {
+            $additional_where[] = 'page_uid=\'' . $this->shop_pid . '\'';
+        }
+        $limit = 20;
+        if (isset($this->get['q']) && !empty($this->get['q'])) {
+            $additional_where[] = '(shipping_method_label like \'%' . addslashes($this->get['q']) . '%\' or shipping_method like \'%' . addslashes($this->get['q']) . '%\')';
+            $limit = 99999;
+        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            $additional_where[] = 'shipping_method = \'' . addslashes($this->get['preselected_id']) . '\'';
+        }
+        $select=array();
+        $select[]='DISTINCT shipping_method';
+        $select[]='shipping_method_label';
+        $select[]='page_uid';
+        $orders_shipping = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, 'shipping_method', 'payment_method_label asc',$limit, $select);
+        $data = array();
+        if (!isset($this->get['preselected_id']) || $this->get['preselected_id'] == 'all') {
+            $data[] = array(
+                    'id' => 'all',
+                    'text' => $this->pi_getLL('all')
+            );
+        }
+        $shipping_methods = array();
+        $shipping_methods_label = array();
+        if (is_array($orders_shipping) && count($orders_shipping)) {
+            foreach ($orders_shipping as $order_shipping) {
+                $shipping_method = array();
+                if ($order_shipping['shipping_method']) {
+                    $shipping_method = mslib_fe::getPaymentMethod($order_shipping['shipping_method'], 'p.code', 0, false);
+                }
+                if (empty($order_shipping['shipping_method_label'])) {
+                    $order_shipping['shipping_method'] = 'nopm';
+                    $order_shipping['shipping_method_label'] = 'Empty shipping method';
+                }
+                if ($this->masterShop) {
+                    $pageTitle = mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
+                    $shop_title = '';
+                    if (!empty($pageTitle)) {
+                        $shop_title = ' (' . $pageTitle . ')';
+                    }
+                    $order_shipping['shipping_method_label'] = $order_shipping['shipping_method_label'] . $shop_title;
+                }
+                $shipping_methods[$order_shipping['shipping_method']] = $order_shipping['shipping_method_label'];
+                $shipping_methods_label[strtoupper($order_shipping['shipping_method_label']) . '_' . $order_shipping['shipping_method']] = $order_shipping['shipping_method'];
+            }
+            ksort($shipping_methods_label);
+        }
+        foreach ($shipping_methods_label as $label => $value) {
+            $data[] = array(
+                    'id' => $value,
+                    'text' => $shipping_methods[$value]
+            );
         }
         $content = json_encode($data);
         echo $content;

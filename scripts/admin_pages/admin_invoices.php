@@ -355,70 +355,11 @@ if (is_array($groups) and count($groups)) {
 }
 $customer_groups_input .= '</select>' . "\n";
 // payment method
-$payment_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        '', // WHERE...
-        'payment_method', // GROUP BY...
-        'payment_method_label', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    if (empty($row['payment_method_label'])) {
-        $row['payment_method'] = 'nopm';
-        $row['payment_method_label'] = 'Empty payment method';
-    }
-    $payment_methods[$row['payment_method']] = $row['payment_method_label'];
-}
-$payment_method_input = '';
-$payment_method_input .= '<select id="payment_method" class="invoice_select2" name="payment_method">' . "\n";
-$payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
-if (is_array($payment_methods) and count($payment_methods)) {
-    foreach ($payment_methods as $payment_method_code => $payment_method) {
-        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->get['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_method . '</option>' . "\n";
-    }
-}
-$payment_method_input .= '</select>' . "\n";
+$payment_method_input = '<input type="hidden" id="payment_method" class="invoice_select2_payment" name="payment_method" value="' . ($this->get['payment_method'] ? $this->post['payment_method'] : '') . '" />' . "\n";
 // shipping method
-$shipping_methods = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        '', // WHERE...
-        'shipping_method', // GROUP BY...
-        'shipping_method_label', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    if (empty($row['shipping_method_label'])) {
-        $row['shipping_method'] = 'nosm';
-        $row['shipping_method_label'] = 'Empty shipping method';
-    }
-    $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
-}
-$shipping_method_input = '';
-$shipping_method_input .= '<select id="shipping_method" class="invoice_select2" name="shipping_method">' . "\n";
-$shipping_method_input .= '<option value="all">' . $this->pi_getLL('all_shipping_methods') . '</option>' . "\n";
-if (is_array($shipping_methods) and count($shipping_methods)) {
-    foreach ($shipping_methods as $shipping_method_code => $shipping_method) {
-        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->get['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_method . '</option>' . "\n";
-    }
-}
-$shipping_method_input .= '</select>' . "\n";
+$shipping_method_input = '<input type="hidden" id="shipping_method" class="invoice_select2_shipping" name="shipping_method" value="' . ($this->get['shipping_method'] ? $this->post['shipping_method'] : '') . '" />' . "\n";
 // billing countries
-$select=array();
-$select[]='DISTINCT billing_country';
-$order_countries = mslib_befe::getRecords('', 'tx_multishop_orders', '', $additional_where, '', 'billing_country asc',99999, $select);
-$order_billing_country = array();
-foreach ($order_countries as $order_country) {
-    if (!empty($order_country['billing_country'])) {
-        $cn_localized_name = htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-        $order_billing_country[] = '<option value="' . mslib_befe::strtolower($order_country['billing_country']) . '" ' . ((mslib_befe::strtolower($this->get['country']) == strtolower($order_country['billing_country'])) ? 'selected' : '') . '>' . $cn_localized_name . '</option>';
-    }
-}
-ksort($order_billing_country);
-$billing_countries_sb = '<select class="invoice_select2" name="country" id="country""><option value="">' . $this->pi_getLL('all_countries') . '</option>' . implode("\n", $order_billing_country) . '</select>';
+$billing_countries_sb = '<input type="hidden" class="invoice_select2_country" name="country" id="country" value="' . $this->get['country'] . '" />';
 $limit_selectbox = '<select name="limit" class="form-control">';
 $limits = array();
 $limits[] = '15';
@@ -878,6 +819,141 @@ $GLOBALS['TSFE']->additionalHeaderData[] = '
 				escapeMarkup: function (m) { return m; }
 			});
 		}
+		$(".invoice_select2_country").select2({
+            placeholder: "' . $this->pi_getLL('all') . '",
+            minimumInputLength: 0,
+            query: function(query) {
+                $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+                    data: {
+                        q: query.term
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    query.callback({results: data});
+                });
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=="") {
+                    $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_country') . '", {
+                        data: {
+                            preselected_id: id
+                        },
+                        dataType: "json"
+                    }).done(function(data) {
+                        callback(data);
+                    });
+                }
+            },
+            formatResult: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function(data){
+                if (data.text === undefined) {
+                    return data[0].text;
+                } else {
+                    return data.text;
+                }
+            },
+            dropdownCssClass: "orderedProductsDropDownCss",
+            escapeMarkup: function (m) { return m; }
+        });
+        $(".invoice_select2_payment").select2({
+            placeholder: "' . $this->pi_getLL('all') . '",
+            minimumInputLength: 0,
+            query: function(query) {
+                $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+                    data: {
+                        q: query.term
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    query.callback({results: data});
+                });
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=="") {
+                    $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+                        data: {
+                            preselected_id: id
+                        },
+                        dataType: "json"
+                    }).done(function(data) {
+                        callback(data);
+                    });
+                }
+            },
+            formatResult: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function(data){
+                if (data.text === undefined) {
+                    return data[0].text;
+                } else {
+                    return data.text;
+                }
+            },
+            dropdownCssClass: "orderedProductsDropDownCss",
+            escapeMarkup: function (m) { return m; }
+        });
+        $(".invoice_select2_shipping").select2({
+            placeholder: "' . $this->pi_getLL('all') . '",
+            minimumInputLength: 0,
+            query: function(query) {
+                $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
+                    data: {
+                        q: query.term
+                    },
+                    dataType: "json"
+                }).done(function(data) {
+                    query.callback({results: data});
+                });
+            },
+            initSelection: function(element, callback) {
+                var id=$(element).val();
+                if (id!=="") {
+                    $.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
+                        data: {
+                            preselected_id: id
+                        },
+                        dataType: "json"
+                    }).done(function(data) {
+                        callback(data);
+                    });
+                }
+            },
+            formatResult: function(data){
+                if (data.text === undefined) {
+                    $.each(data, function(i,val){
+                        return val.text;
+                    });
+                } else {
+                    return data.text;
+                }
+            },
+            formatSelection: function(data){
+                if (data.text === undefined) {
+                    return data[0].text;
+                } else {
+                    return data.text;
+                }
+            },
+            dropdownCssClass: "orderedProductsDropDownCss",
+            escapeMarkup: function (m) { return m; }
+        });
 		ordered_select2(".ordered_manufacturer", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_manufacturers') . '");
 		ordered_select2(".ordered_category", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_categories') . '");
 		ordered_select2(".ordered_product", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_products') . '");
