@@ -1537,7 +1537,16 @@ class mslib_befe {
                             } else {
                                 $item['img'][$i] = '';
                                 if ($log_file) {
-                                    file_put_contents($log_file, 'Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: ' . $plaatje1 . ').' . "\n", FILE_APPEND);
+                                    $errorMessage='Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: ' . $plaatje1 . ').';
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageFailedErnoProc'])) {
+                                        $conf = array(
+                                                'errorMessage' => &$errorMessage
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageFailedErnoProc'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                                        }
+                                    }
+                                    file_put_contents($log_file,  $errorMessage . "\n", FILE_APPEND);
                                 }
                             }
                         } else {
