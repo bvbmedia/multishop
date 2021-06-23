@@ -4,6 +4,13 @@ if (!defined('TYPO3_MODE')) {
 }
 $content = '';
 $this->cObj->data['header'] = 'Customers';
+// post processing by third party plugins
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPreProc'])) {
+    $params = array();
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPreProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] && is_numeric($this->get['customer_id'])) {
     $user = mslib_fe::getUser($this->get['customer_id']);
     if ($user['uid']) {
