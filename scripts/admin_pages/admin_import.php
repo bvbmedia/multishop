@@ -1370,7 +1370,7 @@ if ($this->post['action'] == 'category-insert') {
                     $item['table_unique_id'] = $row[0];
                 }
                 // name
-                for ($i = 0; $i < $cols; $i++) {
+                foreach ($tmpitem as $i => $col) {
                     $char = '';
                     $tmpitem[$i] = trim($tmpitem[$i]);
                     switch ($this->post['select'][$i]) {
@@ -2416,7 +2416,7 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_model']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_model', $importedProductsLockedFields))))) {
                                 $updateArray['products_model'] = $item['products_model'];
                             }
-                            if (isset($item['sku_code']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('sku_code', $importedProductsLockedFields))))) {
+                            if (isset($item['products_sku']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_sku', $importedProductsLockedFields))))) {
                                 $updateArray['sku_code'] = $item['products_sku'];
                             }
                             if (isset($item['manufacturers_products_id'])) {

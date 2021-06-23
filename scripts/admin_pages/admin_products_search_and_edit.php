@@ -695,7 +695,7 @@ if (isset($this->get['product_sort']) && $this->get['product_sort'] != '' && $th
             }
         }
         if ($defaultOrderBy) {
-            $orderby[] = 'pd.products_name asc';
+            $orderby[] = $prefix . 'products_id desc';
         }
     }
 }
