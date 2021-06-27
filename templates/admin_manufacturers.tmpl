@@ -12,6 +12,22 @@
             $(activeTab).fadeIn(0);
             return false;
         });
+        jQuery("tbody").sortable({
+			cursor:"move",
+			items:">tr.manufacturers_sortable",
+			//axis:"y",
+			update:function(e, ui) {
+				href = "###MANUFACTURERS_SORT_URL_AJAX###";
+				$(this).sortable("refresh");
+				sorted = $(this).sortable("serialize","id");
+				$.ajax({
+					type:"POST",
+					url:href,
+					data:sorted,
+					success:function(msg) {}
+			    });
+			}
+		});
     });
 </script>
 <div class="panel-heading">
@@ -60,8 +76,8 @@
                     </thead>
                     <tbody>
                     <!-- ###MANUFACTURERS### begin -->
-                    <tr class="###ROW_TYPE###">
-                        <td class="cellID">###MANUFACTURER_ID###</td>
+                    <tr class="###ROW_TYPE### manufacturers_sortable" id="manufacturers_id_###MANUFACTURER_ID###">
+                        <td class="cellID">###MANUFACTURER_ID2###</td>
                         <td class="cellName"><a href="###MANUFACTURER_EDIT_LINK###">###MANUFACTURER_NAME###</a></td>
                         <td class="cellDate">###MANUFACTURER_DATE_ADDED###</td>
                         <td class="cellStatus">###MANUFACTURER_STATUS###</td>

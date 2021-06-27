@@ -850,6 +850,23 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'admin_manufacturers_sorting':
+        if ($this->ADMIN_USER) {
+            $no = 1;
+            foreach ($this->post['manufacturers_id'] as $manid) {
+                if (is_numeric($manid)) {
+                    $where = "manufacturers_id = " . $manid;
+                    $updateArray = array(
+                            'sort_order' => $no
+                    );
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', $where, $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    $no++;
+                }
+            }
+        }
+        exit();
+        break;
     // attributes options and values editors
     case 'admin_ajax_attributes_options_values':
         if ($this->ADMIN_USER) {
