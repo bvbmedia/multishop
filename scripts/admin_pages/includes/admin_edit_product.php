@@ -1117,7 +1117,10 @@ if ($this->post) {
     }
     $updateArray['ean_code'] = '';
     if ($this->post['ean_code']) {
-        $this->post['ean_code'] = str_pad($this->post['ean_code'], 13, '0', STR_PAD_LEFT);
+        if (strlen($this->post['ean_code']) < 12) {
+            // Make sure the EAN is 12 characters minimum with leading zeros
+            $this->post['ean_code'] = str_pad($this->post['ean_code'], 12, '0', STR_PAD_LEFT);
+        }
         $updateArray['ean_code'] = $this->post['ean_code'];
     }
     if (isset($this->post['starttime']) && !empty($this->post['starttime_visitor'])) {
