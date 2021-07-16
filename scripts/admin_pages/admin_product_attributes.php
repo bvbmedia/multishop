@@ -251,8 +251,7 @@ if ($rows) {
         }
         $attributes_content[$identifier_id] .= '</select></div>';
         $attributes_content[$identifier_id] .= '</div>';
-
-        // hook for adding new items to details fieldset
+        // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesOptionPropertiesPostProc'])) {
             // hook
             $conf = array(
