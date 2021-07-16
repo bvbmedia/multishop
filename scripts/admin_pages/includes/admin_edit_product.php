@@ -2791,7 +2791,7 @@ if ($this->post) {
             $markerArray['VALUE_PRODUCT_URL'] = htmlspecialchars($lngproduct[$language['uid']]['products_url']);
             $markerArray['LABEL_DELIVERY_TIME'] = $this->pi_getLL('admin_delivery_time');
             $markerArray['VALUE_DELIVERY_TIME'] = htmlspecialchars($lngproduct[$language['uid']]['delivery_time']);
-            $markerArray['LABEL_NEGATIVE_KEYWORDS'] = 'Negative keywords';
+            $markerArray['LABEL_NEGATIVE_KEYWORDS'] = 'Alternative keywords';
             $markerArray['VALUE_NEGATIVE_KEYWORDS'] = htmlspecialchars($lngproduct[$language['uid']]['products_negative_keywords']);
             $markerArray['DETAILS_TAB_CONTENT'] = $details_tab_content;
             // custom page hook that can be controlled by third-party plugin
