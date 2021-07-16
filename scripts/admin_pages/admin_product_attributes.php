@@ -64,6 +64,7 @@ $content .= '
         </div>
     </div>
 </div>';
+
 $content .= '</div>';
 $content .= '</form>';
 $content .= '<div class="form-group no-mb">';
@@ -250,20 +251,19 @@ if ($rows) {
         }
         $attributes_content[$identifier_id] .= '</select></div>';
         $attributes_content[$identifier_id] .= '</div>';
-        $attributes_content[$identifier_id] .= '
-<div class="form-group">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="required[' . $row['products_options_id'] . ']" id="required[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['required'] ? ' checked' : '') . '/><label for="required[' . $row['products_options_id'] . ']">' . $this->pi_getLL('required') . '</label>
-        </div>
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="hide_in_details_page[' . $row['products_options_id'] . ']" id="hide_in_details_page[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide'] ? ' checked' : '') . '/><label for="hide_in_details_page[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_hide_in_details_page') . '</label>
-        </div>
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="hide_in_cart[' . $row['products_options_id'] . ']" id="hide_in_cart[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide_in_cart'] ? ' checked' : '') . '/><label for="hide_in_cart[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_dont_include_attribute_values_in_cart') . '</label>
-        </div>
-    </div>
-</div>';
+
+        // hook for adding new items to details fieldset
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesOptionPropertiesPostProc'])) {
+            // hook
+            $conf = array(
+                'attributes_content' => &$attributes_content,
+                'identifier_id' => $identifier_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesOptionPropertiesPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+            }
+            // hook oef
+        }
         //$content.='</div>';
         $attributes_content[$identifier_id] .= '<div class="form-group">';
         $attributes_content[$identifier_id] .= '<div class="col-md-10 col-md-offset-2">';
