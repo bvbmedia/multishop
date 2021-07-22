@@ -1211,7 +1211,16 @@ if (isset($this->get['type_search']) && !empty($this->get['type_search'])) {
     $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
     $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
 }
-
+$subpartArray['###SHOP_PID1###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID2###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID3###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID4###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID5###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID6###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID7###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID8###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID9###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID10###'] = $this->shop_pid;
 $subpartArray['###LABEL_JS_DO_YOU_WANT_CHANGE_ORDERS_ID_X_TO_STATUS_X###'] = $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x');
 $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
