@@ -64,6 +64,7 @@ $content .= '
         </div>
     </div>
 </div>';
+
 $content .= '</div>';
 $content .= '</form>';
 $content .= '<div class="form-group no-mb">';
@@ -77,33 +78,47 @@ $content .= '</div>';
 if ($this->post) {
     if (is_array($this->post['listtype']) and count($this->post['listtype'])) {
         foreach ($this->post['listtype'] as $products_options_id => $settings_value) {
-            foreach ($this->languages as $key => $language) {
-                if (!$key) {
-                    $default_settings_value = $settings_value;
-                }
-                $updateArray = array();
-                $updateArray['language_id'] = $key;
-                $updateArray['products_options_id'] = $products_options_id;
-                $updateArray['listtype'] = $default_settings_value;
-                $updateArray['required'] = (isset($this->post['required'][$products_options_id]) ? 1 : 0);
-                $updateArray['hide'] = (isset($this->post['hide_in_details_page'][$products_options_id]) ? 1 : 0);
-                $updateArray['hide_in_cart'] = (isset($this->post['hide_in_cart'][$products_options_id]) ? 1 : 0);
-                $updateArray['price_group_id'] = 0;
-                $str = $GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
-                        'tx_multishop_products_options', // FROM ...
-                        'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', // WHERE...
-                        '', // GROUP BY...
-                        '', // ORDER BY...
-                        '' // LIMIT ...
-                );
-                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', $updateArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                } else {
-                    $updateArray['products_options_name'] = '';
-                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            if (is_numeric($products_options_id)) {
+                foreach ($this->languages as $key => $language) {
+                    if (!$key) {
+                        $default_settings_value = $settings_value;
+                    }
+                    $updateArray = array();
+                    $updateArray['language_id'] = $key;
+                    $updateArray['products_options_id'] = $products_options_id;
+                    $updateArray['listtype'] = $default_settings_value;
+                    $updateArray['required'] = (isset($this->post['required'][$products_options_id]) ? 1 : 0);
+                    $updateArray['hide'] = (isset($this->post['hide_in_details_page'][$products_options_id]) ? 1 : 0);
+                    $updateArray['hide_in_cart'] = (isset($this->post['hide_in_cart'][$products_options_id]) ? 1 : 0);
+                    $updateArray['price_group_id'] = 0;
+                    // hook for adding new items to details fieldset
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesSaveOptionPreProc'])) {
+                        // hook
+                        $conf = array(
+                                'updateArray' => &$updateArray,
+                                'products_options_id' => $products_options_id
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesSaveOptionPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
+                        // hook oef
+                    }
+                    $str = $GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
+                            'tx_multishop_products_options', // FROM ...
+                            'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', // WHERE...
+                            '', // GROUP BY...
+                            '', // ORDER BY...
+                            '' // LIMIT ...
+                    );
+                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\'' . $products_options_id . '\' and language_id=\'' . $key . '\'', $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $updateArray['products_options_name'] = '';
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 }
             }
             if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
@@ -251,19 +266,32 @@ if ($rows) {
         $attributes_content[$identifier_id] .= '</select></div>';
         $attributes_content[$identifier_id] .= '</div>';
         $attributes_content[$identifier_id] .= '
-<div class="form-group">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="required[' . $row['products_options_id'] . ']" id="required[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['required'] ? ' checked' : '') . '/><label for="required[' . $row['products_options_id'] . ']">' . $this->pi_getLL('required') . '</label>
-        </div>
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="hide_in_details_page[' . $row['products_options_id'] . ']" id="hide_in_details_page[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide'] ? ' checked' : '') . '/><label for="hide_in_details_page[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_hide_in_details_page') . '</label>
-        </div>
-        <div class="checkbox checkbox-success checkbox-inline">
-            <input name="hide_in_cart[' . $row['products_options_id'] . ']" id="hide_in_cart[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide_in_cart'] ? ' checked' : '') . '/><label for="hide_in_cart[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_dont_include_attribute_values_in_cart') . '</label>
-        </div>
-    </div>
-</div>';
+        <div class="form-group">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input name="required[' . $row['products_options_id'] . ']" id="required[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['required'] ? ' checked' : '') . '/><label for="required[' . $row['products_options_id'] . ']">' . $this->pi_getLL('required') . '</label>
+                </div>
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input name="hide_in_details_page[' . $row['products_options_id'] . ']" id="hide_in_details_page[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide'] ? ' checked' : '') . '/><label for="hide_in_details_page[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_hide_in_details_page') . '</label>
+                </div>
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input name="hide_in_cart[' . $row['products_options_id'] . ']" id="hide_in_cart[' . $row['products_options_id'] . ']" type="checkbox" value="1"' . ($row['hide_in_cart'] ? ' checked' : '') . '/><label for="hide_in_cart[' . $row['products_options_id'] . ']">' . $this->pi_getLL('admin_label_dont_include_attribute_values_in_cart') . '</label>
+                </div>
+            </div>
+        </div>';
+        // hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesOptionPropertiesPostProc'])) {
+            // hook
+            $conf = array(
+                    'row' => &$row,
+                    'attributes_content' => &$attributes_content,
+                    'identifier_id' => $identifier_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesOptionPropertiesPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+            }
+            // hook oef
+        }
         //$content.='</div>';
         $attributes_content[$identifier_id] .= '<div class="form-group">';
         $attributes_content[$identifier_id] .= '<div class="col-md-10 col-md-offset-2">';
