@@ -495,10 +495,18 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         $pid = 0;
         $this->get['_q'] = $this->get['q'];
         if (strpos($this->get['q'], '||') !== false) {
-            list($search_term, $tmp_pid, $tmp_optid) = explode('||', $this->get['q']);
-            $this->get['q'] = $search_term;
-            list(, $pid) = explode('=', $tmp_pid);
-            list(, $optid) = explode('=', $tmp_optid);
+            if (strpos($this->get['q'], '||pid') !== false && strpos($this->get['q'], '||optid') !== false) {
+                list($search_term, $tmp_pid, $tmp_optid) = explode('||', $this->get['q']);
+                $this->get['q'] = $search_term;
+                list(, $pid) = explode('=', $tmp_pid);
+                list(, $optid) = explode('=', $tmp_optid);
+            } else {
+                if (strpos($this->get['q'], 'optid=') !== false) {
+                    list($search_term, $tmp_optid) = explode('||', $this->get['q']);
+                    $this->get['q'] = $search_term;
+                    list(, $optid) = explode('=', $tmp_optid);
+                }
+            }
         }
         if (!$pid) {
             if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
