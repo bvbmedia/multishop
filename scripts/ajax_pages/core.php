@@ -2728,7 +2728,11 @@ switch ($this->ms['page']) {
         if ($this->ADMIN_USER) {
             $filter = array();
             // exclude admin usergroups
-            $filter[] = 'uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+            if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+                $filter[] = 'uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+            } else {
+                $filter[] = 'uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'])) . ')';
+            }
             $filter[] = 'deleted=0 and hidden=0';
             $limit = 50;
             if (isset($this->get['q']) && !empty($this->get['q'])) {

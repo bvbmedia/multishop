@@ -122,30 +122,28 @@ if ($this->post && $this->post['email']) {
                 $updateArray['usergroup'] = $this->post['tx_multishop_pi1']['groups'];
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
-                    $old_usergroups = explode(",", $user['usergroup']);
+                    $selectedGroups = array();
+                    $selectedGroups = explode(",", $user['usergroup']);
                     foreach ($this->excluded_userGroups as $usergroup) {
-                        if (in_array($usergroup, $old_usergroups)) {
-                            if (!empty($updateArray['usergroup'])) {
-                                $updateArray['usergroup'] .= ',' . $usergroup;
-                            } else {
-                                $updateArray['usergroup'] .= $usergroup;
-                            }
+                        if (in_array($usergroup, $selectedGroups)) {
+                            $selectedGroups[] = $usergroup;
                         }
                     }
+                    $selectedGroups = array_unique($selectedGroups);
+                    $updateArray['usergroup'] = implode(',', $selectedGroups);
                 }
             } else {
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
-                    $old_usergroups = explode(",", $user['usergroup']);
+                    $selectedGroups = array();
+                    $selectedGroups = explode(",", $user['usergroup']);
                     foreach ($this->excluded_userGroups as $usergroup) {
-                        if (in_array($usergroup, $old_usergroups)) {
-                            if (!empty($updateArray['usergroup'])) {
-                                $updateArray['usergroup'] .= ',' . $usergroup;
-                            } else {
-                                $updateArray['usergroup'] .= $usergroup;
-                            }
+                        if (in_array($usergroup, $selectedGroups)) {
+                            $selectedGroups[] = $usergroup;
                         }
                     }
+                    $selectedGroups = array_unique($selectedGroups);
+                    $updateArray['usergroup'] = implode(',', $selectedGroups);
                 }
             }
             //

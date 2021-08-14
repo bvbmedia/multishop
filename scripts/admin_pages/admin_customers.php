@@ -403,8 +403,10 @@ $orderby[] = $order_by . ' ' . $order;
 if (!$this->get['tx_multishop_pi1']['show_deleted_accounts']) {
     $filter[] = '(f.deleted=0)';
 }
-if (!$this->masterShop) {
-    $filter[] = "f.page_uid='" . $this->shop_pid . "'";
+if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+    if (!$this->masterShop) {
+        $filter[] = "f.page_uid='" . $this->shop_pid . "'";
+    }
 }
 $filter[] = "f.pid='" . $this->conf['fe_customer_pid'] . "'";
 if (!empty($this->get['crdate_from']) && !empty($this->get['crdate_till'])) {
@@ -443,8 +445,10 @@ if (isset($this->get['tx_multishop_pi1']['subscribed_newsletter']) && $this->get
             break;
     }
 }
-if (!$this->masterShop) {
-    $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
+if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+    if (!$this->masterShop) {
+        $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
+    }
 }
 // subquery to summarize grand total per customer
 $select[] = '(select sum(grand_total) from tx_multishop_orders where deleted=0 and customer_id=f.uid) as grand_total';

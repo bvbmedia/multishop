@@ -6539,7 +6539,11 @@ class mslib_fe {
         }
         $filter = array();
         // get usergroup but exclude admin usergroups
-        $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+        if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+        } else {
+            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'])) . ')';
+        }
         $filter[] = 'deleted=0 and hidden=0';
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'fe_groups', // FROM ...
