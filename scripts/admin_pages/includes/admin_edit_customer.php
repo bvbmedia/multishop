@@ -119,19 +119,25 @@ if ($this->post && $this->post['email']) {
             $customer_id = $this->post['tx_multishop_pi1']['cid'];
             // update mode
             if (!empty($this->post['tx_multishop_pi1']['groups'])) {
-                $updateArray['usergroup'] = $this->post['tx_multishop_pi1']['groups'];
+                $selectedGroups = array();
+                $postedUsergroup = explode(',', $this->post['tx_multishop_pi1']['groups']);
+                foreach ($postedUsergroup as $postedGroup) {
+                    $selectedGroups[] = $postedGroup;
+                }
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
-                    $selectedGroups = array();
-                    $selectedGroups = explode(",", $user['usergroup']);
+                    $currentUserGroup = explode(",", $user['usergroup']);
+                    foreach ($currentUserGroup as $currentGroup) {
+                        $selectedGroups[] = $currentGroup;
+                    }
                     foreach ($this->excluded_userGroups as $usergroup) {
                         if (in_array($usergroup, $selectedGroups)) {
                             $selectedGroups[] = $usergroup;
                         }
                     }
-                    $selectedGroups = array_unique($selectedGroups);
-                    $updateArray['usergroup'] = implode(',', $selectedGroups);
                 }
+                $selectedGroups = array_unique($selectedGroups);
+                $updateArray['usergroup'] = implode(',', $selectedGroups);
             } else {
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
