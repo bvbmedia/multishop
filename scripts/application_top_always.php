@@ -167,6 +167,9 @@ if ($this->conf['fe_systemadmin_usergroup']) {
 if ($this->conf['fe_statisticsadmin_usergroup']) {
     $this->excluded_userGroups[] = $this->conf['fe_statisticsadmin_usergroup'];
 }
+if ($this->conf['fe_adduseradmingroup_usergroup']) {
+    $this->excluded_userGroups[] = $this->conf['fe_adduseradmingroup_usergroup'];
+}
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['setExcludedUserGroupsPostProc'])) {
     $params = array();
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/application_top_always.php']['setExcludedUserGroupsPostProc'] as $funcRef) {

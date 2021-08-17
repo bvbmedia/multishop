@@ -2728,10 +2728,18 @@ switch ($this->ms['page']) {
         if ($this->ADMIN_USER) {
             $filter = array();
             // exclude admin usergroups
-            if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+            $showNonAdminUserGroupOnly = true;
+            if ($this->conf['shopAdminEditableInEditCustomer'] == '1') {
+                $user_groups = array();
+                $user_groups = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+                if (in_array($this->conf['fe_adduseradmingroup_usergroup'], $user_groups)) {
+                    $showNonAdminUserGroupOnly = false;
+                }
+            }
+            if ($showNonAdminUserGroupOnly) {
                 $filter[] = 'uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
             } else {
-                $filter[] = 'uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'])) . ')';
+                $filter[] = 'uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'], $this->conf['fe_adduseradmingroup_usergroup'])) . ')';
             }
             $filter[] = 'deleted=0 and hidden=0';
             $limit = 50;

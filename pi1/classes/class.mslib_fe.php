@@ -6539,10 +6539,18 @@ class mslib_fe {
         }
         $filter = array();
         // get usergroup but exclude admin usergroups
-        if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
+        $showNonAdminUserGroupOnly = true;
+        if ($this->conf['shopAdminEditableInEditCustomer'] == '1') {
+            $user_groups = array();
+            $user_groups = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+            if (in_array($this->conf['fe_adduseradmingroup_usergroup'], $user_groups)) {
+                $showNonAdminUserGroupOnly = false;
+            }
+        }
+        if ($showNonAdminUserGroupOnly) {
             $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
         } else {
-            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'])) . ')';
+            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'], $this->conf['fe_adduseradmingroup_usergroup'])) . ')';
         }
         $filter[] = 'deleted=0 and hidden=0';
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
