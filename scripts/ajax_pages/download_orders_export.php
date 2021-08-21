@@ -149,29 +149,46 @@ if ($this->get['orders_export_hash']) {
             } else {
                 switch ($field) {
                     case 'order_products':
-                        $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
-                        for ($i = 0; $i < $max_cols_num; $i++) {
-                            $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
-                            $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
-                            $excelHeaderCols['product_model' . $i] = 'product_model' . $i;
-                            $excelHeaderCols['ean_code' . $i] = 'ean_code' . $i;
-                            $excelHeaderCols['sku_code' . $i] = 'sku_code' . $i;
-                            $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
-                            $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
-                            $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
-                            $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
-                            $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
-                            $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
-                            //hook to let other plugins further manipulate the replacers
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'])) {
-                                $params = array(
-                                        'excelHeaderCols' => &$excelHeaderCols,
-                                        'i' => &$i
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        switch ($post_data['show_order_products_in']) {
+                            case 'horizontal':
+                                $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
+                                for ($i = 0; $i < $max_cols_num; $i++) {
+                                    $excelHeaderCols['product_id' . $i] = 'product_id' . $i;
+                                    $excelHeaderCols['product_name' . $i] = 'product_name' . $i;
+                                    $excelHeaderCols['product_model' . $i] = 'product_model' . $i;
+                                    $excelHeaderCols['ean_code' . $i] = 'ean_code' . $i;
+                                    $excelHeaderCols['sku_code' . $i] = 'sku_code' . $i;
+                                    $excelHeaderCols['product_qty' . $i] = 'product_qty' . $i;
+                                    $excelHeaderCols['product_final_price_excl_tax' . $i] = 'product_final_price_excl_tax' . $i;
+                                    $excelHeaderCols['product_final_price_incl_tax' . $i] = 'product_final_price_incl_tax' . $i;
+                                    $excelHeaderCols['product_price_total_excl_tax' . $i] = 'product_final_price_total_excl_tax' . $i;
+                                    $excelHeaderCols['product_price_total_incl_tax' . $i] = 'product_final_price_total_incl_tax' . $i;
+                                    $excelHeaderCols['product_tax_rate' . $i] = 'product_tax_rate' . $i;
+                                    //hook to let other plugins further manipulate the replacers
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'])) {
+                                        $params = array(
+                                                'excelHeaderCols' => &$excelHeaderCols,
+                                                'i' => &$i
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersHeaderOrderProductsPostProc'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                        }
+                                    }
                                 }
-                            }
+                                break;
+                            case 'vertical':
+                                $excelHeaderCols['product_id'] = 'product_id';
+                                $excelHeaderCols['product_name'] = 'product_name';
+                                $excelHeaderCols['product_model'] = 'product_model';
+                                $excelHeaderCols['ean_code'] = 'ean_code';
+                                $excelHeaderCols['sku_code'] = 'sku_code';
+                                $excelHeaderCols['product_qty'] = 'product_qty';
+                                $excelHeaderCols['product_final_price_excl_tax'] = 'product_final_price_excl_tax';
+                                $excelHeaderCols['product_final_price_incl_tax'] = 'product_final_price_incl_tax';
+                                $excelHeaderCols['product_price_total_excl_tax'] = 'product_final_price_total_excl_tax';
+                                $excelHeaderCols['product_price_total_incl_tax'] = 'product_final_price_total_incl_tax';
+                                $excelHeaderCols['product_tax_rate'] = 'product_tax_rate';
+                                break;
                         }
                         break;
                     case 'turnover_per_category_incl_vat':
@@ -372,6 +389,7 @@ if ($this->get['orders_export_hash']) {
                 $order_tmp = mslib_fe::getOrder($row['orders_id']);
             }
             $excelCols = array();
+            $verticalProductsData = array();
             $total = count($fields);
             $count = 0;
             foreach ($fields as $counter => $field) {
@@ -493,54 +511,75 @@ if ($this->get['orders_export_hash']) {
                         $excelCols[] = ($order_tmp['orders_tax_data']['payment_total_tax_rate'] * 100) . '%';
                         break;
                     case 'order_products':
-                        $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
                         $order_products = $order_tmp['products'];
-                        $prod_ctr = 0;
-                        foreach ($order_products as $product_tmp) {
-                            if ($prod_ctr >= $max_cols_num) {
-                                break;
-                            }
-                            $excelCols[] = $product_tmp['products_id'];
-                            $excelCols[] = $product_tmp['products_name'];
-                            $excelCols[] = $product_tmp['product_model'];
-                            $excelCols[] = $product_tmp['ean_code'];
-                            $excelCols[] = $product_tmp['sku_code'];
-                            $excelCols[] = $product_tmp['qty'];
-                            $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
-                            $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
-                            $excelCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
-                            $excelCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
-                            $excelCols[] = $product_tmp['products_tax'] . '%';
-                            //hook to let other plugins further manipulate the replacers
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'])) {
-                                $params = array(
-                                        'excelCols' => &$excelCols,
-                                        'product_tmp' => &$product_tmp,
-                                        'prod_ctr' => &$prod_ctr
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        switch ($post_data['show_order_products_in']) {
+                            case 'horizontal':
+                                $max_cols_num = ($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
+                                $prod_ctr = 0;
+                                foreach ($order_products as $product_tmp) {
+                                    if ($prod_ctr >= $max_cols_num) {
+                                        break;
+                                    }
+                                    $excelCols[] = $product_tmp['products_id'];
+                                    $excelCols[] = $product_tmp['products_name'];
+                                    $excelCols[] = $product_tmp['product_model'];
+                                    $excelCols[] = $product_tmp['ean_code'];
+                                    $excelCols[] = $product_tmp['sku_code'];
+                                    $excelCols[] = $product_tmp['qty'];
+                                    $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
+                                    $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                                    $excelCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[] = $product_tmp['products_tax'] . '%';
+                                    //hook to let other plugins further manipulate the replacers
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'])) {
+                                        $params = array(
+                                                'excelCols' => &$excelCols,
+                                                'product_tmp' => &$product_tmp,
+                                                'prod_ctr' => &$prod_ctr
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                        }
+                                    }
+                                    $prod_ctr++;
                                 }
-                            }
-                            $prod_ctr++;
-                        }
-                        if ($prod_ctr < $max_cols_num) {
-                            for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
-                                for ($i=1;$i<=11;$i++) {
-                                    $excelCols[] = '';
-                                }
-                                //hook to let other plugins further manipulate the replacers
-                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
-                                    $params = array(
-                                            'excelCols' => &$excelCols,
-                                            'product_tmp' => &$product_tmp,
-                                            'prod_ctr' => &$prod_ctr
-                                    );
-                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'] as $funcRef) {
-                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                if ($prod_ctr < $max_cols_num) {
+                                    for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
+                                        for ($i=1;$i<=11;$i++) {
+                                            $excelCols[] = '';
+                                        }
+                                        //hook to let other plugins further manipulate the replacers
+                                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
+                                            $params = array(
+                                                    'excelCols' => &$excelCols,
+                                                    'product_tmp' => &$product_tmp,
+                                                    'prod_ctr' => &$prod_ctr
+                                            );
+                                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'] as $funcRef) {
+                                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                                break;
+                            case 'vertical':
+                                foreach ($order_products as $idx => $product_tmp) {
+                                    $productCols = array();
+                                    $productCols[] = $product_tmp['products_id'];
+                                    $productCols[] = $product_tmp['products_name'];
+                                    $productCols[] = $product_tmp['product_model'];
+                                    $productCols[] = $product_tmp['ean_code'];
+                                    $productCols[] = $product_tmp['sku_code'];
+                                    $productCols[] = $product_tmp['qty'];
+                                    $productCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
+                                    $productCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                                    $productCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                                    $productCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                    $productCols[] = $product_tmp['products_tax'] . '%';
+                                    $verticalProductsData[] = $productCols;
+                                }
+                                break;
                         }
                         break;
                     case 'order_total_vat':
@@ -792,10 +831,25 @@ if ($this->get['orders_export_hash']) {
                 }
             }
             // new rows
-            if ($this->get['format'] == 'excel') {
-                $excelRows[] = $excelCols;
+            if (count($verticalProductsData)) {
+                foreach ($verticalProductsData as $productCols) {
+                    $defaultCols = $excelCols;
+                    foreach ($productCols as $productCol) {
+                        $defaultCols[] = $productCol;
+                    }
+                    if ($this->get['format'] == 'excel') {
+                        $excelRows[] = $defaultCols;
+                    } else {
+                        $excelRows[] = implode($post_data['delimeter_type'], $defaultCols);
+                    }
+
+                }
             } else {
-                $excelRows[] = implode($post_data['delimeter_type'], $excelCols);
+                if ($this->get['format'] == 'excel') {
+                    $excelRows[] = $excelCols;
+                } else {
+                    $excelRows[] = implode($post_data['delimeter_type'], $excelCols);
+                }
             }
         }
         if ($this->get['format'] == 'excel') {

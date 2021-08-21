@@ -887,6 +887,7 @@
             <label index="max_usage">Max usage</label>
             <label index="maximize">maximize</label>
             <label index="maximum_cart_total_amount_are_x">In order to continue checkout the maximum order subtotal amount must %s</label>
+            <label index="show_order_products_in">Show order products in</label>
             <label index="maximum_number_of_order_products">Maximum number of order products</label>
             <label index="member_of">Member of</label>
             <label index="middle_name">middle name</label>
@@ -2352,6 +2353,7 @@
             <label index="max_usage">Max te gebruiken aantal</label>
             <label index="maximize">maximaliseer</label>
             <label index="maximum_cart_total_amount_are_x">Om door te kunnen gaan dient het maximale subtotaalbedrag van de bestelling %s te zijn</label>
+            <label index="show_order_products_in">Toon bestelproducten in</label>
             <label index="maximum_number_of_order_products">Maximaal aantal bestelregels</label>
             <label index="member_of">Lid van</label>
             <label index="middle_name">tussenvoegsel</label>

@@ -311,6 +311,11 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
 			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
+        // order_products position selectbox
+        $order_products_position_sb = '<select name="show_order_products_in" class="form-control">
+			<option value="horizontal"' . (($post_data['show_order_products_in'] == 'horizontal' || !$post_data['show_order_products_in']) ? ' selected="selected"' : '') . '>Horizontal (one row)</option>
+			<option value="vertical"' . ($post_data['show_order_products_in'] == 'vertical' ? ' selected="selected"' : '') . '>Vertical (multiple rows)</option>
+		</select>';
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_orders_archiver')) {
             $content .= '
                 <div class="form-group">
@@ -446,6 +451,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delimited_by')) . '</label>
 			<div class="col-md-10">
 			' . $delimeter_type_sb . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('show_order_products_in')) . '</label>
+			<div class="col-md-10">
+			' . $order_products_position_sb . '
 			</div>
 		</div>
 		<div class="form-group">
