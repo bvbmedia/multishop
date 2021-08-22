@@ -486,6 +486,12 @@ $(document).on("click", "#multishop_update_button", function(e) {
         //$locale_info = localeconv();
     }
     $html .= '
+    ' . ((!$this->ROOTADMIN_USER && !$this->CATALOGADMIN_USER) ? 'setTimeout(function(){  $(\'li.ms_admin_catalog\').remove(); }, 350);' : '') . '
+    ' . ((!$this->ROOTADMIN_USER && !$this->CUSTOMERSADMIN_USER) ? 'setTimeout(function(){  $(\'li.ms_admin_customers\').remove(); }, 350);' : '') . '
+    ' . (!$this->ROOTADMIN_USER or (!$this->CUSTOMERSADMIN_USER and !$this->ORDERSADMIN_USER) ? 'setTimeout(function(){  $(\'li.ms_admin_customers\').remove(); }, 350);' : '') . '
+    ' . (!$this->ROOTADMIN_USER and !$this->SEARCHADMIN_USER ? 'setTimeout(function(){  $(\'#ms_admin_search\').remove(); }, 350);' : '') . '
+    ' . (!$this->ROOTADMIN_USER and !$this->SYSTEMADMIN_USER ? 'setTimeout(function(){  $(\'li.ms_admin_system\').remove(); }, 350);' : '') . '
+    ' . (!$this->ROOTADMIN_USER and !$this->STATISTICSADMIN_USER ? 'setTimeout(function(){  $(\'li.ms_admin_online_users\').remove(); $(\'li.ms_admin_statistics\').remove(); }, 350);' : '') . '
 });
 </script>
 ';
