@@ -129,7 +129,7 @@ $content .= '
 <div class="form-group">
 	<label class="control-label col-md-2">' . $this->pi_getLL('start_time') . '</label>
 	<div class="col-md-10 form-inline">
-	<input type="text" name="s_date" id="s_date_visitor" class="form-control dateok" value="' . $s_date . '" />
+	<input type="text" name="s_date" id="s_date_visitor" class="form-control dateok" value="' . $s_date . '" autocomplete="off" />
 	<input type="hidden" name="s_date" id="s_date" class="dateok" value="' . $s_date . '" />
 ';
 $content .= '<select name="s_hours" class="form-control">';
@@ -149,7 +149,7 @@ $content .= '</select>
 <div class="form-group">
 	<label class="control-label col-md-2">' . $this->pi_getLL('end_time') . '</label>
 	<div class="col-md-10 form-inline">
-	<input type="text" name="e_date_visitor" id="e_date_visitor" class="form-control dateok" value="' . $e_date . '" />
+	<input type="text" name="e_date_visitor" id="e_date_visitor" class="form-control dateok" value="' . $e_date . '" autocomplete="off" />
 	<input type="hidden" name="e_date" id="e_date" value="' . $e_date . '" />
 ';
 $content .= '<select name="e_hours" class="form-control">';

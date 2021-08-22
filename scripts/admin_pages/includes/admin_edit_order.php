@@ -2216,7 +2216,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
             $orderDetailsItem .= '<div class="col-md-9">
-			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="' . htmlspecialchars($orders_paid_timestamp_visual) . '">
+			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="' . htmlspecialchars($orders_paid_timestamp_visual) . '" autocomplete="off">
 			<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="' . htmlspecialchars($orders_paid_timestamp) . '">
 			</div>';
             $GLOBALS['TSFE']->additionalHeaderData[] = '
@@ -4697,7 +4697,7 @@ if (is_numeric($this->get['orders_id'])) {
         $order_status_tab_content['expected_delivery_date'] = '<div class="form-group">
             <label for="expected_delivery_date" class="control-label col-md-2">' . $this->pi_getLL('expected_delivery_date') . '</label>
             <div class="col-md-10">
-	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="' . $expected_delivery_date_local . '" >
+	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="' . $expected_delivery_date_local . '" autocomplete="off" >
 	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="' . $expected_date . '" />
             </div>
         </div>';

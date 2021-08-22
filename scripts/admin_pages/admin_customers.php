@@ -242,9 +242,9 @@ $formTopSearch .= '
 			<div class="form-group">
 				<div class="form-inline">
 					<label class="control-label" for="crdate_from_visual">' . $this->pi_getLL('from') . '</label>
-					<input class="form-control" type="text" name="crdate_from_visual" id="crdate_from_visual" value="' . (!empty($this->get['crdate_from']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_from'])) : '') . '">
+					<input class="form-control" type="text" name="crdate_from_visual" id="crdate_from_visual" value="' . (!empty($this->get['crdate_from']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_from'])) : '') . '" autocomplete="off">
 					<label for="crdate_till_visual" class="labelInbetween">' . $this->pi_getLL('to') . '</label>
-					<input class="form-control" type="text" name="crdate_till_visual" id="crdate_till_visual" value="' . (!empty($this->get['crdate_till']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_till'])) : '') . '">
+					<input class="form-control" type="text" name="crdate_till_visual" id="crdate_till_visual" value="' . (!empty($this->get['crdate_till']) ? date($this->pi_getLL('locale_datetime_format'), strtotime($this->get['crdate_till'])) : '') . '" autocomplete="off">
 					<input type="hidden" name="crdate_from" id="crdate_from" value="' . (!empty($this->get['crdate_from']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_from'])) : '') . '">
                     <input type="hidden" name="crdate_till" id="crdate_till" value="' . (!empty($this->get['crdate_till']) ? date('Y-m-d H:i:s', strtotime($this->get['crdate_till'])) : '') . '">
 				</div>

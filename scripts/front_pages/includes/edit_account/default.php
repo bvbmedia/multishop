@@ -595,7 +595,7 @@ if (count($erno) || $show_edit_account) {
             $birthday = date("Y-m-d", $user['date_of_birth']);
         }
         $birthday_block = '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '*</label>
-		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"' . $disable_autofill . ' value="' . htmlspecialchars($birthdayVisual) . '" >
+		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" autocomplete="off" value="' . htmlspecialchars($birthdayVisual) . '" >
 		<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="' . htmlspecialchars($birthday) . '" >';
     }
     //

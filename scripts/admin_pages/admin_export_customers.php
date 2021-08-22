@@ -197,14 +197,14 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 					<div class="form-group input_label_wrapper">
 						<div class="col-md-12">
 						<label for="visual_customers_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>
-						<input name="visual_customers_date_from" id="visual_customers_date_from" class="form-control" type="text" value="' . $post_data['visual_customers_date_from'] . '" />
+						<input name="visual_customers_date_from" id="visual_customers_date_from" class="form-control" type="text" value="' . $post_data['visual_customers_date_from'] . '" autocomplete="off" />
 						<input name="customers_date_from" id="customers_date_from" type="hidden" value="' . $post_data['customers_date_from'] . '" />
 						</div>
 					</div>
 					<div class="form-group input_label_wrapper">
 						<div class="col-md-12">
 						<label for="visual_customers_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>
-						<input name="visual_customers_date_till" id="visual_customers_date_till" class="form-control" type="text" value="' . $post_data['visual_customers_date_till'] . '" />
+						<input name="visual_customers_date_till" id="visual_customers_date_till" class="form-control" type="text" value="' . $post_data['visual_customers_date_till'] . '" autocomplete="off" />
 						<input name="customers_date_till" id="customers_date_till" type="hidden" value="' . $post_data['customers_date_till'] . '" />
 						</div>
 					</div>
