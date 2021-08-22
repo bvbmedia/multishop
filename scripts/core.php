@@ -189,6 +189,15 @@ switch ($this->ms['page']) {
         if ($order_session['orders_id']) {
             $order = mslib_fe::getOrder($order_session['orders_id']);
             $orders_id = $order['orders_id'];
+            // Change language based on order language_id
+            if ($order['language_id'] > 0) {
+                $lg_iso_2 = strtolower($this->languages[$order['language_id']]['lg_iso_2']);
+                if ($lg_iso_2) {
+                    $sys_language_uid = mslib_befe::getSysLanguageUidByIso2($lg_iso_2);
+                    $language = strtolower($lg_iso_2);
+                    mslib_befe::setSystemLanguage($sys_language_uid);
+                }
+            }
             // replacing the variables with dynamic values
             $billing_address = '';
             $delivery_address = '';
@@ -351,18 +360,21 @@ switch ($this->ms['page']) {
             $array1[] = '###CUSTOMER_COMMENTS###';
             $array2[] = $order['customer_comments'];
             //hook to let other plugins further manipulate
+            // language id
+            $sys_language_uid = $GLOBALS['TSFE']->sys_language_uid;
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentURLCMSPage'])) {
                 $params = array(
                         'array1' => &$array1,
                         'array2' => &$array2,
                         'order' => &$order,
-                        'cmsPage' => &$cmsPage
+                        'cmsPage' => &$cmsPage,
+                        'sys_language_uid' => &$sys_language_uid
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentURLCMSPage'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            $page = mslib_fe::getCMScontent($cmsPage, $GLOBALS['TSFE']->sys_language_uid);
+            $page = mslib_fe::getCMScontent($cmsPage, $sys_language_uid);
             if ($page[0]['name']) {
                 if (count($array1) && count($array2)) {
                     $page[0]['name'] = str_replace($array1, $array2, $page[0]['name']);
@@ -433,7 +445,10 @@ switch ($this->ms['page']) {
         $array1[] = '###PAYMENT_PAGE_LINK###';
         $array2[] = '';
         $content = str_replace($array1, $array2, $content);
-        // custom hook that can be controlled by third-party plugin eof
+        // set back to site default language
+        if ($order['language_id'] > 0) {
+            mslib_befe::resetSystemLanguage();
+        }
         break;
     // psp thank you or error pages eof
     case 'payment_reminder_checkout':

@@ -77,6 +77,8 @@ switch ($_REQUEST['action']) {
         $format = explode("x", $this->ms['MODULES']['MANUFACTURER_IMAGE_SIZE_NORMAL']);
         $this->ms['manufacturer_image_formats']['normal']['width'] = $format[0];
         $this->ms['manufacturer_image_formats']['normal']['height'] = $format[1];
+        $this->ms['manufacturer_image_formats']['enlarged']['width'] = $this->ms['manufacturer_image_formats']['normal']['width'];
+        $this->ms['manufacturer_image_formats']['enlarged']['height'] = $this->ms['manufacturer_image_formats']['normal']['height'];
         $format = explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_50']);
         $this->ms['product_image_formats']['50']['width'] = $format[0];
         $this->ms['product_image_formats']['50']['height'] = $format[1];

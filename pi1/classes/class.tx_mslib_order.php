@@ -40,7 +40,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         if (is_numeric($orders_id)) {
             $this->conf['order_id'] = (int)$orders_id;
             $tax_separation = array();
-            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
+            $sql = "select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, discount_amount_excl_tax, shipping_method, payment_method, billing_region, billing_country, delivery_country, billing_vat_id, delivery_vat_id from tx_multishop_orders where orders_id='" . $orders_id . "' order by orders_id asc";
             $qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                 if (!$row['billing_country']) {
@@ -89,13 +89,13 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'])) {
                     // hook
-                    $params = array(
+                    $paramsInt = array(
                             'MODULES' => &$this->ms['MODULES'],
                             'row' => &$row,
                             'orders_id' => &$orders_id
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['repairOrderAddressPostProc'] as $funcRef) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
                     }
                     // hook oef
                 }
@@ -243,8 +243,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$tax=$final_price*$tax_rate;
 					}
 					*/
-                    $tax = $final_price * $tax_rate;
+                    // DAEMMFTL-407
+                    if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                        $tax = number_format($final_price * $tax_rate,2,'.','');
+                    } else {
+                        $tax = $final_price * $tax_rate;
+                    }
                     $product_tax_data['total_tax'] = (string)$tax;
+                    //$product_tax_data['total_tax'] = (string)$tax;
                     $sub_total_tax += $tax * $row_prod['qty'];
                     $sub_total += ($final_price + $tax) * $row_prod['qty'];
                     $sub_total_excluding_vat += ($final_price) * $row_prod['qty'];
@@ -261,7 +267,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $sql_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\'' . $row_prod['orders_products_id'] . '\' and orders_id=\'' . $row['orders_id'] . '\'', $updateOrderProducts);
                     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
                     // separation of tax
-                    $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
+                    // DAEMMFTL-407
+                    if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                        $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += number_format(($tax + $attributes_tax) * $row_prod['qty'],2,'.','');
+                    } else {
+                        $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_total_tax'] += ($tax + $attributes_tax) * $row_prod['qty'];
+                    }
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total_excluding_vat'] += ($final_price + $tmp_attributes_price) * $row_prod['qty'];
                     $tax_separation[($row_prod['products_tax'] / 100) * 100]['products_sub_total'] += ($final_price + $tmp_attributes_price) + ($tax + $attributes_tax) * $row_prod['qty'];
                 }
@@ -295,6 +306,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $sub_total_tax = ((($sub_total - $sub_total_excluding_vat) / 100) * (100 - $discount_percentage));
                         }
                     }
+                    $discount_price_excl_vat = round($row['discount_amount_excl_tax'], 2);
                     if (count($tax_separation) > 1) {
                         $tax_separation = array();
                     }
@@ -309,7 +321,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 } else if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                     $order_tax_data['grand_total'] = (string)number_format((($sub_total_excluding_vat - $discount_price) + $sub_total_tax) + ($row['shipping_method_costs'] + $shipping_tax) + ($row['payment_method_costs'] + $payment_tax), 14, '.', '');
                 }
-                $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
+                $order_tax_data['grand_total_excluding_vat'] = (string)number_format(($sub_total_excluding_vat - $discount_price_excl_vat) + ($row['shipping_method_costs']) + ($row['payment_method_costs']), 14, '.', '');
                 //
                 $order_tax_data['tax_separation'] = $tax_separation;
                 //print_r($order_tax_data);
@@ -1032,9 +1044,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price'] + $tmp_tax);
             } else */
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-                $final_price = ($product['qty'] * $product['final_price']);
-                $final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
-                $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(round(($product['final_price'] * ($product['products_tax'] / 100)), 4) + $product['final_price']);
+                // DAEMMFTL-407
+                if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                    $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
+                    $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
+                    // Total price of all qty + tax
+                    //$final_price = ($product['qty'] * $product['final_price']);
+                    //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
+                    $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(($product['final_price']+$taxPricePerEach));
+                } else {
+                    $final_price = ($product['qty'] * $product['final_price']);
+                    $final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
+                    $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents(round(($product['final_price'] * ($product['products_tax'] / 100)), 4) + $product['final_price']);
+                }
             } else {
                 $final_price = ($product['qty'] * $product['final_price']);
                 $item['ITEM_PRICE_SINGLE'] = mslib_fe::amount2Cents($product['final_price']);
@@ -1233,7 +1255,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         $key = 'GRAND_TOTAL_EXCLUDING_VAT_WRAPPER';
         $markerArray = array();
         $markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_LABEL'] = $this->pi_getLL('grand_total_excluding_vat');
-        $markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE'] = mslib_fe::amount2Cents($order['grand_total_excluding_vat']);
+        $grand_total_excluding_vat = $order['orders_tax_data']['grand_total'] - $order['orders_tax_data']['total_orders_tax'];
+        $markerArray['PRODUCTS_GRAND_TOTAL_EXCLUDING_VAT_PRICE'] = mslib_fe::amount2Cents($grand_total_excluding_vat);
         $subpartArray['###' . $key . '###'] = $this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
         //GRAND_TOTAL_EXCLUDING_VAT_WRAPPER EOF
         //GRAND_TOTAL_WRAPPER

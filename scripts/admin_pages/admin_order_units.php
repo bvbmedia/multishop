@@ -7,12 +7,13 @@ if ($this->get['tx_multishop_pi1']['action']) {
         case 'update_default_unit':
             if (intval($this->get['tx_multishop_pi1']['orders_unit_id'])) {
                 $updateArray = array();
+                $updateArray['is_default'] = 0;
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'page_uid=' . $this->showCatalogFromPage, $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                $updateArray = array();
                 $updateArray['is_default'] = 1;
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id=\'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                $updateArray = array();
-                $updateArray['is_default'] = 0;
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units', 'id <> \'' . $this->get['tx_multishop_pi1']['orders_unit_id'] . '\' and page_uid=' . $this->showCatalogFromPage, $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
             break;
@@ -151,7 +152,11 @@ if (count($active_shop) > 1) {
     }
     $tmpcontent .= '</div></div>';
 } else {
-    $tmpcontent .= '<input type="hidden" name="tx_multishop_pi1[related_shop_pid]" value="' . $row['page_uid'] . '">';
+    $shop_pid = $row['page_uid'];
+    if (!$shop_pid) {
+        $shop_pid = $this->showCatalogFromPage;
+    }
+    $tmpcontent .= '<input type="hidden" name="tx_multishop_pi1[related_shop_pid]" value="' . $shop_pid . '">';
 }
 if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $tmpcontent .= '<input type="hidden" class="text" name="tx_multishop_pi1[order_unit_id]" value="' . $this->get['tx_multishop_pi1']['order_unit_id'] . '">';

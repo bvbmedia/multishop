@@ -117,30 +117,37 @@ if (count($this->searchKeywords)) {
 }
 $queryData['select'][] = '*';
 $queryData['from'][] = 'tx_multishop_manufacturers m';
-switch ($this->get['tx_multishop_pi1']['order_by']) {
-    case 'name':
-        $order_by = 'manufacturers_name';
-        break;
-    case 'date_added':
-        $order_by = 'date_added';
-        break;
-    case 'id':
-        $order_by = 'manufacturers_id';
-        break;
-    default:
-        $order_by = 'sort_order,manufacturers_name';
-        break;
+$order_by = 'sort_order';
+$order = 'asc';
+$order_link = 'd';
+if (isset($this->get['tx_multishop_pi1']['order_by'])) {
+    switch ($this->get['tx_multishop_pi1']['order_by']) {
+        case 'name':
+            $order_by = 'manufacturers_name';
+            break;
+        case 'date_added':
+            $order_by = 'date_added';
+            break;
+        case 'id':
+            $order_by = 'manufacturers_id';
+            break;
+        default:
+            $order_by = 'sort_order,manufacturers_name';
+            break;
+    }
 }
-switch ($this->get['tx_multishop_pi1']['order']) {
-    case 'a':
-        $order = 'asc';
-        $order_link = 'd';
-        break;
-    case 'd':
-    default:
-        $order = 'desc';
-        $order_link = 'a';
-        break;
+if (isset($this->get['tx_multishop_pi1']['order'])) {
+    switch ($this->get['tx_multishop_pi1']['order']) {
+        case 'a':
+            $order = 'asc';
+            $order_link = 'd';
+            break;
+        case 'd':
+        default:
+            $order = 'desc';
+            $order_link = 'a';
+            break;
+    }
 }
 $orderby[] = $order_by . ' ' . $order;
 $queryData['order_by'] = $orderby;
@@ -190,6 +197,7 @@ if (!count($pageset['dataset'])) {
             $markerArray = array();
             $markerArray['ROW_TYPE'] = $tr_type;
             $markerArray['MANUFACTURER_ID'] = $row['manufacturers_id'];
+            $markerArray['MANUFACTURER_ID2'] = $row['manufacturers_id'];
             $markerArray['MANUFACTURER_EDIT_LINK'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id=' . $row['manufacturers_id'] . '&action=edit_manufacturer', 1);
             $markerArray['MANUFACTURER_NAME'] = $row['manufacturers_name'];
             $markerArray['MANUFACTURER_DATE_ADDED'] = strftime("%x %X", strtotime($row['date_added']));
@@ -258,6 +266,7 @@ $subpartArray['###SEARCH_NAV###'] = $searchCharNav;
 $subpartArray['###RESULTS###'] = $results;
 $subpartArray['###NORESULTS###'] = $noresults;
 $subpartArray['###ADMIN_LABEL_TABS_MANUFACTURERS###'] = $this->pi_getLL('admin_label_tabs_manufacturers');
+$subpartArray['###MANUFACTURERS_SORT_URL_AJAX###'] = mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_manufacturers_sorting');
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
 $objRef->init($this);

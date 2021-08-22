@@ -73,6 +73,7 @@ class mslib_fe {
         $this->defaultLanguageArray =& $ref->defaultLanguageArray;
         $this->hidePagination =& $ref->hidePagination;
         $this->msLogFile =& $ref->msLogFile;
+        $this->msLockFile =& $ref->msLockFile;
         $this->initLanguage($ref->LOCAL_LANG);
     }
     /**
@@ -1061,7 +1062,7 @@ class mslib_fe {
                 'Á' => 'A',
                 'Â' => 'A',
                 'Ã' => 'A',
-                'Ä' => 'A',
+                'Ä' => 'AE',
                 'Å' => 'A',
                 'Æ' => 'A',
                 'Ç' => 'C',
@@ -1078,12 +1079,12 @@ class mslib_fe {
                 'Ó' => 'O',
                 'Ô' => 'O',
                 'Õ' => 'O',
-                'Ö' => 'O',
+                'Ö' => 'OE',
                 'Ø' => 'O',
                 'Ù' => 'U',
                 'Ú' => 'U',
                 'Û' => 'U',
-                'Ü' => 'U',
+                'Ü' => 'UE',
                 'Ý' => 'Y',
                 'Þ' => 'B',
                 'ß' => 'Ss',
@@ -1091,7 +1092,7 @@ class mslib_fe {
                 'á' => 'a',
                 'â' => 'a',
                 'ã' => 'a',
-                'ä' => 'a',
+                'ä' => 'ae',
                 'å' => 'a',
                 'æ' => 'a',
                 'ç' => 'c',
@@ -1109,7 +1110,7 @@ class mslib_fe {
                 'ó' => 'o',
                 'ô' => 'o',
                 'õ' => 'o',
-                'ö' => 'o',
+                'ö' => 'oe',
                 'ø' => 'o',
                 'ù' => 'u',
                 'ú' => 'u',
@@ -1119,7 +1120,7 @@ class mslib_fe {
                 'þ' => 'b',
                 'ÿ' => 'y',
                 'ƒ' => 'f',
-                'ü' => 'u',
+                'ü' => 'ue',
                 'š' => 's',
                 'd' => 'd',
                 'c' => 'c',
@@ -1129,8 +1130,18 @@ class mslib_fe {
                 'Ð' => 'd',
                 'C' => 'c',
                 'C' => 'c',
-                'Ž' => 'z'
+                'Ž' => 'z',
+                '²' => '2',
         );
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['normalizePreProc'])) {
+            $params = array(
+                    'normalizeChars' => &$normalizeChars,
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['normalizePreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $string = strtr($string, $normalizeChars);
         return $string;
     }
@@ -1627,7 +1638,7 @@ class mslib_fe {
                             if ($hidden_fields) {
                                 $get_url .= '<input name="' . $key . '" type="hidden" value="' . htmlspecialchars($value) . '">' . "\n";
                             } else {
-                                $get_url .= $key . '=' . rawurlencode(htmlentities($value)) . '&';
+                                $get_url .= $key . '=' . rawurlencode(htmlspecialchars($value)) . '&';
                             }
                         }
                     } else {
@@ -1639,7 +1650,7 @@ class mslib_fe {
                                         if ($hidden_fields) {
                                             $get_url .= '<input name="' . $key . rawurlencode('[' . $$key . ']') . '" type="hidden" value="' . htmlspecialchars($$value) . '">' . "\n";
                                         } else {
-                                            $get_url .= $key . rawurlencode('[' . $$key . ']') . '=' . rawurlencode(htmlentities($$value)) . '&';
+                                            $get_url .= $key . rawurlencode('[' . $$key . ']') . '=' . rawurlencode(htmlspecialchars($$value)) . '&';
                                         }
                                     }
                                 }
@@ -1649,7 +1660,7 @@ class mslib_fe {
                                         foreach ($v as $final_key => $final_value) {
                                             $string = $key . '[' . $$key . '][' . $k . ']';
                                             if (!mslib_fe::tep_in_array($string, $exclude_array)) {
-                                                $get_url .= $key . rawurlencode('[' . $$key . ']') . rawurlencode('[' . $k . '][' . $final_key . ']') . '=' . rawurlencode(htmlentities($final_value)) . '&';
+                                                $get_url .= $key . rawurlencode('[' . $$key . ']') . rawurlencode('[' . $k . '][' . $final_key . ']') . '=' . rawurlencode(htmlspecialchars($final_value)) . '&';
                                             }
                                         }
                                     } else {
@@ -1659,7 +1670,7 @@ class mslib_fe {
                                                 if ($hidden_fields) {
                                                     $get_url .= '<input name="' . $key . rawurlencode('[' . $$$key . '][]') . '" type="hidden" value="' . htmlspecialchars($v) . '">' . "\n";
                                                 } else {
-                                                    $get_url .= $key . rawurlencode('[' . $$key . '][' . $k . ']') . '=' . rawurlencode(htmlentities($v)) . '&';
+                                                    $get_url .= $key . rawurlencode('[' . $$key . '][' . $k . ']') . '=' . rawurlencode(htmlspecialchars($v)) . '&';
                                                 }
                                             }
                                         }
@@ -2141,9 +2152,6 @@ class mslib_fe {
                 }
             }
             $body = $this->cObj->substituteMarkerArray($template, $markerArray);
-            if (isset($options['sender'])) {
-                $mail->Sender = $options['sender'];
-            }
             // try to change URL images to embedded
             $mail->SetFrom($from_email, $from_name);
             if (isset($options['reply_to_email'])) {
@@ -2161,19 +2169,6 @@ class mslib_fe {
                         $mail->AddAttachment($path);
                     }
                 }
-            }
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            if (!$options['withoutImageEmbedding']) {
-                self::MsgHTMLwithEmbedImages($mail, $body);
-            } else {
-                $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
-            }
-            // Plain version
-            if (isset($options['alt_body'])) {
-                $mail->AltBody = $options['alt_body'];
-            } else {
-                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
             }
             if (!isset($options['skipSending'])) {
                 $options['skipSending'] = 0;
@@ -2194,7 +2189,20 @@ class mslib_fe {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
-            // Sometims the dispatcher is using name instead of username
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            if (!$options['withoutImageEmbedding']) {
+                self::MsgHTMLwithEmbedImages($mail, $body);
+            } else {
+                $mail->MsgHTML($body, $this->DOCUMENT_ROOT);
+            }
+            // Plain version
+            if (isset($options['alt_body'])) {
+                $mail->AltBody = $options['alt_body'];
+            } else {
+                $mail->AltBody = mslib_befe::antiXSS(mslib_befe::br2nl($body), 'strip_tags');
+            }
+            // Sometimes the dispatcher is using name instead of username
             if (!$user['username'] && $user['name']) {
                 $user['username'] = $user['name'];
             }
@@ -2464,12 +2472,27 @@ class mslib_fe {
                     }
                     $from = 'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp ';
                     $from .= 'LEFT OUTER JOIN tx_multishop_products_options_values_to_products_options_desc povdesc ON povdesc.language_id=\'' . $this->sys_language_uid . '\' AND povdesc.products_options_values_to_products_options_id=povp.products_options_values_to_products_options_id';
+                    $order_by = 'pa.sort_order_option_value asc';
+                    //$order_by = 'pov.products_options_values_name asc';
+                    // hook to let other plugins further manipulate the option values display
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesReturnAsArrayQryPostProc'])) {
+                        $params = array(
+                                'options' => $options,
+                                'select' => &$select,
+                                'from' => &$from,
+                                'order_by' => &$order_by
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesReturnAsArrayQryPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
+                    // hook
                     //products_options_values_to_products_options_id
                     $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
                             $from, // FROM ...
                             'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . addslashes($options['products_options_id']) . '\' and pa.page_uid = \'' . addslashes($this->showCatalogFromPage) . '\' and pov.language_id = \'' . addslashes($this->sys_language_uid) . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . addslashes($options['products_options_id']) . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
                             '', // GROUP BY...
-                            'pa.sort_order_option_value asc', // ORDER BY...
+                            $order_by, // ORDER BY...
                             '' // LIMIT ...
                     );
                     $products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2806,8 +2829,12 @@ class mslib_fe {
                             $value_counter++;
                         }
                         if ($this->conf['enableAttributeOptionValuesGroup'] == '1' && count($attribute_option_value_to_group)) {
-                            foreach ($attribute_option_value_to_group as $idx_key => $group_id) {
-                                list($option_id, $option_value_id) = explode('_', $idx_key);
+                            if (strpos($output, '###ATTRIBUTE_VALUES_GROUP') !== false) {
+                                foreach ($attribute_option_value_to_group as $idx_key => $group_id) {
+                                    list($option_id, $option_value_id) = explode('_', $idx_key);
+                                    $current_markers1[] = '###ATTRIBUTE_VALUES_GROUP_' . $option_id . '_' . $option_value_id . '###';
+                                    $current_markers2[] = '';
+                                }
                             }
                         }
                         if ($total_values > 0) {
@@ -4967,16 +4994,18 @@ class mslib_fe {
             $products = $cart['products'];
         }
         $weight = 0;
-        foreach ($products as $products_id => $value) {
-            if (is_numeric($value['products_id'])) {
-                // get the product weight record when in edit order only
-                if (!$value['products_weight'] && $fetch_weight_record) {
-                    $tmp_product = mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
-                    if ($tmp_product['products_weight']) {
-                        $value['products_weight'] = $tmp_product['products_weight'];
+        if (is_array($products) && count($products)) {
+            foreach ($products as $products_id => $value) {
+                if (is_numeric($value['products_id'])) {
+                    // get the product weight record when in edit order only
+                    if (!$value['products_weight'] && $fetch_weight_record) {
+                        $tmp_product = mslib_befe::getRecord($value['products_id'], 'tx_multishop_products', 'products_id', array(), 'products_weight');
+                        if ($tmp_product['products_weight']) {
+                            $value['products_weight'] = $tmp_product['products_weight'];
+                        }
                     }
+                    $weight = ($weight + ($value['qty'] * $value['products_weight']));
                 }
-                $weight = ($weight + ($value['qty'] * $value['products_weight']));
             }
         }
         return $weight;
@@ -5885,6 +5914,7 @@ class mslib_fe {
         }
     }
     public function final_products_price($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
+        $sum = 0;
         if (!$ignore_minimum_quantity) {
             if ($quantity and $product['minimum_quantity'] > $quantity) {
                 // check if the product has a minimum quantity
@@ -5900,14 +5930,15 @@ class mslib_fe {
                     'quantity' => &$quantity,
                     'add_currency' => &$add_currency,
                     'ignore_minimum_quantity' => &$ignore_minimum_quantity,
-                    'priceColumn' => &$priceColumn
+                    'priceColumn' => &$priceColumn,
+                    'sum' => &$sum
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['finalPriceCalc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
         // hook eof
-        if ($product['staffel_price']) {
+        if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $product['staffel_price']) {
             if ($this->ms['MODULES']['MAKE_FIRST_LEVEL_OF_STEPPING_PRICE_EDITABLE'] == '1') {
                 $product['staffel_price'] = mslib_fe::rebuildStaffelPrice($product['staffel_price'], $product['final_price']);
             }
@@ -5969,12 +6000,10 @@ class mslib_fe {
     }
     public function calculateStaffelPrice($staffel_price, $product_qty) {
         switch ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
-            case 'yes_with_stepping':
-                $mode = 'stepping';
-                break;
             case 'yes_without_stepping':
                 $mode = 'stepless';
                 break;
+            case 'yes_with_stepping':
             default:
                 $mode = 'stepping';
                 break;
@@ -6018,70 +6047,72 @@ class mslib_fe {
                 $plevel = $level;
             }
         }
-        if ($mode == 'stepping') {
-            if ($plevel > 0) {
-                $data_level = array();
-                $real_level = 0;
-                $qty = $product_qty;
-                foreach ($sdata3 as $keys => $values) {
-                    if ($qty < $values['count']) {
-                        $values['count'] = $qty;
+        switch($mode) {
+            case 'stepping':
+                if ($plevel > 0) {
+                    $data_level = array();
+                    $real_level = 0;
+                    $qty = $product_qty;
+                    foreach ($sdata3 as $keys => $values) {
+                        if ($qty < $values['count']) {
+                            $values['count'] = $qty;
+                        }
+                        $data_level['steps'][$keys] = $values['count'];
+                        $qty -= $values['count'];
+                        if ($qty == 0) {
+                            break;
+                        }
                     }
-                    $data_level['steps'][$keys] = $values['count'];
-                    $qty -= $values['count'];
-                    if ($qty == 0) {
-                        break;
+                    for ($xm = 0; $xm < count($data_level['steps']); $xm++) {
+                        $total += ($data_level['steps'][$xm] * $sdata[$xm]);
+                    }
+                    $data_level['steps'] = array();
+                } else {
+                    $plevel = 0;
+                    $gotlevel = false;
+                    foreach ($sdata2 as $level => $range) {
+                        $pqty = $product_qty;
+                        if ($pqty >= $range['min'] && $pqty <= $range['max']) {
+                            $plevel = $level;
+                            $gotlevel = true;
+                        }
+                    }
+                    if ($gotlevel) {
+                        $total = ($sdata[$plevel] * $product_qty);
                     }
                 }
-                for ($xm = 0; $xm < count($data_level['steps']); $xm++) {
-                    $total += ($data_level['steps'][$xm] * $sdata[$xm]);
-                }
-//				error_log(print_r($data_level,1));
-                $data_level['steps'] = array();
-            } else {
+                $final_price = $total;
+                return $final_price;
+                break;
+            case 'stepless':
                 $plevel = 0;
-                $gotlevel = false;
                 foreach ($sdata2 as $level => $range) {
                     $pqty = $product_qty;
                     if ($pqty >= $range['min'] && $pqty <= $range['max']) {
                         $plevel = $level;
-                        $gotlevel = true;
                     }
                 }
-                if ($gotlevel) {
-                    $total = ($sdata[$plevel] * $product_qty);
-                }
-            }
-        } else if ($mode == 'stepless') {
-            $plevel = 0;
-            foreach ($sdata2 as $level => $range) {
-                $pqty = $product_qty;
-                if ($pqty >= $range['min'] && $pqty <= $range['max']) {
-                    $plevel = $level;
-                }
-            }
-            $total = ($sdata[$plevel] * $pqty);
-        } else {
-            $total = 'discount mode not recognized...';
+                $total = ($sdata[$plevel] * $pqty);
+                $final_price = $total;
+                return $final_price;
+                break;
         }
-        $final_price = $total;
-        return $final_price;
     }
+    // Todo we will remove soon because its defined in multishop_api
     public function getFrontendPriceInfoArray($product, $quantity = 1, $add_currency = 1, $ignore_minimum_quantity = 0, $priceColumn = 'final_price') {
-        $finalPrice = mslib_fe::final_products_price($product, $quantity, $add_currency, $ignore_minimum_quantity, $priceColumn);
+        $finalPriceIncludingVat = mslib_fe::final_products_price($product, $quantity, $add_currency, $ignore_minimum_quantity, $priceColumn);
         $priceInfo = array();
-        if ($product['products_price'] <> $product['final_price']) {
-            if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+        if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+            // B2C
+            $priceInfo['final_price_incl_tax'] = $finalPriceIncludingVat;
+            if ($product['products_price'] <> $product['final_price']) {
                 $priceInfo['old_price'] = $product['products_price'] * (1 + $product['tax_rate']);
-                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
-            } else {
-                $priceInfo['old_price'] = $product['products_price'];
-                $priceInfo['final_price_incl_tax'] = $finalPrice;
             }
         } else {
-            $priceInfo['final_price_incl_tax'] = $finalPrice;
-            if (($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] == '1')) {
-                $priceInfo['final_price_incl_tax'] = $finalPrice * (1 + $product['tax_rate']);
+            // B2B
+            $priceInfo['final_price_incl_tax'] = $product['final_price'];
+            if ($product['products_price'] <> $product['final_price']) {
+                $priceInfo['old_price'] = $product['products_price'] ;
             }
         }
         return $priceInfo;
@@ -6508,7 +6539,19 @@ class mslib_fe {
         }
         $filter = array();
         // get usergroup but exclude admin usergroups
-        $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+        $showNonAdminUserGroupOnly = true;
+        if ($this->conf['shopAdminEditableInEditCustomer'] == '1') {
+            $user_groups = array();
+            $user_groups = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+            if (in_array($this->conf['fe_adduseradmingroup_usergroup'], $user_groups)) {
+                $showNonAdminUserGroupOnly = false;
+            }
+        }
+        if ($showNonAdminUserGroupOnly) {
+            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', $this->excluded_userGroups) . ')';
+        } else {
+            $filter[] = 'uid = \'' . $groupId . '\' and uid NOT IN (' . implode(',', array($this->conf['fe_rootadmin_usergroup'], $this->conf['fe_customer_usergroup'], $this->conf['fe_adduseradmingroup_usergroup'])) . ')';
+        }
         $filter[] = 'deleted=0 and hidden=0';
         $str = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'fe_groups', // FROM ...
@@ -9277,17 +9320,19 @@ class mslib_fe {
                 $mailOrder = 0;
             }
             //hook to let other plugins further manipulate the replacers
+            $copyToMerchant = 1;
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateOrderStatusToPaidPostProc'])) {
                 $params = array(
                         'order' => &$order,
-                        'mailOrder' => &$mailOrder
+                        'mailOrder' => &$mailOrder,
+                        'copyToMerchant' => &$copyToMerchant
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateOrderStatusToPaidPostProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
             if ($mailOrder) {
-                $tmp = mslib_fe::mailOrder($order['orders_id'], 1, '', 'email_order_paid_letter');
+                $tmp = mslib_fe::mailOrder($order['orders_id'], $copyToMerchant, '', 'email_order_paid_letter');
             }
             return true;
         } else {

@@ -575,6 +575,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
                 $tbl = 'p.';
             }
             switch ($this->cookie['sortbysb']) {
+                case 'manufacturers_asc':
+                    $select[] = '(select m.manufacturers_name from tx_multishop_manufacturers m where ' . $tbl . 'manufacturers_id=m.manufacturers_id) as product_manufacturers_name';
+                    $orderby[] = "product_manufacturers_name asc";
+                    break;
+                case 'manufacturers_desc':
+                    $select[] = '(select m.manufacturers_name from tx_multishop_manufacturers m where ' . $tbl . 'manufacturers_id=m.manufacturers_id) as product_manufacturers_name';
+                    $orderby[] = "product_manufacturers_name desc";
+                    break;
                 case 'best_selling_asc':
                     $select[] = '(select SUM(op.qty) from tx_multishop_orders_products op where ' . $tbl . 'products_id=op.products_id) as order_total_qty';
                     $orderby[] = "order_total_qty asc";

@@ -914,3 +914,35 @@ foreach($indexToCheck as $index) {
         $messages[] = $str;
     }
 }
+$key = 'APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE';
+if (!isset($settings['GLOBAL_MODULES'][$key])) {
+    $str = "INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Apply rounding tax amount on product piece price', '" . $key . "', '0', 'Only apply to shops that have defined prices excluding VAT with 2 decimals.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''1'', ''0''),');";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+}
+$str = "select discount_amount_excl_tax from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_orders` ADD discount_amount_excl_tax decimal(8,2) DEFAULT '0.00'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+
+$key = 'ADMIN_PRODUCTS_SEARCH_AND_EDIT_DEFAULT_ORDER_BY';
+if (!isset($settings['GLOBAL_MODULES'][$key])) {
+    $str = "INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Admin products search and edit > Default order by', '" . $key . "', '', 'i.e. products_name or sort_order', 11, NULL, NULL, now(), NULL, '');";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+}
+$str = "select deleted_by_uid from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `deleted_by_uid` int(11) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}
+$str = "select deleted_tstamp from tx_multishop_orders limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE  `tx_multishop_orders` ADD `deleted_tstamp` int(11) default '0'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}

@@ -681,7 +681,22 @@ if (isset($this->get['product_sort']) && $this->get['product_sort'] != '' && $th
         }
         $orderby[] = $order_by . ' ' . $order;
     } else {
-        $orderby[] = $prefix . 'products_id desc';
+        $defaultOrderBy=1;
+        if ($this->ms['ADMIN_PRODUCTS_SEARCH_AND_EDIT_DEFAULT_ORDER_BY']) {
+            switch($this->ms['ADMIN_PRODUCTS_SEARCH_AND_EDIT_DEFAULT_ORDER_BY']) {
+                case 'products_name':
+                    $orderby[] = 'pd.products_name asc';
+                    $defaultOrderBy=0;
+                    break;
+                case 'sort_order':
+                    $orderby[] = 'p2c.sort_order asc';
+                    $defaultOrderBy=0;
+                    break;
+            }
+        }
+        if ($defaultOrderBy) {
+            $orderby[] = $prefix . 'products_id desc';
+        }
     }
 }
 if (is_numeric($this->get['cid']) and $this->get['cid'] > 0) {
@@ -1027,6 +1042,12 @@ if ($pageset['total_rows'] > 0) {
         $markerArray['PID0'] = $rs['products_id'];
         $markerArray['PID1'] = $rs['products_id'];
         $markerArray['PID2'] = $rs['products_id'];
+
+        $markerArray['EDIT_PRICE_PENCIL_ICON'] = '';
+        if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '0') {
+            $markerArray['EDIT_PRICE_PENCIL_ICON'] = '<a href="#" class="hoverEdit products_price_edit" data-pid="' . $rs['products_id'] . '"><i class="fa fa-pencil"></i></a>';
+        }
+
         $markerArray['PID3'] = $rs['products_id'];
         $markerArray['PID4'] = $rs['products_id'];
         $markerArray['PID5'] = $rs['products_id'];
@@ -1268,6 +1289,15 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 $tax_rate_selectbox .= '</select>';
 $subpartArray['###LABEL_TAX_RATE###'] = $this->pi_getLL('admin_taxes');
 $subpartArray['###TAX_RATE_SELECTBOX###'] = $tax_rate_selectbox;
+
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['search']) && $this->get['search'] == '1') {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
+}
+
 // product date filter
 $subpartArray['###LABEL_DATE###'] = $this->pi_getLL('date');
 $subpartArray['###LABEL_DATE_FROM###'] = $this->pi_getLL('from');

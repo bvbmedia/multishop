@@ -7,8 +7,24 @@ if ($this->ADMIN_USER) {
     $jsonData = array();
     $customer_currency = 0;
     if (is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
-        $order = mslib_fe::getOrder($this->post['tx_multishop_pi1']['orders_id']);
+        $str = "SELECT *, o.crdate, o.status, osd.name as orders_status from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) where o.orders_id='" . $this->post['tx_multishop_pi1']['orders_id'] . "'";
+        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+        $order = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
         if ($order['orders_id']) {
+            $orders_tax_data = unserialize($order['orders_tax_data']);
+
+            $str2 = "SELECT * from tx_multishop_orders_products where orders_id='" . addslashes($order['orders_id']) . "' order by sort_order asc";
+            $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+            while (($row_products = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))) {
+                $row_products['attributes'] = array();
+                $str3 = "SELECT * from tx_multishop_orders_products_attributes where orders_products_id='" . addslashes($row_products['orders_products_id']) . "' order by orders_products_attributes_id asc";
+                $qry3 = $GLOBALS['TYPO3_DB']->sql_query($str3);
+                while ($row_products_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
+                    $row_products_attributes['attributes_tax_data'] = unserialize($row_products_attributes['attributes_tax_data']);
+                    $row_products['attributes'][] = $row_products_attributes;
+                }
+                $order['products'][] = $row_products;
+            }
             $jsonData['content'] = '';
             $jsonData_content = '';
             if (count($order['products'])) {
@@ -127,6 +143,7 @@ if ($this->ADMIN_USER) {
 				<tbody>
 				';
                 foreach ($order['products'] as $product) {
+                    $order_products_tax_data = unserialize($product['products_tax_data']);
                     if (!$tr_subtype or $tr_subtype == 'even') {
                         $tr_subtype = 'odd';
                     } else {
@@ -170,7 +187,7 @@ if ($this->ADMIN_USER) {
                         $normal_price = $product['final_price'] + $product['discount_amount'];
                     }
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
-                        $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents(($normal_price + $product['products_tax_data']['total_tax']), $customer_currency, 1, 0) . '</td>';
+                        $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents(($normal_price +$order_products_tax_data['total_tax']), $customer_currency, 1, 0) . '</td>';
                     } else {
                         $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents($normal_price, $customer_currency, 1, 0) . '</td>';
                     }
@@ -178,7 +195,7 @@ if ($this->ADMIN_USER) {
                         $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents($product['discount_amount'], $customer_currency, 1, 0) . '</td>';
                     }
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] > 0) {
-                        $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents($product['qty'] * ($product['final_price'] + $product['products_tax_data']['total_tax']), $customer_currency, 1, 0) . '</td>';
+                        $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents($product['qty'] * ($product['final_price'] +$order_products_tax_data['total_tax']), $customer_currency, 1, 0) . '</td>';
                     } else {
                         $jsonData_content .= '<td class="cellFixed cellNoWrap text-right">' . mslib_fe::amount2Cents($product['qty'] * $product['final_price'], $customer_currency, 1, 0) . '</td>';
                     }
@@ -222,7 +239,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="' . $colspan . '" class="text-right">' . $this->pi_getLL('sub_total') . '</td>
-						<td class="text-right">' . mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], $customer_currency, 1, 0) . '</td>
+						<td class="text-right">' . mslib_fe::amount2Cents($orders_tax_data['sub_total'], $customer_currency, 1, 0) . '</td>
 					</tr>';
                 } else {
                     $jsonData_content .= '
@@ -236,7 +253,7 @@ if ($this->ADMIN_USER) {
                         $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . htmlspecialchars($order['shipping_method_label']) . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['shipping_method_costs'] + $order['orders_tax_data']['shipping_tax'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($order['shipping_method_costs'] + $orders_tax_data['shipping_tax'], $customer_currency, 1, 0) . '</td>
 						</tr>';
                     } else {
                         $jsonData_content .= '
@@ -251,13 +268,13 @@ if ($this->ADMIN_USER) {
                         $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . htmlspecialchars($order['payment_method_label']) . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['payment_method_costs'] + $order['orders_tax_data']['payment_tax'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($order['payment_method_costs'] + $orders_tax_data['payment_tax'], 0) . '</td>
 						</tr>';
                     } else {
                         $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . htmlspecialchars($order['payment_method_label']) . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['payment_method_costs'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($order['payment_method_costs'], 0) . '</td>
 						</tr>';
                     }
                 }
@@ -287,14 +304,14 @@ if ($this->ADMIN_USER) {
 					</tr>';
                     $jsonData_content .= '
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
-						<td colspan="' . $colspan . '" class="text-right"><strong>' . (!$order['orders_tax_data']['total_orders_tax'] ? ucfirst($this->pi_getLL('total_excl_vat')) : ucfirst($this->pi_getLL('total'))) . '</strong></td>
+						<td colspan="' . $colspan . '" class="text-right"><strong>' . (!$orders_tax_data['total_orders_tax'] ? ucfirst($this->pi_getLL('total_excl_vat')) : ucfirst($this->pi_getLL('total'))) . '</strong></td>
 						<td class="text-right"><strong>' . mslib_fe::amount2Cents($order['grand_total'], $customer_currency, 1, 0) . '</strong></td>
 					</tr>';
                     //if ($order['payment_method_label']) {
                     $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . $this->pi_getLL('included_vat_amount') . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['subtotal_tax'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], $customer_currency, 1, 0) . '</td>
 						</tr>';
                     //}
                 } else {
@@ -302,7 +319,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '
 						<tr class="removeTableCellBorder msAdminSubtotalRow">
 							<td colspan="' . $colspan . '" class="text-right">' . $this->pi_getLL('vat') . '</td>
-							<td class="text-right">' . mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax'], $customer_currency, 1, 0) . '</td>
+							<td class="text-right">' . mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], $customer_currency, 1, 0) . '</td>
 						</tr>';
                     //}
                     $jsonData_content .= '

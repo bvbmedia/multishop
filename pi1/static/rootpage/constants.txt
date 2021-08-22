@@ -300,4 +300,13 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable attributes option values group
 	enableAttributeOptionValuesGroup = 0
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable Incl tax price field to read-only mode
+	setReadOnlyForEditProductPriceIncludeTaxInput = 0
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Shop admin editable in edit customer
+	shopAdminEditableInEditCustomer = 0
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Shop admin group Id that may add FE-shop admin
+	fe_adduseradmingroup_usergroup = 0
 }

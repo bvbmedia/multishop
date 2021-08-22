@@ -212,7 +212,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -239,7 +239,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -388,7 +388,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -415,7 +415,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1027,6 +1027,8 @@ class mslib_befe {
             $updateArray = array();
             $updateArray['deleted'] = 1;
             $updateArray['orders_last_modified'] = time();
+            $updateArray['deleted_by_uid'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $updateArray['deleted_tstamp'] = time();
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $orders_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         }
@@ -1535,7 +1537,16 @@ class mslib_befe {
                             } else {
                                 $item['img'][$i] = '';
                                 if ($log_file) {
-                                    file_put_contents($log_file, 'Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: ' . $plaatje1 . ').' . "\n", FILE_APPEND);
+                                    $errorMessage='Downloading product' . $i . ' image (' . $item[$colname] . ') failed. Unknown filetype (tmp file: ' . $plaatje1 . ').';
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageFailedErnoProc'])) {
+                                        $conf = array(
+                                                'errorMessage' => &$errorMessage
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageFailedErnoProc'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                                        }
+                                    }
+                                    file_put_contents($log_file,  $errorMessage . "\n", FILE_APPEND);
                                 }
                             }
                         } else {
@@ -1561,9 +1572,13 @@ class mslib_befe {
                     if ($i == 0) {
                         $i = '';
                     }
+                    $colname = 'products_image' . $i;
                     if ($item['img'][$i]) {
-                        $colname = 'products_image' . $i;
                         $array[$colname] = $item['img'][$i];
+                    }
+                    if ($oldproduct[$colname] && isset($item[$colname]) && $item[$colname] == '') {
+                        // In database we have an image already existing, but in the uploaded the feed the image is set to empty so we have to reset it in the database
+                        $array[$colname] = '';
                     }
                 }
                 if (count($array) > 0) {
@@ -1639,7 +1654,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1666,7 +1681,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1701,7 +1716,7 @@ class mslib_befe {
                 /*
 				if (filesize($original_path)>16384) {
 					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
-					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+					$command=\TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $imParams.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "3840x2160>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}
 				*/
@@ -1963,7 +1978,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -1990,7 +2005,7 @@ class mslib_befe {
                                             $i++;
                                         } while (file_exists($newOriginal_path));
                                     }
-                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $newOriginal_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                                     exec($command);
                                     if (file_exists($newOriginal_path)) {
                                         if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -2010,7 +2025,7 @@ class mslib_befe {
                 }
                 if (filesize($original_path) > 16384) {
                     // IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
-                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "1500x1500>" "' . $original_path . '" "' . $original_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+                    $command = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params . ' -quality ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'] . ' -resize "3840x2160>" "' . $original_path . '" "' . $original_path . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
                     exec($command);
                 }
                 $folder = mslib_befe::getImagePrefixFolder($filename);
@@ -4247,6 +4262,9 @@ class mslib_befe {
             if (strpos($date_input, '/') !== false) {
                 $date_delimeter = '/';
             }
+            if (strpos($date_input, '.') !== false) {
+                $date_delimeter = '.';
+            }
             if (strpos($date_input, ':') !== false) {
                 $have_time = true;
             }
@@ -4613,11 +4631,11 @@ class mslib_befe {
                     $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'], 0) . '</td>';
                     if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                         $markerArray['ITEM_DISCOUNT_AMOUNT'] = '<td align="right" class="cell_products_normal_price">' . mslib_fe::amount2Cents($product['discount_amount'] + (($product['discount_amount'] * $product['products_tax']) / 100), 0) . '</td>';
-                        $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price'] + (($product['final_price'] * $product['products_tax']) / 100)), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['products_price'] + (($product['products_price'] * $product['products_tax']) / 100)), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . (($product['final_price'] - $product['discount_amount']) + $product['products_tax_data']['total_tax']), $customer_currency, $display_currency_symbol, 0);
                         $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * ($product['final_price'] + $product['products_tax_data']['total_tax'])), $customer_currency, $display_currency_symbol, 0);
                     } else {
-                        $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['final_price']), $customer_currency, $display_currency_symbol, 0);
+                        $markerArray['ITEM_NORMAL_PRICE'] = mslib_fe::amount2Cents(($product['products_price']), $customer_currency, $display_currency_symbol, 0);
                         //$markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents($prefix . ($product['qty'] * ($product['final_price'] - $product['discount_amount'])), $customer_currency, $display_currency_symbol, 0);
                         $markerArray['ITEM_FINAL_PRICE'] = mslib_fe::amount2Cents(($product['qty'] * $product['final_price']), $customer_currency, $display_currency_symbol, 0);
                     }

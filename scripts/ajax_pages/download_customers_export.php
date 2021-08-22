@@ -296,8 +296,34 @@ if ($this->get['customers_export_hash']) {
         }
         $Cache_Lite->save($content);
     }
-    header("Content-Type: text/plain");
-    echo $content;
+    if ($this->get['downloadAsFile']) {
+        $file='export_customers_'.date('Ymd_Hi').'.csv';
+        $filePath=$this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/'.$file;
+        if (file_put_contents($filePath,$content)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename='.basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            // Remove tmp file
+            unlink($filePath);
+            exit();
+        }
+    }
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Pragma: no-cache");
+    header('Content-Encoding: UTF-8');
+    header('Content-type: text/plain; charset=UTF-8');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    echo "\xEF\xBB\xBF" . $content;
     exit();
 }
 exit();

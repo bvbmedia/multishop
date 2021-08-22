@@ -430,7 +430,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
                 implode(' and ', $where), // WHERE...
                 'optval.products_options_values_id', // GROUP BY...
-                'optval.products_options_values_name asc', // ORDER BY...
+                'optval2opt.sort_order asc', // ORDER BY...
                 '' // LIMIT ...
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
@@ -799,17 +799,28 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
         $value_id = 0;
         if (strpos($image_id, '_') !== false) {
             list($product_id, $option_id, $value_id) = explode('_', $image_id);
+            if ($product_id > 0 && $option_id > 0 && $value_id > 0) {
+                $select = array();
+                $select[] = 'attribute_image';
+
+                $filter = array();
+                $filter[] = 'options_id = ' . $option_id;
+                $filter[] = 'options_values_id = ' . $value_id;
+                $attribute_images = mslib_befe::getRecords('', 'tx_multishop_products_attributes', '', $filter, '', '', $select);
+                $count_attributes = count($attribute_images);
+                if ($count_attributes == '1') {
+                    $updateArray = array();
+                    $updateArray['attribute_image'] = '';
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_id=' . $product_id . ' and options_id=' . $option_id . ' and options_values_id=' . $value_id . ' and attribute_image=\'' . $image_fn . '\' and page_uid=\'' . $this->showCatalogFromPage . '\'', $updateArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+                    mslib_befe::deleteAttributeValuesImage($image_fn);
+                }
+                $return_data = array();
+                $return_data['target_delete_id'] = $image_id;
+                $json_data = mslib_befe::array2json($return_data);
+            }
         }
-        if ($product_id > 0 && $option_id > 0 && $value_id > 0) {
-            $updateArray = array();
-            $updateArray['attribute_image'] = '';
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_id=' . $product_id . ' and options_id=' . $option_id . ' and options_values_id=' . $value_id . ' and attribute_image=\'' . $image_fn . '\' and page_uid=\'' . $this->showCatalogFromPage . '\'', $updateArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-        }
-        mslib_befe::deleteAttributeValuesImage($image_fn);
-        $return_data = array();
-        $return_data['target_delete_id'] = $image_id;
-        $json_data = mslib_befe::array2json($return_data);
         echo $json_data;
         exit();
         break;

@@ -67,16 +67,26 @@ $array['orders_id'] = $this->pi_getLL('feed_exporter_fields_label_orders_id');
 $array['orders_status'] = $this->pi_getLL('feed_exporter_fields_label_orders_status');
 $array['customer_id'] = $this->pi_getLL('feed_exporter_fields_label_customer_id');
 $array['customer_billing_telephone'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_telephone');
+$array['customer_billing_mobile'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_mobile');
 $array['customer_billing_email'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_email');
+$array['customer_billing_company'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_company');
 $array['customer_billing_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_name');
 $array['customer_billing_address'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_address');
+$array['customer_billing_street_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_street_name');
+$array['customer_billing_address_number'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_address_number');
+$array['customer_billing_address_ext'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_address_ext');
 $array['customer_billing_city'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_city');
 $array['customer_billing_zip'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_zip');
 $array['customer_billing_country'] = $this->pi_getLL('feed_exporter_fields_label_customer_billing_country');
 $array['customer_delivery_telephone'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone');
+$array['customer_delivery_mobile'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_mobile');
 $array['customer_delivery_email'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_email');
 $array['customer_delivery_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_name');
+$array['customer_delivery_company'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_company');
 $array['customer_delivery_address'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address');
+$array['customer_delivery_street_name'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_street_name');
+$array['customer_delivery_address_number'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address_number');
+$array['customer_delivery_address_ext'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_address_ext');
 $array['customer_delivery_city'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_city');
 $array['customer_delivery_zip'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_zip');
 $array['customer_delivery_country'] = $this->pi_getLL('feed_exporter_fields_label_customer_delivery_country');
@@ -301,6 +311,11 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="\t"' . ($post_data['delimeter_type'] == '\t' ? ' selected="selected"' : '') . '>tabs (\t)</option>
 			<option value="|"' . ($post_data['delimeter_type'] == '|' ? ' selected="selected"' : '') . '>pipe (|)</option>
 		</select>';
+        // order_products position selectbox
+        $order_products_position_sb = '<select name="show_order_products_in" class="form-control">
+			<option value="horizontal"' . (($post_data['show_order_products_in'] == 'horizontal' || !$post_data['show_order_products_in']) ? ' selected="selected"' : '') . '>Horizontal (one row)</option>
+			<option value="vertical"' . ($post_data['show_order_products_in'] == 'vertical' ? ' selected="selected"' : '') . '>Vertical (multiple rows)</option>
+		</select>';
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_orders_archiver')) {
             $content .= '
                 <div class="form-group">
@@ -436,6 +451,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delimited_by')) . '</label>
 			<div class="col-md-10">
 			' . $delimeter_type_sb . '
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('show_order_products_in')) . '</label>
+			<div class="col-md-10">
+			' . $order_products_position_sb . '
 			</div>
 		</div>
 		<div class="form-group">

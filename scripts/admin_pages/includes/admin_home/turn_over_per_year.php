@@ -42,8 +42,7 @@ if (!$row_year['crdate']) {
     foreach ($dates as $key => $value) {
         $total_price = 0;
         $start_time = strtotime($value);
-        //$end_time=strtotime(date("Y-12-31 23:59:59", strtotime($value)));
-        $end_time = strtotime("Y-01-01 00:00:00 +1 YEAR", $start_time);
+        $end_time = strtotime(date("Y-01-01 00:00:00", strtotime('+1 year',$start_time)));
         $data_query['where'] = array();
         $data_query['where'][] = '(o.deleted=0)';
         $data_query['where'][] = '(o.crdate BETWEEN ' . $start_time . ' and ' . $end_time . ')';

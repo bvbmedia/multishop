@@ -46,6 +46,7 @@ if ($this->get['run_as_cron']) {
     $this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
     @unlink($this->msLogFile);
     file_put_contents($this->msLogFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
+    file_put_contents($this->msLogFile, 'Importer: Enabling lock file.'."\n", FILE_APPEND);
     file_put_contents($this->msLockFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
     // start counter for incremental updates on the display
     $subtel = 0;
@@ -131,6 +132,7 @@ $coltypes['products_old_price'] = 'Products price (old price, excl. VAT)';
 $coltypes['products_old_price_including_vat'] = 'Products price (old price, incl. VAT)';
 $coltypes['products_specials_price'] = 'Products price (specials price, excl. VAT)';
 $coltypes['products_specials_price_including_vat'] = 'Products price (specials price, incl. VAT)';
+$coltypes['specials_price_percentage'] = 'Specials price percentage';
 $coltypes['products_sku'] = 'Products SKU';
 $coltypes['products_minimum_quantity'] = 'Products minimum order quantity';
 $coltypes['products_maximum_quantity'] = 'Products maximum order quantity';
@@ -139,6 +141,7 @@ $coltypes['products_ean'] = 'Products EAN';
 $coltypes['products_unique_identifier'] = 'Products unique identifier (unique products id from feed)';
 $coltypes['products_quantity'] = 'Products stock quantity';
 $coltypes['products_status'] = 'Products status';
+$coltypes['search_engines_allow_indexing'] = 'Search-engine allow indexing';
 $coltypes['products_date_added'] = 'Products date added';
 $coltypes['products_date_available'] = 'Products date available';
 $coltypes['products_date_modified'] = 'Products date modified';
@@ -1176,6 +1179,7 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                     }
+                    $table_cols=array_keys($datarows[0]);
                     $total_datarows = count($datarows);
                     /*
 					// debug
@@ -1366,7 +1370,7 @@ if ($this->post['action'] == 'category-insert') {
                     $item['table_unique_id'] = $row[0];
                 }
                 // name
-                for ($i = 0; $i < $cols; $i++) {
+                foreach ($tmpitem as $i => $col) {
                     $char = '';
                     $tmpitem[$i] = trim($tmpitem[$i]);
                     switch ($this->post['select'][$i]) {
@@ -1572,6 +1576,16 @@ if ($this->post['action'] == 'category-insert') {
                     $fields['products_id'] = 'products_id';
                     $fields['sku_code'] = 'products_sku';
                     $fields['ean_code'] = 'products_ean';
+                    // custom hook that can be controlled by third-party plugin
+                    $skipItem = 0;
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchExistingProductByKeyPreProc'])) {
+                        $conf = array(
+                                'fields' => &$fields,
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchExistingProductByKeyPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
+                    }
                     foreach ($fields as $dbField => $itemField) {
                         if ($item[$itemField]) {
                             $str = "select products_id,extid from tx_multishop_products where page_uid=" . $this->showCatalogFromPage . " and " . $dbField . "='" . addslashes($item[$itemField]) . "'";
@@ -2297,6 +2311,20 @@ if ($this->post['action'] == 'category-insert') {
                             }
                             $item['products_price'] = $item['products_old_price'];
                         }
+                        if (isset($item['specials_price_percentage'])) {
+                            if (strstr($item['specials_price_percentage'],'%')) {
+                                $item['specials_price_percentage']=str_replace('%','',$item['specials_price_percentage']);
+                            }
+                            if (!isset($item['products_specials_price']) || isset($item['products_specials_price']) && !$item['products_specials_price']) {
+                                // If feed contains discount percentage and no specials price value, or empty specials price value
+                                if (isset($item['products_price'])) {
+                                    $item['products_specials_price']=($item['products_price']-($item['products_price']/100*$item['specials_price_percentage']));
+                                }
+                                if (isset($item['products_price_including_vat'])) {
+                                    $item['products_specials_price_including_vat']=($item['products_price_including_vat']-($item['products_price_including_vat']/100*$item['specials_price_percentage']));
+                                }
+                            }
+                        }
                         if (!$item['products_description'] and $item['products_shortdescription']) {
                             $item['products_description'] = nl2br($item['products_shortdescription']);
                         }
@@ -2365,7 +2393,10 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_price']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_price', $importedProductsLockedFields))))) {
                                 $updateArray['products_price'] = $item['products_price'];
                             }
-                            if ($item['manufacturers_id']) {
+                            if (isset($item['specials_price_percentage'])) {
+                                $updateArray['specials_price_percentage'] = $item['specials_price_percentage'];
+                            }
+                            if (isset($item['manufacturers_id'])) {
                                 $updateArray['manufacturers_id'] = $item['manufacturers_id'];
                             }
                             if (isset($item['products_staffel_price'])) {
@@ -2385,7 +2416,7 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_model']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_model', $importedProductsLockedFields))))) {
                                 $updateArray['products_model'] = $item['products_model'];
                             }
-                            if (isset($item['sku_code']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('sku_code', $importedProductsLockedFields))))) {
+                            if (isset($item['products_sku']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_sku', $importedProductsLockedFields))))) {
                                 $updateArray['sku_code'] = $item['products_sku'];
                             }
                             if (isset($item['manufacturers_products_id'])) {
@@ -2413,6 +2444,9 @@ if ($this->post['action'] == 'category-insert') {
                             }
                             if (isset($item['products_status'])) {
                                 $updateArray['products_status'] = $item['products_status'];
+                            }
+                            if (isset($item['search_engines_allow_indexing'])) {
+                                $updateArray['search_engines_allow_indexing'] = $item['search_engines_allow_indexing'];
                             }
                             if (isset($item['products_sort_order'])) {
                                 $updateArray['sort_order'] = $item['products_sort_order'];
@@ -2774,6 +2808,9 @@ if ($this->post['action'] == 'category-insert') {
                             }
                             $updateArray['products_model'] = $item['products_model'];
                             $updateArray['products_status'] = $item['products_status'];
+                            if (isset($item['search_engines_allow_indexing'])) {
+                                $updateArray['search_engines_allow_indexing'] = $item['search_engines_allow_indexing'];
+                            }
                             $updateArray['sku_code'] = $item['products_sku'];
                             if (isset($item['manufacturers_products_id'])) {
                                 $updateArray['vendor_code'] = $item['manufacturers_products_id'];
@@ -2837,11 +2874,16 @@ if ($this->post['action'] == 'category-insert') {
                             if (strstr($updateArray['product_capital_price'], ",")) {
                                 $updateArray['product_capital_price'] = str_replace(",", '.', $updateArray['product_capital_price']);
                             }
+                            if (isset($item['specials_price_percentage'])) {
+                                $updateArray['specials_price_percentage'] = $item['specials_price_percentage'];
+                            }
                             $updateArray['products_date_added'] = strtotime($item['products_date_added']);
                             $updateArray['products_date_available'] = strtotime($item['products_date_available']);
                             $updateArray['products_last_modified'] = strtotime($item['products_date_modified']);
                             $updateArray['page_uid'] = $this->showCatalogFromPage;
-                            $updateArray['manufacturers_id'] = $item['manufacturers_id'];
+                            if (isset($item['manufacturers_id'])) {
+                                $updateArray['manufacturers_id'] = $item['manufacturers_id'];
+                            }
                             $updateArray['imported_product'] = 1;
                             if ($this->get['job_id']) {
                                 $updateArray['import_job_id'] = $this->get['job_id'];
@@ -3457,7 +3499,7 @@ if ($this->post['action'] == 'category-insert') {
                                     } else {
                                         $estimated_time_remaining = number_format($estimated_seconds, 0, '.', '') . ' second(s)';
                                     }
-                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% / ' . number_format($item_counter, 0, '', '.') . ' products imported).' . "\n" . 'Job is running: ' . ($time_running) . ' and the estimated time remaining is: ' . $estimated_time_remaining . '.' . "\n";
+                                    $message .= '50 products processed in: ' . $ms_string . 'ms. ' . number_format(($total_datarows - $item_counter), 0, '', '.') . ' of ' . number_format($total_datarows, 0, '', '.') . ' product(s) waiting for import (' . round($completed_percentage) . '% imported, imported products: ' . number_format($item_counter, 0, '', '.') . ').' . "\n" . 'Job is running: ' . ($time_running) . ' and the remaining estimated time is: ' . $estimated_time_remaining . '.' . "\n";
                                     $message .= "----------------------------------\n";
                                 }
                                 // reset timer and subtel
@@ -3860,8 +3902,8 @@ if (count($erno)) {
 		';
     }
 }
-if ($this->get['run_as_cron']) {
+if (isset($this->msLockFile) && file_exists($this->msLockFile)) {
+    file_put_contents($this->msLogFile, 'Importer: Removing lock file.'."\n", FILE_APPEND);
     @unlink($this->msLockFile);
-    die();
+    exit();
 }
-?>

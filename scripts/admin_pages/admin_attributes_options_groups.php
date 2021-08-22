@@ -14,6 +14,15 @@ if (isset($this->post['new_options_groups_name']) && !empty($this->post['new_opt
         $sql_ins = "insert into tx_multishop_attributes_options_groups (attributes_options_groups_id, language_id, attributes_options_groups_name, sort_order) values ('" . $max_optid . "', '0', '" . addslashes($this->post['new_options_groups_name']) . "', '" . $max_optid . "')";
         $GLOBALS['TYPO3_DB']->sql_query($sql_ins);
     }
+    // hook for adding new items to details fieldset
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_attributes_options_groups.php']['adminAttributeGroupsSaveHook'])) {
+        // hook
+        $params = array();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_attributes_options_groups.php']['adminAttributeGroupsSaveHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+        // hook oef
+    }
     header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
     exit();
 }
@@ -36,6 +45,15 @@ if (is_array($this->post['option_groups_names']) and count($this->post['option_g
                 }
             }
         }
+    }
+    // hook for adding new items to details fieldset
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_attributes_options_groups.php']['adminAttributeGroupsSaveHook'])) {
+        // hook
+        $params = array();
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_attributes_options_groups.php']['adminAttributeGroupsSaveHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+        // hook oef
     }
     header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
     exit();

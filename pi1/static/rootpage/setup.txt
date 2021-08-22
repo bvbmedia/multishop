@@ -134,6 +134,9 @@ plugin.tx_multishop_pi1 {
 	adminOrdersListingDisableAutoRememberFilters = {$plugin.multishop.adminOrdersListingDisableAutoRememberFilters}
 	debugPurgeCacheLite = {$plugin.multishop.debugPurgeCacheLite}
 	enableAttributeOptionValuesGroup = {$plugin.multishop.enableAttributeOptionValuesGroup}
+	setReadOnlyForEditProductPriceIncludeTaxInput = {$plugin.multishop.setReadOnlyForEditProductPriceIncludeTaxInput}
+	shopAdminEditableInEditCustomer = {$plugin.multishop.shopAdminEditableInEditCustomer}
+	fe_adduseradmingroup_usergroup = {$plugin.multishop.fe_adduseradmingroup_usergroup}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

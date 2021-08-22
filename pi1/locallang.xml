@@ -706,6 +706,7 @@
             <label index="feed_exporter_fields_label_customer_billing_email">Customer billing e-mail</label>
             <label index="feed_exporter_fields_label_customer_billing_name">Customer billing name</label>
             <label index="feed_exporter_fields_label_customer_billing_telephone">Customer billing telephone</label>
+            <label index="feed_exporter_fields_label_customer_billing_mobile">Customer billing mobile</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Customer billing zip</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Customer delivery address</label>
             <label index="feed_exporter_fields_label_customer_delivery_company">Customer delivery company</label>
@@ -886,6 +887,7 @@
             <label index="max_usage">Max usage</label>
             <label index="maximize">maximize</label>
             <label index="maximum_cart_total_amount_are_x">In order to continue checkout the maximum order subtotal amount must %s</label>
+            <label index="show_order_products_in">Show order products in</label>
             <label index="maximum_number_of_order_products">Maximum number of order products</label>
             <label index="member_of">Member of</label>
             <label index="middle_name">middle name</label>
@@ -1464,6 +1466,12 @@
             <label index="admin_choose_foreign_source_name">Select foreign source name</label>
             <label index="label_product_image">With image</label>
             <label index="admin_sort_categories">Sort categories</label>
+            <label index="feed_exporter_fields_label_customer_billing_street_name">Customer billing street name</label>
+            <label index="feed_exporter_fields_label_customer_billing_address_number">Customer billing address number</label>
+            <label index="feed_exporter_fields_label_customer_billing_address_ext">Customer billing address number ext</label>
+            <label index="feed_exporter_fields_label_customer_delivery_street_name">Customer delivery street name</label>
+            <label index="feed_exporter_fields_label_customer_delivery_address_number">Customer delivery address number</label>
+            <label index="feed_exporter_fields_label_customer_delivery_address_ext">Customer delivery address number ext</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2165,6 +2173,7 @@
             <label index="feed_exporter_fields_label_customer_billing_email">Debiteur (factuur) e-mailadres</label>
             <label index="feed_exporter_fields_label_customer_billing_name">Debiteur (factuur) naam</label>
             <label index="feed_exporter_fields_label_customer_billing_telephone">Debiteur (factuur) telefoonnummer</label>
+            <label index="feed_exporter_fields_label_customer_billing_mobile">Debiteur (factuur) mobiel</label>
             <label index="feed_exporter_fields_label_customer_billing_zip">Debiteur (factuur) postcode</label>
             <label index="feed_exporter_fields_label_customer_delivery_address">Debiteur (aflever) adres</label>
             <label index="feed_exporter_fields_label_customer_delivery_city">Debiteur (aflever) woonplaats</label>
@@ -2344,6 +2353,7 @@
             <label index="max_usage">Max te gebruiken aantal</label>
             <label index="maximize">maximaliseer</label>
             <label index="maximum_cart_total_amount_are_x">Om door te kunnen gaan dient het maximale subtotaalbedrag van de bestelling %s te zijn</label>
+            <label index="show_order_products_in">Toon bestelproducten in</label>
             <label index="maximum_number_of_order_products">Maximaal aantal bestelregels</label>
             <label index="member_of">Lid van</label>
             <label index="middle_name">tussenvoegsel</label>

@@ -700,7 +700,7 @@ if ($this->get['feed_hash']) {
                         if ($row['categories_crum'][($level - 1)]['id']) {
                             $filter = array();
                             $filter[] = 'language_id=' . $GLOBALS['TSFE']->sys_language_uid;
-                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_keywords', 'categories_id', $filter);
+                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
                             $tmpcontent .= $row2['meta_title'];
                         }
                         break;
@@ -713,7 +713,7 @@ if ($this->get['feed_hash']) {
                         if ($row['categories_crum'][($level - 1)]['id']) {
                             $filter = array();
                             $filter[] = 'language_id=' . $GLOBALS['TSFE']->sys_language_uid;
-                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_keywords', 'categories_id', $filter);
+                            $row2 = mslib_befe::getRecord($row['categories_crum'][($level - 1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
                             $tmpcontent .= $row2['meta_keywords'];
                         }
                         break;
@@ -1243,8 +1243,9 @@ if ($this->get['feed_hash']) {
                 // custom page hook that can be controlled by third-party plugin
                 $continue_stripping = true;
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
+                    // Extend feed by third-party plugins (Google Shopping etc)
                     $output = $tmpcontent;
-                    $params = array(
+                    $conf = array(
                             'feed' => $feed,
                             'mode' => $mode,
                             'field' => $field,
@@ -1253,7 +1254,21 @@ if ($this->get['feed_hash']) {
                             'continue_stripping' => &$continue_stripping
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
-                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                    }
+                    // Additional post hook, so the result of third-party plugins (that are connected to hook: iterateItemFieldProc) can be further manipulated
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProcPostProc'])) {
+                        $conf = array(
+                                'feed' => $feed,
+                                'mode' => $mode,
+                                'field' => $field,
+                                'row' => &$row,
+                                'output' => &$output,
+                                'continue_stripping' => &$continue_stripping
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProcPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                        }
                     }
                     if ($output) {
                         $tmpcontent = $output;

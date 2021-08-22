@@ -157,6 +157,8 @@ switch ($this->post['tx_multishop_pi1']['action']) {
                     if ($order['orders_id']) {
                         $updateArray = array();
                         $updateArray['deleted'] = 1;
+                        $updateArray['deleted_by_uid'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                        $updateArray['deleted_tstamp'] = time();
                         $updateArray['orders_last_modified'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $orders_id . '\'', $updateArray);
                         if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -589,8 +591,8 @@ $search_keys[] = 'order_expected_delivery_date_from';
 $search_keys[] = 'order_expected_delivery_date_till';
 $search_keys[] = 'payment_method';
 $search_keys[] = 'shipping_method';
-$search_keys[] = 'search_by_status_last_modified';
-$search_keys[] = 'search_by_telephone_orders';
+//$search_keys[] = 'search_by_status_last_modified';
+//$search_keys[] = 'search_by_telephone_orders';
 $search_keys[] = 'manufacturers_id';
 foreach ($search_keys as $search_key) {
     // reset the filter cookie
@@ -600,17 +602,43 @@ foreach ($search_keys as $search_key) {
         $GLOBALS['TSFE']->storeSessionData();
     }
     // re-assign new value to cookie
-    if (isset($this->post[$search_key]) && $this->post[$search_key] != $this->cookie[$search_key]) {
+    if (isset($this->post[$search_key]) && !empty($this->post[$search_key]) && $this->cookie[$search_key] != $this->post[$search_key]) {
         $this->cookie[$search_key] = $this->post[$search_key];
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-        $GLOBALS['TSFE']->storeSessionData();
+    } else {
+        unset($this->cookie[$search_key]);
     }
-    // if cookie stiill have value, re-assign back to the post filter, so it gave remembering effect
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+    // if cookie still have value, re-assign back to the post filter, so it gave remembering effect
     if (isset($this->cookie[$search_key]) && $this->cookie[$search_key] && $this->conf['adminOrdersListingDisableAutoRememberFilters'] == '0') {
         $this->post[$search_key] = $this->cookie[$search_key];
     }
 }
-if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
+if (isset($this->post['Search']) and $this->post['customer_type']!=$this->cookie['customer_type']) {
+    $this->cookie['customer_type'] = $this->post['customer_type'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['customer_type']) {
+    $this->post['customer_type']= $this->cookie['customer_type'];
+}
+if (isset($this->post['Search']) and $this->post['search_by_status_last_modified']!=$this->cookie['search_by_status_last_modified']) {
+    $this->cookie['search_by_status_last_modified'] = $this->post['search_by_status_last_modified'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['search_by_status_last_modified']) {
+    $this->post['search_by_status_last_modified']= $this->cookie['search_by_status_last_modified'];
+}
+if (isset($this->post['Search']) and $this->post['search_by_telephone_orders']!=$this->cookie['search_by_telephone_orders']) {
+    $this->cookie['search_by_telephone_orders'] = $this->post['search_by_telephone_orders'];
+    $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+    $GLOBALS['TSFE']->storeSessionData();
+}
+if ($this->cookie['search_by_telephone_orders']) {
+    $this->post['search_by_telephone_orders'] = $this->cookie['search_by_telephone_orders'];
+}
+if (isset($this->post['Search']) and ($this->post['tx_multishop_pi1']['excluding_vat'] != $this->cookie['excluding_vat'])) {
     $this->cookie['excluding_vat'] = $this->post['tx_multishop_pi1']['excluding_vat'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
@@ -618,7 +646,7 @@ if ($this->post['Search'] and ($this->post['tx_multishop_pi1']['excluding_vat'] 
 if ($this->cookie['excluding_vat']) {
     $this->post['tx_multishop_pi1']['excluding_vat'] = $this->cookie['excluding_vat'];
 }
-if ($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) {
+if (isset($this->post['Search']) and ($this->post['limit'] != $this->cookie['limit'])) {
     $this->cookie['limit'] = $this->post['limit'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
@@ -726,7 +754,7 @@ if (!in_array($this->get['limit'], $limits)) {
     $limits[] = $this->get['limit'];
 }
 foreach ($limits as $limit) {
-    $limit_selectbox .= '<option value="' . $limit . '"' . ($limit == $this->post['limit'] ? ' selected' : '') . '>' . $limit . '</option>';
+    $limit_selectbox .= '<option value="' . $limit . '"' . (($limit == $this->post['limit']) || $limit == ($this->get['limit']) ? ' selected' : '') . '>' . $limit . '</option>';
 }
 $limit_selectbox .= '</select>';
 $filter = array();
@@ -738,6 +766,9 @@ $where = array();
 $orderby = array();
 $select = array();
 if ($this->post['skeyword']) {
+    if (preg_match('/^[0-9]*$/', $this->post['skeyword'])) {
+        $type_search = 'orders_id';
+    }
     switch ($type_search) {
         case 'all':
             $option_fields = $option_search;
@@ -870,9 +901,7 @@ if ($this->post['skeyword']) {
     }
 }
 // convert to international format
-if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
-    $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
-    $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
+if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till']) && mslib_befe::isValidDate($this->post['order_date_from']) && mslib_befe::isValidDate($this->post['order_date_till'])) {
     $start_time = strtotime($this->post['order_date_from']);
     $end_time = strtotime($this->post['order_date_till']);
     if ($this->post['search_by_status_last_modified']) {
@@ -882,8 +911,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
     }
     $filter[] = $column . " BETWEEN '" . $start_time . "' and '" . $end_time . "'";
 } else {
-    if (!empty($this->post['order_date_from'])) {
-        $this->post['order_date_from'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_from']);
+    if (!empty($this->post['order_date_from']) && mslib_befe::isValidDate($this->post['order_date_from'])) {
         $start_time = strtotime($this->post['order_date_from']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
@@ -892,8 +920,7 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
         }
         $filter[] = $column . " >= '" . $start_time . "'";
     }
-    if (!empty($this->post['order_date_till'])) {
-        $this->post['order_date_till'] = mslib_befe::convertLocaleDateToInternationalDateFormat($this->post['order_date_till']);
+    if (!empty($this->post['order_date_till']) && mslib_befe::isValidDate($this->post['order_date_till'])) {
         $end_time = strtotime($this->post['order_date_till']);
         if ($this->post['search_by_status_last_modified']) {
             $column = 'o.status_last_modified';
@@ -1012,7 +1039,7 @@ $orderby[] = $order_by . ' ' . $order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
     $filter[] = 'o.by_phone=1';
 }
-if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != 'all') {
+if (isset($this->post['country']) && !empty($this->post['country']) && $this->post['country'] != '' && $this->post['country'] != 'all') {
     $filter[] = "o.billing_country='" . addslashes($this->post['country']) . "'";
 }
 if (isset($this->post['manufacturers_id']) && $this->post['manufacturers_id'] > 0) {
@@ -1078,88 +1105,10 @@ if (is_array($groups) and count($groups)) {
 }
 $customer_groups_input .= '</select>' . "\n";
 // payment method
-$payment_methods = array();
-$payment_methods_label = array();
-$shop_title = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, payment_method, payment_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        'deleted=0' . ((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'payment_method', // GROUP BY...
-        'payment_method_label asc', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    $payment_method = array();
-    if ($row['payment_method']) {
-        $payment_method = mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', 0, false);
-    }
-    if (empty($row['payment_method_label'])) {
-        $row['payment_method'] = 'nopm';
-        $row['payment_method_label'] = 'Empty payment method';
-    }
-    if ($this->masterShop) {
-        $pageTitle = mslib_fe::getShopNameByPageUid($payment_method['page_uid'], 'All');
-        $shop_title = '';
-        if (!empty($pageTitle)) {
-            $shop_title = ' (' . $pageTitle . ')';
-        }
-        $row['payment_method_label'] = $row['payment_method_label'] . $shop_title;
-    }
-    $payment_methods[$row['payment_method']] = $row['payment_method_label'];
-    $payment_methods_label[strtoupper($row['payment_method_label']) . '_' . $row['payment_method']] = $row['payment_method'];
-}
-ksort($payment_methods_label);
-$payment_method_input = '';
-$payment_method_input .= '<select id="payment_method" class="order_select2" name="payment_method">' . "\n";
-$payment_method_input .= '<option value="all">' . $this->pi_getLL('all_payment_methods') . '</option>' . "\n";
-if (is_array($payment_methods_label) and count($payment_methods_label)) {
-    foreach ($payment_methods_label as $payment_method_label => $payment_method_code) {
-        $payment_method_input .= '<option value="' . $payment_method_code . '"' . ($this->post['payment_method'] == $payment_method_code ? ' selected="selected"' : '') . '>' . $payment_methods[$payment_method_code] . '</option>' . "\n";
-    }
-}
-$payment_method_input .= '</select>' . "\n";
+$payment_method_input = '<input type="hidden" id="payment_method" class="order_select2_payment" name="payment_method" value="' . ($this->post['payment_method'] ? $this->post['payment_method'] : '') . '" />' . "\n";
 // shipping method
-$shipping_methods = array();
-$shipping_methods_label = array();
-$sql = $GLOBALS['TYPO3_DB']->SELECTquery('page_uid, shipping_method, shipping_method_label', // SELECT ...
-        'tx_multishop_orders', // FROM ...
-        'deleted=0' . ((!$this->masterShop) ? ' and page_uid=\'' . $this->shop_pid . '\'' : ''), // WHERE...
-        'shipping_method', // GROUP BY...
-        'shipping_method_label asc', // ORDER BY...
-        '' // LIMIT ...
-);
-$qry = $GLOBALS['TYPO3_DB']->sql_query($sql);
-while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-    $shipping_method = array();
-    if ($row['shipping_method']) {
-        $shipping_method = mslib_fe::getShippingMethod($row['shipping_method'], 's.code', 0, false);
-    }
-    if (empty($row['shipping_method_label'])) {
-        $row['shipping_method'] = 'nosm';
-        $row['shipping_method_label'] = 'Empty shipping method';
-    }
-    if ($this->masterShop) {
-        $pageTitle = mslib_fe::getShopNameByPageUid($shipping_method['page_uid'], 'All');
-        $shop_title = '';
-        if (!empty($pageTitle)) {
-            $shop_title = ' (' . $pageTitle . ')';
-        }
-        $row['shipping_method_label'] = $row['shipping_method_label'] . $shop_title;
-    }
-    $shipping_methods[$row['shipping_method']] = $row['shipping_method_label'];
-    $shipping_methods_label[strtoupper($row['shipping_method_label'])] = $row['shipping_method'];
-}
-ksort($shipping_methods_label);
-$shipping_method_input = '';
-$shipping_method_input .= '<select id="shipping_method" class="order_select2" name="shipping_method">' . "\n";
-$shipping_method_input .= '<option value="all">' . $this->pi_getLL('all_shipping_methods') . '</option>' . "\n";
-if (is_array($shipping_methods_label) and count($shipping_methods_label)) {
-    foreach ($shipping_methods_label as $shipping_method_label => $shipping_method_code) {
-        $shipping_method_input .= '<option value="' . $shipping_method_code . '"' . ($this->post['shipping_method'] == $shipping_method_code ? ' selected="selected"' : '') . '>' . $shipping_methods[$shipping_method_code] . '</option>' . "\n";
-    }
-}
-$shipping_method_input .= '</select>' . "\n";
+$shipping_method_input = '<input type="hidden" id="shipping_method" class="order_select2_shipping" name="shipping_method" value="' . ($this->post['shipping_method'] ? $this->post['shipping_method'] : '') . '" />' . "\n";
+// billing country
 $billing_countries_selectbox = '<input type="hidden" class="order_country_select2" name="country" id="country" value="' . $this->post['country'] . '" />';
 $subpartArray = array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
@@ -1254,6 +1203,24 @@ $subpartArray['###UPDATE_ORDER_STATUS###'] = $this->pi_getLL('update_order_statu
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_PRE_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status_pre');
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
 $subpartArray['###ADMIN_AJAX_UPDATE_ORDER_STATUS_URL2###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status');
+
+// expand the search input when search is active
+$subpartArray['###SEARCH_BUTTON_EXPAND###'] = ' collapsed';
+$subpartArray['###SEARCH_INPUT_EXPAND###'] = '';
+if (isset($this->get['type_search']) && !empty($this->get['type_search'])) {
+    $subpartArray['###SEARCH_BUTTON_EXPAND###'] = '';
+    $subpartArray['###SEARCH_INPUT_EXPAND###'] = ' in';
+}
+$subpartArray['###SHOP_PID1###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID2###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID3###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID4###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID5###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID6###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID7###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID8###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID9###'] = $this->shop_pid;
+$subpartArray['###SHOP_PID10###'] = $this->shop_pid;
 $subpartArray['###LABEL_JS_DO_YOU_WANT_CHANGE_ORDERS_ID_X_TO_STATUS_X###'] = $this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x');
 $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_format_js');
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
@@ -1308,7 +1275,8 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     $params = array(
             'subparts' => &$subparts,
             'subpartArray' => &$subpartArray,
-            'headerButtons' => &$headerButtons
+            'headerButtons' => &$headerButtons,
+            'all_orders_status' => &$all_orders_status
     );
     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersMainTemplatePreProc'] as $funcRef) {
         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -1442,6 +1410,96 @@ jQuery(document).ready(function($) {
 			var id=$(element).val();
 			if (id!=="") {
 				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_products') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
+	$(".order_select2_payment").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_payment_methods') . '", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
+	$(".order_select2_shipping").select2({
+		placeholder: "' . $this->pi_getLL('all') . '",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_ordered_shipping_methods') . '", {
 					data: {
 						preselected_id: id
 					},

@@ -543,6 +543,9 @@ CREATE TABLE `tx_multishop_orders` (
  `foreign_orders_id` varchar(30) default '',
  `is_shipping_costs_manual` tinyint(1) default '0',
  `http_host` varchar(127) default '',
+ `discount_amount_excl_tax` decimal(8,2) DEFAULT '0.00',
+ `deleted_by_uid` int(11) DEFAULT '0',
+ `deleted_tstamp` int(11) DEFAULT '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -644,6 +647,8 @@ CREATE TABLE `tx_multishop_orders_products` (
  `categories_name_4` varchar(150) default '',
  `categories_id_5` int(5) default '0',
  `categories_name_5` varchar(150) default '',
+ `categories_id_6` int(5) default '0',
+ `categories_name_6` varchar(150) default '',
  `ean_code` varchar(50) default '',
  `sku_code` varchar(50) default '',
  `vendor_code` varchar(50) default '',
@@ -937,6 +942,7 @@ CREATE TABLE `tx_multishop_products` (
  `import_notes` varchar(250) default '',
  `is_hidden` tinyint(1) default '0',
  `ignore_stock_level` tinyint(1) default '0',
+ `search_engines_allow_indexing` tinyint(1) default '1',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -967,9 +973,9 @@ CREATE TABLE `tx_multishop_products` (
  KEY `foreign_products_id` (`foreign_products_id`),
  KEY `specials_price_percentage` (`specials_price_percentage`),
  KEY `manufacturers_advice_price` (`manufacturers_advice_price`),
- KEY `ignore_stock_level` (`ignore_stock_level`)
-) ;
-
+ KEY `ignore_stock_level` (`ignore_stock_level`),
+ KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)
+);
 
 CREATE TABLE `tx_multishop_products_attributes` (
  `products_attributes_id` int(5) NOT NULL auto_increment,
@@ -1503,7 +1509,7 @@ CREATE TABLE `tx_multishop_undo_products` (
  `products_date_added` int(11) default '0',
  `products_last_modified` int(11) default '0',
  `products_date_available` int(11) default '0',
- `products_weight` decimal(5,2) default '0.00',
+ `products_weight` decimal(11,2) default '0.00',
  `products_status` tinyint(1) default '0',
  `tax_id` int(5) default '0',
  `manufacturers_id` int(5) default '0',

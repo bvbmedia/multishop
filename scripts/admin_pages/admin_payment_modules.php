@@ -9,8 +9,16 @@ if ($this->post) {
             $payment_methods = mslib_fe::loadPaymentMethods();
             $zones = mslib_fe::loadAllCountriesZones();
             foreach ($zones['zone_id'] as $zone_id) {
-                $s = 1;
+                $s = 50;
                 foreach ($payment_methods as $payment_method) {
+                    $filter = array();
+                    $filter[] = 'zone_id=\'' . $zone_id . '\'';
+                    $filter[] = 'payment_method_id=\'' . $payment_method['id'] . '\'';
+                    $recordSortOrder = mslib_befe::getRecord('', 'tx_multishop_payment_methods_to_zones', '', $filter);
+                    $sortOrder = $s;
+                    if ($recordSortOrder['sort_order'] > 0) {
+                        $sortOrder = $recordSortOrder['sort_order'];
+                    }
                     // delete mapping
                     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id=\'' . $zone_id . '\' and payment_method_id=\'' . $payment_method['id'] . '\'');
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -20,9 +28,10 @@ if ($this->post) {
                         $insertArray = array();
                         $insertArray['zone_id'] = $zone_id;
                         $insertArray['payment_method_id'] = $payment_method['id'];
-                        $insertArray['sort_order'] = $s++;
+                        $insertArray['sort_order'] = $sortOrder;
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_to_zones', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        $s++;
                     }
                 }
             }
@@ -933,7 +942,7 @@ if ($this->ms['show_main']) {
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
                         $rs_check = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
                         $payment_method['checked'] = true;
-                        if ($rs_check['sort_order'] > 0) {
+                        if ($rs_check['sort_order'] != '0') {
                             $payment_methods_sorted[$rs_check['sort_order']] = $payment_method;
                         } else {
                             $payment_methods_sorted[$sort_number] = $payment_method;
@@ -946,7 +955,7 @@ if ($this->ms['show_main']) {
                     }
                 }
                 ksort($payment_methods_sorted);
-                foreach ($payment_methods_sorted as $payment_method) {
+                foreach ($payment_methods_sorted as $sortNumber => $payment_method) {
                     $vars = unserialize($payment_method['vars']);
                     if ($payment_method['checked']) {
                         $tmpcontent .= '<tr id="payment_zone_[' . $zone_id . ']_' . $payment_method['id'] . '" class="row_sortable">';
