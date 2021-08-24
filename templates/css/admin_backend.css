@@ -1410,7 +1410,7 @@ ul.navInterface > li.active > span::after {
 /* custom made togglebutton */
 .toggleButton input[type="checkbox"] {
 	position: absolute;
-	top: 0;
+	/*top: 0;*/
 	left: 0;
 	opacity: 0;
 }
