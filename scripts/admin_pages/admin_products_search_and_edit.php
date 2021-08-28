@@ -470,27 +470,77 @@ if (isset($this->get['tax_id']) && $this->get['tax_id'] != '' && $this->get['tax
     }
     $filter[] = $prefix . 'tax_id=' . (int)$this->get['tax_id'];
 }
+$price_from = 0;
+$price_till = 0;
 if (isset($this->get['product_price_from']) && $this->get['product_price_from'] != '' && isset($this->get['product_price_till']) && $this->get['product_price_till'] != '') {
+    $price_from = $this->get['product_price_from'];
+    $price_till = $this->get['product_price_till'];
+} else {
+    if (isset($this->get['product_price_from']) && $this->get['product_price_from'] != '') {
+        $price_from = $this->get['product_price_from'];
+    }
+    if (isset($this->get['product_price_till']) && $this->get['product_price_till'] != '') {
+        $price_till = $this->get['product_price_till'];
+    }
+}
+if ($price_from || $price_till) {
     $prefix = 'p.';
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
     }
     switch ($this->get['search_by_product_price']) {
         case 'products_price':
-            $filter[] = $prefix . 'products_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+        default:
+            if ($price_from && $price_till) {
+                $filter[] = $prefix . 'products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+            } else {
+                if ($price_from) {
+                    $filter[] = $prefix . 'products_price >= ' . $price_from;
+                }
+                if ($price_till) {
+                    $filter[] = $prefix . 'products_price <= ' . $price_till;
+                }
+            }
             break;
         case 'product_capital_price':
-            $filter[] = $prefix . 'product_capital_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            if ($price_from && $price_till) {
+                $filter[] = $prefix . 'product_capital_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+            } else {
+                if ($price_from) {
+                    $filter[] = $prefix . 'product_capital_price >= ' . $price_from;
+                }
+                if ($price_till) {
+                    $filter[] = $prefix . 'product_capital_price <= ' . $price_till;
+                }
+            }
             break;
         case 'manufacturers_advice_price':
-            $filter[] = $prefix . 'manufacturers_advice_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            if ($price_from && $price_till) {
+                $filter[] = $prefix . 'manufacturers_advice_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+            } else {
+                if ($price_from) {
+                    $filter[] = $prefix . 'manufacturers_advice_price >= ' . $price_from;
+                }
+                if ($price_till) {
+                    $filter[] = $prefix . 'manufacturers_advice_price <= ' . $price_till;
+                }
+            }
             break;
         case 'specials_new_products_price':
             $prefix = 's.';
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
                 $prefix = 'pf.';
             }
-            $filter[] = $prefix . 'specials_new_products_price BETWEEN ' . $this->get['product_price_from'] . ' AND ' . $this->get['product_price_till'];
+            if ($price_from && $price_till) {
+                $filter[] = $prefix . 'specials_new_products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+            } else {
+                if ($price_from) {
+                    $filter[] = $prefix . 'specials_new_products_price >= ' . $price_from;
+                }
+                if ($price_till) {
+                    $filter[] = $prefix . 'specials_new_products_price <= ' . $price_till;
+                }
+            }
             break;
     }
 }
