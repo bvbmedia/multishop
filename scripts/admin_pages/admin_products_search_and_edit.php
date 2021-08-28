@@ -302,6 +302,7 @@ $match = array();
 $orderby = array();
 $where = array();
 $select = array();
+$extra_from = array();
 if (!$this->ms['MODULES']['FLAT_DATABASE']) {
     $select[] = 'p.products_status';
     $select[] = 'p.product_capital_price';
@@ -488,41 +489,78 @@ if ($price_from || $price_till) {
     if ($this->ms['MODULES']['FLAT_DATABASE']) {
         $prefix = 'pf.';
     }
+    $select[] = $prefix.'tax_rate';
     switch ($this->get['search_by_product_price']) {
         case 'products_price':
         default:
             if ($price_from && $price_till) {
-                $filter[] = $prefix . 'products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $filter[] = '(' . $prefix . 'products_price * (1 + (' . $prefix . 'tax_rate/100))) BETWEEN ' . $price_from . ' AND ' . $price_till;
+                } else {
+                    $filter[] = $prefix . 'products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                }
             } else {
                 if ($price_from) {
-                    $filter[] = $prefix . 'products_price >= ' . $price_from;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'products_price * (1 + (' . $prefix . 'tax_rate/100))) >= ' . $price_from;
+                    } else {
+                        $filter[] = $prefix . 'products_price >= ' . $price_from;
+                    }
                 }
                 if ($price_till) {
-                    $filter[] = $prefix . 'products_price <= ' . $price_till;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'products_price * (1 + (' . $prefix . 'tax_rate/100))) <= ' . $price_till;
+                    } else {
+                        $filter[] = $prefix . 'products_price <= ' . $price_till;
+                    }
                 }
             }
             break;
         case 'product_capital_price':
             if ($price_from && $price_till) {
-                $filter[] = $prefix . 'product_capital_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $filter[] = '(' . $prefix . 'product_capital_price * (1 + (' . $prefix . 'tax_rate/100))) BETWEEN ' . $price_from . ' AND ' . $price_till;
+                } else {
+                    $filter[] = $prefix . 'product_capital_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                }
             } else {
                 if ($price_from) {
-                    $filter[] = $prefix . 'product_capital_price >= ' . $price_from;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'product_capital_price * (1 + (' . $prefix . 'tax_rate/100))) >= ' . $price_from;
+                    } else {
+                        $filter[] = $prefix . 'product_capital_price >= ' . $price_from;
+                    }
                 }
                 if ($price_till) {
-                    $filter[] = $prefix . 'product_capital_price <= ' . $price_till;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'product_capital_price * (1 + (' . $prefix . 'tax_rate/100))) <= ' . $price_till;
+                    } else {
+                        $filter[] = $prefix . 'product_capital_price <= ' . $price_till;
+                    }
                 }
             }
             break;
         case 'manufacturers_advice_price':
             if ($price_from && $price_till) {
-                $filter[] = $prefix . 'manufacturers_advice_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $filter[] = '(' . $prefix . 'manufacturers_advice_price * (1 + (' . $prefix . 'tax_rate/100))) BETWEEN ' . $price_from . ' AND ' . $price_till;
+                } else {
+                    $filter[] = $prefix . 'manufacturers_advice_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                }
             } else {
                 if ($price_from) {
-                    $filter[] = $prefix . 'manufacturers_advice_price >= ' . $price_from;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'manufacturers_advice_price * (1 + (' . $prefix . 'tax_rate/100))) >= ' . $price_from;
+                    } else {
+                        $filter[] = $prefix . 'manufacturers_advice_price >= ' . $price_from;
+                    }
                 }
                 if ($price_till) {
-                    $filter[] = $prefix . 'manufacturers_advice_price <= ' . $price_till;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'manufacturers_advice_price * (1 + (' . $prefix . 'tax_rate/100))) <= ' . $price_till;
+                    } else {
+                        $filter[] = $prefix . 'manufacturers_advice_price <= ' . $price_till;
+                    }
                 }
             }
             break;
@@ -532,13 +570,25 @@ if ($price_from || $price_till) {
                 $prefix = 'pf.';
             }
             if ($price_from && $price_till) {
-                $filter[] = $prefix . 'specials_new_products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                    $filter[] = '(' . $prefix . 'specials_new_products_price * (1 + (' . $prefix . 'tax_rate/100))) BETWEEN ' . $price_from . ' AND ' . $price_till;
+                } else {
+                    $filter[] = $prefix . 'specials_new_products_price BETWEEN ' . $price_from . ' AND ' . $price_till;
+                }
             } else {
                 if ($price_from) {
-                    $filter[] = $prefix . 'specials_new_products_price >= ' . $price_from;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'specials_new_products_price * (1 + (' . $prefix . 'tax_rate/100))) >= ' . $price_from;
+                    } else {
+                        $filter[] = $prefix . 'specials_new_products_price >= ' . $price_from;
+                    }
                 }
                 if ($price_till) {
-                    $filter[] = $prefix . 'specials_new_products_price <= ' . $price_till;
+                    if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+                        $filter[] = '(' . $prefix . 'specials_new_products_price * (1 + (' . $prefix . 'tax_rate/100))) <= ' . $price_till;
+                    } else {
+                        $filter[] = $prefix . 'specials_new_products_price <= ' . $price_till;
+                    }
                 }
             }
             break;
@@ -834,7 +884,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
     }
 }
 // custom page hook that can be controlled by third-party plugin eof
-$pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'admin_products_search');
+$pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, $extra_from, array(), 'admin_products_search');
 $products = $pageset['products'];
 $product_tax_rate_js = array();
 if ($pageset['total_rows'] > 0) {

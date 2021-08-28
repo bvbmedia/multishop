@@ -943,6 +943,7 @@ CREATE TABLE `tx_multishop_products` (
  `is_hidden` tinyint(1) default '0',
  `ignore_stock_level` tinyint(1) default '0',
  `search_engines_allow_indexing` tinyint(1) default '1',
+ `tax_rate` decimal(6,4) default '0.0000',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -974,7 +975,8 @@ CREATE TABLE `tx_multishop_products` (
  KEY `specials_price_percentage` (`specials_price_percentage`),
  KEY `manufacturers_advice_price` (`manufacturers_advice_price`),
  KEY `ignore_stock_level` (`ignore_stock_level`),
- KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)
+ KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`),
+ KEY `tax_rate` (`tax_rate`)
 );
 
 CREATE TABLE `tx_multishop_products_attributes` (

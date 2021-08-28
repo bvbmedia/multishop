@@ -946,3 +946,24 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
 }
+$str = "select `tax_rate` from tx_multishop_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_products` ADD `tax_rate` decimal(6,4) default '0.0000'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+
+    $select = array();
+    $select[] = 'p.products_id, t.rate';
+    $filter = array();
+    $filter[] = 'p.tax_id = t.tax_id';
+    $products = mslib_befe::getRecords('', 'tx_multishop_products p, tx_multishop_taxes t', '', $filter, '', '', '99999999', $select);
+    if (is_array($products) && count($products)) {
+        foreach ($products as $product) {
+            $updateArray = array();
+            $updateArray['tax_rate'] = $product['rate'];
+            $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $product['products_id'] . '\'', $updateArray);
+            $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+        }
+    }
+}

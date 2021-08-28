@@ -1150,6 +1150,8 @@ if ($this->post) {
     $updateArray['search_engines_allow_indexing'] = $this->post['search_engines_allow_indexing'];
     $updateArray['order_unit_id'] = $this->post['order_unit_id'];
     $updateArray['tax_id'] = $this->post['tax_id'];
+    $data_tax_rate = mslib_fe::getTaxRuleSet($this->post['tax_id']);
+    $updateArray['tax_rate'] = ($data_tax_rate['total_tax_rate']);
     if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
         $updateArray['file_number_of_downloads'] = $this->post['file_number_of_downloads'];
     }
