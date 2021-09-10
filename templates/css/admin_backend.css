@@ -1513,12 +1513,19 @@ ul.navInterface > li.active > span::after {
 /* B2UBILLSPR-47 */
 .col-md-10.form-inline {
 	display: inline-flex
-  }
-  #msSubQtyField,
-  #msCouponCodeField {
+}
+#msSubQtyField,
+#msCouponCodeField {
 	width: 229px;
 	border-radius: 4px;
-  }
-  .form-inline .input-group .input-group-addon.input-group-addon-34 {
+}
+.form-inline .input-group .input-group-addon.input-group-addon-34 {
 	width: 34px; 
-  }
+}
+#couponMessage {
+	text-align: left;
+	margin-left: 10px;
+}
+.ml-20 {
+	margin-left: 20px!important;
+}
