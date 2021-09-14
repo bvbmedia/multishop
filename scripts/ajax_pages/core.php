@@ -3218,6 +3218,26 @@ switch ($this->ms['page']) {
             die();
         }
         break;
+    case 'sort_orders_status':
+        if ($this->ADMIN_USER) {
+            $key = 'row_sortable';
+            if (is_array($this->post[$key]) and count($this->post[$key])) {
+                $no = 1;
+                foreach ($this->post[$key] as $prod_id) {
+                    if (is_numeric($prod_id)) {
+                        $where = "id = " . $prod_id;
+                        $updateArray = array(
+                            'sort_order' => $no
+                        );
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', $where, $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        $no++;
+                    }
+                }
+            }
+        }
+        exit();
+        break;
     case 'custom_page':
         // custom page hook that can be controlled by third-party plugin
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAjaxPage'])) {

@@ -4548,12 +4548,8 @@ if (is_numeric($this->get['orders_id'])) {
                 $.each($(".edit_product_manual_option"), function(i, v){
                     select2_sb("#" + $(v).attr("id"), "' . $this->pi_getLL('admin_label_option') . '", "edit_product_manual_option", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options') . '");
                 });
-                console.log($(".edit_product_manual_values").length);
                 $.each($(".edit_product_manual_values"), function(i, v){
                     var select2_element_id="#" + $(v).attr("id");
-                    
-                    console.log(select2_element_id);
-                    
                     select2_values_sb(select2_element_id, "' . $this->pi_getLL('admin_value') . '", "edit_product_manual_values_class", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values') . '");
                 });
                 select2_discount("#product_discount_percentage");
