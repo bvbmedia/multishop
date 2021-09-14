@@ -53,6 +53,11 @@ if ($this->post) {
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+
+                    // Update the newly created order status sort order using order status id
+                    $sql_update = 'update tx_multishop_orders_status set sort_order = id where sort_order=0';
+                    $GLOBALS['TYPO3_DB']->sql_query($sql_update);
+
                     $this->post['tx_multishop_pi1']['orders_status_id'] = $id;
                     if ($id) {
                         foreach ($this->post['tx_multishop_pi1']['order_status_name'] as $key => $value) {
