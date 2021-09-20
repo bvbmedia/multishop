@@ -975,6 +975,7 @@ if (!$qry) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
     // Update the newly created order status sort order using order status id
-    $sql_update = 'update tx_multishop_orders_status set sort_order = id where sort_order=0';
+    $sql_update = 'UPDATE tx_multishop_orders_status SET sort_order = id where sort_order=0';
     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
+    $messages[] = $str;
 }
