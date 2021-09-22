@@ -971,7 +971,7 @@ if (!$qry) {
 $str = "select `sort_order` from tx_multishop_orders_status limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-    $str = "ALTER TABLE `tx_multishop_orders_status` int(11) default '0', ADD KEY `sort_order` (`sort_order`)";
+    $str = "ALTER TABLE `tx_multishop_orders_status` ADD `sort_order` int(11) default '0', ADD KEY `sort_order` (`sort_order`)";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
     // Update the newly created order status sort order using order status id
