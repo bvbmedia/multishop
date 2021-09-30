@@ -1730,6 +1730,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // now add the order eof
             $orders_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+            if (!$orders_id) {
+                $subject = $this->HTTP_HOST . ' - createOrder query failed';
+                $body = '';
+                $body .= '<strong>Query failed:</strong><br/>' . $query. '<br/><br/>';
+                $body .= '<strong>IP address:</strong><br/>' . $this->REMOTE_ADDR . '<br/><br/>';
+                $body .= '<strong>Browser:</strong><br/>' . htmlspecialchars($this->server['HTTP_USER_AGENT']) . '<br/><br/>';
+                $body .= '<strong>Referer:</strong><br/>' . htmlspecialchars($this->server['HTTP_REFERER']) . '<br/><br/>';
+                $body .= '<strong>Time:</strong><br/>' . ucfirst(strftime($this->pi_getLL('full_date_format'))) . '<br/><br/>';
+                $body .= '<strong>Backtrace:</strong><br/>';
+                $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                mslib_befe::mailDev($subject, $body);
+            }
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPostProc'])) {
                 $params = array(
@@ -1771,6 +1783,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $orders_products_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+            if (!$orders_products_id) {
+                $subject = $this->HTTP_HOST . ' - createOrdersProduct query failed';
+                $body = '';
+                $body .= '<strong>Query failed:</strong><br/>' . $query. '<br/><br/>';
+                $body .= '<strong>IP address:</strong><br/>' . $this->REMOTE_ADDR . '<br/><br/>';
+                $body .= '<strong>Browser:</strong><br/>' . htmlspecialchars($this->server['HTTP_USER_AGENT']) . '<br/><br/>';
+                $body .= '<strong>Referer:</strong><br/>' . htmlspecialchars($this->server['HTTP_REFERER']) . '<br/><br/>';
+                $body .= '<strong>Time:</strong><br/>' . ucfirst(strftime($this->pi_getLL('full_date_format'))) . '<br/><br/>';
+                $body .= '<strong>Backtrace:</strong><br/>';
+                $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                mslib_befe::mailDev($subject, $body);
+            }
             //hook to let other plugins further manipulate the replacers
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPostProc'])) {
                 $params = array(
@@ -1836,6 +1860,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $orders_product_attributes_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                    if (!$orders_product_attributes_id) {
+                        $subject = $this->HTTP_HOST . ' - createOrdersProductAttribute query failed';
+                        $body = '';
+                        $body .= '<strong>Query failed:</strong><br/>' . $query. '<br/><br/>';
+                        $body .= '<strong>IP address:</strong><br/>' . $this->REMOTE_ADDR . '<br/><br/>';
+                        $body .= '<strong>Browser:</strong><br/>' . htmlspecialchars($this->server['HTTP_USER_AGENT']) . '<br/><br/>';
+                        $body .= '<strong>Referer:</strong><br/>' . htmlspecialchars($this->server['HTTP_REFERER']) . '<br/><br/>';
+                        $body .= '<strong>Time:</strong><br/>' . ucfirst(strftime($this->pi_getLL('full_date_format'))) . '<br/><br/>';
+                        $body .= '<strong>Backtrace:</strong><br/>';
+                        $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                        mslib_befe::mailDev($subject, $body);
+                    }
                     //hook to let other plugins further manipulate the replacers
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePostProc'])) {
                         $params = array(
