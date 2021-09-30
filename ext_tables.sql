@@ -664,6 +664,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `related_to_orders_products_id ` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
  `foreign_orders_id` varchar(30) default '',
+ `foreign_orders_products_id` varchar(30) default '',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
