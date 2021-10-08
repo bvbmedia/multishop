@@ -1174,6 +1174,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             if ($user['email'] != '' and !in_array($user['email'], $name)) {
                                 $name[] = 'email: ' . $user['email'];
                             }
+                            if (!count($name) && $user['uid']) {
+                                $name[] = $user['uid'];
+                            }
                             $content .= implode(" / ", $name) . ' has been updated.<br />';
                             $uid = $user_check['uid'];
                             // custom hook that can be controlled by third-party
@@ -1311,6 +1314,9 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 }
                                 if ($user['email'] != '' and !in_array($user['email'], $name)) {
                                     $name[] = 'email: ' . $user['email'];
+                                }
+                                if (!count($name) && $user['uid']) {
+                                    $name[] = $user['uid'];
                                 }
                                 $content .= implode(" / ", $name) . ' has been added.<br />';
                                 // custom hook that can be controlled by third-party
