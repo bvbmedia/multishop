@@ -2865,6 +2865,19 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'checkSKU':
+        $return_data = array();
+        $skuCode = $this->post['product_sku_code'];
+        $additional_where = array();
+        $additional_where[] = 'p.sku_code = \'' . addslashes($skuCode) . '\'';
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        $return_data['status'] = 'OK';
+        if ($skuRecord['products_id']) {
+            $return_data['status'] = 'NOTOK';
+        }
+        echo json_encode($return_data);
+        exit();
+        break;
     case 'method_sortables':
         if ($this->ADMIN_USER) {
             $key = 'multishop_shipping_method';

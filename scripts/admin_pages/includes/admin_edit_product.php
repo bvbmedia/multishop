@@ -1144,6 +1144,12 @@ if ($this->post) {
     $updateArray['product_capital_price'] = $this->post['product_capital_price'];
     $updateArray['products_condition'] = $this->post['products_condition'];
     $updateArray['sku_code'] = $this->post['sku_code'];
+    $additional_where = array();
+    $additional_where[] = 'p.sku_code = \'' . addslashes($this->post['sku_code']) . '\'';
+    $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+    if ($skuRecord['products_id']) {
+        $updateArray['sku_code'] = '';
+    }
     $updateArray['products_price'] = $this->post['products_price'];
     $updateArray['products_weight'] = $this->post['products_weight'];
     $updateArray['products_status'] = $this->post['products_status'];
@@ -4988,6 +4994,8 @@ if ($this->post) {
             $subpartArray['###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###'] = $manufacturers_advice_price_incl_vat_display;
             $subpartArray['###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###'] = $product['manufacturers_advice_price'];
         }
+        $subpartArray['###AJAX_URL_CHECK_SKU###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_sku_already_used');
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

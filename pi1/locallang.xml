@@ -2809,6 +2809,7 @@
             <label index="select_customer_groups">Selecteer debiteurgroep(en)</label>
             <label index="repair_products_default_crumpath">Repareer standaard categorie kruimelpad</label>
             <label index="admin_label_repair_products_default_crumpath_done">Repareer standaard categorie kruimelpad is voltooid!</label>
+            <label index="admin_label_product_sku_already_used">Product SKU already in used</label>
             <label index="label_order_details_vendor_code">Vendor code</label>
             <label index="invoice_paid_status">Betaalstatus</label>
             <label index="invoice_type">Type factuur</label>

@@ -812,8 +812,12 @@
                                 </div>
                                 <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
                                     <div class="col-md-12">
-                                        <p class="form-control-static"><strong>###LABEL_SKU_CODE###</strong></p>
-                                        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><strong>###LABEL_SKU_CODE###</strong></span>
+
+                                            <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
+                                            <span class="input-group-addon"><a href="#" id="checkSKU" class="btn btn-sm btn-default">Validate</a></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
@@ -926,6 +930,37 @@
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
+        $(document).on("click", "#checkSKU", function(e){
+            e.preventDefault();
+            if ($("#sku_code").val() != "") {
+                $(this).empty();
+                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_SKU###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###");
+                           $("#sku_code").css("border", "1px solid red");
+                       } else {
+                           $("#sku_code").css("border", "1px solid green");
+                       }
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   failed: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   }
+                });
+            }
+        });
         $(".admin_product_edit").submit(function () {
             var enableBlockUi = '1';
             if ($("#categories_id").val() == "0" || $("#categories_id").val() == "") {
