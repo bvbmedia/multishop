@@ -815,7 +815,7 @@
                                         <div class="input-group ml-10">
                                             <span class="input-group-addon"><strong>###LABEL_SKU_CODE###</strong></span>
 
-                                            <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
+                                            <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###" data-sku-valid="###VALUE_SKU_CODE_VALIDITY###">
                                             <span class="input-group-btn"><a href="#" id="checkSKU" class="btn btn-success">Validate</a></span>
                                         </div>
                                     </div>
@@ -883,7 +883,7 @@
                         </div>
                         <!-- ###VIRTUAL_PRODUCTS_WRAPPER### end -->
                         ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                        <input name="pid" type="hidden" value="###VALUE_PRODUCT_PID0###" />
+                        <input name="pid" id="product_id" type="hidden" value="###VALUE_PRODUCT_PID0###" />
                         <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
                         <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
@@ -939,13 +939,15 @@
                    type: "POST",
                    url: "###AJAX_URL_CHECK_SKU###",
                    dataType: "json",
-                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID###"},
+                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID1###"},
                    success: function (data) {
                        if (data.status == "NOTOK") {
                            msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###");
                            $("#sku_code").css("border", "1px solid red");
+                           $("#sku_code").attr("data-sku-valid", "0");
                        } else {
                            $("#sku_code").css("border", "1px solid green");
+                           $("#sku_code").attr("data-sku-valid", "1");
                        }
                        $("#checkSKU").empty();
                        $("#checkSKU").html('Validate');
@@ -972,6 +974,13 @@
                 enableBlockUi = '0';
                 msDialog("ERROR", "###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
                 return false;
+            }
+            if ($("#sku_code").val() != "") {
+                if ($("#sku_code").attr("data-sku-valid") == "0") {
+                    enableBlockUi = '0';
+                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###");
+                    return false;
+                }
             }
             if (enableBlockUi == '1') {
                 msAdminBlockUi();

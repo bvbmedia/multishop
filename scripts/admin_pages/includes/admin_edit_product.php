@@ -4892,6 +4892,7 @@ if ($this->post) {
         $subpartArray['###VALUE_EAN_CODE###'] = htmlspecialchars($product['ean_code']);
         $subpartArray['###LABEL_SKU_CODE###'] = $this->pi_getLL('admin_sku_code');
         $subpartArray['###VALUE_SKU_CODE###'] = htmlspecialchars($product['sku_code']);
+        $subpartArray['###VALUE_SKU_CODE_VALIDITY###'] = (!empty($product['sku_code']) ? 1 : 0);
         $subpartArray['###LABEL_MANUFACTURER_CODE###'] = $this->pi_getLL('admin_manufacturers_products_id');
         $subpartArray['###VALUE_MANUFACTURER_CODE###'] = htmlspecialchars($product['vendor_code']);
         $subpartArray['###LABEL_PRODUCT_UNIT###'] = $this->pi_getLL('admin_product_units', 'PRODUCT UNITS');
@@ -4996,6 +4997,8 @@ if ($this->post) {
         }
         $subpartArray['###AJAX_URL_CHECK_SKU###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+        $subpartArray['###AJAX_PID1###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

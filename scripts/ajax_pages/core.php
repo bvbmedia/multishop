@@ -2868,8 +2868,12 @@ switch ($this->ms['page']) {
     case 'checkSKU':
         $return_data = array();
         $skuCode = $this->post['product_sku_code'];
+        $productId = $this->post['pid'];
         $additional_where = array();
         $additional_where[] = 'p.sku_code = \'' . addslashes($skuCode) . '\'';
+        if ($productId) {
+            $additional_where[] = 'p.products_id != \'' . addslashes($productId) . '\'';
+        }
         $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
         $return_data['status'] = 'OK';
         if ($skuRecord['products_id']) {
