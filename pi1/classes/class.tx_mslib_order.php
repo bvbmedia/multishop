@@ -1409,8 +1409,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $orders['products'] = $orders_products;
             $orders['subtotal_tax'] = $orders['orders_tax_data']['total_orders_tax'];
             $orders['subtotal_amount'] = round($total_amount, 2);
-            $orders['shipping_method_costs'] = round($orders['shipping_method_costs'], 2);
-            $orders['payment_method_costs'] = round($orders['payment_method_costs'], 2);
+            // Shipping and payment costs excluding VAT should not be rounded, otherwise we cannot calculate it back to including VAT
+            // Issue-ID: ISOFTL-245
+            //$orders['shipping_method_costs'] = round($orders['shipping_method_costs'], 2);
+            //$orders['payment_method_costs'] = round($orders['payment_method_costs'], 2);
             /* if ($orders['orders_tax_data']['shipping_tax'] || $orders['orders_tax_data']['payment_tax']) {
                 $extra_vat=0;
                 if ($orders['shipping_method_costs']) 	{
