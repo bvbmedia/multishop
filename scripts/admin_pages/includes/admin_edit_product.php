@@ -4996,9 +4996,12 @@ if ($this->post) {
             $subpartArray['###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###'] = $product['manufacturers_advice_price'];
         }
         $subpartArray['###AJAX_URL_CHECK_SKU###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
+        $subpartArray['###AJAX_URL_CHECK_SKU1###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_sku_already_used');
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED2###'] = $this->pi_getLL('admin_label_product_sku_already_used');
         $subpartArray['###AJAX_PID1###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
+        $subpartArray['###AJAX_PID2###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

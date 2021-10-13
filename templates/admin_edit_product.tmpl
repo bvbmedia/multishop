@@ -929,6 +929,13 @@
     </div>
 </div>
 <script type="text/javascript">
+    function delay(fn, ms) {
+        let timer = 0
+        return function(...args) {
+            clearTimeout(timer)
+            timer = setTimeout(fn.bind(this, ...args), ms || 0)
+        }
+    }
     jQuery(document).ready(function ($) {
         $(document).on("click", "#checkSKU", function(e){
             e.preventDefault();
@@ -963,6 +970,38 @@
                 });
             }
         });
+        $(document).on("keydown", "#sku_code", delay(function(e){
+            if ($("#sku_code").val() != "") {
+                $("#checkSKU").empty();
+                $("#checkSKU").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_SKU1###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID2###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED2###");
+                           $("#sku_code").css("border", "1px solid red");
+                           $("#sku_code").attr("data-sku-valid", "0");
+                       } else {
+                           $("#sku_code").css("border", "1px solid green");
+                           $("#sku_code").attr("data-sku-valid", "1");
+                       }
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   failed: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   }
+               });
+            }
+        }, 500));
         $(".admin_product_edit").submit(function () {
             var enableBlockUi = '1';
             if ($("#categories_id").val() == "0" || $("#categories_id").val() == "") {
