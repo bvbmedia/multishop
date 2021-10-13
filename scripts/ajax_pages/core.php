@@ -1870,13 +1870,16 @@ switch ($this->ms['page']) {
                             }
                             move_uploaded_file($file_tmp_name, $temp_file);
                             if ($file_type=='image/svg+xml') {
-                                // Create a new sanitizer instance
-                                $sanitizer = new Sanitizer();
-                                // Load the dirty svg
-                                $svg_content = file_get_contents($temp_file);
-                                // Pass it to the sanitizer and get it back clean
-                                $cleanSVG = $sanitizer->sanitize($svg_content);
-                                file_put_contents($cleanSVG,$temp_file);
+                                if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_images_svg')) {
+                                    include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop_images_svg') . 'res/svg-sanitizer-master/src/Sanitizer.php');
+                                    // Create a new sanitizer instance
+                                    $sanitizer = new Sanitizer();
+                                    // Load the dirty svg
+                                    $svg_content = file_get_contents($temp_file);
+                                    // Pass it to the sanitizer and get it back clean
+                                    $cleanSVG = $sanitizer->sanitize($svg_content);
+                                    file_put_contents($cleanSVG, $temp_file);
+                                }
                             }
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
