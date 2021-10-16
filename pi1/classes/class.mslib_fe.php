@@ -3933,6 +3933,16 @@ class mslib_fe {
                     }
                 }
             }
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['loadPaymentMethodsPostProc'])) {
+                $confMethod = array(
+                    'array' => &$array
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['loadPaymentMethodsPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $confMethod, $this);
+                }
+            }
+            // hook eof
             return $array;
         }
     }
