@@ -1122,6 +1122,12 @@ if ($this->post) {
             $this->post['ean_code'] = str_pad($this->post['ean_code'], 12, '0', STR_PAD_LEFT);
         }
         $updateArray['ean_code'] = $this->post['ean_code'];
+        $additional_where = array();
+        $additional_where[] = 'p.ean_code = \'' . addslashes($this->post['ean_code']) . '\'';
+        $eanRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        if ($eanRecord['products_id']) {
+            $updateArray['ean_code'] = '';
+        }
     }
     if (isset($this->post['starttime']) && !empty($this->post['starttime_visitor'])) {
         $updateArray['starttime'] = strtotime($this->post['starttime']);
@@ -5000,8 +5006,17 @@ if ($this->post) {
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_sku_already_used');
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_sku_already_used');
         $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED2###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+
+        $subpartArray['###AJAX_URL_CHECK_EAN###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkEAN');
+        $subpartArray['###AJAX_URL_CHECK_EAN1###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkEAN');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED2###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+
+
         $subpartArray['###AJAX_PID1###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $subpartArray['###AJAX_PID2###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
+        $subpartArray['###AJAX_PID3###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

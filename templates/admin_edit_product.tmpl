@@ -807,7 +807,10 @@
                             <div class="col-md-10 form-inline">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+                                        <div class="input-group ml-10">
+                                            <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###" data-ean-valid="###VALUE_EAN_CODE_VALIDITY###">
+                                            <span class="input-group-btn"><a href="#" id="checkEAN" class="btn btn-success">Validate</a></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
@@ -937,6 +940,77 @@
         }
     }
     jQuery(document).ready(function ($) {
+        $(document).on("click", "#checkEAN", function(e){
+            e.preventDefault();
+            if ($("#ean_code").val() != "") {
+                $(this).empty();
+                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_EAN###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#ean_code").val(), pid: "###AJAX_PID3###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#ean_code").css("border", "1px solid red");
+                           $("#ean_code").attr("data-sku-valid", "0");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Validate');
+                       } else {
+                           $("#ean_code").css("border", "1px solid green");
+                           $("#ean_code").attr("data-sku-valid", "1");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Invalid');
+                       }
+                   },
+                   failed: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Validate');
+                   }
+                });
+            }
+        });
+        $(document).on("keydown", "#ean_code", delay(function(e){
+            if ($("#ean_code").val() != "") {
+                $("#checkEAN").empty();
+                $("#checkEAN").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_EAN1###",
+                   dataType: "json",
+                   data: {product_ean_code: $("#ean_code").val(), pid: "###AJAX_PID4###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#ean_code").css("border", "1px solid red");
+                           $("#ean_code").attr("data-ean-valid", "0");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Validate');
+                       } else {
+                           $("#ean_code").css("border", "1px solid green");
+                           $("#ean_code").attr("data-ean-valid", "1");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Invalid');
+                       }
+                   },
+                   failed: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Failed');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Error');
+                   }
+                });
+            }
+        }, 500));
         $(document).on("click", "#checkSKU", function(e){
             e.preventDefault();
             if ($("#sku_code").val() != "") {
@@ -949,7 +1023,6 @@
                    data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID1###"},
                    success: function (data) {
                        if (data.status == "NOTOK") {
-                           msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###");
                            $("#sku_code").css("border", "1px solid red");
                            $("#sku_code").attr("data-sku-valid", "0");
                        } else {
@@ -981,7 +1054,6 @@
                    data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID2###"},
                    success: function (data) {
                        if (data.status == "NOTOK") {
-                           msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED2###");
                            $("#sku_code").css("border", "1px solid red");
                            $("#sku_code").attr("data-sku-valid", "0");
                        } else {
@@ -1018,6 +1090,13 @@
                 if ($("#sku_code").attr("data-sku-valid") == "0") {
                     enableBlockUi = '0';
                     msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###");
+                    return false;
+                }
+            }
+            if ($("#ean_code").val() != "") {
+                if ($("#ean_code").attr("data-ean-valid") == "0") {
+                    enableBlockUi = '0';
+                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###");
                     return false;
                 }
             }

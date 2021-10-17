@@ -2885,6 +2885,23 @@ switch ($this->ms['page']) {
         echo json_encode($return_data);
         exit();
         break;
+    case 'checkEAN':
+        $return_data = array();
+        $eanCode = $this->post['product_ean_code'];
+        $productId = $this->post['pid'];
+        $additional_where = array();
+        $additional_where[] = 'p.ean_code = \'' . addslashes($eanCode) . '\'';
+        if ($productId) {
+            $additional_where[] = 'p.products_id != \'' . addslashes($productId) . '\'';
+        }
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        $return_data['status'] = 'OK';
+        if ($skuRecord['products_id']) {
+            $return_data['status'] = 'NOTOK';
+        }
+        echo json_encode($return_data);
+        exit();
+        break;
     case 'method_sortables':
         if ($this->ADMIN_USER) {
             $key = 'multishop_shipping_method';
