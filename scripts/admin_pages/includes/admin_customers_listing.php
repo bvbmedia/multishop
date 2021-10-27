@@ -30,13 +30,13 @@ foreach ($customers as $customer) {
     }
     $customerNameArray = array();
     if ($customer['company']) {
-        $customerNameArray[] = $customer['company'];
+        $customerNameArray[] = htmlspecialchars(addslashes($customer['company']));
     }
     if ($customer['name']) {
-        $customerNameArray[] = $customer['name'];
+        $customerNameArray[] = htmlspecialchars(addslashes($customer['name']));
     }
     if (!count($customerNameArray)) {
-        $customerNameArray[] = $customer['username'];
+        $customerNameArray[] = htmlspecialchars(addslashes($customer['username']));
     }
     if ($customer['lastlogin']) {
         $customer['lastlogin'] = strftime("%a. %x<br/>%X", $customer['lastlogin']);
@@ -85,9 +85,9 @@ foreach ($customers as $customer) {
     $markerArray['LABEL_LOADING'] = htmlspecialchars($this->pi_getLL('loading'));
     $markerArray['CUSTOMERS_UID'] = $customer['uid'];
     $markerArray['CUSTOMERS_EDIT_LINK'] = $customer_edit_link;
-    $markerArray['CUSTOMERS_USERNAME'] = $customer['username'];
-    $markerArray['CUSTOMERS_COMPANY'] = $customer['company'];
-    $markerArray['CUSTOMERS_NAME'] = $customer['name'];
+    $markerArray['CUSTOMERS_USERNAME'] = htmlspecialchars(addslashes($customer['username']));
+    $markerArray['CUSTOMERS_COMPANY'] = htmlspecialchars(addslashes($customer['company']));
+    $markerArray['CUSTOMERS_NAME'] = htmlspecialchars(addslashes($customer['name']));
     $markerArray['CUSTOMERS_COMPANY_AND_NAME'] = implode('<br/>', $customerNameArray);
     $userGroupMarkupArray = array();
     $userGroupUids = explode(',', $customer['usergroup']);
