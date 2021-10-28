@@ -776,6 +776,17 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                             $invoice = $invoices[0];
                             $pdfFileName = $invoice['invoice_id'] . '_' . $invoice['orders_id'] . '.pdf';
                             $pdfFilePath = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/' . $pdfFileName;
+                            //hook to let other plugins further manipulate the replacers
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['paidEmailInvoiceFilenameAttachment'])) {
+                                $params = array(
+                                        'invoice' => $invoice,
+                                        'pdfFileName' => &$pdfFileName,
+                                        'pdfFilePath' => &$pdfFilePath
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['paidEmailInvoiceFilenameAttachment'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
                             // generate the invoice PDF
                             // Get Language code (ie nl, en, de)
                             $language_code = mslib_befe::getLanguageIso2ByLanguageUid($order['language_id']);
