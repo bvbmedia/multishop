@@ -979,3 +979,12 @@ if (!$qry) {
     $GLOBALS['TYPO3_DB']->sql_query($sql_update);
     $messages[] = $str;
 }
+$key='ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS';
+$title='Admin edit product: Expand attributes tabs by default';
+$description='Expand attributes tabs by default.';
+$default_value='0';
+if (!isset($settings['GLOBAL_MODULES'][$key])) {
+    $str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', '".$title."', '".$key."', '".$default_value."', '".$description."', 11, NULL, NULL, now(), 'tep_cfg_select_option(array(''0'',''1''),');";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
+}

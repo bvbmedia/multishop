@@ -4132,6 +4132,14 @@ if ($this->post) {
                         $options_data[$row['products_options_id']] = $row['products_options_name'];
                         $attributes_data[$row['products_options_id']][] = $row;
                     }
+                    $collapsed = ' collapsed';
+                    $aria_expanded = 'false';
+                    $expand_in = '';
+                    if ($this->ms['MODULES']['ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS'] == '1') {
+                        $collapsed = '';
+                        $aria_expanded = 'true';
+                        $expand_in = ' in';
+                    }
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
                         $attributes_tab_block .= '<td colspan="5" id="products_attributes_items">';
@@ -4148,11 +4156,11 @@ if ($this->post) {
                                 $hide_row = ' style="display:none"';
                             }
                             $attributes_block_panel[$option_id] = '
-                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"' . $hide_row . '>
-                                <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="false" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
+                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"' . $hide_row . ' aria-expanded="'.$aria_expanded.'">
+                                <div class="panel-heading panel-heading-toggle ' . $collapsed . '" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="'.$aria_expanded.'" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
                                     <h3 class="panel-title"><i class="fa fa-bars"></i> ' . $option_name . '</h3>
                                 </div>
-                                <div class="panel-collapse collapse" id="bodyproducts_attributes_item_' . $option_id . '">
+                                <div class="panel-collapse collapse'.$expand_in.'" id="bodyproducts_attributes_item_' . $option_id . '">
                                 <div class="panel-body">
                                 <div class="items_wrapper">
 
@@ -4322,7 +4330,7 @@ if ($this->post) {
                                     $collapsed = ' collapsed';
                                     $aria_expanded = 'false';
                                     $expand_in = '';
-                                    if ($counter == '0') {
+                                    if ($counter == '0' || $this->ms['MODULES']['ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS'] == '1') {
                                         $collapsed = '';
                                         $aria_expanded = 'true';
                                         $expand_in = ' in';
