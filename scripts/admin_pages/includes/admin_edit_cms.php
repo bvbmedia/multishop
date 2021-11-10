@@ -361,48 +361,50 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 		';
     foreach ($this->languages as $key => $language) {
         $tmpcontent .= '
-		<div class="form-group">
-		<label class="control-label col-md-2">' . $this->pi_getLL('language') . '</label><div class="col-md-10"><p class="form-control-static">';
-        if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3 . 'sysext/cms/tslib/media/flags/flag_' . $language['flag'] . '.gif')) {
-            $tmpcontent .= '<img src="' . $this->FULL_HTTP_URL_TYPO3 . 'sysext/cms/tslib/media/flags/flag_' . $language['flag'] . '.gif"> ';
-        }
-        $tmpcontent .= '' . $language['title'] . '</p></div>
-		</div>
-		<div class="form-group">
-			<label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('name')) . '</label>
-			<div class="col-md-10">
-			<input spellcheck="true" type="text" class="form-control text" name="cms_name[' . $language['uid'] . ']" id="cms_name[' . $language['uid'] . ']" value="' . htmlspecialchars($cms[$language['uid']]['name']) . '">
+        <div class="panel panel-default">
+			<div class="panel-heading panel-heading-toggle' . (($language['uid'] > 0 && $this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) ? ' collapsed' : '') . '" data-toggle="collapse" data-target="#msEditCMS_' . $language['uid'] . '">
+				<h3 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#msEditCMS_' . $language['uid'] . '"><i class="fa fa-file-text-o"></i> ' . $language['title'] . '</a>
+				</h3>
 			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-md-10 col-md-offset-2">
-				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#markersModal">Markers</button>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="cms_content[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('content')) . '</label>
-			<div class="col-md-10">
-			<textarea spellcheck="true" name="cms_content[' . $language['uid'] . ']" id="cms_content[' . $language['uid'] . ']" class="mceEditor" rows="4">' . htmlspecialchars($cms[$language['uid']]['content']) . '</textarea>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_title')) . '</label>
-			<div class="col-md-10">
-			    <div class="input-group width-fw">
-                    <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_title']) . '" maxlength="60">
-                    <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
+			<div id="msEditCMS_' . $language['uid'] . '" class="panel-collapse collapse' . ($language['uid'] === 0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS'] ? ' in' : '') . '">
+                <div class="form-group">
+                    <label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('name')) . '</label>
+                    <div class="col-md-10">
+                    <input spellcheck="true" type="text" class="form-control text" name="cms_name[' . $language['uid'] . ']" id="cms_name[' . $language['uid'] . ']" value="' . htmlspecialchars($cms[$language['uid']]['name']) . '">
+                    </div>
                 </div>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_description')) . '</label>
-			<div class="col-md-10">
-			    <div class="input-group width-fw">
-                    <input type="text" class="form-control text meta-desc" name="meta_description[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_description']) . '" maxlength="160">
-                    <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#markersModal">Markers</button>
+                    </div>
                 </div>
-			</div>
-		</div>';
+                <div class="form-group">
+                    <label for="cms_content[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('content')) . '</label>
+                    <div class="col-md-10">
+                    <textarea spellcheck="true" name="cms_content[' . $language['uid'] . ']" id="cms_content[' . $language['uid'] . ']" class="mceEditor" rows="4">' . htmlspecialchars($cms[$language['uid']]['content']) . '</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_title')) . '</label>
+                    <div class="col-md-10">
+                        <div class="input-group width-fw">
+                            <input type="text" class="form-control text meta-title" name="meta_title[' . $language['uid'] . ']" id="meta_title[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_title']) . '" maxlength="60">
+                            <div class="input-group-addon">char-left: <span id="meta_title_char_count' . $language['uid'] . '">60</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="metaDescWrapper' . $language['uid'] . '">
+                    <label for="cms_name[' . $language['uid'] . ']" class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('admin_label_input_meta_description')) . '</label>
+                    <div class="col-md-10">
+                        <div class="input-group width-fw">
+                            <input type="text" class="form-control text meta-desc" name="meta_desc[' . $language['uid'] . ']" id="meta_description[' . $language['uid'] . ']" data-lang-id="' . $language['uid'] . '" value="' . htmlspecialchars($cms[$language['uid']]['meta_description']) . '" maxlength="160">
+                            <div class="input-group-addon">char-left: <span id="meta_desc_char_count' . $language['uid'] . '">160</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>';
     }
     $tabs['cms_details'] = array(
             $this->pi_getLL('admin_cms'),
