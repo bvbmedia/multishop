@@ -1122,13 +1122,17 @@ if ($this->post) {
             $this->post['ean_code'] = str_pad($this->post['ean_code'], 12, '0', STR_PAD_LEFT);
         }
         $updateArray['ean_code'] = $this->post['ean_code'];
-        // Disabled
-        /*$additional_where = array();
-        $additional_where[] = 'p.ean_code = \'' . addslashes($this->post['ean_code']) . '\'';
-        $eanRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
-        if ($eanRecord['products_id']) {
-            $updateArray['ean_code'] = '';
-        }*/
+        if ($this->conf['strictProductEAN'] == '1') {
+            $additional_where = array();
+            $additional_where[] = 'p.ean_code = \'' . addslashes($this->post['ean_code']) . '\'';
+            if ($this->post['pid']) {
+                $additional_where[] = 'p.products_id != \'' . $this->post['pid'] . '\'';
+            }
+            $eanRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+            if ($eanRecord['products_id']) {
+                $updateArray['ean_code'] = '';
+            }
+        }
     }
     if (isset($this->post['starttime']) && !empty($this->post['starttime_visitor'])) {
         $updateArray['starttime'] = strtotime($this->post['starttime']);
@@ -1151,12 +1155,17 @@ if ($this->post) {
     $updateArray['product_capital_price'] = $this->post['product_capital_price'];
     $updateArray['products_condition'] = $this->post['products_condition'];
     $updateArray['sku_code'] = $this->post['sku_code'];
-    /*$additional_where = array();
-    $additional_where[] = 'p.sku_code = \'' . addslashes($this->post['sku_code']) . '\'';
-    $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
-    if ($skuRecord['products_id']) {
-        $updateArray['sku_code'] = '';
-    }*/
+    if ($this->conf['strictProductSKU'] == '1') {
+        $additional_where = array();
+        $additional_where[] = 'p.sku_code = \'' . addslashes($this->post['sku_code']) . '\'';
+        if ($this->post['pid']) {
+            $additional_where[] = 'p.products_id != \'' . $this->post['pid'] . '\'';
+        }
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        if ($skuRecord['products_id']) {
+            $updateArray['sku_code'] = '';
+        }
+    }
     $updateArray['products_price'] = $this->post['products_price'];
     $updateArray['products_weight'] = $this->post['products_weight'];
     $updateArray['products_status'] = $this->post['products_status'];

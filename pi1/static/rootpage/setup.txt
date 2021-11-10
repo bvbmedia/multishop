@@ -137,6 +137,8 @@ plugin.tx_multishop_pi1 {
 	setReadOnlyForEditProductPriceIncludeTaxInput = {$plugin.multishop.setReadOnlyForEditProductPriceIncludeTaxInput}
 	shopAdminEditableInEditCustomer = {$plugin.multishop.shopAdminEditableInEditCustomer}
 	fe_adduseradmingroup_usergroup = {$plugin.multishop.fe_adduseradmingroup_usergroup}
+	strictProductEAN = {$plugin.multishop.strictProductEAN}
+	strictProductSKU = {$plugin.multishop.strictProductSKU}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
