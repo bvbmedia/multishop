@@ -102,7 +102,6 @@ if (count($products) > 0) {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_relative_products', 'products_id=' . $products_id . ' or relative_product_id=' . $products_id);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($qry);
         }
         $content .= '<li>' . $row['products_name'] . '</li>';
     }

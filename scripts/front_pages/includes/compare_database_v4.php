@@ -592,7 +592,7 @@ if (!$qry) {
 }
 // remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
 $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
-$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+
 /*
 $auto_shipping_costs=mslib_befe::getRecord('DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER', 'tx_multishop_configuration', 'configuration_key');
 if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_value'])) {
@@ -607,7 +607,6 @@ if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_
     $GLOBALS['TYPO3_DB']->sql_query($query);
 
     $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
-    $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
     $messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
 }
 */
