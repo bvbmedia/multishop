@@ -139,6 +139,7 @@ plugin.tx_multishop_pi1 {
 	fe_adduseradmingroup_usergroup = {$plugin.multishop.fe_adduseradmingroup_usergroup}
 	strictProductEAN = {$plugin.multishop.strictProductEAN}
 	strictProductSKU = {$plugin.multishop.strictProductSKU}
+	sysLanguageIdZeroLgIso2 = {$plugin.multishop.sysLanguageIdZeroLgIso2}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

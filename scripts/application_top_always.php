@@ -232,7 +232,7 @@ if ($GLOBALS['TSFE']->sys_language_uid == 0) {
 if (!$this->languages[0]['title'] || $setDefaultLanguageLabel) {
     $this->languages[0]['title'] = htmlspecialchars($this->pi_getLL('default_language'));
 }
-$this->languages[0]['lg_iso_2'] = $this->lang;
+$this->languages[0]['lg_iso_2'] = $this->conf['sysLanguageIdZeroLgIso2'];
 ksort($this->languages);
 // load enabled languages eof
 //}
