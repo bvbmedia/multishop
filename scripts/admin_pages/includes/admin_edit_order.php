@@ -2007,8 +2007,7 @@ if (is_numeric($this->get['orders_id'])) {
             ';
             $admin_lg_iso_2 = strtolower($this->languages[$this->sys_language_uid]['lg_iso_2']);
             $lg_iso_2 = strtolower($this->languages[$order['language_id']]['lg_iso_2']);
-            $get_order_language = mslib_befe::getLanguageRecordByIsoString($lg_iso_2);
-            $language_used = $get_order_language['lg_name_' . $admin_lg_iso_2];
+            $language_used = ucfirst($this->languages[$order['language_id']]['title']);
             $invoice_label = '';
             $invoice_number = '';
             $invoice_dl_lang_params = '';
