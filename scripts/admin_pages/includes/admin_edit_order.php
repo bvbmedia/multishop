@@ -2007,8 +2007,7 @@ if (is_numeric($this->get['orders_id'])) {
             ';
             $admin_lg_iso_2 = strtolower($this->languages[$this->sys_language_uid]['lg_iso_2']);
             $lg_iso_2 = strtolower($this->languages[$order['language_id']]['lg_iso_2']);
-            $get_order_language = mslib_befe::getLanguageRecordByIsoString($lg_iso_2);
-            $language_used = $get_order_language['lg_name_' . $admin_lg_iso_2];
+            $language_used = ucfirst($this->languages[$order['language_id']]['title']);
             $invoice_label = '';
             $invoice_number = '';
             $invoice_dl_lang_params = '';
@@ -2216,7 +2215,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
             $orderDetailsItem .= '<div class="col-md-9">
-			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="' . htmlspecialchars($orders_paid_timestamp_visual) . '">
+			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="' . htmlspecialchars($orders_paid_timestamp_visual) . '" autocomplete="off">
 			<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="' . htmlspecialchars($orders_paid_timestamp) . '">
 			</div>';
             $GLOBALS['TSFE']->additionalHeaderData[] = '
@@ -4548,12 +4547,8 @@ if (is_numeric($this->get['orders_id'])) {
                 $.each($(".edit_product_manual_option"), function(i, v){
                     select2_sb("#" + $(v).attr("id"), "' . $this->pi_getLL('admin_label_option') . '", "edit_product_manual_option", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options') . '");
                 });
-                console.log($(".edit_product_manual_values").length);
                 $.each($(".edit_product_manual_values"), function(i, v){
                     var select2_element_id="#" + $(v).attr("id");
-                    
-                    console.log(select2_element_id);
-                    
                     select2_values_sb(select2_element_id, "' . $this->pi_getLL('admin_value') . '", "edit_product_manual_values_class", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values') . '");
                 });
                 select2_discount("#product_discount_percentage");
@@ -4697,7 +4692,7 @@ if (is_numeric($this->get['orders_id'])) {
         $order_status_tab_content['expected_delivery_date'] = '<div class="form-group">
             <label for="expected_delivery_date" class="control-label col-md-2">' . $this->pi_getLL('expected_delivery_date') . '</label>
             <div class="col-md-10">
-	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="' . $expected_delivery_date_local . '" >
+	            <input type="text" name="expected_delivery_date_local" class="form-control" id="expected_delivery_date_local" value="' . $expected_delivery_date_local . '" autocomplete="off" >
 	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="' . $expected_date . '" />
             </div>
         </div>';

@@ -506,7 +506,7 @@ if (count($cart['products']) < 1) {
         $birthdate_block = '';
         if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
             $birthdate_block .= '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '</label>
-					<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor"' . $disable_autofill . ' value="' . htmlspecialchars($user['birthday']) . '" >
+					<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor" autocomplete="off" value="' . htmlspecialchars($user['birthday']) . '" >
 					<input type="hidden" name="birthday" id="birthday" value="' . htmlspecialchars($user['birthday']) . '" >';
         }
         $markerArray['###BIRTHDATE_BLOCK###'] = $birthdate_block;

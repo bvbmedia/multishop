@@ -1342,8 +1342,6 @@ ul.navInterface > li.active > span::after {
 .product-overview-listing-item .pol-productinfo {
 	display: -ms-flexbox;
 	display: flex;
-	-ms-flex-wrap: wrap;
-	flex-wrap: wrap;
 }
 .product-overview-listing-item .pol-productinfo ul.msAdminCategoriesCrum {
 	display: -ms-inline-flexbox;
@@ -1412,7 +1410,7 @@ ul.navInterface > li.active > span::after {
 /* custom made togglebutton */
 .toggleButton input[type="checkbox"] {
 	position: absolute;
-	top: 0;
+	/*top: 0;*/
 	left: 0;
 	opacity: 0;
 }
@@ -1512,10 +1510,22 @@ ul.navInterface > li.active > span::after {
 	border-bottom: none;
 }
 
-#msadmin_content .nav.nav-pills.nav-stacked > li > a:hover,
-#msadmin_content .nav.nav-pills.nav-stacked > li > a:focus {
-	border-bottom: none;
+/* B2UBILLSPR-47 */
+.col-md-10.form-inline {
+	display: inline-flex
 }
-.panel-danger > .panel-heading h3 {
-	margin-bottom: 0;
+#msSubQtyField,
+#msCouponCodeField {
+	width: 229px;
+	border-radius: 4px;
+}
+.form-inline .input-group .input-group-addon.input-group-addon-34 {
+	width: 34px; 
+}
+#couponMessage {
+	text-align: left;
+	margin-left: 10px;
+}
+.ml-20 {
+	margin-left: 20px!important;
 }

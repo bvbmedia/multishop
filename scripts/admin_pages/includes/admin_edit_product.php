@@ -1122,6 +1122,17 @@ if ($this->post) {
             $this->post['ean_code'] = str_pad($this->post['ean_code'], 12, '0', STR_PAD_LEFT);
         }
         $updateArray['ean_code'] = $this->post['ean_code'];
+        if ($this->conf['strictProductEAN'] == '1') {
+            $additional_where = array();
+            $additional_where[] = 'p.ean_code = \'' . addslashes($this->post['ean_code']) . '\'';
+            if ($this->post['pid']) {
+                $additional_where[] = 'p.products_id != \'' . $this->post['pid'] . '\'';
+            }
+            $eanRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+            if ($eanRecord['products_id']) {
+                $updateArray['ean_code'] = '';
+            }
+        }
     }
     if (isset($this->post['starttime']) && !empty($this->post['starttime_visitor'])) {
         $updateArray['starttime'] = strtotime($this->post['starttime']);
@@ -1144,12 +1155,25 @@ if ($this->post) {
     $updateArray['product_capital_price'] = $this->post['product_capital_price'];
     $updateArray['products_condition'] = $this->post['products_condition'];
     $updateArray['sku_code'] = $this->post['sku_code'];
+    if ($this->conf['strictProductSKU'] == '1') {
+        $additional_where = array();
+        $additional_where[] = 'p.sku_code = \'' . addslashes($this->post['sku_code']) . '\'';
+        if ($this->post['pid']) {
+            $additional_where[] = 'p.products_id != \'' . $this->post['pid'] . '\'';
+        }
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        if ($skuRecord['products_id']) {
+            $updateArray['sku_code'] = '';
+        }
+    }
     $updateArray['products_price'] = $this->post['products_price'];
     $updateArray['products_weight'] = $this->post['products_weight'];
     $updateArray['products_status'] = $this->post['products_status'];
     $updateArray['search_engines_allow_indexing'] = $this->post['search_engines_allow_indexing'];
     $updateArray['order_unit_id'] = $this->post['order_unit_id'];
     $updateArray['tax_id'] = $this->post['tax_id'];
+    $data_tax_rate = mslib_fe::getTaxRuleSet($this->post['tax_id'], $updateArray['products_price']);
+    $updateArray['tax_rate'] = ($data_tax_rate['total_tax_rate']);
     if ($this->ms['MODULES']['ENABLE_VIRTUAL_PRODUCTS']) {
         $updateArray['file_number_of_downloads'] = $this->post['file_number_of_downloads'];
     }
@@ -4118,6 +4142,14 @@ if ($this->post) {
                         $options_data[$row['products_options_id']] = $row['products_options_name'];
                         $attributes_data[$row['products_options_id']][] = $row;
                     }
+                    $collapsed = ' collapsed';
+                    $aria_expanded = 'false';
+                    $expand_in = '';
+                    if ($this->ms['MODULES']['ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS'] == '1') {
+                        $collapsed = '';
+                        $aria_expanded = 'true';
+                        $expand_in = ' in';
+                    }
                     if (count($options_data)) {
                         $attributes_tab_block .= '<thead><tr id="product_attributes_content_row">';
                         $attributes_tab_block .= '<td colspan="5" id="products_attributes_items">';
@@ -4134,11 +4166,11 @@ if ($this->post) {
                                 $hide_row = ' style="display:none"';
                             }
                             $attributes_block_panel[$option_id] = '
-                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"' . $hide_row . '>
-                                <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="false" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
+                            <div class="panel panel-default products_attributes_item ' . $group_row_type . '" id="products_attributes_item_' . $option_id . '" alt="' . $option_name . '"' . $hide_row . ' aria-expanded="'.$aria_expanded.'">
+                                <div class="panel-heading panel-heading-toggle ' . $collapsed . '" data-toggle="collapse" data-target="#bodyproducts_attributes_item_' . $option_id . '" aria-expanded="'.$aria_expanded.'" aria-controls="bodyproducts_attributes_item_' . $option_id . '">
                                     <h3 class="panel-title"><i class="fa fa-bars"></i> ' . $option_name . '</h3>
                                 </div>
-                                <div class="panel-collapse collapse" id="bodyproducts_attributes_item_' . $option_id . '">
+                                <div class="panel-collapse collapse'.$expand_in.'" id="bodyproducts_attributes_item_' . $option_id . '">
                                 <div class="panel-body">
                                 <div class="items_wrapper">
 
@@ -4308,7 +4340,7 @@ if ($this->post) {
                                     $collapsed = ' collapsed';
                                     $aria_expanded = 'false';
                                     $expand_in = '';
-                                    if ($counter == '0') {
+                                    if ($counter == '0' || $this->ms['MODULES']['ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS'] == '1') {
                                         $collapsed = '';
                                         $aria_expanded = 'true';
                                         $expand_in = ' in';
@@ -4884,6 +4916,7 @@ if ($this->post) {
         $subpartArray['###VALUE_EAN_CODE###'] = htmlspecialchars($product['ean_code']);
         $subpartArray['###LABEL_SKU_CODE###'] = $this->pi_getLL('admin_sku_code');
         $subpartArray['###VALUE_SKU_CODE###'] = htmlspecialchars($product['sku_code']);
+        $subpartArray['###VALUE_SKU_CODE_VALIDITY###'] = (!empty($product['sku_code']) ? 1 : 0);
         $subpartArray['###LABEL_MANUFACTURER_CODE###'] = $this->pi_getLL('admin_manufacturers_products_id');
         $subpartArray['###VALUE_MANUFACTURER_CODE###'] = htmlspecialchars($product['vendor_code']);
         $subpartArray['###LABEL_PRODUCT_UNIT###'] = $this->pi_getLL('admin_product_units', 'PRODUCT UNITS');
@@ -4986,6 +5019,22 @@ if ($this->post) {
             $subpartArray['###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###'] = $manufacturers_advice_price_incl_vat_display;
             $subpartArray['###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###'] = $product['manufacturers_advice_price'];
         }
+        $subpartArray['###AJAX_URL_CHECK_SKU###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
+        $subpartArray['###AJAX_URL_CHECK_SKU1###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkSKU');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED2###'] = $this->pi_getLL('admin_label_product_sku_already_used');
+
+        $subpartArray['###AJAX_URL_CHECK_EAN###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkEAN');
+        $subpartArray['###AJAX_URL_CHECK_EAN1###'] = mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=checkEAN');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+        $subpartArray['###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED2###'] = $this->pi_getLL('admin_label_product_ean_already_used');
+
+
+        $subpartArray['###AJAX_PID1###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
+        $subpartArray['###AJAX_PID2###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
+        $subpartArray['###AJAX_PID3###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

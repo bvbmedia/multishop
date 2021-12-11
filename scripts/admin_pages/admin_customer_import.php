@@ -864,32 +864,340 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                         }
                     }
                     // custom hook that can be controlled by third-party plugin
-                    // snippet to repair already existing data, for repairing partially
-                    /*
-						$updateArray=array();
-						switch($item['gender']) {
-							case 'm':
-								$updateArray['gender']=0;
-								break;
-							case 'f':
-								$updateArray['gender']=1;
-								break;
-						}
-						$updateArray['first_name']=$item['first_name'];
-						$updateArray['middle_name']=$item['middle_name'];
-						$updateArray['last_name']=$item['last_name'];
-						$updateArray['name']=preg_replace('/\s+/', ' ', $updateArray['first_name'].' '.$updateArray['middle_name'].' '.$updateArray['last_name']);
-
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$item['uid'], $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						echo $query.'<br/>';
-						continue;
-					*/
-                    if (!$item['email']) {
-                        $item['email'] = uniqid() . '@UNKNOWN';
+                    // first combine the values to 1 array
+                    $usergroups = array();
+                    $usergroups[] = $this->conf['fe_customer_usergroup'];
+                    if ($item['usergroup']) {
+                        // sometimes excel changes comma to dot
+                        if ($input['usergroup']) {
+                            // use aux
+                            $item['usergroup'] = str_replace($input['usergroup'], ',', $item['usergroup']);
+                        } elseif (strstr($item['usergroup'], '.')) {
+                            $item['usergroup'] = str_replace('.', ',', $item['usergroup']);
+                        }
+                        if (!strstr($item['usergroup'], ",") and !is_numeric($item['usergroup'])) {
+                            $groups = array();
+                            $groups[] = $item['usergroup'];
+                        } else {
+                            $groups = explode(',', $item['usergroup']);
+                        }
+                        foreach ($groups as $group) {
+                            if (is_numeric($group)) {
+                                $usergroups[] = $group;
+                            } else {
+                                $str = "SELECT * from fe_groups where pid='" . $this->conf['fe_customer_pid'] . "' and title='" . addslashes($group) . "'";
+                                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                                if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                                    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                                    $usergroups[] = $row['uid'];
+                                } else {
+                                    $updateArray = array();
+                                    $updateArray['pid'] = $this->conf['fe_customer_pid'];
+                                    $updateArray['title'] = $group;
+                                    $updateArray['crdate'] = time();
+                                    $updateArray['tstamp'] = time();
+                                    $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
+                                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_groups', $updateArray);
+                                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                    $usergroups[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                }
+                            }
+                        }
+                    }
+                    $user = array();
+                    if (isset($item['tx_multishop_source_id'])) {
+                        $user['tx_multishop_source_id'] = $item['tx_multishop_source_id'];
+                        if (!isset($item['foreign_customer_id'])) {
+                            $user['foreign_customer_id'] = $item['tx_multishop_source_id'];
+                        }
+                    }
+                    if ($item['uid']) {
+                        $user['uid'] = $item['uid'];
+                        if (!$item['tx_multishop_source_id']) {
+                            $user['tx_multishop_source_id'] = $item['uid'];
+                        }
+                    }
+                    if ($item['username']) {
+                        $user['username'] = $item['username'];
+                    }
+                    if (is_array($usergroups)) {
+                        $user['usergroup'] = implode(",", $usergroups);
+                    }
+                    if ($item['first_name']) {
+                        $item['first_name'] = preg_replace('/\s+/', ' ', $item['first_name']);
+                        $user['first_name'] = $item['first_name'];
+                    }
+                    if ($item['middle_name']) {
+                        $item['middle_name'] = preg_replace('/\s+/', ' ', $item['middle_name']);
+                        $user['middle_name'] = $item['middle_name'];
+                    }
+                    if ($item['last_name']) {
+                        $item['last_name'] = preg_replace('/\s+/', ' ', $item['last_name']);
+                        $user['last_name'] = $item['last_name'];
+                    }
+                    if (!$item['full_name'] && ($item['first_name'] || $item['last_name'])) {
+                        $fullname = array();
+                        if ($item['first_name'] != '') {
+                            $fullname[] = $item['first_name'];
+                        }
+                        if ($item['middle_name'] != '') {
+                            $fullname[] = $item['middle_name'];
+                        }
+                        if ($item['last_name'] != '') {
+                            $fullname[] = $item['last_name'];
+                        }
+                        if (count($fullname)) {
+                            $item['full_name'] = implode(' ', $fullname);
+//								$item['full_name'] = preg_replace('/\s+/', ' ', $item['full_name']);
+                        }
+                    }
+                    if ($item['full_name'] && !isset($item['first_name']) && !isset($item['last_name'])) {
+                        $user['name'] = $item['full_name'];
+                        $array = explode(' ', $item['full_name']);
+                        $user['first_name'] = $array[0];
+                        unset($array[0]);
+                        $user['last_name'] = implode(' ', $array);
+                    } else {
+                        if ($item['last_name']) {
+                            $user['name'] = preg_replace('/\s+/', ' ', $item['first_name'] . ' ' . $item['middle_name'] . ' ' . $item['last_name']);
+                        }
+                    }
+                    if ($item['company_name']) {
+                        $user['company'] = $item['company_name'];
+                    }
+                    if (isset($item['newsletter'])) {
+                        $user['tx_multishop_newsletter'] = $item['newsletter'];
+                    }
+                    if (isset($item['disable'])) {
+                        $user['disable'] = $item['disable'];
+                    }
+                    if (isset($item['deleted'])) {
+                        $user['deleted'] = $item['deleted'];
+                    }
+                    if (isset($item['tx_multishop_payment_condition'])) {
+                        $user['tx_multishop_payment_condition'] = $item['tx_multishop_payment_condition'];
+                    }
+                    if (isset($item['language_code_2char_iso'])) {
+                        $user['tx_multishop_language'] = $item['language_code_2char_iso'];
+                    }
+                    if (isset($item['tx_multishop_discount'])) {
+                        $user['tx_multishop_discount'] = $item['discount'];
+                    }
+                    if ($item['vat_id']) {
+                        $user['tx_multishop_vat_id'] = $item['vat_id'];
+                    }
+                    if ($item['coc_id']) {
+                        $user['tx_multishop_coc_id'] = $item['coc_id'];
+                    }
+                    if (isset($item['tx_multishop_customer_id'])) {
+                        if ($item['tx_multishop_customer_id'] == '0') {
+                            continue;
+                        }
+                        $user['tx_multishop_customer_id'] = $item['tx_multishop_customer_id'];
+                    }
+                    if (isset($item['crdate'])) {
+                        $user['crdate'] = strtotime($item['crdate']);
+                    }
+                    if (isset($item['gender']) && $item['gender'] != '') {
+                        $user['gender'] = $item['gender'];
+                    }
+                    if ($item['birthday']) {
+                        $user['date_of_birth'] = $item['birthday'];
+                    }
+                    if ($item['title']) {
+                        $user['title'] = $item['title'];
+                    }
+                    if ($item['zip']) {
+                        $user['zip'] = $item['zip'];
+                    }
+                    if ($item['city']) {
+                        $user['city'] = $item['city'];
+                    }
+                    if (isset($item['country']) && $item['country'] != '') {
+                        if ($item['country'] == '') {
+                            $item['country'] = $default_country;
+                        } else {
+                            $englishCountryName = '';
+                            if (strlen($item['country']) == 2) {
+                                // 2CHAR ISO
+                                $englishCountryName = mslib_fe::getCountryByCode($item['country']);
+                            } else {
+                                // check if the country name is valid English name
+                                $englishCountryName = mslib_fe::getEnglishCountryNameByTranslatedName('en', $item['country']);
+                                if (!$englishCountryName) {
+                                    // not english. hopefully its having a valid country name in the shops default language
+                                    $englishCountryName = mslib_fe::getEnglishCountryNameByTranslatedName($this->lang, $item['country']);
+                                }
+                            }
+                            if ($englishCountryName and $englishCountryName != $user['country']) {
+                                $user['country'] = $englishCountryName;
+                            } else {
+                                $user['country'] = $item['country'];
+                            }
+                        }
+                    }
+                    if ($item['www']) {
+                        $user['www'] = $item['www'];
+                    }
+                    if ($item['building']) {
+                        $user['building'] = $item['building'];
+                    }
+                    if ($item['street_name']) {
+                        $user['street_name'] = $item['street_name'];
+                    }
+                    if ($item['address_number']) {
+                        $user['address_number'] = $item['address_number'];
+                    }
+                    if ($item['address_ext']) {
+                        $user['address_ext'] = $item['address_ext'];
+                    }
+                    if ($item['address']) {
+                        $user['address'] = $item['address'];
+                    }
+                    if (!$user['address'] and ($user['street_name'] and $user['address_number'])) {
+                        $user['address'] = $user['street_name'] . ' ' . $user['address_number'];
+                        if ($user['address_ext']) {
+                            $user['address'] .= '-' . $user['address_ext'];
+                        }
+                    } elseif ($user['address'] && !$user['street_name'] && !$user['address_number']) {
+                        $street_address = '';
+                        $house_number = '';
+                        $addon_number = '';
+                        $street_data = explode(' ', $user['address']);
+                        $house_number = $street_data[count($street_data) - 1];
+                        if (!preg_match('/[0-9]/isUm', $house_number)) {
+                            $house_number = $street_data[count($street_data) - 2] . ' ' . $street_data[count($street_data) - 1];
+                            unset($street_data[count($street_data) - 1]);
+                            unset($street_data[count($street_data) - 1]);
+                        } else {
+                            unset($street_data[count($street_data) - 1]);
+                        }
+                        $street_address = implode(' ', $street_data);
+                        $addon_number = '';
+                        $pattern_alpha = '/([a-zA-Z])/isUm';
+                        preg_match_all($pattern_alpha, $house_number, $alpha_result);
+                        if (isset($alpha_result[1][0]) && !empty($alpha_result[1][0])) {
+                            $addon_number = implode('', $alpha_result[1]);
+                            $house_number = str_replace($addon_number, '', $house_number);
+                        }
+                        $user['street_name'] = $street_address;
+                        $user['address_number'] = $house_number;
+                        $user['address_ext'] = $addon_number;
+                    }
+                    if ($item['telephone']) {
+                        $user['telephone'] = $item['telephone'];
+                    }
+                    if ($item['fax']) {
+                        $user['fax'] = $item['fax'];
                     }
                     if ($item['email']) {
-                        if (!$item['username']) {
+                        $user['email'] = $item['email'];
+                    }
+                    if ($item['foreign_customer_id']) {
+                        $user['foreign_customer_id'] = $item['foreign_customer_id'];
+                    }
+                    if ($item['password_hashed']) {
+                        $user['password'] = $item['password_hashed'];
+                    } elseif ($item['password']) {
+                        $item['password'] = mslib_befe::getHashedPassword($item['password']);
+                        $user['password'] = $item['password'];
+                    }
+                    $update = 0;
+                    $user_check = array();
+                    if ($user['uid']) {
+                        $user_check = mslib_fe::getUser($user['uid'], "uid");
+                    } else {
+                        if (!$user_check && $user['tx_multishop_source_id']) {
+                            $user_check = mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
+                        }
+                        if (!$user_check && $user['username']) {
+                            $user_check = mslib_fe::getUser($user['username'], "username");
+                        }
+                        if (!$user_check && $user['email']) {
+                            $user_check = mslib_fe::getUser($user['email'], "email");
+                        }
+                        if (!$user_check && $item['extid']) {
+                            $user_check = mslib_fe::getUser($item['extid'], 'extid');
+                        }
+                    }
+                    if ($user_check['uid']) {
+                        if (!$user['tx_multishop_source_id'] || ($user['tx_multishop_source_id'] == $user_check['tx_multishop_source_id']) || ($user['uid'] == $user_check['uid'])) {
+                            $update = 1;
+                        }
+                    }
+                    // custom hook that can be controlled by third-party
+                    // plugin
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'])) {
+                        $params = array(
+                                'user' => &$user,
+                                'item' => &$item,
+                                'user_check' => &$user_check,
+                                'prefix_source_name' => $this->post['prefix_source_name'],
+                                'update' => &$update
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
+                    }
+                    // custom hook that can be controlled by third-party
+                    // plugin eof
+                    $uid = '';
+                    if ($update) {
+                        // UPDATE USER
+                        $skipRecord = 0;
+                        // custom hook that can be controlled by third-party
+                        // plugin
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'])) {
+                            $params = array(
+                                    'user' => &$user,
+                                    'item' => &$item,
+                                    'user_check' => &$user_check,
+                                    'prefix_source_name' => $this->post['prefix_source_name'],
+                                    'skipRecord' => &$skipRecord
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            }
+                        }
+                        // custom hook that can be controlled by third-party
+                        // plugin eof
+                        if (!$skipRecord) {
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $user_check['uid'], $user);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            $name = array();
+                            if ($user['company'] != '') {
+                                $name[] = $user['company'];
+                            }
+                            if ($user['name'] != '' and !in_array($user['name'], $name)) {
+                                $name[] = $user['name'];
+                            }
+                            if ($user['email'] != '' and !in_array($user['email'], $name)) {
+                                $name[] = 'email: ' . $user['email'];
+                            }
+                            if (!count($name) && $user['uid']) {
+                                $name[] = $user['uid'];
+                            }
+                            $content .= implode(" / ", $name) . ' has been updated.<br />';
+                            $uid = $user_check['uid'];
+                            // custom hook that can be controlled by third-party
+                            // plugin
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'])) {
+                                $params = array(
+                                        'user' => &$user,
+                                        'item' => &$item,
+                                        'user_check' => &$user_check,
+                                        'prefix_source_name' => $this->post['prefix_source_name']
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
+                            }
+                            // custom hook that can be controlled by third-party
+                            // plugin eof
+                        }
+                    } else {
+                        // CREATE USER
+                        if (!$user['username']) {
                             if ($item['uid']) {
                                 $username = '';
                                 if ($item['company_name']) {
@@ -897,8 +1205,10 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 }
                                 $username .= $item['uid'];
                                 $item['username'] = $username;
-                            } else {
+                            } elseif($item['email']) {
                                 $item['username'] = $item['email'];
+                            } else {
+                                $item['username'] = uniqid();
                             }
                             // Make sure the username is not in use by someone else
                             // Prefix of the username
@@ -929,312 +1239,72 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 $counter++;
                             } while (mslib_befe::ifExists($finalUsername, 'fe_users', 'username', $filter));
                             // Copy final username back to the $item array
-                            $item['username'] = $finalUsername;
+                            $user['username'] = $finalUsername;
                         }
-                        // first combine the values to 1 array
-                        $usergroups = array();
-                        $usergroups[] = $this->conf['fe_customer_usergroup'];
-                        if ($item['usergroup']) {
-                            // sometimes excel changes comma to dot
-                            if ($input['usergroup']) {
-                                // use aux
-                                $item['usergroup'] = str_replace($input['usergroup'], ',', $item['usergroup']);
-                            } elseif (strstr($item['usergroup'], '.')) {
-                                $item['usergroup'] = str_replace('.', ',', $item['usergroup']);
-                            }
-                            if (!strstr($item['usergroup'], ",") and !is_numeric($item['usergroup'])) {
-                                $groups = array();
-                                $groups[] = $item['usergroup'];
-                            } else {
-                                $groups = explode(',', $item['usergroup']);
-                            }
-                            foreach ($groups as $group) {
-                                if (is_numeric($group)) {
-                                    $usergroups[] = $group;
-                                } else {
-                                    $str = "SELECT * from fe_groups where pid='" . $this->conf['fe_customer_pid'] . "' and title='" . addslashes($group) . "'";
-                                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-                                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                                        $usergroups[] = $row['uid'];
-                                    } else {
-                                        $updateArray = array();
-                                        $updateArray['pid'] = $this->conf['fe_customer_pid'];
-                                        $updateArray['title'] = $group;
-                                        $updateArray['crdate'] = time();
-                                        $updateArray['tstamp'] = time();
-                                        $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
-                                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_groups', $updateArray);
-                                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                        $usergroups[] = $GLOBALS['TYPO3_DB']->sql_insert_id();
-                                    }
-                                }
-                            }
+                        if (!isset($user['status'])) {
+                            $user['status'] = '1';
                         }
-                        $user = array();
-                        if (isset($item['tx_multishop_source_id'])) {
-                            $user['tx_multishop_source_id'] = $item['tx_multishop_source_id'];
-                            if (!isset($item['foreign_customer_id'])) {
-                                $user['foreign_customer_id'] = $item['tx_multishop_source_id'];
-                            }
+                        if (!isset($user['disable'])) {
+                            $user['disable'] = '0';
                         }
-                        if ($item['uid']) {
-                            $user['uid'] = $item['uid'];
-                            if (!$item['tx_multishop_source_id']) {
-                                $user['tx_multishop_source_id'] = $item['uid'];
-                            }
+                        /*if (!$item['email']) {
+                            $item['email'] = uniqid() . '@UNKNOWN';
+                        }*/
+                        if (!$user['password'] or $user['password'] == 'NULL') {
+                            // generate our own random password
+                            $user['password'] = mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10, $user['username']));
                         }
-                        if ($item['username']) {
-                            $user['username'] = $item['username'];
+                        $user['tstamp'] = time();
+                        if (!$user['crdate']) {
+                            $user['crdate'] = time();
                         }
-                        if (is_array($usergroups)) {
-                            $user['usergroup'] = implode(",", $usergroups);
+                        $user['tx_multishop_code'] = md5(uniqid('', true));
+                        $user['pid'] = $this->conf['fe_customer_pid'];
+                        $user['page_uid'] = $this->shop_pid;
+                        $user['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+                        if (!$user['country']) {
+                            $user['country'] = $default_country;
                         }
-                        if ($item['first_name']) {
-                            $item['first_name'] = preg_replace('/\s+/', ' ', $item['first_name']);
-                            $user['first_name'] = $item['first_name'];
-                        }
-                        if ($item['middle_name']) {
-                            $item['middle_name'] = preg_replace('/\s+/', ' ', $item['middle_name']);
-                            $user['middle_name'] = $item['middle_name'];
-                        }
-                        if ($item['last_name']) {
-                            $item['last_name'] = preg_replace('/\s+/', ' ', $item['last_name']);
-                            $user['last_name'] = $item['last_name'];
-                        }
-                        if (!$item['full_name'] && ($item['first_name'] || $item['last_name'])) {
-                            $fullname = array();
-                            if ($item['first_name'] != '') {
-                                $fullname[] = $item['first_name'];
-                            }
-                            if ($item['middle_name'] != '') {
-                                $fullname[] = $item['middle_name'];
-                            }
-                            if ($item['last_name'] != '') {
-                                $fullname[] = $item['last_name'];
-                            }
-                            if (count($fullname)) {
-                                $item['full_name'] = implode(' ', $fullname);
-//								$item['full_name'] = preg_replace('/\s+/', ' ', $item['full_name']);
-                            }
-                        }
-                        if ($item['full_name'] && !isset($item['first_name']) && !isset($item['last_name'])) {
-                            $user['name'] = $item['full_name'];
-                            $array = explode(' ', $item['full_name']);
-                            $user['first_name'] = $array[0];
-                            unset($array[0]);
-                            $user['last_name'] = implode(' ', $array);
-                        } else {
-                            if ($item['last_name']) {
-                                $user['name'] = preg_replace('/\s+/', ' ', $item['first_name'] . ' ' . $item['middle_name'] . ' ' . $item['last_name']);
-                            }
-                        }
-                        if ($item['company_name']) {
-                            $user['company'] = $item['company_name'];
-                        }
-                        if (isset($item['newsletter'])) {
-                            $user['tx_multishop_newsletter'] = $item['newsletter'];
-                        }
-                        $user['status'] = '1';
-                        $user['disable'] = '0';
-                        if (isset($item['disable'])) {
-                            $user['disable'] = $item['disable'];
-                        }
-                        if (isset($item['deleted'])) {
-                            $user['deleted'] = $item['deleted'];
-                        }
-                        if (isset($item['tx_multishop_payment_condition'])) {
-                            $user['tx_multishop_payment_condition'] = $item['tx_multishop_payment_condition'];
-                        }
-                        if (isset($item['language_code_2char_iso'])) {
-                            $user['tx_multishop_language'] = $item['language_code_2char_iso'];
-                        }
-                        if (isset($item['tx_multishop_discount'])) {
-                            $user['tx_multishop_discount'] = $item['discount'];
-                        }
-                        if ($item['vat_id']) {
-                            $user['tx_multishop_vat_id'] = $item['vat_id'];
-                        }
-                        if ($item['coc_id']) {
-                            $user['tx_multishop_coc_id'] = $item['coc_id'];
-                        }
-                        if (isset($item['tx_multishop_customer_id'])) {
-                            if ($item['tx_multishop_customer_id'] == '0') {
-                                continue;
-                            }
-                            $user['tx_multishop_customer_id'] = $item['tx_multishop_customer_id'];
-                        }
-                        if (isset($item['crdate'])) {
-                            $user['crdate'] = strtotime($item['crdate']);
-                        }
-                        if (isset($item['gender']) && $item['gender'] != '') {
-                            $user['gender'] = $item['gender'];
-                        }
-                        if ($item['birthday']) {
-                            $user['date_of_birth'] = $item['birthday'];
-                        }
-                        if ($item['title']) {
-                            $user['title'] = $item['title'];
-                        }
-                        if ($item['zip']) {
-                            $user['zip'] = $item['zip'];
-                        }
-                        if ($item['city']) {
-                            $user['city'] = $item['city'];
-                        }
-                        if (isset($item['country']) && $item['country'] != '') {
-                            if ($item['country'] == '') {
-                                $item['country'] = $default_country;
-                            } else {
-                                $englishCountryName = '';
-                                if (strlen($item['country']) == 2) {
-                                    // 2CHAR ISO
-                                    $englishCountryName = mslib_fe::getCountryByCode($item['country']);
-                                } else {
-                                    // check if the country name is valid English name
-                                    $englishCountryName = mslib_fe::getEnglishCountryNameByTranslatedName('en', $item['country']);
-                                    if (!$englishCountryName) {
-                                        // not english. hopefully its having a valid country name in the shops default language
-                                        $englishCountryName = mslib_fe::getEnglishCountryNameByTranslatedName($this->lang, $item['country']);
-                                    }
-                                }
-                                if ($englishCountryName and $englishCountryName != $user['country']) {
-                                    $user['country'] = $englishCountryName;
-                                } else {
-                                    $user['country'] = $item['country'];
-                                }
-                            }
-                        }
-                        if ($item['www']) {
-                            $user['www'] = $item['www'];
-                        }
-                        if ($item['building']) {
-                            $user['building'] = $item['building'];
-                        }
-                        if ($item['street_name']) {
-                            $user['street_name'] = $item['street_name'];
-                        }
-                        if ($item['address_number']) {
-                            $user['address_number'] = $item['address_number'];
-                        }
-                        if ($item['address_ext']) {
-                            $user['address_ext'] = $item['address_ext'];
-                        }
-                        if ($item['address']) {
-                            $user['address'] = $item['address'];
-                        }
-                        if (!$user['address'] and ($user['street_name'] and $user['address_number'])) {
-                            $user['address'] = $user['street_name'] . ' ' . $user['address_number'];
-                            if ($user['address_ext']) {
-                                $user['address'] .= '-' . $user['address_ext'];
-                            }
-                        } elseif ($user['address'] && !$user['street_name'] && !$user['address_number']) {
-                            $street_address = '';
-                            $house_number = '';
-                            $addon_number = '';
-                            $street_data = explode(' ', $user['address']);
-                            $house_number = $street_data[count($street_data) - 1];
-                            if (!preg_match('/[0-9]/isUm', $house_number)) {
-                                $house_number = $street_data[count($street_data) - 2] . ' ' . $street_data[count($street_data) - 1];
-                                unset($street_data[count($street_data) - 1]);
-                                unset($street_data[count($street_data) - 1]);
-                            } else {
-                                unset($street_data[count($street_data) - 1]);
-                            }
-                            $street_address = implode(' ', $street_data);
-                            $addon_number = '';
-                            $pattern_alpha = '/([a-zA-Z])/isUm';
-                            preg_match_all($pattern_alpha, $house_number, $alpha_result);
-                            if (isset($alpha_result[1][0]) && !empty($alpha_result[1][0])) {
-                                $addon_number = implode('', $alpha_result[1]);
-                                $house_number = str_replace($addon_number, '', $house_number);
-                            }
-                            $user['street_name'] = $street_address;
-                            $user['address_number'] = $house_number;
-                            $user['address_ext'] = $addon_number;
-                        }
-                        if ($item['telephone']) {
-                            $user['telephone'] = $item['telephone'];
-                        }
-                        if ($item['fax']) {
-                            $user['fax'] = $item['fax'];
-                        }
-                        if ($item['email']) {
-                            $user['email'] = $item['email'];
-                        }
-                        if ($item['foreign_customer_id']) {
-                            $user['foreign_customer_id'] = $item['foreign_customer_id'];
-                        }
-                        if ($item['password_hashed']) {
-                            $user['password'] = $item['password_hashed'];
-                        } elseif ($item['password']) {
-                            $item['password'] = mslib_befe::getHashedPassword($item['password']);
-                            $user['password'] = $item['password'];
-                        }
-                        $update = 0;
-                        $user_check = array();
-                        if ($user['uid']) {
-                            $user_check = mslib_fe::getUser($user['uid'], "uid");
-                        } else {
-                            if (!$user_check && $user['tx_multishop_source_id']) {
-                                $user_check = mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
-                            }
-                            if (!$user_check && $user['username']) {
-                                $user_check = mslib_fe::getUser($user['username'], "username");
-                            }
-                            if (!$user_check && $user['email']) {
-                                $user_check = mslib_fe::getUser($user['email'], "email");
-                            }
-                            if (!$user_check && $item['extid']) {
-                                $user_check = mslib_fe::getUser($item['extid'], 'extid');
-                            }
-                        }
-                        if ($user_check['uid']) {
-                            if (!$user['tx_multishop_source_id'] || ($user['tx_multishop_source_id'] == $user_check['tx_multishop_source_id']) || ($user['uid'] == $user_check['uid'])) {
-                                $update = 1;
-                            }
-                        }
+                        $skipRecord = 0;
                         // custom hook that can be controlled by third-party
                         // plugin
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'])) {
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'])) {
                             $params = array(
                                     'user' => &$user,
                                     'item' => &$item,
                                     'user_check' => &$user_check,
                                     'prefix_source_name' => $this->post['prefix_source_name'],
-                                    'update' => &$update
+                                    'skipRecord' => &$skipRecord
                             );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'] as $funcRef) {
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                             }
                         }
                         // custom hook that can be controlled by third-party
                         // plugin eof
-                        $uid = '';
-                        if ($update) {
-                            if (!$user['country']) {
-                                $user['country'] = $default_country;
+                        if (!$skipRecord) {
+                            if (!isset($user['gender'])) {
+                                // Unknown
+                                $user['gender'] = '';
                             }
-                            $skipRecord = 0;
-                            // custom hook that can be controlled by third-party
-                            // plugin
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'])) {
-                                $params = array(
-                                        'user' => &$user,
-                                        'item' => &$item,
-                                        'user_check' => &$user_check,
-                                        'prefix_source_name' => $this->post['prefix_source_name'],
-                                        'skipRecord' => &$skipRecord
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            // T3 6.2 BUGFIXES
+                            $requiredCols = array();
+                            $requiredCols[] = 'title';
+                            $requiredCols[] = 'www';
+                            foreach ($requiredCols as $requiredCol) {
+                                if (!isset($user[$requiredCol])) {
+                                    $user[$requiredCol] = '';
                                 }
                             }
-                            // custom hook that can be controlled by third-party
-                            // plugin eof
-                            if (!$skipRecord) {
-                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $user_check['uid'], $user);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
+                                $user['tx_multishop_source_id'] = $user['uid'];
+                            }
+                            $user = mslib_befe::rmNullValuedKeys($user);
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                            if ($uid) {
+                                $user_check = mslib_fe::getUser($uid);
                                 $name = array();
                                 if ($user['company'] != '') {
                                     $name[] = $user['company'];
@@ -1245,168 +1315,86 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                                 if ($user['email'] != '' and !in_array($user['email'], $name)) {
                                     $name[] = 'email: ' . $user['email'];
                                 }
-                                $content .= implode(" / ", $name) . ' has been updated.<br />';
-                                $uid = $user_check['uid'];
+                                if (!count($name) && $user['uid']) {
+                                    $name[] = $user['uid'];
+                                }
+                                $content .= implode(" / ", $name) . ' has been added.<br />';
                                 // custom hook that can be controlled by third-party
                                 // plugin
-                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'])) {
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'])) {
                                     $params = array(
                                             'user' => &$user,
                                             'item' => &$item,
                                             'user_check' => &$user_check,
                                             'prefix_source_name' => $this->post['prefix_source_name']
                                     );
-                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
                                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                     }
                                 }
                                 // custom hook that can be controlled by third-party
                                 // plugin eof
-                            }
-                        } else {
-                            if (!$user['password'] or $user['password'] == 'NULL') {
-                                // generate our own random password
-                                $user['password'] = mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10, $user['username']));
-                            }
-                            $user['tstamp'] = time();
-                            if (!$user['crdate']) {
-                                $user['crdate'] = time();
-                            }
-                            $user['tx_multishop_code'] = md5(uniqid('', true));
-                            $user['pid'] = $this->conf['fe_customer_pid'];
-                            $user['page_uid'] = $this->shop_pid;
-                            $user['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                            if (!$user['country']) {
-                                $user['country'] = $default_country;
-                            }
-                            $skipRecord = 0;
-                            // custom hook that can be controlled by third-party
-                            // plugin
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'])) {
-                                $params = array(
-                                        'user' => &$user,
-                                        'item' => &$item,
-                                        'user_check' => &$user_check,
-                                        'prefix_source_name' => $this->post['prefix_source_name'],
-                                        'skipRecord' => &$skipRecord
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                                }
-                            }
-                            // custom hook that can be controlled by third-party
-                            // plugin eof
-                            if (!$skipRecord) {
-                                if (!isset($user['gender'])) {
-                                    // Unknown
-                                    $user['gender'] = '';
-                                }
-                                // T3 6.2 BUGFIXES
-                                $requiredCols = array();
-                                $requiredCols[] = 'title';
-                                $requiredCols[] = 'www';
-                                foreach ($requiredCols as $requiredCol) {
-                                    if (!isset($user[$requiredCol])) {
-                                        $user[$requiredCol] = '';
-                                    }
-                                }
-                                if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
-                                    $user['tx_multishop_source_id'] = $user['uid'];
-                                }
-                                $user = mslib_befe::rmNullValuedKeys($user);
-                                $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
-                                if ($uid) {
-                                    $user_check = mslib_fe::getUser($uid);
-                                    $name = array();
-                                    if ($user['company'] != '') {
-                                        $name[] = $user['company'];
-                                    }
-                                    if ($user['name'] != '' and !in_array($user['name'], $name)) {
-                                        $name[] = $user['name'];
-                                    }
-                                    if ($user['email'] != '' and !in_array($user['email'], $name)) {
-                                        $name[] = 'email: ' . $user['email'];
-                                    }
-                                    $content .= implode(" / ", $name) . ' has been added.<br />';
-                                    // custom hook that can be controlled by third-party
-                                    // plugin
-                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'])) {
-                                        $params = array(
-                                                'user' => &$user,
-                                                'item' => &$item,
-                                                'user_check' => &$user_check,
-                                                'prefix_source_name' => $this->post['prefix_source_name']
-                                        );
-                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
-                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                                        }
-                                    }
-                                    // custom hook that can be controlled by third-party
-                                    // plugin eof
-                                } else {
-                                    $content .= implode(" / ", $name) . ' has been FAILED. Query:<br />' . $query . '<br/>';
-                                }
-                            }
-                        }
-                        if ($uid) {
-                            $address = array();
-                            $address['tstamp'] = time();
-                            $address['tx_multishop_customer_id'] = $uid;
-                            $address['pid'] = $this->conf['fe_customer_pid'];
-                            $address['first_name'] = $user['first_name'];
-                            $address['middle_name'] = $user['middle_name'];
-                            $address['last_name'] = $user['last_name'];
-                            $address['name'] = $user['name'];
-                            $address['gender'] = $user['gender'];
-                            $address['birthday'] = $user['birthday'];
-                            $address['email'] = $user['email'];
-                            $address['phone'] = $user['telephone'];
-                            $address['mobile'] = $user['mobile'];
-                            $address['www'] = $user['www'];
-                            $address['building'] = $user['building'];
-                            $address['street_name'] = $user['street_name'];
-                            $address['address'] = $user['address'];
-                            $address['address_number'] = $user['address_number'];
-                            $address['address_ext'] = $user['address_ext'];
-                            $address['room'] = $user['room'];
-                            $address['company'] = $user['company'];
-                            $address['city'] = $user['city'];
-                            $address['zip'] = $user['zip'];
-                            $address['region'] = $user['region'];
-                            $address['country'] = $user['country'];
-                            $address['fax'] = $user['fax'];
-                            $address['deleted'] = 0;
-                            $address['page_uid'] = $this->shop_pid;
-                            if ($item['deleted'] != '') {
-                                $address['deleted'] = $item['deleted'];
-                            }
-                            $address['addressgroup'] = '';
-                            $str = "SELECT tx_multishop_customer_id from tt_address where tx_multishop_customer_id='" . $uid . "'";
-                            $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $uid, $address);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             } else {
-                                $address['tx_multishop_default'] = 1;
-                                $address['tx_multishop_address_type'] = 'billing';
-                                $address = mslib_befe::rmNullValuedKeys($address);
-                                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $address);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                $content .= implode(" / ", $name) . ' has been FAILED. Query:<br />' . $query . '<br/>';
                             }
                         }
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'])) {
-                            $params = array(
-                                    'user' => &$user,
-                                    'item' => &$item,
-                                    'user_check' => &$user_check,
-                                    'prefix_source_name' => $this->post['prefix_source_name']
-                            );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'] as $funcRef) {
-                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                            }
+                    }
+                    if ($uid) {
+                        $address = array();
+                        $address['tstamp'] = time();
+                        $address['tx_multishop_customer_id'] = $uid;
+                        $address['pid'] = $this->conf['fe_customer_pid'];
+                        $address['first_name'] = $user['first_name'];
+                        $address['middle_name'] = $user['middle_name'];
+                        $address['last_name'] = $user['last_name'];
+                        $address['name'] = $user['name'];
+                        $address['gender'] = $user['gender'];
+                        $address['birthday'] = $user['birthday'];
+                        $address['email'] = $user['email'];
+                        $address['phone'] = $user['telephone'];
+                        $address['mobile'] = $user['mobile'];
+                        $address['www'] = $user['www'];
+                        $address['building'] = $user['building'];
+                        $address['street_name'] = $user['street_name'];
+                        $address['address'] = $user['address'];
+                        $address['address_number'] = $user['address_number'];
+                        $address['address_ext'] = $user['address_ext'];
+                        $address['room'] = $user['room'];
+                        $address['company'] = $user['company'];
+                        $address['city'] = $user['city'];
+                        $address['zip'] = $user['zip'];
+                        $address['region'] = $user['region'];
+                        $address['country'] = $user['country'];
+                        $address['fax'] = $user['fax'];
+                        $address['deleted'] = 0;
+                        $address['page_uid'] = $this->shop_pid;
+                        if ($item['deleted'] != '') {
+                            $address['deleted'] = $item['deleted'];
+                        }
+                        $address['addressgroup'] = '';
+                        $str = "SELECT tx_multishop_customer_id from tt_address where tx_multishop_customer_id='" . $uid . "'";
+                        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $uid, $address);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        } else {
+                            $address['tx_multishop_default'] = 1;
+                            $address['tx_multishop_address_type'] = 'billing';
+                            $address = mslib_befe::rmNullValuedKeys($address);
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $address);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                            $uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                        }
+                    }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'])) {
+                        $params = array(
+                                'user' => &$user,
+                                'item' => &$item,
+                                'user_check' => &$user_check,
+                                'prefix_source_name' => $this->post['prefix_source_name']
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPostHook'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
                 }

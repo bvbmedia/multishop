@@ -553,6 +553,16 @@ class tx_mslib_user {
                     $updateArray[$key] = $val;
                 }
             }
+            if (is_array($updateArray) && count($updateArray)) {
+                foreach ($updateArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $updateArray[$key] = '';
+                    } else {
+                        $updateArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             //hook to let other plugins further manipulate the create table query
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['updateUserPreProc'])) {
                 $params = array(
@@ -656,9 +666,14 @@ class tx_mslib_user {
                 }
             }
             // TYPO3 6.2 is null bugfix
-            foreach ($insertArray as $key => $val) {
-                if (is_null($insertArray[$key])) {
-                    $insertArray[$key] = '';
+            if (is_array($insertArray) && count($insertArray)) {
+                foreach ($insertArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $insertArray[$key] = '';
+                    } else {
+                        $insertArray[$key] = mslib_befe::antiXSS($val);
+                    }
                 }
             }
             //hook to let other plugins further manipulate the create table query
@@ -746,7 +761,17 @@ class tx_mslib_user {
             $updateArray['tx_multishop_address_type'] = 'billing';
             $updateArray['tx_multishop_default'] = ($is_default) ? 1 : 0;
             $updateArray['tx_multishop_customer_id'] = $customer_id;
-            $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
+            // TYPO3 6.2 is null bugfix
+            if (is_array($updateArray) && count($updateArray)) {
+                foreach ($updateArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $updateArray[$key] = '';
+                    } else {
+                        $updateArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             //hook to let other plugins further manipulate the create table query
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressUpdatePreHook'])) {
                 $params = array(
@@ -811,7 +836,17 @@ class tx_mslib_user {
             $insertArray['tx_multishop_address_type'] = 'billing';
             $insertArray['tx_multishop_default'] = ($is_default) ? 1 : 0;
             $insertArray['tx_multishop_customer_id'] = $customer_id;
-            $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+            // TYPO3 6.2 is null bugfix
+            if (is_array($insertArray) && count($insertArray)) {
+                foreach ($insertArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $insertArray[$key] = '';
+                    } else {
+                        $insertArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             //hook to let other plugins further manipulate the create table query
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['saveUserBillingAddressSavingPreHook'])) {
                 $params = array(
@@ -880,6 +915,17 @@ class tx_mslib_user {
         $insertArray['tx_multishop_address_type'] = 'delivery';
         $insertArray['tx_multishop_default'] = ($is_default) ? 1 : 0;
         $insertArray['tx_multishop_customer_id'] = $customer_id;
+        // TYPO3 6.2 is null bugfix
+        if (is_array($insertArray) && count($insertArray)) {
+            foreach ($insertArray as $key => $val) {
+                $val = trim($val);
+                if ($val == null || empty($val)) {
+                    $insertArray[$key] = '';
+                } else {
+                    $insertArray[$key] = mslib_befe::antiXSS($val);
+                }
+            }
+        }
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         if ($res) {

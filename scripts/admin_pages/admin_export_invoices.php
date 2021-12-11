@@ -293,10 +293,10 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('order_date')) . '</label>
 			<div class="col-md-10 form-inline">
 				<label class="form-control-static" for="visual_invoice_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>&nbsp;
-				<input class="form-control" name="visual_invoice_date_from" id="visual_invoice_date_from" type="text" value="' . $post_data['visual_invoice_date_from'] . '" />&nbsp;
+				<input class="form-control" name="visual_invoice_date_from" id="visual_invoice_date_from" type="text" value="' . $post_data['visual_invoice_date_from'] . '" autocomplete="off" />&nbsp;
 				<input name="invoice_date_from" id="invoice_date_from" type="hidden" value="' . $post_data['invoice_date_from'] . '" />
 				<label class="form-control-static" for="visual_invoice_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>&nbsp;
-				<input class="form-control" name="visual_invoice_date_till" id="visual_invoice_date_till" type="text" value="' . $post_data['visual_invoice_date_till'] . '" />&nbsp;
+				<input class="form-control" name="visual_invoice_date_till" id="visual_invoice_date_till" type="text" value="' . $post_data['visual_invoice_date_till'] . '" autocomplete="off" />&nbsp;
 				<input name="invoice_date_till" id="invoice_date_till" type="hidden" value="' . $post_data['invoice_date_till'] . '" />
 			</div>
 		</div>

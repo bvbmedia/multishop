@@ -18,6 +18,5 @@ while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 	$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
 	
 	// delete specials
-	$query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_specials','products_id='.$row['products_id']);	
-	$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);	
+	$query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_specials','products_id='.$row['products_id']);
 } 

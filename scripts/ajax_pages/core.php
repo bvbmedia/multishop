@@ -786,6 +786,13 @@ switch ($this->ms['page']) {
         break;
     case 'sort_specials_sections':
         if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminSortSpecialsSectionsPreProc'])) {
+                $params = array();
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminSortSpecialsSectionsPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $no = 1;
             foreach ($this->post['specialssections'] as $special_id) {
                 if (is_numeric($special_id)) {
@@ -804,14 +811,15 @@ switch ($this->ms['page']) {
     case 'delete_options_group':
         if ($this->ADMIN_USER) {
             if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {
-                $group_id = $this->post['tx_multishop_pi1']['group_id'];
-                $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id=' . $group_id);
-                if ($qry) {
-                    $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'attributes_options_groups_id=' . $group_id);
-                    $data = array();
-                    $data['result'] = 'OK';
-                    echo json_encode($data);
-                    exit();
+                if (is_numeric($this->post['tx_multishop_pi1']['group_id'])) {
+                    $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id=' . $this->post['tx_multishop_pi1']['group_id']);
+                    if ($qry) {
+                        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'attributes_options_groups_id=' . $this->post['tx_multishop_pi1']['group_id']);
+                        $data = array();
+                        $data['result'] = 'OK';
+                        echo json_encode($data);
+                        exit();
+                    }
                 }
             }
         }
@@ -820,10 +828,9 @@ switch ($this->ms['page']) {
     case 'delete_options_values_group':
         if ($this->ADMIN_USER && $this->conf['enableAttributeOptionValuesGroup'] == '1') {
             if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {
-                $group_id = $this->post['tx_multishop_pi1']['group_id'];
-                $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups', 'attributes_options_values_groups_id=' . $group_id);
+                $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups', 'attributes_options_values_groups_id=\'' . addslashes($this->post['tx_multishop_pi1']['group_id']).'\'');
                 if ($qry) {
-                    $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups_to_options_values', 'attributes_options_values_groups_id=' . $group_id);
+                    $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_values_groups_to_options_values', 'attributes_options_values_groups_id=\'' . addslashes($this->post['tx_multishop_pi1']['group_id']).'\'');
                     $data = array();
                     $data['result'] = 'OK';
                     echo json_encode($data);
@@ -835,10 +842,18 @@ switch ($this->ms['page']) {
         break;
     case 'admin_categories_sorting':
         if ($this->ADMIN_USER) {
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminCategoriesSortingPreProc'])) {
+                $params = array();
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminCategoriesSortingPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
+            // hook eof
             $no = 1;
             foreach ($this->post['categories_id'] as $catid) {
                 if (is_numeric($catid)) {
-                    $where = "categories_id = " . $catid;
+                    $where = 'categories_id = \'' . addslashes($catid).'\'';
                     $updateArray = array(
                             'sort_order' => $no
                     );
@@ -852,10 +867,17 @@ switch ($this->ms['page']) {
         break;
     case 'admin_manufacturers_sorting':
         if ($this->ADMIN_USER) {
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminManufacturersSortingPreProc'])) {
+                $params = array();
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxAdminManufacturersSortingPreProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             $no = 1;
             foreach ($this->post['manufacturers_id'] as $manid) {
                 if (is_numeric($manid)) {
-                    $where = "manufacturers_id = " . $manid;
+                    $where = 'manufacturers_id = \'' . addslashes($manid).'\'';
                     $updateArray = array(
                             'sort_order' => $no
                     );
@@ -1848,13 +1870,16 @@ switch ($this->ms['page']) {
                             }
                             move_uploaded_file($file_tmp_name, $temp_file);
                             if ($file_type=='image/svg+xml') {
-                                // Create a new sanitizer instance
-                                $sanitizer = new Sanitizer();
-                                // Load the dirty svg
-                                $svg_content = file_get_contents($temp_file);
-                                // Pass it to the sanitizer and get it back clean
-                                $cleanSVG = $sanitizer->sanitize($svg_content);
-                                file_put_contents($cleanSVG,$temp_file);
+                                if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_images_svg')) {
+                                    include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop_images_svg') . 'res/svg-sanitizer-master/src/Sanitizer.php');
+                                    // Create a new sanitizer instance
+                                    $sanitizer = new Sanitizer();
+                                    // Load the dirty svg
+                                    $svg_content = file_get_contents($temp_file);
+                                    // Pass it to the sanitizer and get it back clean
+                                    $cleanSVG = $sanitizer->sanitize($svg_content);
+                                    file_put_contents($cleanSVG, $temp_file);
+                                }
                             }
                             $size = getimagesize($temp_file);
                             if ($size[0] > 5 and $size[1] > 5) {
@@ -2843,6 +2868,40 @@ switch ($this->ms['page']) {
         }
         exit();
         break;
+    case 'checkSKU':
+        $return_data = array();
+        $skuCode = $this->post['product_sku_code'];
+        $productId = $this->post['pid'];
+        $additional_where = array();
+        $additional_where[] = 'p.sku_code = \'' . addslashes($skuCode) . '\'';
+        if ($productId) {
+            $additional_where[] = 'p.products_id != \'' . addslashes($productId) . '\'';
+        }
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        $return_data['status'] = 'OK';
+        if ($skuRecord['products_id']) {
+            $return_data['status'] = 'NOTOK';
+        }
+        echo json_encode($return_data);
+        exit();
+        break;
+    case 'checkEAN':
+        $return_data = array();
+        $eanCode = $this->post['product_ean_code'];
+        $productId = $this->post['pid'];
+        $additional_where = array();
+        $additional_where[] = 'p.ean_code = \'' . addslashes($eanCode) . '\'';
+        if ($productId) {
+            $additional_where[] = 'p.products_id != \'' . addslashes($productId) . '\'';
+        }
+        $skuRecord = mslib_befe::getRecord('', 'tx_multishop_products p', '', $additional_where, 'p.products_id');
+        $return_data['status'] = 'OK';
+        if ($skuRecord['products_id']) {
+            $return_data['status'] = 'NOTOK';
+        }
+        echo json_encode($return_data);
+        exit();
+        break;
     case 'method_sortables':
         if ($this->ADMIN_USER) {
             $key = 'multishop_shipping_method';
@@ -3217,6 +3276,26 @@ switch ($this->ms['page']) {
             $content .= $this->pi_getLL('encryption_key_not_match');
             die();
         }
+        break;
+    case 'sort_orders_status':
+        if ($this->ADMIN_USER) {
+            $key = 'row_sortable';
+            if (is_array($this->post[$key]) and count($this->post[$key])) {
+                $no = 1;
+                foreach ($this->post[$key] as $prod_id) {
+                    if (is_numeric($prod_id)) {
+                        $where = "id = " . $prod_id;
+                        $updateArray = array(
+                            'sort_order' => $no
+                        );
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', $where, $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        $no++;
+                    }
+                }
+            }
+        }
+        exit();
         break;
     case 'custom_page':
         // custom page hook that can be controlled by third-party plugin

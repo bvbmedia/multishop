@@ -340,12 +340,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<div class="col-md-10">
 			<span class="input_label_wrapper form-inline">
 				<label for="visual_orders_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>
-				<input name="visual_orders_date_from" id="visual_orders_date_from" type="text" class="form-control" value="' . $post_data['visual_orders_date_from'] . '" />
+				<input name="visual_orders_date_from" id="visual_orders_date_from" type="text" class="form-control" value="' . $post_data['visual_orders_date_from'] . '" autocomplete="off" />
 				<input name="orders_date_from" id="orders_date_from" type="hidden" value="' . $post_data['orders_date_from'] . '" />
 			</span>
 			<span class="input_label_wrapper form-inline">
 				<label for="visual_orders_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>
-				<input name="visual_orders_date_till" id="visual_orders_date_till" type="text" class="form-control" value="' . $post_data['visual_orders_date_till'] . '" />
+				<input name="visual_orders_date_till" id="visual_orders_date_till" type="text" class="form-control" value="' . $post_data['visual_orders_date_till'] . '" autocomplete="off" />
 				<input name="orders_date_till" id="orders_date_till" type="hidden" value="' . $post_data['orders_date_till'] . '" />
 			</span>
 			</div>
@@ -413,12 +413,12 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<div class="col-md-10">
 			<span class="input_label_wrapper form-inline">
 				<label for="visual_orders_delivery_date_from">' . htmlspecialchars($this->pi_getLL('admin_from')) . '</label>
-				<input name="visual_orders_delivery_date_from" id="visual_orders_delivery_date_from" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_from'] . '" />
+				<input name="visual_orders_delivery_date_from" id="visual_orders_delivery_date_from" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_from'] . '" autocomplete="off" />
 				<input name="orders_delivery_date_from" id="orders_delivery_date_from" type="hidden" value="' . $post_data['orders_delivery_date_from'] . '" />
 			</span>
 			<span class="input_label_wrapper form-inline">
 				<label for="visual_orders_delivery_date_till">' . htmlspecialchars($this->pi_getLL('admin_till')) . '</label>
-				<input name="visual_orders_delivery_date_till" id="visual_orders_delivery_date_till" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_till'] . '" />
+				<input name="visual_orders_delivery_date_till" id="visual_orders_delivery_date_till" type="text" class="form-control" value="' . $post_data['visual_orders_delivery_date_till'] . '" autocomplete="off" />
 				<input name="orders_delivery_date_till" id="orders_delivery_date_till" type="hidden" value="' . $post_data['orders_delivery_date_till'] . '" />
 			</span>
 			</div>

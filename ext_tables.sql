@@ -664,6 +664,7 @@ CREATE TABLE `tx_multishop_orders_products` (
  `related_to_orders_products_id ` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
  `foreign_orders_id` varchar(30) default '',
+ `foreign_orders_products_id` varchar(30) default '',
  PRIMARY KEY (`orders_products_id`),
  KEY `orders_id` (`orders_id`),
  KEY `type` (`type`),
@@ -724,9 +725,11 @@ CREATE TABLE `tx_multishop_orders_status` (
  `crdate` int(11) default '0',
  `default_status` tinyint(1) default '0',
  `page_uid` int(11) default '0',
+ `sort_order` int(11) default '0',
  PRIMARY KEY (`id`),
  KEY `default_status` (`default_status`),
- KEY `page_uid` (`page_uid`)
+ KEY `page_uid` (`page_uid`),
+ KEY `sort_order` (`sort_order`)
 );
 
 CREATE TABLE `tx_multishop_orders_status_description` (
@@ -943,6 +946,7 @@ CREATE TABLE `tx_multishop_products` (
  `is_hidden` tinyint(1) default '0',
  `ignore_stock_level` tinyint(1) default '0',
  `search_engines_allow_indexing` tinyint(1) default '1',
+ `tax_rate` decimal(6,4) default '0.0000',
  PRIMARY KEY (`products_id`),
  KEY `products_price` (`products_price`),
  KEY `products_model` (`products_model`),
@@ -974,7 +978,8 @@ CREATE TABLE `tx_multishop_products` (
  KEY `specials_price_percentage` (`specials_price_percentage`),
  KEY `manufacturers_advice_price` (`manufacturers_advice_price`),
  KEY `ignore_stock_level` (`ignore_stock_level`),
- KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)
+ KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`),
+ KEY `tax_rate` (`tax_rate`)
 );
 
 CREATE TABLE `tx_multishop_products_attributes` (

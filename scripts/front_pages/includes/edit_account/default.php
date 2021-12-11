@@ -282,6 +282,17 @@ if ($this->post) {
                 }
             }
             // custom hook that can be controlled by third-party plugin eof
+            // TYPO3 6.2 is null bugfix
+            if (is_array($insertArray) && count($insertArray)) {
+                foreach ($insertArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $insertArray[$key] = '';
+                    } else {
+                        $insertArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = ' . $GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // custom hook that can be controlled by third-party plugin
@@ -334,6 +345,17 @@ if ($this->post) {
             $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='billing' and deleted=0";
             $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
             $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+            // TYPO3 6.2 is null bugfix
+            if (is_array($insertTTArray) && count($insertTTArray)) {
+                foreach ($insertTTArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $insertTTArray[$key] = '';
+                    } else {
+                        $insertTTArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             if ($rows_tt_address) {
                 $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
                 $tt_address_id = $row_tt_address['uid'];
@@ -389,6 +411,17 @@ if ($this->post) {
             $sql_tt_address = "select uid from tt_address where tx_multishop_customer_id='" . $GLOBALS["TSFE"]->fe_user->user['uid'] . "' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
             $qry_tt_address = $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
             $rows_tt_address = $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+            // TYPO3 6.2 is null bugfix
+            if (is_array($insertTTArray) && count($insertTTArray)) {
+                foreach ($insertTTArray as $key => $val) {
+                    $val = trim($val);
+                    if ($val == null || empty($val)) {
+                        $insertTTArray[$key] = '';
+                    } else {
+                        $insertTTArray[$key] = mslib_befe::antiXSS($val);
+                    }
+                }
+            }
             if ($rows_tt_address) {
                 $row_tt_address = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
                 $tt_address_id = $row_tt_address['uid'];
@@ -595,7 +628,7 @@ if (count($erno) || $show_edit_account) {
             $birthday = date("Y-m-d", $user['date_of_birth']);
         }
         $birthday_block = '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '*</label>
-		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"' . $disable_autofill . ' value="' . htmlspecialchars($birthdayVisual) . '" >
+		<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" autocomplete="off" value="' . htmlspecialchars($birthdayVisual) . '" >
 		<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="' . htmlspecialchars($birthday) . '" >';
     }
     //

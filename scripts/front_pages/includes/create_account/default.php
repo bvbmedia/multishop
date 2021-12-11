@@ -270,7 +270,7 @@ if (mslib_fe::loggedin()) {
                     $birthday = date("Y-m-d", $user['date_of_birth']);
                 }
                 $birthday_block = '<label for="birthday" id="account-birthday">' . ucfirst($this->pi_getLL('birthday')) . '*</label>
-				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual"' . $disable_autofill . ' value="" >
+				<input type="text" name="date_of_birth_visual" class="birthday" id="date_of_birth_visual" autocomplete="off" value="" >
 				<input type="hidden" name="date_of_birth" class="birthday" id="date_of_birth" value="" >';
             }
             //

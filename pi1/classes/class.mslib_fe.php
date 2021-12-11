@@ -2539,7 +2539,7 @@ class mslib_fe {
                             $output_html[$options['products_options_id']] .= '<div class="opties-field-attribute' . $options['products_options_id'] . ' opties-field-radio opties-field-input" id="attribute_item_wrapper_' . $options['products_options_id'] . '">
                             <label>' . $options['products_options_name'] . ':</label>
                             <div class="attribute_item_wrapper">
-                            <input type="text" name="attributes[' . $options['products_options_id'] . ']" class="' . ($options['listtype'] == 'date' ? 'attributeDate' : 'attributeDateTime') . '" id="attributes' . $options['products_options_id'] . '" value="' . $sessionData['attributes'][$options['products_options_id']]['products_options_values_name'] . '" ' . ($options['required'] ? 'required="required"' : '') . ' />
+                            <input type="text" name="attributes[' . $options['products_options_id'] . ']" class="' . ($options['listtype'] == 'date' ? 'attributeDate' : 'attributeDateTime') . '" id="attributes' . $options['products_options_id'] . '" value="' . $sessionData['attributes'][$options['products_options_id']]['products_options_values_name'] . '" ' . ($options['required'] ? 'required="required"' : '') . ' autocomplete="off" />
                             </div>
                             </div>';
                             $load_default = 0;
@@ -3933,6 +3933,16 @@ class mslib_fe {
                     }
                 }
             }
+            // hook
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['loadPaymentMethodsPostProc'])) {
+                $confMethod = array(
+                    'array' => &$array
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['loadPaymentMethodsPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $confMethod, $this);
+                }
+            }
+            // hook eof
             return $array;
         }
     }
@@ -4348,7 +4358,7 @@ class mslib_fe {
         return $content;
     }
     public function getAllOrderStatus($language_id = 0) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'od.name', '');
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'o.sort_order asc', '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $status = array();
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {

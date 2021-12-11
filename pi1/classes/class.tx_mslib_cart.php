@@ -1414,7 +1414,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 if ($val == null || empty($val)) {
                     $address[$key] = '';
                 } else {
-                    $address[$key] = $val;
+                    $address[$key] = mslib_befe::antiXSS($val);
                 }
             }
         }
@@ -1954,7 +1954,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             } else {
                 $insertArray['cruser_id'] = '';
             }
-            $insertArray['customer_comments'] = $this->post['customer_comments'];
+            $insertArray['customer_comments'] = mslib_befe::antiXSS($this->post['customer_comments']);
             $insertArray['billing_company'] = $address['company'];
             $insertArray['billing_first_name'] = $address['first_name'];
             $insertArray['billing_middle_name'] = $address['middle_name'];

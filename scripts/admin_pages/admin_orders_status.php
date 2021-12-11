@@ -50,6 +50,7 @@ if ($this->post) {
                     $insertArray['page_uid'] = $this->post['related_shop_pid'];
                     $insertArray['deleted'] = 0;
                     $insertArray['crdate'] = time();
+                    $insertArray['sort_order'] = time();
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -186,7 +187,7 @@ if ($this->get['tx_multishop_pi1']['action'] == 'edit') {
     $content .= '<input type="hidden" name="tx_multishop_pi1[action]" value="update_status" />';
 }
 $content .= '</form>';
-$str = "SELECT o.*, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.id desc";
+$str = "SELECT o.*, od.name from tx_multishop_orders_status o, tx_multishop_orders_status_description od where (o.page_uid='0' or o.page_uid='" . $this->showCatalogFromPage . "') and o.deleted=0 and o.id=od.orders_status_id and od.language_id='0' order by o.sort_order asc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 $zones = array();
 while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
@@ -203,6 +204,7 @@ if (count($statusses)) {
     }
     $table_headers['is_default'] = '<th class="cellStatus">' . $this->pi_getLL('default', 'Default') . '</th>';
     $table_headers['action'] = '<th class="cellAction">' . $this->pi_getLL('action') . '</th>';
+    $table_headers['sort_order'] = '<th class="cellAction">&nbsp;</th>';
     // hook
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableHeaders'])) {
         $params = array(
@@ -213,7 +215,7 @@ if (count($statusses)) {
         }
     }
     $content .= '<thead>' . implode("\n", $table_headers) . '</thead>
-    <tbody>';
+    <tbody class="sortable_content">';
     // hook oef
     foreach ($statusses as $status) {
         if (!$tr_type or $tr_type == 'even') {
@@ -257,6 +259,9 @@ if (count($statusses)) {
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[action]=edit') . '" class="btn btn-primary btn-sm admin_menu_edit" alt="' . $this->pi_getLL('edit') . '"><i class="fa fa-pencil"></i></a>
 			<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&tx_multishop_pi1[orders_status_id]=' . $status['id'] . '&tx_multishop_pi1[action]=delete') . '" onclick="return confirm(\'' . $this->pi_getLL('are_you_sure') . '?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="' . $this->pi_getLL('delete') . '"><i class="fa fa-trash-o"></i></a>
 		</td>';
+        $rows_content['sort_order'] = '<td class="cellAction sortOrder" style="padding:20px; cursor: move">
+			<i class="fa fa-bars"></i>
+		</td>';
         // hook
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders_status.php']['adminOrdersStatusListingTableData'])) {
             $params = array(
@@ -267,10 +272,32 @@ if (count($statusses)) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        $content .= '<tr class="' . $tr_type . '">' . implode("\n", $rows_content) . '</tr>';
+        $content .= '<tr class="' . $tr_type . '" id="row_sortable_'.$status['id'] .'">' . implode("\n", $rows_content) . '</tr>';
     }
     $content .= '</tbody></table>';
 }
 $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div>';
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
+$GLOBALS['TSFE']->additionalHeaderData[] = '
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$("tbody.sortable_content").sortable({
+		cursor:"move",
+		handle:".sortOrder",
+		update: function(e, ui) {
+			href = "' . mslib_fe::typolink($ref->shop_pid.',2002', '&tx_multishop_pi1[page_section]=sort_orders_status') . '";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:"POST",
+				url:href,
+				data:sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
+});
+</script>';
 ?>

@@ -709,10 +709,10 @@
                                         <div class="form-group special_price_timer">
                                             <div class="col-md-12">
                                                 <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
-                                                <input type="text" name="specials_price_start_visitor" class="form-control price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
+                                                <input type="text" name="specials_price_start_visitor" class="form-control price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###" autocomplete="off">
                                                 <input type="hidden" name="specials_price_start" class="price small_input" id="specials_price_start" value="###VALUE_SPECIAL_PRICE_START_SYS###">
                                                 <label for="specials_price_expired">###LABEL_SPECIAL_PRICE_EXPIRED###</label>
-                                                <input type="text" name="specials_price_expired_visitor" class="form-control price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###">
+                                                <input type="text" name="specials_price_expired_visitor" class="form-control price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###" autocomplete="off">
                                                 <input type="hidden" name="specials_price_expired" class="price small_input" id="specials_price_expired" value="###VALUE_SPECIAL_PRICE_EXPIRED_SYS###">
                                             </div>
                                         </div>
@@ -755,20 +755,20 @@
                         <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
                             <label for="starttime" class="starttime col-md-2 control-label">###LABEL_STARTTIME###</label>
                             <div class="col-md-10 form-inline">
-                                <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-                                <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+                                <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###" autocomplete="off">
+                                <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###" autocomplete="off">
                                 <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
                             </div>
                         </div>
                         <div class="form-group toggle_advanced_option" id="msEditProductInputDateAvailable">
                             <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
                             <div class="col-md-10 form-inline">
-                                <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
+                                <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###" autocomplete="off">
                                 <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###">
                                 <p class="form-control-static">
                                     <strong>###LABEL_DATE_ADDED###</strong>
                                 </p>
-                                <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
+                                <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###" autocomplete="off">
                                 <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
                                 <p class="form-control-static"><strong>###LABEL_DATE_MODIFIED###</strong></p>
                                 <p class="form-control-static">###VALUE_DATE_MODIFIED###</p>
@@ -807,13 +807,20 @@
                             <div class="col-md-10 form-inline">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+                                        <div class="input-group ml-10">
+                                            <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###" data-ean-valid="###VALUE_EAN_CODE_VALIDITY###">
+                                            <span class="input-group-btn"><a href="#" id="checkEAN" class="btn btn-success">Validate</a></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
                                     <div class="col-md-12">
-                                        <p class="form-control-static"><strong>###LABEL_SKU_CODE###</strong></p>
-                                        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###">
+                                        <div class="input-group ml-10">
+                                            <span class="input-group-addon"><strong>###LABEL_SKU_CODE###</strong></span>
+
+                                            <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###" data-sku-valid="###VALUE_SKU_CODE_VALIDITY###">
+                                            <span class="input-group-btn"><a href="#" id="checkSKU" class="btn btn-success">Validate</a></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
@@ -879,7 +886,7 @@
                         </div>
                         <!-- ###VIRTUAL_PRODUCTS_WRAPPER### end -->
                         ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-                        <input name="pid" type="hidden" value="###VALUE_PRODUCT_PID0###" />
+                        <input name="pid" id="product_id" type="hidden" value="###VALUE_PRODUCT_PID0###" />
                         <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
                         <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
@@ -925,7 +932,148 @@
     </div>
 </div>
 <script type="text/javascript">
+    function delay(fn, ms) {
+        let timer = 0
+        return function(...args) {
+            clearTimeout(timer)
+            timer = setTimeout(fn.bind(this, ...args), ms || 0)
+        }
+    }
     jQuery(document).ready(function ($) {
+        $(document).on("click", "#checkEAN", function(e){
+            e.preventDefault();
+            if ($("#ean_code").val() != "") {
+                $(this).empty();
+                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_EAN###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#ean_code").val(), pid: "###AJAX_PID3###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#ean_code").css("border", "1px solid red");
+                           $("#ean_code").attr("data-sku-valid", "0");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Validate');
+                       } else {
+                           $("#ean_code").css("border", "1px solid green");
+                           $("#ean_code").attr("data-sku-valid", "1");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Invalid');
+                       }
+                   },
+                   failed: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Validate');
+                   }
+                });
+            }
+        });
+        $(document).on("keydown", "#ean_code", delay(function(e){
+            if ($("#ean_code").val() != "") {
+                $("#checkEAN").empty();
+                $("#checkEAN").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_EAN1###",
+                   dataType: "json",
+                   data: {product_ean_code: $("#ean_code").val(), pid: "###AJAX_PID4###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#ean_code").css("border", "1px solid red");
+                           $("#ean_code").attr("data-ean-valid", "0");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Validate');
+                       } else {
+                           $("#ean_code").css("border", "1px solid green");
+                           $("#ean_code").attr("data-ean-valid", "1");
+
+                           $("#checkEAN").empty();
+                           $("#checkEAN").html('Invalid');
+                       }
+                   },
+                   failed: function() {
+                       $("#checkEAN").empty();
+                       $("#checkEAN").html('Failed');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Error');
+                   }
+                });
+            }
+        }, 500));
+        $(document).on("click", "#checkSKU", function(e){
+            e.preventDefault();
+            if ($("#sku_code").val() != "") {
+                $(this).empty();
+                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_SKU###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID1###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#sku_code").css("border", "1px solid red");
+                           $("#sku_code").attr("data-sku-valid", "0");
+                       } else {
+                           $("#sku_code").css("border", "1px solid green");
+                           $("#sku_code").attr("data-sku-valid", "1");
+                       }
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   failed: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   }
+                });
+            }
+        });
+        $(document).on("keydown", "#sku_code", delay(function(e){
+            if ($("#sku_code").val() != "") {
+                $("#checkSKU").empty();
+                $("#checkSKU").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $.ajax({
+                   type: "POST",
+                   url: "###AJAX_URL_CHECK_SKU1###",
+                   dataType: "json",
+                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID2###"},
+                   success: function (data) {
+                       if (data.status == "NOTOK") {
+                           $("#sku_code").css("border", "1px solid red");
+                           $("#sku_code").attr("data-sku-valid", "0");
+                       } else {
+                           $("#sku_code").css("border", "1px solid green");
+                           $("#sku_code").attr("data-sku-valid", "1");
+                       }
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   failed: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   },
+                   error: function() {
+                       $("#checkSKU").empty();
+                       $("#checkSKU").html('Validate');
+                   }
+               });
+            }
+        }, 500));
         $(".admin_product_edit").submit(function () {
             var enableBlockUi = '1';
             if ($("#categories_id").val() == "0" || $("#categories_id").val() == "") {
@@ -937,6 +1085,20 @@
                 enableBlockUi = '0';
                 msDialog("ERROR", "###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
                 return false;
+            }
+            if ($("#sku_code").val() != "") {
+                if ($("#sku_code").attr("data-sku-valid") == "0") {
+                    enableBlockUi = '0';
+                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###");
+                    return false;
+                }
+            }
+            if ($("#ean_code").val() != "") {
+                if ($("#ean_code").attr("data-ean-valid") == "0") {
+                    enableBlockUi = '0';
+                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###");
+                    return false;
+                }
             }
             if (enableBlockUi == '1') {
                 msAdminBlockUi();

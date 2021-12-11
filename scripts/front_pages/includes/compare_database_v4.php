@@ -592,7 +592,7 @@ if (!$qry) {
 }
 // remove the DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER
 $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
-$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+
 /*
 $auto_shipping_costs=mslib_befe::getRecord('DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER', 'tx_multishop_configuration', 'configuration_key');
 if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_value'])) {
@@ -607,7 +607,6 @@ if (is_array($auto_shipping_costs) && isset($auto_shipping_costs['configuration_
     $GLOBALS['TYPO3_DB']->sql_query($query);
 
     $query2 = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration','configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'');
-    $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
     $messages[] = 'DELETE FROM tx_multishop_configuration WHERE configuration_key=\'DISABLE_AUTO_SHIPPING_COSTS_IN_EDIT_ORDER\'';
 }
 */
@@ -945,4 +944,46 @@ if (!$qry) {
     $str = "ALTER TABLE  `tx_multishop_orders` ADD `deleted_tstamp` int(11) default '0'";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[] = $str;
+}
+$str = "select `tax_rate` from tx_multishop_products limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_products` ADD `tax_rate` decimal(6,4) default '0.0000'";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+
+    $select = array();
+    $select[] = 'p.products_id, t.rate';
+    $filter = array();
+    $filter[] = 'p.tax_id = t.tax_id';
+    $products = mslib_befe::getRecords('', 'tx_multishop_products p, tx_multishop_taxes t', '', $filter, '', '', '99999999', $select);
+    if (is_array($products) && count($products)) {
+        foreach ($products as $product) {
+            $updateArray = array();
+            $updateArray['tax_rate'] = $product['rate'];
+            $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $product['products_id'] . '\'', $updateArray);
+            $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
+        }
+    }
+}
+
+$str = "select `sort_order` from tx_multishop_orders_status limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_orders_status` ADD `sort_order` int(11) default '0', ADD KEY `sort_order` (`sort_order`)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+    // Update the newly created order status sort order using order status id
+    $sql_update = 'UPDATE tx_multishop_orders_status SET sort_order = id where sort_order=0';
+    $GLOBALS['TYPO3_DB']->sql_query($sql_update);
+    $messages[] = $str;
+}
+$key='ADMIN_EDIT_PRODUCT_EXPAND_ALL_ATTRIBUTES_TABS';
+$title='Admin edit product: Expand attributes tabs by default';
+$description='Expand attributes tabs by default.';
+$default_value='0';
+if (!isset($settings['GLOBAL_MODULES'][$key])) {
+    $str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES ('', '".$title."', '".$key."', '".$default_value."', '".$description."', 11, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''0'',''1''),');";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[]=$str;
 }

@@ -17,6 +17,15 @@ $tables['tx_multishop_products_options'] = 'products_options_id';
 $tables['tx_multishop_products_options_values'] = 'products_options_values_id';
 $tables['tx_multishop_products_options_values_extra'] = 'products_options_values_extra_id';
 $tables['tx_multishop_reviews_description'] = 'reviews_id';
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_update_catalog_languages.php']['adminSystemAddMissingLanguageOverlay'])) {
+    $params = array(
+            'tables' => &$tables
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_update_catalog_languages.php']['adminSystemAddMissingLanguageOverlay'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 foreach ($tables as $table => $colkey) {
     $counter = 0;
     $str = "SELECT * from " . $table . " where language_id=0 group by " . $colkey;
