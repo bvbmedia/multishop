@@ -112,6 +112,11 @@ if ($this->ADMIN_USER) {
     }
     if (is_array($records)) {
         $counter = 0;
+        if (!isset($this->get['preselected_id'])) {
+            $return_data[0]['text'] = htmlentities($this->pi_getLL('choose'));
+            $return_data[0]['id'] = '';
+            $counter = 1;
+        }
         foreach ($records as $row) {
             $labelArray = array();
             if (isset($row['products_status']) && !$row['products_status']) {
