@@ -903,7 +903,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                 $product['tax'] = mslib_fe::taxDecimalCrop($product['final_price'] / 100 * $tax_rate['total_tax_rate']);
                             } elseif (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                                 //$product['tax']=mslib_fe::taxDecimalCrop($product['final_price']*($tax_rate['total_tax_rate']/100), 2, false);
-                                $product['tax'] = round($product['final_price'] * ($tax_rate['total_tax_rate'] / 100), 2);
+                                $product['tax'] = number_format($product['final_price'] * ($tax_rate['total_tax_rate'] / 100), 4, '.', '');
                             }
                             $product['tax_rate'] = ($tax_rate['total_tax_rate'] / 100);
                         }
