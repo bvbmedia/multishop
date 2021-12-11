@@ -245,7 +245,7 @@ if ($this->ADMIN_USER) {
                     $jsonData_content .= '
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="' . $colspan . '" class="text-right">' . $this->pi_getLL('sub_total') . '</td>
-						<td class="text-right">' . mslib_fe::amount2Cents($order['subtotal_amount'], $customer_currency, 1, 0) . '</td>
+						<td class="text-right">' . mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], $customer_currency, 1, 0) . '</td>
 					</tr>';
                 }
                 if ($order['shipping_method_label']) {
