@@ -534,7 +534,7 @@ switch ($this->ms['page']) {
                     if (strpos($this->get['preselected_id'], ',') !== false) {
                         $tmp_preselecteds = explode(',', $this->get['preselected_id']);
                     } else {
-                        if (is_numeric($this->get['preselected_id'])) {
+                        if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0) {
                             $tmp_preselecteds[] = $this->get['preselected_id'];
                         }
                     }
@@ -543,7 +543,7 @@ switch ($this->ms['page']) {
                     if (strpos($this->post['preselected_id'], ',') !== false) {
                         $tmp_preselecteds = explode(',', $this->post['preselected_id']);
                     } else {
-                        if (is_numeric($this->post['preselected_id'])) {
+                        if (is_numeric($this->post['preselected_id']) && $this->post['preselected_id'] > 0) {
                             $tmp_preselecteds[] = $this->post['preselected_id'];
                         }
                     }
