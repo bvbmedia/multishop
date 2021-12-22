@@ -398,8 +398,6 @@ if ($this->post) {
                                 $insertArray['page_uid'] = $this->showCatalogFromPage;
                                 $insertArray['foreign_page_uid'] = $page_uid;
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
-                                var_dump($query);
-                                die('1');
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 // link existing product from source to foreign cat id
                                 $has_products = mslib_fe::getProducts('', $reflector_cattree[$foreign_cat_id]);
