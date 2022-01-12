@@ -234,6 +234,12 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
         this method is created for returning ajax content.
     */
     function ajax_main($content, $conf) {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['ajax_mainPreProc'])) {
+            $params = array();
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['ajax_mainPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
         $this->AJAX_MODE = 1;
         self::construct($conf);
         if (!defined('MsApplicationTopOnceIsLoaded')) {
