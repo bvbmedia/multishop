@@ -489,14 +489,14 @@ if (isset($this->get['usergroup']) && $this->get['usergroup'] > 0) {
 if ($this->get['orders_status_search'] > 0) {
     $filter[] = "(o.status='" . addslashes($this->get['orders_status_search']) . "')";
 }
-if (isset($this->get['payment_method']) && $this->get['payment_method'] != 'all') {
+if (isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method'] != 'all') {
     if ($this->get['payment_method'] == 'nopm') {
         $filter[] = "(o.payment_method is null)";
     } else {
         $filter[] = "(o.payment_method='" . addslashes($this->get['payment_method']) . "')";
     }
 }
-if (isset($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') {
+if (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') {
     if ($this->get['shipping_method'] == 'nosm') {
         $filter[] = "(o.shipping_method is null)";
     } else {
