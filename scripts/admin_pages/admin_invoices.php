@@ -266,22 +266,22 @@ $subparts['invoices_results'] = $this->cObj->getSubpart($subparts['template'], '
 $subparts['invoices_listing'] = $this->cObj->getSubpart($subparts['invoices_results'], '###INVOICES_LISTING###');
 $subparts['invoices_noresults'] = $this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
 //
-if ($this->get['Search'] and ($this->get['invoice_paid_status'] != $this->cookie['invoice_paid_status'])) {
+if ($this->get['Search'] && !empty($this->get['invoice_paid_status']) && ($this->get['invoice_paid_status'] != $this->cookie['invoice_paid_status'])) {
     $this->cookie['invoice_paid_status'] = $this->get['invoice_paid_status'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
-if ($this->get['Search'] and ($this->get['invoice_type'] != $this->cookie['invoice_type'])) {
+if ($this->get['Search'] && !empty($this->get['invoice_type']) && ($this->get['invoice_type'] != $this->cookie['invoice_type'])) {
     $this->cookie['invoice_type'] = $this->get['invoice_type'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
-if ($this->get['Search'] and ($this->get['tx_multishop_pi1']['filter_by_paid_date'] != $this->cookie['filter_by_paid_date'])) {
+if ($this->get['Search'] && ($this->get['tx_multishop_pi1']['filter_by_paid_date'] != $this->cookie['filter_by_paid_date'])) {
     $this->cookie['filter_by_paid_date'] = $this->get['tx_multishop_pi1']['filter_by_paid_date'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
 }
-if ($this->get['Search'] and ($this->get['limit'] != $this->cookie['limit'])) {
+if ($this->get['Search'] && ($this->get['limit'] != $this->cookie['limit'])) {
     $this->cookie['limit'] = $this->get['limit'];
     $GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
     $GLOBALS['TSFE']->storeSessionData();
@@ -568,8 +568,8 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
         (isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method'] != 'all') ||
         (isset($this->get['invoice_date_from']) && !empty($this->get['invoice_date_from'])) ||
         (isset($this->get['invoice_date_till']) && !empty($this->get['invoice_date_till'])) ||
-        (isset($this->get['invoice_type']) && !empty($this->get['invoice_type'])) ||
-        (isset($this->get['invoice_paid_status']) && !empty($this->get['invoice_paid_status']))
+        (isset($this->get['invoice_type']) && !empty($this->get['invoice_type']) && $this->get['invoice_type'] != 'all') ||
+        (isset($this->get['invoice_paid_status']) && !empty($this->get['invoice_paid_status']) && $this->get['invoice_paid_status'] != 'all')
 ) {
     $subpartArray['###UNFOLD_SEARCH_BOX###'] = ' in';
 }
@@ -631,7 +631,7 @@ $subpartArray['###DATE_TIME_JS_FORMAT0###'] = $this->pi_getLL('locale_date_forma
 $subpartArray['###DATE_TIME_JS_FORMAT1###'] = $this->pi_getLL('locale_date_format_js');
 // paid status
 $paid_status_sb = '<select name="invoice_paid_status" id="invoice_paid_status" class="invoice_select2">
-<option value="">' . $this->pi_getLL('all') . '</option>
+<option value="all">' . $this->pi_getLL('all') . '</option>
 <option value="paid"' . ($this->get['invoice_paid_status'] == 'paid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_paid_invoices_only') . '</option>
 <option value="unpaid"' . ($this->get['invoice_paid_status'] == 'unpaid' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_unpaid_invoices_only') . '</option>
 </select>';
@@ -639,7 +639,7 @@ $subpartArray['###LABEL_INVOICES_PAID_STATUS###'] = $this->pi_getLL('invoice_pai
 $subpartArray['###INVOICES_PAID_STATUS_SELECTBOX###'] = $paid_status_sb;
 // invoice type
 $invoice_type_sb = '<select name="invoice_type" id="invoice_type" class="invoice_select2">
-<option value="">' . $this->pi_getLL('all') . '</option>
+<option value="all">' . $this->pi_getLL('all') . '</option>
 <option value="credit"' . ($this->get['invoice_type'] == 'credit' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_credit_invoices_only') . '</option>
 <option value="debit"' . ($this->get['invoice_type'] == 'debit' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('show_debit_invoices_only') . '</option>
 </select>';
