@@ -1903,7 +1903,16 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                                 $hashed_id .= $cat;
                                 $strchk = "SELECT categories_id from tx_multishop_categories c where c.hashed_id='" . addslashes(md5($hashed_id)) . "' and c.page_uid='" . $this->showCatalogFromPage . "'";
-                                //$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+                                // custom hook that can be controlled by third-party plugin
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterFetchCategoryCrumNode'])) {
+                                    $params = array(
+                                            'strchk' => &$strchk,
+                                            'cat' => &$cat,
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterFetchCategoryCrumNode'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                                 $qrychk = $GLOBALS['TYPO3_DB']->sql_query($strchk);
                                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
@@ -1920,6 +1929,15 @@ if ($this->post['action'] == 'category-insert') {
                                         $insertArray['foreign_source_name'] = $this->post['prefix_source_name'];
                                     }
                                     $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterInsertCategoryCrumNode'])) {
+                                        $params = array(
+                                                'insertArray' => &$insertArray,
+                                                'cat' => &$cat,
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterInsertCategoryCrumNode'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                        }
+                                    }
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
                                     if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                                         $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
